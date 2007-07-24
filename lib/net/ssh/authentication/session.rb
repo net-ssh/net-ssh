@@ -5,7 +5,7 @@ require 'net/ssh/authentication/key_manager'
 require 'net/ssh/authentication/methods/publickey'
 require 'net/ssh/authentication/methods/hostbased'
 require 'net/ssh/authentication/methods/password'
-#require 'net/ssh/authentication/methods/keyboard_interactive'
+require 'net/ssh/authentication/methods/keyboard_interactive'
 
 module Net; module SSH; module Authentication
   class Session
@@ -21,6 +21,8 @@ module Net; module SSH; module Authentication
       @transport = transport
 
       @auth_methods = options[:auth_methods] || %w(publickey hostbased password keyboard-interactive)
+      @keyboard_interactive = options[:keyboard_interactive]
+
       @allowed_auth_methods = @auth_methods
     end
 
@@ -40,7 +42,7 @@ module Net; module SSH; module Authentication
         attempted << name
 
         debug { "trying #{name}" }
-        method = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join).new(self, :key_manager => key_manager)
+        method = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join).new(self, :key_manager => key_manager, :keyboard_interactive => @keyboard_interactive)
 
         return true if method.authenticate(next_service, username, password)
       end

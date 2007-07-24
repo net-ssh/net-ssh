@@ -9,6 +9,8 @@ module Net; module SSH
         value = args[index+1]
         if type == :raw
           buffer.append(value.to_s)
+        elsif Array === value
+          buffer.send("write_#{type}", *value)
         else
           buffer.send("write_#{type}", value)
         end

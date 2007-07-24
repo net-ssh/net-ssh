@@ -13,6 +13,7 @@ module Net; module SSH; module Authentication; module Methods
     def initialize(session, options={})
       @session = session
       @key_manager = options[:key_manager]
+      @options = options
       self.logger = session.logger
     end
 

@@ -151,6 +151,9 @@ module Net
         def agent
           return unless use_agent?
           @agent ||= Agent.new(logger)
+        rescue AgentNotAvailable
+          @use_agent = false
+          nil
         end
 
         # Closes any open connection to an ssh-agent.

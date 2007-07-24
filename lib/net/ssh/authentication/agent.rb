@@ -8,6 +8,8 @@ module Net; module SSH; module Authentication
   # A trivial exception class for representing agent-specific errors.
   class AgentError < Net::SSH::Exception; end
 
+  class AgentNotAvailable < AgentError; end
+
   # This class implements a simple client for the ssh-agent protocol. It
   # does not implement any specific protocol, but instead copies the
   # behavior of the ssh-agent functions in the OpenSSH library (3.8).
@@ -45,8 +47,13 @@ module Net; module SSH; module Authentication
     # socket reports that it is an SSH2-compatible agent, this will fail
     # (it only supports the ssh-agent distributed by OpenSSH).
     def connect!
-      trace { "connecting to ssh-agent" }
-      @socket = UNIXSocket.open(ENV['SSH_AUTH_SOCK'])
+      begin
+        trace { "connecting to ssh-agent" }
+        @socket = UNIXSocket.open(ENV['SSH_AUTH_SOCK'])
+      rescue
+        error { "could not connect to ssh-agent" }
+        raise AgentNotAvailable
+      end
 
       # determine what type of agent we're communicating with
       buffer = Buffer.from(:string, Transport::ServerVersion::PROTO_VERSION)
