@@ -21,7 +21,7 @@ module Net; module SSH; module Transport
     attr_accessor :server_hmac
     attr_accessor :client_hmac
 
-    attr_reader :input
+    attr_reader :input, :output
 
     def client_name
       @client_name ||= begin
@@ -77,7 +77,29 @@ module Net; module SSH; module Transport
       return data.length
     end
 
+    def send_queue
+      if output.length > 0
+        sent = send(output.to_s, 0)
+        trace { "sent #{sent} bytes" }
+        output.consume!(sent)
+      end
+    end
+
+    def wait_for_queue
+      send_queue
+      while output.length > 0
+        result = IO.select(nil, [self]) or next
+        next unless result[1].any?
+        send_queue
+      end
+    end
+
     def send_packet(payload)
+      enqueue_packet(payload)
+      wait_for_queue
+    end
+
+    def enqueue_packet(payload)
       # the length of the packet, minus the padding
       actual_length = 4 + payload.length + 1
 
@@ -101,8 +123,8 @@ module Net; module SSH; module Transport
       encrypted_data = client_cipher.update(unencrypted_data) << client_cipher.final
       message = encrypted_data + mac
 
-      trace { "sending packet ##{@client_sequence_number} len #{packet_length}" }
-      send(message, 0)
+      trace { "queueing packet ##{@client_sequence_number} len #{packet_length}" }
+      output.append(message)
 
       @client_sequence_number += 1
       @client_sequence_number = 0 if @client_sequence_number > 0xFFFFFFFF
@@ -117,6 +139,7 @@ module Net; module SSH; module Transport
         @server_cipher = @client_cipher = CipherFactory.get("none")
         @server_hmac = @client_hmac = HMAC.get("none")
         @input = Net::SSH::Buffer.new
+        @output = Net::SSH::Buffer.new
       end
 
       def poll_next_packet

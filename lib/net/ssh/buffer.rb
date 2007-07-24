@@ -182,7 +182,7 @@ module Net; module SSH
 
     # Writes the given data literally into the string.
     def write(*data)
-      @content << data.join
+      data.each { |datum| @content << datum }
     end
 
     # Writes each argument to the buffer as a network-byte-order-encoded
