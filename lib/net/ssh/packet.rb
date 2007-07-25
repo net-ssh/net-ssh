@@ -1,6 +1,7 @@
 require 'net/ssh/buffer'
 require 'net/ssh/transport/constants'
 require 'net/ssh/authentication/constants'
+require 'net/ssh/connection/constants'
 
 module Net; module SSH
   class Packet < Buffer
@@ -13,6 +14,13 @@ module Net; module SSH
 
     register Authentication::Constants::USERAUTH_BANNER, [:message, :string], [:language, :string]
     register Authentication::Constants::USERAUTH_FAILURE, [:authentications, :string], [:partial_success, :bool]
+
+    register Connection::Constants::CHANNEL_OPEN_CONFIRMATION, [:local_id, :long], [:remote_id, :long], [:window_size, :long], [:packet_size, :long]
+    register Connection::Constants::CHANNEL_WINDOW_ADJUST, [:local_id, :long], [:extra_bytes, :long]
+    register Connection::Constants::CHANNEL_DATA, [:local_id, :long], [:data, :string]
+    register Connection::Constants::CHANNEL_EOF, [:local_id, :long]
+    register Connection::Constants::CHANNEL_CLOSE, [:local_id, :long]
+    register Connection::Constants::CHANNEL_REQUEST, [:local_id, :long], [:request, :string], [:want_reply, :bool], [:request_data, :buffer]
 
     def initialize(payload)
       @instantiated = false
@@ -30,7 +38,11 @@ module Net; module SSH
       @instantiated = true
 
       definitions.each do |name, datatype|
-        @named_elements[name.to_sym] = send("read_#{datatype}")
+        @named_elements[name.to_sym] = if datatype == :buffer
+          remainder_as_buffer
+        else
+          send("read_#{datatype}")
+        end
       end
 
       self

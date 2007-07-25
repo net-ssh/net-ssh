@@ -77,8 +77,12 @@ module Net; module SSH; module Transport
       return data.length
     end
 
+    def pending_write?
+      output.length > 0
+    end
+
     def send_queue
-      if output.length > 0
+      if pending_write?
         sent = send(output.to_s, 0)
         trace { "sent #{sent} bytes" }
         output.consume!(sent)
@@ -87,7 +91,7 @@ module Net; module SSH; module Transport
 
     def wait_for_queue
       send_queue
-      while output.length > 0
+      while pending_write?
         result = IO.select(nil, [self]) or next
         next unless result[1].any?
         send_queue
@@ -100,6 +104,8 @@ module Net; module SSH; module Transport
     end
 
     def enqueue_packet(payload)
+      payload = payload.to_s
+
       # the length of the packet, minus the padding
       actual_length = 4 + payload.length + 1
 
@@ -123,7 +129,7 @@ module Net; module SSH; module Transport
       encrypted_data = client_cipher.update(unencrypted_data) << client_cipher.final
       message = encrypted_data + mac
 
-      trace { "queueing packet ##{@client_sequence_number} len #{packet_length}" }
+      trace { "queueing packet nr #{@client_sequence_number} type #{payload[0]} len #{packet_length}" }
       output.append(message)
 
       @client_sequence_number += 1
@@ -176,7 +182,7 @@ module Net; module SSH; module Transport
         my_computed_hmac = server_hmac.digest([server_sequence_number, @packet.content].pack("NA*"))
         raise Net::SSH::Exception, "corrupted mac detected" if real_hmac != my_computed_hmac
 
-        trace { "received packet ##{@server_sequence_number} len #{@packet_length}" }
+        trace { "received packet nr #{@server_sequence_number} type #{payload[0]} len #{@packet_length}" }
 
         @server_sequence_number += 1
         @server_sequence_number = 0 if @server_sequence_number > 0xFFFFFFFF

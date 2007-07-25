@@ -1,6 +1,7 @@
 require 'socket'
 require 'timeout'
 
+require 'net/ssh/errors'
 require 'net/ssh/loggable'
 require 'net/ssh/version'
 require 'net/ssh/transport/algorithms'
@@ -62,14 +63,12 @@ module Net; module SSH; module Transport
         packet = socket.next_packet(mode)
         return nil if packet.nil?
 
-        trace { "got packet type #{packet.type} len #{packet.length}" }
-
         case packet.type
         when DISCONNECT
           reason_code = packet.read_long
           description = packet.read_string
           language = packet.read_string
-          raise Net::SSH::Transport::Disconnect, "disconnected: #{description} (#{reason_code})"
+          raise Net::SSH::Disconnect, "disconnected: #{description} (#{reason_code})"
 
         when IGNORE
           trace { "IGNORE packet recieved: #{packet.read_string.inspect}" }
@@ -91,8 +90,6 @@ module Net; module SSH; module Transport
     end
 
     def send_message(message)
-      message = message.to_s
-      trace { "sending packet type #{message[0]} len #{message.length}" }
       socket.send_packet(message)
     end
   end
