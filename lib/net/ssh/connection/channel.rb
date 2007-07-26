@@ -20,6 +20,7 @@ module Net; module SSH; module Connection
     attr_reader :remote_window_size
 
     attr_reader :output
+    attr_reader :properties
 
     def initialize(connection, type, local_id, &on_confirm_open)
       self.logger = connection.logger
@@ -35,8 +36,18 @@ module Net; module SSH; module Connection
 
       @output = Buffer.new
 
+      @properties = {}
+
       @on_data = @on_process = @on_close = nil
       @closing = false
+    end
+
+    def [](name)
+      @properties[name]
+    end
+
+    def []=(name, value)
+      @properties[name] = value
     end
 
     def exec(command, want_reply=false)
