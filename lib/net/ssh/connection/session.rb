@@ -38,13 +38,12 @@ module Net; module SSH; module Connection
       process while running.call
     end
 
-    def process
+    def process(wait=nil)
       dispatch_incoming_packets
       channels.each { |id, channel| channel.process }
 
       w = writers.select { |w| w.pending_write? }
-
-      ready_readers, ready_writers, errors = IO.select(readers, w)
+      ready_readers, ready_writers, errors = IO.select(readers, w, nil, wait)
 
       (ready_readers || []).each do |reader|
         if listeners[reader]
