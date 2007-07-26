@@ -56,6 +56,7 @@ module Net; module SSH; module Connection
           if reader.fill.zero?
             reader.close
             readers.delete(reader)
+            writers.delete(reader) # just in case it was a writer, too
           end
         end
       end
@@ -141,7 +142,7 @@ module Net; module SSH; module Connection
             failure = result
           else
             channels[local_id] = channel
-            msg = Buffer.from(:byte, CHANNEL_OPEN_CONFIRMATION, :long, channel.remote_id, :long, channel.local_id, :long, channel.window_size, :long, channel.packet_size)
+            msg = Buffer.from(:byte, CHANNEL_OPEN_CONFIRMATION, :long, channel.remote_id, :long, channel.local_id, :long, channel.local_maximum_window_size, :long, channel.local_maximum_packet_size)
           end
         else
           failure = [3, "unknown channel type #{channel.type}"]

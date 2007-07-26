@@ -35,7 +35,7 @@ module Net; module SSH; module Connection
 
       @output = Buffer.new
 
-      @on_data = @on_process = nil
+      @on_data = @on_process = @on_close = nil
       @closing = false
     end
 
@@ -88,6 +88,10 @@ module Net; module SSH; module Connection
       @on_process = block
     end
 
+    def on_close(&block)
+      @on_close = block
+    end
+
     def channel_request(request_name, data, want_reply=false)
       Buffer.from(:byte, CHANNEL_REQUEST,
         :long, remote_id, :string, request_name,
@@ -119,6 +123,7 @@ module Net; module SSH; module Connection
     end
 
     def do_close
+      @on_close.call(self) if @on_close
     end
 
     private
