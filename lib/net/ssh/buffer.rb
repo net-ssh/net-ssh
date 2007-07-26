@@ -83,10 +83,8 @@ module Net; module SSH
     # Reads +count+ bytes from the buffer. If +count+ is +nil+, this will
     # return all remaining text in the buffer. This method will increment
     # the pointer.
-    def read(count=nil)
-      count = length - @position unless count
-      return nil if @position + count > length
-
+    def read(count=length)
+      count = length - @position if @position + count > length
       @position += count
       @content[@position-count, count]
     end

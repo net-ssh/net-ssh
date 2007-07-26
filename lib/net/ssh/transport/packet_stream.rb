@@ -1,4 +1,4 @@
-require 'net/ssh/loggable'
+require 'net/ssh/buffered_io'
 require 'net/ssh/packet'
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'
@@ -6,7 +6,7 @@ require 'net/ssh/transport/hmac'
 module Net; module SSH; module Transport
 
   module PacketStream
-    include Net::SSH::Loggable
+    include BufferedIo
 
     def self.extended(object)
       object.__send__(:initialize_ssh)
@@ -20,8 +20,6 @@ module Net; module SSH; module Transport
 
     attr_accessor :server_hmac
     attr_accessor :client_hmac
-
-    attr_reader :input, :output
 
     def client_name
       @client_name ||= begin
@@ -68,39 +66,9 @@ module Net; module SSH; module Transport
       end
     end
 
-    def fill(n=8192)
-      input.consume!
-      data = recv(n)
-      raise Net::SSH::Transport::Disconnect, "connection closed by remote host" if data.nil?
-      trace { "read #{data.length} bytes" }
-      input.append(data)
-      return data.length
-    end
-
-    def pending_write?
-      output.length > 0
-    end
-
-    def send_queue
-      if pending_write?
-        sent = send(output.to_s, 0)
-        trace { "sent #{sent} bytes" }
-        output.consume!(sent)
-      end
-    end
-
-    def wait_for_queue
-      send_queue
-      while pending_write?
-        result = IO.select(nil, [self]) or next
-        next unless result[1].any?
-        send_queue
-      end
-    end
-
     def send_packet(payload)
       enqueue_packet(payload)
-      wait_for_queue
+      wait_for_pending_sends
     end
 
     def enqueue_packet(payload)
@@ -130,7 +98,7 @@ module Net; module SSH; module Transport
       message = encrypted_data + mac
 
       trace { "queueing packet nr #{@client_sequence_number} type #{payload[0]} len #{packet_length}" }
-      output.append(message)
+      enqueue(message)
 
       @client_sequence_number += 1
       @client_sequence_number = 0 if @client_sequence_number > 0xFFFFFFFF
@@ -144,14 +112,13 @@ module Net; module SSH; module Transport
         @server_sequence_number = @client_sequence_number = 0
         @server_cipher = @client_cipher = CipherFactory.get("none")
         @server_hmac = @client_hmac = HMAC.get("none")
-        @input = Net::SSH::Buffer.new
-        @output = Net::SSH::Buffer.new
+        initialize_buffered_io
       end
 
       def poll_next_packet
         if @packet.nil?
-          return nil if input.available < server_cipher.block_size
-          data = input.read(server_cipher.block_size)
+          return nil if available < server_cipher.block_size
+          data = read_available(server_cipher.block_size)
 
           # decipher it
           @packet = Net::SSH::Buffer.new(server_cipher.update(data))
@@ -161,17 +128,17 @@ module Net; module SSH; module Transport
         need = @packet_length + 4 - server_cipher.block_size
         raise Net::SSH::Exception, "padding error, need #{need} block #{server_cipher.block_size}" if need % server_cipher.block_size != 0
 
-        return nil if input.available < need + server_hmac.mac_length
+        return nil if available < need + server_hmac.mac_length
 
         if need > 0
           # read the remainder of the packet and decrypt it.
-          data = input.read(need)
+          data = read_available(need)
           @packet.append(server_cipher.update(data))
         end
 
         # get the hmac from the tail of the packet (if one exists), and
         # then validate it.
-        real_hmac = input.read(server_hmac.mac_length)
+        real_hmac = read_available(server_hmac.mac_length) || ""
 
         @packet.append(server_cipher.final)
         padding_length = @packet.read_byte

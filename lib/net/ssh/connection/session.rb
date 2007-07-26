@@ -14,6 +14,9 @@ module Net; module SSH; module Connection
 
     attr_reader :transport
     attr_reader :channels
+    attr_reader :listeners
+    attr_reader :readers
+    attr_reader :writers
 
     def initialize(transport, options={})
       self.logger = transport.logger
@@ -22,6 +25,9 @@ module Net; module SSH; module Connection
 
       @next_channel_id = 0
       @channels = {}
+      @listeners = {}
+      @readers = [transport.socket]
+      @writers = [transport.socket]
     end
 
     # preserve a reference to Kernel#loop
@@ -29,39 +35,40 @@ module Net; module SSH; module Connection
 
     def loop(&block)
       running = block || Proc.new { channels.any? { |id,ch| ch.important? } }
-
-      while running.call
-        process
-      end
+      process while running.call
     end
 
     def process
       dispatch_incoming_packets
+      channels.each { |id, channel| channel.process }
 
-      channels.each { |id, channel| channel.enqueue_pending_output }
+      w = writers.select { |w| w.pending_write? }
 
-      readers = [transport.socket]
-      writers = []
-      writers << transport.socket if transport.socket.pending_write?
+      ready_readers, ready_writers, errors = IO.select(readers, w)
 
-      readers, writers, errors = IO.select(readers, writers, nil, 0)
-
-      if readers
-        transport.socket.fill if readers.include?(transport.socket)
+      (ready_readers || []).each do |reader|
+        if listeners[reader]
+          client = reader.accept
+          trace { "received connection on listener #{reader.inspect}" }
+          listeners[reader].call(client)
+        else
+          # FIXME mark the reader closed so that the channel can close when it gets processed
+          readers.delete(reader) if reader.fill.zero?
+        end
       end
 
-      if writers
-        transport.socket.send_queue if writers.include?(transport.socket)
+      (ready_writers || []).each do |writer|
+        writer.send_pending
       end
     end
 
-    def open_channel(type, &on_confirm)
+    def open_channel(type, *extra, &on_confirm)
       local_id = @next_channel_id += 1
       channel = Channel.new(self, type, local_id, &on_confirm)
 
       msg = Buffer.from(:byte, CHANNEL_OPEN, :string, type, :long, local_id,
         :long, channel.local_maximum_window_size,
-        :long, channel.local_maximum_packet_size)
+        :long, channel.local_maximum_packet_size, *extra)
       send_message(msg)
 
       channels[local_id] = channel
@@ -69,6 +76,11 @@ module Net; module SSH; module Connection
 
     def send_message(message)
       transport.socket.enqueue_packet(message)
+    end
+
+    def listen_to(io, &callback)
+      readers << io
+      @listeners[io] = callback
     end
 
     private

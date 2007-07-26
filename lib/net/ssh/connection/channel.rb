@@ -20,6 +20,7 @@ module Net; module SSH; module Connection
     attr_reader :remote_window_size
 
     attr_reader :output
+    attr_reader :readers
 
     def initialize(connection, type, local_id, &on_confirm_open)
       self.logger = connection.logger
@@ -28,14 +29,15 @@ module Net; module SSH; module Connection
       @type       = type
       @local_id   = local_id
 
-      @local_maximum_packet_size = 0x0FFFF
-      @local_window_size = @local_maximum_window_size = 0x1FFFF
+      @local_maximum_packet_size = 0x10000
+      @local_window_size = @local_maximum_window_size = 0x20000
 
       @on_confirm_open = on_confirm_open
 
       @output = Buffer.new
 
-      @on_data = nil
+      @on_data = @on_process = nil
+      @readers = []
     end
 
     def exec(command, want_reply=false)
@@ -50,6 +52,11 @@ module Net; module SSH; module Connection
       true
     end
 
+    def process
+      @on_process.call(self) if @on_process
+      enqueue_pending_output
+    end
+  
     def enqueue_pending_output
       return unless remote_id
 
@@ -66,6 +73,10 @@ module Net; module SSH; module Connection
 
     def on_data(&block)
       @on_data = block
+    end
+
+    def on_process(&block)
+      @on_process = block
     end
 
     def channel_request(request_name, data, want_reply=false)
@@ -92,7 +103,7 @@ module Net; module SSH; module Connection
 
     def do_data(data)
       update_local_window_size(data.length)
-      @on_data.call(data) if @on_data
+      @on_data.call(self, data) if @on_data
     end
 
     def do_eof
