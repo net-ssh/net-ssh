@@ -1,3 +1,4 @@
+require 'net/ssh/buffer'
 require 'net/ssh/loggable'
 
 module Net; module SSH
@@ -14,7 +15,6 @@ module Net; module SSH
     def fill(n=8192)
       input.consume!
       data = recv(n)
-      raise Net::SSH::Transport::Disconnect, "connection closed by remote host" if data.nil?
       trace { "read #{data.length} bytes" }
       input.append(data)
       return data.length

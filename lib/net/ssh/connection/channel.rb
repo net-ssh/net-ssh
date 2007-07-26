@@ -20,7 +20,6 @@ module Net; module SSH; module Connection
     attr_reader :remote_window_size
 
     attr_reader :output
-    attr_reader :readers
 
     def initialize(connection, type, local_id, &on_confirm_open)
       self.logger = connection.logger
@@ -37,7 +36,7 @@ module Net; module SSH; module Connection
       @output = Buffer.new
 
       @on_data = @on_process = nil
-      @readers = []
+      @closing = false
     end
 
     def exec(command, want_reply=false)
@@ -46,6 +45,16 @@ module Net; module SSH; module Connection
 
     def send_data(data)
       output.append(data)
+    end
+
+    def closing?
+      @closing
+    end
+
+    def close
+      return if @closing
+      @closing = true
+      connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
     end
 
     def important?

@@ -15,19 +15,23 @@ module Net; module SSH; module Connection
     attr_reader :transport
     attr_reader :channels
     attr_reader :listeners
+    attr_reader :pending_requests
     attr_reader :readers
     attr_reader :writers
+    attr_reader :channel_open_handler
 
     def initialize(transport, options={})
       self.logger = transport.logger
 
       @transport = transport
 
-      @next_channel_id = 0
+      @channel_id_counter = -1
       @channels = {}
       @listeners = {}
+      @pending_requests = []
       @readers = [transport.socket]
       @writers = [transport.socket]
+      @channel_open_handler = {}
     end
 
     # preserve a reference to Kernel#loop
@@ -40,7 +44,7 @@ module Net; module SSH; module Connection
 
     def process(wait=nil)
       dispatch_incoming_packets
-      channels.each { |id, channel| channel.process }
+      channels.each { |id, channel| channel.process unless channel.closing? }
 
       w = writers.select { |w| w.pending_write? }
       ready_readers, ready_writers, errors = IO.select(readers, w, nil, wait)
@@ -49,8 +53,10 @@ module Net; module SSH; module Connection
         if listeners[reader]
           listeners[reader].call(reader)
         else
-          # FIXME mark the reader closed so that the channel can close when it gets processed
-          readers.delete(reader) if reader.fill.zero?
+          if reader.fill.zero?
+            reader.close
+            readers.delete(reader)
+          end
         end
       end
 
@@ -59,8 +65,16 @@ module Net; module SSH; module Connection
       end
     end
 
+    def global_request(type, *extra, &callback)
+      trace { "sending global request #{type}" }
+      msg = Buffer.from(:byte, GLOBAL_REQUEST, :string, type.to_s, :bool, !callback.nil?, *extra)
+      send_message(msg)
+      pending_requests << callback if callback
+      self
+    end
+
     def open_channel(type, *extra, &on_confirm)
-      local_id = @next_channel_id += 1
+      local_id = get_next_channel_id
       channel = Channel.new(self, type, local_id, &on_confirm)
 
       msg = Buffer.from(:byte, CHANNEL_OPEN, :string, type, :long, local_id,
@@ -80,6 +94,10 @@ module Net; module SSH; module Connection
       @listeners[io] = callback
     end
 
+    def on_open_channel(type, &block)
+      channel_open_handler[type] = block
+    end
+
     private
 
       def dispatch_incoming_packets
@@ -90,6 +108,51 @@ module Net; module SSH; module Connection
 
           send(MAP[packet.type], packet)
         end
+      end
+
+      def get_next_channel_id
+        @channel_id_counter += 1
+      end
+
+      def request_success(packet)
+        trace { "global request success" }
+        callback = pending_requests.shift
+        callback.call(true, packet) if callback
+      end
+
+      def request_failure(packet)
+        trace { "global request failure" }
+        callback = pending_requests.shift
+        callback.call(false, packet) if callback
+      end
+
+      def channel_open(packet)
+        trace { "channel open #{packet[:channel_type]}" }
+
+        local_id = get_next_channel_id
+        channel = Channel.new(self, packet[:channel_type], local_id)
+        channel.do_open_confirmation(packet[:remote_id], packet[:window_size], packet[:packet_size])
+
+        callback = channel_open_handler[packet[:channel_type]]
+
+        if callback
+          result = callback[self, channel, packet]
+          if Array === result && result.length == 2
+            failure = result
+          else
+            channels[local_id] = channel
+            msg = Buffer.from(:byte, CHANNEL_OPEN_CONFIRMATION, :long, channel.remote_id, :long, channel.local_id, :long, channel.window_size, :long, channel.packet_size)
+          end
+        else
+          failure = [3, "unknown channel type #{channel.type}"]
+        end
+
+        if failure
+          error { failure.inspect }
+          msg = Buffer.from(:byte, CHANNEL_OPEN_FAILURE, :long, channel.remote_id, :long, failure[0], :string, failure[1], :string, "")
+        end
+
+        send_message(msg)
       end
 
       def channel_open_confirmation(packet)
@@ -121,7 +184,7 @@ module Net; module SSH; module Connection
         trace { "channel_close: #{packet[:local_id]}" }
 
         channel = channels[packet[:local_id]]
-        send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, channel.remote_id))
+        channel.close
 
         channels.delete(packet[:local_id])
         channel.do_close

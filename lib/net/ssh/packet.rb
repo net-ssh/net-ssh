@@ -15,6 +15,7 @@ module Net; module SSH
     register Authentication::Constants::USERAUTH_BANNER, [:message, :string], [:language, :string]
     register Authentication::Constants::USERAUTH_FAILURE, [:authentications, :string], [:partial_success, :bool]
 
+    register Connection::Constants::CHANNEL_OPEN, [:channel_type, :string], [:remote_id, :long], [:window_size, :long], [:packet_size, :long]
     register Connection::Constants::CHANNEL_OPEN_CONFIRMATION, [:local_id, :long], [:remote_id, :long], [:window_size, :long], [:packet_size, :long]
     register Connection::Constants::CHANNEL_WINDOW_ADJUST, [:local_id, :long], [:extra_bytes, :long]
     register Connection::Constants::CHANNEL_DATA, [:local_id, :long], [:data, :string]
