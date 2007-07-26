@@ -47,9 +47,7 @@ module Net; module SSH; module Connection
 
       (ready_readers || []).each do |reader|
         if listeners[reader]
-          client = reader.accept
-          trace { "received connection on listener #{reader.inspect}" }
-          listeners[reader].call(client)
+          listeners[reader].call(reader)
         else
           # FIXME mark the reader closed so that the channel can close when it gets processed
           readers.delete(reader) if reader.fill.zero?
