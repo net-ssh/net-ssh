@@ -67,11 +67,11 @@ module Net; module SSH; module Service
       channel.send_channel_request("auth-agent-req@openssh.com") do |channel, success|
         if success
           @auth_agent = Authentication::Agent.new(logger)
-          log { "authentication agent forwarding is active" }
+          debug { "authentication agent forwarding is active" }
         else
           channel.send_channel_request("auth-agent-req") do |channel, success|
             if success
-              log { "authentication agent forwarding is active" }
+              debug { "authentication agent forwarding is active" }
             else
               error { "could not establish forwarding of authentication agent" }
             end

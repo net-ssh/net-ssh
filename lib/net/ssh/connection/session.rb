@@ -9,7 +9,9 @@ module Net; module SSH; module Connection
     include Constants, Loggable
 
     MAP = Constants.constants.inject({}) do |memo, name|
-      memo[const_get(name)] = name.downcase.to_sym
+      value = const_get(name)
+      next unless Integer === value
+      memo[value] = name.downcase.to_sym
       memo
     end
 

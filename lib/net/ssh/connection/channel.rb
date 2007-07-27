@@ -1,5 +1,6 @@
 require 'net/ssh/loggable'
 require 'net/ssh/connection/constants'
+require 'net/ssh/connection/term'
 
 module Net; module SSH; module Connection
 
@@ -54,7 +55,33 @@ module Net; module SSH; module Connection
     end
 
     def exec(command, &block)
-      send_channel_request("exec", command, &block)
+      send_channel_request("exec", :string, command, &block)
+    end
+
+    VALID_PTY_OPTIONS = { :term=>"xterm",
+                          :chars_wide=>80,
+                          :chars_high=>24,
+                          :pixels_wide=>640,
+                          :pixels_high=>480,
+                          :modes=>{} }
+
+    def request_pty(opts={}, &block)
+      extra = opts.keys - VALID_PTY_OPTIONS.keys
+      raise ArgumentError, "invalid option(s) to request_pty: #{invalid_opts.inspect}" if extra.any?
+
+      opts = VALID_PTY_OPTIONS.merge(opts)
+
+      modes = opts[:modes].inject([]) do |memo, (mode, data)|
+        memo << :byte << mode
+        memo << :long << data
+      end
+      modes << :byte << Term::TTY_OP_END
+      modes = Buffer.from(*modes).to_s
+
+      send_channel_request("pty-req", :string, opts[:term],
+        :long, opts[:chars_wide], :long, opts[:chars_high],
+        :long, opts[:pixels_wide], :long, opts[:pixels_high],
+        :string, modes, &block)
     end
 
     def send_data(data)
@@ -99,11 +126,10 @@ module Net; module SSH; module Connection
       CODE
     end
 
-    def send_channel_request(request_name, data=nil, &callback)
+    def send_channel_request(request_name, *data, &callback)
       msg = Buffer.from(:byte, CHANNEL_REQUEST,
         :long, remote_id, :string, request_name,
-        :bool, !callback.nil?)
-      msg.write_string(data) if data
+        :bool, !callback.nil?, *data)
       connection.send_message(msg)
       pending_requests << callback if callback
     end
