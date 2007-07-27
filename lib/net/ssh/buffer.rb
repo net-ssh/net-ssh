@@ -77,7 +77,7 @@ module Net; module SSH
     # Returns all text from the current pointer to the end of the buffer as
     # a new buffer as the same class as the receiver.
     def remainder_as_buffer
-      self.class.new(@content[@position..-1])
+      Buffer.new(@content[@position..-1])
     end
 
     # Reads +count+ bytes from the buffer. If +count+ is +nil+, this will

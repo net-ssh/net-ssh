@@ -117,7 +117,7 @@ module Net; module SSH; module Connection
       end
     end
 
-    %w(data process close eof request).each do |callback|
+    %w(data extended_data process close eof request).each do |callback|
       class_eval(<<-CODE, __FILE__, __LINE__+1)
         def on_#{callback}(&block)
           old, @on_#{callback} = @on_#{callback}, block
