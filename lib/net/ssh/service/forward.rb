@@ -13,8 +13,11 @@ module Net; module SSH; module Service
       @session = session
       self.logger = session.logger
       @remote_forwarded_ports = {}
+      @agent_forwarded = false
 
       session.on_open_channel('forwarded-tcpip', &method(:forwarded_tcpip))
+      session.on_open_channel('auth-agent', &method(:auth_agent_channel))
+      session.on_open_channel('auth-agent@openssh.com', &method(:auth_agent_channel))
     end
 
     def local(*args)
@@ -57,6 +60,26 @@ module Net; module SSH; module Service
     # an alias, for backwards compatibility with the 1.x API
     alias :remote_to :remote
 
+    def agent(channel)
+      return if @agent_forwarded
+      @agent_forwarded = true
+
+      channel.send_channel_request("auth-agent-req@openssh.com") do |channel, success|
+        if success
+          @auth_agent = Authentication::Agent.new(logger)
+          log { "authentication agent forwarding is active" }
+        else
+          channel.send_channel_request("auth-agent-req") do |channel, success|
+            if success
+              log { "authentication agent forwarding is active" }
+            else
+              error { "could not establish forwarding of authentication agent" }
+            end
+          end
+        end
+      end
+    end
+
     private
 
       def prepare_client(client, channel, type)
@@ -73,6 +96,7 @@ module Net; module SSH; module Service
         end
 
         channel.on_close do |ch|
+          trace { "closing #{type} forwarded channel" }
           ch[:socket].close if !client.closed?
           session.readers.delete(ch[:socket])
           session.writers.delete(ch[:socket])
@@ -107,6 +131,12 @@ module Net; module SSH; module Service
 
         client = TCPSocket.new(remote.host, remote.port)
         prepare_client(client, channel, :remote)
+      end
+
+      def auth_agent_channel(session, channel, packet)
+        trace { "opening auth-agent channel" }
+        channel[:invisible] = true
+        prepare_client(@auth_agent.socket, channel, :agent)
       end
   end
 

@@ -37,16 +37,16 @@ module Net; module SSH; module Connection
 
     def close
       channels.each { |id, channel| channel.close }
-      loop { channels.any? }
+      loop(0) { channels.any? }
       transport.close
     end
 
     # preserve a reference to Kernel#loop
     alias :loop_forever :loop
 
-    def loop(&block)
-      running = block || Proc.new { channels.any? { |id,ch| ch.important? } }
-      process while running.call
+    def loop(wait=nil, &block)
+      running = block || Proc.new { channels.any? { |id,ch| !ch[:invisible] } }
+      process(wait) while running.call
     end
 
     def process(wait=nil)
@@ -81,7 +81,7 @@ module Net; module SSH; module Connection
       self
     end
 
-    def open_channel(type, *extra, &on_confirm)
+    def open_channel(type="session", *extra, &on_confirm)
       local_id = get_next_channel_id
       channel = Channel.new(self, type, local_id, &on_confirm)
 
@@ -169,7 +169,8 @@ module Net; module SSH; module Connection
 
       def channel_open_confirmation(packet)
         trace { "channel_open_confirmation: #{packet[:local_id]} #{packet[:remote_id]} #{packet[:window_size]} #{packet[:packet_size]}" }
-        channels[packet[:local_id]].do_open_confirmation(packet[:remote_id], packet[:window_size], packet[:packet_size])
+        channel = channels[packet[:local_id]]
+        channel.do_open_confirmation(packet[:remote_id], packet[:window_size], packet[:packet_size])
       end
 
       def channel_window_adjust(packet)
@@ -187,6 +188,11 @@ module Net; module SSH; module Connection
         channels[packet[:local_id]].do_data(packet[:data])
       end
 
+      def channel_extended_data(packet)
+        trace { "channel_extended_data: #{packet[:local_id]} #{packet[:data_type]} #{packet[:data].length}b" }
+        channels[packet[:local_id]].do_extended_data(packet[:data_type], packet[:data])
+      end
+
       def channel_eof(packet)
         trace { "channel_eof: #{packet[:local_id]}" }
         channels[packet[:local_id]].do_eof
@@ -200,6 +206,16 @@ module Net; module SSH; module Connection
 
         channels.delete(packet[:local_id])
         channel.do_close
+      end
+
+      def channel_success(packet)
+        trace { "channel_success: #{packet[:local_id]}" }
+        channels[packet[:local_id]].do_success
+      end
+
+      def channel_failure(packet)
+        trace { "channel_failure: #{packet[:local_id]}" }
+        channels[packet[:local_id]].do_failure
       end
   end
 

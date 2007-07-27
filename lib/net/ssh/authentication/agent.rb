@@ -37,6 +37,8 @@ module Net; module SSH; module Authentication
     SSH_AGENT_RSA_IDENTITIES_ANSWER  = 2
     SSH_AGENT_FAILURE                = 5
 
+    attr_reader :socket
+
     def initialize(logger=nil)
       self.logger = logger
       connect!
@@ -145,16 +147,6 @@ module Net; module SSH; module Authentication
       type == SSH_COM_AGENT2_FAILURE
     end
     private :agent_failed
-
-    def send_raw_packet(data)
-      @socket.send data, 0
-    end
-    
-    def read_raw_packet
-      buffer = @socket.read(4)
-      length = buffer.unpack("N").first
-      buffer << @socket.read(length)
-    end
 
   end
 

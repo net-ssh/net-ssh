@@ -19,9 +19,12 @@ module Net; module SSH
     register Connection::Constants::CHANNEL_OPEN_CONFIRMATION, [:local_id, :long], [:remote_id, :long], [:window_size, :long], [:packet_size, :long]
     register Connection::Constants::CHANNEL_WINDOW_ADJUST, [:local_id, :long], [:extra_bytes, :long]
     register Connection::Constants::CHANNEL_DATA, [:local_id, :long], [:data, :string]
+    register Connection::Constants::CHANNEL_EXTENDED_DATA, [:local_id, :long], [:data_type, :long], [:data, :string]
     register Connection::Constants::CHANNEL_EOF, [:local_id, :long]
     register Connection::Constants::CHANNEL_CLOSE, [:local_id, :long]
     register Connection::Constants::CHANNEL_REQUEST, [:local_id, :long], [:request, :string], [:want_reply, :bool], [:request_data, :buffer]
+    register Connection::Constants::CHANNEL_SUCCESS, [:local_id, :long]
+    register Connection::Constants::CHANNEL_FAILURE, [:local_id, :long]
 
     def initialize(payload)
       @instantiated = false

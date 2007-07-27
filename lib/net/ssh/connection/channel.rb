@@ -22,6 +22,8 @@ module Net; module SSH; module Connection
     attr_reader :output
     attr_reader :properties
 
+    attr_reader :pending_requests
+
     def initialize(connection, type, local_id, &on_confirm_open)
       self.logger = connection.logger
 
@@ -38,7 +40,8 @@ module Net; module SSH; module Connection
 
       @properties = {}
 
-      @on_data = @on_process = @on_close = nil
+      @pending_requests = []
+      @on_data = @on_process = @on_close = @on_eof = nil
       @closing = false
     end
 
@@ -50,8 +53,8 @@ module Net; module SSH; module Connection
       @properties[name] = value
     end
 
-    def exec(command, want_reply=false)
-      connection.send_message(channel_request("exec", command, want_reply))
+    def exec(command, &block)
+      send_channel_request("exec", command, &block)
     end
 
     def send_data(data)
@@ -66,10 +69,6 @@ module Net; module SSH; module Connection
       return if @closing
       @closing = true
       connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
-    end
-
-    def important?
-      true
     end
 
     def process
@@ -91,28 +90,30 @@ module Net; module SSH; module Connection
       end
     end
 
-    def on_data(&block)
-      @on_data = block
+    %w(data process close eof request).each do |callback|
+      class_eval(<<-CODE, __FILE__, __LINE__+1)
+        def on_#{callback}(&block)
+          old, @on_#{callback} = @on_#{callback}, block
+          old
+        end
+      CODE
     end
 
-    def on_process(&block)
-      @on_process = block
-    end
-
-    def on_close(&block)
-      @on_close = block
-    end
-
-    def channel_request(request_name, data, want_reply=false)
-      Buffer.from(:byte, CHANNEL_REQUEST,
+    def send_channel_request(request_name, data=nil, &callback)
+      msg = Buffer.from(:byte, CHANNEL_REQUEST,
         :long, remote_id, :string, request_name,
-        :bool, want_reply, :string, data)
+        :bool, !callback.nil?)
+      msg.write_string(data) if data
+      connection.send_message(msg)
+      pending_requests << callback if callback
     end
 
     def do_open_confirmation(remote_id, max_window, max_packet)
       @remote_id = remote_id
       @remote_window_size = @remote_maximum_window_size = max_window
       @remote_maximum_packet_size = max_packet
+      # FIXME only request agent forwarding if it has been requested by the user
+      connection.forward.agent(self) if type == "session"
       @on_confirm_open.call(self) if @on_confirm_open
     end
 
@@ -122,7 +123,7 @@ module Net; module SSH; module Connection
     end
 
     def do_request(request, want_reply, data)
-      # ...
+      @on_request.call(self, request, want_reply, data) if @on_request
     end
 
     def do_data(data)
@@ -130,11 +131,34 @@ module Net; module SSH; module Connection
       @on_data.call(self, data) if @on_data
     end
 
+    def do_extended_data(type, data)
+      # FIXME does the window size need to include the 'type' byte?
+      update_local_window_size(data.length)
+      @on_extended_data.call(self, data) if @on_extended_data
+    end
+
     def do_eof
+      @on_eof.call(self) if @on_eof
     end
 
     def do_close
       @on_close.call(self) if @on_close
+    end
+
+    def do_failure
+      if callback = pending_requests.shift
+        callback.call(self, false)
+      else
+        error { "channel failure recieved with no pending request to handle it (bug?)" }
+      end
+    end
+
+    def do_success
+      if callback = pending_requests.shift
+        callback.call(self, true)
+      else
+        error { "channel success recieved with no pending request to handle it (bug?)" }
+      end
     end
 
     private

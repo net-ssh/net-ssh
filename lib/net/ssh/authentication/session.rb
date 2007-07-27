@@ -49,6 +49,8 @@ module Net; module SSH; module Authentication
 
       error { "all authorization methods failed (tried #{attempted.join(', ')})" }
       return false
+    ensure
+      key_manager.finish if key_manager
     end
 
     def next_message
