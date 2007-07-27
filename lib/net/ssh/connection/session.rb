@@ -34,6 +34,12 @@ module Net; module SSH; module Connection
       @channel_open_handler = {}
     end
 
+    def close
+      channels.each { |id, channel| channel.close }
+      loop { channels.any? }
+      transport.close
+    end
+
     # preserve a reference to Kernel#loop
     alias :loop_forever :loop
 
