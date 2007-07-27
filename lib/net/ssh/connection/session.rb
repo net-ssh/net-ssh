@@ -1,6 +1,7 @@
 require 'net/ssh/loggable'
 require 'net/ssh/connection/channel'
 require 'net/ssh/connection/constants'
+require 'net/ssh/service/forward'
 
 module Net; module SSH; module Connection
 
@@ -99,6 +100,10 @@ module Net; module SSH; module Connection
     def listen_to(io, &callback)
       readers << io
       @listeners[io] = callback
+    end
+
+    def forward
+      @forward ||= Service::Forward.new(self)
     end
 
     def on_open_channel(type, &block)
