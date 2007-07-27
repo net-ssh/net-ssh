@@ -36,6 +36,7 @@ module Net; module SSH; module Connection
     end
 
     def close
+      debug { "closing remaining channels (#{channels.length} open)" }
       channels.each { |id, channel| channel.close }
       loop(0) { channels.any? }
       transport.close
