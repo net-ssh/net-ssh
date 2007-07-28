@@ -42,7 +42,8 @@ module Net; module SSH; module Connection
       @properties = {}
 
       @pending_requests = []
-      @on_data = @on_process = @on_close = @on_eof = nil
+      @on_data = @on_extended_data = @on_process = @on_close = @on_eof = nil
+      @on_request = {}
       @closing = false
     end
 
@@ -117,13 +118,18 @@ module Net; module SSH; module Connection
       end
     end
 
-    %w(data extended_data process close eof request).each do |callback|
+    %w(data extended_data process close eof).each do |callback|
       class_eval(<<-CODE, __FILE__, __LINE__+1)
         def on_#{callback}(&block)
           old, @on_#{callback} = @on_#{callback}, block
           old
         end
       CODE
+    end
+
+    def on_request(type, &block)
+      old, @on_request[type] = @on_request[type], block
+      old
     end
 
     def send_channel_request(request_name, *data, &callback)
@@ -149,7 +155,17 @@ module Net; module SSH; module Connection
     end
 
     def do_request(request, want_reply, data)
-      @on_request.call(self, request, want_reply, data) if @on_request
+      callback = @on_request[request]
+      result = callback ? callback.call(self, data) : false
+
+      if result != true && result != false
+        raise "expected request callback to return either true or false"
+      end
+
+      if want_reply
+        msg = Buffer.from(:byte, result ? CHANNEL_SUCCESS : CHANNEL_FAILURE, remote_id)
+        connection.send_message(msg)
+      end
     end
 
     def do_data(data)

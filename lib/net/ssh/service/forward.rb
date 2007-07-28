@@ -45,7 +45,7 @@ module Net; module SSH; module Service
     end
 
     def remote(port, host, remote_port, remote_host="127.0.0.1")
-      session.global_request("tcpip-forward", :string, remote_host, :long, remote_port) do |success, response|
+      session.send_global_request("tcpip-forward", :string, remote_host, :long, remote_port) do |success, response|
         if success
           debug { "remote forward from remote #{remote_host}:#{remote_port} to #{host}:#{port} established" }
           key = "#{remote_host}:#{remote_port}"

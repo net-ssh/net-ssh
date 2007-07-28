@@ -35,6 +35,7 @@ module Net; module SSH; module Connection
       @readers = [transport.socket]
       @writers = [transport.socket]
       @channel_open_handler = {}
+      @on_global_request = {}
     end
 
     def close
@@ -82,7 +83,7 @@ module Net; module SSH; module Connection
       return true
     end
 
-    def global_request(type, *extra, &callback)
+    def send_global_request(type, *extra, &callback)
       trace { "sending global request #{type}" }
       msg = Buffer.from(:byte, GLOBAL_REQUEST, :string, type.to_s, :bool, !callback.nil?, *extra)
       send_message(msg)
@@ -119,6 +120,11 @@ module Net; module SSH; module Connection
       channel_open_handler[type] = block
     end
 
+    def on_global_request(type, &block)
+      old, @on_global_request[type] = @on_global_request[type], block
+      old
+    end
+
     private
 
       def dispatch_incoming_packets
@@ -133,6 +139,21 @@ module Net; module SSH; module Connection
 
       def get_next_channel_id
         @channel_id_counter += 1
+      end
+
+      def global_request(packet)
+        trace { "global request received: #{packet[:request_type]} #{packet[:want_reply]}" }
+        callback = @on_global_request[packet[:request_type]]
+        result = callback ? callback.call(packet[:request_data], packet[:want_reply]) : false
+
+        if result != :sent && result != true && result != false
+          raise "expected global request handler for #{packet[:request_type]} to return true or false"
+        end
+
+        if packet[:want_reply] && result != :sent
+          msg = Buffer.from(:byte, result ? REQUEST_SUCCESS : REQUEST_FAILURE)
+          send_message(msg)
+        end
       end
 
       def request_success(packet)
