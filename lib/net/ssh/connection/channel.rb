@@ -160,7 +160,7 @@ module Net; module SSH; module Connection
     def do_extended_data(type, data)
       # FIXME does the window size need to include the 'type' byte?
       update_local_window_size(data.length)
-      @on_extended_data.call(self, data) if @on_extended_data
+      @on_extended_data.call(self, type, data) if @on_extended_data
     end
 
     def do_eof

@@ -51,6 +51,10 @@ module Net; module SSH
       to_s == buffer.to_s
     end
 
+    def empty?
+      @content.empty?
+    end
+
     # Resets the buffer, making it empty.
     def clear!
       @content = ""

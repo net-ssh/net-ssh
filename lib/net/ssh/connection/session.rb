@@ -49,12 +49,16 @@ module Net; module SSH; module Connection
 
     def loop(wait=nil, &block)
       running = block || Proc.new { channels.any? { |id,ch| !ch[:invisible] } }
-      process(wait) while running.call
+      loop_forever { break unless process(wait, &running) }
     end
 
     def process(wait=nil)
+      return false if block_given? && !yield
+
       dispatch_incoming_packets
       channels.each { |id, channel| channel.process unless channel.closing? }
+
+      return false if block_given? && !yield
 
       w = writers.select { |w| w.pending_write? }
       ready_readers, ready_writers, errors = IO.select(readers, w, nil, wait)
@@ -74,6 +78,8 @@ module Net; module SSH; module Connection
       (ready_writers || []).each do |writer|
         writer.send_pending
       end
+
+      return true
     end
 
     def global_request(type, *extra, &callback)
