@@ -64,7 +64,10 @@ module Net; module SSH
     # Consume's n bytes from the buffer, where n is the current position
     # unless otherwise specified.
     def consume!(n=position)
-      if n > 0
+      if n >= length
+        # optimize for a fairly common case
+        clear!
+      elsif n > 0
         @content = @content[n..-1] || ""
         @position -= n
         @position = 0 if @position < 0
@@ -84,6 +87,20 @@ module Net; module SSH
       Buffer.new(@content[@position..-1])
     end
 
+    # Reads all data up to and including the given pattern, which may be a
+    # String, Fixnum, or Regexp and is interpreted exactly as String#index
+    # does. Returns nil if nothing matches. Increments the position to point
+    # immediately after the pattern, if it does match.
+    def read_to(pattern)
+      index = @content.index(pattern, @position) or return nil
+      length = case pattern
+        when String then pattern.length
+        when Fixnum then 1
+        when Regexp then $&.length
+      end
+      index && read(index+length)
+    end
+
     # Reads +count+ bytes from the buffer. If +count+ is +nil+, this will
     # return all remaining text in the buffer. This method will increment
     # the pointer.
@@ -93,6 +110,13 @@ module Net; module SSH
       @content[@position-count, count]
     end
 
+    # reads and consumes the given number of bytes from the buffer.
+    def read!(count=length)
+      data = read(count)
+      consume!
+      data
+    end
+      
     # Return the next 8 bytes as a 64-bit integer (in network byte order).
     def read_int64
       hi = read_long

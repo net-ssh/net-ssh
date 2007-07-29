@@ -95,8 +95,10 @@ module Net; module SSH; module Connection
 
     def close
       return if @closing
-      @closing = true
-      connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
+      if remote_id
+        @closing = true
+        connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
+      end
     end
 
     def process
@@ -163,7 +165,7 @@ module Net; module SSH; module Connection
       end
 
       if want_reply
-        msg = Buffer.from(:byte, result ? CHANNEL_SUCCESS : CHANNEL_FAILURE, remote_id)
+        msg = Buffer.from(:byte, result ? CHANNEL_SUCCESS : CHANNEL_FAILURE, :long, remote_id)
         connection.send_message(msg)
       end
     end
