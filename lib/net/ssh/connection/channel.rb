@@ -59,6 +59,10 @@ module Net; module SSH; module Connection
       send_channel_request("exec", :string, command, &block)
     end
 
+    def subsystem(subsystem, &block)
+      send_channel_request("subsystem", :string, subsystem, &block)
+    end
+
     VALID_PTY_OPTIONS = { :term=>"xterm",
                           :chars_wide=>80,
                           :chars_high=>24,
@@ -109,14 +113,18 @@ module Net; module SSH; module Connection
     def enqueue_pending_output
       return unless remote_id
 
-      length = output.length
-      length = remote_window_size if length > remote_window_size
-      length = remote_maximum_packet_size if length > remote_maximum_packet_size
+      while output.length > 0
+        length = output.length
+        length = remote_window_size if length > remote_window_size
+        length = remote_maximum_packet_size if length > remote_maximum_packet_size
 
-      if length > 0
-        connection.send_message(Buffer.from(:byte, CHANNEL_DATA, :long, remote_id, :string, output.read(length)))
-        output.consume!
-        @remote_window_size -= length
+        if length > 0
+          connection.send_message(Buffer.from(:byte, CHANNEL_DATA, :long, remote_id, :string, output.read(length)))
+          output.consume!
+          @remote_window_size -= length
+        else
+          break
+        end
       end
     end
 
