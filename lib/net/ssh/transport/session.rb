@@ -37,10 +37,14 @@ module Net; module SSH; module Transport
       @socket.extend(PacketStream)
       @socket.logger = @logger
 
+      @queue = []
+
       @host_key_verifier = select_host_key_verifier(options[:paranoid])
 
       @server_version = ServerVersion.new(socket, logger)
-      @algorithms = Algorithms.negotiate_via(self)
+
+      @algorithms = Algorithms.new(self)
+      wait { algorithms.initialized? }
     end
 
     def host_as_string
@@ -62,6 +66,11 @@ module Net; module SSH; module Transport
       msg
     end
 
+    def rekey!
+      algorithms.rekey!
+      wait { algorithms.initialized? }
+    end
+
     def peer
       @peer ||= begin
         addr = @socket.getpeername
@@ -74,35 +83,48 @@ module Net; module SSH; module Transport
       poll_message(:block)
     end
 
-    def poll_message(mode=:nonblock)
+    def poll_message(mode=:nonblock, consume_queue=true)
       loop do
+        if consume_queue && @queue.any? && algorithms.allow?(@queue.first)
+          return @queue.shift
+        end
+
         packet = socket.next_packet(mode)
         return nil if packet.nil?
 
         case packet.type
         when DISCONNECT
-          reason_code = packet.read_long
-          description = packet.read_string
-          language = packet.read_string
-          raise Net::SSH::Disconnect, "disconnected: #{description} (#{reason_code})"
+          raise Net::SSH::Disconnect, "disconnected: #{packet[:description]} (#{packet[:reason_code]})"
 
         when IGNORE
-          trace { "IGNORE packet recieved: #{packet.read_string.inspect}" }
-
-        when DEBUG
-          always_display = packet.read_bool
-          message = packet.read_string
-          language = packet.read_string
-          send(always_display ? :log : :debug) { message }
+          trace { "IGNORE packet recieved: #{packet[:data].inspect}" }
 
         when UNIMPLEMENTED
-          number = packet.read_long
-          log { "UNIMPLEMENTED: #{number}" }
+          log { "UNIMPLEMENTED: #{packet[:number]}" }
+
+        when DEBUG
+          send(packet[:always_display] ? :log : :debug) { packet[:message] }
+
+        when KEXINIT
+          algorithms.accept_kexinit(packet)
 
         else
-          return packet
+          return packet if algorithms.allow?(packet)
+          push(packet)
         end
       end
+    end
+
+    def wait
+      loop do
+        message = poll_message(:nonblock, false)
+        push(message) if message
+        break if !block_given? || yield
+      end
+    end
+
+    def push(packet)
+      @queue.push(packet)
     end
 
     def send_message(message)

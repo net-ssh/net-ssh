@@ -41,9 +41,15 @@ module Net; module SSH; module Transport
       end
     end
 
+    def available_for_read?
+      result = IO.select([self], nil, nil, 0)
+      result && result.first.any?
+    end
+
     def next_packet(mode=:nonblock)
       case mode
       when :nonblock then
+        fill if available_for_read?
         poll_next_packet
 
       when :block then

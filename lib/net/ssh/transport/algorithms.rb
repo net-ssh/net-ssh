@@ -25,39 +25,73 @@ module Net; module SSH; module Transport
 
     attr_reader :session_id
 
-    def self.negotiate_via(session)
-      new(session).renegotiate!
+    # Returns true if the given packet can be processed during a key-exchange
+    def self.allowed_packet?(packet)
+      ( 1.. 4).include?(packet.type) ||
+      ( 6..19).include?(packet.type) ||
+      (21..49).include?(packet.type)
     end
 
     def initialize(session)
       @session = session
       @logger = session.logger
       @algorithms = {}
+      @pending = @initialized = false
+      @client_packet = @server_packet = nil
       prepare_preferred_algorithms!
     end
 
-    def renegotiate!
-      trace { "negotiating algorithms" }
-      server_data = parse_server_algorithm_packet
-      client_data = build_client_algorithm_packet
+    def rekey!
+      @client_packet = @server_packet = nil
+      @initialized = false
+      send_kexinit
+    end
 
-      session.send_message(client_data)
-
-      @server_packet = server_data[:raw]
-      @client_packet = client_data.to_s
-
-      negotiate_algorithms_from(server_data)
-
-      exchange_keys
-
-      self
+    def accept_kexinit(packet)
+      trace { "got KEXINIT from server" }
+      @server_data = parse_server_algorithm_packet(packet)
+      @server_packet = @server_data[:raw]
+      if !pending?
+        send_kexinit
+      else
+        @pending = true
+        proceed!
+      end
     end
 
     def [](key)
       @algorithms[key]
     end
 
+    def pending?
+      @pending
+    end
+
+    def allow?(packet)
+      !pending? || Algorithms.allowed_packet?(packet)
+    end
+
+    def initialized?
+      @initialized
+    end
+
     private
+
+      def send_kexinit
+        trace { "sending KEXINIT" }
+        @pending = true
+        packet = build_client_algorithm_packet
+        @client_packet = packet.to_s
+        session.send_message(packet)
+        proceed! if @server_packet
+      end
+
+      def proceed!
+        trace { "negotiating algorithms" }
+        negotiate_algorithms
+        exchange_keys
+        @pending = false
+      end
 
       def prepare_preferred_algorithms!
         @algorithms = {
@@ -90,31 +124,26 @@ module Net; module SSH; module Transport
         @algorithms[:host_key] = host_keys
       end
 
-      def parse_server_algorithm_packet
-        data = {}
+      def parse_server_algorithm_packet(packet)
+        data = { :raw => packet.content }
 
-        buffer = session.next_message
-        raise Net::SSH::Exception, "expected KEXINIT" unless buffer.type == KEXINIT
+        packet.read(16) # skip the cookie value
 
-        data[:raw] = buffer.content
-
-        buffer.read(16) # skip the cookie value
-
-        data[:kex]                = buffer.read_string.split(/,/)
-        data[:host_key]           = buffer.read_string.split(/,/)
-        data[:encryption_client]  = buffer.read_string.split(/,/)
-        data[:encryption_server]  = buffer.read_string.split(/,/)
-        data[:hmac_client]        = buffer.read_string.split(/,/)
-        data[:hmac_server]        = buffer.read_string.split(/,/)
-        data[:compression_client] = buffer.read_string.split(/,/)
-        data[:compression_server] = buffer.read_string.split(/,/)
-        data[:language_client]    = buffer.read_string.split(/,/)
-        data[:language_server]    = buffer.read_string.split(/,/)
+        data[:kex]                = packet.read_string.split(/,/)
+        data[:host_key]           = packet.read_string.split(/,/)
+        data[:encryption_client]  = packet.read_string.split(/,/)
+        data[:encryption_server]  = packet.read_string.split(/,/)
+        data[:hmac_client]        = packet.read_string.split(/,/)
+        data[:hmac_server]        = packet.read_string.split(/,/)
+        data[:compression_client] = packet.read_string.split(/,/)
+        data[:compression_server] = packet.read_string.split(/,/)
+        data[:language_client]    = packet.read_string.split(/,/)
+        data[:language_server]    = packet.read_string.split(/,/)
 
         # TODO: if first_kex_packet_follows, we need to try to skip the
         # actual kexinit stuff and try to guess what the server is doing...
         # need to read more about this scenario.
-        first_kex_packet_follows = buffer.read_bool
+        first_kex_packet_follows = packet.read_bool
 
         return data
       end
@@ -141,17 +170,17 @@ module Net; module SSH; module Transport
         return msg
       end
 
-      def negotiate_algorithms_from(server_data)
-        @kex                = negotiate(:kex, server_data)
-        @host_key           = negotiate(:host_key, server_data)
-        @encryption_client  = negotiate(:encryption_client, server_data)
-        @encryption_server  = negotiate(:encryption_server, server_data)
-        @hmac_client        = negotiate(:hmac_client, server_data)
-        @hmac_server        = negotiate(:hmac_server, server_data)
-        @compression_client = negotiate(:compression_client, server_data)
-        @compression_server = negotiate(:compression_server, server_data)
-        @language_client    = negotiate(:language_client, server_data) rescue ""
-        @language_server    = negotiate(:language_server, server_data) rescue ""
+      def negotiate_algorithms
+        @kex                = negotiate(:kex)
+        @host_key           = negotiate(:host_key)
+        @encryption_client  = negotiate(:encryption_client)
+        @encryption_server  = negotiate(:encryption_server)
+        @hmac_client        = negotiate(:hmac_client)
+        @hmac_server        = negotiate(:hmac_server)
+        @compression_client = negotiate(:compression_client)
+        @compression_server = negotiate(:compression_server)
+        @language_client    = negotiate(:language_client) rescue ""
+        @language_server    = negotiate(:language_server) rescue ""
 
         trace do
           "negotiated:\n" +
@@ -161,8 +190,8 @@ module Net; module SSH; module Transport
         end
       end
 
-      def negotiate(algorithm, server_data)
-        match = self[algorithm].find { |item| server_data[algorithm].include?(item) }
+      def negotiate(algorithm)
+        match = self[algorithm].find { |item| @server_data[algorithm].include?(item) }
 
         if match.nil?
           raise Net::SSH::Exception, "could not settle on #{algorithm} algorithm"
@@ -223,6 +252,8 @@ module Net; module SSH; module Transport
         session.socket.server_cipher = cipher_server
         session.socket.client_hmac   = mac_client
         session.socket.server_hmac   = mac_server
+
+        @initialized = true
       end
   end
 end; end; end

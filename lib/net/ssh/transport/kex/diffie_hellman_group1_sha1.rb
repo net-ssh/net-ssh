@@ -122,7 +122,7 @@ module Net; module SSH; module Transport; module Kex
       def send_kexinit #:nodoc:
         init, reply = get_message_types
 
-        # send the KEXINIT message
+        # send the KEXDH_INIT message
         buffer = Net::SSH::Buffer.new
         buffer.write_byte init
         buffer.write_bignum dh.pub_key

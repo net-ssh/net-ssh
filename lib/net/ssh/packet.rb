@@ -10,6 +10,10 @@ module Net; module SSH
       @@types[type] = pairs
     end
 
+    register Transport::Constants::DISCONNECT,     [:reason_code, :long, :description, :string, :language, :string]
+    register Transport::Constants::IGNORE,         [:data, :string]
+    register Transport::Constants::UNIMPLEMENTED,  [:number, :long]
+    register Transport::Constants::DEBUG,          [:always_display, :bool, :message, :string, :language, :string]
     register Transport::Constants::SERVICE_ACCEPT, [:service_name, :string]
 
     register Authentication::Constants::USERAUTH_BANNER, [:message, :string], [:language, :string]
