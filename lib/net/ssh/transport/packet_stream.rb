@@ -2,6 +2,7 @@ require 'net/ssh/buffered_io'
 require 'net/ssh/packet'
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'
+require 'zlib'
 
 module Net; module SSH; module Transport
 
@@ -12,6 +13,8 @@ module Net; module SSH; module Transport
       object.__send__(:initialize_ssh)
     end
 
+    attr_reader :hints
+
     attr_reader :server_sequence_number
     attr_reader :client_sequence_number
 
@@ -20,6 +23,10 @@ module Net; module SSH; module Transport
 
     attr_accessor :server_hmac
     attr_accessor :client_hmac
+
+    attr_accessor :server_compression
+    attr_accessor :client_compression
+    attr_accessor :compression_level
 
     def client_name
       @client_name ||= begin
@@ -78,7 +85,8 @@ module Net; module SSH; module Transport
     end
 
     def enqueue_packet(payload)
-      payload = payload.to_s
+      # try to compress the packet
+      payload = compress(payload)
 
       # the length of the packet, minus the padding
       actual_length = 4 + payload.length + 1
@@ -112,12 +120,18 @@ module Net; module SSH; module Transport
       self
     end
 
+    def cleanup
+      @compressor.close if @compressor
+      @decompressor.close if @decompressor
+    end
+
     protected
     
       def initialize_ssh
         @server_sequence_number = @client_sequence_number = 0
         @server_cipher = @client_cipher = CipherFactory.get("none")
         @server_hmac = @client_hmac = HMAC.get("none")
+        @hints = {}
         initialize_buffered_io
       end
 
@@ -156,6 +170,9 @@ module Net; module SSH; module Transport
         my_computed_hmac = server_hmac.digest([server_sequence_number, @packet.content].pack("NA*"))
         raise Net::SSH::Exception, "corrupted mac detected" if real_hmac != my_computed_hmac
 
+        # try to decompress the payload, in case compression is active
+        payload = decompress(payload)
+
         trace { "received packet nr #{@server_sequence_number} type #{payload[0]} len #{@packet_length}" }
 
         @server_sequence_number += 1
@@ -164,6 +181,36 @@ module Net; module SSH; module Transport
         @packet = nil
 
         return Packet.new(payload)
+      end
+
+      def compress?
+        client_compression == :standard ||
+        (client_compression == :delayed && hints[:authenticated])
+      end
+
+      def decompress?
+        server_compression == :standard ||
+        (server_compression == :delayed && hints[:authenticated])
+      end
+
+      def compressor
+        @compressor ||= Zlib::Deflate.new(compression_level || Zlib::DEFAULT_COMPRESSION)
+      end
+
+      def decompressor
+        @decompressor ||= Zlib::Inflate.new(nil)
+      end
+
+      def compress(data)
+        data = data.to_s
+        return data unless compress?
+        compressor.deflate(data, Zlib::SYNC_FLUSH)
+      end
+
+      def decompress(data)
+        data = data.to_s
+        return data unless decompress?
+        decompressor.inflate(data)
       end
   end
 

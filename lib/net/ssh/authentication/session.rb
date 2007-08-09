@@ -67,7 +67,11 @@ module Net; module SSH; module Authentication
           trace { "allowed methods: #{packet[:authentications]}" }
           return packet
 
-        when USERAUTH_METHOD_RANGE, SERVICE_ACCEPT, USERAUTH_SUCCESS
+        when USERAUTH_METHOD_RANGE, SERVICE_ACCEPT
+          return packet
+
+        when USERAUTH_SUCCESS
+          transport.socket.hints[:authenticated] = true
           return packet
 
         else

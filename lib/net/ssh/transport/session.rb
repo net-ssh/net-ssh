@@ -56,6 +56,7 @@ module Net; module SSH; module Transport
     end
 
     def close
+      socket.cleanup
       socket.close
     end
 

@@ -18,7 +18,7 @@ module Net; module SSH; module Transport
                          aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se
                          idea-cbc none),
       :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 none),
-      :compression => %w(none),
+      :compression => %w(none zlib@openssh.com zlib),
       :languages   => %w() 
     }
 
@@ -108,6 +108,8 @@ module Net; module SSH; module Transport
       end
 
       def prepare_preferred_algorithms!
+        options[:compression] = %w(zlib@openssh.com zlib) if options[:compression] == true
+
         ALGORITHMS.each do |algorithm, list|
           @algorithms[algorithm] = list.dup
 
@@ -161,7 +163,6 @@ module Net; module SSH; module Transport
         data[:language_client]    = packet.read_string.split(/,/)
         data[:language_server]    = packet.read_string.split(/,/)
 
-p data
         # TODO: if first_kex_packet_follows, we need to try to skip the
         # actual kexinit stuff and try to guess what the server is doing...
         # need to read more about this scenario.
@@ -270,12 +271,24 @@ p data
         mac_client = HMAC.get(hmac_client, mac_key_client)
         mac_server = HMAC.get(hmac_server, mac_key_server)
 
-        session.socket.client_cipher = cipher_client
-        session.socket.server_cipher = cipher_server
-        session.socket.client_hmac   = mac_client
-        session.socket.server_hmac   = mac_server
+        session.socket.client_cipher      = cipher_client
+        session.socket.server_cipher      = cipher_server
+        session.socket.client_hmac        = mac_client
+        session.socket.server_hmac        = mac_server
+        session.socket.client_compression = normalize_compression_name(compression_client)
+        session.socket.server_compression = normalize_compression_name(compression_server)
+        session.socket.compression_level  = options[:compression_level]
 
         @initialized = true
+      end
+
+      def normalize_compression_name(name)
+        case name
+        when "none"             then false
+        when "zlib"             then :standard
+        when "zlib@openssh.com" then :delayed
+        else raise ArgumentError, "unknown compression type `#{name}'"
+        end
       end
   end
 end; end; end
