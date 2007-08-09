@@ -10,7 +10,20 @@ module Net; module SSH; module Transport
   class Algorithms
     include Constants, Loggable
 
+    ALGORITHMS = {
+      :host_key    => %w(ssh-dss ssh-rsa),
+      :kex         => %w(diffie-hellman-group-exchange-sha1
+                         diffie-hellman-group1-sha1),
+      :encryption  => %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc
+                         aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se
+                         idea-cbc none),
+      :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 none),
+      :compression => %w(none),
+      :languages   => %w() 
+    }
+
     attr_reader :session
+    attr_reader :options
 
     attr_reader :kex
     attr_reader :host_key
@@ -32,9 +45,10 @@ module Net; module SSH; module Transport
       (21..49).include?(packet.type)
     end
 
-    def initialize(session)
+    def initialize(session, options={})
       @session = session
       @logger = session.logger
+      @options = options
       @algorithms = {}
       @pending = @initialized = false
       @client_packet = @server_packet = nil
@@ -94,16 +108,21 @@ module Net; module SSH; module Transport
       end
 
       def prepare_preferred_algorithms!
-        @algorithms = {
-          :host_key    => %w(ssh-dss ssh-rsa),
-          :kex         => %w(diffie-hellman-group-exchange-sha1
-                             diffie-hellman-group1-sha1),
-          :encryption  => %w(aes128-cbc 3des-cbc blowfish-cbc aes256-cbc
-                             aes192-cbc idea-cbc none),
-          :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 none),
-          :compression => %w(none),
-          :languages   => %w() 
-        }
+        ALGORITHMS.each do |algorithm, list|
+          @algorithms[algorithm] = list.dup
+
+          # apply the preferred algorithm order, if any
+          if options[algorithm]
+            @algorithms[algorithm] = Array(options[algorithm]).compact.uniq
+            invalid = @algorithms[algorithm].detect { |name| !ALGORITHMS[algorithm].include?(name) }
+            raise NotImplementedError, "unsupported #{algorithm} algorithm: `#{invalid}'" if invalid
+
+            # make sure all of our supported algorithms are tacked onto the
+            # end, so that if the user tries to give a list of which none are
+            # supported, we can still proceed.
+            list.each { |name| @algorithms[algorithm] << name unless @algorithms[algorithm].include?(name) }
+          end
+        end
 
         # for convention, make sure our list has the same keys as the server
         # list
@@ -113,15 +132,17 @@ module Net; module SSH; module Transport
         @algorithms[:compression_client] = @algorithms[:compression_server] = @algorithms[:compression]
         @algorithms[:language_client   ] = @algorithms[:language_server   ] = @algorithms[:languages]
 
-        # make sure the host keys are specified in preference order, where any
-        # existing known key for the host has preference.
+        if !options.key?(:host_key)
+          # make sure the host keys are specified in preference order, where any
+          # existing known key for the host has preference.
 
-        existing_keys = KnownHosts.search_for(session.host_as_string)
-        host_keys = existing_keys.map { |key| key.ssh_type }.uniq
-        @algorithms[:host_key].each do |name|
-          host_keys << name unless host_keys.include?(name)
+          existing_keys = KnownHosts.search_for(session.host_as_string)
+          host_keys = existing_keys.map { |key| key.ssh_type }.uniq
+          @algorithms[:host_key].each do |name|
+            host_keys << name unless host_keys.include?(name)
+          end
+          @algorithms[:host_key] = host_keys
         end
-        @algorithms[:host_key] = host_keys
       end
 
       def parse_server_algorithm_packet(packet)
@@ -140,6 +161,7 @@ module Net; module SSH; module Transport
         data[:language_client]    = packet.read_string.split(/,/)
         data[:language_server]    = packet.read_string.split(/,/)
 
+p data
         # TODO: if first_kex_packet_follows, we need to try to skip the
         # actual kexinit stuff and try to guess what the server is doing...
         # need to read more about this scenario.

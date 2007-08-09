@@ -7,13 +7,15 @@ module Net; module SSH; module Transport
   class CipherFactory
     # Maps the SSH name of a cipher to it's corresponding OpenSSL name
     SSH_TO_OSSL = {
-      "3des-cbc"     => "des-ede3-cbc",
-      "blowfish-cbc" => "bf-cbc",
-      "aes256-cbc"   => "aes-256-cbc",
-      "aes192-cbc"   => "aes-192-cbc",
-      "aes128-cbc"   => "aes-128-cbc",
-      "idea-cbc"     => "idea-cbc",
-      "none"         => "none"
+      "3des-cbc"                    => "des-ede3-cbc",
+      "blowfish-cbc"                => "bf-cbc",
+      "aes256-cbc"                  => "aes-256-cbc",
+      "aes192-cbc"                  => "aes-192-cbc",
+      "aes128-cbc"                  => "aes-128-cbc",
+      "idea-cbc"                    => "idea-cbc",
+      "cast128-cbc"                 => "cast-cbc",
+      "rijndael-cbc@lysator.liu.se" => "aes-256-cbc",
+      "none"                        => "none"
     }
 
     # Retrieves a new instance of the named algorithm. The new instance

@@ -43,7 +43,7 @@ module Net; module SSH; module Transport
 
       @server_version = ServerVersion.new(socket, logger)
 
-      @algorithms = Algorithms.new(self)
+      @algorithms = Algorithms.new(self, options)
       wait { algorithms.initialized? }
     end
 
@@ -56,7 +56,7 @@ module Net; module SSH; module Transport
     end
 
     def close
-      @socket.close
+      socket.close
     end
 
     def service_request(service)
@@ -73,7 +73,7 @@ module Net; module SSH; module Transport
 
     def peer
       @peer ||= begin
-        addr = @socket.getpeername
+        addr = socket.getpeername
         ip_address = Socket.getnameinfo(addr, Socket::NI_NUMERICHOST | Socket::NI_NUMERICSERV).first
         { :ip => ip_address, :port => @port.to_i, :host => @host, :canonized => host_as_string }
       end

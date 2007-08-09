@@ -63,7 +63,7 @@ module Net; module SSH; module Transport
           end
 
           if fill <= 0
-            raise Net::SSH::Transport::Disconnect, "connection closed by remote host"
+            raise Net::SSH::Disconnect, "connection closed by remote host"
           end
         end
 
@@ -123,8 +123,9 @@ module Net; module SSH; module Transport
 
       def poll_next_packet
         if @packet.nil?
-          return nil if available < server_cipher.block_size
-          data = read_available(server_cipher.block_size)
+          minimum = server_cipher.block_size < 4 ? 4 : server_cipher.block_size
+          return nil if available < minimum
+          data = read_available(minimum)
 
           # decipher it
           @packet = Net::SSH::Buffer.new(server_cipher.update(data))

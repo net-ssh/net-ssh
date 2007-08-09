@@ -77,7 +77,7 @@ module Net; module SSH; module Transport; module Kex
     private
     
       # Returns the DH key parameters for the current connection.
-      def get_parameters(data)
+      def get_parameters
         [p, g]
       end
 
