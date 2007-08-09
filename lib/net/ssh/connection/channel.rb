@@ -154,8 +154,7 @@ module Net; module SSH; module Connection
       @remote_id = remote_id
       @remote_window_size = @remote_maximum_window_size = max_window
       @remote_maximum_packet_size = max_packet
-      # FIXME only request agent forwarding if it has been requested by the user
-      connection.forward.agent(self) if type == "session"
+      connection.forward.agent(self) if connection.options[:forward_agent] && type == "session"
       @on_confirm_open.call(self) if @on_confirm_open
     end
 

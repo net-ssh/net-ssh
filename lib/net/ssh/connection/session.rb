@@ -22,11 +22,13 @@ module Net; module SSH; module Connection
     attr_reader :readers
     attr_reader :writers
     attr_reader :channel_open_handler
+    attr_reader :options
 
     def initialize(transport, options={})
       self.logger = transport.logger
 
       @transport = transport
+      @options = options
 
       @channel_id_counter = -1
       @channels = {}
