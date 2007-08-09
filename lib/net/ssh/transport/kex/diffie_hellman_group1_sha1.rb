@@ -163,10 +163,9 @@ module Net; module SSH; module Transport; module Kex
 
         blob, fingerprint = generate_key_fingerprint(key)
 
-        warn "FIXME host key verification"
-        #unless @host_key_verifier.verify(:key => key, :key_blob => blob, :fingerprint => fingerprint, :peer => session.peer)
-        #  raise Net::SSH::Exception, "host key verification failed"
-        #end
+        unless connection.host_key_verifier.verify(:key => key, :key_blob => blob, :fingerprint => fingerprint, :session => connection)
+          raise Net::SSH::Exception, "host key verification failed"
+        end
       end
 
       def generate_key_fingerprint(key)

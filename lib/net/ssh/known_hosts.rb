@@ -5,8 +5,40 @@ module Net; module SSH
   class KnownHosts
     attr_reader :source
 
-    def self.search_in(files, host)
-      files.map { |file| KnownHosts.new(file).keys_for(host) }.flatten
+    class <<self
+      def search_for(host)
+        search_in(hostfiles, host)
+      end
+
+      def search_in(files, host)
+        files.map { |file| KnownHosts.new(file).keys_for(host) }.flatten
+      end
+
+      def hostfiles
+        @hostfiles ||= [
+          "#{home_directory}/.ssh/known_hosts",
+          "#{home_directory}/.ssh/known_hosts2",
+          "/etc/ssh/ssh_known_hosts",
+          "/etc/ssh_ssh_known_hosts2"
+        ]
+      end
+
+      def home_directory
+        ENV['HOME'] ||
+          (ENV['HOMEPATH'] && "#{ENV['HOMEDRIVE']}#{ENV['HOMEPATH']}") ||
+          "/"
+      end
+
+      def add(host, key)
+        hostfiles.each do |file|
+          begin
+            KnownHosts.new(file).add(host, key)
+            return
+          rescue SystemCallError
+            # try the next hostfile
+          end
+        end
+      end
     end
 
     def initialize(source)
@@ -15,6 +47,7 @@ module Net; module SSH
 
     def keys_for(host)
       keys = []
+      return keys unless File.readable?(source)
 
       File.open(source) do |file|
         scanner = StringScanner.new("")
@@ -44,5 +77,6 @@ module Net; module SSH
         file.puts "#{host} #{key.ssh_type} #{blob}"
       end
     end
+
   end
 end; end

@@ -8,6 +8,9 @@ require 'net/ssh/transport/algorithms'
 require 'net/ssh/transport/constants'
 require 'net/ssh/transport/packet_stream'
 require 'net/ssh/transport/server_version'
+require 'net/ssh/verifiers/null'
+require 'net/ssh/verifiers/strict'
+require 'net/ssh/verifiers/lenient'
 
 module Net; module SSH; module Transport
   class Session
@@ -20,6 +23,7 @@ module Net; module SSH; module Transport
     attr_reader :header
     attr_reader :server_version
     attr_reader :algorithms
+    attr_reader :host_key_verifier
 
     def initialize(host, options={})
       self.logger = options[:logger]
@@ -33,14 +37,18 @@ module Net; module SSH; module Transport
       @socket.extend(PacketStream)
       @socket.logger = @logger
 
+      @host_key_verifier = select_host_key_verifier(options[:paranoid])
+
       @server_version = ServerVersion.new(socket, logger)
       @algorithms = Algorithms.negotiate_via(self)
     end
 
     def host_as_string
-      string = "#{host}"
-      string = "[#{string}]:#{port}" if port != DEFAULT_PORT
-      string
+      @host_as_string ||= begin
+        string = "#{host}"
+        string = "[#{string}]:#{port}" if port != DEFAULT_PORT
+        string
+      end
     end
 
     def close
@@ -52,6 +60,14 @@ module Net; module SSH; module Transport
       msg.write_byte(SERVICE_REQUEST)
       msg.write_string(service)
       msg
+    end
+
+    def peer
+      @peer ||= begin
+        addr = @socket.getpeername
+        ip_address = Socket.getnameinfo(addr, Socket::NI_NUMERICHOST | Socket::NI_NUMERICSERV).first
+        { :ip => ip_address, :port => @port.to_i, :host => @host, :canonized => host_as_string }
+      end
     end
 
     def next_message
@@ -92,5 +108,24 @@ module Net; module SSH; module Transport
     def send_message(message)
       socket.send_packet(message)
     end
+
+    private
+
+      def select_host_key_verifier(paranoid)
+        case paranoid
+        when true, nil then
+          Net::SSH::Verifiers::Lenient.new
+        when false then
+          Net::SSH::Verifiers::Null.new
+        when :very then
+          Net::SSH::Verifiers::Strict.new
+        else
+          if paranoid.respond_to?(:verify)
+            paranoid
+          else
+            raise ArgumentError, "argument to :paranoid is not valid: #{paranoid.inspect}"
+          end
+        end
+      end
   end
 end; end; end
