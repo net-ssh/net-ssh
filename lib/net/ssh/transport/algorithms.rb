@@ -68,7 +68,6 @@ module Net; module SSH; module Transport
       if !pending?
         send_kexinit
       else
-        @pending = true
         proceed!
       end
     end

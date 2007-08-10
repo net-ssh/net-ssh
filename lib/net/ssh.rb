@@ -8,7 +8,19 @@ require 'net/ssh/connection/session'
 
 module Net
   module SSH
+    VALID_OPTIONS = [
+      :auth_methods, :compression, :compression_level, :encryption,
+      :forward_agent, :hmac, :host_key, :kex, :keys, :languages,
+      :logger, :paranoid, :password, :port, :proxy, :rekey_blocks_limit,
+      :rekey_limit, :rekey_packet_limit, :timeout, :verbose
+    ]
+
     def self.start(host, user, options={}, &block)
+      invalid_options = options.keys - VALID_OPTIONS
+      if invalid_options.any?
+        raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
+      end
+
       if !options.key?(:logger)
         options[:logger] = Logger.new(STDERR)
         options[:logger].level = Logger::WARN
