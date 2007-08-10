@@ -11,7 +11,7 @@ module Net; module SSH; module Transport
     include Constants, Loggable
 
     ALGORITHMS = {
-      :host_key    => %w(ssh-dss ssh-rsa),
+      :host_key    => %w(ssh-rsa ssh-dss),
       :kex         => %w(diffie-hellman-group-exchange-sha1
                          diffie-hellman-group1-sha1),
       :encryption  => %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc

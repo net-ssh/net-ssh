@@ -51,6 +51,11 @@ module Net; module SSH; module Transport
       @host_as_string ||= begin
         string = "#{host}"
         string = "[#{string}]:#{port}" if port != DEFAULT_PORT
+        if socket.peer_ip != host
+          string2 = socket.peer_ip
+          string2 = "[#{string2}]:#{port}" if port != DEFAULT_PORT
+          string << "," << string2
+        end
         string
       end
     end
@@ -80,11 +85,7 @@ module Net; module SSH; module Transport
     end
 
     def peer
-      @peer ||= begin
-        addr = socket.getpeername
-        ip_address = Socket.getnameinfo(addr, Socket::NI_NUMERICHOST | Socket::NI_NUMERICSERV).first
-        { :ip => ip_address, :port => @port.to_i, :host => @host, :canonized => host_as_string }
-      end
+      @peer ||= { :ip => socket.peer_ip, :port => @port.to_i, :host => @host, :canonized => host_as_string }
     end
 
     def next_message

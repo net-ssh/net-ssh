@@ -49,6 +49,8 @@ module Net; module SSH
       keys = []
       return keys unless File.readable?(source)
 
+      entries = host.split(/,/)
+
       File.open(source) do |file|
         scanner = StringScanner.new("")
         file.each_line do |line|
@@ -58,7 +60,7 @@ module Net; module SSH
           next if scanner.match?(/$|#/)
 
           hostlist = scanner.scan(/\S+/)
-          next unless hostlist.split(/,/).include?(host)
+          next unless (hostlist.split(/,/) & entries).any?
 
           scanner.skip(/\s*/)
           type = scanner.scan(/\S+/)
@@ -76,7 +78,7 @@ module Net; module SSH
 
     def add(host, key)
       File.open(source, "a") do |file|
-        blob = [Net::SSH::Buffer.new.write_key(key).to_s].pack("m*")
+        blob = [Net::SSH::Buffer.from(:key, key).to_s].pack("m*").gsub(/\s/, "")
         file.puts "#{host} #{key.ssh_type} #{blob}"
       end
     end

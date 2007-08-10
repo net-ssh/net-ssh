@@ -38,6 +38,13 @@ module Net; module SSH; module Transport
       end
     end
 
+    def peer_ip
+      @peer_ip ||= begin
+        addr = getpeername
+        Socket.getnameinfo(addr, Socket::NI_NUMERICHOST | Socket::NI_NUMERICSERV).first
+      end
+    end
+
     def available_for_read?
       result = IO.select([self], nil, nil, 0)
       result && result.first.any?

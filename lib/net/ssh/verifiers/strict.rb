@@ -14,6 +14,7 @@ module Net; module SSH; module Verifiers
       # fingerprint, this is a reasonable compromise between usability and
       # security.
       if matches.empty?
+        ip = arguments[:session].peer[:ip]
         Net::SSH::KnownHosts.add(host, arguments[:key])
         return true
       end
