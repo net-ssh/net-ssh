@@ -63,8 +63,11 @@ module Net; module SSH; module Connection
 
       return false if block_given? && !yield
 
+      closed_readers = readers.select { |r| r.closed? }
+      closed_readers.each { |r| stop_listening_to(r) }
+
       w = writers.select { |w| w.pending_write? }
-      ready_readers, ready_writers, errors = IO.select(readers, w, nil, wait)
+      ready_readers, ready_writers, = IO.select(readers, w, nil, wait)
 
       (ready_readers || []).each do |reader|
         if listeners[reader]
@@ -72,8 +75,7 @@ module Net; module SSH; module Connection
         else
           if reader.fill.zero?
             reader.close
-            readers.delete(reader)
-            writers.delete(reader) # just in case it was a writer, too
+            stop_listening_to(reader)
           end
         end
       end
@@ -113,7 +115,14 @@ module Net; module SSH; module Connection
 
     def listen_to(io, &callback)
       readers << io
-      @listeners[io] = callback
+      writers << io if io.respond_to?(:pending_write?)
+      listeners[io] = callback if callback
+    end
+
+    def stop_listening_to(io)
+      readers.delete(io)
+      writers.delete(io)
+      listeners.delete(io)
     end
 
     def forward

@@ -13,6 +13,7 @@ module Net; module SSH; module Service
       @session = session
       self.logger = session.logger
       @remote_forwarded_ports = {}
+      @local_forwarded_ports = {}
       @agent_forwarded = false
 
       session.on_open_channel('forwarded-tcpip', &method(:forwarded_tcpip))
@@ -33,6 +34,9 @@ module Net; module SSH; module Service
       remote_port = args.shift.to_i
 
       socket = TCPServer.new(bind_address, local_port)
+
+      @local_forwarded_ports[[local_port, bind_address]] = socket
+
       session.listen_to(socket) do |socket|
         client = socket.accept
         debug { "received connection on #{bind_address}:#{local_port}" }
@@ -44,12 +48,21 @@ module Net; module SSH; module Service
       end
     end
 
+    def cancel_local(port, bind_address="127.0.0.1")
+      socket = @local_forwarded_ports.delete([port, bind_address])
+      socket.shutdown
+      socket.close
+    end
+
+    def active_locals
+      @local_forwarded_ports.keys
+    end
+
     def remote(port, host, remote_port, remote_host="127.0.0.1")
       session.send_global_request("tcpip-forward", :string, remote_host, :long, remote_port) do |success, response|
         if success
           debug { "remote forward from remote #{remote_host}:#{remote_port} to #{host}:#{port} established" }
-          key = "#{remote_host}:#{remote_port}"
-          @remote_forwarded_ports[key] = Remote.new(host, port)
+          @remote_forwarded_ports[[remote_port, remote_host]] = Remote.new(host, port)
         else
           error { "remote forwarding request failed" }
           raise Net::SSH::Exception, "remote forwarding request failed"
@@ -59,6 +72,20 @@ module Net; module SSH; module Service
 
     # an alias, for backwards compatibility with the 1.x API
     alias :remote_to :remote
+
+    def cancel_remote(port, host="127.0.0.1")
+      session.send_global_request("cancel-tcpip-forward", :string, host, :long, port) do |success, response|
+        if success
+          @remote_forwarded_ports.delete([port, host])
+        else
+          raise Net::SSH::Exception, "could not cancel remote forward request on #{host}:#{port}"
+        end
+      end
+    end
+
+    def active_remotes
+      @remote_forwarded_ports.keys
+    end
 
     def agent(channel)
       return if @agent_forwarded
@@ -71,6 +98,7 @@ module Net; module SSH; module Service
         else
           channel.send_channel_request("auth-agent-req") do |channel, success|
             if success
+              @auth_agent = Authentication::Agent.new(logger)
               debug { "authentication agent forwarding is active" }
             else
               error { "could not establish forwarding of authentication agent" }
@@ -86,9 +114,7 @@ module Net; module SSH; module Service
         client.extend(Net::SSH::BufferedIo)
         client.logger = logger
 
-        session.readers << client
-        session.writers << client
-
+        session.listen_to(client)
         channel[:socket] = client
 
         channel.on_data do |ch, data|
@@ -98,8 +124,7 @@ module Net; module SSH; module Service
         channel.on_close do |ch|
           trace { "closing #{type} forwarded channel" }
           ch[:socket].close if !client.closed?
-          session.readers.delete(ch[:socket])
-          session.writers.delete(ch[:socket])
+          session.stop_listening_to(ch[:socket])
         end
 
         channel.on_process do |ch|
@@ -120,14 +145,13 @@ module Net; module SSH; module Service
         originator_address = packet.read_string
         originator_port    = packet.read_long
 
-        key = "#{connected_address}:#{connected_port}"
-        remote = @remote_forwarded_ports[key]
+        remote = @remote_forwarded_ports[[connected_port, connected_address]]
 
         if remote.nil?
-          raise Net::SSH::Exception, "unknown request from remote forwarded connection on #{key}"
+          raise Net::SSH::Exception, "unknown request from remote forwarded connection on #{connected_address}:#{connected_port}"
         end
 
-        trace { "connected #{key} originator #{originator_address}:#{originator_port}" }
+        trace { "connected #{connected_address}:#{connected_port} originator #{originator_address}:#{originator_port}" }
 
         client = TCPSocket.new(remote.host, remote.port)
         prepare_client(client, channel, :remote)
