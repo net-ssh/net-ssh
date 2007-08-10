@@ -15,13 +15,14 @@ module Net; module SSH; module Authentication
     attr_reader :transport
 
     attr_reader :auth_methods
+    attr_reader :options
 
     def initialize(transport, options={})
       self.logger = transport.logger
       @transport = transport
 
       @auth_methods = options[:auth_methods] || %w(publickey hostbased password keyboard-interactive)
-      @keyboard_interactive = options[:keyboard_interactive]
+      @options = options
 
       @allowed_auth_methods = @auth_methods
     end
@@ -35,6 +36,8 @@ module Net; module SSH; module Authentication
       message = expect_message(SERVICE_ACCEPT)
 
       key_manager = KeyManager.new(logger)
+      Array(options[:keys]).each { |key| key_manager.add(key) }
+
       attempted = []
 
       @auth_methods.each do |name|
@@ -42,7 +45,7 @@ module Net; module SSH; module Authentication
         attempted << name
 
         debug { "trying #{name}" }
-        method = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join).new(self, :key_manager => key_manager, :keyboard_interactive => @keyboard_interactive)
+        method = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join).new(self, :key_manager => key_manager)
 
         return true if method.authenticate(next_service, username, password)
       end

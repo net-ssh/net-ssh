@@ -121,10 +121,8 @@ module Net
           end
 
           if info[:key]
-            sig_blob = @buffers.writer
-            sig_blob.write_string identity.ssh_type
-            sig_blob.write_string info[:key].ssh_do_sign(data.to_s)
-            return sig_blob.to_s
+            return Net::SSH::Buffer.from(:string, identity.ssh_type,
+              :string, info[:key].ssh_do_sign(data.to_s)).to_s
           end
 
           if info[:from] == :agent

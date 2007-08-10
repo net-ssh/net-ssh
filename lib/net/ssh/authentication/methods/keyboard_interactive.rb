@@ -1,3 +1,4 @@
+require 'net/ssh/prompt'
 require 'net/ssh/authentication/methods/abstract'
 
 module Net
@@ -7,6 +8,8 @@ module Net
 
         # Implements the "keyboard-interactive" SSH authentication method.
         class KeyboardInteractive < Abstract
+          include Prompt
+
           # Represents an information request from the server
           InfoRequest = Struct.new(:name, :instruction, :password, :prompts)
 
@@ -36,30 +39,29 @@ module Net
                 instruction = message.read_string
                 trace { "keyboard-interactive info request" }
 
-                req = InfoRequest.new(name, instruction, password, [])
-                password = nil # only use the given password once
-
-                lang_tag = message.read_string
-                message.read_long.times do
-                  prompt = message.read_string
-                  echo = message.read_bool
-                  req.prompts << Prompt.new(prompt, echo)
+                unless password
+                  puts(name) unless name.empty?
+                  puts(instruction) unless instruction.empty?
                 end
 
-                responses = prompt(req)
+                lang_tag = message.read_string
+                responses =[]
+  
+                message.read_long.times do
+                  text = message.read_string
+                  echo = message.read_bool
+                  responses << (password || prompt(text, echo))
+                end
+
+                # if the password failed the first time around, don't try
+                # and use it on subsequent requests.
+                password = nil
+
                 msg = Buffer.from(:byte, USERAUTH_INFO_RESPONSE, :long, responses.length, :string, responses)
                 send_message(msg)
               else
                 raise Net::SSH::Exception, "unexpected reply in keyboard interactive: #{message.type} (#{message.inspect})"
               end
-            end
-          end
-
-          def prompt(req)
-            if @options[:keyboard_interactive].respond_to?(:call)
-              @options[:keyboard_interactive].call(req)
-            else
-              [@options[:keyboard_interactive] || ""] * req.prompts.length
             end
           end
         end
