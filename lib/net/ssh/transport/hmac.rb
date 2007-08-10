@@ -6,12 +6,12 @@ require 'net/ssh/transport/hmac/none'
 
 module Net::SSH::Transport::HMAC
   def self.get(name, key="")
-    impl = find(name) or raise IndexError, "hmac not found: #{name.inspect}"
+    impl = find(name) or raise ArgumentError, "hmac not found: #{name.inspect}"
     impl.new(key)
   end
 
   def self.key_length(name)
-    impl = find(name) or raise IndexError, "hmac not found: #{name.inspect}"
+    impl = find(name) or raise ArgumentError, "hmac not found: #{name.inspect}"
     impl.key_length
   end
 
