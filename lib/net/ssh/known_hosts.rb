@@ -62,6 +62,9 @@ module Net; module SSH
 
           scanner.skip(/\s*/)
           type = scanner.scan(/\S+/)
+
+          next unless %w(ssh-rsa ssh-dss).include?(type)
+
           scanner.skip(/\s*/)
           blob = scanner.rest.unpack("m*").first
           keys << Net::SSH::Buffer.new(blob).read_key
