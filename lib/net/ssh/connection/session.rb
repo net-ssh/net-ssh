@@ -63,9 +63,6 @@ module Net; module SSH; module Connection
 
       return false if block_given? && !yield
 
-      closed_readers = readers.select { |r| r.closed? }
-      closed_readers.each { |r| stop_listening_to(r) }
-
       w = writers.select { |w| w.pending_write? }
       ready_readers, ready_writers, = IO.select(readers, w, nil, wait)
 

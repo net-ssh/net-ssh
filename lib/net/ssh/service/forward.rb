@@ -52,6 +52,7 @@ module Net; module SSH; module Service
       socket = @local_forwarded_ports.delete([port, bind_address])
       socket.shutdown
       socket.close
+      session.stop_listening_to(socket)
     end
 
     def active_locals
