@@ -3,6 +3,8 @@ require 'net/ssh/errors'
 require 'net/ssh/loggable'
 require 'net/ssh/transport/server_version'
 
+require 'net/ssh/authentication/pageant' if File::ALT_SEPARATOR
+
 module Net; module SSH; module Authentication
 
   # A trivial exception class for representing agent-specific errors.
@@ -51,7 +53,7 @@ module Net; module SSH; module Authentication
     def connect!
       begin
         trace { "connecting to ssh-agent" }
-        @socket = UNIXSocket.open(ENV['SSH_AUTH_SOCK'])
+        @socket = agent_socket_factory.open(ENV['SSH_AUTH_SOCK'])
       rescue
         error { "could not connect to ssh-agent" }
         raise AgentNotAvailable
@@ -148,6 +150,13 @@ module Net; module SSH; module Authentication
     end
     private :agent_failed
 
+    def agent_socket_factory
+      if File::ALT_SEPARATOR
+        Pageant::Socket
+      else
+        UNIXSocket
+      end
+    end
   end
 
 end; end; end
