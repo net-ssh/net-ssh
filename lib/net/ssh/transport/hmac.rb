@@ -1,7 +1,7 @@
 require 'net/ssh/transport/hmac/md5'
-require 'net/ssh/transport/hmac/md5-96'
+require 'net/ssh/transport/hmac/md5_96'
 require 'net/ssh/transport/hmac/sha1'
-require 'net/ssh/transport/hmac/sha1-96'
+require 'net/ssh/transport/hmac/sha1_96'
 require 'net/ssh/transport/hmac/none'
 
 module Net::SSH::Transport::HMAC
