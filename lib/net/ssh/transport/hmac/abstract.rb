@@ -10,7 +10,7 @@ module Net; module SSH; module Transport; module HMAC
         define_method(attribute) do |*v|
           if v.empty?
             v = instance_variable_get("@#{attribute}")
-            if v.nil?
+            if v.nil? && superclass.respond_to?(attribute)
               v = superclass.send(attribute)
               instance_variable_set("@#{attribute}", v)
             end
