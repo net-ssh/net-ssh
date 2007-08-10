@@ -20,6 +20,11 @@ module Transport; module HMAC
       assert_equal 16, subject.new.mac_length
     end
 
+    def test_expected_digest
+      hmac = subject.new("1234567890123456")
+      assert_equal "\275\345\006\307y~Oi\035<.\341\031\250<\257", hmac.digest("hello world")
+    end
+
     private
 
       def subject
