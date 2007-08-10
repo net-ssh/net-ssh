@@ -11,7 +11,8 @@ module Net; module SSH; module Transport; module HMAC
           if v.empty?
             v = instance_variable_get("@#{attribute}")
             if v.nil?
-              instance_variable_set("@#{attribute}", self.class.superclass.send(attribute))
+              v = superclass.send(attribute)
+              instance_variable_set("@#{attribute}", v)
             end
             v
           else
