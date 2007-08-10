@@ -2,7 +2,7 @@ require 'net/ssh/buffered_io'
 require 'net/ssh/packet'
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'
-require 'zlib'
+require 'net/ssh/transport/state'
 
 module Net; module SSH; module Transport
 
@@ -13,19 +13,9 @@ module Net; module SSH; module Transport
       object.__send__(:initialize_ssh)
     end
 
-    attr_reader :hints
-
-    attr_reader :server_sequence_number
-    attr_reader :client_sequence_number
-
-    attr_accessor :server_cipher
-    attr_accessor :client_cipher
-
-    attr_accessor :server_hmac
-    attr_accessor :client_hmac
-
-    attr_accessor :server_compression
-    attr_accessor :client_compression
+    attr_reader   :hints
+    attr_reader   :server
+    attr_reader   :client
     attr_accessor :compression_level
 
     def client_name
@@ -86,131 +76,105 @@ module Net; module SSH; module Transport
 
     def enqueue_packet(payload)
       # try to compress the packet
-      payload = compress(payload)
+      payload = client.compress(payload)
 
       # the length of the packet, minus the padding
       actual_length = 4 + payload.length + 1
 
       # compute the padding length
-      padding_length = client_cipher.block_size - (actual_length % client_cipher.block_size)
-      padding_length += client_cipher.block_size if padding_length < 4
+      padding_length = client.cipher.block_size - (actual_length % client.cipher.block_size)
+      padding_length += client.cipher.block_size if padding_length < 4
 
       # compute the packet length (sans the length field itself)
       packet_length = payload.length + padding_length + 1
 
       if packet_length < 16
-        padding_length += client_cipher.block_size
+        padding_length += client.cipher.block_size
         packet_length = payload.length + padding_length + 1
       end
 
       padding = Array.new(padding_length) { rand(256) }.pack("C*")
 
       unencrypted_data = [packet_length, padding_length, payload, padding].pack("NCA*A*")
-      mac = client_hmac.digest([client_sequence_number, unencrypted_data].pack("NA*"))
+      mac = client.hmac.digest([client.sequence_number, unencrypted_data].pack("NA*"))
 
-      encrypted_data = client_cipher.update(unencrypted_data) << client_cipher.final
+      encrypted_data = client.cipher.update(unencrypted_data) << client.cipher.final
       message = encrypted_data + mac
 
-      trace { "queueing packet nr #{@client_sequence_number} type #{payload[0]} len #{packet_length}" }
+      trace { "queueing packet nr #{client.sequence_number} type #{payload[0]} len #{packet_length}" }
       enqueue(message)
 
-      @client_sequence_number += 1
-      @client_sequence_number = 0 if @client_sequence_number > 0xFFFFFFFF
+      client.increment(packet_length)
 
       self
     end
 
     def cleanup
-      @compressor.close if @compressor
-      @decompressor.close if @decompressor
+      client.cleanup
+      server.cleanup
+    end
+
+    def if_needs_rekey?
+      if client.needs_rekey? || server.needs_rekey?
+        yield
+        client.reset! if client.needs_rekey?
+        server.reset! if server.needs_rekey?
+      end
     end
 
     protected
     
       def initialize_ssh
-        @server_sequence_number = @client_sequence_number = 0
-        @server_cipher = @client_cipher = CipherFactory.get("none")
-        @server_hmac = @client_hmac = HMAC.get("none")
-        @hints = {}
+        @hints  = {}
+        @server = State.new(self)
+        @client = State.new(self)
         initialize_buffered_io
       end
 
       def poll_next_packet
         if @packet.nil?
-          minimum = server_cipher.block_size < 4 ? 4 : server_cipher.block_size
+          minimum = server.cipher.block_size < 4 ? 4 : server.cipher.block_size
           return nil if available < minimum
           data = read_available(minimum)
 
           # decipher it
-          @packet = Net::SSH::Buffer.new(server_cipher.update(data))
+          @packet = Net::SSH::Buffer.new(server.cipher.update(data))
           @packet_length = @packet.read_long
         end
 
-        need = @packet_length + 4 - server_cipher.block_size
-        raise Net::SSH::Exception, "padding error, need #{need} block #{server_cipher.block_size}" if need % server_cipher.block_size != 0
+        need = @packet_length + 4 - server.cipher.block_size
+        raise Net::SSH::Exception, "padding error, need #{need} block #{server.cipher.block_size}" if need % server.cipher.block_size != 0
 
-        return nil if available < need + server_hmac.mac_length
+        return nil if available < need + server.hmac.mac_length
 
         if need > 0
           # read the remainder of the packet and decrypt it.
           data = read_available(need)
-          @packet.append(server_cipher.update(data))
+          @packet.append(server.cipher.update(data))
         end
 
         # get the hmac from the tail of the packet (if one exists), and
         # then validate it.
-        real_hmac = read_available(server_hmac.mac_length) || ""
+        real_hmac = read_available(server.hmac.mac_length) || ""
 
-        @packet.append(server_cipher.final)
+        @packet.append(server.cipher.final)
         padding_length = @packet.read_byte
 
         payload = @packet.read(@packet_length - padding_length - 1)
         padding = @packet.read(padding_length) if padding_length > 0
 
-        my_computed_hmac = server_hmac.digest([server_sequence_number, @packet.content].pack("NA*"))
+        my_computed_hmac = server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
         raise Net::SSH::Exception, "corrupted mac detected" if real_hmac != my_computed_hmac
 
         # try to decompress the payload, in case compression is active
-        payload = decompress(payload)
+        payload = server.decompress(payload)
 
-        trace { "received packet nr #{@server_sequence_number} type #{payload[0]} len #{@packet_length}" }
+        trace { "received packet nr #{server.sequence_number} type #{payload[0]} len #{@packet_length}" }
 
-        @server_sequence_number += 1
-        @server_sequence_number = 0 if @server_sequence_number > 0xFFFFFFFF
-
+        server.increment(@packet_length)
         @packet = nil
 
         return Packet.new(payload)
-      end
-
-      def compress?
-        client_compression == :standard ||
-        (client_compression == :delayed && hints[:authenticated])
-      end
-
-      def decompress?
-        server_compression == :standard ||
-        (server_compression == :delayed && hints[:authenticated])
-      end
-
-      def compressor
-        @compressor ||= Zlib::Deflate.new(compression_level || Zlib::DEFAULT_COMPRESSION)
-      end
-
-      def decompressor
-        @decompressor ||= Zlib::Inflate.new(nil)
-      end
-
-      def compress(data)
-        data = data.to_s
-        return data unless compress?
-        compressor.deflate(data, Zlib::SYNC_FLUSH)
-      end
-
-      def decompress(data)
-        data = data.to_s
-        return data unless decompress?
-        decompressor.inflate(data)
       end
   end
 

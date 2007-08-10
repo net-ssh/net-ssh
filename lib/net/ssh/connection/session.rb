@@ -82,6 +82,8 @@ module Net; module SSH; module Connection
         writer.send_pending
       end
 
+      transport.rekey_as_needed
+
       return true
     end
 

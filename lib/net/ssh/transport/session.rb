@@ -68,8 +68,15 @@ module Net; module SSH; module Transport
     end
 
     def rekey!
-      algorithms.rekey!
-      wait { algorithms.initialized? }
+      if !algorithms.pending?
+        algorithms.rekey!
+        wait { algorithms.initialized? }
+      end
+    end
+
+    def rekey_as_needed
+      return if algorithms.pending?
+      socket.if_needs_rekey? { rekey! }
     end
 
     def peer

@@ -271,13 +271,18 @@ module Net; module SSH; module Transport
         mac_client = HMAC.get(hmac_client, mac_key_client)
         mac_server = HMAC.get(hmac_server, mac_key_server)
 
-        session.socket.client_cipher      = cipher_client
-        session.socket.server_cipher      = cipher_server
-        session.socket.client_hmac        = mac_client
-        session.socket.server_hmac        = mac_server
-        session.socket.client_compression = normalize_compression_name(compression_client)
-        session.socket.server_compression = normalize_compression_name(compression_server)
-        session.socket.compression_level  = options[:compression_level]
+        session.socket.client.set :cipher => cipher_client, :hmac => mac_client,
+          :compression => normalize_compression_name(compression_client),
+          :compression_level => options[:compression_level],
+          :rekey_limit => options[:rekey_limit],
+          :max_packets => options[:rekey_packet_limit],
+          :max_blocks => options[:rekey_blocks_limit]
+
+        session.socket.server.set :cipher => cipher_server, :hmac => mac_server,
+          :compression => normalize_compression_name(compression_server),
+          :rekey_limit => options[:rekey_limit],
+          :max_packets => options[:rekey_packet_limit],
+          :max_blocks  => options[:rekey_blocks_limit]
 
         @initialized = true
       end
