@@ -51,10 +51,6 @@ class MockTransport
 end
 
 
-# TO TEST:
-# * what happens if host-key validation fails?
-# * server signature could not be verified
-
 module Transport; module Kex
 
   class TextDiffieHellmanGroup1SHA1 < Test::Unit::TestCase
@@ -79,6 +75,11 @@ module Transport; module Kex
 
     def test_exchange_keys_with_host_key_type_mismatch_should_raise_exception
       algorithms :host_key => "ssh-dss"
+      assert_raises(Net::SSH::Exception) { exchange! :key_type => "ssh-dss" }
+    end
+
+    def test_exchange_keys_when_server_signature_could_not_be_verified_should_raise_exception
+      @signature = "1234567890"
       assert_raises(Net::SSH::Exception) { exchange! }
     end
 
