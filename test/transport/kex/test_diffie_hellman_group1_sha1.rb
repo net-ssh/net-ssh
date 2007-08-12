@@ -52,9 +52,7 @@ end
 
 
 # TO TEST:
-# * what happens if server host-key differs from what is described in the negotiated algorithms?
 # * what happens if host-key validation fails?
-# * test the arguments that get sent to the host-key verifier
 # * server signature could not be verified
 
 module Transport; module Kex
@@ -62,32 +60,50 @@ module Transport; module Kex
   class TextDiffieHellmanGroup1SHA1 < Test::Unit::TestCase
     include Net::SSH::Transport::Constants
 
-    def test_exchange_key_should_return_expected_results
-      connection.expect do |t, buffer|
-        assert_equal KEXDH_INIT, buffer.read_byte
-        assert_equal dh.dh.pub_key, buffer.read_bignum
-        t.return(:byte, KEXDH_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, "ssh-rsa", :string, signature))
-        connection.expect do |t, buffer|
-          assert_equal NEWKEYS, buffer.read_byte
-          t.return(:byte, NEWKEYS)
-        end
-      end
-
-      result = dh.exchange_keys
+    def test_exchange_keys_should_return_expected_results_when_successful
+      result = exchange!
       assert_equal session_id, result[:session_id]
       assert_equal server_key.to_blob, result[:server_key].to_blob
       assert_equal shared_secret, result[:shared_secret]
       assert_equal OpenSSL::Digest::SHA1, result[:hashing_algorithm]
     end
 
+    def test_exchange_keys_with_unverifiable_host_should_raise_exception
+      connection.verifier { false }
+      assert_raises(Net::SSH::Exception) { exchange! }
+    end
+
+    def test_exchange_keys_with_signature_key_type_mismatch_should_raise_exception
+      assert_raises(Net::SSH::Exception) { exchange! :key_type => "ssh-dss" }
+    end
+
+    def test_exchange_keys_with_host_key_type_mismatch_should_raise_exception
+      algorithms :host_key => "ssh-dss"
+      assert_raises(Net::SSH::Exception) { exchange! }
+    end
+
     private
+
+      def exchange!(options={})
+        connection.expect do |t, buffer|
+          assert_equal KEXDH_INIT, buffer.read_byte
+          assert_equal dh.dh.pub_key, buffer.read_bignum
+          t.return(:byte, KEXDH_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
+          connection.expect do |t, buffer|
+            assert_equal NEWKEYS, buffer.read_byte
+            t.return(:byte, NEWKEYS)
+          end
+        end
+
+        dh.exchange_keys
+      end
 
       def dh
         @dh ||= subject.new(algorithms, connection, packet_data.merge(:need_bytes => 20))
       end
 
-      def algorithms
-        @algorithms ||= OpenStruct.new(:host_key => "ssh-rsa")
+      def algorithms(options={})
+        @algorithms ||= OpenStruct.new(:host_key => options[:host_key] || "ssh-rsa")
       end
 
       def connection
