@@ -168,10 +168,7 @@ module Net; module SSH; module Transport; module Kex
       end
 
       def generate_key_fingerprint(key)
-        writer = Net::SSH::Buffer.new
-        writer.write_key(key)
-
-        blob = writer.to_s
+        blob = Net::SSH::Buffer.from(:key, key).to_s
         fingerprint = OpenSSL::Digest::MD5.hexdigest(blob).scan(/../).join(":")
 
         [blob, fingerprint]

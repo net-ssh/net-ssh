@@ -83,6 +83,26 @@ module Transport; module Kex
       assert_raises(Net::SSH::Exception) { exchange! }
     end
 
+    def test_exchange_keys_should_pass_expected_parameters_to_host_key_verifier
+      verified = false
+      connection.verifier do |data|
+        verified = true
+        assert_equal server_key.to_blob, data[:key].to_blob
+
+        blob = Net::SSH::Buffer.from(:key, data[:key]).to_s
+        fingerprint = OpenSSL::Digest::MD5.hexdigest(blob).scan(/../).join(":")
+
+        assert_equal blob, data[:key_blob]
+        assert_equal fingerprint, data[:fingerprint]
+        assert_equal connection, data[:session]
+
+        true
+      end
+
+      assert_nothing_raised { exchange! }
+      assert verified
+    end
+
     private
 
       def exchange!(options={})
