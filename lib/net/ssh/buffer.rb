@@ -27,7 +27,7 @@ module Net; module SSH
 
     # creates a new buffer
     def initialize(content="")
-      @content = content
+      @content = content.to_s
       @position = 0
     end
 
@@ -242,8 +242,9 @@ module Net; module SSH
     # string is prefixed by its length, encoded as a 4-byte long integer.
     def write_string(*text)
       text.each do |string|
-        write_long(string.length)
-        write(string)
+        s = string.to_s
+        write_long(s.length)
+        write(s)
       end
     end
 

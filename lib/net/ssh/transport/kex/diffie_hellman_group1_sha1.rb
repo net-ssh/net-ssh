@@ -1,4 +1,5 @@
 require 'net/ssh/buffer'
+require 'net/ssh/errors'
 require 'net/ssh/loggable'
 require 'net/ssh/transport/openssl'
 require 'net/ssh/transport/constants'
@@ -123,10 +124,8 @@ module Net; module SSH; module Transport; module Kex
         init, reply = get_message_types
 
         # send the KEXDH_INIT message
-        buffer = Net::SSH::Buffer.new
-        buffer.write_byte init
-        buffer.write_bignum dh.pub_key
-        connection.send_message buffer
+        buffer = Net::SSH::Buffer.from(:byte, init, :bignum, dh.pub_key)
+        connection.send_message(buffer)
 
         # expect the KEXDH_REPLY message
         buffer = connection.next_message
