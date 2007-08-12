@@ -53,7 +53,7 @@ end
 
 module Transport; module Kex
 
-  class TextDiffieHellmanGroup1SHA1 < Test::Unit::TestCase
+  class TestDiffieHellmanGroup1SHA1 < Test::Unit::TestCase
     include Net::SSH::Transport::Constants
 
     def test_exchange_keys_should_return_expected_results_when_successful
@@ -89,7 +89,7 @@ module Transport; module Kex
         verified = true
         assert_equal server_key.to_blob, data[:key].to_blob
 
-        blob = Net::SSH::Buffer.from(:key, data[:key]).to_s
+        blob = b(:key, data[:key]).to_s
         fingerprint = OpenSSL::Digest::MD5.hexdigest(blob).scan(/../).join(":")
 
         assert_equal blob, data[:key_blob]
@@ -119,8 +119,12 @@ module Transport; module Kex
         dh.exchange_keys
       end
 
+      def dh_options(options={})
+        @dh_options = options
+      end
+
       def dh
-        @dh ||= subject.new(algorithms, connection, packet_data.merge(:need_bytes => 20))
+        @dh ||= subject.new(algorithms, connection, packet_data.merge(:need_bytes => 20).merge(@dh_options || {}))
       end
 
       def algorithms(options={})
