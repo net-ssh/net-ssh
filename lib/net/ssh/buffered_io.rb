@@ -56,6 +56,16 @@ module Net; module SSH
       end
     end
 
+    public # these methods are primarily for use in tests
+
+      def write_buffer #:nodoc:
+        output.to_s
+      end
+
+      def read_buffer #:nodoc:
+        input.to_s
+      end
+
     private
 
       attr_reader :input, :output, :input_mutex, :output_mutex

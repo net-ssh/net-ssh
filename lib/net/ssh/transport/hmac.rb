@@ -5,24 +5,21 @@ require 'net/ssh/transport/hmac/sha1_96'
 require 'net/ssh/transport/hmac/none'
 
 module Net::SSH::Transport::HMAC
+  MAP = {
+    'hmac-md5'     => MD5,
+    'hmac-md5-96'  => MD5_96,
+    'hmac-sha1'    => SHA1,
+    'hmac-sha1-96' => SHA1_96,
+    'none'         => None
+  }
+
   def self.get(name, key="")
-    impl = find(name) or raise ArgumentError, "hmac not found: #{name.inspect}"
+    impl = MAP[name] or raise ArgumentError, "hmac not found: #{name.inspect}"
     impl.new(key)
   end
 
   def self.key_length(name)
-    impl = find(name) or raise ArgumentError, "hmac not found: #{name.inspect}"
+    impl = MAP[name] or raise ArgumentError, "hmac not found: #{name.inspect}"
     impl.key_length
-  end
-
-  def self.find(name)
-    case name
-    when 'hmac-md5'     then MD5
-    when 'hmac-md5-96'  then MD5_96
-    when 'hmac-sha1'    then SHA1
-    when 'hmac-sha1-96' then SHA1_96
-    when 'none'         then None
-    else nil
-    end
   end
 end

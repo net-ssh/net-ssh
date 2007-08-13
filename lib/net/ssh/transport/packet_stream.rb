@@ -1,4 +1,5 @@
 require 'net/ssh/buffered_io'
+require 'net/ssh/errors'
 require 'net/ssh/packet'
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'

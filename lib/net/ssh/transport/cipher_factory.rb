@@ -24,7 +24,7 @@ module Net; module SSH; module Transport
     # cipher will be put into encryption or decryption mode, based on the
     # value of the +encrypt+ parameter.
     def self.get(name, options={})
-      ossl_name = SSH_TO_OSSL[name] or raise CipherNotFound, name
+      ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
       return IdentityCipher if ossl_name == "none"
 
       cipher = OpenSSL::Cipher::Cipher.new(ossl_name)

@@ -35,10 +35,6 @@ module Transport; module Kex
       assert_equal 3, dh.dh.g
     end
 
-    # test that bits are never less than MINIMUM BITS
-    # test that bits are never more than MAXIMUM BITS
-    # test that p and g are provided by the server
-
     private
 
       def need_bits(bits=1024)
