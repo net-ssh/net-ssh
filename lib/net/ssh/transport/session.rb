@@ -140,6 +140,14 @@ module Net; module SSH; module Transport
       socket.send_packet(message)
     end
 
+    def configure_client(options={})
+      socket.client.set(options)
+    end
+
+    def configure_server(options={})
+      socket.server.set(options)
+    end
+
     private
 
       def select_host_key_verifier(paranoid)

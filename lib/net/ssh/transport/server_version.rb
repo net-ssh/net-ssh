@@ -1,4 +1,5 @@
 require 'net/ssh/loggable'
+require 'net/ssh/version'
 
 module Net; module SSH; module Transport
   class ServerVersion

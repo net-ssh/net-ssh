@@ -1,55 +1,7 @@
 $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../..").uniq!
 require 'common'
-require 'net/ssh/packet'
 require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 require 'ostruct'
-
-class MockTransport
-  class BlockVerifier
-    def initialize(block)
-      @block = block
-    end
-
-    def verify(data)
-      @block.call(data)
-    end
-  end
-
-  attr_reader :host_key_verifier
-
-  def initialize
-    @expectation = nil
-    @queue = []
-    verifier { |data| true }
-  end
-
-  def send_message(message)
-    buffer = Net::SSH::Buffer.new(message.to_s)
-    if @expectation.nil?
-      raise "got #{message.to_s.inspect} but was not expecting anything"
-    else
-      block, @expectation = @expectation, nil
-      block.call(self, buffer)
-    end
-  end
-
-  def next_message
-    @queue.shift or raise "expected a message from the server but nothing was ready to send"
-  end
-
-  def return(*args)
-    @queue << Net::SSH::Packet.new(Net::SSH::Buffer.from(*args))
-  end
-
-  def expect(&block)
-    @expectation = block
-  end
-
-  def verifier(&block)
-    @host_key_verifier = BlockVerifier.new(block)
-  end
-end
-
 
 module Transport; module Kex
 

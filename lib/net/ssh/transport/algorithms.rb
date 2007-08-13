@@ -5,6 +5,7 @@ require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/constants'
 require 'net/ssh/transport/hmac'
 require 'net/ssh/transport/kex'
+require 'net/ssh/transport/server_version'
 
 module Net; module SSH; module Transport
   class Algorithms
@@ -19,7 +20,7 @@ module Net; module SSH; module Transport
                          idea-cbc none),
       :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 none),
       :compression => %w(none zlib@openssh.com zlib),
-      :languages   => %w() 
+      :language    => %w() 
     }
 
     attr_reader :session
@@ -36,6 +37,7 @@ module Net; module SSH; module Transport
     attr_reader :language_client
     attr_reader :language_server
 
+    attr_reader :algorithms
     attr_reader :session_id
 
     # Returns true if the given packet can be processed during a key-exchange
@@ -73,7 +75,7 @@ module Net; module SSH; module Transport
     end
 
     def [](key)
-      @algorithms[key]
+      algorithms[key]
     end
 
     def pending?
@@ -110,28 +112,28 @@ module Net; module SSH; module Transport
         options[:compression] = %w(zlib@openssh.com zlib) if options[:compression] == true
 
         ALGORITHMS.each do |algorithm, list|
-          @algorithms[algorithm] = list.dup
+          algorithms[algorithm] = list.dup
 
           # apply the preferred algorithm order, if any
           if options[algorithm]
-            @algorithms[algorithm] = Array(options[algorithm]).compact.uniq
-            invalid = @algorithms[algorithm].detect { |name| !ALGORITHMS[algorithm].include?(name) }
+            algorithms[algorithm] = Array(options[algorithm]).compact.uniq
+            invalid = algorithms[algorithm].detect { |name| !ALGORITHMS[algorithm].include?(name) }
             raise NotImplementedError, "unsupported #{algorithm} algorithm: `#{invalid}'" if invalid
 
             # make sure all of our supported algorithms are tacked onto the
             # end, so that if the user tries to give a list of which none are
             # supported, we can still proceed.
-            list.each { |name| @algorithms[algorithm] << name unless @algorithms[algorithm].include?(name) }
+            list.each { |name| algorithms[algorithm] << name unless algorithms[algorithm].include?(name) }
           end
         end
 
         # for convention, make sure our list has the same keys as the server
         # list
 
-        @algorithms[:encryption_client ] = @algorithms[:encryption_server ] = @algorithms[:encryption]
-        @algorithms[:hmac_client       ] = @algorithms[:hmac_server       ] = @algorithms[:hmac]
-        @algorithms[:compression_client] = @algorithms[:compression_server] = @algorithms[:compression]
-        @algorithms[:language_client   ] = @algorithms[:language_server   ] = @algorithms[:languages]
+        algorithms[:encryption_client ] = algorithms[:encryption_server ] = algorithms[:encryption]
+        algorithms[:hmac_client       ] = algorithms[:hmac_server       ] = algorithms[:hmac]
+        algorithms[:compression_client] = algorithms[:compression_server] = algorithms[:compression]
+        algorithms[:language_client   ] = algorithms[:language_server   ] = algorithms[:language]
 
         if !options.key?(:host_key)
           # make sure the host keys are specified in preference order, where any
@@ -139,10 +141,10 @@ module Net; module SSH; module Transport
 
           existing_keys = KnownHosts.search_for(session.host_as_string)
           host_keys = existing_keys.map { |key| key.ssh_type }.uniq
-          @algorithms[:host_key].each do |name|
+          algorithms[:host_key].each do |name|
             host_keys << name unless host_keys.include?(name)
           end
-          @algorithms[:host_key] = host_keys
+          algorithms[:host_key] = host_keys
         end
       end
 
@@ -171,12 +173,12 @@ module Net; module SSH; module Transport
       end
 
       def build_client_algorithm_packet
-        kex         = @algorithms[:kex        ].join(",")
-        host_key    = @algorithms[:host_key   ].join(",")
-        encryption  = @algorithms[:encryption ].join(",")
-        hmac        = @algorithms[:hmac       ].join(",")
-        compression = @algorithms[:compression].join(",")
-        languages   = @algorithms[:languages  ].join(",")
+        kex         = algorithms[:kex        ].join(",")
+        host_key    = algorithms[:host_key   ].join(",")
+        encryption  = algorithms[:encryption ].join(",")
+        hmac        = algorithms[:hmac       ].join(",")
+        compression = algorithms[:compression].join(",")
+        languages   = algorithms[:language   ].join(",")
 
         msg = Net::SSH::Buffer.new
         msg.write_byte KEXINIT
@@ -270,14 +272,14 @@ module Net; module SSH; module Transport
         mac_client = HMAC.get(hmac_client, mac_key_client)
         mac_server = HMAC.get(hmac_server, mac_key_server)
 
-        session.socket.client.set :cipher => cipher_client, :hmac => mac_client,
+        session.configure_client :cipher => cipher_client, :hmac => mac_client,
           :compression => normalize_compression_name(compression_client),
           :compression_level => options[:compression_level],
           :rekey_limit => options[:rekey_limit],
           :max_packets => options[:rekey_packet_limit],
           :max_blocks => options[:rekey_blocks_limit]
 
-        session.socket.server.set :cipher => cipher_server, :hmac => mac_server,
+        session.configure_server :cipher => cipher_server, :hmac => mac_server,
           :compression => normalize_compression_name(compression_server),
           :rekey_limit => options[:rekey_limit],
           :max_packets => options[:rekey_packet_limit],
