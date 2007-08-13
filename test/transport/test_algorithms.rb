@@ -2,9 +2,6 @@ $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/..").uniq!
 require 'common'
 require 'net/ssh/transport/algorithms'
 
-# TESTS
-# * server-initiated key exchange
-# * client-initiated key exchange
 module Transport
 
   class TestAlgorithms < Test::Unit::TestCase
@@ -160,7 +157,6 @@ module Transport
       assert algorithms.pending?
 
       (0..255).each do |type|
-        packet = stub("packet", :type => type)
         packet = stub("packet", :type => type)
         case type
         when 1..4, 6..19, 21..49 then assert(algorithms.allow?(packet), "#{type} should be allowed during key exchange")
