@@ -61,6 +61,10 @@ class MockTransport
     @expectation = block
   end
 
+  def expect!
+    expect {}
+  end
+
   def verifier(&block)
     @host_key_verifier = BlockVerifier.new(block)
   end

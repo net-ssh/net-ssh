@@ -102,7 +102,7 @@ module Transport
       assert !algorithms.initialized?
     end
 
-    def test_server_initiated_key_exchange_with_defaults
+    def test_key_exchange_when_initiated_by_server
       transport.expect do |t, buffer|
         assert_kexinit(buffer)
         install_mock_key_exchange(buffer)
@@ -111,12 +111,25 @@ module Transport
       install_mock_algorithm_lookups
       algorithms.accept_kexinit(kexinit)
 
-      assert !transport.client_options[:compression]
-      assert !transport.server_options[:compression]
-      assert_equal :client_cipher, transport.client_options[:cipher]
-      assert_equal :server_cipher, transport.server_options[:cipher]
-      assert_equal :client_hmac, transport.client_options[:hmac]
-      assert_equal :server_hmac, transport.server_options[:hmac]
+      assert_exchange_results
+    end
+
+    def test_key_exchange_when_initiated_by_client
+      state = nil
+      transport.expect do |t, buffer|
+        assert_kexinit(buffer)
+        state = :sent_kexinit
+        install_mock_key_exchange(buffer)
+      end
+
+      algorithms.rekey!
+      assert_equal state, :sent_kexinit
+      assert algorithms.pending?
+
+      install_mock_algorithm_lookups
+      algorithms.accept_kexinit(kexinit)
+
+      assert_exchange_results
     end
 
     def test_key_exchange_when_server_does_not_support_preferred_kex_should_fallback_to_secondary
@@ -132,6 +145,58 @@ module Transport
       kexinit :kex => "something-obscure"
       transport.expect { |t,buffer| assert_kexinit(buffer) }
       assert_raises(Net::SSH::Exception) { algorithms.accept_kexinit(kexinit) }
+    end
+
+    def test_allow_when_not_pending_should_be_true_for_all_packets
+      (0..255).each do |type|
+        packet = stub("packet", :type => type)
+        assert algorithms.allow?(packet), type
+      end
+    end
+
+    def test_allow_when_pending_should_be_true_only_for_packets_valid_during_key_exchange
+      transport.expect!
+      algorithms.rekey!
+      assert algorithms.pending?
+
+      (0..255).each do |type|
+        packet = stub("packet", :type => type)
+        packet = stub("packet", :type => type)
+        case type
+        when 1..4, 6..19, 21..49 then assert(algorithms.allow?(packet), "#{type} should be allowed during key exchange")
+        else assert(!algorithms.allow?(packet), "#{type} should not be allowed during key exchange")
+        end
+      end
+    end
+
+    def test_exchange_with_zlib_compression_enabled_sets_compression_to_standard
+      algorithms :compression => "zlib"
+
+      transport.expect do |t, buffer|
+        assert_kexinit(buffer, :compression_client => "zlib,none,zlib@openssh.com", :compression_server => "zlib,none,zlib@openssh.com")
+        install_mock_key_exchange(buffer)
+      end
+
+      install_mock_algorithm_lookups
+      algorithms.accept_kexinit(kexinit)
+
+      assert_equal :standard, transport.client_options[:compression]
+      assert_equal :standard, transport.server_options[:compression]
+    end
+
+    def test_exchange_with_zlib_at_openssh_dot_com_compression_enabled_sets_compression_to_delayed
+      algorithms :compression => "zlib@openssh.com"
+
+      transport.expect do |t, buffer|
+        assert_kexinit(buffer, :compression_client => "zlib@openssh.com,none,zlib", :compression_server => "zlib@openssh.com,none,zlib")
+        install_mock_key_exchange(buffer)
+      end
+
+      install_mock_algorithm_lookups
+      algorithms.accept_kexinit(kexinit)
+
+      assert_equal :delayed, transport.client_options[:compression]
+      assert_equal :delayed, transport.server_options[:compression]
     end
 
     private
@@ -217,6 +282,17 @@ module Transport
         assert_equal options[:language_client] || "", buffer.read_string
         assert_equal options[:language_server] || "", buffer.read_string
         assert_equal options[:first_kex_follows] || false, buffer.read_bool
+      end
+
+      def assert_exchange_results
+        assert algorithms.initialized?
+        assert !algorithms.pending?
+        assert !transport.client_options[:compression]
+        assert !transport.server_options[:compression]
+        assert_equal :client_cipher, transport.client_options[:cipher]
+        assert_equal :server_cipher, transport.server_options[:cipher]
+        assert_equal :client_hmac, transport.client_options[:hmac]
+        assert_equal :server_hmac, transport.server_options[:hmac]
       end
 
       def algorithms(options={})
