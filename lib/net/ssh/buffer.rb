@@ -25,7 +25,7 @@ module Net; module SSH
     attr_reader :content
 
     # the current position of the pointer in the buffer
-    attr_reader :position
+    attr_accessor :position
 
     # creates a new buffer
     def initialize(content="")
@@ -196,6 +196,10 @@ module Net; module SSH
       end
 
       return key
+    end
+
+    def read_buffer
+      Buffer.new(read_string)
     end
 
     # Resets the pointer to the start of the buffer.

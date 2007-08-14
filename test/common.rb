@@ -37,6 +37,8 @@ class MockTransport < Net::SSH::Transport::Session
     @expectation = nil
     @queue = []
     @hints = {}
+    @socket = options[:socket]
+    @algorithms = OpenStruct.new(:session_id => "abcxyz123")
     verifier { |data| true }
   end
 
