@@ -24,67 +24,66 @@ module Net
             return false
           end
 
-          # Builds a Net::SSH::Util::WriterBuffer that contains the request
-          # formatted for sending a public-key request to the server.
-          def build_request(pub_key, username, next_service, has_sig)
-            blob = Net::SSH::Buffer.new
-            blob.write_key pub_key
+          private
 
-            userauth_request(username, next_service, "publickey", has_sig,
-              pub_key.ssh_type, blob.to_s)
-          end
-          private :build_request
+            # Builds a Net::SSH::Util::WriterBuffer that contains the request
+            # formatted for sending a public-key request to the server.
+            def build_request(pub_key, username, next_service, has_sig)
+              blob = Net::SSH::Buffer.new
+              blob.write_key pub_key
 
-          # Builds and sends a request formatted for a public-key
-          # authentication request.
-          def send_request( pub_key, username, next_service, signature=nil )
-            msg = build_request(pub_key, username, next_service, !signature.nil?)
-            msg.write_string(signature) if signature
-            send_message(msg)
-          end
-          private :send_request
-
-          # Attempts to perform public-key authentication for the given
-          # username, with the given identity (public key). Returns +true+ if
-          # successful, or +false+ otherwise.
-          def authenticate_with(identity, next_service, username)
-            trace { "trying publickey (#{identity.fingerprint})" }
-            send_request(identity, username, next_service)
-
-            message = session.next_message
-
-            case message.type
-              when USERAUTH_PK_OK
-                buffer = build_request(identity, username, next_service, true)
-                sig_data = Net::SSH::Buffer.new
-                sig_data.write_string(session_id)
-                sig_data.append(buffer.to_s)
-
-                sig_blob = key_manager.sign(identity, sig_data)
-
-                send_request(identity, username, next_service, sig_blob.to_s)
-                message = session.next_message
-
-                case message.type
-                  when USERAUTH_SUCCESS
-                    debug { "publickey succeeded (#{identity.fingerprint})" }
-                    return true
-                  when USERAUTH_FAILURE
-                    trace { "publickey failed (#{identity.fingerprint})" }
-                    return false
-                  else
-                    raise Net::SSH::Exception,
-                      "unexpected server response to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
-                end
-
-              when USERAUTH_FAILURE
-                return false
-
-              else
-                raise Net::SSH::Exception, "unexpected reply to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
+              userauth_request(username, next_service, "publickey", has_sig,
+                pub_key.ssh_type, blob.to_s)
             end
-          end
-          private :authenticate_with
+
+            # Builds and sends a request formatted for a public-key
+            # authentication request.
+            def send_request(pub_key, username, next_service, signature=nil)
+              msg = build_request(pub_key, username, next_service, !signature.nil?)
+              msg.write_string(signature) if signature
+              send_message(msg)
+            end
+
+            # Attempts to perform public-key authentication for the given
+            # username, with the given identity (public key). Returns +true+ if
+            # successful, or +false+ otherwise.
+            def authenticate_with(identity, next_service, username)
+              trace { "trying publickey (#{identity.fingerprint})" }
+              send_request(identity, username, next_service)
+
+              message = session.next_message
+
+              case message.type
+                when USERAUTH_PK_OK
+                  buffer = build_request(identity, username, next_service, true)
+                  sig_data = Net::SSH::Buffer.new
+                  sig_data.write_string(session_id)
+                  sig_data.append(buffer.to_s)
+
+                  sig_blob = key_manager.sign(identity, sig_data)
+
+                  send_request(identity, username, next_service, sig_blob.to_s)
+                  message = session.next_message
+
+                  case message.type
+                    when USERAUTH_SUCCESS
+                      debug { "publickey succeeded (#{identity.fingerprint})" }
+                      return true
+                    when USERAUTH_FAILURE
+                      trace { "publickey failed (#{identity.fingerprint})" }
+                      return false
+                    else
+                      raise Net::SSH::Exception,
+                        "unexpected server response to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
+                  end
+
+                when USERAUTH_FAILURE
+                  return false
+
+                else
+                  raise Net::SSH::Exception, "unexpected reply to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
+              end
+            end
 
         end
 
