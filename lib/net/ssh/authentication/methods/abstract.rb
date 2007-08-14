@@ -26,11 +26,8 @@ module Net; module SSH; module Authentication; module Methods
     end
 
     def userauth_request(username, next_service, auth_method, *others)
-      buffer = Net::SSH::Buffer.new
-      buffer.write_byte(USERAUTH_REQUEST)
-      buffer.write_string(username)
-      buffer.write_string(next_service)
-      buffer.write_string(auth_method)
+      buffer = Net::SSH::Buffer.from(:byte, USERAUTH_REQUEST,
+        :string, username, :string, next_service, :string, auth_method)
 
       others.each do |value|
         case value
