@@ -1,4 +1,6 @@
 require 'zlib'
+require 'net/ssh/transport/cipher_factory'
+require 'net/ssh/transport/hmac'
 
 module Net; module SSH; module Transport
 
