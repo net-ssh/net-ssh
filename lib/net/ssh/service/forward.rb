@@ -99,7 +99,7 @@ module Net; module SSH; module Service
         else
           channel.send_channel_request("auth-agent-req") do |channel, success|
             if success
-              @auth_agent = Authentication::Agent.new(logger)
+              @auth_agent = Authentication::Agent.connect(logger)
               debug { "authentication agent forwarding is active" }
             else
               error { "could not establish forwarding of authentication agent" }

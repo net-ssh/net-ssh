@@ -148,7 +148,7 @@ module Net
 
         def agent
           return unless use_agent?
-          @agent ||= Agent.new(logger)
+          @agent ||= Agent.connect(logger)
         rescue AgentNotAvailable
           @use_agent = false
           nil

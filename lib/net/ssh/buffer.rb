@@ -1,3 +1,5 @@
+require 'net/ssh/transport/openssl'
+
 module Net; module SSH
   class Buffer
     def self.from(*args)

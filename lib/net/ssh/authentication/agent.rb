@@ -41,9 +41,15 @@ module Net; module SSH; module Authentication
 
     attr_reader :socket
 
+    def self.connect(logger=nil)
+      agent = new(logger)
+      agent.connect!
+      agent.negotiate!
+      agent
+    end
+
     def initialize(logger=nil)
       self.logger = logger
-      connect!
     end
 
     # Connect to the agent process using the socket factory and socket name
@@ -56,12 +62,15 @@ module Net; module SSH; module Authentication
         @socket = agent_socket_factory.open(ENV['SSH_AUTH_SOCK'])
       rescue
         error { "could not connect to ssh-agent" }
-        raise AgentNotAvailable
+        raise AgentNotAvailable, $!.message
       end
+    end
 
+    # Attempts to negotiate the SSH agent protocol version. Raises an error
+    # if the version could not be negotiated successfully.
+    def negotiate!
       # determine what type of agent we're communicating with
-      buffer = Buffer.from(:string, Transport::ServerVersion::PROTO_VERSION)
-      type, body = send_with_reply(SSH2_AGENT_REQUEST_VERSION, buffer)
+      type, body = send_and_wait(SSH2_AGENT_REQUEST_VERSION, :string, Transport::ServerVersion::PROTO_VERSION)
 
       if type == SSH2_AGENT_VERSION_RESPONSE
         raise NotImplementedError, "SSH2 agents are not yet supported"
@@ -74,7 +83,7 @@ module Net; module SSH; module Authentication
     # Each key returned is augmented with a +comment+ property which is set
     # to the comment returned by the agent for that key.
     def identities
-      type, body = send_with_reply(SSH2_AGENT_REQUEST_IDENTITIES)
+      type, body = send_and_wait(SSH2_AGENT_REQUEST_IDENTITIES)
       raise AgentError, "could not get identity count" if agent_failed(type)
       raise AgentError, "bad authentication reply: #{type}" if type != SSH2_AGENT_IDENTITIES_ANSWER
 
@@ -98,10 +107,7 @@ module Net; module SSH; module Authentication
     # Using the agent and the given public key, sign the given data. The
     # signature is returned in SSH2 format.
     def sign(key, data)
-      blob = Buffer.from(:key, key)
-
-      packet_data = Buffer.from(:string, blob.to_s, :string, data.to_s, :long, 0)
-      type, reply = send_with_reply(SSH2_AGENT_SIGN_REQUEST, packet_data)
+      type, reply = send_and_wait(SSH2_AGENT_SIGN_REQUEST, :string, Buffer.from(:key, key), :string, data, :long, 0)
 
       if agent_failed(type)
         raise AgentError, "agent could not sign data with requested identity"
@@ -112,44 +118,6 @@ module Net; module SSH; module Authentication
       return reply.read_string
     end
 
-    # Send a new packet of the given type, with the associated data.
-    def send_packet(type, data=nil)
-      buffer = Buffer.from(:long, (data ? data.length : 0) + 1, :byte, type.to_i)
-      buffer.write(data.to_s) if data
-      trace { "sending agent request #{type} len #{buffer.to_s.length}" }
-      @socket.send buffer.to_s, 0
-    end
-    private :send_packet
-
-    # Read the next packet from the agent. This will return a two-part
-    # tuple consisting of the packet type, and the packet's body (which
-    # is returned as a Net::SSH::Buffer).
-    def read_packet
-      length = @socket.read(4).unpack("N").first - 1
-      type = @socket.read(1).unpack("C").first
-      reader = Net::SSH::Buffer.new(@socket.read(length))
-      trace { "received agent packet #{type} len #{length}" }
-      return type, reader
-    end
-    private :read_packet
-
-    # Send the given packet and return the subsequent reply from the agent.
-    # (See #send_packet and #read_packet).
-    def send_with_reply(type, data=nil)
-      send_packet(type, data)
-      read_packet
-    end
-    private :send_with_reply
-
-    # Returns +true+ if the parameter indicates a "failure" response from
-    # the agent, and +false+ otherwise.
-    def agent_failed(type)
-      type == SSH_AGENT_FAILURE ||
-      type == SSH2_AGENT_FAILURE ||
-      type == SSH_COM_AGENT2_FAILURE
-    end
-    private :agent_failed
-
     def agent_socket_factory
       if File::ALT_SEPARATOR
         Pageant::Socket
@@ -157,6 +125,42 @@ module Net; module SSH; module Authentication
         UNIXSocket
       end
     end
+
+    private
+
+      # Send a new packet of the given type, with the associated data.
+      def send_packet(type, *args)
+        buffer = Buffer.from(*args)
+        data = [buffer.length + 1, type.to_i, buffer.to_s].pack("NCA*")
+        trace { "sending agent request #{type} len #{buffer.length}" }
+        @socket.send data, 0
+      end
+
+      # Read the next packet from the agent. This will return a two-part
+      # tuple consisting of the packet type, and the packet's body (which
+      # is returned as a Net::SSH::Buffer).
+      def read_packet
+        buffer = Net::SSH::Buffer.new(@socket.read(4))
+        buffer.append(@socket.read(buffer.read_long))
+        type = buffer.read_byte
+        trace { "received agent packet #{type} len #{buffer.length-4}" }
+        return type, buffer
+      end
+
+      # Send the given packet and return the subsequent reply from the agent.
+      # (See #send_packet and #read_packet).
+      def send_and_wait(type, *args)
+        send_packet(type, *args)
+        read_packet
+      end
+
+      # Returns +true+ if the parameter indicates a "failure" response from
+      # the agent, and +false+ otherwise.
+      def agent_failed(type)
+        type == SSH_AGENT_FAILURE ||
+        type == SSH2_AGENT_FAILURE ||
+        type == SSH_COM_AGENT2_FAILURE
+      end
   end
 
 end; end; end
