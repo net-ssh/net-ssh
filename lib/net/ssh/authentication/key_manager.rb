@@ -24,11 +24,11 @@ module Net
       class KeyManager
         include Loggable
 
-        # The key manager instance to use for managing keys
-        attr_writer :keys
-
         # The list of user key files that will be examined
         attr_reader :key_files
+
+        # The map of loaded identities
+        attr_reader :known_identities
 
         # Create a new KeyManager. By default, the manager will
         # use the ssh-agent (if it is running).
@@ -45,18 +45,16 @@ module Net
         # appropriate to use if a client wishes to NOT use the default identity
         # files.
         def clear!
-          @key_files.clear
-          @known_identities.clear
+          key_files.clear
+          known_identities.clear
           self
         end
 
         # Add the given key_file to the list of key files that will be used.
         def add(key_file)
-          @key_files.push(key_file).uniq!
+          key_files.push(key_file).uniq!
           self
         end
-
-        alias :<< :add
 
         # This is used as a hint to the KeyManager indicating that the agent
         # connection is no longer needed. Any other open resources may be closed
@@ -81,16 +79,16 @@ module Net
           if agent
             agent.identities.each do |key|
               identities.push key
-              @known_identities[key] = { :from => :agent }
+              known_identities[key] = { :from => :agent }
             end
           end
 
-          @key_files.each do |file|
+          key_files.each do |file|
             if File.readable?(file)
               begin
                 key = KeyFactory.load_public_key(file + ".pub")
                 identities.push key
-                @known_identities[key] = { :from => :file, :file => file }
+                known_identities[key] = { :from => :file, :file => file }
               rescue Exception => e
                 error { "could not load public key file `#{file}.pub': #{e.class} (#{e.message})" }
               end
@@ -110,7 +108,7 @@ module Net
         # will always return the signature in an SSH2-specified "signature
         # blob" format.
         def sign(identity, data)
-          info = @known_identities[identity] or raise KeyManagerError, "the given identity is unknown to the key manager"
+          info = known_identities[identity] or raise KeyManagerError, "the given identity is unknown to the key manager"
 
           if info[:key].nil? && info[:from] == :file
             begin
@@ -154,12 +152,13 @@ module Net
           nil
         end
 
-        # Closes any open connection to an ssh-agent.
-        def close_agent
-          @agent.close if @agent
-          @agent = nil
-        end
-        private :close_agent
+        private
+
+          # Closes any open connection to an ssh-agent.
+          def close_agent
+            @agent.close if @agent
+            @agent = nil
+          end
       end
 
     end
