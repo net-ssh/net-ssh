@@ -1,10 +1,12 @@
 $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../..").uniq!
 require 'common'
+require 'authentication/methods/common'
 require 'net/ssh/authentication/methods/abstract'
 
 module Authentication; module Methods
 
   class TestAbstract < Test::Unit::TestCase
+    include Common
 
     def test_constructor_should_set_defaults
       assert_nil subject.key_manager
@@ -43,14 +45,6 @@ module Authentication; module Methods
 
       def subject(options={})
         @subject ||= Net::SSH::Authentication::Methods::Abstract.new(session(options), options)
-      end
-
-      def transport(options={})
-        @transport ||= MockTransport.new(options)
-      end
-
-      def session(options={})
-        @session ||= stub("auth-session", :logger => nil, :transport => transport(options))
       end
 
   end

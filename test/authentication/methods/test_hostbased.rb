@@ -1,11 +1,12 @@
 $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../..").uniq!
 require 'common'
 require 'net/ssh/authentication/methods/hostbased'
+require 'authentication/methods/common'
 
 module Authentication; module Methods
 
   class TestHostbased < Test::Unit::TestCase
-    include Net::SSH::Authentication::Constants
+    include Common
 
     def test_authenticate_should_return_false_when_no_key_manager_has_been_set
       assert_equal false, subject(:key_manager => nil).authenticate("ssh-connection", "jamis")

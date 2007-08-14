@@ -10,12 +10,6 @@ module Net
         class KeyboardInteractive < Abstract
           include Prompt
 
-          # Represents an information request from the server
-          InfoRequest = Struct.new(:name, :instruction, :password, :prompts)
-
-          # Represents a single prompt in an InfoRequest.
-          Prompt = Struct.new(:prompt, :echo)
-
           USERAUTH_INFO_REQUEST  = 60
           USERAUTH_INFO_RESPONSE = 61
 
