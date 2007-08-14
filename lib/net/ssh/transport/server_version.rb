@@ -1,3 +1,4 @@
+require 'net/ssh/errors'
 require 'net/ssh/loggable'
 require 'net/ssh/version'
 
