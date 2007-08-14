@@ -15,6 +15,7 @@ module Net; module SSH; module Authentication
     attr_reader :transport
 
     attr_reader :auth_methods
+    attr_reader :allowed_auth_methods
     attr_reader :options
 
     def initialize(transport, options={})
@@ -30,9 +31,7 @@ module Net; module SSH; module Authentication
     def authenticate(next_service, username, password=nil)
       trace { "beginning authentication of `#{username}'" }
 
-      packet = transport.service_request("ssh-userauth")
-      transport.send_message(packet)
-
+      transport.send_message(transport.service_request("ssh-userauth"))
       message = expect_message(SERVICE_ACCEPT)
 
       key_manager = KeyManager.new(logger)
@@ -74,7 +73,7 @@ module Net; module SSH; module Authentication
           return packet
 
         when USERAUTH_SUCCESS
-          transport.socket.hints[:authenticated] = true
+          transport.hint :authenticated
           return packet
 
         else

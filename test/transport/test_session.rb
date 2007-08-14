@@ -267,10 +267,16 @@ module Transport
       assert_equal :standard, socket.server.compression
     end
 
+    def test_hint_should_set_hint_on_socket
+      assert !socket.hints[:authenticated]
+      session.hint :authenticated
+      assert socket.hints[:authenticated]
+    end
+
     private
 
       def socket
-        @socket ||= stub("socket")
+        @socket ||= stub("socket", :hints => {})
       end
 
       def server_version

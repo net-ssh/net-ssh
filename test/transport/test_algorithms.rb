@@ -265,7 +265,7 @@ module Transport
       end
 
       def assert_kexinit(buffer, options={})
-        assert_equal KEXINIT, buffer.read_byte
+        assert_equal KEXINIT, buffer.type
         assert_equal 16, buffer.read(16).length
         assert_equal options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1", buffer.read_string
         assert_equal options[:host_key] || "ssh-rsa,ssh-dss", buffer.read_string

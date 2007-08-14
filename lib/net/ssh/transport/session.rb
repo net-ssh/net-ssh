@@ -146,6 +146,10 @@ module Net; module SSH; module Transport
       socket.server.set(options)
     end
 
+    def hint(which, value=true)
+      socket.hints[which] = value
+    end
+
     public
 
       # this method is primarily for use in tests

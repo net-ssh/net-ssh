@@ -47,18 +47,18 @@ module Transport; module Kex
 
       def exchange!(options={})
         connection.expect do |t, buffer|
-          assert_equal KEXDH_GEX_REQUEST, buffer.read_byte
+          assert_equal KEXDH_GEX_REQUEST, buffer.type
           assert_equal 1024, buffer.read_long
           assert_equal need_bits, buffer.read_long
           assert_equal 8192, buffer.read_long
-          t.return(:byte, KEXDH_GEX_GROUP, :bignum, bn(options[:p] || default_p), :bignum, bn(options[:g] || 2))
+          t.return(KEXDH_GEX_GROUP, :bignum, bn(options[:p] || default_p), :bignum, bn(options[:g] || 2))
           t.expect do |t, buffer|
-            assert_equal KEXDH_GEX_INIT, buffer.read_byte
+            assert_equal KEXDH_GEX_INIT, buffer.type
             assert_equal dh.dh.pub_key, buffer.read_bignum
-            t.return(:byte, KEXDH_GEX_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
+            t.return(KEXDH_GEX_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
             t.expect do |t, buffer|
-              assert_equal NEWKEYS, buffer.read_byte
-              t.return(:byte, NEWKEYS)
+              assert_equal NEWKEYS, buffer.type
+              t.return(NEWKEYS)
             end
           end
         end

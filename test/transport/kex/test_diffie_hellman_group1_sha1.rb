@@ -59,12 +59,12 @@ module Transport; module Kex
 
       def exchange!(options={})
         connection.expect do |t, buffer|
-          assert_equal KEXDH_INIT, buffer.read_byte
+          assert_equal KEXDH_INIT, buffer.type
           assert_equal dh.dh.pub_key, buffer.read_bignum
-          t.return(:byte, KEXDH_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
+          t.return(KEXDH_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
           connection.expect do |t, buffer|
-            assert_equal NEWKEYS, buffer.read_byte
-            t.return(:byte, NEWKEYS)
+            assert_equal NEWKEYS, buffer.type
+            t.return(NEWKEYS)
           end
         end
 

@@ -4,15 +4,14 @@ require 'mocha'
 require 'net/ssh/buffer'
 require 'net/ssh/loggable'
 require 'net/ssh/packet'
+require 'net/ssh/transport/session'
 require 'ostruct'
 
 def P(*args)
   Net::SSH::Packet.new(Net::SSH::Buffer.from(*args))
 end
 
-class MockTransport
-  include Net::SSH::Loggable
-
+class MockTransport < Net::SSH::Transport::Session
   class BlockVerifier
     def initialize(block)
       @block = block
@@ -29,6 +28,7 @@ class MockTransport
 
   attr_reader :client_options
   attr_reader :server_options
+  attr_reader :hints
 
   def initialize(options={})
     self.logger = options[:logger]
@@ -36,6 +36,7 @@ class MockTransport
     self.server_version = OpenStruct.new(:version => "SSH-2.0-Ruby/Net::SSH::Test")
     @expectation = nil
     @queue = []
+    @hints = {}
     verifier { |data| true }
   end
 
@@ -45,7 +46,7 @@ class MockTransport
       raise "got #{message.to_s.inspect} but was not expecting anything"
     else
       block, @expectation = @expectation, nil
-      block.call(self, buffer)
+      block.call(self, Net::SSH::Packet.new(buffer))
     end
   end
 
@@ -53,8 +54,8 @@ class MockTransport
     @queue.shift or raise "expected a message from the server but nothing was ready to send"
   end
 
-  def return(*args)
-    @queue << P(*args)
+  def return(type, *args)
+    @queue << P(:byte, type, *args)
   end
 
   def expect(&block)
@@ -75,5 +76,9 @@ class MockTransport
 
   def configure_server(options)
     @server_options = options
+  end
+
+  def hint(name, value=true)
+    @hints[name] = value
   end
 end
