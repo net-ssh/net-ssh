@@ -66,10 +66,7 @@ module Net; module SSH; module Transport
     end
 
     def service_request(service)
-      msg = Net::SSH::Buffer.new
-      msg.write_byte(SERVICE_REQUEST)
-      msg.write_string(service)
-      msg
+      Net::SSH::Buffer.from(:byte, SERVICE_REQUEST, :string, service)
     end
 
     def rekey!
@@ -126,9 +123,10 @@ module Net; module SSH; module Transport
 
     def wait
       loop do
+        break if block_given? && yield
         message = poll_message(:nonblock, false)
         push(message) if message
-        break if !block_given? || yield
+        break if !block_given?
       end
     end
 
@@ -147,6 +145,11 @@ module Net; module SSH; module Transport
     def configure_server(options={})
       socket.server.set(options)
     end
+
+    public
+
+      # this method is primarily for use in tests
+      attr_reader :queue #:nodoc:
 
     private
 
