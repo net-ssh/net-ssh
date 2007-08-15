@@ -59,8 +59,8 @@ module Net; module SSH
           scanner.skip(/\s*/)
           next if scanner.match?(/$|#/)
 
-          hostlist = scanner.scan(/\S+/)
-          next unless (hostlist.split(/,/) & entries).any?
+          hostlist = scanner.scan(/\S+/).split(/,/)
+          next unless entries.all? { |entry| hostlist.include?(entry) }
 
           scanner.skip(/\s*/)
           type = scanner.scan(/\S+/)
