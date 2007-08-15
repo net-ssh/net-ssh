@@ -72,7 +72,7 @@ module Net; module SSH; module Connection
 
     def request_pty(opts={}, &block)
       extra = opts.keys - VALID_PTY_OPTIONS.keys
-      raise ArgumentError, "invalid option(s) to request_pty: #{invalid_opts.inspect}" if extra.any?
+      raise ArgumentError, "invalid option(s) to request_pty: #{extra.inspect}" if extra.any?
 
       opts = VALID_PTY_OPTIONS.merge(opts)
 
@@ -183,7 +183,6 @@ module Net; module SSH; module Connection
     end
 
     def do_extended_data(type, data)
-      # FIXME does the window size need to include the 'type' byte?
       update_local_window_size(data.length)
       @on_extended_data.call(self, type, data) if @on_extended_data
     end
