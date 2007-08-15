@@ -57,13 +57,23 @@ module Net; module SSH
       @content.empty?
     end
 
+    # Resets the pointer to the start of the buffer.
+    def reset!
+      @position = 0
+    end
+
+    # Returns true if the pointer is at the end of the buffer.
+    def eof?
+      @position >= length
+    end
+
     # Resets the buffer, making it empty.
     def clear!
       @content = ""
       @position = 0
     end
 
-    # Consume's n bytes from the buffer, where n is the current position
+    # Consumes n bytes from the buffer, where n is the current position
     # unless otherwise specified.
     def consume!(n=position)
       if n >= length
@@ -121,8 +131,8 @@ module Net; module SSH
       
     # Return the next 8 bytes as a 64-bit integer (in network byte order).
     def read_int64
-      hi = read_long
-      lo = read_long
+      hi = read_long or return nil
+      lo = read_long or return nil
       return (hi << 32) + lo
     end
 
@@ -130,12 +140,6 @@ module Net; module SSH
     def read_long
       b = read(4) or return nil
       b.unpack("N").first
-    end
-
-    # Read the next two bytes as a short integer (in network byte order).
-    def read_short
-      b = read(2) or return nil
-      b.unpack("n").first
     end
 
     # Read and return the next byte in the buffer.
@@ -154,8 +158,8 @@ module Net; module SSH
     # Read a single byte and convert it into a boolean, using 'C' rules
     # (i.e., zero is false, non-zero is true).
     def read_bool
-      b = read(1) or return nil
-      b[0] != 0
+      b = read_byte or return nil
+      b != 0
     end
 
     # Read a bignum (OpenSSL::BN) from the buffer, in SSH2 format. It is
@@ -202,16 +206,6 @@ module Net; module SSH
       Buffer.new(read_string)
     end
 
-    # Resets the pointer to the start of the buffer.
-    def reset!
-      @position = 0
-    end
-
-    # Returns true if the pointer is at the end of the buffer.
-    def eof?
-      @position >= length
-    end
-
     # Writes the given data literally into the string.
     def write(*data)
       data.each { |datum| @content << datum }
@@ -231,12 +225,6 @@ module Net; module SSH
     # long (4-byte) integer.
     def write_long(*n)
       @content << n.pack("N*")
-    end
-
-    # Writes each argument to the buffer as a network-byte-order-encoded
-    # short (2-byte) integer.
-    def write_short(*n)
-      @content << n.pack("n*")
     end
 
     # Writes each argument to the buffer as a byte.
