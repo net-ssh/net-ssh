@@ -47,7 +47,7 @@ module Net; module SSH
           if encrypted_key
             tries += 1
             if tries <= 3
-              password = prompt("Enter password for #{filename}: ", false)
+              password = prompt("Enter password for #{filename}:", false)
               retry
             else
               raise
