@@ -149,13 +149,15 @@ module Net; module SSH; module Service
         remote = @remote_forwarded_ports[[connected_port, connected_address]]
 
         if remote.nil?
-          raise Net::SSH::Exception, "unknown request from remote forwarded connection on #{connected_address}:#{connected_port}"
+          raise Net::SSH::ChannelOpenFailed.new(1, "unknown request from remote forwarded connection on #{connected_address}:#{connected_port}")
         end
 
+        client = TCPSocket.new(remote.host, remote.port)
         trace { "connected #{connected_address}:#{connected_port} originator #{originator_address}:#{originator_port}" }
 
-        client = TCPSocket.new(remote.host, remote.port)
         prepare_client(client, channel, :remote)
+      rescue SocketError => err
+        raise Net::SSH::ChannelOpenFailed.new(2, "could not connect to remote host (#{remote.host}:#{remote.port}): #{err.message}")
       end
 
       def auth_agent_channel(session, channel, packet)

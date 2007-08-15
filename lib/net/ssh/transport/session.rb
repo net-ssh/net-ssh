@@ -138,6 +138,10 @@ module Net; module SSH; module Transport
       socket.send_packet(message)
     end
 
+    def enqueue_message(message)
+      socket.enqueue_packet(message)
+    end
+
     def configure_client(options={})
       socket.client.set(options)
     end

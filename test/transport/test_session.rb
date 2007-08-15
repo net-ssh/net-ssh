@@ -257,6 +257,13 @@ module Transport
       session.send_message(packet)
     end
 
+    def test_enqueue_message_should_delegate_to_socket
+      session!
+      packet = P(:byte, SERVICE_ACCEPT, :string, "test")
+      socket.expects(:enqueue_packet).with(packet)
+      session.enqueue_message(packet)
+    end
+
     def test_configure_client_should_pass_options_to_socket_client_state
       session.configure_client :compression => :standard
       assert_equal :standard, socket.client.compression

@@ -21,7 +21,7 @@ module Net; module SSH; module Connection
     attr_reader :pending_requests
     attr_reader :readers
     attr_reader :writers
-    attr_reader :channel_open_handler
+    attr_reader :channel_open_handlers
     attr_reader :options
 
     def initialize(transport, options={})
@@ -36,7 +36,7 @@ module Net; module SSH; module Connection
       @pending_requests = []
       @readers = [transport.socket]
       @writers = [transport.socket]
-      @channel_open_handler = {}
+      @channel_open_handlers = {}
       @on_global_request = {}
     end
 
@@ -107,7 +107,7 @@ module Net; module SSH; module Connection
     end
 
     def send_message(message)
-      transport.socket.enqueue_packet(message)
+      transport.enqueue_message(message)
     end
 
     def listen_to(io, &callback)
@@ -127,7 +127,7 @@ module Net; module SSH; module Connection
     end
 
     def on_open_channel(type, &block)
-      channel_open_handler[type] = block
+      channel_open_handlers[type] = block
     end
 
     def on_global_request(type, &block)
@@ -157,7 +157,7 @@ module Net; module SSH; module Connection
         result = callback ? callback.call(packet[:request_data], packet[:want_reply]) : false
 
         if result != :sent && result != true && result != false
-          raise "expected global request handler for #{packet[:request_type]} to return true or false"
+          raise "expected global request handler for `#{packet[:request_type]}' to return true, false, or :sent, but got #{result.inspect}"
         end
 
         if packet[:want_reply] && result != :sent
@@ -185,12 +185,13 @@ module Net; module SSH; module Connection
         channel = Channel.new(self, packet[:channel_type], local_id)
         channel.do_open_confirmation(packet[:remote_id], packet[:window_size], packet[:packet_size])
 
-        callback = channel_open_handler[packet[:channel_type]]
+        callback = channel_open_handlers[packet[:channel_type]]
 
         if callback
-          result = callback[self, channel, packet]
-          if Array === result && result.length == 2
-            failure = result
+          begin
+            callback[self, channel, packet]
+          rescue ChannelOpenFailed => err
+            failure = [err.code, err.reason]
           else
             channels[local_id] = channel
             msg = Buffer.from(:byte, CHANNEL_OPEN_CONFIRMATION, :long, channel.remote_id, :long, channel.local_id, :long, channel.local_maximum_window_size, :long, channel.local_maximum_packet_size)

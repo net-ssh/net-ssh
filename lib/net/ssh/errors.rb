@@ -5,6 +5,15 @@ module Net; module SSH
 
   class Disconnect < Exception; end
 
+  class ChannelOpenFailed < Exception
+    attr_reader :code, :reason
+
+    def initialize(code, reason)
+      @code, @reason = code, reason
+      super "#{reason} (#{code})"
+    end
+  end
+
   # Raised when the cached key for a particular host does not match the
   # key given by the host, which can be indicative of a man-in-the-middle
   # attack. When rescuing this exception, you can inspect the key fingerprint

@@ -28,7 +28,7 @@ class MockTransport < Net::SSH::Transport::Session
 
   attr_reader :client_options
   attr_reader :server_options
-  attr_reader :hints
+  attr_reader :hints, :queue
 
   def initialize(options={})
     self.logger = options[:logger]
@@ -50,6 +50,10 @@ class MockTransport < Net::SSH::Transport::Session
       block, @expectation = @expectation, nil
       block.call(self, Net::SSH::Packet.new(buffer))
     end
+  end
+
+  def poll_message
+    @queue.shift
   end
 
   def next_message
