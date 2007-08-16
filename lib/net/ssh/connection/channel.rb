@@ -164,11 +164,13 @@ module Net; module SSH; module Connection
     end
 
     def do_request(request, want_reply, data)
-      callback = @on_request[request]
-      result = callback ? callback.call(self, data) : false
+      result = true
 
-      if result != true && result != false
-        raise "expected request callback to return either true or false"
+      begin
+        callback = @on_request[request] or raise ChannelRequestFailed
+        callback.call(self, data)
+      rescue ChannelRequestFailed
+        result = false
       end
 
       if want_reply

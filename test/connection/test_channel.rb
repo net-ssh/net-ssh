@@ -212,12 +212,6 @@ module Connection
       channel.do_request "keepalive@openssh.com", true, nil
     end
 
-    def test_do_request_for_handled_request_should_raise_error_if_callback_returns_bad_value
-      channel.do_open_confirmation(0, 100, 100)
-      channel.on_request("exit-status") { "hello" }
-      assert_raises(RuntimeError) { channel.do_request "exit-status", false, nil }
-    end
-
     def test_do_request_for_handled_request_should_invoke_callback_and_do_nothing_if_returns_true_and_not_wants_reply
       channel.do_open_confirmation(0, 100, 100)
       flag = false
@@ -226,10 +220,10 @@ module Connection
       assert flag, "callback should have been invoked"
     end
 
-    def test_do_request_for_handled_request_should_invoke_callback_and_do_nothing_if_returns_false_and_not_wants_reply
+    def test_do_request_for_handled_request_should_invoke_callback_and_do_nothing_if_fails_and_not_wants_reply
       channel.do_open_confirmation(0, 100, 100)
       flag = false
-      channel.on_request("exit-status") { flag = true; false }
+      channel.on_request("exit-status") { flag = true; raise Net::SSH::ChannelRequestFailed }
       assert_nothing_raised { channel.do_request "exit-status", false, nil }
       assert flag, "callback should have been invoked"
     end
@@ -246,7 +240,7 @@ module Connection
     def test_do_request_for_handled_request_should_invoke_callback_and_send_CHANNEL_FAILURE_if_returns_false_and_wants_reply
       channel.do_open_confirmation(0, 100, 100)
       flag = false
-      channel.on_request("exit-status") { flag = true; false }
+      channel.on_request("exit-status") { flag = true; raise Net::SSH::ChannelRequestFailed }
       connection.expect { |t,p| assert_equal CHANNEL_FAILURE, p.type }
       assert_nothing_raised { channel.do_request "exit-status", true, nil }
       assert flag, "callback should have been invoked"
