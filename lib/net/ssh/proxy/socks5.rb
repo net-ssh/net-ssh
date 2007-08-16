@@ -63,7 +63,7 @@ module Net
           end
 
           packet << [port].pack("n")
-          sockry.send packet, 0
+          socket.send packet, 0
 
           version, reply, = socket.recv(4).unpack("C*")
           len = socket.recv(1)[0]
