@@ -21,6 +21,8 @@ module Net; module SSH; module Transport
     private
 
       def negotiate!(socket)
+        trace { "negotiating protocol version" }
+
         loop do
           @version = socket.readline
           break if @version.nil? || @version.match(/^SSH-/)

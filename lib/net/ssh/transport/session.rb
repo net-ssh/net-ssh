@@ -37,6 +37,8 @@ module Net; module SSH; module Transport
       @socket.extend(PacketStream)
       @socket.logger = @logger
 
+      trace { "connection established" }
+
       @queue = []
 
       @host_key_verifier = select_host_key_verifier(options[:paranoid])
