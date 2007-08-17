@@ -7,7 +7,7 @@ module Net; module SSH; module Service
 
     attr_reader :session
 
-    Remote = Struct.new(:host, :port)
+    Remote = Struct.new(:host, :port) #:nodoc:
 
     def initialize(session)
       @session = session

@@ -15,6 +15,11 @@ module Net; module SSH
     end
   end
 
+  # A basic prompt module that can be mixed into other objects. If HighLine is
+  # installed, it will be used to display prompts and read input from the
+  # user. Otherwise, the termios library will be used. If neither HighLine
+  # nor termios is installed, a simple prompt that echos text in the clear
+  # will be used.
   module Prompt
     if PROMPTS[:highline]
 
