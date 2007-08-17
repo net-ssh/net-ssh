@@ -10,6 +10,7 @@ module Net; module SSH; module Authentication
   # A trivial exception class for representing agent-specific errors.
   class AgentError < Net::SSH::Exception; end
 
+  # An exception for indicating that the SSH agent is not available.
   class AgentNotAvailable < AgentError; end
 
   # This class implements a simple client for the ssh-agent protocol. It
@@ -21,6 +22,8 @@ module Net; module SSH; module Authentication
   class Agent
     include Loggable
 
+    # A simple module for extending keys, to allow comments to be specified
+    # for them.
     module Comment
       attr_accessor :comment
     end
@@ -39,8 +42,11 @@ module Net; module SSH; module Authentication
     SSH_AGENT_RSA_IDENTITIES_ANSWER  = 2
     SSH_AGENT_FAILURE                = 5
 
+    # The underlying socket being used to communicate with the SSH agent.
     attr_reader :socket
 
+    # Instantiates a new agent object, connects to a running SSH agent,
+    # negotiates the agent protocol version, and returns the agent object.
     def self.connect(logger=nil)
       agent = new(logger)
       agent.connect!
@@ -48,6 +54,8 @@ module Net; module SSH; module Authentication
       agent
     end
 
+    # Creates a new Agent object, using the optional logger instance to
+    # report status.
     def initialize(logger=nil)
       self.logger = logger
     end
@@ -118,15 +126,16 @@ module Net; module SSH; module Authentication
       return reply.read_string
     end
 
-    def agent_socket_factory
-      if File::ALT_SEPARATOR
-        Pageant::Socket
-      else
-        UNIXSocket
-      end
-    end
-
     private
+
+      # Returns the agent socket factory to use.
+      def agent_socket_factory
+        if File::ALT_SEPARATOR
+          Pageant::Socket
+        else
+          UNIXSocket
+        end
+      end
 
       # Send a new packet of the given type, with the associated data.
       def send_packet(type, *args)

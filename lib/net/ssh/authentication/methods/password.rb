@@ -8,9 +8,9 @@ module Net
 
         # Implements the "password" SSH authentication method.
         class Password < Abstract
-          # Attempt to authenticate the given user for the given service. The
-          # data hash must specify a <tt>:password</tt> value, otherwise this
-          # will always return false.
+          # Attempt to authenticate the given user for the given service. If
+          # the password parameter is nil, this will never do anything except
+          # return false.
           def authenticate(next_service, username, password=nil)
             return false unless password
 

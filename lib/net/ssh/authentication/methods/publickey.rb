@@ -11,9 +11,8 @@ module Net
         class Publickey < Abstract
           # Attempts to perform public-key authentication for the given
           # username, trying each identity known to the key manager. If any of
-          # them succeed, returns +true+, otherwise returns +false+. The data
-          # hash must contain a UserKeyManager instance under the
-          # <tt>:key_manager</tt> key.
+          # them succeed, returns +true+, otherwise returns +false+. This
+          # requires the presence of a key manager.
           def authenticate(next_service, username, password=nil)
             return false unless key_manager
 
@@ -26,8 +25,8 @@ module Net
 
           private
 
-            # Builds a Net::SSH::Util::WriterBuffer that contains the request
-            # formatted for sending a public-key request to the server.
+            # Builds a packet that contains the request formatted for sending
+            # a public-key request to the server.
             def build_request(pub_key, username, next_service, has_sig)
               blob = Net::SSH::Buffer.new
               blob.write_key pub_key

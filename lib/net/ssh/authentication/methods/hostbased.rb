@@ -9,7 +9,8 @@ module Net
         class Hostbased < Abstract
           include Constants
 
-          # Attempts to perform host-based authorization of the user.
+          # Attempts to perform host-based authorization of the user by trying
+          # all known keys.
           def authenticate(next_service, username, password=nil)
             return false unless key_manager
 
@@ -23,6 +24,7 @@ module Net
 
           private
 
+            # Returns the hostname as reported by the underlying socket.
             def hostname
               session.transport.socket.client_name
             end

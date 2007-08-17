@@ -2,6 +2,16 @@ require 'net/ssh/transport/openssl'
 
 module Net; module SSH
   class Buffer
+    # This is a convenience method for creating and populating a new buffer
+    # from a single command. The arguments must be even in length, with the
+    # first of each pair of arguments being a symbol naming the type of the
+    # data that follows. If the type is :raw, the value is written directly
+    # to the hash.
+    #
+    # Example:
+    #
+    #   b = Buffer.from(:byte, 1, :string, "hello", :raw, "\1\2\3\4")
+    #   #-> "\1\0\0\0\5hello\1\2\3\4"
     def self.from(*args)
       raise ArgumentError, "odd number of arguments given" unless args.length % 2 == 0
 
@@ -202,6 +212,8 @@ module Net; module SSH
       return key
     end
 
+    # Reads the next string from the buffer, and returns a new Buffer
+    # object that wraps it.
     def read_buffer
       Buffer.new(read_string)
     end

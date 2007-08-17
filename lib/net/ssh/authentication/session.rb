@@ -8,16 +8,26 @@ require 'net/ssh/authentication/methods/password'
 require 'net/ssh/authentication/methods/keyboard_interactive'
 
 module Net; module SSH; module Authentication
+
+  # Represents an authentication session. It manages the authentication of
+  # a user over an established connection (the "transport" object).
   class Session
     include Transport::Constants, Constants, Loggable
 
-    # transport session
+    # transport layer abstraction
     attr_reader :transport
 
+    # the list of authentication methods to try
     attr_reader :auth_methods
+
+    # the list of authentication methods that are allowed
     attr_reader :allowed_auth_methods
+
+    # a hash of options, given at construction time
     attr_reader :options
 
+    # Instantiates a new Authentication::Session object over the given
+    # transport layer abstraction.
     def initialize(transport, options={})
       self.logger = transport.logger
       @transport = transport
@@ -28,6 +38,9 @@ module Net; module SSH; module Authentication
       @allowed_auth_methods = @auth_methods
     end
 
+    # Attempts to authenticate the given user, in preparation for the next
+    # service request. Returns true if an authentication method succeeds in
+    # authenticating the user, and false otherwise.
     def authenticate(next_service, username, password=nil)
       trace { "beginning authentication of `#{username}'" }
 
@@ -55,6 +68,9 @@ module Net; module SSH; module Authentication
       key_manager.finish if key_manager
     end
 
+    # Blocks until a packet is received. It silently handles USERAUTH_BANNER
+    # packets, and will raise an error if any packet is received that is not
+    # valid during user authentication.
     def next_message
       loop do
         packet = transport.next_message
@@ -82,6 +98,8 @@ module Net; module SSH; module Authentication
       end
     end
 
+    # Blocks until a packet is received, and returns it if it is of the given
+    # type. If it is not, an exception is raised.
     def expect_message(type)
       message = next_message
       unless message.type == type

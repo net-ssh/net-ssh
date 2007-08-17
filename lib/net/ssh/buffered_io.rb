@@ -1,52 +1,65 @@
-require 'thread'
 require 'net/ssh/buffer'
 require 'net/ssh/loggable'
 
 module Net; module SSH
 
+  # This module is used to extend sockets and other IO objects, to allow
+  # them to be buffered for both read and write. This abstraction makes it
+  # quite easy to write a select-based event loop (see Connection::Session).
   module BufferedIo
     include Loggable
 
-    def self.extended(object)
+    # Called when the #extend is called on an object, with this module as the
+    # argument. It ensures that the modules instance variables are all properly
+    # initialized.
+    def self.extended(object) #:nodoc:
       object.__send__(:initialize_buffered_io)
     end
 
+    # Tries to consume up to +n+ bytes of data from the underlying IO object,
+    # and adds the data to the input buffer. It returns the number of bytes
+    # read.
     def fill(n=8192)
-      input_mutex.synchronize do
-        input.consume!
-        data = recv(n)
-        trace { "read #{data.length} bytes" }
-        input.append(data)
-        return data.length
-      end
+      input.consume!
+      data = recv(n)
+      trace { "read #{data.length} bytes" }
+      input.append(data)
+      return data.length
     end
 
+    # Read up to +length+ bytes from the input buffer.
     def read_available(length)
-      input_mutex.synchronize { input.read(length) }
+      input.read(length)
     end
 
+    # Returns the number of bytes available to be read from the input buffer,
+    # via #read_available.
     def available
-      input_mutex.synchronize { input.available }
+      input.available
     end
 
+    # Enqueues data in the output buffer, to be written when #send_pending
+    # is called.
     def enqueue(data)
-      output_mutex.synchronize { output.append(data) }
+      output.append(data)
     end
 
+    # Returns +true+ if there is data waiting in the output buffer, and
+    # +false+ otherwise.
     def pending_write?
-      output_mutex.synchronize { output.length > 0 }
+      output.length > 0
     end
 
+    # Sends as much of the pending output as possible.
     def send_pending
-      output_mutex.synchronize do
-        if output.length > 0
-          sent = send(output.to_s, 0)
-          trace { "sent #{sent} bytes" }
-          output.consume!(sent)
-        end
+      if output.length > 0
+        sent = send(output.to_s, 0)
+        trace { "sent #{sent} bytes" }
+        output.consume!(sent)
       end
     end
 
+    # Blocks until the output buffer is empty.
     def wait_for_pending_sends
       send_pending
       while output.length > 0
@@ -73,8 +86,6 @@ module Net; module SSH
       def initialize_buffered_io
         @input = Net::SSH::Buffer.new
         @output = Net::SSH::Buffer.new
-        @input_mutex = Mutex.new
-        @output_mutex = Mutex.new
       end
   end
 

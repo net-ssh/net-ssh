@@ -66,7 +66,8 @@ module Net
         # reconnected. This method simply allows the client connection to be
         # closed when it will not be used in the immediate future.
         def finish
-          close_agent
+          @agent.close if @agent
+          @agent = nil
         end
 
         # Returns an array of identities (public keys) known to this manager.
@@ -140,10 +141,13 @@ module Net
         # attempt will be made to use the ssh-agent. If false, any existing
         # connection to an agent is closed and the agent will not be used.
         def use_agent=(use_agent)
-          close_agent if !use_agent
+          finish if !use_agent
           @use_agent = use_agent
         end
 
+        # Returns an Agent instance to use for communicating with an SSH
+        # agent process. Returns nil if use of an SSH agent has been disabled,
+        # or if the agent is otherwise not available.
         def agent
           return unless use_agent?
           @agent ||= Agent.connect(logger)
@@ -151,14 +155,6 @@ module Net
           @use_agent = false
           nil
         end
-
-        private
-
-          # Closes any open connection to an ssh-agent.
-          def close_agent
-            @agent.close if @agent
-            @agent = nil
-          end
       end
 
     end

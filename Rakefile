@@ -191,7 +191,7 @@ Rake::RDocTask.new( :rdoc_core ) do |rdoc|
   rdoc.rdoc_dir = rdoc_dir
   rdoc.title    = "Net::SSH -- An SSH client in, and for, Ruby"
   rdoc.options += %w(--line-numbers --inline-source --main README)
-  rdoc.rdoc_files.include 'README'
+  #rdoc.rdoc_files.include 'README'
   rdoc.rdoc_files.include 'lib/**/*.rb'
 
   if can_require( "rdoc/generators/template/html/jamis" )
