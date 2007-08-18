@@ -20,26 +20,27 @@ module Net; module SSH
       @@types[type] = pairs
     end
 
-    register Transport::Constants::DISCONNECT,     [:reason_code, :long], [:description, :string], [:language, :string]
-    register Transport::Constants::IGNORE,         [:data, :string]
-    register Transport::Constants::UNIMPLEMENTED,  [:number, :long]
-    register Transport::Constants::DEBUG,          [:always_display, :bool], [:message, :string], [:language, :string]
-    register Transport::Constants::SERVICE_ACCEPT, [:service_name, :string]
+    include Transport::Constants, Authentication::Constants, Connection::Constants
 
-    register Authentication::Constants::USERAUTH_BANNER, [:message, :string], [:language, :string]
-    register Authentication::Constants::USERAUTH_FAILURE, [:authentications, :string], [:partial_success, :bool]
-
-    register Connection::Constants::GLOBAL_REQUEST, [:request_type, :string], [:want_reply, :bool], [:request_data, :buffer]
-    register Connection::Constants::CHANNEL_OPEN, [:channel_type, :string], [:remote_id, :long], [:window_size, :long], [:packet_size, :long]
-    register Connection::Constants::CHANNEL_OPEN_CONFIRMATION, [:local_id, :long], [:remote_id, :long], [:window_size, :long], [:packet_size, :long]
-    register Connection::Constants::CHANNEL_WINDOW_ADJUST, [:local_id, :long], [:extra_bytes, :long]
-    register Connection::Constants::CHANNEL_DATA, [:local_id, :long], [:data, :string]
-    register Connection::Constants::CHANNEL_EXTENDED_DATA, [:local_id, :long], [:data_type, :long], [:data, :string]
-    register Connection::Constants::CHANNEL_EOF, [:local_id, :long]
-    register Connection::Constants::CHANNEL_CLOSE, [:local_id, :long]
-    register Connection::Constants::CHANNEL_REQUEST, [:local_id, :long], [:request, :string], [:want_reply, :bool], [:request_data, :buffer]
-    register Connection::Constants::CHANNEL_SUCCESS, [:local_id, :long]
-    register Connection::Constants::CHANNEL_FAILURE, [:local_id, :long]
+    register DISCONNECT,                [:reason_code, :long], [:description, :string], [:language, :string]
+    register IGNORE,                    [:data, :string]
+    register UNIMPLEMENTED,             [:number, :long]
+    register DEBUG,                     [:always_display, :bool], [:message, :string], [:language, :string]
+    register SERVICE_ACCEPT,            [:service_name, :string]
+    register USERAUTH_BANNER,           [:message, :string], [:language, :string]
+    register USERAUTH_FAILURE,          [:authentications, :string], [:partial_success, :bool]
+    register GLOBAL_REQUEST,            [:request_type, :string], [:want_reply, :bool], [:request_data, :buffer]
+    register CHANNEL_OPEN,              [:channel_type, :string], [:remote_id, :long], [:window_size, :long], [:packet_size, :long]
+    register CHANNEL_OPEN_CONFIRMATION, [:local_id, :long], [:remote_id, :long], [:window_size, :long], [:packet_size, :long]
+    register CHANNEL_OPEN_FAILURE,      [:local_id, :long], [:reason_code, :long], [:description, :string], [:language, :string]
+    register CHANNEL_WINDOW_ADJUST,     [:local_id, :long], [:extra_bytes, :long]
+    register CHANNEL_DATA,              [:local_id, :long], [:data, :string]
+    register CHANNEL_EXTENDED_DATA,     [:local_id, :long], [:data_type, :long], [:data, :string]
+    register CHANNEL_EOF,               [:local_id, :long]
+    register CHANNEL_CLOSE,             [:local_id, :long]
+    register CHANNEL_REQUEST,           [:local_id, :long], [:request, :string], [:want_reply, :bool], [:request_data, :buffer]
+    register CHANNEL_SUCCESS,           [:local_id, :long]
+    register CHANNEL_FAILURE,           [:local_id, :long]
 
     # The (integer) type of this packet.
     attr_reader :type

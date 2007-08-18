@@ -255,6 +255,13 @@ module Connection
       assert_equal "auth-agent", ch.type
     end
 
+    def test_channel_open_failure_should_remove_channel_raise_exception
+      session.channels[1] = stub("channel")
+      transport.return(CHANNEL_OPEN_FAILURE, :long, 1, :long, 1234, :string, "some reason", :string, "lang tag")
+      assert_raises(Net::SSH::ChannelOpenFailed) { process_times(2) }
+      assert session.channels.empty?
+    end
+
     def test_channel_open_confirmation_packet_should_be_routed_to_corresponding_channel
       channel_at(14).expects(:do_open_confirmation).with(1234, 0x20001, 0x10001)
       transport.return(CHANNEL_OPEN_CONFIRMATION, :long, 14, :long, 1234, :long, 0x20001, :long, 0x10001)

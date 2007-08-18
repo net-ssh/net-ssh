@@ -308,6 +308,12 @@ module Net; module SSH; module Connection
         channel.do_open_confirmation(packet[:remote_id], packet[:window_size], packet[:packet_size])
       end
 
+      def channel_open_failure(packet)
+        error { "channel_open_failed: #{packet[:local_id]} #{packet[:reason_code]} #{packet[:description]}" }
+        channels.delete(packet[:local_id])
+        raise ChannelOpenFailed.new(packet[:reason_code], packet[:description])
+      end
+
       def channel_window_adjust(packet)
         trace { "channel_window_adjust: #{packet[:local_id]} +#{packet[:extra_bytes]}" }
         channels[packet[:local_id]].do_window_adjust(packet[:extra_bytes])
