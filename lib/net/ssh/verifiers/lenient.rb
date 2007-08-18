@@ -2,7 +2,14 @@ require 'net/ssh/verifiers/strict'
 
 module Net; module SSH; module Verifiers
 
+  # Basically the same as the Strict verifier, but does not try to actually
+  # verify a connection if the server is the localhost and the port is a
+  # nonstandard port number. Those two conditions will typically mean the
+  # connection is being tunnelled through a forwarded port, so the known-hosts
+  # file will not be helpful (in general).
   class Lenient < Strict
+    # Tries to determine if the connection is being tunnelled, and if so,
+    # returns true. Otherwise, performs the standard strict verification.
     def verify(arguments)
       return true if tunnelled?(arguments)
       super
