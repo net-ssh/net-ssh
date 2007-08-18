@@ -8,9 +8,19 @@ require 'net/ssh/transport/kex'
 require 'net/ssh/transport/server_version'
 
 module Net; module SSH; module Transport
+
+  # Implements the higher-level logic behind an SSH key-exchange. It handles
+  # both the initial exchange, as well as subsequent re-exchanges (as needed).
+  # It also encapsulates the negotiation of the algorithms, and provides a
+  # single point of access to the negotiated algorithms.
+  #
+  # You will never instantiate or reference this directly. It is used
+  # internally by the transport layer.
   class Algorithms
     include Constants, Loggable
 
+    # Define the default algorithms, in order of preference, supported by
+    # Net::SSH.
     ALGORITHMS = {
       :host_key    => %w(ssh-rsa ssh-dss),
       :kex         => %w(diffie-hellman-group-exchange-sha1
@@ -23,30 +33,59 @@ module Net; module SSH; module Transport
       :language    => %w() 
     }
 
+    # The underlying transport layer session that supports this object
     attr_reader :session
+
+    # The hash of options used to initialize this object
     attr_reader :options
 
+    # The kex algorithm to use settled on between the client and server.
     attr_reader :kex
+
+    # The type of host key that will be used for this session.
     attr_reader :host_key
+
+    # The type of the cipher to use to encrypt packets sent from the client to
+    # the server.
     attr_reader :encryption_client
+
+    # The type of the cipher to use to decrypt packets arriving from the server.
     attr_reader :encryption_server
+
+    # The type of HMAC to use to sign packets sent by the client.
     attr_reader :hmac_client
+
+    # The type of HMAC to use to validate packets arriving from the server.
     attr_reader :hmac_server
+
+    # The type of compression to use to compress packets being sent by the client.
     attr_reader :compression_client
+
+    # The type of compression to use to decompress packets arriving from the server.
     attr_reader :compression_server
+
+    # The language that will be used in messages sent by the client.
     attr_reader :language_client
+
+    # The language that will be used in messages sent from the server.
     attr_reader :language_server
 
+    # The hash of algorithms preferred by the client, which will be told to
+    # the server during algorithm negotiation.
     attr_reader :algorithms
+
+    # The session-id for this session, as decided during the initial key exchange.
     attr_reader :session_id
 
-    # Returns true if the given packet can be processed during a key-exchange
+    # Returns true if the given packet can be processed during a key-exchange.
     def self.allowed_packet?(packet)
       ( 1.. 4).include?(packet.type) ||
       ( 6..19).include?(packet.type) ||
       (21..49).include?(packet.type)
     end
 
+    # Instantiates a new Algorithms object, and prepares the hash of preferred
+    # algorithms based on the options parameter and the ALGORITHMS constant.
     def initialize(session, options={})
       @session = session
       @logger = session.logger
@@ -57,12 +96,20 @@ module Net; module SSH; module Transport
       prepare_preferred_algorithms!
     end
 
+    # Request a rekey operation. This will return immediately, and does not
+    # actually perform the rekey operation. It does cause the session to change
+    # state, however--until the key exchange finishes, no new packets will be
+    # processed.
     def rekey!
       @client_packet = @server_packet = nil
       @initialized = false
       send_kexinit
     end
 
+    # Called by the transport layer when a KEXINIT packet is recieved, indicating
+    # that the server wants to exchange keys. This can be spontaneous, or it
+    # can be in response to a client-initiated rekey request (see #rekey!). Either
+    # way, this will block until the key exchange completes.
     def accept_kexinit(packet)
       trace { "got KEXINIT from server" }
       @server_data = parse_server_algorithm_packet(packet)
@@ -74,24 +121,39 @@ module Net; module SSH; module Transport
       end
     end
 
+    # A convenience method for accessing the list of preferred types for a
+    # specific algorithm (see #algorithms).
     def [](key)
       algorithms[key]
     end
 
+    # Returns +true+ if a key-exchange is pending. This will be true from the
+    # moment either the client or server requests the key exchange, until the
+    # exchange completes. While an exchange is pending, only a limited number
+    # of packets are allowed, so event processing essentially stops during this
+    # period.
     def pending?
       @pending
     end
 
+    # Returns true if no exchange is pending, and otherwise returns true or
+    # false depending on whether the given packet is of a type that is allowed
+    # during a key exchange.
     def allow?(packet)
       !pending? || Algorithms.allowed_packet?(packet)
     end
 
+    # Returns true if the algorithms have been negotiated at all.
     def initialized?
       @initialized
     end
 
     private
 
+      # Sends a KEXINIT packet to the server. If a server KEXINIT has already
+      # been received, this will then invoke #proceed! to proceed with the key
+      # exchange, otherwise it returns immediately (but sets the object to the
+      # pending state).
       def send_kexinit
         trace { "sending KEXINIT" }
         @pending = true
@@ -101,6 +163,9 @@ module Net; module SSH; module Transport
         proceed! if @server_packet
       end
 
+      # After both client and server have sent their KEXINIT packets, this
+      # will do the algorithm negotiation and key exchange. Once both finish,
+      # the object leaves the pending state and the method returns.
       def proceed!
         trace { "negotiating algorithms" }
         negotiate_algorithms
@@ -108,6 +173,12 @@ module Net; module SSH; module Transport
         @pending = false
       end
 
+      # Prepares the list of preferred algorithms, based on the options hash
+      # that was given when the object was constructed, and the ALGORITHMS
+      # constant. Also, when determining the host_key type to use, the known
+      # hosts files are examined to see if the host has ever sent a host_key
+      # before, and if so, that key type is used as the preferred type for
+      # communicating with this server.
       def prepare_preferred_algorithms!
         options[:compression] = %w(zlib@openssh.com zlib) if options[:compression] == true
 
@@ -148,6 +219,7 @@ module Net; module SSH; module Transport
         end
       end
 
+      # Parses a KEXINIT packet from the server.
       def parse_server_algorithm_packet(packet)
         data = { :raw => packet.content }
 
@@ -172,28 +244,28 @@ module Net; module SSH; module Transport
         return data
       end
 
+      # Given the #algorithms map of preferred algorithm types, this constructs
+      # a KEXINIT packet to send to the server. It does not actually send it,
+      # it simply builds the packet and returns it.
       def build_client_algorithm_packet
         kex         = algorithms[:kex        ].join(",")
         host_key    = algorithms[:host_key   ].join(",")
         encryption  = algorithms[:encryption ].join(",")
         hmac        = algorithms[:hmac       ].join(",")
         compression = algorithms[:compression].join(",")
-        languages   = algorithms[:language   ].join(",")
+        language    = algorithms[:language   ].join(",")
 
-        msg = Net::SSH::Buffer.new
-        msg.write_byte KEXINIT
-        msg.write_long rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF)
-        msg.write_string kex, host_key
-        msg.write_string encryption, encryption
-        msg.write_string hmac, hmac
-        msg.write_string compression, compression
-        msg.write_string languages, languages
-        msg.write_bool false
-        msg.write_long 0
-  
-        return msg
+        Net::SSH::Buffer.from(:byte, KEXINIT,
+          :long, [rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF)],
+          :string, [kex, host_key, encryption, encryption, hmac, hmac],
+          :string, [compression, compression, language, language],
+          :bool, false, :long, 0)
       end
 
+      # Given the parsed server KEX packet, and the client's preferred algorithm
+      # lists in #algorithms, determine which preferred algorithms each has
+      # in common and set those as the selected algorithms. If, for any algorithm,
+      # no type can be settled on, an exception is raised.
       def negotiate_algorithms
         @kex                = negotiate(:kex)
         @host_key           = negotiate(:host_key)
@@ -214,6 +286,9 @@ module Net; module SSH; module Transport
         end
       end
 
+      # Negotiates a single algorithm based on the preferences reported by the
+      # server and those set by the client. This is called by
+      # #negotiate_algorithms.
       def negotiate(algorithm)
         match = self[algorithm].find { |item| @server_data[algorithm].include?(item) }
 
@@ -224,6 +299,9 @@ module Net; module SSH; module Transport
         return match
       end
 
+      # Considers the sizes of the keys and block-sizes for the selected ciphers,
+      # and the lengths of the hmacs, and returns the largest as the byte requirement
+      # for the key-exchange algorithm.
       def kex_byte_requirement
         sizes = []
 
@@ -236,6 +314,10 @@ module Net; module SSH; module Transport
         sizes.max
       end
 
+      # Instantiates one of the Transport::Kex classes (based on the negotiated
+      # kex algorithm), and uses it to exchange keys. Then, the ciphers and
+      # HMACs are initialized and fed to the transport layer, to be used in
+      # further communication with the server.
       def exchange_keys
         trace { "exchanging keys" }
 
@@ -288,6 +370,8 @@ module Net; module SSH; module Transport
         @initialized = true
       end
 
+      # Given the SSH name for some compression algorithm, return a normalized
+      # name as a symbol.
       def normalize_compression_name(name)
         case name
         when "none"             then false

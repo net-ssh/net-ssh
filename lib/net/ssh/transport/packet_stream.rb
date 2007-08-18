@@ -7,6 +7,10 @@ require 'net/ssh/transport/state'
 
 module Net; module SSH; module Transport
 
+  # A module that builds additional functionality onto the Net::SSH::BufferedIo
+  # module. It adds SSH encryption, compression, and packet validation, as
+  # per the SSH2 protocol. It also adds an abstraction for polling packets,
+  # to allow for both blocking and non-blocking reads.
   module PacketStream
     include BufferedIo
 
@@ -14,11 +18,22 @@ module Net; module SSH; module Transport
       object.__send__(:initialize_ssh)
     end
 
-    attr_reader   :hints
-    attr_reader   :server
-    attr_reader   :client
-    attr_accessor :compression_level
+    # The map of "hints" that can be used to modify the behavior of the packet
+    # stream. For instance, when authentication succeeds, an "authenticated"
+    # hint is set, which is used to determine whether or not to compress the
+    # data when using the "delayed" compression algorithm.
+    attr_reader :hints
 
+    # The server state object, which encapsulates the algorithms used to interpret
+    # packets coming from the server.
+    attr_reader :server
+
+    # The client state object, which encapsulates the algorithms used to build
+    # packets to send to the server.
+    attr_reader :client
+
+    # The name of the client (local) end of the socket, as reported by the
+    # socket.
     def client_name
       @client_name ||= begin
         sockaddr = getsockname
@@ -39,6 +54,8 @@ module Net; module SSH; module Transport
       end
     end
 
+    # The IP address of the peer (remote) end of the socket, as reported by
+    # the socket.
     def peer_ip
       @peer_ip ||= begin
         addr = getpeername
@@ -46,11 +63,17 @@ module Net; module SSH; module Transport
       end
     end
 
+    # Returns true if the IO is available for reading, and false otherwise.
     def available_for_read?
       result = IO.select([self], nil, nil, 0)
       result && result.first.any?
     end
 
+    # Returns the next full packet. If the mode parameter is :nonblock (the
+    # default), then this will return immediately, whether a packet is
+    # available or not, and will return nil if there is no packet ready to be
+    # returned. If the mode parameter is :block, then this method will block
+    # until a packet is available.
     def next_packet(mode=:nonblock)
       case mode
       when :nonblock then
@@ -77,11 +100,16 @@ module Net; module SSH; module Transport
       end
     end
 
+    # Enqueues a packet to be sent, and blocks until the entire packet is
+    # sent.
     def send_packet(payload)
       enqueue_packet(payload)
       wait_for_pending_sends
     end
 
+    # Enqueues a packet to be sent, but does not immediately send the packet.
+    # The given payload is pre-processed according to the algorithms specified
+    # in the client state (compression, cipher, and hmac).
     def enqueue_packet(payload)
       # try to compress the packet
       payload = client.compress(payload)
@@ -117,11 +145,16 @@ module Net; module SSH; module Transport
       self
     end
 
+    # Performs any pending cleanup necessary on the IO and its associated
+    # state objects. (See State#cleanup).
     def cleanup
       client.cleanup
       server.cleanup
     end
 
+    # If the IO object requires a rekey operation (as indicated by either its
+    # client or server state objects, see State#needs_rekey?), this will
+    # yield. Otherwise, this does nothing.
     def if_needs_rekey?
       if client.needs_rekey? || server.needs_rekey?
         yield
@@ -131,7 +164,9 @@ module Net; module SSH; module Transport
     end
 
     protected
-    
+
+      # Called when this module is used to extend an object. It initializes
+      # the states and generally prepares the object for use as a packet stream.
       def initialize_ssh
         @hints  = {}
         @server = State.new(self)
@@ -139,6 +174,11 @@ module Net; module SSH; module Transport
         initialize_buffered_io
       end
 
+      # Tries to read the next packet. If there is insufficient data to read
+      # an entire packet, this returns immediately, otherwise the packet is
+      # read, post-processed according to the cipher, hmac, and compression
+      # algorithms specified in the server state object, and returned as a
+      # new Packet object.
       def poll_next_packet
         if @packet.nil?
           minimum = server.cipher.block_size < 4 ? 4 : server.cipher.block_size
