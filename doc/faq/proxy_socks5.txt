@@ -1,0 +1,26 @@
+If you ever need to tunnel an SSH connection through an obliging SOCKS5 proxy, you just need to instantiate the SOCKS5 proxy object with the appropriate parameters, and pass it in via the @:proxy@ option:
+
+<h:code lang="ruby">
+require 'net/ssh'
+require 'net/ssh/proxy/socks5'
+
+proxy = Net::SSH::Proxy::SOCKS5.new("my.proxy.com", 3125)
+
+Net::SSH.start("host.com", "bob", :proxy => proxy) do |ssh|
+  # ...
+end
+</h:code>
+
+If the proxy requires authentication, you can pass the user-name and password as options to the proxy constructor:
+
+<h:code lang="ruby">
+require 'net/ssh'
+require 'net/ssh/proxy/socks5'
+
+proxy = Net::SSH::Proxy::SOCKS5.new("my.proxy.com", 3125,
+  :user => "bob", :password => "proxypass")
+
+Net::SSH.start("host.com", "bob", :proxy => proxy) do |ssh|
+  # ...
+end
+</h:code>

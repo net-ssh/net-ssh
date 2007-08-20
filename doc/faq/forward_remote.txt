@@ -1,0 +1,23 @@
+To have the remote host forward a port via the SSH connection to your local host, just use the @#forward@ service:
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+Net::SSH.start("host.com", "bob") do |ssh|
+  ssh.forward.remote(80, "www.google.com", 1234)
+  ssh.loop
+end
+</h:code>
+
+Just specify the port and host you want connections forwarded to, and the port on the remote host that you want forwarded. You can set up as many forwarded ports as you want; just be sure to call @#loop@ when you're done, to start the event loop.
+
+By default, only connections from "127.0.0.1" on the remote host are accepted. To change the bind address, give it as the last parameter:
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+Net::SSH.start("host.com", "bob") do |ssh|
+  ssh.forward.remote(80, "www.google.com", 1234, "0.0.0.0")
+  ssh.loop
+end
+</h:code>

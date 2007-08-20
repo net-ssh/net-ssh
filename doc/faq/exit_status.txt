@@ -1,0 +1,21 @@
+Channels in SSH can report information back to the client via _channel requests_. The exit status of a process is one such datum that is reported this way. To express interest in that datum, simply register a callback for it:
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+Net::SSH.start("host.com", "bob") do |ssh|
+  ssh.open_channel do |channel|
+    channel.exec "echo hello world"
+    channel.on_request("exit-status") do |ch, request|
+      status = request.read_long
+      puts "exit-status was #{status}"
+    end
+  end
+
+  ssh.loop
+end
+</h:code>
+
+It's all rather raw and low-level, but it's not so bad for all that. The given callback gets called when an exit-status request is received, and the callback is passed the channel object, as well as the request packet that was received from the server. All that remains to be done is to read the next 4-byte integer (via @#read_long@) to extract the exit-status itself from the packet.
+
+Note that because this requires a custom callback, you can't generally use the @Connection::Session#exec@ helpers; you have to do it longhand, by opening a channel and registering the callbacks yourself.

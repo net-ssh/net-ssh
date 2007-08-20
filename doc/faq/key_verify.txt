@@ -1,0 +1,41 @@
+The default host-key verification algorithm works similarly to the algorithm employed by OpenSSH: it checks the current host against a list of hosts and their known keys in any of several files, and if it finds a match, the host key "passes", and the connection proceeds. If it finds the same host with a different key, an exception is raised. If it does not find the host at all, the host will be silently added to the known hosts list.
+
+The default verification algorithm will also automatically verify hosts when the connection appears to be tunneled via an alternative port on the localhost, so that forwarded ports and such don't cause a stink.
+
+However, sometimes you might want even tunneled connections to be verified; in that case, pass @:very@ to the @:paranoid@ option on start:
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+Net::SSH.start("host.com", "bob", :paranoid => :very) do |ssh|
+  # ...
+end
+</h:code>
+
+Similarly, you might want to disable host-key verification altogether, and simply allow all connections to succeed. (This is _not_ recommended, as it is not very secure and opens you up to man-in-the-middle attacks, but there are always extenuating circumstances.) To turn off host-key verification, pass @false@:
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+Net::SSH.start("host.com", "bob", :paranoid => false) do |ssh|
+  # ...
+end
+</h:code>
+
+Lastly, if you're feeling perky and want to implement your own host-key verification algorithm, you can just pass any object that responds to @:verify@ as the value to @:paranoid@:
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+class CustomVerifier
+  def verify(options)
+    # your custom verification code here
+  end
+end
+
+Net::SSH.start("host.com", "bob", :paranoid => CustomVerifier.new) do |ssh|
+  # ...
+end
+</h:code>
+
+You can look at the implementation for Net::SSH::Verfiers::Strict to get an idea of how to implement your own.

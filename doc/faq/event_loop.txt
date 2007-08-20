@@ -1,0 +1,20 @@
+When you need an SSH event loop, the @Connection::Session#loop@ method is good enough for most uses. However, one drawback of it is that (by default) it blocks (doesn't return) until there are no open channels. For some uses, like interactive programs and such, you don't want your entire program to halt every time you are waiting for a command to complete.
+
+At times like these, you need to implement your own event loop. Typically what you'll do is just call @Connection::Session#process@ at strategic places in your code (such as in an idle handler in a GUI application). What this method does is take one baby-step through the event loop, and then return.
+
+Note that, by default, even @Connection::Session#process@ will block until there is activity on the connection. If you want a completely non-blocking call (a "poll"), pass a zero (0) as the only argument, which tells Net::SSH to wait exactly 0 seconds for activity.
+
+As an example, you could implement your own version of @Connection::Session#loop@ like this:
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+Net::SSH.start('host.com', 'bob') do |ssh|
+  channel = ssh.exec("echo hello world")
+
+  loop do
+    ssh.process # blocking call!
+    break if channel[:closed]
+  end
+end
+</h:code>

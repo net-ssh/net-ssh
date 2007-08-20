@@ -1,0 +1,9 @@
+The default port assigned for the SSH protocol is 22. If you want to connect to a different port (perhaps because you're connecting over a forwarded port), you can specify the port number as an option:
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+Net::SSH.start("host.com", "bob", :port => 4567) do |ssh|
+  # ...
+end
+</h:code>

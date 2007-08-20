@@ -1,0 +1,59 @@
+To open a new channel (see the "Net::SSH overview":../overview.html for information about channels), simply call the @#open_channel@ method on the SSH session:
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+Net::SSH.start("host.com", "bob") do |ssh|
+  ssh.open_channel do |channel|
+    # ...
+  end
+
+  ssh.loop
+end
+</h:code>
+
+As with almost every other method in Net::SSH, though, @#open_channel@ will return immediately, without waiting until the channel is actually opened. Thus, although @#open_channel@ will return the newly created channel object, you can't actually use it yet. Instead, you attach a block to the call, which will be invoked when the server confirms that the channel has been opened. _That's_ when you get to start doing stuff with the channel.
+
+There are a few different things you can do with a channel, but the most common is executing a program, so that's what we'll do here. To execute a channel, use @Channel#exec@. Without a block, this will just queue the command up, to be executed.
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+Net::SSH.start("host.com", "bob") do |ssh|
+  ssh.open_channel do |channel|
+
+    channel.exec "mysqldump > /tmp/backup.sql"
+
+  end
+
+  ssh.loop
+end
+</h:code>
+
+For most things, though, you're also going to want to know when the remote command is emitting output on stdout and stderr, and to do that, you'll need to register some callbacks on the channel:
+
+<h:code lang="ruby">
+require 'net/ssh'
+
+Net::SSH.start("host.com", "bob") do |ssh|
+  ssh.open_channel do |channel|
+
+    channel.exec "mysqldump > /tmp/backup.sql"
+
+    channel.on_data do |ch, data|
+      puts "got stdout: #{data}"
+    end
+
+    channel.on_extended_data do |ch, type, data|
+      puts "got stderr: #{data}"
+    end
+
+  end
+
+  ssh.loop
+end
+</h:code>
+
+Note the @type@ parameter to the @on_extended_data@ block. You can almost always ignore that, since the only value defined by the SSH specification is for @stderr@.
+
+You can check out the "quick reference":../reference.html for more information on additional hooks and callbacks you can use with channels.

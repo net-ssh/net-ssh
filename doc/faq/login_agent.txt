@@ -1,0 +1,1 @@
+To log into a server using an SSH agent, just make sure the agent is running before you try to connect. The agent will be used automatically.
