@@ -53,10 +53,11 @@ task :clean do
 end
 
 desc "Generate the manual"
-task :manual => [ "doc/manual-html/index.html" ]
+task :manual => %w(doc/out/index.html)
 
-file "doc/manual-html/index.html" => [ "doc/manual/manual.yml" ] do
-  FileUtils.cd( "doc/manual" ) { ruby "manual.rb ../manual-html" }
+file "doc/out/index.html" => %w(doc/build.rb doc/styles.css) + Dir["doc/templates/*.erb"] + Dir["doc/faq/*.txt"] do
+  rm_rf "doc/out"
+  ruby "doc/build.rb"
 end
 
 Rake::TestTask.new do |t|
@@ -208,3 +209,8 @@ end
 
 desc "Publish the documentation"
 task :pubdoc => [:pubrdoc, :pubman]
+
+desc "Start an IRB session with the dev load-path preloaded"
+task :irb do
+  system "irb -Ilib -rnet/ssh"
+end

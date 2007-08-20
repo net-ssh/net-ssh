@@ -1,0 +1,43 @@
+<h1>Net::SSH</h1>
+
+<h2>Information for Developers</h2>
+
+<p>The Net::SSH source code is kept in a publicly readable <a href="http://subversion.tigris.org">Subversion</a> repository, at <a href="http://svn.jamisbuck.org/net-ssh/trunk">http://svn.jamisbuck.org/net-ssh/trunk</a>. To play with the latest copy of the code, just check that out to your local machine:</p>
+
+<h:code lang="shell">
+$ svn co http://svn.jamisbuck.org/net-ssh/trunk net-ssh
+$ cd net-ssh
+</h:code>
+
+<p>You can run the tests via <a href="http://rake.rubyforge.org">Rake</a>:</p>
+
+<h:code lang="shell">
+$ rake
+</h:code>
+
+<p>Note that the tests depend on the <a href="http://mocha.rubyforge.org/">Mocha</a> mocking and stubbing library, so you'll need to make sure it is installed before running the tests.</p>
+
+<h2>Directory structure</h2>
+
+<p>The Net::SSH project is structured as follows:</p>
+
+<ul>
+  <li>The "doc" directory contains the scripts and files used to build this documentation. You can build this documentation at any time by running <code>rake manual</code>. It will be built into the "doc/out" subdirectory.</li>
+  <li>The "lib" directory contains the Net::SSH source code itself. More about this will be said, below.</li>
+  <li>The "test" directory contains the unit tests for Net::SSH.</li>
+</ul>
+
+<p>The source code is structured as follows:</p>
+
+<ul>
+  <li>net/ssh/transport contains the code that deals with the low-level transport layer of the SSH protocol. It deals primarily with the initialization of the protocol, as well as with the low-level packet handling (encryption, etc.). All of what makes the SSH protocol secure is dealt with here.</li>
+  <li>net/ssh/authentication contains the code that deals with user authentication. All supported authentication methods (password, publickey, etc.) are implemented here. Also, here is where you'll find the implementation for the SSH agent client, and so forth.</li>
+  <li>net/ssh/connection contains the code that consumers of Net::SSH will deal with the most: the connection session, and channels. This layer of the SSH protocol is where the channel abstraction is implemented, as well as the event loop.</li>
+  <li>net/ssh/service contains additional services available via the SSH protocol, like forwarded ports.</li>
+  <li>net/ssh/proxy contains the implementations for the HTTP, SOCKS4, and SOCKS5 connection proxies.</li>
+  <li>net/ssh/verifiers contains the code that deals with host-key verification.</li>
+</ul>
+
+<div class="navigation">
+  <a href="index.html">Back to menu</a>
+</div>

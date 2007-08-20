@@ -1,0 +1,27 @@
+<h1>Net::SSH</h1>
+
+<h2>Overview</h2>
+
+<p>It's easiest if you think of SSH as an event-oriented protocol. You (the client) send requests to the server, and the server sends responses. When you are interested in receiving those responses, you need to register callbacks to be invoked when they arrive, And all of this happens <em>asynchronously</em>.</p>
+
+<p>This differs from other network libraries. Take Net::HTTP, for instance. That is a <em>synchronous</em> library. You request a page, and the request blocks until a response is received from the server.</p>
+
+<p>Net::SSH, on the other hand, operates <em>asynchronously</em>. You tell the library that you want to open a channel, so Net::SSH queues up a request and the open_channel method immediately returns. <em>The channel has not actually been opened yet.</em> Instead, you give a block to the open_channel method, and Net::SSH remembers that the block goes to this specific channel request. Then, when the server eventually (a few milliseconds later) gets around to telling you that the channel is ready to be used, the block that you gave gets called. The open_channel <em>event</em> gets triggered.</p>
+
+<p>This asychronicity has another implication&mdash;somewhere, an <em>event loop</em> must be running, which constantly polls the server to see if any events are pending. You just set up all the commands and callbacks that your program needs to start, and then fire-off the event loop. It's like touching the first domino in a chain. Net::SSH provides a ready-made event loop in <code>Connection::Session#loop</code>, but you can also <a href="faq/event_loop.html">write your own</a> if you need to.</p>
+  
+<p>It can take some getting used to, but it is really quite powerful. It lets you (for instance) run multiple commands simultaneously over the same connection, which you can't do with (say) HTTP.</p>
+
+<h2>Channels</h2>
+
+<p>Unlike libraries like Net::Telnet and Net::FTP, you can't actually do much with the connection object itself. Instead, you need to open and manage <em>channels</em>.</p>
+
+<p>A single SSH connection can consist of multiple channels, with each channel doing it's own thing: executing a remote process, forwarding a port, communicating with an SSH subsystem (like SFTP), and so forth. You can fire off as many channels as you want.</p>
+
+<p>When you open a channel, you'll want to register callbacks on certain events, like "data" or "close", or "request", which lets your program respond to messages that the server sends to the channel.</p>
+
+<p>Writing a complex program using asynchronous channels feels very different from writing a conventional, sequential program. You wind up writing a kind of state machine using callbacks. It can be quite elegant!</p>
+
+<div class="navigation">
+  <a href="index.html">Back to menu</a>
+</div>

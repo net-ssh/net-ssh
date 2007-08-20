@@ -2,15 +2,27 @@ require 'erb'
 require 'coderay'
 require 'redcloth'
 require 'fileutils'
+require "#{File.dirname(__FILE__)}/../lib/net/ssh/version"
+
+def syntax_highlight(content, options={})
+  content.gsub(/<h:code(?:\s+lang="(.*?)")?>(.*?)<\/h:code>/m) do |match|
+    lang = $1 || "text"
+    code = CodeRay.scan($2.strip, lang)
+    result = code.div(:line_numbers => :table, :css => :class)
+    result = "<notextile>#{result}</notextile>" if options[:textile]
+    result
+  end
+end
 
 def render(template, variables={})
-  erb = ERB.new(File.read("#{File.dirname(__FILE__)}/templates/#{template}.erb"))
+  content = File.read("#{File.dirname(__FILE__)}/templates/#{template}.erb")
+  erb = ERB.new(content)
   __value = nil
   __binding = binding
   variables.each do |name, __value|
     eval("#{name}=__value", __binding)
   end
-  body = erb.result(__binding)
+  body = syntax_highlight(erb.result(__binding))
   @layout.result(__binding)
 end
 
@@ -42,6 +54,8 @@ FAQ = [
 base = "#{File.dirname(__FILE__)}/out"
 FileUtils.mkdir_p(base)
 FileUtils.cp("#{File.dirname(__FILE__)}/styles.css", base)
+
+# write index.html
 File.open("#{base}/index.html", "w") do |f|
   f.write(render(:index, :title => "Net::SSH", :root => "."))
 end
@@ -55,16 +69,30 @@ FAQ.each do |faq|
     next
   end
 
-  content = File.read(file)
-  content.gsub!(/<h:code(?:\s+lang="(.*?)")?>(.*?)<\/h:code>/m) do |match|
-    lang = $1 || "text"
-    code = CodeRay.scan($2.strip, lang)
-    "<notextile>#{code.div(:line_numbers => :table, :css => :class)}</notextile>"
-  end
-
+  content = syntax_highlight(File.read(file), :textile => true)
   content = RedCloth.new(content).to_html
 
   File.open("#{base}/faq/#{faq[:f]}.html", "w") do |f|
     f.write(render(:faq, :answer => content, :faq => faq, :title => "Net::SSH: #{faq[:t]}", :root => ".."))
   end
+end
+
+# write download/install page
+File.open("#{base}/install.html", "w") do |f|
+  f.write(render(:install, :title => "Net::SSH", :root => ".", :version => Net::SSH::Version.current))
+end
+
+# write developers page
+File.open("#{base}/developers.html", "w") do |f|
+  f.write(render(:developers, :title => "Net::SSH", :root => ".", :version => Net::SSH::Version.current))
+end
+
+# write overview page
+File.open("#{base}/overview.html", "w") do |f|
+  f.write(render(:overview, :title => "Net::SSH", :root => "."))
+end
+
+# write tutorial page
+File.open("#{base}/tutorial.html", "w") do |f|
+  f.write(render(:tutorial, :title => "Net::SSH", :root => "."))
 end
