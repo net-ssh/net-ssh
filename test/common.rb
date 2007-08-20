@@ -30,6 +30,8 @@ class MockTransport < Net::SSH::Transport::Session
   attr_reader :server_options
   attr_reader :hints, :queue
 
+  attr_accessor :mock_enqueue
+
   def initialize(options={})
     self.logger = options[:logger]
     self.host_as_string = "net.ssh.test,127.0.0.1"
@@ -49,6 +51,14 @@ class MockTransport < Net::SSH::Transport::Session
     else
       block, @expectation = @expectation, nil
       block.call(self, Net::SSH::Packet.new(buffer))
+    end
+  end
+
+  def enqueue_message(message)
+    if mock_enqueue
+      send_message(message)
+    else
+      super
     end
   end
 

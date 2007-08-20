@@ -164,6 +164,57 @@ module Net; module SSH; module Connection
       channels[local_id] = channel
     end
 
+    # A convenience method for executing a command and interacting with it. If
+    # no block is given, all output printed via $stdout and $stderr. Otherwise,
+    # the block is called for each data and extended data packet, with three
+    # arguments: the channel object, a symbol indicating the data type
+    # (:stdout or :stderr), and the data (as a string).
+    #
+    # Note that this method returns immediately, and requires an event loop
+    # (see Session#loop) in order for the command to actually execute.
+    def exec(command, &block)
+      open_channel do |channel|
+        channel.exec(command) do |ch, success|
+          raise "could not execute command: #{command.inspect}" unless success
+          
+          channel.on_data do |ch, data|
+            if block
+              block.call(ch, :stdout, data)
+            else
+              $stdout.print(data)
+            end
+          end
+
+          channel.on_extended_data do |ch, type, data|
+            if block
+              block.call(ch, :stderr, data)
+            else
+              $stderr.print(data)
+            end
+          end
+
+          channel.on_close do |ch|
+            ch[:closed] = true
+          end
+        end
+      end
+    end
+
+    # Same as #exec, except this will block until the command finishes. Also,
+    # if a block is not given, this will return all output (stdout and stderr)
+    # as a single string.
+    def exec!(command, &block)
+      block ||= Proc.new do |ch, type, data|
+        ch[:result] ||= ""
+        ch[:result] << data
+      end
+
+      channel = exec(command, &block)
+      loop { !channel[:closed] }
+
+      return channel[:result]
+    end
+
     # Enqueues a message to be sent to the server as soon as the socket is
     # available for writing.
     def send_message(message)

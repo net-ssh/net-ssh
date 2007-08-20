@@ -383,7 +383,84 @@ module Connection
       assert_equal 4, n
     end
 
+    def test_exec_should_open_channel_and_configure_default_callbacks
+      prep_exec("ls", :stdout, "data packet", :stderr, "extended data packet")
+
+      call = :first
+      session.exec "ls" do |channel, type, data|
+        if call == :first
+          assert_equal :stdout, type
+          assert_equal "data packet", data
+          call = :second
+        elsif call == :second
+          assert_equal :stderr, type
+          assert_equal "extended data packet", data
+          call = :third
+        else
+          flunk "should never get here, call == #{call.inspect}"
+        end
+      end
+
+      session.loop
+      assert_equal :third, call
+    end
+
+    def test_exec_without_block_should_use_print_to_display_result
+      prep_exec("ls", :stdout, "data packet", :stderr, "extended data packet")
+      $stdout.expects(:print).with("data packet")
+      $stderr.expects(:print).with("extended data packet")
+
+      session.exec "ls"
+      session.loop
+    end
+
+    def test_exec_bang_should_block_until_command_finishes
+      prep_exec("ls", :stdout, "some data")
+      called = false
+      session.exec! "ls" do |channel, type, data|
+        called = true
+        assert_equal :stdout, type
+        assert_equal "some data", data
+      end
+      assert called
+    end
+
+    def test_exec_bang_without_block_should_return_data_as_string
+      prep_exec("ls", :stdout, "some data")
+      assert_equal "some data", session.exec!("ls")
+    end
+
     private
+
+      def prep_exec(command, *data)
+        transport.mock_enqueue = true
+        transport.expect do |t, p|
+          assert_equal CHANNEL_OPEN, p.type
+          t.return(CHANNEL_OPEN_CONFIRMATION, :long, p[:remote_id], :long, 0, :long, 0x20000, :long, 0x10000)
+          t.expect do |t, p2|
+            assert_equal CHANNEL_REQUEST, p2.type
+            assert_equal "exec", p2[:request]
+            assert_equal true, p2[:want_reply]
+            assert_equal "ls", p2.read_string
+
+            t.return(CHANNEL_SUCCESS, :long, p[:remote_id])
+
+            0.step(data.length-1, 2) do |index|
+              type = data[index]
+              datum = data[index+1]
+
+              if type == :stdout
+                t.return(CHANNEL_DATA, :long, p[:remote_id], :string, datum)
+              else
+                t.return(CHANNEL_EXTENDED_DATA, :long, p[:remote_id], :long, 1, :string, datum)
+              end
+            end
+
+            t.return(CHANNEL_CLOSE, :long, p[:remote_id])
+            t.expect { |t,p| assert_equal CHANNEL_CLOSE, p.type }
+          end
+        end
+      end
 
       module MockSocket
         # so that we can easily test the contents that were enqueued, without

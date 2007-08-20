@@ -21,7 +21,7 @@ PACKAGE_FILES = FileList.new do |fl|
   [ "api", "doc" ].each do |dir|
     fl.include "#{dir}/**/*"
   end
-  fl.include "ChangeLog", "NEWS", "LICENSE", "TODO", "#{PACKAGE_NAME}.gemspec"
+  fl.include "NEWS", "LICENSE", "TODO", "#{PACKAGE_NAME}.gemspec"
   fl.include "README", "THANKS", "setup.rb"
   fl.include SOURCE_FILES
 end
@@ -40,13 +40,6 @@ end
 desc "Default task"
 task :default => [ :test ]
 
-desc "Build the ChangeLog"
-task :changelog do
-  output = `ruby util/svn2cl.rb`
-  cvs = File.read( "ChangeLog.cvs" )
-  File.open( "ChangeLog", "w" ) { |f| f.write output + cvs }
-end
-
 desc "Build documentation"
 task :doc => [ :rdoc, :manual ]
 
@@ -54,11 +47,9 @@ task :rdoc => SOURCE_FILES
 
 desc "Clean generated files"
 task :clean do
-  rm_rf "ChangeLog"
   rm_rf "coverage"
   rm_rf "pkg"
   rm_rf "api"
-  rm_rf "doc/manual-html"
 end
 
 desc "Generate the manual"
@@ -124,10 +115,10 @@ bz2_file = "#{package_name}.tar.bz2"
 zip_file = "#{package_name}.zip"
 gem_file = "#{package_name}.gem"
 
-task :gzip => SOURCE_FILES + [ :changelog, :doc, "#{package_dir}/#{gz_file}" ]
-task :bzip => SOURCE_FILES + [ :changelog, :doc, "#{package_dir}/#{bz2_file}" ]
-task :zip  => SOURCE_FILES + [ :changelog, :doc, "#{package_dir}/#{zip_file}" ]
-task :gem  => SOURCE_FILES + [ :changelog, "#{package_dir}/#{gem_file}" ]
+task :gzip => SOURCE_FILES + [ :doc, "#{package_dir}/#{gz_file}" ]
+task :bzip => SOURCE_FILES + [ :doc, "#{package_dir}/#{bz2_file}" ]
+task :zip  => SOURCE_FILES + [ :doc, "#{package_dir}/#{zip_file}" ]
+task :gem  => SOURCE_FILES + [ "#{package_dir}/#{gem_file}" ]
 
 desc "Build all packages"
 task :package => [ :prepackage, :test, :gzip, :bzip, :zip, :gem ]
