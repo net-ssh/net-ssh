@@ -96,3 +96,8 @@ end
 File.open("#{base}/tutorial.html", "w") do |f|
   f.write(render(:tutorial, :title => "Net::SSH", :root => "."))
 end
+
+# write reference page
+File.open("#{base}/quickref.html", "w") do |f|
+  f.write(render(:quickref, :title => "Net::SSH", :root => "."))
+end
