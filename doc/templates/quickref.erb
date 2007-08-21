@@ -104,6 +104,10 @@
 
 <p>Enqueues the given data, to be sent at the next available opportunity over the channel. For a remote process, this data arrives on standard input (stdin). For other channel types, the data will be interpreted differently.</p>
 
+<h3><code>#wait</code></h3>
+
+<p>Runs the event loop while the channel is active. This is handy in multi-channel scenarios, where you want other channels to run, but want to block until a specific channel completes.</p>
+
 
 <h2>Forward (Net::SSH::Service::Forward)</h2>
 

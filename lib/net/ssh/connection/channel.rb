@@ -160,6 +160,19 @@ module Net; module SSH; module Connection
       output.append(data.to_s)
     end
 
+    # Returns true if the channel exists in the channel list of the session,
+    # and false otherwise. This can be used to determine whether a channel has
+    # been closed or not.
+    def active?
+      connection.channels.key?(local_id)
+    end
+
+    # Runs the SSH event loop until the channel is no longer active. This is
+    # handy for blocking while you wait for some channel to finish.
+    def wait
+      connection.loop { active? }
+    end
+
     # Returns true if the channel is currently closing, but not actually
     # closed. A channel is closing when, for instance, #close has been
     # invoked, but the server has not yet responded with a CHANNEL_CLOSE

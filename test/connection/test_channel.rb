@@ -361,15 +361,31 @@ module Connection
       assert channel.pending_requests.empty?
     end
 
+    def test_active_should_be_true_when_channel_appears_in_channel_list
+      connection.channels[channel.local_id] = channel
+      assert channel.active?
+    end
+
+    def test_active_should_be_false_when_channel_is_not_in_channel_list
+      assert !channel.active?
+    end
+
+    def test_wait_should_block_while_channel_is_active?
+      channel.expects(:active?).times(3).returns(true,true,false)
+      channel.wait
+    end
+
     private
 
       class MockConnection
         attr_reader :logger
         attr_reader :options
+        attr_reader :channels
 
         def initialize(options={})
           @expectation = nil
           @options = options
+          @channels = {}
         end
 
         def expect(&block)
@@ -381,6 +397,11 @@ module Connection
           packet = Net::SSH::Packet.new(msg.to_s)
           callback, @expectation = @expectation, nil
           callback.call(self, packet)
+        end
+
+        alias loop_forever loop
+        def loop(&block)
+          loop_forever { break unless block.call }
         end
 
         def test!
