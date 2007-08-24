@@ -303,7 +303,7 @@ module Net; module SSH; module Transport
       # and the lengths of the hmacs, and returns the largest as the byte requirement
       # for the key-exchange algorithm.
       def kex_byte_requirement
-        sizes = []
+        sizes = [8] # require at least 8 bytes
 
         sizes.concat(CipherFactory.get_lengths(encryption_client))
         sizes.concat(CipherFactory.get_lengths(encryption_server))
