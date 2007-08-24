@@ -92,7 +92,7 @@ module Net; module SSH; module Connection
       @pending_requests = []
       @on_data = @on_extended_data = @on_process = @on_close = @on_eof = nil
       @on_request = {}
-      @closing = false
+      @closing = @eof = false
     end
 
     # A shortcut for accessing properties of the channel (see #properties).
@@ -155,8 +155,11 @@ module Net; module SSH; module Connection
     end
 
     # Appends the given data to the channel's output buffer, preparatory to
-    # being packaged up and sent to the remote server as channel data.
+    # being packaged up and sent to the remote server as channel data. This will
+    # raise an exception if the channel has previously declared that no more
+    # data will be sent (see #eof!).
     def send_data(data)
+      raise EOFError, "cannot send data if channel has declared eof" if eof?
       output.append(data.to_s)
     end
 
@@ -191,6 +194,21 @@ module Net; module SSH; module Connection
         @closing = true
         connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
       end
+    end
+
+    # Returns true if the local end of the channel has declared that no more
+    # data is forthcoming (see #eof!). Trying to send data via #send_data when
+    # this is true will result in an exception being raised.
+    def eof?
+      @eof
+    end
+
+    # Tells the remote end of the channel that no more data is forthcoming
+    # from this end of the channel, though the remote end may still send data.
+    def eof!
+      return if eof?
+      @eof = true
+      connection.send_message(Buffer.from(:byte, CHANNEL_EOF, :long, remote_id))
     end
 
     # If an #on_process handler has been set up, this will cause it to be

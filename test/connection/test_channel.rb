@@ -375,6 +375,35 @@ module Connection
       channel.wait
     end
 
+    def test_eof_bang_should_send_eof_to_server
+      channel.do_open_confirmation(0, 1000, 1000)
+      connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
+      channel.eof!
+    end
+
+    def test_eof_bang_should_not_send_eof_if_eof_was_already_declared
+      channel.do_open_confirmation(0, 1000, 1000)
+      connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
+      channel.eof!
+      assert_nothing_raised { channel.eof! }
+    end
+
+    def test_eof_q_should_return_true_if_eof_declared
+      channel.do_open_confirmation(0, 1000, 1000)
+      connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
+
+      assert !channel.eof?
+      channel.eof!
+      assert channel.eof?
+    end
+
+    def test_send_data_should_raise_exception_if_eof_declared
+      channel.do_open_confirmation(0, 1000, 1000)
+      connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
+      channel.eof!
+      assert_raises(EOFError) { channel.send_data("die! die! die!") }
+    end
+
     private
 
       class MockConnection

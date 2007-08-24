@@ -1,0 +1,8 @@
+*SVN*
+
+* Added Channel#eof? and Channel#eof! [Jamis Buck]
+
+
+*2.0 Preview Release 1 (1.99.0)* (21 Aug 2007)
+
+* First preview release of Net::SSH v2
