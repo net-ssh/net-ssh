@@ -23,7 +23,7 @@ module Net; module SSH; module Test
 
         actual = packet.send(:"read_#{type}")
         next if expected.nil?
-        raise "expected #{type} `#{expected}' but got `#{actual}'" unless expected == actual
+        raise "expected #{type} #{expected.inspect} but got #{actual.inspect}" unless expected == actual
       end
     end
   end
