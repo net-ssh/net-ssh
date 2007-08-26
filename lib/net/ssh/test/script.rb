@@ -11,12 +11,16 @@ module Net; module SSH; module Test
       @events = []
     end
 
-    def opens_channel
+    def opens_channel(confirm=true)
       channel = Channel.new(self)
       channel.remote_id = 5555
 
       events << LocalPacket.new(:channel_open) { |p| channel.local_id = p[:remote_id] }
-      events << RemotePacket.new(:channel_open_confirmation, channel.local_id, channel.remote_id, 0x20000, 0x10000)
+
+      if confirm
+        events << RemotePacket.new(:channel_open_confirmation, channel.local_id, channel.remote_id, 0x20000, 0x10000)
+      end
+
       channel
     end
 
@@ -72,7 +76,7 @@ module Net; module SSH; module Test
     end
 
     def process(packet)
-      event = events.shift or raise "end of script reached, but got a packet type #{packet.type}"
+      event = events.shift or raise "end of script reached, but got a packet type #{packet.read_byte}"
       event.process(packet)
     end
   end
