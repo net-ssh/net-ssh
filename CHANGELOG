@@ -1,5 +1,7 @@
 *SVN*
 
+* Fixed bug in strict host key verifier on cache miss [Mike Timm]
+
 * Added Net::SSH::Test to facilitate testing complex SSH state machines [Jamis Buck]
 
 * Added Channel#eof? and Channel#eof! [Jamis Buck]

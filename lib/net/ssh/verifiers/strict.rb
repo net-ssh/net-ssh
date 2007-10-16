@@ -40,7 +40,7 @@ module Net; module SSH; module Verifiers
     private
 
       def process_cache_miss(host, args)
-        exception = HostKeyMismatch.new("fingerprint #{args[:fingerprint]} does not match for #{host.join(',')}")
+        exception = HostKeyMismatch.new("fingerprint #{args[:fingerprint]} does not match for #{host.inspect}")
         exception.data = args
         exception.callback = Proc.new { Net::SSH::KnownHosts.add(host, args[:key]) }
         raise exception
