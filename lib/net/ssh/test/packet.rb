@@ -39,7 +39,7 @@ module Net; module SSH; module Test
         when CHANNEL_REQUEST
           parts = [:long, :string, :bool]
           case @data[1]
-          when "exec" then parts << :string
+          when "exec", "subsystem" then parts << :string
           when "exit-status" then parts << :long
           else raise "don't know what to do about #{@data[1]} channel request"
           end

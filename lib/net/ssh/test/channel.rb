@@ -21,6 +21,10 @@ module Net; module SSH; module Test
       script.sends_channel_request(self, "exec", reply, command, success)
     end
 
+    def sends_subsystem(subsystem, reply=true, success=true)
+      script.sends_channel_request(self, "subsystem", reply, subsystem, success)
+    end
+
     def sends_data(data)
       script.sends_channel_data(self, data)
     end
