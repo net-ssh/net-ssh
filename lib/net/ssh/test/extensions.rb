@@ -1,6 +1,7 @@
 require 'net/ssh/buffer'
 require 'net/ssh/packet'
 require 'net/ssh/buffered_io'
+require 'net/ssh/connection/channel'
 require 'net/ssh/connection/constants'
 require 'net/ssh/transport/constants'
 require 'net/ssh/transport/packet_stream'
@@ -52,6 +53,15 @@ module Net::SSH::Transport::PacketStream
   end
 end
 
+class Net::SSH::Connection::Channel
+  alias original_send_data send_data
+  def send_data(data)
+    original_send_data(data)
+    # force each packet of sent data to be enqueued separately, so that
+    # scripted sends are properly interpreted.
+    enqueue_pending_output
+  end
+end
 
 def IO.select(readers=nil, writers=nil, errors=nil, wait=nil)
   ready_readers = Array(readers).select { |r| r.select_for_read? }
