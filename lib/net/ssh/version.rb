@@ -1,13 +1,5 @@
 module Net; module SSH
   class Version
-    MAJOR = 1
-    MINOR = 99
-    TINY  = 0
-
-    def self.current
-      @current ||= new(MAJOR, MINOR, TINY)
-    end
-
     def self.[](major, minor, tiny)
       new(major, minor, tiny)
     end
@@ -30,6 +22,11 @@ module Net; module SSH
       @to_i ||= @major * 1_000_000 + @minor * 1_000 + @tiny
     end
 
-    STRING = current.to_s
+    MAJOR = 1
+    MINOR = 99
+    TINY  = 0
+
+    CURRENT = new(MAJOR, MINOR, TINY)
+    STRING = CURRENT.to_s
   end
 end; end
