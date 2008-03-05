@@ -1,4 +1,5 @@
 require 'socket'
+require 'stringio'
 require 'net/ssh/test/extensions'
 require 'net/ssh/test/script'
 

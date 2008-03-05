@@ -1,4 +1,3 @@
-require 'base64'
 require 'net/ssh/transport/openssl'
 require 'net/ssh/prompt'
 
@@ -65,7 +64,7 @@ module Net; module SSH
         data = File.read(filename)
         type, blob = data.split(/ /)
 
-        blob = Base64.decode64(blob)
+        blob = blob.unpack("m*").first
         reader = Net::SSH::Buffer.new(blob)
         reader.read_key or raise OpenSSL::PKey::PKeyError, "not a public key #{filename.inspect}"
       end
