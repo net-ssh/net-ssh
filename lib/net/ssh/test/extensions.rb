@@ -34,17 +34,20 @@ module Net::SSH::Transport::PacketStream
     return true
   end
 
+  alias real_available_for_read? available_for_read?
   def available_for_read?
     return true if select_for_read?
     idle!
     false
   end
 
+  alias real_enqueue_packet enqueue_packet
   def enqueue_packet(payload)
     packet = Net::SSH::Buffer.new(payload.to_s)
     script.process(packet)
   end
 
+  alias real_poll_next_packet poll_next_packet
   def poll_next_packet
     return nil if available <= 0
     packet = Net::SSH::Buffer.new(read_available(4))
@@ -63,19 +66,24 @@ class Net::SSH::Connection::Channel
   end
 end
 
-def IO.select(readers=nil, writers=nil, errors=nil, wait=nil)
-  ready_readers = Array(readers).select { |r| r.select_for_read? }
-  ready_writers = Array(writers).select { |r| r.select_for_write? }
-  ready_errors  = Array(errors).select  { |r| r.select_for_error? }
+class IO
+  class <<self
+    alias real_select select
+    def select(readers=nil, writers=nil, errors=nil, wait=nil)
+      ready_readers = Array(readers).select { |r| r.select_for_read? }
+      ready_writers = Array(writers).select { |r| r.select_for_write? }
+      ready_errors  = Array(errors).select  { |r| r.select_for_error? }
 
-  if ready_readers.any? || ready_writers.any? || ready_errors.any?
-    return [ready_readers, ready_writers, ready_errors]
+      if ready_readers.any? || ready_writers.any? || ready_errors.any?
+        return [ready_readers, ready_writers, ready_errors]
+      end
+
+      processed = 0
+      Array(readers).each do |reader|
+        processed += 1 if reader.idle!
+      end
+
+      raise "no readers were ready for reading, and none had any incoming packets" if processed == 0
+    end
   end
-
-  processed = 0
-  Array(readers).each do |reader|
-    processed += 1 if reader.idle!
-  end
-
-  raise "no readers were ready for reading, and none had any incoming packets" if processed == 0
 end

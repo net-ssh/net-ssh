@@ -81,7 +81,11 @@ module Net; module SSH
 
     private
 
-      attr_reader :input, :output, :input_mutex, :output_mutex
+      # Can't use attr_reader here (after +private+) without incurring the
+      # wrath of "ruby -w". We hates it.
+
+      def input; @input; end
+      def output; @output; end
 
       def initialize_buffered_io
         @input = Net::SSH::Buffer.new

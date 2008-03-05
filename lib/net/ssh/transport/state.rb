@@ -54,6 +54,7 @@ module Net; module SSH; module Transport
       @cipher = CipherFactory.get("none")
       @hmac = HMAC.get("none")
       @compression = nil
+      @compressor = @decompressor = nil
     end
 
     # A convenience method for quickly setting multiple values in a single
