@@ -23,27 +23,27 @@ module Net; module SSH
     attr_writer :callback, :data
 
     def [](key)
-      @data[key]
+      @data && @data[key]
     end
 
     def fingerprint
-      @data[:fingerprint]
+      @data && @data[:fingerprint]
     end
 
     def host
-      @data[:peer][:host]
+      @data && @data[:peer] && @data[:peer][:host]
     end
 
     def port
-      @data[:peer][:port]
+      @data && @data[:peer] && @data[:peer][:port]
     end
 
     def ip
-      @data[:peer][:ip]
+      @data && @data[:peer] && @data[:peer][:ip]
     end
 
     def key
-      @data[:key]
+      @data && @data[:key]
     end
 
     def remember_host!
