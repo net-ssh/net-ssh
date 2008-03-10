@@ -1,45 +1,30 @@
 module Net; module SSH
 
-  PROMPTS = {}
-
-  begin
-    require 'highline'
-    HighLine.track_eof = false
-    PROMPTS[:highline] = true
-  rescue LoadError
-    begin
-      require 'termios'
-      PROMPTS[:termios] = true
-    rescue LoadError
-      # we'll just have to use plain-text
-    end
-  end
-
   # A basic prompt module that can be mixed into other objects. If HighLine is
   # installed, it will be used to display prompts and read input from the
   # user. Otherwise, the termios library will be used. If neither HighLine
   # nor termios is installed, a simple prompt that echos text in the clear
   # will be used.
-  module Prompt
-    if PROMPTS[:highline]
 
+  module PromptMethods
+    module Highline
       def prompt(prompt, echo=true)
-        @highline ||= HighLine.new
+        @highline ||= ::HighLine.new
         @highline.ask(prompt + " ") { |q| q.echo = echo }
       end
+    end
 
-    elsif PROMPTS[:termios]
-
+    module Termios
       def set_echo(enable)
-        term = Termios.getattr($stdin)
+        term = ::Termios.getattr($stdin)
 
         if enable
-          term.c_lflag |= (Termios::ECHO | Termios::ICANON)
+          term.c_lflag |= (::Termios::ECHO | ::Termios::ICANON)
         else
-          term.c_lflag &= ~Termios::ECHO
+          term.c_lflag &= ~::Termios::ECHO
         end
 
-        Termios.setattr($stdin, Termios::TCSANOW, term)
+        ::Termios.setattr($stdin, ::Termios::TCSANOW, term)
       end
       private :set_echo
 
@@ -55,9 +40,9 @@ module Net; module SSH
           $stdout.puts
         end
       end
+    end
 
-    else
-
+    module Clear
       def prompt(prompt, echo=true)
         @seen_warning ||= false
         if !echo && !@seen_warning
@@ -69,8 +54,20 @@ module Net; module SSH
         $stdout.flush
         $stdin.gets.chomp
       end
-
     end
   end
+
+  Prompt = begin
+      require 'highline'
+      HighLine.track_eof = false
+      PromptMethods::Highline
+    rescue LoadError
+      begin
+        require 'termios'
+        PromptMethods::Termios
+      rescue LoadError
+        PromptMethods::Clear
+      end
+    end
 
 end; end
