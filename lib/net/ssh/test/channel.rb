@@ -17,6 +17,10 @@ module Net; module SSH; module Test
       @remote_id || Proc.new { @remote_id or raise "remote-id has not been set yet!" }
     end
 
+    def inject_remote_delay!
+      gets_data("")
+    end
+
     def sends_exec(command, reply=true, success=true)
       script.sends_channel_request(self, "exec", reply, command, success)
     end
