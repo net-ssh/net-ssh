@@ -7,6 +7,11 @@ module Transport; module Kex
   class TestDiffieHellmanGroup1SHA1 < Test::Unit::TestCase
     include Net::SSH::Transport::Constants
 
+    def setup
+      @dh_options = @dh = @algorithms = @connection = @server_key = 
+        @packet_data = @shared_secret = nil
+    end
+
     def test_exchange_keys_should_return_expected_results_when_successful
       result = exchange!
       assert_equal session_id, result[:session_id]

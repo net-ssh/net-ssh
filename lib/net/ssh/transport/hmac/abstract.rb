@@ -8,6 +8,11 @@ module Net; module SSH; module Transport; module HMAC
     class <<self
       %w(key_length mac_length digest_class).each do |attribute|
         define_method(attribute) do |*v|
+          # satisfy ruby -w
+          if !instance_variable_defined?("@#{attribute}")
+            instance_variable_set("@#{attribute}", nil)
+          end
+
           if v.empty?
             v = instance_variable_get("@#{attribute}")
             if v.nil? && superclass.respond_to?(attribute)

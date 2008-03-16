@@ -143,8 +143,13 @@ module Net; module SSH; module Transport
     # Closes any the compressor and/or decompressor objects that have been
     # instantiated.
     def cleanup
-      @compressor.close if @compressor
+      if @compressor
+        @compressor.finish if !@compressor.finished?
+        @compressor.close
+      end
+
       @decompressor.close if @decompressor
+
       @compressor = @decompressor = nil
     end
 

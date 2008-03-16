@@ -171,6 +171,7 @@ module Net; module SSH; module Transport
         @hints  = {}
         @server = State.new(self)
         @client = State.new(self)
+        @packet = nil
         initialize_buffered_io
       end
 

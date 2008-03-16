@@ -5,6 +5,24 @@ module Transport
 
   class TestState < Test::Unit::TestCase
 
+    def setup
+      @socket = @state = @deflater = @inflater = nil
+    end
+
+    def teardown
+      if @deflater
+        @deflater.finish if !@deflater.finished?
+        @deflater.close
+      end
+
+      if @inflater
+        @inflater.finish if !@inflater.finished?
+        @inflater.close
+      end
+
+      state.cleanup
+    end
+
     def test_constructor_should_initialize_all_values
       assert_equal 0, state.sequence_number
       assert_equal 0, state.packets
@@ -131,12 +149,6 @@ module Transport
       assert !state.needs_rekey?
       state.increment(88)
       assert state.needs_rekey?
-    end
-
-    def teardown
-      @deflater.close if @deflater
-      @inflater.close if @inflater
-      state.cleanup
     end
 
     private
