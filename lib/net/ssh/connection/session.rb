@@ -192,10 +192,6 @@ module Net; module SSH; module Connection
               $stderr.print(data)
             end
           end
-
-          channel.on_close do |ch|
-            ch[:closed] = true
-          end
         end
       end
     end
@@ -210,7 +206,7 @@ module Net; module SSH; module Connection
       end
 
       channel = exec(command, &block)
-      loop { !channel[:closed] }
+      loop { channel.active? }
 
       return channel[:result]
     end

@@ -1,4 +1,3 @@
-$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/..").uniq!
 require 'common'
 require 'net/ssh/transport/identity_cipher'
 

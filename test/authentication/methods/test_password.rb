@@ -1,4 +1,3 @@
-$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../..").uniq!
 require 'common'
 require 'net/ssh/authentication/methods/password'
 require 'authentication/methods/common'

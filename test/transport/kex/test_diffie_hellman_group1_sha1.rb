@@ -1,4 +1,3 @@
-$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../..").uniq!
 require 'common'
 require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 require 'ostruct'

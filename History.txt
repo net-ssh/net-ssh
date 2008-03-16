@@ -1,0 +1,22 @@
+=== (unreleased)
+
+* 1 major enhancement
+
+  * Added Net::SSH::Test to facilitate testing complex SSH state machines [Jamis Buck]
+
+* 2 minor enhancements
+
+  * Reworked Net::SSH::Prompt to use conditionally-selected modules [Jamis Buck, suggested by James Rosen]
+
+  * Added Channel#eof? and Channel#eof! [Jamis Buck]
+
+* 1 minor bug fix
+
+  * Fixed bug in strict host key verifier on cache miss [Mike Timm]
+
+
+=== 2.0 Preview Release 1 (1.99.0) / 21 Aug 2007
+
+* 1 major enhancement
+
+  * First preview release of Net::SSH v2
