@@ -2,10 +2,16 @@ $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
 require 'test/unit'
 require 'mocha'
 require 'net/ssh/buffer'
+require 'net/ssh/config'
 require 'net/ssh/loggable'
 require 'net/ssh/packet'
 require 'net/ssh/transport/session'
 require 'ostruct'
+
+# clear the default files out so that tests don't get confused by existing
+# SSH config files.
+$original_config_default_files = Net::SSH::Config.default_files.dup
+Net::SSH::Config.default_files.clear
 
 def P(*args)
   Net::SSH::Packet.new(Net::SSH::Buffer.from(*args))

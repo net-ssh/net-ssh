@@ -10,6 +10,7 @@ Guillaume Marçais <guillaume.marcais@free.fr>
 
 Daniel Berger <djberg96@yahoo.com>
   * help getting unit tests in earlier Net::SSH versions to pass in Windows
+  * initial version of Net::SSH::Config provided inspiration and encouragement
 
 Chris Andrews <chris@nodnol.org> and Lee Jensen <lee@outerim.com>
   * support for ssh agent forwarding

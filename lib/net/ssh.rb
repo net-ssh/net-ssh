@@ -1,5 +1,6 @@
 require 'logger'
 
+require 'net/ssh/config'
 require 'net/ssh/errors'
 require 'net/ssh/loggable'
 require 'net/ssh/transport/session'
@@ -27,12 +28,13 @@ module Net
     # * :encryption => the encryption cipher to use
     # * :forward_agent => set to true if you want the SSH agent connection to be forwarded
     # * :hmac => the hmac algorithm to use
+    # * :host_key => the host key algorithm to use
     # * :kex => the key exchange algorithm to use
     # * :keys => an array of file names of private keys to use for publickey and hostbased authentication
     # * :logger => the logger instance to use when logging
     # * :paranoid => either true, false, or :very, specifying how strict host-key verification should be
     # * :password => the password to use to login
-    # * :port => the port to use when connecting to the reote host
+    # * :port => the port to use when connecting to the remote host
     # * :proxy => a proxy instance (see Proxy) to use when connecting
     # * :rekey_blocks_limit => the max number of blocks to process before rekeying
     # * :rekey_limit => the max number of bytes to process before rekeying
@@ -44,6 +46,8 @@ module Net
       if invalid_options.any?
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
       end
+
+      options = Net::SSH::Config.for(host).merge(options)
 
       if !options.key?(:logger)
         options[:logger] = Logger.new(STDERR)
