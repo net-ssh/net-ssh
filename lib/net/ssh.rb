@@ -51,7 +51,7 @@ module Net
 
       if !options.key?(:logger)
         options[:logger] = Logger.new(STDERR)
-        options[:logger].level = Logger::WARN
+        options[:logger].level = Logger::FATAL
       end
 
       options[:logger].level = options[:verbose] if options[:verbose]

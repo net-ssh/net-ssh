@@ -1,13 +1,5 @@
 DOCUMENT the Net::SSH::Test system
 
-tweak the logger output so it isn't so noisy
-
-find a way to allow log output to be filtered...?
-
-find a nice way to allow server/client algorithms to be specified independently (e.g., compress from client->server, but not vice-versa).
-
 examples
-
-don't blow up when ssh-agent is not available
 
 thread safety?
