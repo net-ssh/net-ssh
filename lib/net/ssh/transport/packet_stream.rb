@@ -46,7 +46,7 @@ module Net; module SSH; module Transport
             begin
               Socket.gethostbyname(Socket.gethostname).first
             rescue
-              error { "the client ipaddr/name could not be determined" }
+              lwarn { "the client ipaddr/name could not be determined" }
               "unknown"
             end
           end
@@ -137,7 +137,7 @@ module Net; module SSH; module Transport
       encrypted_data = client.cipher.update(unencrypted_data) << client.cipher.final
       message = encrypted_data + mac
 
-      trace { "queueing packet nr #{client.sequence_number} type #{payload[0]} len #{packet_length}" }
+      debug { "queueing packet nr #{client.sequence_number} type #{payload[0]} len #{packet_length}" }
       enqueue(message)
 
       client.increment(packet_length)
@@ -218,7 +218,7 @@ module Net; module SSH; module Transport
         # try to decompress the payload, in case compression is active
         payload = server.decompress(payload)
 
-        trace { "received packet nr #{server.sequence_number} type #{payload[0]} len #{@packet_length}" }
+        debug { "received packet nr #{server.sequence_number} type #{payload[0]} len #{@packet_length}" }
 
         server.increment(@packet_length)
         @packet = nil

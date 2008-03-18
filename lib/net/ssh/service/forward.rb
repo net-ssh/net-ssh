@@ -66,7 +66,7 @@ module Net; module SSH; module Service
         debug { "received connection on #{bind_address}:#{local_port}" }
 
         session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, :long, local_port) do |channel|
-          channel.trace { "direct channel established" }
+          channel.info { "direct channel established" }
           prepare_client(client, channel, :local)
         end
       end
@@ -199,18 +199,18 @@ module Net; module SSH; module Service
         end
 
         channel.on_close do |ch|
-          trace { "closing #{type} forwarded channel" }
+          debug { "closing #{type} forwarded channel" }
           ch[:socket].close if !client.closed?
           session.stop_listening_to(ch[:socket])
         end
 
         channel.on_process do |ch|
           if ch[:socket].closed?
-            ch.trace { "#{type} forwarded connection closed" }
+            ch.info { "#{type} forwarded connection closed" }
             ch.close
           elsif ch[:socket].available > 0
             data = ch[:socket].read_available(8192)
-            ch.trace { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
+            ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
             ch.send_data(data)
           end
         end
@@ -232,7 +232,7 @@ module Net; module SSH; module Service
         end
 
         client = TCPSocket.new(remote.host, remote.port)
-        trace { "connected #{connected_address}:#{connected_port} originator #{originator_address}:#{originator_port}" }
+        info { "connected #{connected_address}:#{connected_port} originator #{originator_address}:#{originator_port}" }
 
         prepare_client(client, channel, :remote)
       rescue SocketError => err
@@ -241,7 +241,7 @@ module Net; module SSH; module Service
 
       # The callback used when an auth-agent channel is requested by the server.
       def auth_agent_channel(session, channel, packet)
-        trace { "opening auth-agent channel" }
+        info { "opening auth-agent channel" }
         channel[:invisible] = true
         prepare_client(@auth_agent.socket, channel, :agent)
       end

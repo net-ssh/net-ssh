@@ -62,7 +62,7 @@ module Net; module SSH; module Transport
       @socket.extend(PacketStream)
       @socket.logger = @logger
 
-      trace { "connection established" }
+      debug { "connection established" }
 
       @queue = []
 
@@ -156,13 +156,13 @@ module Net; module SSH; module Transport
           raise Net::SSH::Disconnect, "disconnected: #{packet[:description]} (#{packet[:reason_code]})"
 
         when IGNORE
-          trace { "IGNORE packet recieved: #{packet[:data].inspect}" }
+          debug { "IGNORE packet recieved: #{packet[:data].inspect}" }
 
         when UNIMPLEMENTED
-          log { "UNIMPLEMENTED: #{packet[:number]}" }
+          lwarn { "UNIMPLEMENTED: #{packet[:number]}" }
 
         when DEBUG
-          send(packet[:always_display] ? :log : :debug) { packet[:message] }
+          send(packet[:always_display] ? :fatal : :debug) { packet[:message] }
 
         when KEXINIT
           algorithms.accept_kexinit(packet)

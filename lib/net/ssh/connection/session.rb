@@ -138,7 +138,7 @@ module Net; module SSH; module Connection
     # first parameter being true or false (success, or failure), and the second
     # being the packet itself.
     def send_global_request(type, *extra, &callback)
-      trace { "sending global request #{type}" }
+      info { "sending global request #{type}" }
       msg = Buffer.from(:byte, GLOBAL_REQUEST, :string, type.to_s, :bool, !callback.nil?, *extra)
       send_message(msg)
       pending_requests << callback if callback
@@ -287,7 +287,7 @@ module Net; module SSH; module Connection
       # request callback will be invoked, if one exists, and the necessary
       # reply returned.
       def global_request(packet)
-        trace { "global request received: #{packet[:request_type]} #{packet[:want_reply]}" }
+        info { "global request received: #{packet[:request_type]} #{packet[:want_reply]}" }
         callback = @on_global_request[packet[:request_type]]
         result = callback ? callback.call(packet[:request_data], packet[:want_reply]) : false
 
@@ -303,14 +303,14 @@ module Net; module SSH; module Connection
 
       # Invokes the next pending request callback with +true+.
       def request_success(packet)
-        trace { "global request success" }
+        info { "global request success" }
         callback = pending_requests.shift
         callback.call(true, packet) if callback
       end
 
       # Invokes the next pending request callback with +false+.
       def request_failure(packet)
-        trace { "global request failure" }
+        info { "global request failure" }
         callback = pending_requests.shift
         callback.call(false, packet) if callback
       end
@@ -320,7 +320,7 @@ module Net; module SSH; module Connection
       # is returned, otherwise the callback is invoked and everything proceeds
       # accordingly.
       def channel_open(packet)
-        trace { "channel open #{packet[:channel_type]}" }
+        info { "channel open #{packet[:channel_type]}" }
 
         local_id = get_next_channel_id
         channel = Channel.new(self, packet[:channel_type], local_id)
@@ -350,7 +350,7 @@ module Net; module SSH; module Connection
       end
 
       def channel_open_confirmation(packet)
-        trace { "channel_open_confirmation: #{packet[:local_id]} #{packet[:remote_id]} #{packet[:window_size]} #{packet[:packet_size]}" }
+        info { "channel_open_confirmation: #{packet[:local_id]} #{packet[:remote_id]} #{packet[:window_size]} #{packet[:packet_size]}" }
         channel = channels[packet[:local_id]]
         channel.do_open_confirmation(packet[:remote_id], packet[:window_size], packet[:packet_size])
       end
@@ -362,32 +362,32 @@ module Net; module SSH; module Connection
       end
 
       def channel_window_adjust(packet)
-        trace { "channel_window_adjust: #{packet[:local_id]} +#{packet[:extra_bytes]}" }
+        info { "channel_window_adjust: #{packet[:local_id]} +#{packet[:extra_bytes]}" }
         channels[packet[:local_id]].do_window_adjust(packet[:extra_bytes])
       end
 
       def channel_request(packet)
-        trace { "channel_request: #{packet[:local_id]} #{packet[:request]} #{packet[:want_reply]}" }
+        info { "channel_request: #{packet[:local_id]} #{packet[:request]} #{packet[:want_reply]}" }
         channels[packet[:local_id]].do_request(packet[:request], packet[:want_reply], packet[:request_data])
       end
 
       def channel_data(packet)
-        trace { "channel_data: #{packet[:local_id]} #{packet[:data].length}b" }
+        info { "channel_data: #{packet[:local_id]} #{packet[:data].length}b" }
         channels[packet[:local_id]].do_data(packet[:data])
       end
 
       def channel_extended_data(packet)
-        trace { "channel_extended_data: #{packet[:local_id]} #{packet[:data_type]} #{packet[:data].length}b" }
+        info { "channel_extended_data: #{packet[:local_id]} #{packet[:data_type]} #{packet[:data].length}b" }
         channels[packet[:local_id]].do_extended_data(packet[:data_type], packet[:data])
       end
 
       def channel_eof(packet)
-        trace { "channel_eof: #{packet[:local_id]}" }
+        info { "channel_eof: #{packet[:local_id]}" }
         channels[packet[:local_id]].do_eof
       end
 
       def channel_close(packet)
-        trace { "channel_close: #{packet[:local_id]}" }
+        info { "channel_close: #{packet[:local_id]}" }
 
         channel = channels[packet[:local_id]]
         channel.close
@@ -397,12 +397,12 @@ module Net; module SSH; module Connection
       end
 
       def channel_success(packet)
-        trace { "channel_success: #{packet[:local_id]}" }
+        info { "channel_success: #{packet[:local_id]}" }
         channels[packet[:local_id]].do_success
       end
 
       def channel_failure(packet)
-        trace { "channel_failure: #{packet[:local_id]}" }
+        info { "channel_failure: #{packet[:local_id]}" }
         channels[packet[:local_id]].do_failure
       end
   end

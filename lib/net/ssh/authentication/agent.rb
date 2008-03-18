@@ -66,7 +66,7 @@ module Net; module SSH; module Authentication
     # (it only supports the ssh-agent distributed by OpenSSH).
     def connect!
       begin
-        trace { "connecting to ssh-agent" }
+        debug { "connecting to ssh-agent" }
         @socket = agent_socket_factory.open(ENV['SSH_AUTH_SOCK'])
       rescue
         error { "could not connect to ssh-agent" }
@@ -141,7 +141,7 @@ module Net; module SSH; module Authentication
       def send_packet(type, *args)
         buffer = Buffer.from(*args)
         data = [buffer.length + 1, type.to_i, buffer.to_s].pack("NCA*")
-        trace { "sending agent request #{type} len #{buffer.length}" }
+        debug { "sending agent request #{type} len #{buffer.length}" }
         @socket.send data, 0
       end
 
@@ -152,7 +152,7 @@ module Net; module SSH; module Authentication
         buffer = Net::SSH::Buffer.new(@socket.read(4))
         buffer.append(@socket.read(buffer.read_long))
         type = buffer.read_byte
-        trace { "received agent packet #{type} len #{buffer.length-4}" }
+        debug { "received agent packet #{type} len #{buffer.length-4}" }
         return type, buffer
       end
 

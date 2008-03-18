@@ -38,7 +38,7 @@ module Net; module SSH; module Transport
       # reports an incompatible SSH version (e.g., SSH1), this will raise an
       # exception.
       def negotiate!(socket)
-        trace { "negotiating protocol version" }
+        info { "negotiating protocol version" }
 
         loop do
           @version = socket.readline
@@ -46,7 +46,7 @@ module Net; module SSH; module Transport
           @header << @version
         end
 
-        trace { "remote is #{@version.strip}" }
+        debug { "remote is #{@version.strip}" }
 
         unless @version.match(/^SSH-(1\.99|2\.0)-/)
           raise Net::SSH::Exception, "incompatible SSH version `#{@version}'"
@@ -54,7 +54,7 @@ module Net; module SSH; module Transport
 
         @version.strip!
 
-        trace { "local is #{PROTO_VERSION}" }
+        debug { "local is #{PROTO_VERSION}" }
         socket.write "#{PROTO_VERSION}\r\n"
       end
   end

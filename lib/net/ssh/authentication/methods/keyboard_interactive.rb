@@ -15,7 +15,7 @@ module Net
 
           # Attempt to authenticate the given user for the given service.
           def authenticate(next_service, username, password=nil)
-            trace { "trying keyboard-interactive" }
+            debug { "trying keyboard-interactive" }
             send_message(userauth_request(username, next_service, "keyboard-interactive", "", ""))
 
             loop do
@@ -26,12 +26,12 @@ module Net
                 debug { "keyboard-interactive succeeded" }
                 return true
               when USERAUTH_FAILURE
-                trace { "keyboard-interactive failed" }
+                debug { "keyboard-interactive failed" }
                 return false
               when USERAUTH_INFO_REQUEST
                 name = message.read_string
                 instruction = message.read_string
-                trace { "keyboard-interactive info request" }
+                debug { "keyboard-interactive info request" }
 
                 unless password
                   puts(name) unless name.empty?

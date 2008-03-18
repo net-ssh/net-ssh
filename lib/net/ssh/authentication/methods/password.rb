@@ -22,7 +22,7 @@ module Net
                 debug { "password succeeded" }
                 return true
               when USERAUTH_FAILURE
-                trace { "password failed" }
+                debug { "password failed" }
                 return false
               when USERAUTH_PASSWD_CHANGEREQ
                 debug { "password change request received, failing" }

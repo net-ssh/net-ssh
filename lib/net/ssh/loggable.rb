@@ -3,42 +3,35 @@ module Net; module SSH
   # A simple module to make logging easier to deal with. It assumes that the
   # logger instance (if not nil) quacks like a Logger object (in Ruby's
   # standard library).
-  #
-  # The Logger output levels have been reinterpreted by Net::SSH as follows:
-  #
-  # * Logger::DEBUG: trace messages
-  # * Logger::INFO: debug messages
-  # * Logger::WARN: information messages
-  # * Logger::ERROR: standard log messages
-  # * Logger::FATAL: error messages
   module Loggable
     # The logger instance that will be used to log messages. If nil, nothing
     # will be logged.
     attr_accessor :logger
 
     # Displays the result of yielding if the log level is sufficient.
-    def trace
-      logger.add(0, nil, facility) { yield } if logger
-    end
-
-    # Displays the result of yielding if the log level is sufficient.
     def debug
-      logger.add(1, nil, facility) { yield } if logger
+      logger.add(Logger::DEBUG, nil, facility) { yield } if logger
     end
 
     # Displays the result of yielding if the log level is sufficient.
     def info
-      logger.add(2, nil, facility) { yield } if logger
+      logger.add(Logger::INFO, nil, facility) { yield } if logger
     end
 
     # Displays the result of yielding if the log level is sufficient.
-    def log
-      logger.add(3, nil, facility) { yield } if logger
+    # (Called lwarn to avoid shadowing with Kernel#warn.)
+    def lwarn
+      logger.add(Logger::WARN, nil, facility) { yield } if logger
     end
 
     # Displays the result of yielding if the log level is sufficient.
     def error
-      logger.add(4, nil, facility) { yield } if logger
+      logger.add(Logger::ERROR, nil, facility) { yield } if logger
+    end
+
+    # Displays the result of yielding if the log level is sufficient.
+    def fatal
+      logger.add(Logger::FATAL, nil, facility) { yield } if logger
     end
 
     private

@@ -1,7 +1,5 @@
 DOCUMENT the Net::SSH::Test system
 
-set up a custom mapping for log levels, since the Logger level constants don't make sense here
-
 tweak the logger output so it isn't so noisy
 
 find a way to allow log output to be filtered...?
@@ -10,6 +8,6 @@ find a nice way to allow server/client algorithms to be specified independently 
 
 examples
 
-net-ssh-config
+don't blow up when ssh-agent is not available
 
-
+thread safety?

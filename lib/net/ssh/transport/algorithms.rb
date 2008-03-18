@@ -111,7 +111,7 @@ module Net; module SSH; module Transport
     # can be in response to a client-initiated rekey request (see #rekey!). Either
     # way, this will block until the key exchange completes.
     def accept_kexinit(packet)
-      trace { "got KEXINIT from server" }
+      info { "got KEXINIT from server" }
       @server_data = parse_server_algorithm_packet(packet)
       @server_packet = @server_data[:raw]
       if !pending?
@@ -155,7 +155,7 @@ module Net; module SSH; module Transport
       # exchange, otherwise it returns immediately (but sets the object to the
       # pending state).
       def send_kexinit
-        trace { "sending KEXINIT" }
+        info { "sending KEXINIT" }
         @pending = true
         packet = build_client_algorithm_packet
         @client_packet = packet.to_s
@@ -167,7 +167,7 @@ module Net; module SSH; module Transport
       # will do the algorithm negotiation and key exchange. Once both finish,
       # the object leaves the pending state and the method returns.
       def proceed!
-        trace { "negotiating algorithms" }
+        info { "negotiating algorithms" }
         negotiate_algorithms
         exchange_keys
         @pending = false
@@ -278,7 +278,7 @@ module Net; module SSH; module Transport
         @language_client    = negotiate(:language_client) rescue ""
         @language_server    = negotiate(:language_server) rescue ""
 
-        trace do
+        debug do
           "negotiated:\n" +
             [:kex, :host_key, :encryption_server, :encryption_client, :hmac_client, :hmac_server, :compression_client, :compression_server, :language_client, :language_server].map do |key|
               "* #{key}: #{instance_variable_get("@#{key}")}"
@@ -319,7 +319,7 @@ module Net; module SSH; module Transport
       # HMACs are initialized and fed to the transport layer, to be used in
       # further communication with the server.
       def exchange_keys
-        trace { "exchanging keys" }
+        debug { "exchanging keys" }
 
         algorithm = Kex::MAP[kex].new(self, session,
           :client_version_string => Net::SSH::Transport::ServerVersion::PROTO_VERSION,

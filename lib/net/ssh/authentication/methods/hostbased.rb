@@ -32,7 +32,7 @@ module Net
             # Attempts to perform host-based authentication of the user, using
             # the given host identity (key).
             def authenticate_with(identity, next_service, username, key_manager)
-              trace { "trying hostbased (#{identity.fingerprint})" }
+              debug { "trying hostbased (#{identity.fingerprint})" }
               client_username = ENV['USER'] || username
 
               req = build_request(identity, next_service, username, "#{hostname}.", client_username)
@@ -47,10 +47,10 @@ module Net
 
               case message.type
                 when USERAUTH_SUCCESS
-                  debug { "hostbased succeeded (#{identity.fingerprint})" }
+                  info { "hostbased succeeded (#{identity.fingerprint})" }
                   return true
                 when USERAUTH_FAILURE
-                  trace { "hostbased failed (#{identity.fingerprint})" }
+                  info { "hostbased failed (#{identity.fingerprint})" }
                   return false
                 else
                   raise Net::SSH::Exception, "unexpected server response to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"

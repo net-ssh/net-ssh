@@ -42,7 +42,7 @@ module Net; module SSH; module Authentication
     # service request. Returns true if an authentication method succeeds in
     # authenticating the user, and false otherwise.
     def authenticate(next_service, username, password=nil)
-      trace { "beginning authentication of `#{username}'" }
+      debug { "beginning authentication of `#{username}'" }
 
       transport.send_message(transport.service_request("ssh-userauth"))
       message = expect_message(SERVICE_ACCEPT)
@@ -77,12 +77,12 @@ module Net; module SSH; module Authentication
 
         case packet.type
         when USERAUTH_BANNER
-          log { packet[:message] }
+          info { packet[:message] }
           # TODO add a hook for people to retrieve the banner when it is sent
 
         when USERAUTH_FAILURE
           @allowed_auth_methods = packet[:authentications].split(/,/)
-          trace { "allowed methods: #{packet[:authentications]}" }
+          debug { "allowed methods: #{packet[:authentications]}" }
           return packet
 
         when USERAUTH_METHOD_RANGE, SERVICE_ACCEPT

@@ -47,7 +47,7 @@ module Net
             # username, with the given identity (public key). Returns +true+ if
             # successful, or +false+ otherwise.
             def authenticate_with(identity, next_service, username)
-              trace { "trying publickey (#{identity.fingerprint})" }
+              debug { "trying publickey (#{identity.fingerprint})" }
               send_request(identity, username, next_service)
 
               message = session.next_message
@@ -69,7 +69,7 @@ module Net
                       debug { "publickey succeeded (#{identity.fingerprint})" }
                       return true
                     when USERAUTH_FAILURE
-                      trace { "publickey failed (#{identity.fingerprint})" }
+                      debug { "publickey failed (#{identity.fingerprint})" }
                       return false
                     else
                       raise Net::SSH::Exception,

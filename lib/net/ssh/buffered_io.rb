@@ -22,7 +22,7 @@ module Net; module SSH
     def fill(n=8192)
       input.consume!
       data = recv(n)
-      trace { "read #{data.length} bytes" }
+      debug { "read #{data.length} bytes" }
       input.append(data)
       return data.length
     end
@@ -54,7 +54,7 @@ module Net; module SSH
     def send_pending
       if output.length > 0
         sent = send(output.to_s, 0)
-        trace { "sent #{sent} bytes" }
+        debug { "sent #{sent} bytes" }
         output.consume!(sent)
       end
     end
@@ -90,6 +90,10 @@ module Net; module SSH
       def initialize_buffered_io
         @input = Net::SSH::Buffer.new
         @output = Net::SSH::Buffer.new
+      end
+
+      def facility
+        @facility ||= super + "[#{object_id}]"
       end
   end
 
