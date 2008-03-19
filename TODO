@@ -7,3 +7,5 @@ FIXME's
 examples
 
 thread safety?
+
+add support for the FIXME entries in Net::SSH::Config
