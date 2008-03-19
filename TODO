@@ -1,3 +1,5 @@
+Modify Net::SSH::Test to include modules rather than reopening classes (it messes with the rdoc)
+
 DOCUMENT the Net::SSH::Test system
 
 FIXME's

@@ -39,7 +39,7 @@ module Net; module SSH
       # Sets the "facility" value, used for reporting where a log message
       # originates. It defaults to the name of class.
       def facility
-        @facility ||= self.class.name.gsub(/::/, ".").gsub(/([a-z])([A-Z])/, "\\1_\\2").downcase
+        @facility ||= self.class.name.gsub(/::/, ".").gsub(/([a-z])([A-Z])/, "\\1_\\2").downcase + "[%x]" % object_id
       end
   end
 end; end
