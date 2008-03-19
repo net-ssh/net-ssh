@@ -6,8 +6,8 @@ module Net; module SSH
         @@default_files
       end
 
-      def for(host)
-        settings = load_all(default_files, host)
+      def for(host, files=default_files)
+        settings = load_all(files, host)
 
         settings.inject({}) do |hash, (key, value)|
           case key
