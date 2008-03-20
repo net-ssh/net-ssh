@@ -3,8 +3,17 @@ require 'net/ssh/prompt'
 
 module Net; module SSH
 
-  # A factory class for returning new Key classes.
+  # A factory class for returning new Key classes. It is used for obtaining
+  # OpenSSL key instances via their SSH names, and for loading both public and
+  # private keys. It used used primarily by Net::SSH itself, internally, and
+  # will rarely (if ever) be directly used by consumers of the library.
+  #
+  #   klass = Net::SSH::KeyFactory.get("rsa")
+  #   assert klass.is_a?(OpenSSL::PKey::RSA)
+  #
+  #   key = Net::SSH::KeyFacory.load_public_key("~/.ssh/id_dsa.pub")
   class KeyFactory
+    # Specifies the mapping of SSH names to OpenSSL key classes.
     MAP = {
       "dh"  => OpenSSL::PKey::DH,
       "rsa" => OpenSSL::PKey::RSA,
@@ -14,6 +23,8 @@ module Net; module SSH
     class <<self
       include Prompt
 
+      # Fetch an OpenSSL key instance by its SSH name. It will be a new,
+      # empty key of the given type.
       def get(name)
         MAP.fetch(name).new
       end
@@ -24,7 +35,7 @@ module Net; module SSH
       # encrypted (requiring a passphrase to use), the user will be
       # prompted to enter their password. 
       def load_private_key(filename)
-        file = File.read(filename)
+        file = File.read(File.expand_path(filename))
 
         if file.match(/-----BEGIN DSA PRIVATE KEY-----/)
           key_type = OpenSSL::PKey::DSA
@@ -61,7 +72,7 @@ module Net; module SSH
       # the file describes an RSA or DSA key, and will load it
       # appropriately. The new public key is returned.
       def load_public_key(filename)
-        data = File.read(filename)
+        data = File.read(File.expand_path(filename))
         type, blob = data.split(/ /)
 
         blob = blob.unpack("m*").first

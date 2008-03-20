@@ -8,4 +8,6 @@ examples
 
 thread safety?
 
+tests for Net::SSH::Config
+
 add support for the FIXME entries in Net::SSH::Config
