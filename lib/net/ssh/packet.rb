@@ -8,19 +8,40 @@ module Net; module SSH
   # A specialization of Buffer that knows the format of certain common
   # packet types. It auto-parses those packet types, and allows them to
   # be accessed via the #[] accessor.
+  #
+  #   data = some_channel_request_packet
+  #   packet = Net::SSH::Packet.new(data)
+  #
+  #   p packet.type #-> 98 (CHANNEL_REQUEST)
+  #   p packet[:request]
+  #   p packet[:want_reply]
+  #
+  # This is used exclusively internally by Net::SSH, and unless you're doing
+  # protocol-level manipulation or are extending Net::SSH in some way, you'll
+  # never need to use this class directly.
   class Packet < Buffer
     @@types = {}
 
-    # Register a new packet type. The +pairs+ parameter must be either empty,
-    # or an array of two-element tuples, where the first element of each
-    # tuple is the name of the field, and the second is the type.
+    # Register a new packet type that should be recognized and auto-parsed by
+    # Net::SSH::Packet. Note that any packet type that is not preregistered
+    # will not be autoparsed.
     #
-    #  register DISCONNECT, [:reason_code, :long], [:description, :string], [:language, :string]
+    # The +pairs+ parameter must be either empty, or an array of two-element
+    # tuples, where the first element of each tuple is the name of the field,
+    # and the second is the type.
+    #
+    #   register DISCONNECT, [:reason_code, :long], [:description, :string], [:language, :string]
     def self.register(type, *pairs)
       @@types[type] = pairs
     end
 
     include Transport::Constants, Authentication::Constants, Connection::Constants
+
+    #--
+    # These are the recognized packet types. All other packet types will be
+    # accepted, but not auto-parsed, requiring the client to parse the
+    # fields using the methods provided by Net::SSH::Buffer.
+    #++
 
     register DISCONNECT,                [:reason_code, :long], [:description, :string], [:language, :string]
     register IGNORE,                    [:data, :string]
@@ -47,9 +68,9 @@ module Net; module SSH
 
     # Create a new packet from the given payload. This will automatically
     # parse the packet if it is one that has been previously registered with
-    # Packet.register.
+    # Packet.register; otherwise, the packet will need to be manually parsed
+    # using the methods provided in the Net::SSH::Buffer superclass.
     def initialize(payload)
-      @instantiated = false
       @named_elements = {}
       super
       @type = read_byte

@@ -3,9 +3,12 @@ require 'net/ssh/buffer'
 
 module Net; module SSH
 
-  # Searches an SSH-style known-host file for a given host, and returns all
+  # Searches an OpenSSH-style known-host file for a given host, and returns all
   # matching keys. This is used to implement host-key verification, as well as
   # to determine what key a user prefers to use for a given host.
+  #
+  # This is used internally by Net::SSH, and will never need to be used directly
+  # by consumers of the library.
   class KnownHosts
     class <<self
       # Searches all known host files (see KnownHosts.hostfiles) for all keys
@@ -31,19 +34,11 @@ module Net; module SSH
       # should be tried first.
       def hostfiles
         @hostfiles ||= [
-          "#{home_directory}/.ssh/known_hosts",
-          "#{home_directory}/.ssh/known_hosts2",
+          "~/.ssh/known_hosts",
+          "~/.ssh/known_hosts2",
           "/etc/ssh/ssh_known_hosts",
           "/etc/ssh_ssh_known_hosts2"
         ]
-      end
-
-      # Returns a "best guess" at the location of the "home" directory for
-      # the current user. This is used to find user-specific known-host files.
-      def home_directory
-        ENV['HOME'] ||
-          (ENV['HOMEPATH'] && "#{ENV['HOMEDRIVE']}#{ENV['HOMEPATH']}") ||
-          "/"
       end
 
       # Looks in all known host files (see KnownHosts.hostfiles) and tries to
@@ -66,9 +61,9 @@ module Net; module SSH
     attr_reader :source
 
     # Instantiate a new KnownHosts instance that will search the given known-hosts
-    # file.
+    # file. The path is expanded file File.expand_path.
     def initialize(source)
-      @source = source
+      @source = File.expand_path(source)
     end
 
     # Returns an array of all keys that are known to be associatd with the
