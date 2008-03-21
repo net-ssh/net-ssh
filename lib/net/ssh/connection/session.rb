@@ -27,14 +27,14 @@ module Net; module SSH; module Connection
     # The underlying transport layer abstraction (see Net::SSH::Transport::Session).
     attr_reader :transport
 
-    # The map of channels, each key being the local-id for the channel.
-    attr_reader :channels
-
-    # The map of listeners that the event loop knows about. See #listen_to.
-    attr_reader :listeners
-
     # The map of options that were used to initialize this instance.
     attr_reader :options
+
+    # The map of channels, each key being the local-id for the channel.
+    attr_reader :channels #:nodoc:
+
+    # The map of listeners that the event loop knows about. See #listen_to.
+    attr_reader :listeners #:nodoc:
 
     # The map of specialized handlers for opening specific channel types. See
     # #on_open_channel.
@@ -63,7 +63,7 @@ module Net; module SSH; module Connection
     # successfully closed, and then closes the underlying transport layer
     # connection.
     def close
-      debug { "closing remaining channels (#{channels.length} open)" }
+      info { "closing remaining channels (#{channels.length} open)" }
       channels.each { |id, channel| channel.close }
       loop(0) { channels.any? }
       transport.close
@@ -72,33 +72,84 @@ module Net; module SSH; module Connection
     # preserve a reference to Kernel#loop
     alias :loop_forever :loop
 
+    # Returns +true+ if there are any channels currently active on this
+    # session. By default, this will not include "invisible" channels
+    # (such as those created by forwarding ports and such), but if you pass
+    # a +true+ value for +include_invisible+, then those will be counted.
+    #
+    # This can be useful for determining whether the event loop should continue
+    # to be run.
+    #
+    #   ssh.loop { ssh.busy? }
+    def busy?(include_invisible=false)
+      if include_invisible
+        channels.any?
+      else
+        channels.any? { |id, ch| !ch[:invisible] }
+      end
+    end
+
     # The main event loop. Calls #process until #process returns false. If a
     # block is given, it is passed to #process, otherwise a default proc is
-    # used that just returns true if there are any channels active. The +wait+
-    # parameter is also passed through to #process.
+    # used that just returns true if there are any channels active (see #busy?).
+    # The # +wait+ parameter is also passed through to #process (where it is
+    # interpreted as the maximum number of seconds to wait for IO.select to return).
+    #
+    #   # loop for as long as there are any channels active
+    #   ssh.loop
+    #
+    #   # loop for as long as there are any channels active, but make sure
+    #   # the event loop runs at least once per 0.1 second
+    #   ssh.loop(0.1)
+    #
+    #   # loop until ctrl-C is pressed
+    #   int_pressed = false
+    #   trap("INT") { int_pressed = true }
+    #   ssh.loop(0.1) { not int_pressed }
     def loop(wait=nil, &block)
-      running = block || Proc.new { channels.any? { |id,ch| !ch[:invisible] } }
+      running = block || Proc.new { busy? }
       loop_forever { break unless process(wait, &running) }
     end
 
     # The core of the event loop. It processes a single iteration of the event
     # loop. If a block is given, it should return false when the processing
     # should abort, which causes #process to return false. Otherwise,
-    # #process returns true.
+    # #process returns true. The session itself is yielded to the block as its
+    # only argument.
     #
     # If +wait+ is nil (the default), this method will block until any of the
     # monitored IO objects are ready to be read from or written to. If you want
     # it to not block, you can pass 0, or you can pass any other numeric value
     # to indicate that it should block for no more than that many seconds.
+    # Passing 0 is a good way to poll the connection, but if you do it too
+    # frequently it can make your CPU quite busy!
     #
-    # This will cause all active channels to be processed once each.
+    # This will also cause all active channels to be processed once each (see
+    # Net::SSH::Connection::Channel#on_process).
+    #
+    #   # process multiple Net::SSH connections in parallel
+    #   connections = [
+    #     Net::SSH.start("host1", ...),
+    #     Net::SSH.start("host2", ...)
+    #   ]
+    #
+    #   connections.each do |ssh|
+    #     ssh.exec "grep something /in/some/files"
+    #   end
+    #
+    #   condition = Proc.new { |s| s.busy? }
+    #
+    #   loop do
+    #     connections.delete_if { |ssh| !ssh.process(0.1, &condition) }
+    #     break if connections.empty?
+    #   end
     def process(wait=nil)
-      return false if block_given? && !yield
+      return false if block_given? && !yield(self)
 
       dispatch_incoming_packets
       channels.each { |id, channel| channel.process unless channel.closing? }
 
-      return false if block_given? && !yield
+      return false if block_given? && !yield(self)
 
       r = listeners.keys
       w = r.select { |w| w.pending_write? }
@@ -132,6 +183,14 @@ module Net; module SSH; module Connection
     # success or failure is indicated by the callback being invoked, with the
     # first parameter being true or false (success, or failure), and the second
     # being the packet itself.
+    #
+    # Generally, Net::SSH will manage global requests that need to be sent
+    # (e.g. port forward requests and such are handled in the Net::SSH::Service::Forward
+    # class, for instance). However, there may be times when you need to
+    # send a global request that isn't explicitly handled by Net::SSH, and so
+    # this method is available to you.
+    #
+    #   ssh.send_global_request("keep-alive@openssh.com")
     def send_global_request(type, *extra, &callback)
       info { "sending global request #{type}" }
       msg = Buffer.from(:byte, GLOBAL_REQUEST, :string, type.to_s, :bool, !callback.nil?, *extra)
@@ -147,6 +206,18 @@ module Net; module SSH; module Connection
     # Net::SSH::Buffer.from. If a callback is given, it will be invoked when
     # the server confirms that the channel opened successfully. The sole parameter
     # for the callback is the channel object itself.
+    #
+    # In general, you'll use #open_channel without any arguments; the only
+    # time you'd want to set the channel type or pass additional initialization
+    # data is if you were implementing an SSH extension.
+    #
+    #   channel = ssh.open_channel do |ch|
+    #     ch.exec "grep something /some/files" do |ch, success|
+    #       ...
+    #     end
+    #   end
+    #
+    #   channel.wait
     def open_channel(type="session", *extra, &on_confirm)
       local_id = get_next_channel_id
       channel = Channel.new(self, type, local_id, &on_confirm)
@@ -160,13 +231,25 @@ module Net; module SSH; module Connection
     end
 
     # A convenience method for executing a command and interacting with it. If
-    # no block is given, all output printed via $stdout and $stderr. Otherwise,
+    # no block is given, all output is printed via $stdout and $stderr. Otherwise,
     # the block is called for each data and extended data packet, with three
     # arguments: the channel object, a symbol indicating the data type
     # (:stdout or :stderr), and the data (as a string).
     #
     # Note that this method returns immediately, and requires an event loop
     # (see Session#loop) in order for the command to actually execute.
+    #
+    # This is effectively identical to calling #open_channel, and then
+    # Net::SSH::Connection::Channel#exec, and then setting up the channel
+    # callbacks. However, for most uses, this will be sufficient.
+    #
+    #   ssh.exec "grep something /some/files" do |ch, stream, data|
+    #     if stream == :stderr
+    #       puts "ERROR: #{data}"
+    #     else
+    #       puts data
+    #     end
+    #   end
     def exec(command, &block)
       open_channel do |channel|
         channel.exec(command) do |ch, success|
@@ -194,6 +277,8 @@ module Net; module SSH; module Connection
     # Same as #exec, except this will block until the command finishes. Also,
     # if a block is not given, this will return all output (stdout and stderr)
     # as a single string.
+    #
+    #   matches = ssh.exec!("grep something /some/files")
     def exec!(command, &block)
       block ||= Proc.new do |ch, type, data|
         ch[:result] ||= ""
@@ -201,13 +286,18 @@ module Net; module SSH; module Connection
       end
 
       channel = exec(command, &block)
-      loop { channel.active? }
+      channel.wait
 
       return channel[:result]
     end
 
     # Enqueues a message to be sent to the server as soon as the socket is
-    # available for writing.
+    # available for writing. Most programs will never need to call this, but
+    # if you are implementing an extension to the SSH protocol, or if you
+    # need to send a packet that Net::SSH does not directly support, you can
+    # use this to send it.
+    #
+    #  ssh.send_message(Buffer.from(:byte, REQUEST_SUCCESS).to_s)
     def send_message(message)
       transport.enqueue_message(message)
     end
@@ -215,6 +305,37 @@ module Net; module SSH; module Connection
     # Adds an IO object for the event loop to listen to. If a callback
     # is given, it will be invoked when the io is ready to be read, otherwise,
     # the io will merely have its #fill method invoked.
+    #
+    # Any +io+ value passed to this method _must_ have mixed into it the
+    # Net::SSH::BufferedIo functionality, typically by calling #extend on the
+    # object.
+    #
+    # The following example executes a process on the remote server, opens
+    # a socket to somewhere, and then pipes data from that socket to the
+    # remote process' stdin stream:
+    #
+    #   channel = ssh.open_channel do |ch|
+    #     ch.exec "/some/process/that/wants/input" do |ch, success|
+    #       abort "can't execute!" unless success
+    #
+    #       io = TCPSocket.new(somewhere, port)
+    #       io.extend(Net::SSH::BufferedIo)
+    #       ssh.listen_to(io)
+    #
+    #       ch.on_process do
+    #         if io.available > 0
+    #           ch.send_data(io.read_available)
+    #         end
+    #       end
+    #
+    #       ch.on_close do
+    #         ssh.stop_listening_to(io)
+    #         io.close
+    #       end
+    #     end
+    #   end
+    #
+    #   channel.wait
     def listen_to(io, &callback)
       listeners[io] = callback
     end
@@ -225,8 +346,8 @@ module Net; module SSH; module Connection
       listeners.delete(io)
     end
 
-    # Returns a reference to the Service::Forward service, which can be used
-    # for forwarding ports over SSH.
+    # Returns a reference to the Net::SSH::Service::Forward service, which can
+    # be used for forwarding ports over SSH.
     def forward
       @forward ||= Service::Forward.new(self)
     end
@@ -237,6 +358,10 @@ module Net; module SSH; module Connection
     # raise ChannelOpenFailed if it is unable to open the channel for some
     # reason. Otherwise, the channel will be opened and a confirmation message
     # sent to the server.
+    #
+    # This is used by the Net::SSH::Service::Forward service to open a channel
+    # when a remote forwarded port receives a connection. However, you are
+    # welcome to register handlers for other channel types, as needed.
     def on_open_channel(type, &block)
       channel_open_handlers[type] = block
     end

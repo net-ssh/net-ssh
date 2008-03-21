@@ -337,8 +337,9 @@ module Connection
     def test_ready_readers_that_are_registered_with_a_block_should_call_block_instead_of_fill
       io = stub("io", :pending_write? => false)
       flag = false
+      session.stop_listening_to(socket) # so that we only have to test the presence of a single IO object
       session.listen_to(io) { flag = true }
-      IO.expects(:select).with([socket,io],[],nil,nil).returns([[io],[],[]])
+      IO.expects(:select).with([io],[],nil,nil).returns([[io],[],[]])
       session.process
       assert flag, "callback should have been invoked"
     end
