@@ -15,11 +15,45 @@ module Net; module SSH; module Connection
   # opened channel, which are called in response to the corresponding events.
   # Programming with Net::SSH works best if you think of your programs as
   # state machines. Complex programs are best implemented as objects that
-  # wrap a channel. See Net::SCP and Net::SFTP for examples.
+  # wrap a channel. See Net::SCP and Net::SFTP for examples of how complex
+  # state machines can be built on top of the SSH protocol.
+  #
+  #   ssh.open_channel do |channel|
+  #     channel.exec("/invoke/some/command") do |ch, success|
+  #       abort "could not execute command" unless success
+  #
+  #       channel.on_data do |ch, data|
+  #         puts "got stdout: #{data}"
+  #         channel.send_data "something for stdin\n"
+  #       end
+  #
+  #       channel.on_extended_data do |ch, type, data|
+  #         puts "got stderr: #{data}"
+  #       end
+  #
+  #       channel.on_close do |ch|
+  #         puts "channel is closing!"
+  #       end
+  #     end
+  #   end
+  #
+  #   ssh.loop
+  #
+  # Channels also have a basic hash-like interface, that allows programs to
+  # store arbitrary state information on a channel object. This helps simplify
+  # the writing of state machines, especially when you may be juggling
+  # multiple open channels at the same time.
+  #
+  # Note that data sent across SSH channels are governed by maximum packet
+  # sizes and maximum window sizes. These details are managed internally
+  # by Net::SSH::Connection::Channel, so you may remain blissfully ignorant
+  # if you so desire, but you can always inspect the current maximums, as
+  # well as the remaining window size, using the reader attributes for those
+  # values.
   class Channel
     include Constants, Loggable
 
-    # The local id for this channel, assigned by the Connection::Session instance.
+    # The local id for this channel, assigned by the Net::SSH::Connection::Session instance.
     attr_reader :local_id
 
     # The remote id for this channel, assigned by the remote host.
@@ -28,7 +62,7 @@ module Net; module SSH; module Connection
     # The type of this channel, usually "session".
     attr_reader :type
 
-    # The underlying Connection::Session instance that supports this channel.
+    # The underlying Net::SSH::Connection::Session instance that supports this channel.
     attr_reader :connection
 
     # The maximum packet size that the local host can receive.
@@ -112,6 +146,15 @@ module Net; module SSH; module Connection
     # request succeeded or not. In this case, success means that the command
     # is being executed, not that it has completed, and failure means that the
     # command altogether failed to be executed.
+    #
+    #   channel.exec "ls -l /home" do |ch, success|
+    #     if success
+    #       puts "command has begun executing..."
+    #       # this is a good place to hang callbacks like #on_data...
+    #     else
+    #       puts "alas! the command could not be invoked!"
+    #     end
+    #   end
     def exec(command, &block)
       send_channel_request("exec", :string, command, &block)
     end
@@ -119,22 +162,47 @@ module Net; module SSH; module Connection
     # Syntactic sugar for requesting that a subsystem be started. Subsystems
     # are a way for other protocols (like SFTP) to be run, using SSH as
     # the transport. Generally, you'll never need to call this directly unless
-    # you are the implementor of a subsystem.
+    # you are the implementor of something that consumes an SSH subsystem, like
+    # SFTP.
+    #
+    #   channel.subsystem("sftp") do |ch, success|
+    #     if success
+    #       puts "subsystem successfully started"
+    #     else
+    #       puts "subsystem could not be started"
+    #     end
+    #   end
     def subsystem(subsystem, &block)
       send_channel_request("subsystem", :string, subsystem, &block)
     end
 
-    # A hash of the valid PTY options.
-    VALID_PTY_OPTIONS = { :term=>"xterm",
-                          :chars_wide=>80,
-                          :chars_high=>24,
-                          :pixels_wide=>640,
-                          :pixels_high=>480,
-                          :modes=>{} }
+    # A hash of the valid PTY options (see #request_pty).
+    VALID_PTY_OPTIONS = { :term        => "xterm",
+                          :chars_wide  => 80,
+                          :chars_high  => 24,
+                          :pixels_wide => 640,
+                          :pixels_high => 480,
+                          :modes       => {} }
 
-    # Requests that a pty be made available for this channel. This is useful
-    # when you want to invoke and interact with some kind of screen-based
-    # program (e.g., vim, or some menuing system).
+    # Requests that a pseudo-tty (or "pty") be made available for this channel.
+    # This is useful when you want to invoke and interact with some kind of
+    # screen-based program (e.g., vim, or some menuing system).
+    #
+    # Note, that without a pty some programs (e.g. sudo, or subversion) on
+    # some systems, will not be able to run interactively, and will error
+    # instead of prompt if they ever need some user interaction.
+    #
+    # Note, too, that when a pty is requested, user's shell configuration
+    # scripts (.bashrc and such) are not run by default, whereas they are
+    # run when a pty is not present.
+    #
+    #   channel.request_pty do |ch, success|
+    #     if success
+    #       puts "pty successfully obtained"
+    #     else
+    #       puts "could not obtain pty"
+    #     end
+    #   end
     def request_pty(opts={}, &block)
       extra = opts.keys - VALID_PTY_OPTIONS.keys
       raise ArgumentError, "invalid option(s) to request_pty: #{extra.inspect}" if extra.any?
@@ -154,10 +222,19 @@ module Net; module SSH; module Connection
         :string, modes, &block)
     end
 
-    # Appends the given data to the channel's output buffer, preparatory to
-    # being packaged up and sent to the remote server as channel data. This will
-    # raise an exception if the channel has previously declared that no more
-    # data will be sent (see #eof!).
+    # Sends data to the channel's remote endpoint. This usually has the
+    # effect of sending the given string to the remote process' stdin stream.
+    # Note that it does not immediately send the data across the channel,
+    # but instead merely appends the given data to the channel's output buffer,
+    # preparatory to being packaged up and sent out the next time the connection
+    # is accepting data. (A connection might not be accepting data if, for
+    # instance, it has filled its data window and has not yet been resized by
+    # the remote end-point.)
+    #
+    # This will raise an exception if the channel has previously declared
+    # that no more data will be sent (see #eof!).
+    #
+    #   channel.send_data("the password\n")
     def send_data(data)
       raise EOFError, "cannot send data if channel has declared eof" if eof?
       output.append(data.to_s)
@@ -166,12 +243,17 @@ module Net; module SSH; module Connection
     # Returns true if the channel exists in the channel list of the session,
     # and false otherwise. This can be used to determine whether a channel has
     # been closed or not.
+    #
+    #   ssh.loop { channel.active? }
     def active?
       connection.channels.key?(local_id)
     end
 
     # Runs the SSH event loop until the channel is no longer active. This is
     # handy for blocking while you wait for some channel to finish.
+    #
+    #   channel.exec("grep ...") { ... }
+    #   channel.wait
     def wait
       connection.loop { active? }
     end
@@ -204,7 +286,7 @@ module Net; module SSH; module Connection
     end
 
     # Tells the remote end of the channel that no more data is forthcoming
-    # from this end of the channel, though the remote end may still send data.
+    # from this end of the channel. The remote end may still send data.
     def eof!
       return if eof?
       @eof = true
@@ -219,18 +301,31 @@ module Net; module SSH; module Connection
       enqueue_pending_output
     end
 
-    # Registers callback to be invoked when data packets are received by the
+    # Registers a callback to be invoked when data packets are received by the
     # channel. The callback is called with the channel as the first argument,
     # and the data as the second.
+    #
+    #   channel.on_data do |ch, data|
+    #     puts "got data: #{data.inspect}"
+    #   end
+    #
+    # Data received this way is typically the data written by the remote
+    # process to its +stdout+ stream.
     def on_data(&block)
       old, @on_data = @on_data, block
       old
     end
 
-    # Registers callback to be invoked when extended data packets are received
+    # Registers a callback to be invoked when extended data packets are received
     # by the channel. The callback is called with the channel as the first
     # argument, the data type (as an integer) as the second, and the data as
-    # the third. Extended data is almost exclusively used to send STDERR data.
+    # the third. Extended data is almost exclusively used to send +stderr+ data
+    # (+type+ == 1). Other extended data types are not defined by the SSH
+    # protocol.
+    #
+    #   channel.on_extended_data do |ch, type, data|
+    #     puts "got stderr: #{data.inspect}"
+    #   end
     def on_extended_data(&block)
       old, @on_extended_data = @on_extended_data, block
       old
@@ -241,6 +336,23 @@ module Net; module SSH; module Connection
     # but it will be called roughly once for each packet received by the
     # connection (not the channel). This callback is invoked with the channel
     # as the sole argument.
+    #
+    # Here's an example that accumulates the channel data into a variable on
+    # the channel itself, and displays individual lines in the input one
+    # at a time when the channel is processed:
+    #
+    #   channel[:data] = ""
+    #
+    #   channel.on_data do |ch, data|
+    #     channel[:data] << data
+    #   end
+    #
+    #   channel.on_process do |ch|
+    #     if channel[:data] =~ /^.*?\n/
+    #       puts $&
+    #       channel[:data] = $'
+    #     end
+    #   end
     def on_process(&block)
       old, @on_process = @on_process, block
       old
@@ -248,6 +360,10 @@ module Net; module SSH; module Connection
 
     # Registers a callback to be invoked when the server acknowledges that a
     # channel is closed. This is invoked with the channel as the sole argument.
+    #
+    #   channel.on_close do |ch|
+    #     puts "remote end is closing!"
+    #   end
     def on_close(&block)
       old, @on_close = @on_close, block
       old
@@ -256,6 +372,10 @@ module Net; module SSH; module Connection
     # Registers a callback to be invoked when the server indicates that no more
     # data will be sent to the channel (although the channel can still send
     # data to the server). The channel is the sole argument to the callback.
+    #
+    #   channel.on_eof do |ch|
+    #     puts "remote end is done sending data"
+    #   end
     def on_eof(&block)
       old, @on_eof = @on_eof, block
       old
@@ -263,11 +383,30 @@ module Net; module SSH; module Connection
 
     # Registers a callback to be invoked when a channel request of the given
     # type is received. The callback will receive the channel as the first
-    # argument, and the associated data as the second. By default, if the request
-    # wants a reply, Net::SSH will send a CHANNEL_SUCCESS response for any
-    # request that was handled by a registered callback, and CHANNEL_FAILURE
-    # for any that wasn't, but if you want your registered callback to result
-    # in a CHANNEL_FAILURE response, just raise ChannelRequestFailed.
+    # argument, and the associated (unparsed) data as the second. The data
+    # will be a Net::SSH::Buffer that you will need to parse, yourself,
+    # according to the kind of request you are watching.
+    #
+    # By default, if the request wants a reply, Net::SSH will send a
+    # CHANNEL_SUCCESS response for any request that was handled by a registered
+    # callback, and CHANNEL_FAILURE for any that wasn't, but if you want your
+    # registered callback to result in a CHANNEL_FAILURE response, just raise
+    # Net::SSH::ChannelRequestFailed.
+    #
+    # Some common channel requests that your programs might want to listen
+    # for are:
+    #
+    # * "exit-status" : the exit status of the remote process will be reported
+    #   as a long integer in the data buffer, which you can grab via
+    #   data.read_long.
+    # * "exit-signal" : if the remote process died as a result of a signal
+    #   being sent to it, the signal will be reported as a string in the
+    #   data, via data.read_string. (Not all SSH servers support this channel
+    #   request type.)
+    #
+    #   channel.on_request "exit-status" do |ch, data|
+    #     puts "process terminated with exit status: #{data.read_long}"
+    #   end
     def on_request(type, &block)
       old, @on_request[type] = @on_request[type], block
       old
@@ -284,6 +423,17 @@ module Net; module SSH; module Connection
     # either true or false as the second, depending on whether the request
     # succeeded or not. The meaning of "success" and "failure" in this context
     # is dependent on the specific request that was sent.
+    #
+    #   channel.send_channel_request "shell" do |ch, success|
+    #     if success
+    #       puts "user shell started successfully"
+    #     else
+    #       puts "could not start user shell"
+    #     end
+    #   end
+    #
+    # Most channel requests you'll want to send are already wrapped in more
+    # convenient helper methods (see #exec and #subsystem).
     def send_channel_request(request_name, *data, &callback)
       msg = Buffer.from(:byte, CHANNEL_REQUEST,
         :long, remote_id, :string, request_name,
@@ -292,7 +442,7 @@ module Net; module SSH; module Connection
       pending_requests << callback if callback
     end
 
-    public # these methods are public, but for internal use only
+    public # these methods are public, but for Net::SSH internal use only
 
       # Enqueues pending output at the connection as CHANNEL_DATA packets. This
       # does nothing if the channel has not yet been confirmed open (see

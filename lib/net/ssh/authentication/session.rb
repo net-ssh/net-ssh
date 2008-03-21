@@ -10,7 +10,12 @@ require 'net/ssh/authentication/methods/keyboard_interactive'
 module Net; module SSH; module Authentication
 
   # Represents an authentication session. It manages the authentication of
-  # a user over an established connection (the "transport" object).
+  # a user over an established connection (the "transport" object, see
+  # Net::SSH::Transport::Session).
+  #
+  # The use of an authentication session to manage user authentication is
+  # internal to Net::SSH (specifically Net::SSH.start). Consumers of the
+  # Net::SSH library will never need to access this class directly.
   class Session
     include Transport::Constants, Constants, Loggable
 

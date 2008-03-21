@@ -6,20 +6,23 @@ require 'net/ssh/service/forward'
 module Net; module SSH; module Connection
 
   # A session class representing the connection service running on top of
-  # the SSH transport layer. It manages the creation of channels, and the
-  # dispatching of messages to the various channels. It also encapsulates
-  # the SSH event loop (via Session#loop and Session#process), and serves
-  # as a central point-of-reference for all SSH-related services (e.g.
+  # the SSH transport layer. It manages the creation of channels (see
+  # #open_channel), and the dispatching of messages to the various channels.
+  # It also encapsulates the SSH event loop (via #loop and #process),
+  # and serves as a central point-of-reference for all SSH-related services (e.g.
   # port forwarding, SFTP, SCP, etc.).
+  #
+  # You will rarely (if ever) need to instantiate this class directly; rather,
+  # you'll almost always use Net::SSH.start to initialize a new network
+  # connection, authenticate a user, and return a new connection session,
+  # all in one call.
+  #
+  #   Net::SSH.start("localhost", "user") do |ssh|
+  #     # 'ssh' is an instance of Net::SSH::Connection::Session
+  #     ssh.exec! "/etc/init.d/some_process start"
+  #   end
   class Session
     include Constants, Loggable
-
-    MAP = Constants.constants.inject({}) do |memo, name|
-      value = const_get(name)
-      next unless Integer === value
-      memo[value] = name.downcase.to_sym
-      memo
-    end
 
     # The underlying transport layer abstraction
     attr_reader :transport
@@ -404,6 +407,13 @@ module Net; module SSH; module Connection
       def channel_failure(packet)
         info { "channel_failure: #{packet[:local_id]}" }
         channels[packet[:local_id]].do_failure
+      end
+
+      MAP = Constants.constants.inject({}) do |memo, name|
+        value = const_get(name)
+        next unless Integer === value
+        memo[value] = name.downcase.to_sym
+        memo
       end
   end
 
