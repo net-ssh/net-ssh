@@ -24,7 +24,7 @@ module Net; module SSH; module Connection
   class Session
     include Constants, Loggable
 
-    # The underlying transport layer abstraction
+    # The underlying transport layer abstraction (see Net::SSH::Transport::Session).
     attr_reader :transport
 
     # The map of channels, each key being the local-id for the channel.
@@ -33,25 +33,18 @@ module Net; module SSH; module Connection
     # The map of listeners that the event loop knows about. See #listen_to.
     attr_reader :listeners
 
-    # The list of callbacks for pending requests. See #send_global_request.
-    attr_reader :pending_requests
-
-    # The list of reader IO's that the event loop knows about. See #listen_to.
-    attr_reader :readers
-
-    # The list of writer IO's that the event loop knows about. See #listen_to.
-    attr_reader :writers
-
-    # The map of specialized handlers for opening specific channel types. See
-    # #on_open_channel.
-    attr_reader :channel_open_handlers
-
     # The map of options that were used to initialize this instance.
     attr_reader :options
 
+    # The map of specialized handlers for opening specific channel types. See
+    # #on_open_channel.
+    attr_reader :channel_open_handlers #:nodoc:
+
+    # The list of callbacks for pending requests. See #send_global_request.
+    attr_reader :pending_requests #:nodoc:
+
     # Create a new connection service instance atop the given transport
-    # layer. Initializes the readers and writers to be only the underlying
-    # socket object.
+    # layer. Initializes the listeners to be only the underlying socket object.
     def initialize(transport, options={})
       self.logger = transport.logger
 
@@ -60,10 +53,8 @@ module Net; module SSH; module Connection
 
       @channel_id_counter = -1
       @channels = {}
-      @listeners = {}
+      @listeners = { transport.socket => nil }
       @pending_requests = []
-      @readers = [transport.socket]
-      @writers = [transport.socket]
       @channel_open_handlers = {}
       @on_global_request = {}
     end
@@ -109,8 +100,9 @@ module Net; module SSH; module Connection
 
       return false if block_given? && !yield
 
-      w = writers.select { |w| w.pending_write? }
-      ready_readers, ready_writers, = IO.select(readers, w, nil, wait)
+      r = listeners.keys
+      w = r.select { |w| w.pending_write? }
+      ready_readers, ready_writers, = IO.select(r, w, nil, wait)
 
       (ready_readers || []).each do |reader|
         if listeners[reader]
@@ -220,22 +212,16 @@ module Net; module SSH; module Connection
       transport.enqueue_message(message)
     end
 
-    # Adds an IO object for the event loop to listen to. If the IO object
-    # responds to :pending_write? (e.g. it has been extended with Net::SSH::BufferedIo),
-    # it will be added to the list of writers to attend to, as well. If a callback
+    # Adds an IO object for the event loop to listen to. If a callback
     # is given, it will be invoked when the io is ready to be read, otherwise,
     # the io will merely have its #fill method invoked.
     def listen_to(io, &callback)
-      readers << io
-      writers << io if io.respond_to?(:pending_write?)
-      listeners[io] = callback if callback
+      listeners[io] = callback
     end
 
-    # Removes the given io object from all applicable lists (readers,
-    # writers, listeners), so that the event loop will no longer monitor it.
+    # Removes the given io object from the listeners collection, so that the
+    # event loop will no longer monitor it.
     def stop_listening_to(io)
-      readers.delete(io)
-      writers.delete(io)
       listeners.delete(io)
     end
 

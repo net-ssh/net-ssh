@@ -8,10 +8,8 @@ module Connection
 
     def test_constructor_should_set_defaults
       assert session.channels.empty?
-      assert session.listeners.empty?
       assert session.pending_requests.empty?
-      assert_equal [socket], session.readers
-      assert_equal [socket], session.writers
+      assert_equal({ socket => nil }, session.listeners)
     end
 
     def test_on_open_channel_should_register_block_with_given_channel_type
@@ -27,20 +25,11 @@ module Connection
       assert_equal session.forward.object_id, session.forward.object_id
     end
 
-    def test_listen_to_should_add_argument_to_readers_list
+    def test_listen_to_without_callback_should_add_argument_as_listener
       io = stub("io")
       session.listen_to(io)
-      assert session.readers.include?(io)
-      assert !session.writers.include?(io)
-      assert !session.listeners.key?(io)
-    end
-
-    def test_listen_to_should_add_argument_to_writers_list_if_it_responds_to_pending_write
-      io = stub("io", :pending_write? => true)
-      session.listen_to(io)
-      assert session.readers.include?(io)
-      assert session.writers.include?(io)
-      assert !session.listeners.key?(io)
+      assert session.listeners.key?(io)
+      assert_nil session.listeners[io]
     end
 
     def test_listen_to_should_add_argument_to_listeners_list_if_block_is_given
@@ -48,24 +37,18 @@ module Connection
       flag = false
       session.listen_to(io) { flag = true }
       assert !flag, "callback should not be invoked immediately"
-      assert session.readers.include?(io)
-      assert session.writers.include?(io)
       assert session.listeners.key?(io)
       session.listeners[io].call
       assert flag, "callback should have been invoked"
     end
 
-    def test_stop_listening_to_should_remove_argument_from_lists
+    def test_stop_listening_to_should_remove_argument_from_listeners
       io = stub("io", :pending_write? => true)
 
-      session.listen_to(io) { }
-      assert session.readers.include?(io)
-      assert session.writers.include?(io)
+      session.listen_to(io)
       assert session.listeners.key?(io)
 
       session.stop_listening_to(io)
-      assert !session.readers.include?(io)
-      assert !session.writers.include?(io)
       assert !session.listeners.key?(io)
     end
 
@@ -340,7 +323,7 @@ module Connection
       socket.expects(:recv).returns("this is some data")
       IO.expects(:select).with([socket],[],nil,nil).returns([[socket],[],[]])
       session.process
-      assert_equal [socket], session.readers
+      assert_equal [socket], session.listeners.keys
     end
 
     def test_ready_readers_that_cant_be_filled_should_be_removed
@@ -348,12 +331,11 @@ module Connection
       socket.expects(:close)
       IO.expects(:select).with([socket],[],nil,nil).returns([[socket],[],[]])
       session.process
-      assert_equal [], session.readers
-      assert_equal [], session.writers
+      assert session.listeners.empty?
     end
 
     def test_ready_readers_that_are_registered_with_a_block_should_call_block_instead_of_fill
-      io = stub("io")
+      io = stub("io", :pending_write? => false)
       flag = false
       session.listen_to(io) { flag = true }
       IO.expects(:select).with([socket,io],[],nil,nil).returns([[io],[],[]])

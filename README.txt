@@ -60,7 +60,7 @@ In a nutshell:
 
     # forward connections on local port 1234 to port 80 of www.capify.org
     ssh.forward.local(1234, "www.capify.org", 80)
-    ssh.loop
+    ssh.loop { true }
   end
 
 See Net::SSH for more documentation, and links to further information.
