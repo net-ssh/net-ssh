@@ -37,7 +37,7 @@ module Transport
     end
 
     def test_constructor_with_known_hosts_reporting_known_host_key_should_use_that_host_key_type
-      Net::SSH::KnownHosts.expects(:search_for).with("net.ssh.test,127.0.0.1").returns([stub("key", :ssh_type => "ssh-dss")])
+      Net::SSH::KnownHosts.expects(:search_for).with("net.ssh.test,127.0.0.1", {}).returns([stub("key", :ssh_type => "ssh-dss")])
       assert_equal %w(ssh-dss ssh-rsa), algorithms[:host_key]
     end
 

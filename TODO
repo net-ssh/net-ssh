@@ -1,13 +1,7 @@
-Modify Net::SSH::Test to include modules rather than reopening classes (it messes with the rdoc)
-
-DOCUMENT the Net::SSH::Test system
-
 FIXME's
 
 examples
 
 thread safety?
-
-tests for Net::SSH::Config
 
 add support for the FIXME entries in Net::SSH::Config

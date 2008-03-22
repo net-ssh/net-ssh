@@ -12,7 +12,7 @@ module Net; module SSH; module Verifiers
   class Strict
     def verify(arguments)
       host = arguments[:session].host_as_string
-      matches = Net::SSH::KnownHosts.search_for(host)
+      matches = Net::SSH::KnownHosts.search_for(host, arguments[:session].options)
 
       # we've never seen this host before, so just automatically add the key.
       # not the most secure option (since the first hit might be the one that
@@ -21,7 +21,7 @@ module Net; module SSH; module Verifiers
       # security.
       if matches.empty?
         ip = arguments[:session].peer[:ip]
-        Net::SSH::KnownHosts.add(host, arguments[:key])
+        Net::SSH::KnownHosts.add(host, arguments[:key], arguments[:session].options)
         return true
       end
 
@@ -42,7 +42,7 @@ module Net; module SSH; module Verifiers
       def process_cache_miss(host, args)
         exception = HostKeyMismatch.new("fingerprint #{args[:fingerprint]} does not match for #{host.inspect}")
         exception.data = args
-        exception.callback = Proc.new { Net::SSH::KnownHosts.add(host, args[:key]) }
+        exception.callback = Proc.new { Net::SSH::KnownHosts.add(host, args[:key], args[:session].options) }
         raise exception
       end
   end

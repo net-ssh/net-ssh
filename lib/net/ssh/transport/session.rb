@@ -47,6 +47,9 @@ module Net; module SSH; module Transport
     # the connection is not being spoofed.
     attr_reader :host_key_verifier
 
+    # The hash of options that were given to the object at initialization.
+    attr_reader :options
+
     # Instantiates a new transport layer abstraction. This will block until
     # the initial key exchange completes, leaving you with a ready-to-use
     # transport session.
@@ -55,6 +58,7 @@ module Net; module SSH; module Transport
 
       @host = host
       @port = options[:port] || DEFAULT_PORT
+      @options = options
 
       debug { "establishing connection to #{@host}:#{@port}" }
       factory = options[:proxy] || TCPSocket

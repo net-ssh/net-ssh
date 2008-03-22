@@ -13,8 +13,8 @@ module Net; module SSH
     class <<self
       # Searches all known host files (see KnownHosts.hostfiles) for all keys
       # of the given host. Returns an array of keys found.
-      def search_for(host)
-        search_in(hostfiles, host)
+      def search_for(host, options={})
+        search_in(hostfiles(options), host)
       end
 
       # Search for all known keys for the given host, in every file given in
@@ -23,29 +23,34 @@ module Net; module SSH
         files.map { |file| KnownHosts.new(file).keys_for(host) }.flatten
       end
 
-      # Returns an array of all known host files. Not all will actually exist.
-      # You can add your own cust host files by prepending or appending to
-      # this array:
+      # Looks in the given +options+ hash for the :user_known_hosts_file and
+      # :global_known_hosts_file keys, and returns an array of all known
+      # hosts files. If the :user_known_hosts_file key is not set, the
+      # default is returned (~/.ssh/known_hosts and ~/.ssh/known_hosts2). If
+      # :global_known_hosts_file is not set, the default is used
+      # (/etc/ssh/known_hosts and /etc/ssh/known_hosts2).
       #
-      #   KnownHosts.hostfiles.unshift "/path/to/my/host-file"
-      #
-      # Files are checked in the same order as returned by this array, so
-      # by putting files on the front of this list, you indicate that they
-      # should be tried first.
-      def hostfiles
-        @hostfiles ||= [
-          "~/.ssh/known_hosts",
-          "~/.ssh/known_hosts2",
-          "/etc/ssh/ssh_known_hosts",
-          "/etc/ssh_ssh_known_hosts2"
-        ]
+      # If you only want the user known host files, you can pass :user as
+      # the second option.
+      def hostfiles(options, which=:all)
+        files = []
+
+        if which == :all || which == :user
+          files += Array(options[:user_known_hosts_file] || %w(~/.ssh/known_hosts ~/.ssh/known_hosts2))
+        end
+
+        if which == :all || which == :global
+          files += Array(options[:global_known_hosts_file] || %w(/etc/ssh/known_hosts /etc/ssh/known_hosts2))
+        end
+
+        return files
       end
 
-      # Looks in all known host files (see KnownHosts.hostfiles) and tries to
+      # Looks in all user known host files (see KnownHosts.hostfiles) and tries to
       # add an entry for the given host and key to the first file it is able
       # to.
-      def add(host, key)
-        hostfiles.each do |file|
+      def add(host, key, options={})
+        hostfiles(options, :user).each do |file|
           begin
             KnownHosts.new(file).add(host, key)
             return

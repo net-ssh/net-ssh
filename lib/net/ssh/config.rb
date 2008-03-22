@@ -9,19 +9,23 @@ module Net; module SSH
   # Only a subset of OpenSSH configuration options are understood:
   #
   # * Ciphers => maps to the :encryption option
+  # * Compression => :compression
+  # * CompressionLevel => :compression_level
   # * ConnectTimeout => maps to the :timeout option
+  # * ForwardAgent => :forward_agent
+  # * GlobalKnownHostsFile => :global_known_hosts_file
   # * HostBasedAuthentication => maps to the :auth_methods option
   # * HostKeyAlgorithms => maps to :host_key option
   # * IdentityFile => maps to the :keys option
   # * Macs => maps to the :hmac option
   # * PasswordAuthentication => maps to the :auth_methods option
+  # * Port => :port
   # * PreferredAuthentications => maps to the :auth_methods option
-  #
-  # Compression, CompressionLevel, ForwardAgent, Port, RekeyLimit are map to
-  # options of the same name (snake-cased, rather than camel-cased).
+  # * RekeyLimit => :rekey_limit
+  # * UserKnownHostsFile => :user_known_hosts_file
   #
   #--
-  # FIXME: GlobalKnownHostsFile, HostKeyAlias, HostName, LocalForward, SendEnv, User, UserKnownHostsFile
+  # FIXME: HostKeyAlias, HostName, LocalForward, SendEnv, User
   #++
   #
   # Note that you will never need to use this class directly--you can control
@@ -77,7 +81,7 @@ module Net; module SSH
               settings[key] ||= []
               settings[key] << value
             else
-              settings[key] ||= value
+              settings[key] = value unless settings.key?(key)
             end
           end
         end
@@ -103,7 +107,7 @@ module Net; module SSH
           when 'forwardagent' then
             hash[:forward_agent] = value
           when 'globalknownhostsfile'
-            # FIXME
+            hash[:global_known_hosts_file] = value
           when 'hostbasedauthentication' then
             if value
               hash[:auth_methods] ||= []
@@ -142,7 +146,7 @@ module Net; module SSH
           when 'user'
             # FIXME
           when 'userknownhostsfile'
-            # FIXME
+            hash[:user_known_hosts_file] = value
           end
           hash
         end

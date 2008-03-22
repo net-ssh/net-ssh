@@ -37,7 +37,8 @@ module Net
       :auth_methods, :compression, :compression_level, :config, :encryption,
       :forward_agent, :hmac, :host_key, :kex, :keys, :languages,
       :logger, :paranoid, :password, :port, :proxy, :rekey_blocks_limit,
-      :rekey_limit, :rekey_packet_limit, :timeout, :verbose
+      :rekey_limit, :rekey_packet_limit, :timeout, :verbose,
+      :global_known_hosts_file, :user_known_hosts_file
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -79,6 +80,9 @@ module Net
     # * :encryption => the encryption cipher (or ciphers) to use
     # * :forward_agent => set to true if you want the SSH agent connection to
     #   be forwarded
+    # * :global_known_hosts_file => the location of the global known hosts
+    #   file. Set to an array if you want to specify multiple global known
+    #   hosts files. Defaults to %w(/etc/ssh/known_hosts /etc/ssh/known_hosts2).
     # * :hmac => the hmac algorithm (or algorithms) to use
     # * :host_key => the host key algorithm (or algorithms) to use
     # * :kex => the key exchange algorithm (or algorithms) to use
@@ -94,6 +98,9 @@ module Net
     # * :rekey_limit => the max number of bytes to process before rekeying
     # * :rekey_packet_limit => the max number of packets to process before rekeying
     # * :timeout => how long to wait for the initial connection to be made
+    # * :user_known_hosts_file => the location of the user known hosts file.
+    #   Set to an array to specify multiple user known hosts files.
+    #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
     # * :verbose => how verbose to be (Logger verbosity constants, Logger::DEBUG
     #   is very verbose, Logger::FATAL is all but silent). Logger::FATAL is the
     #   default.
