@@ -39,7 +39,7 @@ module Net
       :logger, :paranoid, :password, :port, :proxy, :rekey_blocks_limit,
       :rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
-      :host_name
+      :host_name, :user
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -106,6 +106,9 @@ module Net
     # * :rekey_limit => the max number of bytes to process before rekeying
     # * :rekey_packet_limit => the max number of packets to process before rekeying
     # * :timeout => how long to wait for the initial connection to be made
+    # * :user => the user name to log in as; this overrides the +user+
+    #   parameter, and is primarily only useful when provided via an SSH
+    #   configuration file.
     # * :user_known_hosts_file => the location of the user known hosts file.
     #   Set to an array to specify multiple user known hosts files.
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
@@ -137,6 +140,7 @@ module Net
       transport = Transport::Session.new(host, options)
       auth = Authentication::Session.new(transport, options)
 
+      user = options.fetch(:user, user)
       if auth.authenticate("ssh-connection", user, options[:password])
         connection = Connection::Session.new(transport, options)
         if block_given?

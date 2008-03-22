@@ -24,10 +24,11 @@ module Net; module SSH
   # * Port => :port
   # * PreferredAuthentications => maps to the :auth_methods option
   # * RekeyLimit => :rekey_limit
+  # * User => :user
   # * UserKnownHostsFile => :user_known_hosts_file
   #
   #--
-  # FIXME: LocalForward, SendEnv, User
+  # FIXME: LocalForward, SendEnv
   #++
   #
   # Note that you will never need to use this class directly--you can control
@@ -146,7 +147,7 @@ module Net; module SSH
           when 'sendenv'
             # FIXME
           when 'user'
-            # FIXME
+            hash[:user] = value
           when 'userknownhostsfile'
             hash[:user_known_hosts_file] = value
           end
