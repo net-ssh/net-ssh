@@ -148,7 +148,12 @@ module Net; module SSH; module Transport
         @compressor.close
       end
 
-      @decompressor.close if @decompressor
+      if @decompressor
+        # we call reset here so that we don't get warnings when we try to
+        # close the decompressor
+        @decompressor.reset
+        @decompressor.close
+      end
 
       @compressor = @decompressor = nil
     end
