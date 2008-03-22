@@ -45,6 +45,9 @@ module Net; module SSH; module Service
     #
     # If three arguments are given, it is as if the local bind address is
     # "127.0.0.1", and the rest are applied as above.
+    #
+    #   ssh.forward.local(1234, "www.capify.org", 80)
+    #   ssh.forward.local("0.0.0.0", 1234, "www.capify.org", 80)
     def local(*args)
       if args.length < 3 || args.length > 4
         raise ArgumentError, "expected 3 or 4 parameters, got #{args.length}"
@@ -75,6 +78,9 @@ module Net; module SSH; module Service
     # Terminates an active local forwarded port. If no such forwarded port
     # exists, this will raise an exception. Otherwise, the forwarded connection
     # is terminated.
+    #
+    #   ssh.forward.cancel_local(1234)
+    #   ssh.forward.cancel_local(1234, "0.0.0.0")
     def cancel_local(port, bind_address="127.0.0.1")
       socket = @local_forwarded_ports.delete([port, bind_address])
       socket.shutdown
@@ -116,7 +122,7 @@ module Net; module SSH; module Service
       end
     end
 
-    # an alias, for backwards compatibility with the 1.x API
+    # an alias, for token backwards compatibility with the 1.x API
     alias :remote_to :remote
 
     # Requests that a remote forwarded port be cancelled. The remote forwarded
