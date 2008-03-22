@@ -27,10 +27,6 @@ module Net; module SSH
   # * User => :user
   # * UserKnownHostsFile => :user_known_hosts_file
   #
-  #--
-  # FIXME: LocalForward, SendEnv
-  #++
-  #
   # Note that you will never need to use this class directly--you can control
   # whether the OpenSSH configuration files are read by passing the :config
   # option to Net::SSH.start. (They are, by default.)
@@ -124,8 +120,6 @@ module Net; module SSH
             hash[:host_name] = value
           when 'identityfile' then
             hash[:keys] = value
-          when 'localforward' then
-            # FIXME
           when 'macs' then
             hash[:hmac] = value.split(/,/)
           when 'passwordauthentication'
@@ -144,8 +138,6 @@ module Net; module SSH
             end
           when 'rekeylimit'
             hash[:rekey_limit] = interpret_size(value)
-          when 'sendenv'
-            # FIXME
           when 'user'
             hash[:user] = value
           when 'userknownhostsfile'

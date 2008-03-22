@@ -176,6 +176,16 @@ module Net; module SSH; module Connection
       send_channel_request("subsystem", :string, subsystem, &block)
     end
 
+    # Syntactic sugar for setting an environment variable in the remote
+    # process' environment. Note that for security reasons, the server may
+    # refuse to set certain environment variables, or all, at the server's
+    # discretion.
+    #
+    #   channel.env "PATH", "/usr/local/bin"
+    def env(variable_name, variable_value, &block)
+      send_channel_request("env", :string, variable_name, :string, variable_value, &block)
+    end
+
     # A hash of the valid PTY options (see #request_pty).
     VALID_PTY_OPTIONS = { :term        => "xterm",
                           :chars_wide  => 80,
@@ -434,6 +444,7 @@ module Net; module SSH; module Connection
     # Most channel requests you'll want to send are already wrapped in more
     # convenient helper methods (see #exec and #subsystem).
     def send_channel_request(request_name, *data, &callback)
+      info { "sending channel request #{request_name.inspect}" }
       msg = Buffer.from(:byte, CHANNEL_REQUEST,
         :long, remote_id, :string, request_name,
         :bool, !callback.nil?, *data)
