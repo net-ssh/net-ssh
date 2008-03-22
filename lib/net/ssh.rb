@@ -38,7 +38,7 @@ module Net
       :forward_agent, :hmac, :host_key, :kex, :keys, :languages,
       :logger, :paranoid, :password, :port, :proxy, :rekey_blocks_limit,
       :rekey_limit, :rekey_packet_limit, :timeout, :verbose,
-      :global_known_hosts_file, :user_known_hosts_file
+      :global_known_hosts_file, :user_known_hosts_file, :host_key_alias
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -85,6 +85,8 @@ module Net
     #   hosts files. Defaults to %w(/etc/ssh/known_hosts /etc/ssh/known_hosts2).
     # * :hmac => the hmac algorithm (or algorithms) to use
     # * :host_key => the host key algorithm (or algorithms) to use
+    # * :host_key_alias => the host name to use when looking up or adding a
+    #   host to a known_hosts dictionary file
     # * :kex => the key exchange algorithm (or algorithms) to use
     # * :keys => an array of file names of private keys to use for publickey
     #   and hostbased authentication
