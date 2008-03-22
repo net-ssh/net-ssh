@@ -38,7 +38,8 @@ module Net
       :forward_agent, :hmac, :host_key, :kex, :keys, :languages,
       :logger, :paranoid, :password, :port, :proxy, :rekey_blocks_limit,
       :rekey_limit, :rekey_packet_limit, :timeout, :verbose,
-      :global_known_hosts_file, :user_known_hosts_file, :host_key_alias
+      :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
+      :host_name
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -87,6 +88,11 @@ module Net
     # * :host_key => the host key algorithm (or algorithms) to use
     # * :host_key_alias => the host name to use when looking up or adding a
     #   host to a known_hosts dictionary file
+    # * :host_name => the real host name or IP to log into. This is used
+    #   instead of the +host+ parameter, and is primarily only useful when
+    #   specified in an SSH configuration file. It lets you specify an 
+    #   "alias", similarly to adding an entry in /etc/hosts but without needing
+    #   to modify /etc/hosts.
     # * :kex => the key exchange algorithm (or algorithms) to use
     # * :keys => an array of file names of private keys to use for publickey
     #   and hostbased authentication
@@ -119,6 +125,7 @@ module Net
         end
       
       options = Net::SSH::Config.for(host, files).merge(options)
+      host = options.fetch(:host_name, host)
 
       if !options.key?(:logger)
         options[:logger] = Logger.new(STDERR)

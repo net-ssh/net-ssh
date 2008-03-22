@@ -17,6 +17,7 @@ module Net; module SSH
   # * HostBasedAuthentication => maps to the :auth_methods option
   # * HostKeyAlgorithms => maps to :host_key option
   # * HostKeyAlias => :host_key_alias
+  # * HostName => :host_name
   # * IdentityFile => maps to the :keys option
   # * Macs => maps to the :hmac option
   # * PasswordAuthentication => maps to the :auth_methods option
@@ -26,7 +27,7 @@ module Net; module SSH
   # * UserKnownHostsFile => :user_known_hosts_file
   #
   #--
-  # FIXME: HostName, LocalForward, SendEnv, User
+  # FIXME: LocalForward, SendEnv, User
   #++
   #
   # Note that you will never need to use this class directly--you can control
@@ -119,7 +120,7 @@ module Net; module SSH
           when 'hostkeyalias' then
             hash[:host_key_alias] = value
           when 'hostname' then
-            # FIXME
+            hash[:host_name] = value
           when 'identityfile' then
             hash[:keys] = value
           when 'localforward' then
