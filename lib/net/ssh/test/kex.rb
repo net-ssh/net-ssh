@@ -7,13 +7,23 @@ require 'net/ssh/transport/kex'
 
 module Net; module SSH; module Test
 
+  # An implementation of a key-exchange strategy specifically for unit tests.
+  # (This strategy would never really work against a real SSH server--it makes
+  # too many assumptions about the server's response.)
+  #
+  # This registers itself with the transport key-exchange system as the
+  # "test" algorithm.
   class Kex
     include Net::SSH::Transport::Constants
 
+    # Creates a new instance of the testing key-exchange algorithm with the
+    # given arguments.
     def initialize(algorithms, connection, data)
       @connection = connection
     end
 
+    # Exchange keys with the server. This returns a hash of constant values,
+    # and does not actually exchange keys.
     def exchange_keys
       result = Net::SSH::Buffer.from(:byte, NEWKEYS)
       @connection.send_message(result)
