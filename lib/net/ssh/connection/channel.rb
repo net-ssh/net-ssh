@@ -179,7 +179,9 @@ module Net; module SSH; module Connection
     # Syntactic sugar for setting an environment variable in the remote
     # process' environment. Note that for security reasons, the server may
     # refuse to set certain environment variables, or all, at the server's
-    # discretion.
+    # discretion. If you are connecting to an OpenSSH server, you will
+    # need to update the AcceptEnv setting in the sshd_config to include the
+    # environment variables you want to send.
     #
     #   channel.env "PATH", "/usr/local/bin"
     def env(variable_name, variable_value, &block)
