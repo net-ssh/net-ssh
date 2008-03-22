@@ -42,6 +42,10 @@ module Net; module SSH
   #   end
   #
   # See Net::SSH::Test::Channel and Net::SSH::Test::Script for more options.
+  #
+  # Note that the Net::SSH::Test system is rather finicky yet, and can be kind
+  # of frustrating to get working. Any suggestions for improvement will be
+  # welcome!
   module Test
     # If a block is given, yields the script for the test socket (#socket).
     # Otherwise, simply returns the socket's script. See Net::SSH::Test::Script.
