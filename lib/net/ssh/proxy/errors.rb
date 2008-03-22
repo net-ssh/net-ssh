@@ -8,7 +8,7 @@ module Net; module SSH; module Proxy
   # Used for reporting proxy connection errors.
   class ConnectError < Error; end
 
-  # Used when the server doesn't recognize the users credentials
+  # Used when the server doesn't recognize the user's credentials.
   class UnauthorizedError < Error; end
 
 end; end; end

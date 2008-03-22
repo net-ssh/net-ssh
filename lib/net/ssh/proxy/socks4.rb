@@ -7,20 +7,37 @@ module Net
   module SSH
     module Proxy
 
-      # An implementation of a socket factory that returns a socket which
-      # will tunnel the connection through a SOCKS4 proxy. It allows explicit
-      # specification of the user.
+      # An implementation of a SOCKS4 proxy. To use it, instantiate it, then
+      # pass the instantiated object via the :proxy key to Net::SSH.start:
+      #
+      #   require 'net/ssh/proxy/socks4'
+      #
+      #   proxy = Net::SSH::Proxy::SOCKS4.new('proxy.host', proxy_port, :user => 'user')
+      #   Net::SSH.start('host', 'user', :proxy => proxy) do |ssh|
+      #     ...
+      #   end
       class SOCKS4
 
+        # The SOCKS protocol version used by this class
         VERSION = 4
+
+        # The packet type for connection requests
         CONNECT = 1
+
+        # The status code for a successful connection
         GRANTED = 90
 
-        attr_reader :proxy_host, :proxy_port
+        # The proxy's host name or IP address, as given to the constructor.
+        attr_reader :proxy_host
+
+        # The proxy's port number.
+        attr_reader :proxy_port
+
+        # The additional options that were given to the proxy's constructor.
         attr_reader :options
 
         # Create a new proxy connection to the given proxy host and port.
-        # Optionally, a @:user@ option may be given to identify the username
+        # Optionally, a :user key may be given to identify the username
         # with which to authenticate.
         def initialize(proxy_host, proxy_port=1080, options={})
           @proxy_host = proxy_host

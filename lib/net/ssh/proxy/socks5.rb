@@ -5,24 +5,53 @@ module Net
   module SSH
     module Proxy
 
-      # An implementation of a socket factory that returns a socket which
-      # will tunnel the connection through a SOCKS5 proxy. It allows explicit
-      # specification of the user and password.
+      # An implementation of a SOCKS5 proxy. To use it, instantiate it, then
+      # pass the instantiated object via the :proxy key to Net::SSH.start:
+      #
+      #   require 'net/ssh/proxy/socks5'
+      #
+      #   proxy = Net::SSH::Proxy::SOCKS5.new('proxy.host', proxy_port,
+      #     :user => 'user', :password => "password")
+      #   Net::SSH.start('host', 'user', :proxy => proxy) do |ssh|
+      #     ...
+      #   end
       class SOCKS5
-        VERSION        = 5
-        METHOD_NO_AUTH = 0
-        METHOD_PASSWD  = 2
-        METHOD_NONE    = 0xFF
-        CMD_CONNECT    = 1
-        ATYP_IPV4      = 1
-        ATYP_DOMAIN    = 3
-        SUCCESS        = 0
+        # The SOCKS protocol version used by this class
+        VERSION = 5
 
-        attr_reader :proxy_host, :proxy_port
+        # The SOCKS authentication type for requests without authentication
+        METHOD_NO_AUTH = 0
+
+        # The SOCKS authentication type for requests via username/password
+        METHOD_PASSWD = 2
+
+        # The SOCKS authentication type for when there are no supported
+        # authentication methods.
+        METHOD_NONE = 0xFF
+
+        # The SOCKS packet type for requesting a proxy connection.
+        CMD_CONNECT = 1
+
+        # The SOCKS address type for connections via IP address.
+        ATYP_IPV4 = 1
+
+        # The SOCKS address type for connections via domain name.
+        ATYP_DOMAIN = 3
+
+        # The SOCKS response code for a successful operation.
+        SUCCESS = 0
+
+        # The proxy's host name or IP address
+        attr_reader :proxy_host
+
+        # The proxy's port number
+        attr_reader :proxy_port
+
+        # The map of options given at initialization
         attr_reader :options
 
         # Create a new proxy connection to the given proxy host and port.
-        # Optionally, @:user@ and @:password@ options may be given to
+        # Optionally, :user and :password options may be given to
         # identify the username and password with which to authenticate.
         def initialize(proxy_host, proxy_port=1080, options={})
           @proxy_host = proxy_host

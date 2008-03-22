@@ -1,6 +1,9 @@
 module Net; module SSH; module Connection
       
-  # Terminal opcodes, for use when opening pty's.
+  # These constants are used when requesting a pseudo-terminal (via
+  # Net::SSH::Connection::Channel#request_pty). The descriptions for each are
+  # taken directly from RFC 4254 ("The Secure Shell (SSH) Connection Protocol"),
+  # http://tools.ietf.org/html/rfc4254.
   module Term
     # Interrupt character; 255 if none. Similarly for the other characters.
     # Not all of these characters are supported on all systems.

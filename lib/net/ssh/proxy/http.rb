@@ -3,18 +3,43 @@ require 'net/ssh/proxy/errors'
 
 module Net; module SSH; module Proxy
 
-  # An implementation of a socket factory that returns a socket which
-  # will tunnel the connection through an HTTP proxy. It allows explicit
-  # specification of the user and password, but if none are given it
-  # will look in the HTTP_PROXY_USER/HTTP_PROXY_PASSWORD and
-  # CONNECT_USER/CONNECT_PASSWORD environment variables as well.
+  # An implementation of an HTTP proxy. To use it, instantiate it, then
+  # pass the instantiated object via the :proxy key to Net::SSH.start:
+  #
+  #   require 'net/ssh/proxy/http'
+  #
+  #   proxy = Net::SSH::Proxy::HTTP.new('proxy.host', proxy_port)
+  #   Net::SSH.start('host', 'user', :proxy => proxy) do |ssh|
+  #     ...
+  #   end
+  #
+  # If the proxy requires authentication, you can pass :user and :password
+  # to the proxy's constructor:
+  #
+  #   proxy = Net::SSH::Proxy::HTTP.new('proxy.host', proxy_port,
+  #      :user => "user", :password => "password")
+  #
+  # Note that HTTP digest authentication is not supported; Basic only at
+  # this point.
   class HTTP
 
-    attr_reader :proxy_host, :proxy_port
+    # The hostname or IP address of the HTTP proxy.
+    attr_reader :proxy_host
+
+    # The port number of the proxy.
+    attr_reader :proxy_port
+
+    # The map of additional options that were given to the object at
+    # initialization.
     attr_reader :options
 
     # Create a new socket factory that tunnels via the given host and
-    # port.
+    # port. The +options+ parameter is a hash of additional settings that
+    # can be used to tweak this proxy connection. Specifically, the following
+    # options are supported:
+    #
+    # * :user => the user name to use when authenticating to the proxy
+    # * :password => the password to use when authenticating
     def initialize(proxy_host, proxy_port=80, options={})
       @proxy_host = proxy_host
       @proxy_port = proxy_port
