@@ -209,17 +209,16 @@ module Net; module SSH; module Connection
 
       opts = VALID_PTY_OPTIONS.merge(opts)
 
-      modes = opts[:modes].inject([]) do |memo, (mode, data)|
-        memo << :byte << mode
-        memo << :long << data
+      modes = opts[:modes].inject(Buffer.new) do |memo, (mode, data)|
+        memo.write_byte(mode).write_long(data)
       end
-      modes << :byte << Term::TTY_OP_END
-      modes = Buffer.from(*modes).to_s
+      # mark the end of the mode opcode list with a 0 byte
+      modes.write_byte(0)
 
       send_channel_request("pty-req", :string, opts[:term],
         :long, opts[:chars_wide], :long, opts[:chars_high],
         :long, opts[:pixels_wide], :long, opts[:pixels_high],
-        :string, modes, &block)
+        :string, modes.to_s, &block)
     end
 
     # Sends data to the channel's remote endpoint. This usually has the
