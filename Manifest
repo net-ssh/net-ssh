@@ -1,3 +1,4 @@
+CHANGELOG.rdoc
 lib/net/ssh/authentication/agent.rb
 lib/net/ssh/authentication/constants.rb
 lib/net/ssh/authentication/key_manager.rb
@@ -59,6 +60,10 @@ lib/net/ssh/verifiers/null.rb
 lib/net/ssh/verifiers/strict.rb
 lib/net/ssh/version.rb
 lib/net/ssh.rb
+Manifest.txt
+Rakefile
+README.rdoc
+setup.rb
 test/authentication/methods/common.rb
 test/authentication/methods/test_abstract.rb
 test/authentication/methods/test_hostbased.rb
@@ -93,9 +98,5 @@ test/transport/test_packet_stream.rb
 test/transport/test_server_version.rb
 test/transport/test_session.rb
 test/transport/test_state.rb
-History.txt
-Manifest.txt
-README.txt
-Thanks.txt
-Rakefile
-setup.rb
+THANKS.rdoc
+Manifest
