@@ -75,6 +75,11 @@ If that spits out something like "OpenSSL 0.9.8g 19 Oct 2007", then you're set. 
 
 Additionally: if you are going to be having Net::SSH prompt you for things like passwords or certificate passphrases, you'll want to have either the Highline (recommended) or Termios (unix systems only) gem installed, so that the passwords don't echo in clear text.
 
+Lastly, if you want to run the tests or use any of the Rake tasks, you'll need:
+
+* Echoe (for the Rakefile)
+* Mocha (for the tests)
+
 == INSTALL:
 
 * gem install net-ssh (might need sudo privileges)
