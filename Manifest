@@ -60,7 +60,6 @@ lib/net/ssh/verifiers/null.rb
 lib/net/ssh/verifiers/strict.rb
 lib/net/ssh/version.rb
 lib/net/ssh.rb
-Manifest.txt
 Rakefile
 README.rdoc
 setup.rb
