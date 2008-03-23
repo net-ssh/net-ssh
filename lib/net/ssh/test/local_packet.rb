@@ -41,7 +41,7 @@ module Net; module SSH; module Test
           when TrueClass, FalseClass then :bool
           end
 
-        actual = packet.send(:"read_#{type}")
+        actual = packet.send("read_#{type}")
         next if expected.nil?
         raise "expected #{type} #{expected.inspect} but got #{actual.inspect}" unless expected == actual
       end

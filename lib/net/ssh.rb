@@ -30,6 +30,29 @@ module Net
   #
   # Net::SSH::Connection::Session and Net::SSH::Connection::Channel have more
   # information about this technique.
+  #
+  # = "Um, all I want to do is X, just show me how!"
+  #
+  # == X == "execute a command and capture the output"
+  #
+  #   Net::SSH.start("host", "user", :password => "password") do |ssh|
+  #     result = ssh.exec!("ls -l")
+  #     puts result
+  #   end
+  #
+  # == X == "forward connections on a local port to a remote host"
+  #
+  #   Net::SSH.start("host", "user", :password => "password") do |ssh|
+  #     ssh.forward.local(1234, "www.google.com", 80)
+  #     ssh.loop { true }
+  #   end
+  #
+  # == X == "forward connections on a remote port to the local host"
+  #
+  #   Net::SSH.start("host", "user", :password => "password") do |ssh|
+  #     ssh.forward.remote(80, "www.google.com", 1234)
+  #     ssh.loop { true }
+  #   end
   module SSH
     # This is the set of options that Net::SSH.start recognizes. See
     # Net::SSH.start for a description of each option.

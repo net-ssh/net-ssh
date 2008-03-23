@@ -38,13 +38,11 @@ module Net; module SSH
   # and, if you want to proceed anyway, simply call the remember_host!
   # method on the exception, and then retry.
   class HostKeyMismatch < Exception
-    # :nodoc:
     # the callback to use when #remember_host! is called
-    attr_writer :callback
+    attr_writer :callback #:nodoc:
 
-    # :nodoc:
     # situation-specific data describing the host (see #host, #port, etc.)
-    attr_writer :data
+    attr_writer :data #:nodoc:
 
     # An accessor for getting at the data that was used to look up the host
     # (see also #fingerprint, #host, #port, #ip, and #key).
