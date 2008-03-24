@@ -83,8 +83,8 @@ module Net; module SSH; module Service
     #   ssh.forward.cancel_local(1234, "0.0.0.0")
     def cancel_local(port, bind_address="127.0.0.1")
       socket = @local_forwarded_ports.delete([port, bind_address])
-      socket.shutdown
-      socket.close
+      socket.shutdown rescue nil
+      socket.close rescue nil
       session.stop_listening_to(socket)
     end
 

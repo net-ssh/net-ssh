@@ -152,7 +152,7 @@ module Net; module SSH; module Connection
       return false if block_given? && !yield(self)
 
       r = listeners.keys
-      w = r.select { |w| w.pending_write? }
+      w = r.select { |w| w.respond_to?(:pending_write?) && w.pending_write? }
       ready_readers, ready_writers, = IO.select(r, w, nil, wait)
 
       (ready_readers || []).each do |reader|
