@@ -62,7 +62,7 @@ module Net
       :logger, :paranoid, :password, :port, :proxy, :rekey_blocks_limit,
       :rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
-      :host_name, :user
+      :host_name, :user, :properties
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -124,6 +124,8 @@ module Net
     #   host-key verification should be
     # * :password => the password to use to login
     # * :port => the port to use when connecting to the remote host
+    # * :properties => a hash of key/value pairs to add to the new connection's
+    #   properties (see Net::SSH::Connection::Session#properties)
     # * :proxy => a proxy instance (see Proxy) to use when connecting
     # * :rekey_blocks_limit => the max number of blocks to process before rekeying
     # * :rekey_limit => the max number of bytes to process before rekeying

@@ -30,6 +30,9 @@ module Net; module SSH; module Connection
     # The map of options that were used to initialize this instance.
     attr_reader :options
 
+    # The collection of custom properties for this instance. (See #[] and #[]=).
+    attr_reader :properties
+
     # The map of channels, each key being the local-id for the channel.
     attr_reader :channels #:nodoc:
 
@@ -57,6 +60,25 @@ module Net; module SSH; module Connection
       @pending_requests = []
       @channel_open_handlers = {}
       @on_global_request = {}
+      @properties = (options[:properties] || {}).dup
+    end
+
+    # Retrieves a custom property from this instance. This can be used to
+    # store additional state in applications that must manage multiple
+    # SSH connections.
+    def [](key)
+      @properties[key]
+    end
+
+    # Sets a custom property for this instance.
+    def []=(key, value)
+      @properties[key] = value
+    end
+
+    # Returns the name of the host that was given to the transport layer to
+    # connect to.
+    def host
+      transport.host
     end
 
     # Closes the session gracefully, blocking until all channels have
@@ -143,19 +165,35 @@ module Net; module SSH; module Connection
     #     connections.delete_if { |ssh| !ssh.process(0.1, &condition) }
     #     break if connections.empty?
     #   end
-    def process(wait=nil)
-      return false if block_given? && !yield(self)
-
-      dispatch_incoming_packets
-      channels.each { |id, channel| channel.process unless channel.closing? }
-
-      return false if block_given? && !yield(self)
+    def process(wait=nil, &block)
+      return false unless preprocess(&block)
 
       r = listeners.keys
       w = r.select { |w| w.respond_to?(:pending_write?) && w.pending_write? }
-      ready_readers, ready_writers, = IO.select(r, w, nil, wait)
+      readers, writers, = IO.select(r, w, nil, wait)
 
-      (ready_readers || []).each do |reader|
+      postprocess(readers, writers)
+    end
+
+    # This is called internally as part of #process. It dispatches any
+    # available incoming packets, and then runs Net::SSH::Connection::Channel#process
+    # for any active channels. If a block is given, it is invoked at the
+    # start of the method and again at the end, and if the block ever returns
+    # false, this method returns false. Otherwise, it returns true.
+    def preprocess
+      return false if block_given? && !yield(self)
+      dispatch_incoming_packets
+      channels.each { |id, channel| channel.process unless channel.closing? }
+      return false if block_given? && !yield(self)
+      return true
+    end
+
+    # This is called internally as part of #process. It loops over the given
+    # arrays of reader IO's and writer IO's, processing them as needed, and
+    # then calls Net::SSH::Transport::Session#rekey_as_needed to allow the
+    # transport layer to rekey. Then returns true.
+    def postprocess(readers, writers)
+      Array(readers).each do |reader|
         if listeners[reader]
           listeners[reader].call(reader)
         else
@@ -166,7 +204,7 @@ module Net; module SSH; module Connection
         end
       end
 
-      (ready_writers || []).each do |writer|
+      Array(writers).each do |writer|
         writer.send_pending
       end
 
