@@ -68,9 +68,14 @@ module Net; module SSH; module Service
         client = socket.accept
         debug { "received connection on #{bind_address}:#{local_port}" }
 
-        session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, :long, local_port) do |channel|
+        channel = session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, :long, local_port) do |channel|
           channel.info { "direct channel established" }
           prepare_client(client, channel, :local)
+        end
+
+        channel.on_open_failed do |ch, code, description|
+          channel.error { "could not establish direct channel: #{description} (#{code})" }
+          client.close
         end
       end
     end

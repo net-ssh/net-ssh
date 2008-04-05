@@ -1,3 +1,8 @@
+=== *unreleased*
+
+* Make channel open failure work with a callback so that failures can be handled similarly to successes [Jamis Buck]
+
+
 === 2.0 Preview Release 2 (1.99.1) / 22 Mar 2008
 
 * Partial support for ~/.ssh/config (and related) SSH configuration files [Daniel J. Berger, Jamis Buck]

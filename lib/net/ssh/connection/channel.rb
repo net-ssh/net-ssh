@@ -124,7 +124,7 @@ module Net; module SSH; module Connection
       @properties = {}
 
       @pending_requests = []
-      @on_data = @on_extended_data = @on_process = @on_close = @on_eof = nil
+      @on_open_failed = @on_data = @on_extended_data = @on_process = @on_close = @on_eof = nil
       @on_request = {}
       @closing = @eof = false
     end
@@ -392,6 +392,21 @@ module Net; module SSH; module Connection
       old
     end
 
+    # Registers a callback to be invoked when the server was unable to open
+    # the requested channel. The channel itself will be passed to the block,
+    # along with the integer "reason code" for the failure, and a textual
+    # description of the failure from the server.
+    #
+    #   channel = session.open_channel do |ch|
+    #     # ..
+    #   end
+    #
+    #   channel.on_open_failed { |ch, code, desc| ... }
+    def on_open_failed(&block)
+      old, @on_open_failed = @on_open_failed, block
+      old
+    end
+
     # Registers a callback to be invoked when a channel request of the given
     # type is received. The callback will receive the channel as the first
     # argument, and the associated (unparsed) data as the second. The data
@@ -491,6 +506,18 @@ module Net; module SSH; module Connection
         @remote_maximum_packet_size = max_packet
         connection.forward.agent(self) if connection.options[:forward_agent] && type == "session"
         @on_confirm_open.call(self) if @on_confirm_open
+      end
+
+      # Invoked when the server failed to open the channel. If an #on_open_failed
+      # callback was specified, it will be invoked with the channel, reason code,
+      # and description as arguments. Otherwise, a ChannelOpenFailed exception
+      # will be raised.
+      def do_open_failed(reason_code, description)
+        if @on_open_failed
+          @on_open_failed.call(self, reason_code, description)
+        else
+          raise ChannelOpenFailed.new(reason_code, description)
+        end          
       end
 
       # Invoked when the server sends a CHANNEL_WINDOW_ADJUST packet, and

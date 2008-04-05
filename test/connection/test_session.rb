@@ -237,10 +237,11 @@ module Connection
       assert_equal "auth-agent", ch.type
     end
 
-    def test_channel_open_failure_should_remove_channel_raise_exception
+    def test_channel_open_failure_should_remove_channel_and_tell_channel_that_open_failed
       session.channels[1] = stub("channel")
+      session.channels[1].expects(:do_open_failed).with(1234, "some reason")
       transport.return(CHANNEL_OPEN_FAILURE, :long, 1, :long, 1234, :string, "some reason", :string, "lang tag")
-      assert_raises(Net::SSH::ChannelOpenFailed) { process_times(2) }
+      process_times(2)
       assert session.channels.empty?
     end
 

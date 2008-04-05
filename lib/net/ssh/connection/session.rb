@@ -509,8 +509,8 @@ module Net; module SSH; module Connection
 
       def channel_open_failure(packet)
         error { "channel_open_failed: #{packet[:local_id]} #{packet[:reason_code]} #{packet[:description]}" }
-        channels.delete(packet[:local_id])
-        raise ChannelOpenFailed.new(packet[:reason_code], packet[:description])
+        channel = channels.delete(packet[:local_id])
+        channel.do_open_failed(packet[:reason_code], packet[:description])
       end
 
       def channel_window_adjust(packet)
