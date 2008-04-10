@@ -1,4 +1,4 @@
-=== *unreleased*
+=== 2.0 Preview Release 3 (1.99.2) / 10 Apr 2008
 
 * Session properties [Jamis Buck]
 
