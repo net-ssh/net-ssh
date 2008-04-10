@@ -1,5 +1,7 @@
 === *unreleased*
 
+* Session properties [Jamis Buck]
+
 * Make channel open failure work with a callback so that failures can be handled similarly to successes [Jamis Buck]
 
 
