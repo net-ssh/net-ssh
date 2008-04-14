@@ -32,12 +32,13 @@ module Net
 
         # Create a new KeyManager. By default, the manager will
         # use the ssh-agent (if it is running).
-        def initialize(logger)
+        def initialize(logger, possible_password)
           self.logger = logger
           @key_files = []
           @use_agent = true
           @known_identities = {}
           @agent = nil
+          @possible_password = possible_password
         end
 
         # Clear all knowledge of any loaded user keys. This also clears the list
@@ -113,7 +114,7 @@ module Net
 
           if info[:key].nil? && info[:from] == :file
             begin
-              info[:key] = KeyFactory.load_private_key(info[:file])
+              info[:key] = KeyFactory.load_private_key(info[:file], @possible_password)
             rescue Exception => e 
               raise KeyManagerError, "the given identity is known, but the private key could not be loaded: #{e.class} (#{e.message})"
             end
