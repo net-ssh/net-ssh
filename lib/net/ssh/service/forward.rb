@@ -70,12 +70,13 @@ module Net; module SSH; module Service
 
         channel = session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, :long, local_port) do |channel|
           channel.info { "direct channel established" }
-          prepare_client(client, channel, :local)
         end
 
+        prepare_client(client, channel, :local)
+  
         channel.on_open_failed do |ch, code, description|
           channel.error { "could not establish direct channel: #{description} (#{code})" }
-          client.close
+          channel[:socket].close
         end
       end
     end
