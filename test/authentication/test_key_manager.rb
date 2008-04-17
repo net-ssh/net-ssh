@@ -77,7 +77,7 @@ module Authentication
         manager.add(name)
         File.expects(:readable?).with(name).returns(true)
         Net::SSH::KeyFactory.expects(:load_public_key).with("#{name}.pub").returns(key)
-        Net::SSH::KeyFactory.expects(:load_private_key).with(name).returns(key) if also_private
+        Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil).returns(key) if also_private
       end
 
       def rsa(size=32)
