@@ -33,8 +33,8 @@ module Net; module SSH
       # whether the file describes an RSA or DSA key, and will load it
       # appropriately. The new key is returned. If the key itself is
       # encrypted (requiring a passphrase to use), the user will be
-      # prompted to enter their password unless possible_passphrase works. 
-      def load_private_key(filename, possible_passphrase = nil)
+      # prompted to enter their password unless passphrase works. 
+      def load_private_key(filename, passphrase=nil)
         file = File.read(File.expand_path(filename))
 
         if file.match(/-----BEGIN DSA PRIVATE KEY-----/)
@@ -48,20 +48,15 @@ module Net; module SSH
         end
 
         encrypted_key = file.match(/ENCRYPTED/)
-        password = encrypted_key ? 'nil' : nil
         tries = 0
 
         begin
-          return key_type.new(file, password)
+          return key_type.new(file, passphrase || 'invalid')
         rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError => e
           if encrypted_key
             tries += 1
-            if tries == 1 && possible_passphrase
-              password = possible_passphrase
-              retry
-            end
-            if tries <= (possible_passphrase ? 4 : 3)
-              password = prompt("Enter password for #{filename}:", false)
+            if tries <= 3
+              passphrase = prompt("Enter passphrase for #{filename}:", false)
               retry
             else
               raise

@@ -62,7 +62,7 @@ module Net
       :logger, :paranoid, :password, :port, :proxy, :rekey_blocks_limit,
       :rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
-      :host_name, :user, :properties
+      :host_name, :user, :properties, :passphrase
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -122,6 +122,8 @@ module Net
     # * :logger => the logger instance to use when logging
     # * :paranoid => either true, false, or :very, specifying how strict
     #   host-key verification should be
+    # * :passphrase => the passphrase to use when loading a private key (default
+    #   is +nil+, for no passphrase)
     # * :password => the password to use to login
     # * :port => the port to use when connecting to the remote host
     # * :properties => a hash of key/value pairs to add to the new connection's

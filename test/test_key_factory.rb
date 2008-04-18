@@ -14,7 +14,7 @@ class TestKeyFactory < Test::Unit::TestCase
 
   def test_load_encrypted_private_RSA_key_should_prompt_for_password_and_return_key
     File.expects(:read).with("/key-file").returns(encrypted(rsa_key, "password"))
-    Net::SSH::KeyFactory.expects(:prompt).with("Enter password for /key-file:", false).returns("password")
+    Net::SSH::KeyFactory.expects(:prompt).with("Enter passphrase for /key-file:", false).returns("password")
     assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
   end
 
@@ -25,7 +25,7 @@ class TestKeyFactory < Test::Unit::TestCase
 
   def test_load_encrypted_private_DSA_key_should_prompt_for_password_and_return_key
     File.expects(:read).with("/key-file").returns(encrypted(dsa_key, "password"))
-    Net::SSH::KeyFactory.expects(:prompt).with("Enter password for /key-file:", false).returns("password")
+    Net::SSH::KeyFactory.expects(:prompt).with("Enter passphrase for /key-file:", false).returns("password")
     assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
   end
 
@@ -36,7 +36,7 @@ class TestKeyFactory < Test::Unit::TestCase
 
   def test_load_encrypted_private_key_should_give_three_tries_for_the_password_and_then_raise_exception
     File.expects(:read).with("/key-file").returns(encrypted(rsa_key, "password"))
-    Net::SSH::KeyFactory.expects(:prompt).times(3).with("Enter password for /key-file:", false).returns("passwod","passphrase","passwd")
+    Net::SSH::KeyFactory.expects(:prompt).times(3).with("Enter passphrase for /key-file:", false).returns("passwod","passphrase","passwd")
     assert_raises(OpenSSL::PKey::RSAError) { Net::SSH::KeyFactory.load_private_key("/key-file") }
   end
 

@@ -4,7 +4,6 @@ require 'net/ssh/authentication/key_manager'
 module Authentication
 
   class TestKeyManager < Test::Unit::TestCase
-
     def test_key_files_and_known_identities_are_empty_by_default
       assert manager.key_files.empty?
       assert manager.known_identities.empty?
@@ -15,11 +14,11 @@ module Authentication
     end
 
     def test_add_ensures_list_is_unique
-      manager.add "first"
-      manager.add "second"
-      manager.add "third"
-      manager.add "second"
-      assert_equal %w(first second third), manager.key_files
+      manager.add "/first"
+      manager.add "/second"
+      manager.add "/third"
+      manager.add "/second"
+      assert_equal %w(/first /second /third), manager.key_files
     end
 
     def test_use_agent_should_be_set_to_false_if_agent_could_not_be_found
@@ -32,16 +31,16 @@ module Authentication
     def test_identities_should_load_from_key_files
       manager.stubs(:agent).returns(nil)
 
-      stub_file_key "first", rsa
-      stub_file_key "second", dsa
+      stub_file_key "/first", rsa
+      stub_file_key "/second", dsa
 
       identities = manager.identities
       assert_equal 2, identities.length
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
 
-      assert_equal({:from => :file, :file => "first"}, manager.known_identities[rsa])
-      assert_equal({:from => :file, :file => "second"}, manager.known_identities[dsa])
+      assert_equal({:from => :file, :file => "/first"}, manager.known_identities[rsa])
+      assert_equal({:from => :file, :file => "/second"}, manager.known_identities[dsa])
     end
 
     def test_identities_should_load_from_agent
@@ -65,7 +64,7 @@ module Authentication
 
     def test_sign_with_file_originated_key_should_load_private_key_and_sign_with_it
       manager.stubs(:agent).returns(nil)
-      stub_file_key "first", rsa(512), true
+      stub_file_key "/first", rsa(512), true
       rsa.expects(:ssh_do_sign).with("hello, world").returns("abcxyz123")
       manager.identities
       assert_equal "\0\0\0\assh-rsa\0\0\0\011abcxyz123", manager.sign(rsa, "hello, world")
@@ -75,7 +74,7 @@ module Authentication
 
       def stub_file_key(name, key, also_private=false)
         manager.add(name)
-        File.expects(:readable?).with(name).returns(true)
+        File.expects(:readable?).returns(true)
         Net::SSH::KeyFactory.expects(:load_public_key).with("#{name}.pub").returns(key)
         Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil).returns(key) if also_private
       end

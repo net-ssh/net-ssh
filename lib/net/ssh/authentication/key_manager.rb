@@ -30,15 +30,18 @@ module Net
         # The map of loaded identities
         attr_reader :known_identities
 
+        # The map of options that were passed to the key-manager
+        attr_reader :options
+
         # Create a new KeyManager. By default, the manager will
         # use the ssh-agent (if it is running).
-        def initialize(logger, possible_passphrase)
+        def initialize(logger, options={})
           self.logger = logger
           @key_files = []
           @use_agent = true
           @known_identities = {}
           @agent = nil
-          @possible_passphrase = possible_passphrase
+          @options = options
         end
 
         # Clear all knowledge of any loaded user keys. This also clears the list
@@ -53,7 +56,7 @@ module Net
 
         # Add the given key_file to the list of key files that will be used.
         def add(key_file)
-          key_files.push(key_file).uniq!
+          key_files.push(File.expand_path(key_file)).uniq!
           self
         end
 
@@ -114,7 +117,7 @@ module Net
 
           if info[:key].nil? && info[:from] == :file
             begin
-              info[:key] = KeyFactory.load_private_key(info[:file], @possible_passphrase)
+              info[:key] = KeyFactory.load_private_key(info[:file], options[:passphrase])
             rescue Exception => e 
               raise KeyManagerError, "the given identity is known, but the private key could not be loaded: #{e.class} (#{e.message})"
             end
