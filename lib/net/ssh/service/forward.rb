@@ -160,7 +160,7 @@ module Net; module SSH; module Service
       @remote_forwarded_ports.keys
     end
 
-    # Enabled SSH agent forwarding on the given channel. The forwarded agent
+    # Enables SSH agent forwarding on the given channel. The forwarded agent
     # will remain active even after the channel closes--the channel is only
     # used as the transport for enabling the forwarded connection. You should
     # never need to call this directly--it is called automatically the first
@@ -179,12 +179,10 @@ module Net; module SSH; module Service
 
       channel.send_channel_request("auth-agent-req@openssh.com") do |channel, success|
         if success
-          @auth_agent = Authentication::Agent.connect(logger)
           debug { "authentication agent forwarding is active" }
         else
           channel.send_channel_request("auth-agent-req") do |channel, success|
             if success
-              @auth_agent = Authentication::Agent.connect(logger)
               debug { "authentication agent forwarding is active" }
             else
               error { "could not establish forwarding of authentication agent" }
@@ -255,7 +253,14 @@ module Net; module SSH; module Service
       def auth_agent_channel(session, channel, packet)
         info { "opening auth-agent channel" }
         channel[:invisible] = true
-        prepare_client(@auth_agent.socket, channel, :agent)
+
+        begin
+          agent = Authentication::Agent.connect(logger)
+          prepare_client(agent.socket, channel, :agent)
+        rescue Exception => e
+          error { "attempted to connect to agent but failed: #{e.class.name} (#{e.message})" }
+          raise ChannelOpenFailure.new(2, "could not connect to authentication agent")
+        end
       end
   end
 
