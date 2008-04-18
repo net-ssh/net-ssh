@@ -52,7 +52,7 @@ module Net; module SSH; module Authentication
       transport.send_message(transport.service_request("ssh-userauth"))
       message = expect_message(SERVICE_ACCEPT)
 
-      key_manager = KeyManager.new(logger, options[:password])
+      key_manager = KeyManager.new(logger, options[:passphrase])
       Array(options[:keys]).each { |key| key_manager.add(key) }
 
       attempted = []
