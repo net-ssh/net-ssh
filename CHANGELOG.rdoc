@@ -1,6 +1,6 @@
 === *unreleased*
 
-* Fixed bug in auth-agent forwarding where the agent was not correctly instantiated [Jamis Buck]
+* Open a new auth agent connection for every auth-agent channel request [Jamis Buck]
 
 
 === 2.0 Preview Release 3 (1.99.2) / 10 Apr 2008
