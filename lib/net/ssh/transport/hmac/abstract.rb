@@ -9,7 +9,7 @@ module Net; module SSH; module Transport; module HMAC
       %w(key_length mac_length digest_class).each do |attribute|
         define_method(attribute) do |*v|
           # satisfy ruby -w
-          if !instance_variable_defined?("@#{attribute}")
+          if !instance_variables.include?("@#{attribute}")
             instance_variable_set("@#{attribute}", nil)
           end
 
