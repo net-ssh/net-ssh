@@ -1,5 +1,7 @@
 === *unreleased*
 
+* Make sure HOME is set to something sane, even on OS's that don't set it by default [Jamis Buck]
+
 * Add a :passphrase option to specify the passphrase to use with private keys [Francis Sullivan]
 
 * Open a new auth agent connection for every auth-agent channel request [Jamis Buck]
