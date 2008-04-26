@@ -145,7 +145,8 @@ module Net
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
     # * :verbose => how verbose to be (Logger verbosity constants, Logger::DEBUG
     #   is very verbose, Logger::FATAL is all but silent). Logger::FATAL is the
-    #   default.
+    #   default. The symbols :debug, :info, :warn, :error, and :fatal are also
+    #   supported and are translated to the corresponding Logger constant.
     def self.start(host, user, options={}, &block)
       invalid_options = options.keys - VALID_OPTIONS
       if invalid_options.any?
@@ -166,7 +167,17 @@ module Net
         options[:logger].level = Logger::FATAL
       end
 
-      options[:logger].level = options[:verbose] if options[:verbose]
+      if options[:verbose]
+        options[:logger].level = case options[:verbose]
+          when Fixnum then options[:verbose]
+          when :debug then Logger::DEBUG
+          when :info  then Logger::INFO
+          when :warn  then Logger::WARN
+          when :error then Logger::ERROR
+          when :fatal then Logger::FATAL
+          else raise ArgumentError, "can't convert #{options[:verbose].inspect} to any of the Logger level constants"
+        end
+      end
 
       transport = Transport::Session.new(host, options)
       auth = Authentication::Session.new(transport, options)

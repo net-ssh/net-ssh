@@ -1,3 +1,8 @@
+=== *unreleased*
+
+* Allow the :verbose argument to accept symbols (:debug, etc.) as well as Logger level constants (Logger::DEBUG, etc.) [Jamis Buck]
+
+
 === 2.0 Preview Release 4 (1.99.3) / 19 Apr 2008
 
 * Make sure HOME is set to something sane, even on OS's that don't set it by default [Jamis Buck]
