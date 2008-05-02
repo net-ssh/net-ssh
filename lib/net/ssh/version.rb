@@ -43,13 +43,13 @@ module Net; module SSH
     end
 
     # The major component of this version of the Net::SSH library
-    MAJOR = 1
+    MAJOR = 2
 
     # The minor component of this version of the Net::SSH library
-    MINOR = 99
+    MINOR = 0
 
     # The tiny component of this version of the Net::SSH library
-    TINY  = 3
+    TINY  = 0
 
     # The current version of the Net::SSH library as a Version instance
     CURRENT = new(MAJOR, MINOR, TINY)

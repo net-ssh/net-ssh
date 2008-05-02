@@ -1,4 +1,4 @@
-=== *unreleased*
+=== 2.0.0 / 1 May 2008
 
 * Allow the :verbose argument to accept symbols (:debug, etc.) as well as Logger level constants (Logger::DEBUG, etc.) [Jamis Buck]
 
