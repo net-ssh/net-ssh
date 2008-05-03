@@ -53,7 +53,7 @@ module Net; module SSH; module Authentication
       message = expect_message(SERVICE_ACCEPT)
 
       key_manager = KeyManager.new(logger, options)
-      Array(options[:keys]).each { |key| key_manager.add(key) }
+      keys.each { |key| key_manager.add(key) }
 
       attempted = []
 
@@ -112,5 +112,16 @@ module Net; module SSH; module Authentication
       end
       message
     end
+
+    private
+
+      # Returns an array of paths to the key files that should be used when
+      # attempting any key-based authentication mechanism.
+      def keys
+        Array(
+          options[:keys] ||
+          %w(~/.ssh/id_dsa ~/.ssh/id_rsa ~/.ssh2/id_dsa ~/.ssh2/id_rsa)
+        )
+      end
   end
 end; end; end
