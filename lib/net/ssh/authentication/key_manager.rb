@@ -89,9 +89,10 @@ module Net
           end
 
           key_files.each do |file|
-            if File.readable?(file)
+            public_key_file = file + '.pub'
+            if File.readable?(public_key_file)
               begin
-                key = KeyFactory.load_public_key(file + ".pub")
+                key = KeyFactory.load_public_key(public_key_file)
                 identities.push key
                 known_identities[key] = { :from => :file, :file => file }
               rescue Exception => e
