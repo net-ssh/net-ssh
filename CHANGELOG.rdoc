@@ -1,3 +1,8 @@
+=== *unreleased*
+
+* Fix detection and loading of public keys when the keys don't actually exist [David Dollar]
+
+
 === 2.0.1 / 5 May 2008
 
 * Teach Net::SSH about a handful of default key names [Jamis Buck]
