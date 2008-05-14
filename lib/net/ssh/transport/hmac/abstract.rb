@@ -31,11 +31,17 @@ module Net; module SSH; module Transport; module HMAC
       define_method(attribute) { self.class.send(attribute) }
     end
 
-    # The key to use for this instance.
-    attr_accessor :key
+    # The key in use for this instance.
+    attr_reader :key
 
     def initialize(key=nil)
       self.key = key
+    end
+
+    # Sets the key to the given value, truncating it so that it is the correct
+    # length.
+    def key=(value)
+      @key = value ? value.to_s[0,key_length] : nil
     end
 
     # Compute the HMAC digest for the given data string.

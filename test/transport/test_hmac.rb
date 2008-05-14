@@ -7,7 +7,7 @@ module Transport
     Net::SSH::Transport::HMAC::MAP.each do |name, value|
       method = name.tr("-", "_")
       define_method("test_get_with_#{method}_returns_new_hmac_instance") do
-        key = "abcdefghijklmnopqrstuvwxyz"[0..Net::SSH::Transport::HMAC::MAP[name].key_length]
+        key = "abcdefghijklmnopqrstuvwxyz"[0,Net::SSH::Transport::HMAC::MAP[name].key_length]
         hmac = Net::SSH::Transport::HMAC.get(name, key)
         assert_instance_of Net::SSH::Transport::HMAC::MAP[name], hmac
         assert_equal key, hmac.key

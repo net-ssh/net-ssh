@@ -24,6 +24,11 @@ module Transport; module HMAC
       assert_equal "\275\345\006\307y~Oi\035<.\341\031\250<\257", hmac.digest("hello world")
     end
 
+    def test_key_should_be_truncated_to_required_length
+      hmac = subject.new("12345678901234567890")
+      assert_equal "1234567890123456", hmac.key
+    end
+
     private
 
       def subject
