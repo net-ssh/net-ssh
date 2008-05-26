@@ -1,5 +1,7 @@
 === *unreleased*
 
+* Make sure the agent client understands both RSA "identities answers" [Jamis Buck]
+
 * Fixed key truncation bug that caused hmacs other than SHA1 to fail with "corrupt hmac" errors [Jamis Buck]
 
 * Fix detection and loading of public keys when the keys don't actually exist [David Dollar]

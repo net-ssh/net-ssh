@@ -39,7 +39,8 @@ module Net; module SSH; module Authentication
     SSH_COM_AGENT2_FAILURE        = 102
 
     SSH_AGENT_REQUEST_RSA_IDENTITIES = 1
-    SSH_AGENT_RSA_IDENTITIES_ANSWER  = 2
+    SSH_AGENT_RSA_IDENTITIES_ANSWER1 = 2
+    SSH_AGENT_RSA_IDENTITIES_ANSWER2 = 5
     SSH_AGENT_FAILURE                = 5
 
     # The underlying socket being used to communicate with the SSH agent.
@@ -82,7 +83,7 @@ module Net; module SSH; module Authentication
 
       if type == SSH2_AGENT_VERSION_RESPONSE
         raise NotImplementedError, "SSH2 agents are not yet supported"
-      elsif type != SSH_AGENT_RSA_IDENTITIES_ANSWER
+      elsif type != SSH_AGENT_RSA_IDENTITIES_ANSWER1 && type != SSH_AGENT_RSA_IDENTITIES_ANSWER2
         raise AgentError, "unknown response from agent: #{type}, #{body.to_s.inspect}"
       end
     end
