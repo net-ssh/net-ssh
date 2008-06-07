@@ -38,6 +38,12 @@ class TestConfig < Test::Unit::TestCase
     assert !config.key?(:rekey_limit)
   end
 
+  def test_load_should_parse_equal_sign_delimiters
+    config = Net::SSH::Config.load(config(:eqsign), "test.test")
+    assert config['compression']
+    assert_equal 1234, config['port']
+  end
+
   def test_translate_should_correctly_translate_from_openssh_to_net_ssh_names
     open_ssh = {
       'ciphers'                 => "a,b,c",

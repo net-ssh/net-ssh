@@ -2,6 +2,9 @@
 
 * Use #chomp instead of #strip when cleaning the version string reported by the remote host, so that trailing whitespace is preserved (this is to play nice with servers like Mocana SSH) [Timo Gatsonides]
 
+* Correctly parse ssh_config entries with eq-sign delimiters [Jamis Buck]
+
+* Ignore malformed ssh_config entries [Jamis Buck]
 
 === 2.0.2 / 29 May 2008
 

@@ -62,10 +62,18 @@ module Net; module SSH
         IO.foreach(file) do |line|
           next if line =~ /^\s*(?:#.*)?$/
 
-          key, value = line.strip.split(/\s+/, 2)
-          key.downcase!
+          if line =~ /^\s*(\S+)\s*=(.*)$/
+            key, value = $1, $2
+          else
+            key, value = line.strip.split(/\s+/, 2)
+          end
 
+          # silently ignore malformed entries
+          next if value.nil?
+
+          key.downcase!
           value = $1 if value =~ /^"(.*)"$/
+
           value = case value.strip
             when /^\d+$/ then value.to_i
             when /^no$/i then false
