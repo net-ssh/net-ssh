@@ -17,9 +17,11 @@ module Transport
       assert_equal "SSH-2.0-Testing_1.0", s.version
     end
 
-    def test_trailing_whitespace_should_be_stripped
+    def test_trailing_whitespace_should_be_preserved
+      # some servers, like Mocana, send a version string with trailing
+      # spaces, which are significant when exchanging keys later.
       s = subject(socket(true, "SSH-2.0-Testing_1.0    \r\n"))
-      assert_equal "SSH-2.0-Testing_1.0", s.version
+      assert_equal "SSH-2.0-Testing_1.0    ", s.version
     end
 
     def test_unacceptible_server_version_should_raise_exception

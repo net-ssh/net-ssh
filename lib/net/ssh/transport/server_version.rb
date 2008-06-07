@@ -46,15 +46,14 @@ module Net; module SSH; module Transport
           @header << @version
         end
 
-        debug { "remote is #{@version.strip}" }
+        @version.chomp!
+        debug { "remote is `#{@version}'" }
 
         unless @version.match(/^SSH-(1\.99|2\.0)-/)
           raise Net::SSH::Exception, "incompatible SSH version `#{@version}'"
         end
 
-        @version.strip!
-
-        debug { "local is #{PROTO_VERSION}" }
+        debug { "local is `#{PROTO_VERSION}'" }
         socket.write "#{PROTO_VERSION}\r\n"
       end
   end
