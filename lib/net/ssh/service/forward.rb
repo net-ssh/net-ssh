@@ -259,7 +259,7 @@ module Net; module SSH; module Service
           prepare_client(agent.socket, channel, :agent)
         rescue Exception => e
           error { "attempted to connect to agent but failed: #{e.class.name} (#{e.message})" }
-          raise ChannelOpenFailure.new(2, "could not connect to authentication agent")
+          raise Net::SSH::ChannelOpenFailed.new(2, "could not connect to authentication agent")
         end
       end
   end
