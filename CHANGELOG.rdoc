@@ -1,4 +1,4 @@
-=== *unreleased*
+=== 2.0.3 / 27 Jun 2008
 
 * Make Net::SSH::Version comparable [Brian Candler]
 
