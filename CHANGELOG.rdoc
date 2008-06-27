@@ -1,5 +1,7 @@
 === *unreleased*
 
+* Make Net::SSH::Version comparable [Brian Candler]
+
 * Fix errors in port forwarding when a channel could not be opened due to a typo in the exception name [Matthew Todd]
 
 * Use #chomp instead of #strip when cleaning the version string reported by the remote host, so that trailing whitespace is preserved (this is to play nice with servers like Mocana SSH) [Timo Gatsonides]
