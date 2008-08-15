@@ -134,7 +134,7 @@ module Net; module SSH; module Transport
       unencrypted_data = [packet_length, padding_length, payload, padding].pack("NCA*A*")
       mac = client.hmac.digest([client.sequence_number, unencrypted_data].pack("NA*"))
 
-      encrypted_data = client.cipher.update(unencrypted_data) << client.cipher.final
+      encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
       message = encrypted_data + mac
 
       debug { "queueing packet nr #{client.sequence_number} type #{payload[0]} len #{packet_length}" }
@@ -187,7 +187,7 @@ module Net; module SSH; module Transport
           data = read_available(minimum)
 
           # decipher it
-          @packet = Net::SSH::Buffer.new(server.cipher.update(data))
+          @packet = Net::SSH::Buffer.new(server.update_cipher(data))
           @packet_length = @packet.read_long
         end
 
@@ -199,14 +199,14 @@ module Net; module SSH; module Transport
         if need > 0
           # read the remainder of the packet and decrypt it.
           data = read_available(need)
-          @packet.append(server.cipher.update(data))
+          @packet.append(server.update_cipher(data))
         end
 
         # get the hmac from the tail of the packet (if one exists), and
         # then validate it.
         real_hmac = read_available(server.hmac.mac_length) || ""
 
-        @packet.append(server.cipher.final)
+        @packet.append(server.final_cipher)
         padding_length = @packet.read_byte
 
         payload = @packet.read(@packet_length - padding_length - 1)

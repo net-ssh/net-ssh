@@ -16,9 +16,6 @@ module Net; module SSH; module Transport
     # The next packet sequence number for this socket endpoint.
     attr_reader :sequence_number
 
-    # The cipher algorithm in use for this socket endpoint.
-    attr_reader :cipher
-
     # The hmac algorithm in use for this endpoint.
     attr_reader :hmac
 
@@ -55,6 +52,8 @@ module Net; module SSH; module Transport
       @hmac = HMAC.get("none")
       @compression = nil
       @compressor = @decompressor = nil
+      @next_iv = nil
+      @cipher_needs_reset = false
     end
 
     # A convenience method for quickly setting multiple values in a single
@@ -64,6 +63,27 @@ module Net; module SSH; module Transport
         instance_variable_set("@#{key}", value)
       end
       reset!
+    end
+
+    # The cipher algorithm in use for this socket endpoint.
+    def cipher
+      if @cipher_needs_reset
+        @cipher.reset
+        @cipher.iv = @next_iv
+        @cipher_needs_reset = false
+      end
+
+      @cipher
+    end
+
+    def update_cipher(data)
+      @next_iv = data[-cipher.iv_len..-1]
+      cipher.update(data)
+    end
+
+    def final_cipher
+      @cipher_needs_reset
+      cipher.final
     end
 
     # Increments the counters. The sequence number is incremented (and remapped

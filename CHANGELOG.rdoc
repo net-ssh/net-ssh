@@ -1,3 +1,8 @@
+=== (unreleased)
+
+* Cipher#reset is now called after Cipher#final, with the last n bytes used as the next initialization vector [Jamis Buck]
+
+
 === 2.0.3 / 27 Jun 2008
 
 * Make Net::SSH::Version comparable [Brian Candler]

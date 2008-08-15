@@ -10,6 +10,11 @@ module Net; module SSH; module Transport
         8
       end
 
+      # Returns an arbitrary integer.
+      def iv_len
+        4
+      end
+
       # Does nothing. Returns self.
       def encrypt
         self
