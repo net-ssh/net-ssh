@@ -74,6 +74,8 @@ module Net; module SSH
         data = File.read(File.expand_path(filename))
         type, blob = data.split(/ /)
 
+        raise Net::SSH::Exception, "public key at #{filename} is not valid" if blob.nil?
+
         blob = blob.unpack("m*").first
         reader = Net::SSH::Buffer.new(blob)
         reader.read_key or raise OpenSSL::PKey::PKeyError, "not a public key #{filename.inspect}"

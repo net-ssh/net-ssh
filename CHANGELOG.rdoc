@@ -1,5 +1,7 @@
 === (unreleased)
 
+* Make sure the error raised when a public key file is malformed is more informative than a MethodMissing error [Jamis Buck]
+
 * Cipher#reset is now called after Cipher#final, with the last n bytes used as the next initialization vector [Jamis Buck]
 
 
