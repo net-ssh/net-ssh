@@ -160,7 +160,7 @@ module Net; module SSH
         # Converts an ssh_config pattern into a regex for matching against
         # host names.
         def pattern2regex(pattern)
-          pattern = "^" + pattern.gsub(/\./, "\\.").
+          pattern = "^" + pattern.to_s.gsub(/\./, "\\.").
             gsub(/\?/, '.').
             gsub(/\*/, '.*') + "$"
           Regexp.new(pattern, true)
