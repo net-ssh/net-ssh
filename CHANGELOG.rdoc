@@ -1,5 +1,7 @@
 === (unreleased)
 
+* Added Connection::Session#closed? and Transport::Session#closed? [Jamis Buck]
+
 * Numeric host names in .ssh/config are now parsed correct [Yanko Ivanov]
 
 * Make sure the error raised when a public key file is malformed is more informative than a MethodMissing error [Jamis Buck]

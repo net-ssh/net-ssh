@@ -93,6 +93,11 @@ module Net; module SSH; module Transport
       end
     end
 
+    # Returns true if the underlying socket has been closed.
+    def closed?
+      socket.closed?
+    end
+
     # Cleans up (see PacketStream#cleanup) and closes the underlying socket.
     def close
       socket.cleanup

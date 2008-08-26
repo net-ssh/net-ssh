@@ -81,6 +81,15 @@ module Net; module SSH; module Connection
       transport.host
     end
 
+    # Returns true if the underlying transport has been closed. Note that
+    # this can be a little misleading, since if the remote server has
+    # closed the connection, the local end will still think it is open
+    # until the next operation on the socket. Nevertheless, this method can
+    # be useful if you just want to know if _you_ have closed the connection.
+    def closed?
+      transport.closed?
+    end
+
     # Closes the session gracefully, blocking until all channels have
     # successfully closed, and then closes the underlying transport layer
     # connection.
