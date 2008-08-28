@@ -1,4 +1,4 @@
-=== (unreleased)
+=== 2.0.4 / 27 Aug 2008
 
 * Added Connection::Session#closed? and Transport::Session#closed? [Jamis Buck]
 
