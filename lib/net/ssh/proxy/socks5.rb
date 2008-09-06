@@ -1,4 +1,5 @@
 require 'socket'
+require 'net/ssh/ruby_compat'
 require 'net/ssh/proxy/errors'
 
 module Net
@@ -95,7 +96,7 @@ module Net
           socket.send packet, 0
 
           version, reply, = socket.recv(4).unpack("C*")
-          len = socket.recv(1)[0]
+          len = socket.recv(1).getbyte(0)
           socket.recv(len + 2)
 
           unless reply == SUCCESS

@@ -137,7 +137,7 @@ module Net; module SSH; module Transport
       encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
       message = encrypted_data + mac
 
-      debug { "queueing packet nr #{client.sequence_number} type #{payload[0]} len #{packet_length}" }
+      debug { "queueing packet nr #{client.sequence_number} type #{payload.getbyte(0)} len #{packet_length}" }
       enqueue(message)
 
       client.increment(packet_length)
@@ -218,7 +218,7 @@ module Net; module SSH; module Transport
         # try to decompress the payload, in case compression is active
         payload = server.decompress(payload)
 
-        debug { "received packet nr #{server.sequence_number} type #{payload[0]} len #{@packet_length}" }
+        debug { "received packet nr #{server.sequence_number} type #{payload.getbyte(0)} len #{@packet_length}" }
 
         server.increment(@packet_length)
         @packet = nil
