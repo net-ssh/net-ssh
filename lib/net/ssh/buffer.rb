@@ -1,3 +1,4 @@
+require 'net/ssh/ruby_compat'
 require 'net/ssh/transport/openssl'
 
 module Net; module SSH
@@ -203,7 +204,7 @@ module Net; module SSH
     # the end of the buffer.
     def read_byte
       b = read(1) or return nil
-      b[0]
+      b.getbyte(0)
     end
 
     # Read and return an SSH2-encoded string. The string starts with a long

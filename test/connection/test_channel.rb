@@ -127,10 +127,10 @@ module Connection
         assert_equal 0, packet[:local_id]
         assert_equal "hello wo", packet[:data]
         
-        t.expect do |t,packet|
-          assert_equal CHANNEL_DATA, packet.type
-          assert_equal 0, packet[:local_id]
-          assert_equal "rld", packet[:data]
+        t.expect do |t2,packet2|
+          assert_equal CHANNEL_DATA, packet2.type
+          assert_equal 0, packet2[:local_id]
+          assert_equal "rld", packet2[:data]
         end
       end
 

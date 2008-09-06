@@ -64,12 +64,12 @@ module Net; module SSH; module Service
 
       @local_forwarded_ports[[local_port, bind_address]] = socket
 
-      session.listen_to(socket) do |socket|
-        client = socket.accept
+      session.listen_to(socket) do |server|
+        client = server.accept
         debug { "received connection on #{bind_address}:#{local_port}" }
 
-        channel = session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, :long, local_port) do |channel|
-          channel.info { "direct channel established" }
+        channel = session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, :long, local_port) do |achannel|
+          achannel.info { "direct channel established" }
         end
 
         prepare_client(client, channel, :local)
@@ -177,12 +177,12 @@ module Net; module SSH; module Service
       return if @agent_forwarded
       @agent_forwarded = true
 
-      channel.send_channel_request("auth-agent-req@openssh.com") do |channel, success|
+      channel.send_channel_request("auth-agent-req@openssh.com") do |achannel, success|
         if success
           debug { "authentication agent forwarding is active" }
         else
-          channel.send_channel_request("auth-agent-req") do |channel, success|
-            if success
+          achannel.send_channel_request("auth-agent-req") do |a2channel, success2|
+            if success2
               debug { "authentication agent forwarding is active" }
             else
               error { "could not establish forwarding of authentication agent" }

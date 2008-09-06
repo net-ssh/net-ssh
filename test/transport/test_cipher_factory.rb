@@ -4,6 +4,10 @@ require 'net/ssh/transport/cipher_factory'
 module Transport
 
   class TestCipherFactory < Test::Unit::TestCase
+    def self.if_supported?(name)
+      yield if Net::SSH::Transport::CipherFactory.supported?(name)
+    end
+
     def test_lengths_for_none
       assert_equal [0,0], factory.get_lengths("none")
       assert_equal [0,0], factory.get_lengths("bogus")
@@ -13,8 +17,10 @@ module Transport
       assert_equal [16,8], factory.get_lengths("blowfish-cbc")
     end
 
-    def test_lengths_for_idea_cbc
-      assert_equal [16,8], factory.get_lengths("idea-cbc")
+    if_supported?("idea-cbc") do
+      def test_lengths_for_idea_cbc
+        assert_equal [16,8], factory.get_lengths("idea-cbc")
+      end
     end
 
     def test_lengths_for_rijndael_cbc
@@ -51,14 +57,16 @@ module Transport
       assert_equal TEXT, decrypt("blowfish-cbc", BLOWFISH)
     end
 
-    IDEA = "W\234\017G\231\b\357\370H\b\256U]\343M\031k\233]~\023C\363\263\177\262-\261\341$\022\376mv\217\322\b\2763\270H\306\035\343z\313\312\3531\351\t\201\302U\022\360\300\354ul7$z\320O]\360g\024\305\005`V\005\335A\351\312\270c\320D\232\eQH1\340\265\2118\031g*\303v"
+    if_supported?("idea-cbc") do
+      IDEA = "W\234\017G\231\b\357\370H\b\256U]\343M\031k\233]~\023C\363\263\177\262-\261\341$\022\376mv\217\322\b\2763\270H\306\035\343z\313\312\3531\351\t\201\302U\022\360\300\354ul7$z\320O]\360g\024\305\005`V\005\335A\351\312\270c\320D\232\eQH1\340\265\2118\031g*\303v"
 
-    def test_idea_cbc_for_encryption
-      assert_equal IDEA, encrypt("idea-cbc")
-    end
+      def test_idea_cbc_for_encryption
+        assert_equal IDEA, encrypt("idea-cbc")
+      end
 
-    def test_idea_cbc_for_decryption
-      assert_equal TEXT, decrypt("idea-cbc", IDEA)
+      def test_idea_cbc_for_decryption
+        assert_equal TEXT, decrypt("idea-cbc", IDEA)
+      end
     end
 
     RIJNDAEL = "$\253\271\255\005Z\354\336&\312\324\221\233\307Mj\315\360\310Fk\241EfN\037\231\213\361{'\310\204\347I\343\271\005\240`\325;\034\346uM>#\241\231C`\374\261\vo\226;Z\302:\b\250\366T\330\\#V\330\340\226\363\374!\bm\266\232\207!\232\347\340\t\307\370\356z\236\343=v\210\206y"

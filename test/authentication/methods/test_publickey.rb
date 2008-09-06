@@ -21,10 +21,10 @@ module Authentication; module Methods
         assert verify_userauth_request_packet(packet, keys.first, false)
         t.return(USERAUTH_FAILURE, :string, "hostbased,password")
 
-        t.expect do |t, packet|
-          assert_equal USERAUTH_REQUEST, packet.type
-          assert verify_userauth_request_packet(packet, keys.last, false)
-          t.return(USERAUTH_FAILURE, :string, "hostbased,password")
+        t.expect do |t2, packet2|
+          assert_equal USERAUTH_REQUEST, packet2.type
+          assert verify_userauth_request_packet(packet2, keys.last, false)
+          t2.return(USERAUTH_FAILURE, :string, "hostbased,password")
         end
       end
 
@@ -40,22 +40,22 @@ module Authentication; module Methods
         assert verify_userauth_request_packet(packet, keys.first, false)
         t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
 
-        t.expect do |t,packet|
-          assert_equal USERAUTH_REQUEST, packet.type
-          assert verify_userauth_request_packet(packet, keys.first, true)
-          assert_equal "sig-one", packet.read_string
-          t.return(USERAUTH_FAILURE, :string, "hostbased,password")
+        t.expect do |t2,packet2|
+          assert_equal USERAUTH_REQUEST, packet2.type
+          assert verify_userauth_request_packet(packet2, keys.first, true)
+          assert_equal "sig-one", packet2.read_string
+          t2.return(USERAUTH_FAILURE, :string, "hostbased,password")
 
-          t.expect do |t, packet|
-            assert_equal USERAUTH_REQUEST, packet.type
-            assert verify_userauth_request_packet(packet, keys.last, false)
-            t.return(USERAUTH_PK_OK, :string, keys.last.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.last))
+          t2.expect do |t3, packet3|
+            assert_equal USERAUTH_REQUEST, packet3.type
+            assert verify_userauth_request_packet(packet3, keys.last, false)
+            t3.return(USERAUTH_PK_OK, :string, keys.last.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.last))
 
-            t.expect do |t,packet|
-              assert_equal USERAUTH_REQUEST, packet.type
-              assert verify_userauth_request_packet(packet, keys.last, true)
-              assert_equal "sig-two", packet.read_string
-              t.return(USERAUTH_FAILURE, :string, "hostbased,password")
+            t3.expect do |t4,packet4|
+              assert_equal USERAUTH_REQUEST, packet4.type
+              assert verify_userauth_request_packet(packet4, keys.last, true)
+              assert_equal "sig-two", packet4.read_string
+              t4.return(USERAUTH_FAILURE, :string, "hostbased,password")
             end
           end
         end
@@ -72,11 +72,11 @@ module Authentication; module Methods
         assert verify_userauth_request_packet(packet, keys.first, false)
         t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
 
-        t.expect do |t,packet|
-          assert_equal USERAUTH_REQUEST, packet.type
-          assert verify_userauth_request_packet(packet, keys.first, true)
-          assert_equal "sig-one", packet.read_string
-          t.return(USERAUTH_SUCCESS)
+        t.expect do |t2,packet2|
+          assert_equal USERAUTH_REQUEST, packet2.type
+          assert verify_userauth_request_packet(packet2, keys.first, true)
+          assert_equal "sig-one", packet2.read_string
+          t2.return(USERAUTH_SUCCESS)
         end
       end
 

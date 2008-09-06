@@ -4,7 +4,10 @@ require 'net/ssh/transport/session'
 # mocha adds #verify to Object, which throws off the host-key-verifier part of
 # these tests.
 
-Object.send(:undef_method, :verify)
+# can't use .include? because ruby18 uses strings and ruby19 uses symbols :/
+if Object.instance_methods.any? { |v| v.to_sym == :verify }
+  Object.send(:undef_method, :verify)
+end
 
 module Transport
 

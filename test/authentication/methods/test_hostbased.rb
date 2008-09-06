@@ -25,11 +25,11 @@ module Authentication; module Methods
         assert_equal "sig-one", packet.read_string
         t.return(USERAUTH_FAILURE, :string, "hostbased,password")
 
-        t.expect do |t, packet|
-          assert_equal USERAUTH_REQUEST, packet.type
-          assert verify_userauth_request_packet(packet, keys.last)
-          assert_equal "sig-two", packet.read_string
-          t.return(USERAUTH_FAILURE, :string, "hostbased,password")
+        t.expect do |t2, packet2|
+          assert_equal USERAUTH_REQUEST, packet2.type
+          assert verify_userauth_request_packet(packet2, keys.last)
+          assert_equal "sig-two", packet2.read_string
+          t2.return(USERAUTH_FAILURE, :string, "hostbased,password")
         end
       end
 

@@ -178,7 +178,7 @@ module Net; module SSH; module Connection
       return false unless preprocess(&block)
 
       r = listeners.keys
-      w = r.select { |w| w.respond_to?(:pending_write?) && w.pending_write? }
+      w = r.select { |w2| w2.respond_to?(:pending_write?) && w2.pending_write? }
       readers, writers, = IO.select(r, w, nil, wait)
 
       postprocess(readers, writers)
@@ -302,17 +302,17 @@ module Net; module SSH; module Connection
         channel.exec(command) do |ch, success|
           raise "could not execute command: #{command.inspect}" unless success
           
-          channel.on_data do |ch, data|
+          channel.on_data do |ch2, data|
             if block
-              block.call(ch, :stdout, data)
+              block.call(ch2, :stdout, data)
             else
               $stdout.print(data)
             end
           end
 
-          channel.on_extended_data do |ch, type, data|
+          channel.on_extended_data do |ch2, type, data|
             if block
-              block.call(ch, :stderr, data)
+              block.call(ch2, :stderr, data)
             else
               $stderr.print(data)
             end

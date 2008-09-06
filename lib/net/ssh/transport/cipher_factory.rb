@@ -18,6 +18,14 @@ module Net; module SSH; module Transport
       "none"                        => "none"
     }
 
+    # Returns true if the underlying OpenSSL library supports the given cipher,
+    # and false otherwise.
+    def self.supported?(name)
+      ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
+      return true if ossl_name == "none"
+      return OpenSSL::Cipher.ciphers.include?(ossl_name)
+    end
+
     # Retrieves a new instance of the named algorithm. The new instance
     # will be initialized using an iv and key generated from the given
     # iv, key, shared, hash and digester values. Additionally, the

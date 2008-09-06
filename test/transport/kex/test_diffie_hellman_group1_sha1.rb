@@ -66,9 +66,9 @@ module Transport; module Kex
           assert_equal KEXDH_INIT, buffer.type
           assert_equal dh.dh.pub_key, buffer.read_bignum
           t.return(KEXDH_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
-          connection.expect do |t, buffer|
-            assert_equal NEWKEYS, buffer.type
-            t.return(NEWKEYS)
+          connection.expect do |t2, buffer2|
+            assert_equal NEWKEYS, buffer2.type
+            t2.return(NEWKEYS)
           end
         end
 

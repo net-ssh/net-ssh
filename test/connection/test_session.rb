@@ -420,27 +420,27 @@ module Connection
         transport.expect do |t, p|
           assert_equal CHANNEL_OPEN, p.type
           t.return(CHANNEL_OPEN_CONFIRMATION, :long, p[:remote_id], :long, 0, :long, 0x20000, :long, 0x10000)
-          t.expect do |t, p2|
+          t.expect do |t2, p2|
             assert_equal CHANNEL_REQUEST, p2.type
             assert_equal "exec", p2[:request]
             assert_equal true, p2[:want_reply]
             assert_equal "ls", p2.read_string
 
-            t.return(CHANNEL_SUCCESS, :long, p[:remote_id])
+            t2.return(CHANNEL_SUCCESS, :long, p[:remote_id])
 
             0.step(data.length-1, 2) do |index|
               type = data[index]
               datum = data[index+1]
 
               if type == :stdout
-                t.return(CHANNEL_DATA, :long, p[:remote_id], :string, datum)
+                t2.return(CHANNEL_DATA, :long, p[:remote_id], :string, datum)
               else
-                t.return(CHANNEL_EXTENDED_DATA, :long, p[:remote_id], :long, 1, :string, datum)
+                t2.return(CHANNEL_EXTENDED_DATA, :long, p[:remote_id], :long, 1, :string, datum)
               end
             end
 
-            t.return(CHANNEL_CLOSE, :long, p[:remote_id])
-            t.expect { |t,p| assert_equal CHANNEL_CLOSE, p.type }
+            t2.return(CHANNEL_CLOSE, :long, p[:remote_id])
+            t2.expect { |t3,p3| assert_equal CHANNEL_CLOSE, p3.type }
           end
         end
       end

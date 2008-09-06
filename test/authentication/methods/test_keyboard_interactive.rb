@@ -29,11 +29,11 @@ module Authentication; module Methods
       transport.expect do |t,packet|
         assert_equal USERAUTH_REQUEST, packet.type
         t.return(USERAUTH_INFO_REQUEST, :string, "", :string, "", :string, "", :long, 1, :string, "Password:", :bool, false)
-        t.expect do |t,packet|
-          assert_equal USERAUTH_INFO_RESPONSE, packet.type
-          assert_equal 1, packet.read_long
-          assert_equal "the-password", packet.read_string
-          t.return(USERAUTH_FAILURE, :string, "publickey")
+        t.expect do |t2,packet2|
+          assert_equal USERAUTH_INFO_RESPONSE, packet2.type
+          assert_equal 1, packet2.read_long
+          assert_equal "the-password", packet2.read_string
+          t2.return(USERAUTH_FAILURE, :string, "publickey")
         end
       end
 
@@ -44,9 +44,9 @@ module Authentication; module Methods
       transport.expect do |t,packet|
         assert_equal USERAUTH_REQUEST, packet.type
         t.return(USERAUTH_INFO_REQUEST, :string, "", :string, "", :string, "", :long, 1, :string, "Password:", :bool, false)
-        t.expect do |t,packet|
-          assert_equal USERAUTH_INFO_RESPONSE, packet.type
-          t.return(USERAUTH_SUCCESS)
+        t.expect do |t2,packet2|
+          assert_equal USERAUTH_INFO_RESPONSE, packet2.type
+          t2.return(USERAUTH_SUCCESS)
         end
       end
 
@@ -57,12 +57,12 @@ module Authentication; module Methods
       transport.expect do |t,packet|
         assert_equal USERAUTH_REQUEST, packet.type
         t.return(USERAUTH_INFO_REQUEST, :string, "", :string, "", :string, "", :long, 2, :string, "Password:", :bool, false, :string, "Again:", :bool, false)
-        t.expect do |t,packet|
-          assert_equal USERAUTH_INFO_RESPONSE, packet.type
-          assert_equal 2, packet.read_long
-          assert_equal "the-password", packet.read_string
-          assert_equal "the-password", packet.read_string
-          t.return(USERAUTH_SUCCESS)
+        t.expect do |t2,packet2|
+          assert_equal USERAUTH_INFO_RESPONSE, packet2.type
+          assert_equal 2, packet2.read_long
+          assert_equal "the-password", packet2.read_string
+          assert_equal "the-password", packet2.read_string
+          t2.return(USERAUTH_SUCCESS)
         end
       end
 
@@ -76,12 +76,12 @@ module Authentication; module Methods
       transport.expect do |t,packet|
         assert_equal USERAUTH_REQUEST, packet.type
         t.return(USERAUTH_INFO_REQUEST, :string, "", :string, "", :string, "", :long, 2, :string, "Name:", :bool, true, :string, "Password:", :bool, false)
-        t.expect do |t,packet|
-          assert_equal USERAUTH_INFO_RESPONSE, packet.type
-          assert_equal 2, packet.read_long
-          assert_equal "name", packet.read_string
-          assert_equal "password", packet.read_string
-          t.return(USERAUTH_SUCCESS)
+        t.expect do |t2,packet2|
+          assert_equal USERAUTH_INFO_RESPONSE, packet2.type
+          assert_equal 2, packet2.read_long
+          assert_equal "name", packet2.read_string
+          assert_equal "password", packet2.read_string
+          t2.return(USERAUTH_SUCCESS)
         end
       end
 

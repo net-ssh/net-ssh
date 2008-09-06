@@ -51,13 +51,13 @@ module Transport; module Kex
           assert_equal need_bits, buffer.read_long
           assert_equal 8192, buffer.read_long
           t.return(KEXDH_GEX_GROUP, :bignum, bn(options[:p] || default_p), :bignum, bn(options[:g] || 2))
-          t.expect do |t, buffer|
-            assert_equal KEXDH_GEX_INIT, buffer.type
-            assert_equal dh.dh.pub_key, buffer.read_bignum
-            t.return(KEXDH_GEX_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
-            t.expect do |t, buffer|
-              assert_equal NEWKEYS, buffer.type
-              t.return(NEWKEYS)
+          t.expect do |t2, buffer2|
+            assert_equal KEXDH_GEX_INIT, buffer2.type
+            assert_equal dh.dh.pub_key, buffer2.read_bignum
+            t2.return(KEXDH_GEX_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
+            t2.expect do |t3, buffer3|
+              assert_equal NEWKEYS, buffer3.type
+              t3.return(NEWKEYS)
             end
           end
         end

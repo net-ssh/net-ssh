@@ -370,6 +370,8 @@ module Transport
     hmacs = Net::SSH::Transport::HMAC::MAP.keys
 
     ciphers.each do |cipher_name|
+      next unless Net::SSH::Transport::CipherFactory.supported?(cipher_name)
+
       hmacs.each do |hmac_name|
         [false, :standard].each do |compress|
           cipher_method_name = cipher_name.gsub(/\W/, "_")
