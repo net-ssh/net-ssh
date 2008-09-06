@@ -31,6 +31,12 @@ module Net; module SSH; module Transport
     # The number of data blocks processed since the last call to #reset!
     attr_reader :blocks
 
+    # The cipher algorithm in use for this socket endpoint.
+    attr_reader :cipher
+
+    # The role that this state plays (either :client or :server)
+    attr_reader :role
+
     # The maximum number of packets that this endpoint wants to process before
     # needing a rekey.
     attr_accessor :max_packets
@@ -45,15 +51,15 @@ module Net; module SSH; module Transport
 
     # Creates a new state object, belonging to the given socket. Initializes
     # the algorithms to "none".
-    def initialize(socket)
+    def initialize(socket, role)
       @socket = socket
+      @role = role
       @sequence_number = @packets = @blocks = 0
       @cipher = CipherFactory.get("none")
       @hmac = HMAC.get("none")
       @compression = nil
       @compressor = @decompressor = nil
-      @next_iv = nil
-      @cipher_needs_reset = false
+      @next_iv = ""
     end
 
     # A convenience method for quickly setting multiple values in a single
@@ -65,25 +71,16 @@ module Net; module SSH; module Transport
       reset!
     end
 
-    # The cipher algorithm in use for this socket endpoint.
-    def cipher
-      if @cipher_needs_reset
-        @cipher.reset
-        @cipher.iv = @next_iv
-        @cipher_needs_reset = false
-      end
-
-      @cipher
-    end
-
     def update_cipher(data)
-      @next_iv = data[-cipher.iv_len..-1]
-      cipher.update(data)
+      result = cipher.update(data)
+      update_next_iv(role == :client ? result : data)
+      return result
     end
 
     def final_cipher
-      @cipher_needs_reset = true
-      cipher.final
+      result = cipher.final
+      update_next_iv(role == :client ? result : "", true)
+      return result
     end
 
     # Increments the counters. The sequence number is incremented (and remapped
@@ -185,6 +182,20 @@ module Net; module SSH; module Transport
       max_packets && packets > max_packets ||
       max_blocks && blocks > max_blocks
     end
+
+    private
+
+      def update_next_iv(data, reset=false)
+        @next_iv << data
+        @next_iv = @next_iv[-cipher.iv_len..-1]
+
+        if reset
+          cipher.reset
+          cipher.iv = @next_iv
+        end
+
+        return data
+      end
   end
 
 end; end; end

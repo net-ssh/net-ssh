@@ -169,8 +169,8 @@ module Net; module SSH; module Transport
       # the states and generally prepares the object for use as a packet stream.
       def initialize_ssh
         @hints  = {}
-        @server = State.new(self)
-        @client = State.new(self)
+        @server = State.new(self, :server)
+        @client = State.new(self, :client)
         @packet = nil
         initialize_buffered_io
       end

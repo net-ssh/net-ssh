@@ -166,7 +166,7 @@ module Transport
       end
 
       def state
-        @state ||= Net::SSH::Transport::State.new(socket)
+        @state ||= Net::SSH::Transport::State.new(socket, :test)
       end
   end
 
