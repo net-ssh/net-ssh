@@ -39,6 +39,16 @@ module Net; module SSH; module Transport
       def name
         "identity"
       end
+
+      # Does nothing. Returns nil.
+      def iv=(v)
+        nil
+      end
+
+      # Does nothing. Returns self.
+      def reset
+        self
+      end
     end
   end
 

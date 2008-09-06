@@ -1,3 +1,8 @@
+=== (unreleased)
+
+* Fix Cipher#final to correctly flag a need for a cipher reset [Jamis Buck]
+
+
 === 2.0.4 / 27 Aug 2008
 
 * Added Connection::Session#closed? and Transport::Session#closed? [Jamis Buck]

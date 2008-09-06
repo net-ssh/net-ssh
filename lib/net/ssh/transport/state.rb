@@ -82,7 +82,7 @@ module Net; module SSH; module Transport
     end
 
     def final_cipher
-      @cipher_needs_reset
+      @cipher_needs_reset = true
       cipher.final
     end
 
