@@ -1,5 +1,7 @@
 === (unreleased)
 
+* Don't busy-wait on session close for remaining channels to close [Will Bryant]
+
 * Ruby 1.9 compatibility [Jamis Buck]
 
 * Fix Cipher#final to correctly flag a need for a cipher reset [Jamis Buck]
