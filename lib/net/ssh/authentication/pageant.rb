@@ -156,6 +156,13 @@ module Net; module SSH; module Authentication
         @pos = 0
       end
 
+      # Conceptually asks if the socket is closed. As with #close,
+      # this doesn't really do anything significant, but merely
+      # complies with the Socket interface.
+      def closed?
+        @res.nil? && @pos.zero?
+      end
+
       # Reads +n+ bytes from the cached result of the last query. If +n+
       # is +nil+, returns all remaining data from the last query.
       def read(n = nil)

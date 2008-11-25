@@ -1,5 +1,7 @@
 === (unreleased)
 
+* Make the Pageant interface comply with more of the Socket interface to avoid related errors [Jamis Buck]
+
 * Don't busy-wait on session close for remaining channels to close [Will Bryant]
 
 * Ruby 1.9 compatibility [Jamis Buck]
