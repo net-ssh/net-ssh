@@ -26,6 +26,7 @@ lib/net/ssh/proxy/errors.rb
 lib/net/ssh/proxy/http.rb
 lib/net/ssh/proxy/socks4.rb
 lib/net/ssh/proxy/socks5.rb
+lib/net/ssh/ruby_compat.rb
 lib/net/ssh/service/forward.rb
 lib/net/ssh/test/channel.rb
 lib/net/ssh/test/extensions.rb
@@ -60,6 +61,7 @@ lib/net/ssh/verifiers/null.rb
 lib/net/ssh/verifiers/strict.rb
 lib/net/ssh/version.rb
 lib/net/ssh.rb
+Manifest
 Rakefile
 README.rdoc
 setup.rb
@@ -73,6 +75,7 @@ test/authentication/test_agent.rb
 test/authentication/test_key_manager.rb
 test/authentication/test_session.rb
 test/common.rb
+test/configs/eqsign
 test/configs/exact_match
 test/configs/wild_cards
 test/connection/test_channel.rb
@@ -98,4 +101,4 @@ test/transport/test_server_version.rb
 test/transport/test_session.rb
 test/transport/test_state.rb
 THANKS.rdoc
-Manifest
+TODO
