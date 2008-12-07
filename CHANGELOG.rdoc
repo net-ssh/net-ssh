@@ -1,4 +1,4 @@
-=== (unreleased)
+=== 2.0.5 / 6 December 2008
 
 * Make the Pageant interface comply with more of the Socket interface to avoid related errors [Jamis Buck]
 
