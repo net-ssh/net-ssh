@@ -1,3 +1,8 @@
+=== 2.0.6 / 6 December 2008
+
+* Update the Manifest file so that the gem includes all necessary files [Jamis Buck]
+
+
 === 2.0.5 / 6 December 2008
 
 * Make the Pageant interface comply with more of the Socket interface to avoid related errors [Jamis Buck]
