@@ -3,7 +3,7 @@ require 'net/ssh/errors'
 require 'net/ssh/loggable'
 require 'net/ssh/transport/server_version'
 
-require 'net/ssh/authentication/pageant' if File::ALT_SEPARATOR
+require 'net/ssh/authentication/pageant' if File::ALT_SEPARATOR && !(RUBY_PLATFORM =~ /java/)
 
 module Net; module SSH; module Authentication
 

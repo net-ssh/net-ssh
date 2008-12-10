@@ -1,3 +1,8 @@
+=== (unreleased)
+
+* Don't include pageant when running under JRuby [Angel N. Sciortino]
+
+
 === 2.0.6 / 6 December 2008
 
 * Update the Manifest file so that the gem includes all necessary files [Jamis Buck]
