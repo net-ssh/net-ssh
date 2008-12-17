@@ -93,7 +93,7 @@ module Net
             public_key_file = file# + '.pub'
             if File.readable?(public_key_file)
               begin
-                key = KeyFactory.load_public_key(public_key_file)
+                key = KeyFactory.load_private_key(public_key_file)
                 identities.push key
                 known_identities[key] = { :from => :file, :file => file }
               rescue Exception => e
