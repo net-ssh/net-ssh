@@ -32,7 +32,7 @@ module Authentication
       manager.stubs(:agent).returns(nil)
 
       stub_file_key "/first", rsa
-      stub_file_key "/second", dsa
+      stub_file_key "/second", dsa      
 
       identities = manager.identities
       assert_equal 2, identities.length
