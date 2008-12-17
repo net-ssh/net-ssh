@@ -16,6 +16,7 @@ module Authentication; module Methods
     end
 
     def test_authenticate_should_return_false_if_no_keys_can_authenticate
+      ENV.stubs(:[]).with('USER').returns(nil)
       key_manager.expects(:sign).with(&signature_parameters(keys.first)).returns("sig-one")
       key_manager.expects(:sign).with(&signature_parameters(keys.last)).returns("sig-two")
 
@@ -37,6 +38,7 @@ module Authentication; module Methods
     end
 
     def test_authenticate_should_return_true_if_any_key_can_authenticate
+      ENV.stubs(:[]).with('USER').returns(nil)
       key_manager.expects(:sign).with(&signature_parameters(keys.first)).returns("sig-one")
 
       transport.expect do |t, packet|

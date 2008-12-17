@@ -7,6 +7,7 @@ require 'net/ssh/loggable'
 require 'net/ssh/packet'
 require 'net/ssh/transport/session'
 require 'ostruct'
+require 'rubygems'
 
 # clear the default files out so that tests don't get confused by existing
 # SSH config files.
