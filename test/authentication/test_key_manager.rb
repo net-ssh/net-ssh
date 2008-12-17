@@ -75,7 +75,7 @@ module Authentication
       def stub_file_key(name, key, also_private=false)
         manager.add(name)
         File.expects(:readable?).returns(true)
-        Net::SSH::KeyFactory.expects(:load_public_key).with("#{name}.pub").returns(key)
+        Net::SSH::KeyFactory.expects(:load_public_key).with("#{name}").returns(key)
         Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil).returns(key) if also_private
       end
 
