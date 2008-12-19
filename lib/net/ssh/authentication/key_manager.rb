@@ -89,8 +89,6 @@ module Net
           end
           
           key_files.each do |file|
-            # Faking the public key
-            # public_key_file = file# + '.pub'
             if File.readable?(file)
               begin
                 private_key = KeyFactory.load_private_key(file)
