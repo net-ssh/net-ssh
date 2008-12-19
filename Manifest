@@ -62,6 +62,7 @@ lib/net/ssh/verifiers/strict.rb
 lib/net/ssh/version.rb
 lib/net/ssh.rb
 Manifest
+net-ssh.gemspec
 Rakefile
 README.rdoc
 setup.rb
@@ -101,4 +102,3 @@ test/transport/test_server_version.rb
 test/transport/test_session.rb
 test/transport/test_state.rb
 THANKS.rdoc
-TODO

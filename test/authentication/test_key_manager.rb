@@ -32,13 +32,13 @@ module Authentication
       manager.stubs(:agent).returns(nil)
 
       stub_file_key "/first", rsa
-      stub_file_key "/second", dsa
+      stub_file_key "/second", dsa      
 
       identities = manager.identities
       assert_equal 2, identities.length
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
-
+      
       assert_equal({:from => :file, :file => "/first"}, manager.known_identities[rsa])
       assert_equal({:from => :file, :file => "/second"}, manager.known_identities[dsa])
     end
@@ -75,8 +75,8 @@ module Authentication
       def stub_file_key(name, key, also_private=false)
         manager.add(name)
         File.expects(:readable?).returns(true)
-        Net::SSH::KeyFactory.expects(:load_public_key).with("#{name}.pub").returns(key)
-        Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil).returns(key) if also_private
+        Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil).returns(key).at_least_once
+        key.expects(:public_key).returns(key)
       end
 
       def rsa(size=32)

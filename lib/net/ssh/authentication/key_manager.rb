@@ -87,12 +87,12 @@ module Net
               known_identities[key] = { :from => :agent }
             end
           end
-
+          
           key_files.each do |file|
-            public_key_file = file + '.pub'
-            if File.readable?(public_key_file)
+            if File.readable?(file)
               begin
-                key = KeyFactory.load_public_key(public_key_file)
+                private_key = KeyFactory.load_private_key(file)
+                key = private_key.send :public_key
                 identities.push key
                 known_identities[key] = { :from => :file, :file => file }
               rescue Exception => e

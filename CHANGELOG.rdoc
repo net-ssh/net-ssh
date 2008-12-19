@@ -1,5 +1,9 @@
 === (unreleased)
 
+* Make key manager use private keys instead of requiring public key to exist [arilerner@mac.com]
+
+* Fix failing tests [arilerner@mac.com]
+
 * Don't include pageant when running under JRuby [Angel N. Sciortino]
 
 
