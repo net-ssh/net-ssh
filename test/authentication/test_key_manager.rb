@@ -28,13 +28,15 @@ module Authentication
       assert !manager.use_agent?
     end
 
-    def test_identities_should_load_from_key_files
+    def test_each_identity_should_load_from_key_files
       manager.stubs(:agent).returns(nil)
 
       stub_file_key "/first", rsa
       stub_file_key "/second", dsa      
 
-      identities = manager.identities
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
       assert_equal 2, identities.length
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
@@ -45,7 +47,9 @@ module Authentication
 
     def test_identities_should_load_from_agent
       manager.stubs(:agent).returns(agent)
-      identities = manager.identities
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
 
       assert_equal 2, identities.length
       assert_equal rsa.to_blob, identities.first.to_blob
@@ -57,7 +61,7 @@ module Authentication
 
     def test_sign_with_agent_originated_key_should_request_signature_from_agent
       manager.stubs(:agent).returns(agent)
-      manager.identities
+      manager.each_identity { |identity| } # preload the known_identities
       agent.expects(:sign).with(rsa, "hello, world").returns("abcxyz123")
       assert_equal "abcxyz123", manager.sign(rsa, "hello, world")
     end
@@ -66,7 +70,7 @@ module Authentication
       manager.stubs(:agent).returns(nil)
       stub_file_key "/first", rsa(512), true
       rsa.expects(:ssh_do_sign).with("hello, world").returns("abcxyz123")
-      manager.identities
+      manager.each_identity { |identity| } # preload the known_identities
       assert_equal "\0\0\0\assh-rsa\0\0\0\011abcxyz123", manager.sign(rsa, "hello, world")
     end
 

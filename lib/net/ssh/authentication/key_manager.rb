@@ -74,17 +74,16 @@ module Net
           @agent = nil
         end
 
-        # Returns an array of identities (public keys) known to this manager.
+        # Iterates over all available identities (public keys) known to this
+        # manager. As it finds one, it will then yield it to the caller.
         # The origin of the identities may be from files on disk or from an
         # ssh-agent. Note that identities from an ssh-agent are always listed
         # first in the array, with other identities coming after.
-        def identities
-          identities = []
-
+        def each_identity
           if agent
             agent.identities.each do |key|
-              identities.push key
               known_identities[key] = { :from => :agent }
+              yield key
             end
           end
           
@@ -93,15 +92,15 @@ module Net
               begin
                 private_key = KeyFactory.load_private_key(file)
                 key = private_key.send :public_key
-                identities.push key
                 known_identities[key] = { :from => :file, :file => file }
+                yield key
               rescue Exception => e
                 error { "could not load public key file `#{file}.pub': #{e.class} (#{e.message})" }
               end
             end
           end
 
-          identities
+          self
         end
 
         # Sign the given data, using the corresponding private key of the given

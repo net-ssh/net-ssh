@@ -110,7 +110,11 @@ module Authentication; module Methods
       end
 
       def key_manager(options={})
-        @key_manager ||= stub("key_manager", :identities => options[:keys] || keys)
+        @key_manager ||= begin
+          manager = stub("key_manager")
+          manager.stubs(:each_identity).multiple_yields(*(options[:keys] || keys))
+          manager
+        end
       end
 
       def subject(options={})
