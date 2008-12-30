@@ -1,4 +1,4 @@
-=== (unreleased)
+=== 2.0.7 / 29 December 2008
 
 * Make key manager use private keys instead of requiring public key to exist [arilerner@mac.com]
 
