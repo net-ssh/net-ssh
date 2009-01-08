@@ -90,7 +90,7 @@ module Net
           key_files.each do |file|
             if File.readable?(file)
               begin
-                private_key = KeyFactory.load_private_key(file)
+                private_key = KeyFactory.load_private_key(file,options[:passphrase])
                 key = private_key.send :public_key
                 known_identities[key] = { :from => :file, :file => file }
                 yield key
