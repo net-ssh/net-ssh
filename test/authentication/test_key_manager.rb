@@ -41,8 +41,8 @@ module Authentication
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
       
-      assert_equal({:from => :file, :file => "/first"}, manager.known_identities[rsa])
-      assert_equal({:from => :file, :file => "/second"}, manager.known_identities[dsa])
+      assert_equal({:from => :file, :file => "/first", :key => rsa}, manager.known_identities[rsa])
+      assert_equal({:from => :file, :file => "/second", :key => dsa}, manager.known_identities[dsa])
     end
 
     def test_identities_should_load_from_agent
@@ -78,7 +78,8 @@ module Authentication
 
       def stub_file_key(name, key, also_private=false)
         manager.add(name)
-        File.expects(:readable?).returns(true)
+        File.expects(:readable?).with(name).returns(true)
+        File.expects(:readable?).with(name + ".pub").returns(false)
         Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil).returns(key).at_least_once
         key.expects(:public_key).returns(key)
       end

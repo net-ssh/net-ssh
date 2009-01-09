@@ -88,14 +88,23 @@ module Net
           end
           
           key_files.each do |file|
-            if File.readable?(file)
+            public_key_file = file + ".pub"
+            if File.readable?(public_key_file)
               begin
-                private_key = KeyFactory.load_private_key(file,options[:passphrase])
-                key = private_key.send :public_key
+                key = KeyFactory.load_public_key(public_key_file)
                 known_identities[key] = { :from => :file, :file => file }
                 yield key
               rescue Exception => e
-                error { "could not load public key file `#{file}.pub': #{e.class} (#{e.message})" }
+                error { "could not load public key file `#{public_key_file}': #{e.class} (#{e.message})" }
+              end
+            elsif File.readable?(file)
+              begin
+                private_key = KeyFactory.load_private_key(file, options[:passphrase])
+                key = private_key.send(:public_key)
+                known_identities[key] = { :from => :file, :file => file, :key => private_key }
+                yield key
+              rescue Exception => e
+                error { "could not load private key file `#{file}': #{e.class} (#{e.message})" }
               end
             end
           end
