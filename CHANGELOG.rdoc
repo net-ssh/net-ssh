@@ -1,5 +1,7 @@
 === unreleased
 
+* Ignore requests for non-existent channels (workaround ssh server bug) [Jamis Buck]
+
 * Add terminate! method for hard shutdown scenarios [Jamis Buck]
 
 * Revert to pre-2.0.7 key-loading behavior by default, but load private-key if public-key doesn't exist [Jamis Buck]

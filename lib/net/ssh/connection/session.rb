@@ -46,6 +46,16 @@ module Net; module SSH; module Connection
     # The list of callbacks for pending requests. See #send_global_request.
     attr_reader :pending_requests #:nodoc:
 
+    class NilChannel
+      def initialize(session)
+        @session = session
+      end
+
+      def method_missing(sym, *args)
+        @session.lwarn { "ignoring request #{sym.inspect} for non-existent (closed?) channel; probably ssh server bug" }
+      end
+    end
+
     # Create a new connection service instance atop the given transport
     # layer. Initializes the listeners to be only the underlying socket object.
     def initialize(transport, options={})
@@ -55,7 +65,7 @@ module Net; module SSH; module Connection
       @options = options
 
       @channel_id_counter = -1
-      @channels = {}
+      @channels = Hash.new(NilChannel.new(self))
       @listeners = { transport.socket => nil }
       @pending_requests = []
       @channel_open_handlers = {}

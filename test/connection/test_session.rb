@@ -257,6 +257,11 @@ module Connection
       process_times(2)
     end
 
+    def test_channel_request_for_nonexistant_channel_should_be_ignored
+      transport.return(CHANNEL_REQUEST, :long, 14, :string, "testing", :bool, false)
+      assert_nothing_raised { process_times(2) }
+    end
+
     def test_channel_request_packet_should_be_routed_to_corresponding_channel
       channel_at(14).expects(:do_request).with("testing", false, Net::SSH::Buffer.new)
       transport.return(CHANNEL_REQUEST, :long, 14, :string, "testing", :bool, false)
