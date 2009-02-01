@@ -159,6 +159,7 @@ module Net
         else Array(options[:config])
         end
       
+      options[:user] = user if user
       options = Net::SSH::Config.for(host, files).merge(options)
       host = options.fetch(:host_name, host)
 

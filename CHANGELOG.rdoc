@@ -1,5 +1,7 @@
 === unreleased
 
+* Specifying non-nil user argument overrides user in .ssh/config [Jamis Buck]
+
 * Ignore requests for non-existent channels (workaround ssh server bug) [Jamis Buck]
 
 * Add terminate! method for hard shutdown scenarios [Jamis Buck]
