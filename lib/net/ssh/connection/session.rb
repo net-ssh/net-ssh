@@ -100,6 +100,14 @@ module Net; module SSH; module Connection
       transport.close
     end
 
+    # Performs a "hard" shutdown of the connection. In general, this should
+    # never be done, but it might be necessary (in a rescue clause, for instance,
+    # when the connection needs to close but you don't know the status of the
+    # underlying protocol's state).
+    def shutdown!
+      transport.shutdown!
+    end
+
     # preserve a reference to Kernel#loop
     alias :loop_forever :loop
 

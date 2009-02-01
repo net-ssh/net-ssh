@@ -1,5 +1,7 @@
 === unreleased
 
+* Add terminate! method for hard shutdown scenarios [Jamis Buck]
+
 * Revert to pre-2.0.7 key-loading behavior by default, but load private-key if public-key doesn't exist [Jamis Buck]
 
 * Make sure :passphrase option gets passed to key manager [Bob Cotton]

@@ -104,6 +104,15 @@ module Net; module SSH; module Transport
       socket.close
     end
 
+    # Performs a "hard" shutdown of the connection. In general, this should
+    # never be done, but it might be necessary (in a rescue clause, for instance,
+    # when the connection needs to close but you don't know the status of the
+    # underlying protocol's state).
+    def shutdown!
+      error { "forcing connection closed" }
+      socket.close
+    end
+
     # Returns a new service_request packet for the given service name, ready
     # for sending to the server.
     def service_request(service)
