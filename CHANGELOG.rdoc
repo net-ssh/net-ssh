@@ -1,4 +1,4 @@
-=== unreleased
+=== 2.0.9 / 1 Feb 2009
 
 * Specifying non-nil user argument overrides user in .ssh/config [Jamis Buck]
 
