@@ -1,3 +1,8 @@
+=== (unreleased)
+
+* Added Net::SSH.configuration_for to make it easier to query the SSH configuration file(s) [Jamis Buck]
+
+
 === 2.0.9 / 1 Feb 2009
 
 * Specifying non-nil user argument overrides user in .ssh/config [Jamis Buck]

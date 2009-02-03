@@ -153,14 +153,8 @@ module Net
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
       end
 
-      files = case options.fetch(:config, true)
-        when true then Net::SSH::Config.default_files
-        when false, nil then []
-        else Array(options[:config])
-        end
-      
       options[:user] = user if user
-      options = Net::SSH::Config.for(host, files).merge(options)
+      options = configuration_for(host, options.fetch(:config, true)).merge(options)
       host = options.fetch(:host_name, host)
 
       if !options.key?(:logger)
@@ -195,6 +189,25 @@ module Net
       else
         raise AuthenticationFailed, user
       end
+    end
+
+    # Returns a hash of the configuration options for the given host, as read
+    # from the SSH configuration file(s). If +use_ssh_config+ is true (the
+    # default), this will load configuration from both ~/.ssh/config and
+    # /etc/ssh_config. If +use_ssh_config+ is nil or false, nothing will be
+    # loaded (and an empty hash returned). Otherwise, +use_ssh_config+ may
+    # be a file name (or array of file names) of SSH configuration file(s)
+    # to read.
+    #
+    # See Net::SSH::Config for the full description of all supported options.
+    def self.configuration_for(host, use_ssh_config=true)
+      files = case use_ssh_config
+        when true then Net::SSH::Config.default_files
+        when false, nil then return {}
+        else Array(use_ssh_config)
+        end
+      
+      Net::SSH::Config.for(host, files)
     end
   end
 end
