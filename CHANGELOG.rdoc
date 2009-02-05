@@ -1,4 +1,4 @@
-=== (unreleased)
+=== 2.0.10 / 4 Feb 2009
 
 * Added Net::SSH.configuration_for to make it easier to query the SSH configuration file(s) [Jamis Buck]
 
