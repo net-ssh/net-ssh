@@ -62,7 +62,7 @@ module Net
     # Net::SSH.start for a description of each option.
     VALID_OPTIONS = [
       :auth_methods, :compression, :compression_level, :config, :encryption,
-      :forward_agent, :hmac, :host_key, :kex, :keys, :languages,
+      :forward_agent, :hmac, :host_key, :kex, :keys, :key_data, :languages,
       :logger, :paranoid, :password, :port, :proxy, :rekey_blocks_limit,
       :rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
@@ -123,6 +123,8 @@ module Net
     # * :kex => the key exchange algorithm (or algorithms) to use
     # * :keys => an array of file names of private keys to use for publickey
     #   and hostbased authentication
+    # * :key_data => an array of strings, with each element of the array being
+    #   a raw private key in PEM format.
     # * :logger => the logger instance to use when logging
     # * :paranoid => either true, false, or :very, specifying how strict
     #   host-key verification should be

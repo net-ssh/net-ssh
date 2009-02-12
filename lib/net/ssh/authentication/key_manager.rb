@@ -27,6 +27,9 @@ module Net
         # The list of user key files that will be examined
         attr_reader :key_files
 
+        # The list of user key data that will be examined
+        attr_reader :key_data
+
         # The map of loaded identities
         attr_reader :known_identities
 
@@ -38,6 +41,7 @@ module Net
         def initialize(logger, options={})
           self.logger = logger
           @key_files = []
+          @key_data = []
           @use_agent = true
           @known_identities = {}
           @agent = nil
@@ -50,6 +54,7 @@ module Net
         # files.
         def clear!
           key_files.clear
+          key_data.clear
           known_identities.clear
           self
         end
@@ -57,6 +62,12 @@ module Net
         # Add the given key_file to the list of key files that will be used.
         def add(key_file)
           key_files.push(File.expand_path(key_file)).uniq!
+          self
+        end
+
+        # Add the given key_file to the list of keys that will be used.
+        def add_key_data(key_data_)
+          key_data.push(key_data_).uniq!
           self
         end
 
@@ -107,6 +118,13 @@ module Net
                 error { "could not load private key file `#{file}': #{e.class} (#{e.message})" }
               end
             end
+          end
+
+          key_data.each do |data|
+            private_key = KeyFactory.load_data_private_key(data)
+            key = private_key.send(:public_key)
+            known_identities[key] = { :from => :key_data, :data => data, :key => private_key }
+            yield key
           end
 
           self
