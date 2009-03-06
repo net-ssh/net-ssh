@@ -40,10 +40,18 @@ module Net; module SSH; module Transport
       def negotiate!(socket)
         info { "negotiating protocol version" }
 
-        loop do
-          @version = socket.readline
-          break if @version.nil? || @version.match(/^SSH-/)
-          @header << @version
+        catch :DEAD do
+          loop do
+            @version = ""
+            loop do
+              b = socket.recv(1)
+              throw :DEAD if b.nil?
+              @version << b
+              break if b == "\n"
+            end
+            break if @version.match(/^SSH-/)
+            @header << @version
+          end
         end
 
         @version.chomp!
@@ -55,6 +63,7 @@ module Net; module SSH; module Transport
 
         debug { "local is `#{PROTO_VERSION}'" }
         socket.write "#{PROTO_VERSION}\r\n"
+        socket.flush
       end
   end
 end; end; end
