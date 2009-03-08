@@ -40,18 +40,18 @@ module Net; module SSH; module Transport
       def negotiate!(socket)
         info { "negotiating protocol version" }
 
-        catch :DEAD do
+        loop do
+          @version = ""
           loop do
-            @version = ""
-            loop do
-              b = socket.recv(1)
-              throw :DEAD if b.nil?
-              @version << b
-              break if b == "\n"
+            b = socket.recv(1)
+            if b.nil?
+              raise Net::SSH::Disconnect, "connection closed by remote host"
             end
-            break if @version.match(/^SSH-/)
-            @header << @version
+            @version << b
+            break if b == "\n"
           end
+          break if @version.match(/^SSH-/)
+          @header << @version
         end
 
         @version.chomp!
