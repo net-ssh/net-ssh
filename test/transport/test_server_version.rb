@@ -29,16 +29,26 @@ module Transport
     end
 
     def test_header_lines_should_be_accumulated
-      s = subject(socket(true, "Welcome\r\n", "Another line\r\n", "SSH-2.0-Testing_1.0\r\n"))
+      s = subject(socket(true, "Welcome\r\nAnother line\r\nSSH-2.0-Testing_1.0\r\n"))
       assert_equal "Welcome\r\nAnother line\r\n", s.header
       assert_equal "SSH-2.0-Testing_1.0", s.version
     end
 
+    def test_server_disconnect_should_raise_exception
+      assert_raises(Net::SSH::Disconnect) { subject(socket(false, "SSH-2.0-Aborting")) }
+    end
+
     private
 
-      def socket(good, *lines)
+      def socket(good, version_header)
         socket = mock("socket")
-        socket.expects(:recv).with(1).times(lines.join.length).returns(*lines.join.split(''))
+
+        data = version_header.split('')
+        recv_times = data.length
+        if data[-1] != "\n"
+            recv_times += 1
+        end
+        socket.expects(:recv).with(1).times(recv_times).returns(*data).then.returns(nil)
 
         if good
           socket.expects(:write).with("#{Net::SSH::Transport::ServerVersion::PROTO_VERSION}\r\n")
