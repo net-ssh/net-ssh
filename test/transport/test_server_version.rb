@@ -38,10 +38,11 @@ module Transport
 
       def socket(good, *lines)
         socket = mock("socket")
-        socket.expects(:readline).times(lines.length).returns(*lines)
+        socket.expects(:recv).with(1).times(lines.join.length).returns(*lines.join.split(''))
 
         if good
           socket.expects(:write).with("#{Net::SSH::Transport::ServerVersion::PROTO_VERSION}\r\n")
+          socket.expects(:flush)
         else
           socket.expects(:write).never
         end
