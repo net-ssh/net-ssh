@@ -1,3 +1,8 @@
+=== (unreleased)
+
+* Use unbuffered reads when negotiating the protocol version [Steven Hazel]
+
+
 === 2.0.11 / 24 Feb 2009
 
 * Add :key_data option for specifying raw private keys in PEM format [Alex Holems, Andrew Babkin]
