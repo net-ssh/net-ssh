@@ -3,6 +3,11 @@
 * Use unbuffered reads when negotiating the protocol version [Steven Hazel]
 
 
+=== 2.0.12 / 08 Jun 2009
+
+* Applied patch for arcfour128 and arcfour256 support [Denis Bernard]
+
+
 === 2.0.11 / 24 Feb 2009
 
 * Add :key_data option for specifying raw private keys in PEM format [Alex Holems, Andrew Babkin]
