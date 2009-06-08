@@ -19,7 +19,7 @@ module Transport
     def test_constructor_should_build_default_list_of_preferred_algorithms
       assert_equal %w(ssh-rsa ssh-dss), algorithms[:host_key]
       assert_equal %w(diffie-hellman-group-exchange-sha1 diffie-hellman-group1-sha1), algorithms[:kex]
-      assert_equal %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se idea-cbc none), algorithms[:encryption]
+      assert_equal %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256), algorithms[:encryption]
       assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 none), algorithms[:hmac]
       assert_equal %w(none zlib@openssh.com zlib), algorithms[:compression]
       assert_equal %w(), algorithms[:language]
@@ -54,11 +54,11 @@ module Transport
     end
 
     def test_constructor_with_preferred_encryption_should_put_preferred_encryption_first
-      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none), algorithms(:encryption => "aes256-cbc")[:encryption]
+      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256), algorithms(:encryption => "aes256-cbc")[:encryption]
     end
 
     def test_constructor_with_multiple_preferred_encryption_should_put_all_preferred_encryption_first
-      assert_equal %w(aes256-cbc 3des-cbc idea-cbc aes128-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se none), algorithms(:encryption => %w(aes256-cbc 3des-cbc idea-cbc))[:encryption]
+      assert_equal %w(aes256-cbc 3des-cbc idea-cbc aes128-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se none arcfour128 arcfour256), algorithms(:encryption => %w(aes256-cbc 3des-cbc idea-cbc))[:encryption]
     end
 
     def test_constructor_with_unrecognized_encryption_should_raise_exception
@@ -268,8 +268,8 @@ module Transport
         assert_equal 16, buffer.read(16).length
         assert_equal options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1", buffer.read_string
         assert_equal options[:host_key] || "ssh-rsa,ssh-dss", buffer.read_string
-        assert_equal options[:encryption_client] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none", buffer.read_string
-        assert_equal options[:encryption_server] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none", buffer.read_string
+        assert_equal options[:encryption_client] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none,arcfour128,arcfour256", buffer.read_string
+        assert_equal options[:encryption_server] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none,arcfour128,arcfour256", buffer.read_string
         assert_equal options[:hmac_client] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96,none", buffer.read_string
         assert_equal options[:hmac_server] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96,none", buffer.read_string
         assert_equal options[:compression_client] || "none,zlib@openssh.com,zlib", buffer.read_string
