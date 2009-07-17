@@ -1,3 +1,51 @@
+= Foreword
+
+This is a patched version of Ruby's Net::SSH implementation which works around a bug in Ruby's OpenSSL implementation.  Ruby's OpenSSL bindings always return a key length of 16 for RC4 ciphers, which means that when we try to use ARCFOUR256 or higher, Net::SSH generates keys which are consistently too short - 16 bytes as opposed to 32 bytes - resulting in the following error:
+
+  OpenSSL::CipherError: key length too short
+  
+My patch simply instructs Net::SSH to build keys of the the proper length, regardless of the required key length reported by OpenSSL.
+
+Unfortunately I was not able to locate the bug in Ruby's OpenSSL implementation...to be honest I can't see where it invokes the underlying C OpenSSL libraries or where it defines the +key_len+ method on the +Cipher+ object.
+
+You should also be aware that your OpenSSL C libraries may also contain this bug.  I've updated to 0.9.8k, but according to this thread[https://bugzilla.mindrot.org/show_bug.cgi?id=1291], the bug existed as recently as 0.9.8e!  I've manually taken a look at my header files and they look ok, which is what makes me think it's a bug in the Ruby implementation.
+
+To see your OpenSSL version:
+
+  $ openssl version
+  OpenSSL 0.9.8k 25 Mar 2009
+  
+After installing this gem, verify that Net::SSH is generating keys of the correct length. Open +irb+ and type the following:
+
+  require 'net/ssh'
+  a = Net::SSH::Transport::CipherFactory.get_lengths('arcfour256')
+  a = Net::SSH::Transport::CipherFactory.get('arcfour256', {:key => ([].fill('a', 0, 32).join) })
+  a = Net::SSH::Transport::CipherFactory.get_lengths('arcfour512')
+  a = Net::SSH::Transport::CipherFactory.get('arcfour512', {:key => ([].fill('a', 0, 64).join) })
+  a = Net::SSH::Transport::CipherFactory.get('arcfour256', {:key => ([].fill('a', 0, 16).join) })
+
+This should output:
+
+  >   require 'net/ssh'
+  => []
+  >>   a = Net::SSH::Transport::CipherFactory.get_lengths('arcfour256')
+  => [32, 8]
+  >>   a = Net::SSH::Transport::CipherFactory.get('arcfour256', {:key => ([].fill('a', 0, 32).join) })
+  => #<OpenSSL::Cipher::Cipher:0x261bf3c>
+  >>   a = Net::SSH::Transport::CipherFactory.get_lengths('arcfour512')
+  => [64, 8]
+  >>   a = Net::SSH::Transport::CipherFactory.get('arcfour512', {:key => ([].fill('a', 0, 64).join) })
+  => #<OpenSSL::Cipher::Cipher:0x260f14c>
+  >> a = Net::SSH::Transport::CipherFactory.get('arcfour256', {:key => ([].fill('a', 0, 16).join) })
+  NoMethodError: You have a nil object when you didn't expect it!
+  You might have expected an instance of Array.
+  The error occurred while evaluating nil.+
+  	from /Library/Ruby/Gems/1.8/gems/net-ssh-2.0.12/lib/net/ssh/transport/cipher_factory.rb:81:in `make_key'
+  	from /Library/Ruby/Gems/1.8/gems/net-ssh-2.0.12/lib/net/ssh/transport/cipher_factory.rb:49:in `get'
+  	from (irb):12
+
+The last exception is because the key isn't long enough.  It's not pretty, and not informative, but that's life :)
+
 = Net::SSH
 
 * http://net-ssh.rubyforge.org/ssh
@@ -12,6 +60,7 @@ Net::SSH is a pure-Ruby implementation of the SSH2 client protocol. It allows yo
 * Run multiple processes in parallel over a single SSH connection
 * Support for SSH subsystems
 * Forward local and remote ports via an SSH connection
+* Supports ARCFOUR256 and ARCFOUR512 ciphers
 
 == SYNOPSIS:
 

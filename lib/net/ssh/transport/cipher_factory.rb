@@ -17,6 +17,7 @@ module Net; module SSH; module Transport
       "rijndael-cbc@lysator.liu.se" => "aes-256-cbc",
       "arcfour128"                  => "rc4",
       "arcfour256"                  => "rc4",
+      "arcfour512"                  => "rc4",
       "none"                        => "none"
     }
 
@@ -42,8 +43,10 @@ module Net; module SSH; module Transport
 
       cipher.padding = 0
       cipher.iv      = make_key(cipher.iv_len, options[:iv], options) if ossl_name != "rc4"
-      cipher.key_len = 32 if name == "arcfour256"
-      cipher.key     = make_key(cipher.key_len, options[:key], options)
+      key_len = cipher.key_len
+      cipher.key_len = key_len = 32 if name == "arcfour256"
+      cipher.key_len = key_len = 64 if name == "arcfour512"
+      cipher.key     = make_key(key_len, options[:key], options)
       cipher.update(" " * 1536) if ossl_name == "rc4"
 
       return cipher
@@ -58,7 +61,10 @@ module Net; module SSH; module Transport
       return [0, 0] if ossl_name.nil? || ossl_name == "none"
 
       cipher = OpenSSL::Cipher::Cipher.new(ossl_name)
-      return [cipher.key_len, ossl_name=="rc4" ? 8 : cipher.block_size]
+      key_len = cipher.key_len
+      key_len = 32 if name == "arcfour256"
+      key_len = 64 if name == "arcfour512"
+      return [key_len, ossl_name=="rc4" ? 8 : cipher.block_size]
     end
 
     private
