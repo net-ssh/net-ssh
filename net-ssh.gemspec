@@ -100,6 +100,7 @@
   test/common.rb
   test/configs/eqsign
   test/configs/exact_match
+  test/configs/multihost
   test/configs/wild_cards
   test/connection/test_channel.rb
   test/connection/test_session.rb

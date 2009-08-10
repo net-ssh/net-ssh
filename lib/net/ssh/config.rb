@@ -57,11 +57,12 @@ module Net; module SSH
       def load(file, host, settings={})
         file = File.expand_path(file)
         return settings unless File.readable?(file)
-
-        in_match = false
+        
+        matched_host = nil
+        multi_host = []
         IO.foreach(file) do |line|
           next if line =~ /^\s*(?:#.*)?$/
-
+          
           if line =~ /^\s*(\S+)\s*=(.*)$/
             key, value = $1, $2
           else
@@ -82,8 +83,12 @@ module Net; module SSH
             end
 
           if key == 'host'
-            in_match = (host =~ pattern2regex(value))
-          elsif in_match
+            # Support "Host host1,host2,hostN".
+            # See http://github.com/net-ssh/net-ssh/issues#issue/6
+            multi_host = value.split(/,\s+/)
+            matched_host = multi_host.select { |h| host =~ pattern2regex(h) }.first
+            p matched_host
+          elsif !matched_host.nil?
             if key == 'identityfile'
               settings[key] ||= []
               settings[key] << value
@@ -92,7 +97,7 @@ module Net; module SSH
             end
           end
         end
-
+        
         return settings
       end
 

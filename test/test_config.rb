@@ -37,7 +37,22 @@ class TestConfig < Test::Unit::TestCase
     assert_equal %w(~/.ssh/id_dsa), config[:keys]
     assert !config.key?(:rekey_limit)
   end
-
+  
+  def test_load_with_multiple_hosts
+    config = Net::SSH::Config.load(config(:multihost), "test.host")
+    assert config['compression']
+    assert_equal '2G', config['rekeylimit']
+    assert_equal 1980, config['port']
+  end
+  
+  def test_load_with_multiple_hosts_and_config_should_match_for_both
+    aconfig = Net::SSH::Config.load(config(:multihost), "test.host")
+    bconfig = Net::SSH::Config.load(config(:multihost), "other.host")
+    assert_equal aconfig['port'], bconfig['port']
+    assert_equal aconfig['compression'], bconfig['compression']
+    assert_equal aconfig['rekeylimit'], bconfig['rekeylimit']
+  end
+  
   def test_load_should_parse_equal_sign_delimiters
     config = Net::SSH::Config.load(config(:eqsign), "test.test")
     assert config['compression']
