@@ -47,6 +47,18 @@ module Transport
       assert_equal [32,16], factory.get_lengths("aes256-cbc")
     end
 
+    def test_lengths_for_arcfour128
+      assert_equal [16,8], factory.get_lengths("arcfour128")
+    end
+    
+    def test_lengths_for_arcfour256
+      assert_equal [32,8], factory.get_lengths("arcfour256")
+    end
+    
+    def test_lengths_for_arcfour512
+      assert_equal [64,8], factory.get_lengths("arcfour512")
+    end
+    
     BLOWFISH = "\210\021\200\315\240_\026$\352\204g\233\244\242x\332e\370\001\327\224Nv@9_\323\037\252kb\037\036\237\375]\343/y\037\237\312Q\f7]\347Y\005\275%\377\0010$G\272\250B\265Nd\375\342\372\025r6}+Y\213y\n\237\267\\\374^\346BdJ$\353\220Ik\023<\236&H\277=\225"
 
     def test_blowfish_cbc_for_encryption
