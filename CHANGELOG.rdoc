@@ -1,11 +1,9 @@
-=== (unreleased)
-
-* Use unbuffered reads when negotiating the protocol version [Steven Hazel]
 
 
-=== 2.0.12 / 08 Jun 2009
+=== 2.0.12 / ?? Aug 2009
 
 * Applied patch for arcfour128 and arcfour256 support [Denis Bernard]
+* Use unbuffered reads when negotiating the protocol version [Steven Hazel]
 
 
 === 2.0.11 / 24 Feb 2009
