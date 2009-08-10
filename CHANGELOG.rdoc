@@ -2,6 +2,8 @@
 
 === 2.0.13 / ?? Aug 2009
 
+* Applied patch for Socks5 negotiation fix [Gerald Talton]
+
 * Added support for specifying a list of hosts in .ssh/config, with tests (GH-6) [Delano Mandelbaum]
 
 * Added tests for arcfour128/256/512 lengths, encryption, and decryption [Delano Mandelbaum]
