@@ -2,7 +2,12 @@
 
 === 2.0.12 / ?? Aug 2009
 
+* Skip packet stream tests for arcfour128/256/512 [Delano Mandelbaum]
+
+* Fix for OpenSSL cipher key length because it always returns 16, even when 32 byte keys are required, e.g. for arcfour256 and arcfour512 ciphers [Karl Varga]
+
 * Applied patch for arcfour128 and arcfour256 support [Denis Bernard]
+
 * Use unbuffered reads when negotiating the protocol version [Steven Hazel]
 
 
