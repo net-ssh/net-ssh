@@ -87,7 +87,6 @@ module Net; module SSH
             # See http://github.com/net-ssh/net-ssh/issues#issue/6
             multi_host = value.split(/,\s+/)
             matched_host = multi_host.select { |h| host =~ pattern2regex(h) }.first
-            p matched_host
           elsif !matched_host.nil?
             if key == 'identityfile'
               settings[key] ||= []
