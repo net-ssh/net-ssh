@@ -6,7 +6,7 @@
 	s.description = s.summary
 	s.author = "Jamis Buck"
 	s.email = "net-ssh@solutious.com"
-	s.homepage = "http://github.com/net-ssh/net-ssh"
+	s.homepage = "http://rubyforge.org/projects/net-ssh/"
   
   s.extra_rdoc_files = %w[README.rdoc THANKS.rdoc CHANGELOG.rdoc]
   s.has_rdoc = true
@@ -87,6 +87,7 @@
   lib/net/ssh/version.rb
   net-ssh.gemspec
   setup.rb
+  support/arcfour_check.rb
   test/authentication/methods/common.rb
   test/authentication/methods/test_abstract.rb
   test/authentication/methods/test_hostbased.rb

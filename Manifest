@@ -67,6 +67,7 @@ lib/net/ssh/verifiers/strict.rb
 lib/net/ssh/version.rb
 net-ssh.gemspec
 setup.rb
+support/arcfour_check.rb
 test/authentication/methods/common.rb
 test/authentication/methods/test_abstract.rb
 test/authentication/methods/test_hostbased.rb
