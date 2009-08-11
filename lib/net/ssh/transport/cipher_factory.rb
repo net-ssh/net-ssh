@@ -79,10 +79,10 @@ module Net; module SSH; module Transport
       # Generate a key value in accordance with the SSH2 specification.
       def self.make_key(bytes, start, options={})
         k = start[0, bytes]
-
-        digester = options[:digester]
-        shared   = options[:shared]
-        hash     = options[:hash]
+        
+        digester = options[:digester] or raise 'No digester supplied'
+        shared   = options[:shared] or raise 'No shared secret supplied'
+        hash     = options[:hash] or raise 'No hash supplied'
 
         while k.length < bytes
           step = digester.digest(shared + hash + k)
