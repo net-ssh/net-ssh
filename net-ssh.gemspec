@@ -12,7 +12,7 @@
   s.has_rdoc = true
   s.rdoc_options = ["--line-numbers", "--title", s.summary, "--main", "README.rdoc"]
   s.require_paths = %w[lib]
-  s.rubygems_version = '1.1.1'
+  s.rubygems_version = '1.3.2'
   
   s.executables = %w[]
   
@@ -22,6 +22,7 @@
   Manifest
   README.rdoc
   Rakefile
+  Rudyfile
   THANKS.rdoc
   lib/net/ssh.rb
   lib/net/ssh/authentication/agent.rb

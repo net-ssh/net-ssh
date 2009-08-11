@@ -2,6 +2,7 @@ CHANGELOG.rdoc
 Manifest
 README.rdoc
 Rakefile
+Rudyfile
 THANKS.rdoc
 lib/net/ssh.rb
 lib/net/ssh/authentication/agent.rb
