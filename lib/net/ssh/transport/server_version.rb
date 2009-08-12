@@ -43,7 +43,6 @@ module Net; module SSH; module Transport
         loop do
           @version = ""
           loop do
-            #break unless socket.available_for_read?
             b = socket.recv(1)
             
             if b.nil?

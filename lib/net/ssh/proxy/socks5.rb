@@ -94,11 +94,24 @@ module Net
 
           packet << [port].pack("n")
           socket.send packet, 0
-
-          version, reply, = socket.recv(4).unpack("C*")
-          len = socket.recv(1).getbyte(0)
-          socket.recv(len + 2)
-
+          
+          version, reply, = socket.recv(2).unpack("C*")
+          socket.recv(1)
+          address_type = socket.recv(1).getbyte(0)
+          case address_type
+          when 1
+            socket.recv(4)  # get four bytes for IPv4 address
+          when 3
+            len = socket.recv(1).getbyte(0)
+            hostname = socket.recv(len)
+          when 4
+            ipv6addr hostname = socket.recv(16)
+          else
+            socket.close
+            raise ConnectionError, "Illegal response type"
+          end
+          portnum = socket.recv(2)
+          
           unless reply == SUCCESS
             socket.close
             raise ConnectError, "#{reply}"
