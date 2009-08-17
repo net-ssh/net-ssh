@@ -4,7 +4,7 @@
 
 * Added fix for hanging in ServerVersion#negotiate! when using SOCKS5 proxy (GH-9) [Gerald Talton]
 
-* Added support for specifying a list of hosts in .ssh/config, with tests (GH-6) [Delano Mandelbaum]
+* Added support for specifying a list of hosts in .ssh/config, with tests (GH-6) [ckoehler, Delano Mandelbaum]
 
 * Added tests for arcfour128/256/512 lengths, encryption, and decryption [Delano Mandelbaum]
 
