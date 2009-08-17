@@ -4,7 +4,7 @@
 	s.version = "2.0.13"
 	s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
 	s.description = s.summary
-	s.author = ["Jamis Buck", "Delano Mandelbaum"]
+	s.authors = ["Jamis Buck", "Delano Mandelbaum"]
 	s.email = "net-ssh@solutious.com"
 	s.homepage = "http://rubyforge.org/projects/net-ssh/"
   
