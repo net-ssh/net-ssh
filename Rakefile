@@ -50,7 +50,7 @@ end
 if @spec.rubyforge_project
   desc 'Publish website to rubyforge'
   task 'publish:rdoc' => 'doc/index.html' do
-    sh "scp -rp doc/* rubyforge.org:/var/www/gforge-projects/#{name}/"
+    sh "scp -rp doc/* rubyforge.org:/var/www/gforge-projects/#{name}/ssh/v2/api/"
   end
 
   desc 'Public release to rubyforge'
