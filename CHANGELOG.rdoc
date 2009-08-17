@@ -1,6 +1,6 @@
 
 
-=== 2.0.13 / ?? Aug 2009
+=== 2.0.13 / 17 Aug 2009
 
 * Added fix for hanging in ServerVersion#negotiate! when using SOCKS5 proxy (GH-9) [Gerald Talton]
 
