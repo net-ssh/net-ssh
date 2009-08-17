@@ -1,0 +1,726 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::Connection::Session [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Net::SSH::Connection::Session
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../files/lib/net/ssh/connection/session_rb.html">lib/net/ssh/connection/session.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            A session class representing the connection service running on top of the
+            <a href="../../SSH.html">SSH</a> transport layer. It manages the creation
+            of channels (see <a href="Session.html#M000090">open_channel</a>), and the
+            dispatching of messages to the various channels. It also encapsulates the
+            <a href="../../SSH.html">SSH</a> event loop (via <a
+            href="Session.html#M000084">loop</a> and <a
+            href="Session.html#M000086">process</a>), and serves as a central
+            point-of-reference for all SSH-related services (e.g. port forwarding,
+            SFTP, SCP, etc.).
+            </p>
+            <p>
+            You will rarely (if ever) need to instantiate this class directly; rather,
+            you&#8217;ll almost always use <a
+            href="../../SSH.html#M000002">Net::SSH.start</a> to initialize a new
+            network connection, authenticate a user, and return a new connection
+            session, all in one call.
+            </p>
+            <pre>Net::SSH.start(&quot;localhost&quot;, &quot;user&quot;) do |ssh|&#x000A;  # 'ssh' is an instance of Net::SSH::Connection::Session&#x000A;  ssh.exec! &quot;/etc/init.d/some_process start&quot;&#x000A;end</pre>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000076">new</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000077">[]</a></li>
+              <li><a href="#M000078">[]=</a></li>
+              <li><a href="#M000083">busy?</a></li>
+              <li><a href="#M000081">close</a></li>
+              <li><a href="#M000080">closed?</a></li>
+              <li><a href="#M000091">exec</a></li>
+              <li><a href="#M000092">exec!</a></li>
+              <li><a href="#M000096">forward</a></li>
+              <li><a href="#M000079">host</a></li>
+              <li><a href="#M000094">listen_to</a></li>
+              <li><a href="#M000084">loop</a></li>
+              <li><a href="#M000085">loop_forever</a></li>
+              <li><a href="#M000098">on_global_request</a></li>
+              <li><a href="#M000097">on_open_channel</a></li>
+              <li><a href="#M000090">open_channel</a></li>
+              <li><a href="#M000088">postprocess</a></li>
+              <li><a href="#M000087">preprocess</a></li>
+              <li><a href="#M000086">process</a></li>
+              <li><a href="#M000089">send_global_request</a></li>
+              <li><a href="#M000093">send_message</a></li>
+              <li><a href="#M000082">shutdown!</a></li>
+              <li><a href="#M000095">stop_listening_to</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+            <div id='includes'>
+              <h2>Included modules</h2>
+              <ol>
+                <li><a href="Constants.html">Constants</a></li>
+                <li><a href="../Loggable.html">Loggable</a></li>
+              </ol>
+            </div>
+          </div>
+          <div id='section'>
+            <div id='class-list'>
+              <h2>Classes and Modules</h2>
+              Class <a href="Session/NilChannel.html" class="link">Net::SSH::Connection::Session::NilChannel</a><br />
+            </div>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>MAP</td>
+                    <td>=</td>
+                    <td class='context-item-value'>Constants.constants.inject({}) do |memo, name|         value = const_get(name)         next unless Integer === value         memo[value] = name.downcase.to_sym</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>options</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The map of options that were used to initialize this instance.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>properties</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The collection of custom properties for this instance. (See #[] and #[]=).
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>transport</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The underlying transport layer abstraction (see <a
+                      href="../Transport/Session.html">Net::SSH::Transport::Session</a>).
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000076'>
+                <a name='M000076'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(transport, options={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Create a new connection service instance atop the given transport layer.
+                  Initializes the listeners to be only the underlying socket object.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000076-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000076-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 61</span>&#x000A;61:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>={})&#x000A;62:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">logger</span>&#x000A;63: &#x000A;64:       <span class="ruby-ivar">@transport</span> = <span class="ruby-identifier">transport</span>&#x000A;65:       <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;66: &#x000A;67:       <span class="ruby-ivar">@channel_id_counter</span> = <span class="ruby-value">-1</span>&#x000A;68:       <span class="ruby-ivar">@channels</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">NilChannel</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>))&#x000A;69:       <span class="ruby-ivar">@listeners</span> = { <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">socket</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">nil</span> }&#x000A;70:       <span class="ruby-ivar">@pending_requests</span> = []&#x000A;71:       <span class="ruby-ivar">@channel_open_handlers</span> = {}&#x000A;72:       <span class="ruby-ivar">@on_global_request</span> = {}&#x000A;73:       <span class="ruby-ivar">@properties</span> = (<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:properties</span>] <span class="ruby-operator">||</span> {}).<span class="ruby-identifier">dup</span>&#x000A;74:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000077'>
+                <a name='M000077'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>[]</span>
+                  <span class='arguments'>(key)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Retrieves a custom property from this instance. This can be used to store
+                  additional state in applications that must manage multiple <a
+                  href="../../SSH.html">SSH</a> connections.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000077-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000077-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 79</span>&#x000A;79:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)&#x000A;80:       <span class="ruby-ivar">@properties</span>[<span class="ruby-identifier">key</span>]&#x000A;81:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000078'>
+                <a name='M000078'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>[]=</span>
+                  <span class='arguments'>(key, value)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Sets a custom property for this instance.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000078-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000078-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 84</span>&#x000A;84:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]=</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)&#x000A;85:       <span class="ruby-ivar">@properties</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span>&#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000083'>
+                <a name='M000083'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>busy?</span>
+                  <span class='arguments'>(include_invisible=false)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns <tt>true</tt> if there are any channels currently active on this
+                  session. By default, this will not include &#8220;invisible&#8221; channels
+                  (such as those created by forwarding ports and such), but if you pass a
+                  <tt>true</tt> value for <tt>include_invisible</tt>, then those will be
+                  counted.
+                  </p>
+                  <p>
+                  This can be useful for determining whether the event loop should continue
+                  to be run.
+                  </p>
+                  <pre>ssh.loop { ssh.busy? }</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000083-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000083-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 133</span>&#x000A;133:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">busy?</span>(<span class="ruby-identifier">include_invisible</span>=<span class="ruby-keyword kw">false</span>)&#x000A;134:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">include_invisible</span>&#x000A;135:         <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">any?</span>&#x000A;136:       <span class="ruby-keyword kw">else</span>&#x000A;137:         <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">id</span>, <span class="ruby-identifier">ch</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ch</span>[<span class="ruby-identifier">:invisible</span>] }&#x000A;138:       <span class="ruby-keyword kw">end</span>&#x000A;139:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000081'>
+                <a name='M000081'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>close</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Closes the session gracefully, blocking until all channels have
+                  successfully closed, and then closes the underlying transport layer
+                  connection.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000081-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000081-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 106</span>&#x000A;106:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>&#x000A;107:       <span class="ruby-identifier">info</span> { <span class="ruby-node">&quot;closing remaining channels (#{channels.length} open)&quot;</span> }&#x000A;108:       <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">id</span>, <span class="ruby-identifier">channel</span><span class="ruby-operator">|</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">close</span> }&#x000A;109:       <span class="ruby-identifier">loop</span> { <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">any?</span> }&#x000A;110:       <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">close</span>&#x000A;111:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000080'>
+                <a name='M000080'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>closed?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns true if the underlying transport has been closed. Note that this
+                  can be a little misleading, since if the remote server has closed the
+                  connection, the local end will still think it is open until the next
+                  operation on the socket. Nevertheless, this method can be useful if you
+                  just want to know if <em>you</em> have closed the connection.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000080-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000080-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 99</span>&#x000A; 99:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">closed?</span>&#x000A;100:       <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">closed?</span>&#x000A;101:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000091'>
+                <a name='M000091'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>exec</span>
+                  <span class='arguments'>(command, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  A convenience method for executing a command and interacting with it. If no
+                  block is given, all output is printed via $stdout and $stderr. Otherwise,
+                  the block is called for each data and extended data packet, with three
+                  arguments: the channel object, a symbol indicating the data type (:stdout
+                  or :stderr), and the data (as a string).
+                  </p>
+                  <p>
+                  Note that this method returns immediately, and requires an event loop (see
+                  <a href="Session.html#M000084">Session#loop</a>) in order for the command
+                  to actually execute.
+                  </p>
+                  <p>
+                  This is effectively identical to calling <a
+                  href="Session.html#M000090">open_channel</a>, and then <a
+                  href="Channel.html#M000050">Net::SSH::Connection::Channel#exec</a>, and
+                  then setting up the channel callbacks. However, for most uses, this will be
+                  sufficient.
+                  </p>
+                  <pre>ssh.exec &quot;grep something /some/files&quot; do |ch, stream, data|&#x000A;  if stream == :stderr&#x000A;    puts &quot;ERROR: #{data}&quot;&#x000A;  else&#x000A;    puts data&#x000A;  end&#x000A;end</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000091-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000091-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 318</span>&#x000A;318:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;319:       <span class="ruby-identifier">open_channel</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">channel</span><span class="ruby-operator">|</span>&#x000A;320:         <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;321:           <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;could not execute command: #{command.inspect}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">success</span>&#x000A;322:           &#x000A;323:           <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_data</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch2</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;324:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>&#x000A;325:               <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">ch2</span>, <span class="ruby-identifier">:stdout</span>, <span class="ruby-identifier">data</span>)&#x000A;326:             <span class="ruby-keyword kw">else</span>&#x000A;327:               <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-identifier">data</span>)&#x000A;328:             <span class="ruby-keyword kw">end</span>&#x000A;329:           <span class="ruby-keyword kw">end</span>&#x000A;330: &#x000A;331:           <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_extended_data</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch2</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;332:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>&#x000A;333:               <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">ch2</span>, <span class="ruby-identifier">:stderr</span>, <span class="ruby-identifier">data</span>)&#x000A;334:             <span class="ruby-keyword kw">else</span>&#x000A;335:               <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">print</span>(<span class="ruby-identifier">data</span>)&#x000A;336:             <span class="ruby-keyword kw">end</span>&#x000A;337:           <span class="ruby-keyword kw">end</span>&#x000A;338:         <span class="ruby-keyword kw">end</span>&#x000A;339:       <span class="ruby-keyword kw">end</span>&#x000A;340:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000092'>
+                <a name='M000092'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>exec!</span>
+                  <span class='arguments'>(command, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Same as <a href="Session.html#M000091">exec</a>, except this will block
+                  until the command finishes. Also, if a block is not given, this will return
+                  all output (stdout and stderr) as a single string.
+                  </p>
+                  <pre>matches = ssh.exec!(&quot;grep something /some/files&quot;)</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000092-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000092-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 347</span>&#x000A;347:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exec!</span>(<span class="ruby-identifier">command</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;348:       <span class="ruby-identifier">block</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;349:         <span class="ruby-identifier">ch</span>[<span class="ruby-identifier">:result</span>] <span class="ruby-operator">||=</span> <span class="ruby-value str">&quot;&quot;</span>&#x000A;350:         <span class="ruby-identifier">ch</span>[<span class="ruby-identifier">:result</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">data</span>&#x000A;351:       <span class="ruby-keyword kw">end</span>&#x000A;352: &#x000A;353:       <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;354:       <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">wait</span>&#x000A;355: &#x000A;356:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">channel</span>[<span class="ruby-identifier">:result</span>]&#x000A;357:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000096'>
+                <a name='M000096'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>forward</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns a reference to the <a
+                  href="../Service/Forward.html">Net::SSH::Service::Forward</a> service,
+                  which can be used for forwarding ports over <a
+                  href="../../SSH.html">SSH</a>.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000096-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000096-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 416</span>&#x000A;416:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">forward</span>&#x000A;417:       <span class="ruby-ivar">@forward</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Service</span><span class="ruby-operator">::</span><span class="ruby-constant">Forward</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>)&#x000A;418:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000079'>
+                <a name='M000079'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>host</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns the name of the host that was given to the transport layer to
+                  connect to.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000079-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000079-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 90</span>&#x000A;90:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">host</span>&#x000A;91:       <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">host</span>&#x000A;92:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000094'>
+                <a name='M000094'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>listen_to</span>
+                  <span class='arguments'>(io, &amp;callback)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Adds an IO object for the event loop to listen to. If a callback is given,
+                  it will be invoked when the io is ready to be read, otherwise, the io will
+                  merely have its fill method invoked.
+                  </p>
+                  <p>
+                  Any <tt>io</tt> value passed to this method <em>must</em> have mixed into
+                  it the <a href="../BufferedIo.html">Net::SSH::BufferedIo</a> functionality,
+                  typically by calling extend on the object.
+                  </p>
+                  <p>
+                  The following example executes a process on the remote server, opens a
+                  socket to somewhere, and then pipes data from that socket to the remote
+                  process&#8217; stdin stream:
+                  </p>
+                  <pre>channel = ssh.open_channel do |ch|&#x000A;  ch.exec &quot;/some/process/that/wants/input&quot; do |ch, success|&#x000A;    abort &quot;can't execute!&quot; unless success&#x000A;&#x000A;    io = TCPSocket.new(somewhere, port)&#x000A;    io.extend(Net::SSH::BufferedIo)&#x000A;    ssh.listen_to(io)&#x000A;&#x000A;    ch.on_process do&#x000A;      if io.available &gt; 0&#x000A;        ch.send_data(io.read_available)&#x000A;      end&#x000A;    end&#x000A;&#x000A;    ch.on_close do&#x000A;      ssh.stop_listening_to(io)&#x000A;      io.close&#x000A;    end&#x000A;  end&#x000A;end&#x000A;&#x000A;channel.wait</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000094-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000094-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 404</span>&#x000A;404:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">listen_to</span>(<span class="ruby-identifier">io</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)&#x000A;405:       <span class="ruby-identifier">listeners</span>[<span class="ruby-identifier">io</span>] = <span class="ruby-identifier">callback</span>&#x000A;406:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000084'>
+                <a name='M000084'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>loop</span>
+                  <span class='arguments'>(wait=nil, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  The main event loop. Calls <a href="Session.html#M000086">process</a> until
+                  <a href="Session.html#M000086">process</a> returns false. If a block is
+                  given, it is passed to <a href="Session.html#M000086">process</a>,
+                  otherwise a default proc is used that just returns true if there are any
+                  channels active (see <a href="Session.html#M000083">busy?</a>). The #
+                  <tt>wait</tt> parameter is also passed through to <a
+                  href="Session.html#M000086">process</a> (where it is interpreted as the
+                  maximum number of seconds to wait for IO.select to return).
+                  </p>
+                  <pre># loop for as long as there are any channels active&#x000A;ssh.loop&#x000A;&#x000A;# loop for as long as there are any channels active, but make sure&#x000A;# the event loop runs at least once per 0.1 second&#x000A;ssh.loop(0.1)&#x000A;&#x000A;# loop until ctrl-C is pressed&#x000A;int_pressed = false&#x000A;trap(&quot;INT&quot;) { int_pressed = true }&#x000A;ssh.loop(0.1) { not int_pressed }</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000084-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000084-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 158</span>&#x000A;158:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">loop</span>(<span class="ruby-identifier">wait</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;159:       <span class="ruby-identifier">running</span> = <span class="ruby-identifier">block</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-identifier">busy?</span> }&#x000A;160:       <span class="ruby-identifier">loop_forever</span> { <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">wait</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">running</span>) }&#x000A;161:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000085'>
+                <a name='M000085'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>loop_forever</span>
+                  <span class='arguments'>(wait=nil, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Alias for <a href="Session.html#M000084">loop</a>
+                  </p>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000098'>
+                <a name='M000098'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>on_global_request</span>
+                  <span class='arguments'>(type, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Registers a handler to be invoked when the server sends a global request of
+                  the given type. The callback receives the request data as the first
+                  parameter, and true/false as the second (indicating whether a response is
+                  required). If the callback sends the response, it should return :sent.
+                  Otherwise, if it returns true, REQUEST_SUCCESS will be sent, and if it
+                  returns false, REQUEST_FAILURE will be sent.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000098-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000098-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 440</span>&#x000A;440:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_global_request</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;441:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_global_request</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-ivar">@on_global_request</span>[<span class="ruby-identifier">type</span>], <span class="ruby-identifier">block</span>&#x000A;442:       <span class="ruby-identifier">old</span>&#x000A;443:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000097'>
+                <a name='M000097'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>on_open_channel</span>
+                  <span class='arguments'>(type, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Registers a handler to be invoked when the server wants to open a channel
+                  on the client. The callback receives the connection object, the new channel
+                  object, and the packet itself as arguments, and should raise <a
+                  href="../ChannelOpenFailed.html">ChannelOpenFailed</a> if it is unable to
+                  open the channel for some reason. Otherwise, the channel will be opened and
+                  a confirmation message sent to the server.
+                  </p>
+                  <p>
+                  This is used by the <a
+                  href="../Service/Forward.html">Net::SSH::Service::Forward</a> service to
+                  open a channel when a remote forwarded port receives a connection. However,
+                  you are welcome to register handlers for other channel types, as needed.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000097-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000097-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 430</span>&#x000A;430:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_open_channel</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;431:       <span class="ruby-identifier">channel_open_handlers</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-identifier">block</span>&#x000A;432:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000090'>
+                <a name='M000090'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>open_channel</span>
+                  <span class='arguments'>(type=&quot;session&quot;, *extra, &amp;on_confirm)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Requests that a new channel be opened. By default, the channel will be of
+                  type &#8220;session&#8221;, but if you know what you&#8217;re doing you can
+                  select any of the channel types supported by the <a
+                  href="../../SSH.html">SSH</a> protocol. The <tt>extra</tt> parameters must
+                  be even in number and conform to the same format as described for <a
+                  href="../Buffer.html#M000261">Net::SSH::Buffer.from</a>. If a callback is
+                  given, it will be invoked when the server confirms that the channel opened
+                  successfully. The sole parameter for the callback is the channel object
+                  itself.
+                  </p>
+                  <p>
+                  In general, you&#8217;ll use <a
+                  href="Session.html#M000090">open_channel</a> without any arguments; the
+                  only time you&#8217;d want to set the channel type or pass additional
+                  initialization data is if you were implementing an <a
+                  href="../../SSH.html">SSH</a> extension.
+                  </p>
+                  <pre>channel = ssh.open_channel do |ch|&#x000A;  ch.exec &quot;grep something /some/files&quot; do |ch, success|&#x000A;    ...&#x000A;  end&#x000A;end&#x000A;&#x000A;channel.wait</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000090-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000090-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 286</span>&#x000A;286:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">open_channel</span>(<span class="ruby-identifier">type</span>=<span class="ruby-value str">&quot;session&quot;</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">on_confirm</span>)&#x000A;287:       <span class="ruby-identifier">local_id</span> = <span class="ruby-identifier">get_next_channel_id</span>&#x000A;288:       <span class="ruby-identifier">channel</span> = <span class="ruby-constant">Channel</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">local_id</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">on_confirm</span>)&#x000A;289: &#x000A;290:       <span class="ruby-identifier">msg</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-constant">CHANNEL_OPEN</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">local_id</span>,&#x000A;291:         <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_maximum_window_size</span>,&#x000A;292:         <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_maximum_packet_size</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra</span>)&#x000A;293:       <span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">msg</span>)&#x000A;294: &#x000A;295:       <span class="ruby-identifier">channels</span>[<span class="ruby-identifier">local_id</span>] = <span class="ruby-identifier">channel</span>&#x000A;296:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000088'>
+                <a name='M000088'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>postprocess</span>
+                  <span class='arguments'>(readers, writers)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  This is called internally as part of <a
+                  href="Session.html#M000086">process</a>. It loops over the given arrays of
+                  reader IO&#8217;s and writer IO&#8217;s, processing them as needed, and
+                  then calls <a
+                  href="../Transport/Session.html#M000234">Net::SSH::Transport::Session#rekey_as_needed</a>
+                  to allow the transport layer to rekey. Then returns true.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000088-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000088-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 222</span>&#x000A;222:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>)&#x000A;223:       <span class="ruby-constant">Array</span>(<span class="ruby-identifier">readers</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reader</span><span class="ruby-operator">|</span>&#x000A;224:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">listeners</span>[<span class="ruby-identifier">reader</span>]&#x000A;225:           <span class="ruby-identifier">listeners</span>[<span class="ruby-identifier">reader</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">reader</span>)&#x000A;226:         <span class="ruby-keyword kw">else</span>&#x000A;227:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">reader</span>.<span class="ruby-identifier">fill</span>.<span class="ruby-identifier">zero?</span>&#x000A;228:             <span class="ruby-identifier">reader</span>.<span class="ruby-identifier">close</span>&#x000A;229:             <span class="ruby-identifier">stop_listening_to</span>(<span class="ruby-identifier">reader</span>)&#x000A;230:           <span class="ruby-keyword kw">end</span>&#x000A;231:         <span class="ruby-keyword kw">end</span>&#x000A;232:       <span class="ruby-keyword kw">end</span>&#x000A;233: &#x000A;234:       <span class="ruby-constant">Array</span>(<span class="ruby-identifier">writers</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>&#x000A;235:         <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">send_pending</span>&#x000A;236:       <span class="ruby-keyword kw">end</span>&#x000A;237: &#x000A;238:       <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">rekey_as_needed</span>&#x000A;239: &#x000A;240:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>&#x000A;241:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000087'>
+                <a name='M000087'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>preprocess</span>
+                  <span class='arguments'>() {|self| ...}</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  This is called internally as part of <a
+                  href="Session.html#M000086">process</a>. It dispatches any available
+                  incoming packets, and then runs <a
+                  href="Channel.html#M000061">Net::SSH::Connection::Channel#process</a> for
+                  any active channels. If a block is given, it is invoked at the start of the
+                  method and again at the end, and if the block ever returns false, this
+                  method returns false. Otherwise, it returns true.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000087-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000087-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 210</span>&#x000A;210:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">preprocess</span>&#x000A;211:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">yield</span>(<span class="ruby-keyword kw">self</span>)&#x000A;212:       <span class="ruby-identifier">dispatch_incoming_packets</span>&#x000A;213:       <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">id</span>, <span class="ruby-identifier">channel</span><span class="ruby-operator">|</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">process</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">closing?</span> }&#x000A;214:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">yield</span>(<span class="ruby-keyword kw">self</span>)&#x000A;215:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>&#x000A;216:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000086'>
+                <a name='M000086'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>process</span>
+                  <span class='arguments'>(wait=nil, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  The core of the event loop. It processes a single iteration of the event
+                  loop. If a block is given, it should return false when the processing
+                  should abort, which causes <a href="Session.html#M000086">process</a> to
+                  return false. Otherwise, <a href="Session.html#M000086">process</a> returns
+                  true. The session itself is yielded to the block as its only argument.
+                  </p>
+                  <p>
+                  If <tt>wait</tt> is nil (the default), this method will block until any of
+                  the monitored IO objects are ready to be read from or written to. If you
+                  want it to not block, you can pass 0, or you can pass any other numeric
+                  value to indicate that it should block for no more than that many seconds.
+                  Passing 0 is a good way to poll the connection, but if you do it too
+                  frequently it can make your CPU quite busy!
+                  </p>
+                  <p>
+                  This will also cause all active channels to be processed once each (see <a
+                  href="Channel.html#M000064">Net::SSH::Connection::Channel#on_process</a>).
+                  </p>
+                  <pre># process multiple Net::SSH connections in parallel&#x000A;connections = [&#x000A;  Net::SSH.start(&quot;host1&quot;, ...),&#x000A;  Net::SSH.start(&quot;host2&quot;, ...)&#x000A;]&#x000A;&#x000A;connections.each do |ssh|&#x000A;  ssh.exec &quot;grep something /in/some/files&quot;&#x000A;end&#x000A;&#x000A;condition = Proc.new { |s| s.busy? }&#x000A;&#x000A;loop do&#x000A;  connections.delete_if { |ssh| !ssh.process(0.1, &amp;condition) }&#x000A;  break if connections.empty?&#x000A;end</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000086-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000086-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 195</span>&#x000A;195:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">wait</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;196:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;197: &#x000A;198:       <span class="ruby-identifier">r</span> = <span class="ruby-identifier">listeners</span>.<span class="ruby-identifier">keys</span>&#x000A;199:       <span class="ruby-identifier">w</span> = <span class="ruby-identifier">r</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">w2</span><span class="ruby-operator">|</span> <span class="ruby-identifier">w2</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:pending_write?</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">w2</span>.<span class="ruby-identifier">pending_write?</span> }&#x000A;200:       <span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>, = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-identifier">r</span>, <span class="ruby-identifier">w</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">wait</span>)&#x000A;201: &#x000A;202:       <span class="ruby-identifier">postprocess</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>)&#x000A;203:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000089'>
+                <a name='M000089'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>send_global_request</span>
+                  <span class='arguments'>(type, *extra, &amp;callback)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Send a global request of the given type. The <tt>extra</tt> parameters must
+                  be even in number, and conform to the same format as described for <a
+                  href="../Buffer.html#M000261">Net::SSH::Buffer.from</a>. If a callback is
+                  not specified, the request will not require a response from the server,
+                  otherwise the server is required to respond and indicate whether the
+                  request was successful or not. This success or failure is indicated by the
+                  callback being invoked, with the first parameter being true or false
+                  (success, or failure), and the second being the packet itself.
+                  </p>
+                  <p>
+                  Generally, <a href="../../SSH.html">Net::SSH</a> will manage global
+                  requests that need to be sent (e.g. port forward requests and such are
+                  handled in the <a
+                  href="../Service/Forward.html">Net::SSH::Service::Forward</a> class, for
+                  instance). However, there may be times when you need to send a global
+                  request that isn&#8217;t explicitly handled by <a
+                  href="../../SSH.html">Net::SSH</a>, and so this method is available to you.
+                  </p>
+                  <pre>ssh.send_global_request(&quot;keep-alive@openssh.com&quot;)</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000089-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000089-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 259</span>&#x000A;259:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_global_request</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)&#x000A;260:       <span class="ruby-identifier">info</span> { <span class="ruby-node">&quot;sending global request #{type}&quot;</span> }&#x000A;261:       <span class="ruby-identifier">msg</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-constant">GLOBAL_REQUEST</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">type</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-identifier">:bool</span>, <span class="ruby-operator">!</span><span class="ruby-identifier">callback</span>.<span class="ruby-identifier">nil?</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra</span>)&#x000A;262:       <span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">msg</span>)&#x000A;263:       <span class="ruby-identifier">pending_requests</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">callback</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callback</span>&#x000A;264:       <span class="ruby-keyword kw">self</span>&#x000A;265:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000093'>
+                <a name='M000093'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>send_message</span>
+                  <span class='arguments'>(message)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Enqueues a message to be sent to the server as soon as the socket is
+                  available for writing. Most programs will never need to call this, but if
+                  you are implementing an extension to the <a href="../../SSH.html">SSH</a>
+                  protocol, or if you need to send a packet that <a
+                  href="../../SSH.html">Net::SSH</a> does not directly support, you can use
+                  this to send it.
+                  </p>
+                  <pre>ssh.send_message(Buffer.from(:byte, REQUEST_SUCCESS).to_s)</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000093-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000093-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 366</span>&#x000A;366:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">message</span>)&#x000A;367:       <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">enqueue_message</span>(<span class="ruby-identifier">message</span>)&#x000A;368:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000082'>
+                <a name='M000082'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>shutdown!</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Performs a &#8220;hard&#8221; shutdown of the connection. In general, this
+                  should never be done, but it might be necessary (in a rescue clause, for
+                  instance, when the connection needs to close but you don&#8217;t know the
+                  status of the underlying protocol&#8217;s state).
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000082-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000082-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 117</span>&#x000A;117:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">shutdown!</span>&#x000A;118:       <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">shutdown!</span>&#x000A;119:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000095'>
+                <a name='M000095'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>stop_listening_to</span>
+                  <span class='arguments'>(io)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Removes the given io object from the listeners collection, so that the
+                  event loop will no longer monitor it.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000095-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000095-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 410</span>&#x000A;410:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">stop_listening_to</span>(<span class="ruby-identifier">io</span>)&#x000A;411:       <span class="ruby-identifier">listeners</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">io</span>)&#x000A;412:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

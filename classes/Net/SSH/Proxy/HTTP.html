@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::Proxy::HTTP [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Net::SSH::Proxy::HTTP
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../files/lib/net/ssh/proxy/http_rb.html">lib/net/ssh/proxy/http.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            An implementation of an <a href="HTTP.html">HTTP</a> proxy. To use it,
+            instantiate it, then pass the instantiated object via the :proxy key to <a
+            href="../../SSH.html#M000002">Net::SSH.start</a>:
+            </p>
+            <pre>require 'net/ssh/proxy/http'&#x000A;&#x000A;proxy = Net::SSH::Proxy::HTTP.new('proxy.host', proxy_port)&#x000A;Net::SSH.start('host', 'user', :proxy =&gt; proxy) do |ssh|&#x000A;  ...&#x000A;end</pre>
+            <p>
+            If the proxy requires authentication, you can pass :user and :password to
+            the proxy&#8217;s constructor:
+            </p>
+            <pre>proxy = Net::SSH::Proxy::HTTP.new('proxy.host', proxy_port,&#x000A;   :user =&gt; &quot;user&quot;, :password =&gt; &quot;password&quot;)</pre>
+            <p>
+            Note that <a href="HTTP.html">HTTP</a> digest authentication is not
+            supported; Basic only at this point.
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000109">new</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000110">open</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>options</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The map of additional options that were given to the object at
+                      initialization.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>proxy_host</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The hostname or IP address of the <a href="HTTP.html">HTTP</a> proxy.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>proxy_port</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The port number of the proxy.
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000109'>
+                <a name='M000109'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(proxy_host, proxy_port=80, options={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Create a new socket factory that tunnels via the given host and port. The
+                  <tt>options</tt> parameter is a hash of additional settings that can be
+                  used to tweak this proxy connection. Specifically, the following options
+                  are supported:
+                  </p>
+                  <ul>
+                  <li>:user => the user name to use when authenticating to the proxy
+                  
+                  </li>
+                  <li>:password => the password to use when authenticating
+                  
+                  </li>
+                  </ul>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000109-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000109-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/proxy/http.rb, line 43</span>&#x000A;43:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>=<span class="ruby-value">80</span>, <span class="ruby-identifier">options</span>={})&#x000A;44:       <span class="ruby-ivar">@proxy_host</span> = <span class="ruby-identifier">proxy_host</span>&#x000A;45:       <span class="ruby-ivar">@proxy_port</span> = <span class="ruby-identifier">proxy_port</span>&#x000A;46:       <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000110'>
+                <a name='M000110'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>open</span>
+                  <span class='arguments'>(host, port)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Return a new socket connected to the given host and port via the proxy that
+                  was requested when the socket factory was instantiated.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000110-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000110-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/proxy/http.rb, line 51</span>&#x000A;51:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>)&#x000A;52:       <span class="ruby-identifier">socket</span> = <span class="ruby-constant">TCPSocket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>)&#x000A;53:       <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-node">&quot;CONNECT #{host}:#{port} HTTP/1.0\r\n&quot;</span>&#x000A;54: &#x000A;55:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:user</span>]&#x000A;56:         <span class="ruby-identifier">credentials</span> = [<span class="ruby-node">&quot;#{options[:user]}:#{options[:password]}&quot;</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;m*&quot;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\s/</span>, <span class="ruby-value str">&quot;&quot;</span>)&#x000A;57:         <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-node">&quot;Proxy-Authorization: Basic #{credentials}\r\n&quot;</span>&#x000A;58:       <span class="ruby-keyword kw">end</span>&#x000A;59: &#x000A;60:       <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-value str">&quot;\r\n&quot;</span>&#x000A;61: &#x000A;62:       <span class="ruby-identifier">resp</span> = <span class="ruby-identifier">parse_response</span>(<span class="ruby-identifier">socket</span>)&#x000A;63: &#x000A;64:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">socket</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">resp</span>[<span class="ruby-identifier">:code</span>] <span class="ruby-operator">==</span> <span class="ruby-value">200</span>&#x000A;65: &#x000A;66:       <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">close</span>&#x000A;67:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConnectError</span>, <span class="ruby-identifier">resp</span>.<span class="ruby-identifier">inspect</span>&#x000A;68:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

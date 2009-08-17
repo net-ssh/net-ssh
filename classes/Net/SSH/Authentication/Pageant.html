@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::Authentication::Pageant [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Module</span>
+          Net::SSH::Authentication::Pageant
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../files/lib/net/ssh/authentication/pageant_rb.html">lib/net/ssh/authentication/pageant.rb</a>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            This module encapsulates the implementation of a socket factory that uses
+            the PuTTY &#8220;pageant&#8221; utility to obtain information about <a
+            href="../../SSH.html">SSH</a> identities.
+            </p>
+            <p>
+            This code is a slightly modified version of the original implementation by
+            Guillaume Marçais (guillaume.marcais@free.fr). It is used and relicensed by
+            permission.
+            </p>
+          </div>
+          <div id='section'>
+            <div id='class-list'>
+              <h2>Classes and Modules</h2>
+              Module <a href="Pageant/Win.html" class="link">Net::SSH::Authentication::Pageant::Win</a><br />
+              Class <a href="Pageant/Socket.html" class="link">Net::SSH::Authentication::Pageant::Socket</a><br />
+            </div>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>AGENT_MAX_MSGLEN</td>
+                    <td>=</td>
+                    <td class='context-item-value'>8192</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'>
+                      
+                      From Putty pageant.c
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>AGENT_COPYDATA_ID</td>
+                    <td>=</td>
+                    <td class='context-item-value'>0x804e50ba</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

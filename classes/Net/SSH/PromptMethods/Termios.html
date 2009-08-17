@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::PromptMethods::Termios [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Module</span>
+          Net::SSH::PromptMethods::Termios
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../files/lib/net/ssh/prompt_rb.html">lib/net/ssh/prompt.rb</a>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            Defines the prompt method to use if the <a href="Termios.html">Termios</a>
+            library is installed.
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000107">prompt</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000107'>
+                <a name='M000107'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>prompt</span>
+                  <span class='arguments'>(prompt, echo=true)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Displays the prompt to $stdout. If <tt>echo</tt> is false, the <a
+                  href="Termios.html">Termios</a> library will be used to disable keystroke
+                  echoing for the duration of this method.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000107-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000107-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/prompt.rb, line 27</span>&#x000A;27:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">prompt</span>(<span class="ruby-identifier">prompt</span>, <span class="ruby-identifier">echo</span>=<span class="ruby-keyword kw">true</span>)&#x000A;28:         <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-identifier">prompt</span>)&#x000A;29:         <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">flush</span>&#x000A;30: &#x000A;31:         <span class="ruby-identifier">set_echo</span>(<span class="ruby-keyword kw">false</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">echo</span>&#x000A;32:         <span class="ruby-identifier">$stdin</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">chomp</span>&#x000A;33:       <span class="ruby-keyword kw">ensure</span>&#x000A;34:         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">echo</span>&#x000A;35:           <span class="ruby-identifier">set_echo</span>(<span class="ruby-keyword kw">true</span>)&#x000A;36:           <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">puts</span>&#x000A;37:         <span class="ruby-keyword kw">end</span>&#x000A;38:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::HostKeyMismatch [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Net::SSH::HostKeyMismatch
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../files/lib/net/ssh/errors_rb.html">lib/net/ssh/errors.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a href="Exception.html">Net::SSH::Exception</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            Raised when the cached key for a particular host does not match the key
+            given by the host, which can be indicative of a man-in-the-middle attack.
+            When rescuing this exception, you can inspect the key fingerprint and, if
+            you want to proceed anyway, simply call the remember_host! method on the
+            exception, and then retry.
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000299">[]</a></li>
+              <li><a href="#M000300">fingerprint</a></li>
+              <li><a href="#M000301">host</a></li>
+              <li><a href="#M000303">ip</a></li>
+              <li><a href="#M000304">key</a></li>
+              <li><a href="#M000302">port</a></li>
+              <li><a href="#M000305">remember_host!</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000299'>
+                <a name='M000299'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>[]</span>
+                  <span class='arguments'>(key)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  An accessor for getting at the data that was used to look up the host (see
+                  also <a href="HostKeyMismatch.html#M000300">fingerprint</a>, <a
+                  href="HostKeyMismatch.html#M000301">host</a>, <a
+                  href="HostKeyMismatch.html#M000302">port</a>, <a
+                  href="HostKeyMismatch.html#M000303">ip</a>, and <a
+                  href="HostKeyMismatch.html#M000304">key</a>).
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000299-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000299-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)&#x000A;50:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">key</span>]&#x000A;51:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000300'>
+                <a name='M000300'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>fingerprint</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns the fingerprint of the key for the host, which either was not found
+                  or did not match.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000300-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000300-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 55</span>&#x000A;55:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fingerprint</span>&#x000A;56:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:fingerprint</span>]&#x000A;57:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000301'>
+                <a name='M000301'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>host</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns the host name for the remote host, as reported by the socket.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000301-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000301-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 60</span>&#x000A;60:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">host</span>&#x000A;61:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>][<span class="ruby-identifier">:host</span>]&#x000A;62:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000303'>
+                <a name='M000303'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>ip</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns the IP address of the remote host, as reported by the socket.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000303-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000303-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 70</span>&#x000A;70:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ip</span>&#x000A;71:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>][<span class="ruby-identifier">:ip</span>]&#x000A;72:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000304'>
+                <a name='M000304'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>key</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns the key itself, as reported by the remote host.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000304-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000304-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 75</span>&#x000A;75:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">key</span>&#x000A;76:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:key</span>]&#x000A;77:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000302'>
+                <a name='M000302'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>port</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns the port number for the remote host, as reported by the socket.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000302-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000302-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 65</span>&#x000A;65:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">port</span>&#x000A;66:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>][<span class="ruby-identifier">:port</span>]&#x000A;67:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000305'>
+                <a name='M000305'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>remember_host!</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Tell <a href="../SSH.html">Net::SSH</a> to record this host and key in the
+                  known hosts file, so that subsequent connections will remember them.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000305-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000305-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 81</span>&#x000A;81:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remember_host!</span>&#x000A;82:       <span class="ruby-ivar">@callback</span>.<span class="ruby-identifier">call</span>&#x000A;83:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

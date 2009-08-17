@@ -1,0 +1,401 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::Transport::Algorithms [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Net::SSH::Transport::Algorithms
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../files/lib/net/ssh/transport/algorithms_rb.html">lib/net/ssh/transport/algorithms.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            Implements the higher-level logic behind an <a
+            href="../../SSH.html">SSH</a> key-exchange. It handles both the initial
+            exchange, as well as subsequent re-exchanges (as needed). It also
+            encapsulates the negotiation of the algorithms, and provides a single point
+            of access to the negotiated algorithms.
+            </p>
+            <p>
+            You will never instantiate or reference this directly. It is used
+            internally by the transport layer.
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000206">allowed_packet?</a></li>
+              <li><a href="#M000207">new</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000210">[]</a></li>
+              <li><a href="#M000209">accept_kexinit</a></li>
+              <li><a href="#M000212">allow?</a></li>
+              <li><a href="#M000213">initialized?</a></li>
+              <li><a href="#M000211">pending?</a></li>
+              <li><a href="#M000208">rekey!</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+            <div id='includes'>
+              <h2>Included modules</h2>
+              <ol>
+                <li><a href="Constants.html">Constants</a></li>
+                <li><a href="../Loggable.html">Loggable</a></li>
+              </ol>
+            </div>
+          </div>
+          <div id='section'>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>ALGORITHMS</td>
+                    <td>=</td>
+                    <td class='context-item-value'>{       :host_key    =&gt; %w(ssh-rsa ssh-dss),       :kex         =&gt; %w(diffie-hellman-group-exchange-sha1                          diffie-hellman-group1-sha1),       :encryption  =&gt; %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc                          aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se                          idea-cbc none arcfour128 arcfour256),       :hmac        =&gt; %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 none),       :compression =&gt; %w(none zlib@openssh.com zlib),       :language    =&gt; %w()      }</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'>
+                      
+                      Define the default algorithms, in order of preference, supported by <a
+                      href="../../SSH.html">Net::SSH</a>.
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>algorithms</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The hash of algorithms preferred by the client, which will be told to the
+                      server during algorithm negotiation.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>compression_client</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The type of compression to use to compress packets being sent by the
+                      client.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>compression_server</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The type of compression to use to decompress packets arriving from the
+                      server.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>encryption_client</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The type of the cipher to use to encrypt packets sent from the client to
+                      the server.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>encryption_server</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The type of the cipher to use to decrypt packets arriving from the server.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>hmac_client</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The type of <a href="HMAC.html">HMAC</a> to use to sign packets sent by the
+                      client.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>hmac_server</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The type of <a href="HMAC.html">HMAC</a> to use to validate packets
+                      arriving from the server.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>host_key</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The type of host key that will be used for this session.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>kex</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The kex algorithm to use settled on between the client and server.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>language_client</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The language that will be used in messages sent by the client.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>language_server</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The language that will be used in messages sent from the server.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>options</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The hash of options used to initialize this object
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>session</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The underlying transport layer session that supports this object
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>session_id</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      The session-id for this session, as decided during the initial key
+                      exchange.
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000206'>
+                <a name='M000206'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>allowed_packet?</span>
+                  <span class='arguments'>(packet)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns true if the given packet can be processed during a key-exchange.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000206-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000206-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 81</span>&#x000A;81:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">allowed_packet?</span>(<span class="ruby-identifier">packet</span>)&#x000A;82:       ( <span class="ruby-value">1</span><span class="ruby-operator">..</span> <span class="ruby-value">4</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">||</span>&#x000A;83:       ( <span class="ruby-value">6</span><span class="ruby-operator">..</span><span class="ruby-value">19</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">||</span>&#x000A;84:       (<span class="ruby-value">21</span><span class="ruby-operator">..</span><span class="ruby-value">49</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>)&#x000A;85:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000207'>
+                <a name='M000207'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(session, options={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Instantiates a new <a href="Algorithms.html">Algorithms</a> object, and
+                  prepares the hash of preferred algorithms based on the options parameter
+                  and the ALGORITHMS constant.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000207-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000207-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 89</span>&#x000A;89:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>, <span class="ruby-identifier">options</span>={})&#x000A;90:       <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>&#x000A;91:       <span class="ruby-ivar">@logger</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">logger</span>&#x000A;92:       <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;93:       <span class="ruby-ivar">@algorithms</span> = {}&#x000A;94:       <span class="ruby-ivar">@pending</span> = <span class="ruby-ivar">@initialized</span> = <span class="ruby-keyword kw">false</span>&#x000A;95:       <span class="ruby-ivar">@client_packet</span> = <span class="ruby-ivar">@server_packet</span> = <span class="ruby-keyword kw">nil</span>&#x000A;96:       <span class="ruby-identifier">prepare_preferred_algorithms!</span>&#x000A;97:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000210'>
+                <a name='M000210'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>[]</span>
+                  <span class='arguments'>(key)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  A convenience method for accessing the list of preferred types for a
+                  specific algorithm (see algorithms).
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000210-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000210-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 126</span>&#x000A;126:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)&#x000A;127:       <span class="ruby-identifier">algorithms</span>[<span class="ruby-identifier">key</span>]&#x000A;128:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000209'>
+                <a name='M000209'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>accept_kexinit</span>
+                  <span class='arguments'>(packet)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Called by the transport layer when a KEXINIT packet is recieved, indicating
+                  that the server wants to exchange keys. This can be spontaneous, or it can
+                  be in response to a client-initiated rekey request (see <a
+                  href="Algorithms.html#M000208">rekey!</a>). Either way, this will block
+                  until the key exchange completes.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000209-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000209-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 113</span>&#x000A;113:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">accept_kexinit</span>(<span class="ruby-identifier">packet</span>)&#x000A;114:       <span class="ruby-identifier">info</span> { <span class="ruby-value str">&quot;got KEXINIT from server&quot;</span> }&#x000A;115:       <span class="ruby-ivar">@server_data</span> = <span class="ruby-identifier">parse_server_algorithm_packet</span>(<span class="ruby-identifier">packet</span>)&#x000A;116:       <span class="ruby-ivar">@server_packet</span> = <span class="ruby-ivar">@server_data</span>[<span class="ruby-identifier">:raw</span>]&#x000A;117:       <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">pending?</span>&#x000A;118:         <span class="ruby-identifier">send_kexinit</span>&#x000A;119:       <span class="ruby-keyword kw">else</span>&#x000A;120:         <span class="ruby-identifier">proceed!</span>&#x000A;121:       <span class="ruby-keyword kw">end</span>&#x000A;122:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000212'>
+                <a name='M000212'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>allow?</span>
+                  <span class='arguments'>(packet)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns true if no exchange is pending, and otherwise returns true or false
+                  depending on whether the given packet is of a type that is allowed during a
+                  key exchange.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000212-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000212-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 142</span>&#x000A;142:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">allow?</span>(<span class="ruby-identifier">packet</span>)&#x000A;143:       <span class="ruby-operator">!</span><span class="ruby-identifier">pending?</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Algorithms</span>.<span class="ruby-identifier">allowed_packet?</span>(<span class="ruby-identifier">packet</span>)&#x000A;144:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000213'>
+                <a name='M000213'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>initialized?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns true if the algorithms have been negotiated at all.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000213-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000213-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 147</span>&#x000A;147:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialized?</span>&#x000A;148:       <span class="ruby-ivar">@initialized</span>&#x000A;149:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000211'>
+                <a name='M000211'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>pending?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns <tt>true</tt> if a key-exchange is pending. This will be true from
+                  the moment either the client or server requests the key exchange, until the
+                  exchange completes. While an exchange is pending, only a limited number of
+                  packets are allowed, so event processing essentially stops during this
+                  period.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000211-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000211-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 135</span>&#x000A;135:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pending?</span>&#x000A;136:       <span class="ruby-ivar">@pending</span>&#x000A;137:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000208'>
+                <a name='M000208'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>rekey!</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Request a rekey operation. This will return immediately, and does not
+                  actually perform the rekey operation. It does cause the session to change
+                  state, however&#8212;until the key exchange finishes, no new packets will
+                  be processed.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000208-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000208-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 103</span>&#x000A;103:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">rekey!</span>&#x000A;104:       <span class="ruby-ivar">@client_packet</span> = <span class="ruby-ivar">@server_packet</span> = <span class="ruby-keyword kw">nil</span>&#x000A;105:       <span class="ruby-ivar">@initialized</span> = <span class="ruby-keyword kw">false</span>&#x000A;106:       <span class="ruby-identifier">send_kexinit</span>&#x000A;107:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

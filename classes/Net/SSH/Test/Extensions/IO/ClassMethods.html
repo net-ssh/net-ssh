@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::Test::Extensions::IO::ClassMethods [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Module</span>
+          Net::SSH::Test::Extensions::IO::ClassMethods
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../../../files/lib/net/ssh/test/extensions_rb.html">lib/net/ssh/test/extensions.rb</a>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000135">select_for_test</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000135'>
+                <a name='M000135'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>select_for_test</span>
+                  <span class='arguments'>(readers=nil, writers=nil, errors=nil, wait=nil)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  The testing version of ::IO.select. Assumes that all readers, writers, and
+                  errors arrays are either nil, or contain only objects that mix in <a
+                  href="../BufferedIo.html">Net::SSH::Test::Extensions::BufferedIo</a>.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000135-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000135-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/test/extensions.rb, line 127</span>&#x000A;127:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">select_for_test</span>(<span class="ruby-identifier">readers</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">writers</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">errors</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">wait</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;128:           <span class="ruby-identifier">ready_readers</span> = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">readers</span>).<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">select_for_read?</span> }&#x000A;129:           <span class="ruby-identifier">ready_writers</span> = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">writers</span>).<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">select_for_write?</span> }&#x000A;130:           <span class="ruby-identifier">ready_errors</span>  = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">errors</span>).<span class="ruby-identifier">select</span>  { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">select_for_error?</span> }&#x000A;131: &#x000A;132:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ready_readers</span>.<span class="ruby-identifier">any?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ready_writers</span>.<span class="ruby-identifier">any?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ready_errors</span>.<span class="ruby-identifier">any?</span>&#x000A;133:             <span class="ruby-keyword kw">return</span> [<span class="ruby-identifier">ready_readers</span>, <span class="ruby-identifier">ready_writers</span>, <span class="ruby-identifier">ready_errors</span>]&#x000A;134:           <span class="ruby-keyword kw">end</span>&#x000A;135: &#x000A;136:           <span class="ruby-identifier">processed</span> = <span class="ruby-value">0</span>&#x000A;137:           <span class="ruby-constant">Array</span>(<span class="ruby-identifier">readers</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reader</span><span class="ruby-operator">|</span>&#x000A;138:             <span class="ruby-identifier">processed</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">reader</span>.<span class="ruby-identifier">idle!</span>&#x000A;139:           <span class="ruby-keyword kw">end</span>&#x000A;140: &#x000A;141:           <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;no readers were ready for reading, and none had any incoming packets&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">processed</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;142:         <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

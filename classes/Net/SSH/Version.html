@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::Version [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Net::SSH::Version
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../files/lib/net/ssh/version_rb.html">lib/net/ssh/version.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            A class for describing the current version of a library. The version
+            consists of three parts: the <tt>major</tt> number, the <tt>minor</tt>
+            number, and the <tt>tiny</tt> (or <tt>patch</tt>) number.
+            </p>
+            <p>
+            Two <a href="Version.html">Version</a> instances may be compared, so that
+            you can test that a version of a library is what you require:
+            </p>
+            <pre>require 'net/ssh/version'&#x000A;&#x000A;if Net::SSH::Version::CURRENT &lt; Net::SSH::Version[2,1,0]&#x000A;  abort &quot;your software is too old!&quot;&#x000A;end</pre>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000321">[]</a></li>
+              <li><a href="#M000322">new</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000323">&lt;=&gt;</a></li>
+              <li><a href="#M000325">to_i</a></li>
+              <li><a href="#M000324">to_s</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+            <div id='includes'>
+              <h2>Included modules</h2>
+              <ol>
+                <li>Comparable</li>
+              </ol>
+            </div>
+          </div>
+          <div id='section'>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>MAJOR</td>
+                    <td>=</td>
+                    <td class='context-item-value'>2</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'>
+                      
+                      The major component of this version of the <a
+                      href="../SSH.html">Net::SSH</a> library
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>MINOR</td>
+                    <td>=</td>
+                    <td class='context-item-value'>0</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'>
+                      
+                      The minor component of this version of the <a
+                      href="../SSH.html">Net::SSH</a> library
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>TINY</td>
+                    <td>=</td>
+                    <td class='context-item-value'>13</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'>
+                      
+                      The tiny component of this version of the <a
+                      href="../SSH.html">Net::SSH</a> library
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>CURRENT</td>
+                    <td>=</td>
+                    <td class='context-item-value'>new(MAJOR, MINOR, TINY)</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'>
+                      
+                      The current version of the <a href="../SSH.html">Net::SSH</a> library as a
+                      <a href="Version.html">Version</a> instance
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>STRING</td>
+                    <td>=</td>
+                    <td class='context-item-value'>CURRENT.to_s</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'>
+                      
+                      The current version of the <a href="../SSH.html">Net::SSH</a> library as a
+                      <a href="../../String.html">String</a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>major</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>minor</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>tiny</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000321'>
+                <a name='M000321'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>[]</span>
+                  <span class='arguments'>(major, minor, tiny)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  A convenience method for instantiating a new <a
+                  href="Version.html">Version</a> instance with the given <tt>major</tt>,
+                  <tt>minor</tt>, and <tt>tiny</tt> components.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000321-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000321-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/version.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-operator">[]</span>(<span class="ruby-identifier">major</span>, <span class="ruby-identifier">minor</span>, <span class="ruby-identifier">tiny</span>)&#x000A;20:       <span class="ruby-identifier">new</span>(<span class="ruby-identifier">major</span>, <span class="ruby-identifier">minor</span>, <span class="ruby-identifier">tiny</span>)&#x000A;21:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000322'>
+                <a name='M000322'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(major, minor, tiny)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Create a new <a href="Version.html">Version</a> object with the given
+                  components.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000322-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000322-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/version.rb, line 26</span>&#x000A;26:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">major</span>, <span class="ruby-identifier">minor</span>, <span class="ruby-identifier">tiny</span>)&#x000A;27:       <span class="ruby-ivar">@major</span>, <span class="ruby-ivar">@minor</span>, <span class="ruby-ivar">@tiny</span> = <span class="ruby-identifier">major</span>, <span class="ruby-identifier">minor</span>, <span class="ruby-identifier">tiny</span>&#x000A;28:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000323'>
+                <a name='M000323'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>&lt;=&gt;</span>
+                  <span class='arguments'>(version)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Compare this version to the given <tt>version</tt> object.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000323-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000323-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/version.rb, line 31</span>&#x000A;31:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">&lt;=&gt;</span>(<span class="ruby-identifier">version</span>)&#x000A;32:       <span class="ruby-identifier">to_i</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">version</span>.<span class="ruby-identifier">to_i</span>&#x000A;33:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000325'>
+                <a name='M000325'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>to_i</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Converts this version to a canonical integer that may be compared against
+                  other version objects.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000325-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000325-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/version.rb, line 43</span>&#x000A;43:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_i</span>&#x000A;44:       <span class="ruby-ivar">@to_i</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@major</span> <span class="ruby-operator">*</span> <span class="ruby-value">1_000_000</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@minor</span> <span class="ruby-operator">*</span> <span class="ruby-value">1_000</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@tiny</span>&#x000A;45:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000324'>
+                <a name='M000324'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>to_s</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Converts this version object to a string, where each of the three version
+                  components are joined by the &#8217;.&#8217; character. E.g., 2.0.0.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000324-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000324-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/version.rb, line 37</span>&#x000A;37:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>&#x000A;38:       <span class="ruby-ivar">@to_s</span> <span class="ruby-operator">||=</span> [<span class="ruby-ivar">@major</span>, <span class="ruby-ivar">@minor</span>, <span class="ruby-ivar">@tiny</span>].<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;.&quot;</span>)&#x000A;39:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
