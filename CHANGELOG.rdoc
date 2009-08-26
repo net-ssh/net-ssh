@@ -1,5 +1,10 @@
 
 
+=== 2.0.14 / ?? Aug 2009
+
+* Fix for IO#select threading bug in Ruby 1.8 (LH-1) [Daniel Azuma]
+
+
 === 2.0.13 / 17 Aug 2009
 
 * Added fix for hanging in ServerVersion#negotiate! when using SOCKS5 proxy (GH-9) [Gerald Talton]

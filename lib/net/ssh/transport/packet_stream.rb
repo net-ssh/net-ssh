@@ -5,6 +5,8 @@ require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'
 require 'net/ssh/transport/state'
 
+require 'thread'
+
 module Net; module SSH; module Transport
 
   # A module that builds additional functionality onto the Net::SSH::BufferedIo
@@ -62,13 +64,20 @@ module Net; module SSH; module Transport
         Socket.getnameinfo(addr, Socket::NI_NUMERICHOST | Socket::NI_NUMERICSERV).first
       end
     end
-
+    
+    # A fix for an IO#select threading bug
+    # See: http://www.daniel-azuma.com/blog/view/z2ysbx0e4c3it9/ruby_1_8_7_io_select_threading_bug
+    MUTEX = Mutex.new
+    
     # Returns true if the IO is available for reading, and false otherwise.
     def available_for_read?
-      result = IO.select([self], nil, nil, 0)
+      result = nil
+      MUTEX.synchronize do
+        result = IO.select([self], nil, nil, 0)
+      end
       result && result.first.any?
     end
-
+    
     # Returns the next full packet. If the mode parameter is :nonblock (the
     # default), then this will return immediately, whether a packet is
     # available or not, and will return nil if there is no packet ready to be
