@@ -1,5 +1,6 @@
 require 'net/ssh/buffer'
 require 'net/ssh/loggable'
+require 'net/ssh/ruby_compat'
 
 module Net; module SSH
 
@@ -109,7 +110,7 @@ module Net; module SSH
     def wait_for_pending_sends
       send_pending
       while output.length > 0
-        result = IO.select(nil, [self]) or next
+        result = Net::SSH::Compat.io_select(nil, [self]) or next
         next unless result[1].any?
         send_pending
       end

@@ -1,4 +1,5 @@
 require 'net/ssh/loggable'
+require 'net/ssh/ruby_compat'
 require 'net/ssh/connection/channel'
 require 'net/ssh/connection/constants'
 require 'net/ssh/service/forward'
@@ -197,7 +198,7 @@ module Net; module SSH; module Connection
 
       r = listeners.keys
       w = r.select { |w2| w2.respond_to?(:pending_write?) && w2.pending_write? }
-      readers, writers, = IO.select(r, w, nil, wait)
+      readers, writers, = Net::SSH::Compat.io_select(r, w, nil, wait)
 
       postprocess(readers, writers)
     end

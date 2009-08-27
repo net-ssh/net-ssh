@@ -1,11 +1,11 @@
 require 'net/ssh/buffered_io'
 require 'net/ssh/errors'
 require 'net/ssh/packet'
+require 'net/ssh/ruby_compat'
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'
 require 'net/ssh/transport/state'
 
-require 'thread'
 
 module Net; module SSH; module Transport
 
@@ -65,24 +65,10 @@ module Net; module SSH; module Transport
       end
     end
     
-    if RUBY_VERSION > '1.9' || RUBY_PLATFORM == 'java'
-       # Returns true if the IO is available for reading, and false otherwise.
-       def available_for_read?
-         result = IO.select([self], nil, nil, 0)
-         result && result.first.any?
-       end
-    else        
-      # A fix for an IO#select threading bug in Ruby 1.8
-      # See: http://net-ssh.lighthouseapp.com/projects/36253/tickets/1-ioselect-threading-bug-in-ruby-18
-      MUTEX = Mutex.new
-      # Returns true if the IO is available for reading, and false otherwise.
-      def available_for_read?
-        result = nil
-        MUTEX.synchronize do
-          result = IO.select([self], nil, nil, 0)
-        end
-        result && result.first.any?
-      end
+    # Returns true if the IO is available for reading, and false otherwise.
+    def available_for_read?
+      result = Net::SSH::Compat.io_select([self], nil, nil, 0)
+      result && result.first.any?
     end
     
     # Returns the next full packet. If the mode parameter is :nonblock (the
@@ -102,7 +88,7 @@ module Net; module SSH; module Transport
           return packet if packet
 
           loop do
-            result = IO.select([self]) or next
+            result = Net::SSH::Compat.io_select([self]) or next
             break if result.first.any?
           end
 
