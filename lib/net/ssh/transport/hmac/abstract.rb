@@ -1,4 +1,5 @@
 require 'openssl'
+require 'openssl/digest'
 
 module Net; module SSH; module Transport; module HMAC
 

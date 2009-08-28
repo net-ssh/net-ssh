@@ -1,8 +1,10 @@
 
 
-=== 2.0.14 / ?? Aug 2009
+=== 2.0.14 / 28 Aug 2009
 
 * Fix for IO#select threading bug in Ruby 1.8 (LH-1) [Daniel Azuma]
+
+* Fix for "uninitialized constant OpenSSL::Digest::MD5" exception in Net::SFTP [DL Redden]
 
 
 === 2.0.13 / 17 Aug 2009
