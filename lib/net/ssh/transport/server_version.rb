@@ -43,7 +43,8 @@ module Net; module SSH; module Transport
         loop do
           @version = ""
           loop do
-            b = socket.recv(1)
+#            b = socket.recv(1)
+            b = socket.readchar
             
             if b.nil?
               raise Net::SSH::Disconnect, "connection closed by remote host"

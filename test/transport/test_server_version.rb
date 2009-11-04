@@ -48,7 +48,8 @@ module Transport
         if data[-1] != "\n"
             recv_times += 1
         end
-        socket.expects(:recv).with(1).times(recv_times).returns(*data).then.returns(nil)
+#        socket.expects(:recv).with(1).times(recv_times).returns(*data).then.returns(nil)
+        socket.expects(:readchar).times(recv_times).returns(*data).then.returns(nil)
 
         if good
           socket.expects(:write).with("#{Net::SSH::Transport::ServerVersion::PROTO_VERSION}\r\n")
