@@ -59,10 +59,13 @@ module Net; module SSH; module Transport
     # The IP address of the peer (remote) end of the socket, as reported by
     # the socket.
     def peer_ip
-      @peer_ip ||= begin
-        addr = getpeername
-        Socket.getnameinfo(addr, Socket::NI_NUMERICHOST | Socket::NI_NUMERICSERV).first
-      end
+      @peer_ip ||=
+        if respond_to?(:getpeername)
+          addr = getpeername
+          Socket.getnameinfo(addr, Socket::NI_NUMERICHOST | Socket::NI_NUMERICSERV).first
+        else
+          "<no hostip for proxy command>"
+        end
     end
     
     # Returns true if the IO is available for reading, and false otherwise.
