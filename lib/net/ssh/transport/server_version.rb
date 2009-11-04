@@ -44,9 +44,10 @@ module Net; module SSH; module Transport
           @version = ""
           loop do
 #            b = socket.recv(1)
-            b = socket.readchar
-            
-            if b.nil?
+            begin
+              b = socket.readpartial(1)
+              raise Net::SSH::Disconnect, "connection closed by remote host" if b.nil?
+            rescue EOFError => e
               raise Net::SSH::Disconnect, "connection closed by remote host"
             end
             @version << b
