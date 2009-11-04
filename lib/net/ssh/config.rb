@@ -31,7 +31,7 @@ module Net; module SSH
   # whether the OpenSSH configuration files are read by passing the :config
   # option to Net::SSH.start. (They are, by default.)
   class Config
-    class <<self
+    class << self
       @@default_files = %w(~/.ssh/config /etc/ssh_config /etc/ssh/ssh_config)
 
       # Returns an array of locations of OpenSSH configuration files
@@ -83,9 +83,9 @@ module Net; module SSH
             end
 
           if key == 'host'
-            # Support "Host host1,host2,hostN".
+            # Support "Host host1 host2 hostN".
             # See http://github.com/net-ssh/net-ssh/issues#issue/6
-            multi_host = value.split(/,\s+/)
+            multi_host = value.split(/\s+/)
             matched_host = multi_host.select { |h| host =~ pattern2regex(h) }.first
           elsif !matched_host.nil?
             if key == 'identityfile'
