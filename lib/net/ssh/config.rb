@@ -23,6 +23,7 @@ module Net; module SSH
   # * PasswordAuthentication => maps to the :auth_methods option
   # * Port => :port
   # * PreferredAuthentications => maps to the :auth_methods option
+  # * ProxyCommand => maps to the :proxy option
   # * RekeyLimit => :rekey_limit
   # * User => :user
   # * UserKnownHostsFile => :user_known_hosts_file
@@ -143,6 +144,9 @@ module Net; module SSH
             hash[:port] = value
           when 'preferredauthentications'
             hash[:auth_methods] = value.split(/,/)
+          when 'proxycommand'
+            require 'net/ssh/proxy/command'
+            hash[:proxy] = Net::SSH::Proxy::Command.new(value)
           when 'pubkeyauthentication'
             if value
               hash[:auth_methods] ||= []
