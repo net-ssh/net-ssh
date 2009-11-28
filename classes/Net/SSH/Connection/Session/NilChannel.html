@@ -55,7 +55,7 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000099'>
+              <div class='method public-class' id='method-M000099'>
                 <a name='M000099'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
@@ -65,11 +65,11 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000099-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000099-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 50</span>&#x000A;50:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>)&#x000A;51:         <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>&#x000A;52:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000099-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 51</span>&#x000A;51:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>)&#x000A;52:         <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>&#x000A;53:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000100'>
+              <div class='method public-instance' id='method-M000100'>
                 <a name='M000100'>      </a>
                 <div class='synopsis'>
                   <span class='name'>method_missing</span>
@@ -79,7 +79,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000100-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000100-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 54</span>&#x000A;54:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;55:         <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">lwarn</span> { <span class="ruby-node">&quot;ignoring request #{sym.inspect} for non-existent (closed?) channel; probably ssh server bug&quot;</span> }&#x000A;56:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000100-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/connection/session.rb, line 55</span>&#x000A;55:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;56:         <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">lwarn</span> { <span class="ruby-node">&quot;ignoring request #{sym.inspect} for non-existent (closed?) channel; probably ssh server bug&quot;</span> }&#x000A;57:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

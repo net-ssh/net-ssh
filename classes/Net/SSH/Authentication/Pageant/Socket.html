@@ -69,7 +69,7 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000013'>
+              <div class='method public-class' id='method-M000013'>
                 <a name='M000013'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
@@ -88,7 +88,7 @@
                   <pre id='M000013-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 89</span>&#x000A;89:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>&#x000A;90:         <span class="ruby-ivar">@win</span> = <span class="ruby-constant">Win</span>.<span class="ruby-identifier">findWindow</span>(<span class="ruby-value str">&quot;Pageant&quot;</span>, <span class="ruby-value str">&quot;Pageant&quot;</span>)&#x000A;91: &#x000A;92:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@win</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;93:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>,&#x000A;94:             <span class="ruby-value str">&quot;pageant process not running&quot;</span>&#x000A;95:         <span class="ruby-keyword kw">end</span>&#x000A;96: &#x000A;97:         <span class="ruby-ivar">@res</span> = <span class="ruby-keyword kw">nil</span>&#x000A;98:         <span class="ruby-ivar">@pos</span> = <span class="ruby-value">0</span>&#x000A;99:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000012'>
+              <div class='method public-class' id='method-M000012'>
                 <a name='M000012'>      </a>
                 <div class='synopsis'>
                   <span class='name'>open</span>
@@ -109,7 +109,7 @@
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000016'>
+              <div class='method public-instance' id='method-M000016'>
                 <a name='M000016'>      </a>
                 <div class='synopsis'>
                   <span class='name'>close</span>
@@ -129,7 +129,7 @@
                   <pre id='M000016-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 154</span>&#x000A;154:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>&#x000A;155:         <span class="ruby-ivar">@res</span> = <span class="ruby-keyword kw">nil</span>&#x000A;156:         <span class="ruby-ivar">@pos</span> = <span class="ruby-value">0</span>&#x000A;157:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000017'>
+              <div class='method public-instance' id='method-M000017'>
                 <a name='M000017'>      </a>
                 <div class='synopsis'>
                   <span class='name'>closed?</span>
@@ -150,7 +150,7 @@
                   <pre id='M000017-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 162</span>&#x000A;162:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">closed?</span>&#x000A;163:         <span class="ruby-ivar">@res</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@pos</span>.<span class="ruby-identifier">zero?</span>&#x000A;164:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000018'>
+              <div class='method public-instance' id='method-M000018'>
                 <a name='M000018'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read</span>
@@ -169,7 +169,7 @@
                   <pre id='M000018-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 168</span>&#x000A;168:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">n</span> = <span class="ruby-keyword kw">nil</span>)&#x000A;169:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@res</span>&#x000A;170:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">nil?</span>&#x000A;171:           <span class="ruby-identifier">start</span>, <span class="ruby-ivar">@pos</span> = <span class="ruby-ivar">@pos</span>, <span class="ruby-ivar">@res</span>.<span class="ruby-identifier">size</span>&#x000A;172:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@res</span>[<span class="ruby-identifier">start</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>]&#x000A;173:         <span class="ruby-keyword kw">else</span>&#x000A;174:           <span class="ruby-identifier">start</span>, <span class="ruby-ivar">@pos</span> = <span class="ruby-ivar">@pos</span>, <span class="ruby-ivar">@pos</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">n</span>&#x000A;175:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@res</span>[<span class="ruby-identifier">start</span>, <span class="ruby-identifier">n</span>]&#x000A;176:         <span class="ruby-keyword kw">end</span>&#x000A;177:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000014'>
+              <div class='method public-instance' id='method-M000014'>
                 <a name='M000014'>      </a>
                 <div class='synopsis'>
                   <span class='name'>send</span>
@@ -188,7 +188,7 @@
                   <pre id='M000014-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 103</span>&#x000A;103:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send</span>(<span class="ruby-identifier">data</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;104:         <span class="ruby-ivar">@res</span> = <span class="ruby-identifier">send_query</span>(<span class="ruby-identifier">data</span>)&#x000A;105:         <span class="ruby-ivar">@pos</span> = <span class="ruby-value">0</span>&#x000A;106:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000015'>
+              <div class='method public-instance' id='method-M000015'>
                 <a name='M000015'>      </a>
                 <div class='synopsis'>
                   <span class='name'>send_query</span>

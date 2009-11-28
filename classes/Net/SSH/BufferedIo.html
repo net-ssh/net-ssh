@@ -97,7 +97,7 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000042'>
+              <div class='method public-instance' id='method-M000042'>
                 <a name='M000042'>      </a>
                 <div class='synopsis'>
                   <span class='name'>available</span>
@@ -113,10 +113,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000042-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000042-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 78</span>&#x000A;78:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">available</span>&#x000A;79:       <span class="ruby-identifier">input</span>.<span class="ruby-identifier">available</span>&#x000A;80:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000042-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 79</span>&#x000A;79:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">available</span>&#x000A;80:       <span class="ruby-identifier">input</span>.<span class="ruby-identifier">available</span>&#x000A;81:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000043'>
+              <div class='method public-instance' id='method-M000043'>
                 <a name='M000043'>      </a>
                 <div class='synopsis'>
                   <span class='name'>enqueue</span>
@@ -133,10 +133,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000043-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000043-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 84</span>&#x000A;84:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">enqueue</span>(<span class="ruby-identifier">data</span>)&#x000A;85:       <span class="ruby-identifier">output</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">data</span>)&#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000043-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 85</span>&#x000A;85:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">enqueue</span>(<span class="ruby-identifier">data</span>)&#x000A;86:       <span class="ruby-identifier">output</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">data</span>)&#x000A;87:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000040'>
+              <div class='method public-instance' id='method-M000040'>
                 <a name='M000040'>      </a>
                 <div class='synopsis'>
                   <span class='name'>fill</span>
@@ -153,10 +153,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000040-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000040-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fill</span>(<span class="ruby-identifier">n</span>=<span class="ruby-value">8192</span>)&#x000A;63:       <span class="ruby-identifier">input</span>.<span class="ruby-identifier">consume!</span>&#x000A;64:       <span class="ruby-identifier">data</span> = <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)&#x000A;65:       <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;read #{data.length} bytes&quot;</span> }&#x000A;66:       <span class="ruby-identifier">input</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">data</span>)&#x000A;67:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">length</span>&#x000A;68:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000040-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 63</span>&#x000A;63:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fill</span>(<span class="ruby-identifier">n</span>=<span class="ruby-value">8192</span>)&#x000A;64:       <span class="ruby-identifier">input</span>.<span class="ruby-identifier">consume!</span>&#x000A;65:       <span class="ruby-identifier">data</span> = <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)&#x000A;66:       <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;read #{data.length} bytes&quot;</span> }&#x000A;67:       <span class="ruby-identifier">input</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">data</span>)&#x000A;68:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">length</span>&#x000A;69:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000044'>
+              <div class='method public-instance' id='method-M000044'>
                 <a name='M000044'>      </a>
                 <div class='synopsis'>
                   <span class='name'>pending_write?</span>
@@ -172,10 +172,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000044-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000044-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 90</span>&#x000A;90:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pending_write?</span>&#x000A;91:       <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;92:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000044-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 91</span>&#x000A;91:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pending_write?</span>&#x000A;92:       <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;93:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000041'>
+              <div class='method public-instance' id='method-M000041'>
                 <a name='M000041'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_available</span>
@@ -192,10 +192,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000041-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000041-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 72</span>&#x000A;72:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_available</span>(<span class="ruby-identifier">length</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;73:       <span class="ruby-identifier">input</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">length</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">available</span>)&#x000A;74:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000041-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 73</span>&#x000A;73:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_available</span>(<span class="ruby-identifier">length</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;74:       <span class="ruby-identifier">input</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">length</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">available</span>)&#x000A;75:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000045'>
+              <div class='method public-instance' id='method-M000045'>
                 <a name='M000045'>      </a>
                 <div class='synopsis'>
                   <span class='name'>send_pending</span>
@@ -211,10 +211,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000045-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000045-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 96</span>&#x000A; 96:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_pending</span>&#x000A; 97:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A; 98:         <span class="ruby-identifier">sent</span> = <span class="ruby-identifier">send</span>(<span class="ruby-identifier">output</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-value">0</span>)&#x000A; 99:         <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;sent #{sent} bytes&quot;</span> }&#x000A;100:         <span class="ruby-identifier">output</span>.<span class="ruby-identifier">consume!</span>(<span class="ruby-identifier">sent</span>)&#x000A;101:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">sent</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;102:       <span class="ruby-keyword kw">else</span>&#x000A;103:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>&#x000A;104:       <span class="ruby-keyword kw">end</span>&#x000A;105:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000045-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 97</span>&#x000A; 97:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_pending</span>&#x000A; 98:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A; 99:         <span class="ruby-identifier">sent</span> = <span class="ruby-identifier">send</span>(<span class="ruby-identifier">output</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-value">0</span>)&#x000A;100:         <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;sent #{sent} bytes&quot;</span> }&#x000A;101:         <span class="ruby-identifier">output</span>.<span class="ruby-identifier">consume!</span>(<span class="ruby-identifier">sent</span>)&#x000A;102:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">sent</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;103:       <span class="ruby-keyword kw">else</span>&#x000A;104:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>&#x000A;105:       <span class="ruby-keyword kw">end</span>&#x000A;106:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000046'>
+              <div class='method public-instance' id='method-M000046'>
                 <a name='M000046'>      </a>
                 <div class='synopsis'>
                   <span class='name'>wait_for_pending_sends</span>
@@ -230,7 +230,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000046-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000046-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 109</span>&#x000A;109:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">wait_for_pending_sends</span>&#x000A;110:       <span class="ruby-identifier">send_pending</span>&#x000A;111:       <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;112:         <span class="ruby-identifier">result</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-keyword kw">nil</span>, [<span class="ruby-keyword kw">self</span>]) <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">next</span>&#x000A;113:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">result</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">any?</span>&#x000A;114:         <span class="ruby-identifier">send_pending</span>&#x000A;115:       <span class="ruby-keyword kw">end</span>&#x000A;116:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000046-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffered_io.rb, line 110</span>&#x000A;110:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">wait_for_pending_sends</span>&#x000A;111:       <span class="ruby-identifier">send_pending</span>&#x000A;112:       <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;113:         <span class="ruby-identifier">result</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Compat</span>.<span class="ruby-identifier">io_select</span>(<span class="ruby-keyword kw">nil</span>, [<span class="ruby-keyword kw">self</span>]) <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">next</span>&#x000A;114:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">result</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">any?</span>&#x000A;115:         <span class="ruby-identifier">send_pending</span>&#x000A;116:       <span class="ruby-keyword kw">end</span>&#x000A;117:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

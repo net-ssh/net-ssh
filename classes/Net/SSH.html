@@ -100,6 +100,9 @@
             <a href="../../files/lib/net/ssh/prompt_rb.html">lib/net/ssh/prompt.rb</a>
           </li>
           <li class='other'>
+            <a href="../../files/lib/net/ssh/proxy/command_rb.html">lib/net/ssh/proxy/command.rb</a>
+          </li>
+          <li class='other'>
             <a href="../../files/lib/net/ssh/proxy/errors_rb.html">lib/net/ssh/proxy/errors.rb</a>
           </li>
           <li class='other'>
@@ -110,6 +113,9 @@
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/proxy/socks5_rb.html">lib/net/ssh/proxy/socks5.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/net/ssh/ruby_compat_rb.html">lib/net/ssh/ruby_compat.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/service/forward_rb.html">lib/net/ssh/service/forward.rb</a>
@@ -133,10 +139,10 @@
             <a href="../../files/lib/net/ssh/test/remote_packet_rb.html">lib/net/ssh/test/remote_packet.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/test/script_rb.html">lib/net/ssh/test/script.rb</a>
+            <a href="../../files/lib/net/ssh/test/socket_rb.html">lib/net/ssh/test/socket.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/test/socket_rb.html">lib/net/ssh/test/socket.rb</a>
+            <a href="../../files/lib/net/ssh/test/script_rb.html">lib/net/ssh/test/script.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/test_rb.html">lib/net/ssh/test.rb</a>
@@ -166,10 +172,10 @@
             <a href="../../files/lib/net/ssh/transport/server_version_rb.html">lib/net/ssh/transport/server_version.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/transport/session_rb.html">lib/net/ssh/transport/session.rb</a>
+            <a href="../../files/lib/net/ssh/transport/state_rb.html">lib/net/ssh/transport/state.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/transport/state_rb.html">lib/net/ssh/transport/state.rb</a>
+            <a href="../../files/lib/net/ssh/transport/session_rb.html">lib/net/ssh/transport/session.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/verifiers/lenient_rb.html">lib/net/ssh/verifiers/lenient.rb</a>
@@ -262,6 +268,7 @@
               Class <a href="SSH/Buffer.html" class="link">Net::SSH::Buffer</a><br />
               Class <a href="SSH/ChannelOpenFailed.html" class="link">Net::SSH::ChannelOpenFailed</a><br />
               Class <a href="SSH/ChannelRequestFailed.html" class="link">Net::SSH::ChannelRequestFailed</a><br />
+              Class <a href="SSH/Compat.html" class="link">Net::SSH::Compat</a><br />
               Class <a href="SSH/Config.html" class="link">Net::SSH::Config</a><br />
               Class <a href="SSH/Disconnect.html" class="link">Net::SSH::Disconnect</a><br />
               Class <a href="SSH/Exception.html" class="link">Net::SSH::Exception</a><br />
@@ -306,7 +313,7 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000003'>
+              <div class='method public-class' id='method-M000003'>
                 <a name='M000003'>      </a>
                 <div class='synopsis'>
                   <span class='name'>configuration_for</span>
@@ -334,7 +341,7 @@
                   <pre id='M000003-source'>     <span class="ruby-comment cmt"># File lib/net/ssh.rb, line 205</span>&#x000A;205:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">configuration_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">use_ssh_config</span>=<span class="ruby-keyword kw">true</span>)&#x000A;206:       <span class="ruby-identifier">files</span> = <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">use_ssh_config</span>&#x000A;207:         <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">default_files</span>&#x000A;208:         <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">false</span>, <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">then</span> <span class="ruby-keyword kw">return</span> {}&#x000A;209:         <span class="ruby-keyword kw">else</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">use_ssh_config</span>)&#x000A;210:         <span class="ruby-keyword kw">end</span>&#x000A;211:       &#x000A;212:       <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">files</span>)&#x000A;213:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000002'>
+              <div class='method public-class' id='method-M000002'>
                 <a name='M000002'>      </a>
                 <div class='synopsis'>
                   <span class='name'>start</span>

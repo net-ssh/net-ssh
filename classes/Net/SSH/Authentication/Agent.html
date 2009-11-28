@@ -166,7 +166,7 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000019'>
+              <div class='method public-class' id='method-M000019'>
                 <a name='M000019'>      </a>
                 <div class='synopsis'>
                   <span class='name'>connect</span>
@@ -186,7 +186,7 @@
                   <pre id='M000019-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent.rb, line 51</span>&#x000A;51:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">logger</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;52:       <span class="ruby-identifier">agent</span> = <span class="ruby-identifier">new</span>(<span class="ruby-identifier">logger</span>)&#x000A;53:       <span class="ruby-identifier">agent</span>.<span class="ruby-identifier">connect!</span>&#x000A;54:       <span class="ruby-identifier">agent</span>.<span class="ruby-identifier">negotiate!</span>&#x000A;55:       <span class="ruby-identifier">agent</span>&#x000A;56:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000020'>
+              <div class='method public-class' id='method-M000020'>
                 <a name='M000020'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
@@ -206,7 +206,7 @@
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000024'>
+              <div class='method public-instance' id='method-M000024'>
                 <a name='M000024'>      </a>
                 <div class='synopsis'>
                   <span class='name'>close</span>
@@ -225,7 +225,7 @@
                   <pre id='M000024-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent.rb, line 112</span>&#x000A;112:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>&#x000A;113:       <span class="ruby-ivar">@socket</span>.<span class="ruby-identifier">close</span>&#x000A;114:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000021'>
+              <div class='method public-instance' id='method-M000021'>
                 <a name='M000021'>      </a>
                 <div class='synopsis'>
                   <span class='name'>connect!</span>
@@ -246,7 +246,7 @@
                   <pre id='M000021-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent.rb, line 68</span>&#x000A;68:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">connect!</span>&#x000A;69:       <span class="ruby-keyword kw">begin</span>&#x000A;70:         <span class="ruby-identifier">debug</span> { <span class="ruby-value str">&quot;connecting to ssh-agent&quot;</span> }&#x000A;71:         <span class="ruby-ivar">@socket</span> = <span class="ruby-identifier">agent_socket_factory</span>.<span class="ruby-identifier">open</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'SSH_AUTH_SOCK'</span>])&#x000A;72:       <span class="ruby-keyword kw">rescue</span>&#x000A;73:         <span class="ruby-identifier">error</span> { <span class="ruby-value str">&quot;could not connect to ssh-agent&quot;</span> }&#x000A;74:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentNotAvailable</span>, <span class="ruby-identifier">$!</span>.<span class="ruby-identifier">message</span>&#x000A;75:       <span class="ruby-keyword kw">end</span>&#x000A;76:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000023'>
+              <div class='method public-instance' id='method-M000023'>
                 <a name='M000023'>      </a>
                 <div class='synopsis'>
                   <span class='name'>identities</span>
@@ -266,7 +266,7 @@
                   <pre id='M000023-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent.rb, line 94</span>&#x000A; 94:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">identities</span>&#x000A; 95:       <span class="ruby-identifier">type</span>, <span class="ruby-identifier">body</span> = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-constant">SSH2_AGENT_REQUEST_IDENTITIES</span>)&#x000A; 96:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-value str">&quot;could not get identity count&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">agent_failed</span>(<span class="ruby-identifier">type</span>)&#x000A; 97:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-node">&quot;bad authentication reply: #{type}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH2_AGENT_IDENTITIES_ANSWER</span>&#x000A; 98: &#x000A; 99:       <span class="ruby-identifier">identities</span> = []&#x000A;100:       <span class="ruby-identifier">body</span>.<span class="ruby-identifier">read_long</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword kw">do</span>&#x000A;101:         <span class="ruby-identifier">key</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">body</span>.<span class="ruby-identifier">read_string</span>).<span class="ruby-identifier">read_key</span>&#x000A;102:         <span class="ruby-identifier">key</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Comment</span>)&#x000A;103:         <span class="ruby-identifier">key</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">body</span>.<span class="ruby-identifier">read_string</span>&#x000A;104:         <span class="ruby-identifier">identities</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">key</span>&#x000A;105:       <span class="ruby-keyword kw">end</span>&#x000A;106: &#x000A;107:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">identities</span>&#x000A;108:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000022'>
+              <div class='method public-instance' id='method-M000022'>
                 <a name='M000022'>      </a>
                 <div class='synopsis'>
                   <span class='name'>negotiate!</span>
@@ -286,7 +286,7 @@
                   <pre id='M000022-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent.rb, line 80</span>&#x000A;80:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">negotiate!</span>&#x000A;81:       <span class="ruby-comment cmt"># determine what type of agent we're communicating with</span>&#x000A;82:       <span class="ruby-identifier">type</span>, <span class="ruby-identifier">body</span> = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-constant">SSH2_AGENT_REQUEST_VERSION</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">ServerVersion</span><span class="ruby-operator">::</span><span class="ruby-constant">PROTO_VERSION</span>)&#x000A;83: &#x000A;84:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">SSH2_AGENT_VERSION_RESPONSE</span>&#x000A;85:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-value str">&quot;SSH2 agents are not yet supported&quot;</span>&#x000A;86:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_RSA_IDENTITIES_ANSWER1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_RSA_IDENTITIES_ANSWER2</span>&#x000A;87:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-node">&quot;unknown response from agent: #{type}, #{body.to_s.inspect}&quot;</span>&#x000A;88:       <span class="ruby-keyword kw">end</span>&#x000A;89:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000025'>
+              <div class='method public-instance' id='method-M000025'>
                 <a name='M000025'>      </a>
                 <div class='synopsis'>
                   <span class='name'>sign</span>

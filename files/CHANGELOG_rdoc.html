@@ -31,12 +31,47 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2009-08-17 11:03:33 -0400</span>
+          <span class='datetime'>2009-11-28 15:22:21 -0500</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
+            <h3>2.0.16 / 28 Nov 2009</h3>
+            <ul>
+            <li>Fix for &#8220;multiple hosts are separated by whitespace&#8221; [Akinori
+            MUSHA]
+            
+            </li>
+            <li>Add support for the ProxyCommand directive [Akinori MUSHA]
+            
+            </li>
+            <li>Do not put a command line twice in error messages [Akinori MUSHA]
+            
+            </li>
+            <li>Switched from recv(1) to readchar in <a
+            href="lib/net/ssh/transport/server_version_rb.html">lib/net/ssh/transport/server_version.rb</a>,
+            so that closed sockets are recognized [Alex Peuchert]
+            
+            </li>
+            </ul>
+            <h3>2.0.15 / 03 Sep 2009</h3>
+            <ul>
+            <li>Scale back IO#select patch so it mutexes only zero-timeout calls [Daniel
+            Azuma, Will Bryant]
+            
+            </li>
+            </ul>
+            <h3>2.0.14 / 28 Aug 2009</h3>
+            <ul>
+            <li>Fix for IO#select threading bug in Ruby 1.8 (LH-1) [Daniel Azuma]
+            
+            </li>
+            <li>Fix for &#8220;uninitialized constant OpenSSL::Digest::MD5&#8221; exception
+            in Net::SFTP [DL Redden]
+            
+            </li>
+            </ul>
             <h3>2.0.13 / 17 Aug 2009</h3>
             <ul>
             <li>Added fix for hanging in ServerVersion#negotiate! when using SOCKS5 proxy
