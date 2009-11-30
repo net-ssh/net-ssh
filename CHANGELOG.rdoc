@@ -3,7 +3,6 @@
 
 * Fix for "multiple hosts are separated by whitespace" [Akinori MUSHA]
 * Add support for the ProxyCommand directive [Akinori MUSHA]
-* Do not put a command line twice in error messages [Akinori MUSHA]
 * Switched from #recv(1) to #readchar in lib/net/ssh/transport/server_version.rb, so that closed sockets are recognized [Alex Peuchert]
 
 
