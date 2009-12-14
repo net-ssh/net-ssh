@@ -3,7 +3,10 @@ require 'net/ssh/errors'
 require 'net/ssh/loggable'
 require 'net/ssh/transport/server_version'
 
-require 'net/ssh/authentication/pageant' if File::ALT_SEPARATOR && !(RUBY_PLATFORM =~ /java/)
+# Only load pageant on Windows, Ruby 1.8.x
+if File::ALT_SEPARATOR && !(RUBY_PLATFORM =~ /java/) && RUBY_VERSION < "1.9"
+  require 'net/ssh/authentication/pageant' 
+end
 
 module Net; module SSH; module Authentication
 
