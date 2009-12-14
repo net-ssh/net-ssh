@@ -1,4 +1,9 @@
 
+=== 2.0.17 / 14 Dec 2009
+
+* Don't load net/ssh/authentication/pageant on Windows with Ruby 1.9 [Travis Reeder, Delano Mandelbaum]
+
+
 === 2.0.16 / 28 Nov 2009
 
 * Fix for "multiple hosts are separated by whitespace" [Akinori MUSHA]
