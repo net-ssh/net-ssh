@@ -1,3 +1,6 @@
+=== Unreleased
+
+* Fix related to #recv(1) to #readpartial change in 2.0.16 [Hans de Graaff, Delano Mandelbaum]
 
 === 2.0.17 / 14 Dec 2009
 
@@ -8,7 +11,7 @@
 
 * Fix for "multiple hosts are separated by whitespace" [Akinori MUSHA]
 * Add support for the ProxyCommand directive [Akinori MUSHA]
-* Switched from #recv(1) to #readchar in lib/net/ssh/transport/server_version.rb, so that closed sockets are recognized [Alex Peuchert]
+* Switched from #recv(1) to #readpartial in lib/net/ssh/transport/server_version.rb, so that closed sockets are recognized [Alex Peuchert]
 
 
 === 2.0.15 / 03 Sep 2009
