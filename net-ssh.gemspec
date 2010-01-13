@@ -6,7 +6,7 @@
 	s.description = s.summary
 	s.authors = ["Jamis Buck", "Delano Mandelbaum"]
 	s.email = ["net-ssh@solutious.com", "net-ssh@solutious.com"]
-	s.homepage = "http://rubyforge.org/projects/net-ssh/"
+	s.homepage = "http://gemcutter.org/gems/net-ssh"
   
   s.extra_rdoc_files = %w[README.rdoc THANKS.rdoc CHANGELOG.rdoc]
   s.has_rdoc = true
