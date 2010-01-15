@@ -170,6 +170,7 @@ module Net; module SSH
         def pattern2regex(pattern)
           pattern = "^" + pattern.to_s.gsub(/\./, "\\.").
             gsub(/\?/, '.').
+            gsub(/([+\/])/, '\\\\\\0').
             gsub(/\*/, '.*') + "$"
           Regexp.new(pattern, true)
         end
