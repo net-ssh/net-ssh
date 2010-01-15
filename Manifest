@@ -28,6 +28,7 @@ lib/net/ssh/known_hosts.rb
 lib/net/ssh/loggable.rb
 lib/net/ssh/packet.rb
 lib/net/ssh/prompt.rb
+lib/net/ssh/proxy/command.rb
 lib/net/ssh/proxy/errors.rb
 lib/net/ssh/proxy/http.rb
 lib/net/ssh/proxy/socks4.rb
@@ -69,6 +70,7 @@ lib/net/ssh/version.rb
 net-ssh.gemspec
 setup.rb
 support/arcfour_check.rb
+support/ssh_tunnel_bug.rb
 test/authentication/methods/common.rb
 test/authentication/methods/test_abstract.rb
 test/authentication/methods/test_hostbased.rb
@@ -81,6 +83,7 @@ test/authentication/test_session.rb
 test/common.rb
 test/configs/eqsign
 test/configs/exact_match
+test/configs/host_plus
 test/configs/multihost
 test/configs/wild_cards
 test/connection/test_channel.rb
