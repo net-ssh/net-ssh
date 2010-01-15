@@ -52,22 +52,22 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000219">block_size</a></li>
-              <li><a href="#M000222">decrypt</a></li>
-              <li><a href="#M000221">encrypt</a></li>
-              <li><a href="#M000224">final</a></li>
-              <li><a href="#M000226">iv=</a></li>
-              <li><a href="#M000220">iv_len</a></li>
-              <li><a href="#M000225">name</a></li>
-              <li><a href="#M000227">reset</a></li>
-              <li><a href="#M000223">update</a></li>
+              <li><a href="#M000220">block_size</a></li>
+              <li><a href="#M000223">decrypt</a></li>
+              <li><a href="#M000222">encrypt</a></li>
+              <li><a href="#M000225">final</a></li>
+              <li><a href="#M000227">iv=</a></li>
+              <li><a href="#M000221">iv_len</a></li>
+              <li><a href="#M000226">name</a></li>
+              <li><a href="#M000228">reset</a></li>
+              <li><a href="#M000224">update</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000219'>
-                <a name='M000219'>      </a>
+              <div class='method public-class' id='method-M000220'>
+                <a name='M000220'>      </a>
                 <div class='synopsis'>
                   <span class='name'>block_size</span>
                   <span class='arguments'>()</span>
@@ -78,16 +78,34 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000219-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000220-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000219-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 9</span>&#x000A; 9:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">block_size</span>&#x000A;10:         <span class="ruby-value">8</span>&#x000A;11:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000220-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 9</span>&#x000A; 9:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">block_size</span>&#x000A;10:         <span class="ruby-value">8</span>&#x000A;11:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-M000223'>
+                <a name='M000223'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>decrypt</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Does nothing. Returns self.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000223-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000223-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 24</span>&#x000A;24:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">decrypt</span>&#x000A;25:         <span class="ruby-keyword kw">self</span>&#x000A;26:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-M000222'>
                 <a name='M000222'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>decrypt</span>
+                  <span class='name'>encrypt</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='description'>
@@ -99,29 +117,11 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000222-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000222-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 24</span>&#x000A;24:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">decrypt</span>&#x000A;25:         <span class="ruby-keyword kw">self</span>&#x000A;26:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000222-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 19</span>&#x000A;19:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">encrypt</span>&#x000A;20:         <span class="ruby-keyword kw">self</span>&#x000A;21:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000221'>
-                <a name='M000221'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>encrypt</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='description'>
-                  <p>
-                  Does nothing. Returns self.
-                  </p>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000221-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000221-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 19</span>&#x000A;19:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">encrypt</span>&#x000A;20:         <span class="ruby-keyword kw">self</span>&#x000A;21:       <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='method public-class' id='method-M000224'>
-                <a name='M000224'>      </a>
+              <div class='method public-class' id='method-M000225'>
+                <a name='M000225'>      </a>
                 <div class='synopsis'>
                   <span class='name'>final</span>
                   <span class='arguments'>()</span>
@@ -132,14 +132,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000224-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000225-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000224-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 34</span>&#x000A;34:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">final</span>&#x000A;35:         <span class="ruby-value str">&quot;&quot;</span>&#x000A;36:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000225-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 34</span>&#x000A;34:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">final</span>&#x000A;35:         <span class="ruby-value str">&quot;&quot;</span>&#x000A;36:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000226'>
-                <a name='M000226'>      </a>
+              <div class='method public-class' id='method-M000227'>
+                <a name='M000227'>      </a>
                 <div class='synopsis'>
                   <span class='name'>iv=</span>
                   <span class='arguments'>(v)</span>
@@ -150,14 +150,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000226-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000227-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000226-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 44</span>&#x000A;44:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">iv=</span>(<span class="ruby-identifier">v</span>)&#x000A;45:         <span class="ruby-keyword kw">nil</span>&#x000A;46:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000227-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 44</span>&#x000A;44:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">iv=</span>(<span class="ruby-identifier">v</span>)&#x000A;45:         <span class="ruby-keyword kw">nil</span>&#x000A;46:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000220'>
-                <a name='M000220'>      </a>
+              <div class='method public-class' id='method-M000221'>
+                <a name='M000221'>      </a>
                 <div class='synopsis'>
                   <span class='name'>iv_len</span>
                   <span class='arguments'>()</span>
@@ -168,14 +168,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000220-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000221-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000220-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 14</span>&#x000A;14:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">iv_len</span>&#x000A;15:         <span class="ruby-value">4</span>&#x000A;16:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000221-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 14</span>&#x000A;14:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">iv_len</span>&#x000A;15:         <span class="ruby-value">4</span>&#x000A;16:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000225'>
-                <a name='M000225'>      </a>
+              <div class='method public-class' id='method-M000226'>
+                <a name='M000226'>      </a>
                 <div class='synopsis'>
                   <span class='name'>name</span>
                   <span class='arguments'>()</span>
@@ -186,14 +186,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000225-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000226-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000225-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 39</span>&#x000A;39:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name</span>&#x000A;40:         <span class="ruby-value str">&quot;identity&quot;</span>&#x000A;41:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000226-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 39</span>&#x000A;39:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name</span>&#x000A;40:         <span class="ruby-value str">&quot;identity&quot;</span>&#x000A;41:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000227'>
-                <a name='M000227'>      </a>
+              <div class='method public-class' id='method-M000228'>
+                <a name='M000228'>      </a>
                 <div class='synopsis'>
                   <span class='name'>reset</span>
                   <span class='arguments'>()</span>
@@ -204,14 +204,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000227-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000228-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000227-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 49</span>&#x000A;49:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reset</span>&#x000A;50:         <span class="ruby-keyword kw">self</span>&#x000A;51:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000228-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 49</span>&#x000A;49:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reset</span>&#x000A;50:         <span class="ruby-keyword kw">self</span>&#x000A;51:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000223'>
-                <a name='M000223'>      </a>
+              <div class='method public-class' id='method-M000224'>
+                <a name='M000224'>      </a>
                 <div class='synopsis'>
                   <span class='name'>update</span>
                   <span class='arguments'>(text)</span>
@@ -222,10 +222,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000223-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000224-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000223-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 29</span>&#x000A;29:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">text</span>)&#x000A;30:         <span class="ruby-identifier">text</span>&#x000A;31:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000224-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/identity_cipher.rb, line 29</span>&#x000A;29:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">text</span>)&#x000A;30:         <span class="ruby-identifier">text</span>&#x000A;31:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

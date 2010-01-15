@@ -52,14 +52,15 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000178">new</a></li>
+              <li><a href="#M000164">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000181">getpeername</a></li>
-              <li><a href="#M000180">open</a></li>
-              <li><a href="#M000182">recv</a></li>
-              <li><a href="#M000179">write</a></li>
+              <li><a href="#M000167">getpeername</a></li>
+              <li><a href="#M000166">open</a></li>
+              <li><a href="#M000169">readpartial</a></li>
+              <li><a href="#M000168">recv</a></li>
+              <li><a href="#M000165">write</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -92,8 +93,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000178'>
-                <a name='M000178'>      </a>
+              <div class='method public-class' id='method-M000164'>
+                <a name='M000164'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>()</span>
@@ -106,15 +107,15 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000178-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000164-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000178-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 22</span>&#x000A;22:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>&#x000A;23:       <span class="ruby-identifier">extend</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">PacketStream</span>)&#x000A;24:       <span class="ruby-keyword kw">super</span> <span class="ruby-value str">&quot;SSH-2.0-Test\r\n&quot;</span>&#x000A;25: &#x000A;26:       <span class="ruby-ivar">@script</span> = <span class="ruby-constant">Script</span>.<span class="ruby-identifier">new</span>&#x000A;27: &#x000A;28:       <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets</span>(<span class="ruby-identifier">:kexinit</span>, <span class="ruby-value">1</span>, <span class="ruby-value">2</span>, <span class="ruby-value">3</span>, <span class="ruby-value">4</span>, <span class="ruby-value str">&quot;test&quot;</span>, <span class="ruby-value str">&quot;ssh-rsa&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-keyword kw">false</span>)&#x000A;29:       <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends</span>(<span class="ruby-identifier">:kexinit</span>)&#x000A;30:       <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends</span>(<span class="ruby-identifier">:newkeys</span>)&#x000A;31:       <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets</span>(<span class="ruby-identifier">:newkeys</span>)&#x000A;32:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000164-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 22</span>&#x000A;22:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>&#x000A;23:       <span class="ruby-identifier">extend</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">PacketStream</span>)&#x000A;24:       <span class="ruby-keyword kw">super</span> <span class="ruby-value str">&quot;SSH-2.0-Test\r\n&quot;</span>&#x000A;25: &#x000A;26:       <span class="ruby-ivar">@script</span> = <span class="ruby-constant">Script</span>.<span class="ruby-identifier">new</span>&#x000A;27: &#x000A;28:       <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets</span>(<span class="ruby-identifier">:kexinit</span>, <span class="ruby-value">1</span>, <span class="ruby-value">2</span>, <span class="ruby-value">3</span>, <span class="ruby-value">4</span>, <span class="ruby-value str">&quot;test&quot;</span>, <span class="ruby-value str">&quot;ssh-rsa&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;none&quot;</span>, <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-keyword kw">false</span>)&#x000A;29:       <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends</span>(<span class="ruby-identifier">:kexinit</span>)&#x000A;30:       <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends</span>(<span class="ruby-identifier">:newkeys</span>)&#x000A;31:       <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets</span>(<span class="ruby-identifier">:newkeys</span>)&#x000A;32:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000181'>
-                <a name='M000181'>      </a>
+              <div class='method public-instance' id='method-M000167'>
+                <a name='M000167'>      </a>
                 <div class='synopsis'>
                   <span class='name'>getpeername</span>
                   <span class='arguments'>()</span>
@@ -126,14 +127,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000181-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000167-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000181-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getpeername</span>&#x000A;50:       <span class="ruby-operator">::</span><span class="ruby-constant">Socket</span>.<span class="ruby-identifier">sockaddr_in</span>(<span class="ruby-identifier">port</span>, <span class="ruby-identifier">host</span>)&#x000A;51:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000167-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getpeername</span>&#x000A;50:       <span class="ruby-operator">::</span><span class="ruby-constant">Socket</span>.<span class="ruby-identifier">sockaddr_in</span>(<span class="ruby-identifier">port</span>, <span class="ruby-identifier">host</span>)&#x000A;51:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000180'>
-                <a name='M000180'>      </a>
+              <div class='method public-instance' id='method-M000166'>
+                <a name='M000166'>      </a>
                 <div class='synopsis'>
                   <span class='name'>open</span>
                   <span class='arguments'>(host, port)</span>
@@ -145,14 +146,27 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000180-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000166-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000180-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 42</span>&#x000A;42:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>)&#x000A;43:       <span class="ruby-ivar">@host</span>, <span class="ruby-ivar">@port</span> = <span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>&#x000A;44:       <span class="ruby-keyword kw">self</span>&#x000A;45:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000166-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 42</span>&#x000A;42:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>)&#x000A;43:       <span class="ruby-ivar">@host</span>, <span class="ruby-ivar">@port</span> = <span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>&#x000A;44:       <span class="ruby-keyword kw">self</span>&#x000A;45:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000182'>
-                <a name='M000182'>      </a>
+              <div class='method public-instance' id='method-M000169'>
+                <a name='M000169'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>readpartial</span>
+                  <span class='arguments'>(n)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000169-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000169-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 58</span>&#x000A;58:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">readpartial</span>(<span class="ruby-identifier">n</span>)&#x000A;59:       <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)&#x000A;60:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-M000168'>
+                <a name='M000168'>      </a>
                 <div class='synopsis'>
                   <span class='name'>recv</span>
                   <span class='arguments'>(n)</span>
@@ -163,14 +177,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000182-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000168-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000182-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 54</span>&#x000A;54:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)&#x000A;55:       <span class="ruby-identifier">read</span>(<span class="ruby-identifier">n</span>) <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;&quot;</span>&#x000A;56:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000168-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 54</span>&#x000A;54:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)&#x000A;55:       <span class="ruby-identifier">read</span>(<span class="ruby-identifier">n</span>) <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;&quot;</span>&#x000A;56:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000179'>
-                <a name='M000179'>      </a>
+              <div class='method public-instance' id='method-M000165'>
+                <a name='M000165'>      </a>
                 <div class='synopsis'>
                   <span class='name'>write</span>
                   <span class='arguments'>(data)</span>
@@ -182,10 +196,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000179-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000165-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000179-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 36</span>&#x000A;36:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-identifier">data</span>)&#x000A;37:       <span class="ruby-comment cmt"># black hole, because we don't actually care about what gets written</span>&#x000A;38:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000165-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/socket.rb, line 36</span>&#x000A;36:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-identifier">data</span>)&#x000A;37:       <span class="ruby-comment cmt"># black hole, because we don't actually care about what gets written</span>&#x000A;38:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
