@@ -1,4 +1,4 @@
-=== Unreleased
+=== 2.0.18 / 15 Jan 2010
 
 * Fix related to #recv(1) to #readpartial change in 2.0.16 [Hans de Graaff, Delano Mandelbaum]
 
