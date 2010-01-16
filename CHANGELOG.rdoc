@@ -1,4 +1,5 @@
-=== Unreleased
+
+=== 2.0.19 / 16 Jan 2010
 
 * Support plus sign in sshconfig hostname [Jason Weathered]
 
@@ -6,6 +7,7 @@
 === 2.0.18 / 15 Jan 2010
 
 * Fix related to #recv(1) to #readpartial change in 2.0.16 [Hans de Graaff, Delano Mandelbaum]
+
 
 === 2.0.17 / 14 Dec 2009
 
