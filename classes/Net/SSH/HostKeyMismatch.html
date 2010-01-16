@@ -54,20 +54,20 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000302">[]</a></li>
-              <li><a href="#M000303">fingerprint</a></li>
-              <li><a href="#M000304">host</a></li>
-              <li><a href="#M000306">ip</a></li>
-              <li><a href="#M000307">key</a></li>
-              <li><a href="#M000305">port</a></li>
-              <li><a href="#M000308">remember_host!</a></li>
+              <li><a href="#M000307">[]</a></li>
+              <li><a href="#M000308">fingerprint</a></li>
+              <li><a href="#M000309">host</a></li>
+              <li><a href="#M000311">ip</a></li>
+              <li><a href="#M000312">key</a></li>
+              <li><a href="#M000310">port</a></li>
+              <li><a href="#M000313">remember_host!</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000302'>
-                <a name='M000302'>      </a>
+              <div class='method public-instance' id='method-M000307'>
+                <a name='M000307'>      </a>
                 <div class='synopsis'>
                   <span class='name'>[]</span>
                   <span class='arguments'>(key)</span>
@@ -75,22 +75,22 @@
                 <div class='description'>
                   <p>
                   An accessor for getting at the data that was used to look up the host (see
-                  also <a href="HostKeyMismatch.html#M000303">fingerprint</a>, <a
-                  href="HostKeyMismatch.html#M000304">host</a>, <a
-                  href="HostKeyMismatch.html#M000305">port</a>, <a
-                  href="HostKeyMismatch.html#M000306">ip</a>, and <a
-                  href="HostKeyMismatch.html#M000307">key</a>).
+                  also <a href="HostKeyMismatch.html#M000308">fingerprint</a>, <a
+                  href="HostKeyMismatch.html#M000309">host</a>, <a
+                  href="HostKeyMismatch.html#M000310">port</a>, <a
+                  href="HostKeyMismatch.html#M000311">ip</a>, and <a
+                  href="HostKeyMismatch.html#M000312">key</a>).
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000302-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000307-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000302-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)&#x000A;50:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">key</span>]&#x000A;51:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000307-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)&#x000A;50:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">key</span>]&#x000A;51:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000303'>
-                <a name='M000303'>      </a>
+              <div class='method public-instance' id='method-M000308'>
+                <a name='M000308'>      </a>
                 <div class='synopsis'>
                   <span class='name'>fingerprint</span>
                   <span class='arguments'>()</span>
@@ -102,14 +102,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000303-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000308-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000303-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 55</span>&#x000A;55:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fingerprint</span>&#x000A;56:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:fingerprint</span>]&#x000A;57:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000308-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 55</span>&#x000A;55:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fingerprint</span>&#x000A;56:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:fingerprint</span>]&#x000A;57:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000304'>
-                <a name='M000304'>      </a>
+              <div class='method public-instance' id='method-M000309'>
+                <a name='M000309'>      </a>
                 <div class='synopsis'>
                   <span class='name'>host</span>
                   <span class='arguments'>()</span>
@@ -120,14 +120,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000304-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000309-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000304-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 60</span>&#x000A;60:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">host</span>&#x000A;61:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>][<span class="ruby-identifier">:host</span>]&#x000A;62:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000309-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 60</span>&#x000A;60:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">host</span>&#x000A;61:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>][<span class="ruby-identifier">:host</span>]&#x000A;62:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000306'>
-                <a name='M000306'>      </a>
+              <div class='method public-instance' id='method-M000311'>
+                <a name='M000311'>      </a>
                 <div class='synopsis'>
                   <span class='name'>ip</span>
                   <span class='arguments'>()</span>
@@ -138,14 +138,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000306-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000311-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000306-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 70</span>&#x000A;70:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ip</span>&#x000A;71:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>][<span class="ruby-identifier">:ip</span>]&#x000A;72:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000311-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 70</span>&#x000A;70:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ip</span>&#x000A;71:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>][<span class="ruby-identifier">:ip</span>]&#x000A;72:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000307'>
-                <a name='M000307'>      </a>
+              <div class='method public-instance' id='method-M000312'>
+                <a name='M000312'>      </a>
                 <div class='synopsis'>
                   <span class='name'>key</span>
                   <span class='arguments'>()</span>
@@ -156,14 +156,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000307-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000312-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000307-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 75</span>&#x000A;75:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">key</span>&#x000A;76:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:key</span>]&#x000A;77:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000312-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 75</span>&#x000A;75:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">key</span>&#x000A;76:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:key</span>]&#x000A;77:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000305'>
-                <a name='M000305'>      </a>
+              <div class='method public-instance' id='method-M000310'>
+                <a name='M000310'>      </a>
                 <div class='synopsis'>
                   <span class='name'>port</span>
                   <span class='arguments'>()</span>
@@ -174,14 +174,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000305-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000310-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000305-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 65</span>&#x000A;65:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">port</span>&#x000A;66:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>][<span class="ruby-identifier">:port</span>]&#x000A;67:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000310-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 65</span>&#x000A;65:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">port</span>&#x000A;66:       <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">:peer</span>][<span class="ruby-identifier">:port</span>]&#x000A;67:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000308'>
-                <a name='M000308'>      </a>
+              <div class='method public-instance' id='method-M000313'>
+                <a name='M000313'>      </a>
                 <div class='synopsis'>
                   <span class='name'>remember_host!</span>
                   <span class='arguments'>()</span>
@@ -193,10 +193,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000308-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000313-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000308-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 81</span>&#x000A;81:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remember_host!</span>&#x000A;82:       <span class="ruby-ivar">@callback</span>.<span class="ruby-identifier">call</span>&#x000A;83:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000313-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 81</span>&#x000A;81:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remember_host!</span>&#x000A;82:       <span class="ruby-ivar">@callback</span>.<span class="ruby-identifier">call</span>&#x000A;83:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
