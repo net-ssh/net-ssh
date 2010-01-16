@@ -90,7 +90,12 @@ class TestConfig < Test::Unit::TestCase
     assert_equal 1234,      net_ssh[:port]
     assert_equal 1024,      net_ssh[:rekey_limit]
   end
-
+  
+  def test_load_with_plus_sign_hosts
+    config = Net::SSH::Config.load(config(:host_plus), "test.host")
+    assert config['compression']
+  end
+  
   private
 
     def config(name)
