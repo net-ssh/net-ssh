@@ -145,9 +145,11 @@ module Net; module SSH
           when 'preferredauthentications'
             hash[:auth_methods] = value.split(/,/)
           when 'proxycommand'
-            require 'net/ssh/proxy/command'
-            hash[:proxy] = Net::SSH::Proxy::Command.new(value)
-          when 'pubkeyauthentication'
+            if value and !(value =~ /^none$/)
+              require 'net/ssh/proxy/command'
+              hash[:proxy] = Net::SSH::Proxy::Command.new(value)
+            end
+	  when 'pubkeyauthentication'
             if value
               hash[:auth_methods] ||= []
               hash[:auth_methods] << "publickey"
