@@ -51,20 +51,6 @@ routines do
     
     after :install_rubyforge, :install_github
   end
-    
-  install_rubyforge do
-    remote :root do
-      gem_install 'net-ssh', '--version', '2.0.7'
-      gem_install 'net-ssh'
-    end
-  end
-
-  install_github do
-    remote :root do
-      gem_sources :a, "http://gems.github.com"
-      gem_install 'net-ssh-net-ssh'
-    end
-  end
   
   install_gem do
     before :package_gem

@@ -1,6 +1,6 @@
 = Net::SSH
 
-* http://net-ssh.rubyforge.org/ssh
+* http://net-ssh.github.com/net-ssh
 
 == DESCRIPTION:
 

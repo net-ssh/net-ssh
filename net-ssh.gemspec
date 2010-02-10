@@ -1,12 +1,12 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "net-ssh"
         s.rubyforge_project = 'net-ssh'
-	s.version = "2.0.19"
+	s.version = "2.0.20"
 	s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
 	s.description = s.summary
 	s.authors = ["Jamis Buck", "Delano Mandelbaum"]
-	s.email = ["net-ssh@solutious.com", "net-ssh@solutious.com"]
-	s.homepage = "http://gemcutter.org/gems/net-ssh"
+	s.email = ["net-ssh@solutious.com"]
+	s.homepage = "http://github.com/net-ssh/net-ssh"
   
   s.extra_rdoc_files = %w[README.rdoc THANKS.rdoc CHANGELOG.rdoc]
   s.has_rdoc = true
