@@ -1,8 +1,11 @@
 
+=== 2.0.20 / 10 Feb 2010
+
+* Support "ProxyCommand none" directive [Andy Lo-A-Foe]
+
 === 2.0.19 / 16 Jan 2010
 
 * Support plus sign in sshconfig hostname [Jason Weathered]
-
 
 === 2.0.18 / 15 Jan 2010
 
