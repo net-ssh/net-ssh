@@ -55,23 +55,23 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000162">process</a></li>
-              <li><a href="#M000161">remote?</a></li>
-              <li><a href="#M000163">to_s</a></li>
+              <li><a href="#M000153">process</a></li>
+              <li><a href="#M000152">remote?</a></li>
+              <li><a href="#M000154">to_s</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000162'>
-                <a name='M000162'>      </a>
+              <div class='method public-instance' id='method-M000153'>
+                <a name='M000153'>      </a>
                 <div class='synopsis'>
                   <span class='name'>process</span>
                   <span class='arguments'>(packet)</span>
                 </div>
                 <div class='description'>
                   <p>
-                  The <a href="RemotePacket.html#M000162">process</a> method should only be
+                  The <a href="RemotePacket.html#M000153">process</a> method should only be
                   called on <a href="LocalPacket.html">Net::SSH::Test::LocalPacket</a>
                   packets; if it is attempted on a remote packet, then it is an expectation
                   mismatch (a remote packet was received when a local packet was expected to
@@ -80,14 +80,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000162-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000153-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000162-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/remote_packet.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)&#x000A;22:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;received packet type #{packet.read_byte} and was not expecting any packet&quot;</span>&#x000A;23:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000153-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/remote_packet.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)&#x000A;22:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;received packet type #{packet.read_byte} and was not expecting any packet&quot;</span>&#x000A;23:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000161'>
-                <a name='M000161'>      </a>
+              <div class='method public-instance' id='method-M000152'>
+                <a name='M000152'>      </a>
                 <div class='synopsis'>
                   <span class='name'>remote?</span>
                   <span class='arguments'>()</span>
@@ -98,14 +98,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000161-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000152-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000161-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/remote_packet.rb, line 12</span>&#x000A;12:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remote?</span>&#x000A;13:       <span class="ruby-keyword kw">true</span>&#x000A;14:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000152-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/remote_packet.rb, line 12</span>&#x000A;12:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remote?</span>&#x000A;13:       <span class="ruby-keyword kw">true</span>&#x000A;14:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000163'>
-                <a name='M000163'>      </a>
+              <div class='method public-instance' id='method-M000154'>
+                <a name='M000154'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>
                   <span class='arguments'>()</span>
@@ -119,10 +119,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000163-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000154-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000163-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/remote_packet.rb, line 29</span>&#x000A;29:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>&#x000A;30:       <span class="ruby-ivar">@to_s</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">begin</span>&#x000A;31:         <span class="ruby-identifier">instantiate!</span>&#x000A;32:         <span class="ruby-identifier">string</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-ivar">@type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">types</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-ivar">@data</span>).<span class="ruby-identifier">flatten</span>).<span class="ruby-identifier">to_s</span>&#x000A;33:         [<span class="ruby-identifier">string</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">string</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;NA*&quot;</span>)&#x000A;34:       <span class="ruby-keyword kw">end</span>&#x000A;35:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000154-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/remote_packet.rb, line 29</span>&#x000A;29:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>&#x000A;30:       <span class="ruby-ivar">@to_s</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">begin</span>&#x000A;31:         <span class="ruby-identifier">instantiate!</span>&#x000A;32:         <span class="ruby-identifier">string</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-ivar">@type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">types</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-ivar">@data</span>).<span class="ruby-identifier">flatten</span>).<span class="ruby-identifier">to_s</span>&#x000A;33:         [<span class="ruby-identifier">string</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">string</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;NA*&quot;</span>)&#x000A;34:       <span class="ruby-keyword kw">end</span>&#x000A;35:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
