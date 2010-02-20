@@ -1,10 +1,16 @@
 require 'rubygems'
 require 'rake/clean'
 require 'rake/gempackagetask'
-require 'hanna/rdoctask'
 require 'fileutils'
 include FileUtils
- 
+
+begin
+  require 'hanna/rdoctask'
+rescue LoadError
+  require 'rake/rdoctask'
+end
+
+
 task :default => :package
  
 # CONFIG =============================================================

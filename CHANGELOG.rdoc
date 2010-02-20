@@ -1,3 +1,7 @@
+=== Unreleased
+
+* Removed Hanna dependency in Rakefile [Delano Mandelbaum]
+
 
 === 2.0.20 / 10 Feb 2010
 
