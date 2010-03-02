@@ -239,8 +239,16 @@ module Net; module SSH; module Service
         session.listen_to(client)
         channel[:socket] = client
 
-        channel.on_data do |ch, data|
+        channel.on_data do |ch, data|  
+          debug { "data:#{data.length} on #{type} forwarded channel" }
           ch[:socket].enqueue(data)
+        end
+        
+        channel.on_eof do |ch|
+          debug { "eof #{type} on #{type} forwarded channel" }
+          ch[:socket].send_pending
+          ch[:socket].close if !client.closed?
+          session.stop_listening_to(ch[:socket]) 
         end
 
         channel.on_close do |ch|
