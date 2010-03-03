@@ -1,6 +1,7 @@
 require 'common'
 require 'net/ssh/buffer'
 require 'net/ssh'
+require 'timeout'
                       
 # keyless ssh setup
 #
@@ -127,5 +128,45 @@ class TestForward < Test::Unit::TestCase
       end
     end
     session.loop(0.1) { client_done.empty? }
+  end
+  
+  def start_server
+    server = TCPServer.open(0)
+    Thread.start do
+      loop do
+        Thread.start(server.accept) do |client|
+          yield(client)
+        end
+      end
+    end
+    return server
+  end
+  
+  def test_server_eof_should_be_handled
+    session = Net::SSH.start(*ssh_start_params)    
+    server = start_server do |client|
+      client.write "This is a small message!"
+      client.close
+    end
+    client_done = Queue.new
+    client_exception = Queue.new
+    client_data = Queue.new
+    remote_port = server.addr[1]
+    local_port = find_free_port+3 
+    session.forward.local(local_port, localhost, remote_port)
+    Thread.start do
+      begin
+        client = TCPSocket.new(localhost, local_port)
+        data = client.read(4096)
+        client.close
+        client_done << data
+      rescue
+        client_done << $!
+      end
+    end
+    timeout(5) do
+      session.loop(0.1) { client_done.empty? }
+      assert_equal "This is a small message!", client_done.pop
+    end
   end
 end

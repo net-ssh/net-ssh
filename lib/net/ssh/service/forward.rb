@@ -247,10 +247,9 @@ module Net; module SSH; module Service
         channel.on_eof do |ch|
           debug { "eof #{type} on #{type} forwarded channel" }
           ch[:socket].send_pending
-          ch[:socket].close if !client.closed?
-          session.stop_listening_to(ch[:socket]) 
+          ch[:socket].shutdown Socket::SHUT_WR
         end
-
+        
         channel.on_close do |ch|
           debug { "closing #{type} forwarded channel" }
           ch[:socket].close if !client.closed?
