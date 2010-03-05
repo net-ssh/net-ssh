@@ -20,8 +20,12 @@ class TestForward < Test::Unit::TestCase
     [localhost ,ENV['USER']]
   end
   
-  def find_free_port
-    8080
+  def find_free_port 
+    server = TCPServer.open(0)
+    server.setsockopt(Socket::SOL_SOCKET,Socket::SO_REUSEADDR,true)
+    port = server.addr[1]
+    server.close
+    port
   end
   
   def start_server_sending_lot_of_data(exceptions=nil)
@@ -68,7 +72,7 @@ class TestForward < Test::Unit::TestCase
     server_exc = Queue.new
     server = start_server_sending_lot_of_data(server_exc)
     remote_port = server.addr[1]
-    local_port = find_free_port 
+    local_port = find_free_port
     session.forward.local(local_port, localhost, remote_port)
     client_done = Queue.new
     Thread.start do
@@ -90,7 +94,7 @@ class TestForward < Test::Unit::TestCase
     server_exc = Queue.new    
     server = start_server_sending_lot_of_data(server_exc)
     remote_port = server.addr[1]
-    local_port = find_free_port+1
+    local_port = find_free_port
     session.forward.local(local_port, localhost, remote_port)
     client_done = Queue.new
     Thread.start do
@@ -112,7 +116,7 @@ class TestForward < Test::Unit::TestCase
     session = Net::SSH.start(*ssh_start_params)    
     server = start_server_closing_soon
     remote_port = server.addr[1]
-    local_port = find_free_port+2 
+    local_port = find_free_port
     session.forward.local(local_port, localhost, remote_port)
     client_done = Queue.new
     Thread.start do
@@ -152,7 +156,7 @@ class TestForward < Test::Unit::TestCase
     client_exception = Queue.new
     client_data = Queue.new
     remote_port = server.addr[1]
-    local_port = find_free_port+3 
+    local_port = find_free_port
     session.forward.local(local_port, localhost, remote_port)
     Thread.start do
       begin
