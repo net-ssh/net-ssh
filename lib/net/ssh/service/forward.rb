@@ -193,21 +193,63 @@ module Net; module SSH; module Service
     end
 
     private
+        
+      module ForwardedBufferedIo
+        def fill(n=8192)
+          begin
+            super(n)
+          rescue Errno::ECONNRESET => e
+            debug { "connection was reset => shallowing exception:#{e}" }
+            return 0
+          rescue IOError => e                                 
+            if e.message =~ /closed/ then 
+              debug { "connection was reset => shallowing exception:#{e}" }
+              return 0
+            else
+              raise
+            end 
+          end
+        end
+        
+        def send_pending
+          begin
+            super                                                          
+          rescue Errno::ECONNRESET => e
+            debug { "connection was reset => shallowing exception:#{e}" }
+            return 0
+          rescue IOError => e
+            if e.message =~ /closed/ then 
+              debug { "connection was reset => shallowing exception:#{e}" }
+              return 0
+            else
+              raise
+            end
+          end
+        end
+      end
 
       # Perform setup operations that are common to all forwarded channels.
       # +client+ is a socket, +channel+ is the channel that was just created,
       # and +type+ is an arbitrary string describing the type of the channel.
       def prepare_client(client, channel, type)
         client.extend(Net::SSH::BufferedIo)
+        client.extend(ForwardedBufferedIo)
         client.logger = logger
 
         session.listen_to(client)
         channel[:socket] = client
 
-        channel.on_data do |ch, data|
+        channel.on_data do |ch, data|  
+          debug { "data:#{data.length} on #{type} forwarded channel" }
           ch[:socket].enqueue(data)
         end
-
+        
+        channel.on_eof do |ch|
+          debug { "eof #{type} on #{type} forwarded channel" }
+          ch[:socket].send_pending
+          ch[:socket].shutdown Socket::SHUT_WR
+        end
+        
         channel.on_close do |ch|
           debug { "closing #{type} forwarded channel" }
           ch[:socket].close if !client.closed?
