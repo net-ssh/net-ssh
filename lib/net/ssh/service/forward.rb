@@ -246,8 +246,20 @@ module Net; module SSH; module Service
         
         channel.on_eof do |ch|
           debug { "eof #{type} on #{type} forwarded channel" }
-          ch[:socket].send_pending
-          ch[:socket].shutdown Socket::SHUT_WR
+          begin
+            ch[:socket].send_pending
+            ch[:socket].shutdown Socket::SHUT_WR
+          rescue IOError => e
+            if e.message =~ /closed/ then
+              debug { "epipe in on_eof => shallowing exception:#{e}" }
+            else
+              raise
+            end
+          rescue Errno::EPIPE => e
+            debug { "epipe in on_eof => shallowing exception:#{e}" }
+          rescue Errno::ENOTCONN => e
+            debug { "enotconn in on_eof => shallowing exception:#{e}" }
+          end
         end
         
         channel.on_close do |ch|

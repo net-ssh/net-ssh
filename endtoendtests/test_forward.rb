@@ -17,7 +17,7 @@ class TestForward < Test::Unit::TestCase
   end
   
   def ssh_start_params
-    [localhost ,ENV['USER']]
+    [localhost ,ENV['USER']] #:verbose => :debug
   end
   
   def find_free_port 
@@ -28,7 +28,7 @@ class TestForward < Test::Unit::TestCase
     port
   end
   
-  def start_server_sending_lot_of_data(exceptions=nil)
+  def start_server_sending_lot_of_data(exceptions)
     server = TCPServer.open(0)
     Thread.start do
       loop do
@@ -86,7 +86,7 @@ class TestForward < Test::Unit::TestCase
       end
     end
     session.loop(0.1) { client_done.empty? }
-    assert_equal "Broken pipe", "#{server_exc.pop}"
+    assert_equal "Broken pipe", "#{server_exc.pop}" unless server_exc.empty?
   end
   
   def test_loop_should_not_abort_when_local_side_of_forward_is_reset
@@ -109,7 +109,7 @@ class TestForward < Test::Unit::TestCase
       end
     end
     session.loop(0.1) { client_done.empty? }
-    assert_equal "Broken pipe", "#{server_exc.pop}"
+    assert_equal "Broken pipe", "#{server_exc.pop}" unless server_exc.empty?
   end
   
   def test_loop_should_not_abort_when_server_side_of_forward_is_closed
