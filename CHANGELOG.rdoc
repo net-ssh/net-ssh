@@ -1,4 +1,12 @@
-=== Unreleased
+
+
+=== 2.0.21 / ?? Mar 2010
+
+* Fix for client closes a forwarded connection, but the server is reading, net-ssh terminates with IOError socket closed (http://net-ssh.lighthouseapp.com/projects/36253/tickets/7) [Miklós Fazekas]
+
+* Fix for client force closes (RST) a forwarded connection, but server is reading, net-ssh terminates with exception [Miklós Fazekas]
+
+* Fix for server closes the sending side, the on_eof is not handled. [Miklós Fazekas]
 
 * Removed Hanna dependency in Rakefile [Delano Mandelbaum]
 
@@ -24,7 +32,9 @@
 === 2.0.16 / 28 Nov 2009
 
 * Fix for "multiple hosts are separated by whitespace" [Akinori MUSHA]
+
 * Add support for the ProxyCommand directive [Akinori MUSHA]
+
 * Switched from #recv(1) to #readpartial in lib/net/ssh/transport/server_version.rb, so that closed sockets are recognized [Alex Peuchert]
 
 
