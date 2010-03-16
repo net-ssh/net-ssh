@@ -147,4 +147,52 @@ module Net; module SSH
       end
   end
 
+
+  
+  # Fixes for two issues by Miklós Fazekas:
+  #
+  #   * if client closes a forwarded connection, but the server is 
+  #     reading, net-ssh terminates with IOError socket closed.
+  #   * if client force closes (RST) a forwarded connection, but 
+  #     server is reading, net-ssh terminates with [an exception]
+  #
+  # See: 
+  # 
+  #    http://net-ssh.lighthouseapp.com/projects/36253/tickets/7
+  #    http://github.com/net-ssh/net-ssh/tree/portfwfix
+  #
+  module ForwardedBufferedIo
+    def fill(n=8192)
+      begin
+        super(n)
+      rescue Errno::ECONNRESET => e
+        debug { "connection was reset => shallowing exception:#{e}" }
+        return 0
+      rescue IOError => e                                 
+        if e.message =~ /closed/ then 
+          debug { "connection was reset => shallowing exception:#{e}" }
+          return 0
+        else
+          raise
+        end 
+      end
+    end
+    
+    def send_pending
+      begin
+        super                                                          
+      rescue Errno::ECONNRESET => e
+        debug { "connection was reset => shallowing exception:#{e}" }
+        return 0
+      rescue IOError => e
+        if e.message =~ /closed/ then 
+          debug { "connection was reset => shallowing exception:#{e}" }
+          return 0
+        else
+          raise
+        end
+      end
+    end
+  end
+  
 end; end
