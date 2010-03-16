@@ -22,7 +22,7 @@ EXPECTED RESULTS
 
 PORT FORWARDING TESTS
 
-     ruby -Ilib -Itest -rrubygems test/endtoend/test_forward.rb
+     ruby -Ilib -Itest -rrubygems test/manual/test_forward.rb
 
 test_forward.rb must be run separately from the test suite because
 it requires authorizing your public SSH keys on you localhost. 
