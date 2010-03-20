@@ -49,10 +49,10 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000123">idle!</a></li>
-              <li><a href="#M000124">test_available_for_read?</a></li>
-              <li><a href="#M000125">test_enqueue_packet</a></li>
-              <li><a href="#M000126">test_poll_next_packet</a></li>
+              <li><a href="#M000134">idle!</a></li>
+              <li><a href="#M000135">test_available_for_read?</a></li>
+              <li><a href="#M000136">test_enqueue_packet</a></li>
+              <li><a href="#M000137">test_poll_next_packet</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -66,8 +66,8 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000123'>
-                <a name='M000123'>      </a>
+              <div class='method public-instance' id='method-M000134'>
+                <a name='M000134'>      </a>
                 <div class='synopsis'>
                   <span class='name'>idle!</span>
                   <span class='arguments'>()</span>
@@ -80,14 +80,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000123-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000134-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000123-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/extensions.rb, line 56</span>&#x000A;56:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">idle!</span>&#x000A;57:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">script</span>.<span class="ruby-identifier">next</span>(<span class="ruby-identifier">:first</span>)&#x000A;58: &#x000A;59:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">script</span>.<span class="ruby-identifier">next</span>(<span class="ruby-identifier">:first</span>).<span class="ruby-identifier">remote?</span>&#x000A;60:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">string</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">script</span>.<span class="ruby-identifier">next</span>.<span class="ruby-identifier">to_s</span>&#x000A;61:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">pos</span> = <span class="ruby-identifier">pos</span>&#x000A;62:         <span class="ruby-keyword kw">end</span>&#x000A;63: &#x000A;64:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>&#x000A;65:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000134-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/extensions.rb, line 56</span>&#x000A;56:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">idle!</span>&#x000A;57:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">script</span>.<span class="ruby-identifier">next</span>(<span class="ruby-identifier">:first</span>)&#x000A;58: &#x000A;59:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">script</span>.<span class="ruby-identifier">next</span>(<span class="ruby-identifier">:first</span>).<span class="ruby-identifier">remote?</span>&#x000A;60:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">string</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">script</span>.<span class="ruby-identifier">next</span>.<span class="ruby-identifier">to_s</span>&#x000A;61:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">pos</span> = <span class="ruby-identifier">pos</span>&#x000A;62:         <span class="ruby-keyword kw">end</span>&#x000A;63: &#x000A;64:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>&#x000A;65:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000124'>
-                <a name='M000124'>      </a>
+              <div class='method public-instance' id='method-M000135'>
+                <a name='M000135'>      </a>
                 <div class='synopsis'>
                   <span class='name'>test_available_for_read?</span>
                   <span class='arguments'>()</span>
@@ -95,20 +95,20 @@
                 <div class='description'>
                   <p>
                   The testing version of <a
-                  href="../../Transport/PacketStream.html#M000201">Net::SSH::Transport::PacketStream#available_for_read?</a>.
+                  href="../../Transport/PacketStream.html#M000203">Net::SSH::Transport::PacketStream#available_for_read?</a>.
                   Returns true if there is data pending to be read. Otherwise calls <a
-                  href="PacketStream.html#M000123">idle!</a>.
+                  href="PacketStream.html#M000134">idle!</a>.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000124-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000135-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000124-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/extensions.rb, line 69</span>&#x000A;69:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">test_available_for_read?</span>&#x000A;70:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">select_for_read?</span>&#x000A;71:         <span class="ruby-identifier">idle!</span>&#x000A;72:         <span class="ruby-keyword kw">false</span>&#x000A;73:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000135-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/extensions.rb, line 69</span>&#x000A;69:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">test_available_for_read?</span>&#x000A;70:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">select_for_read?</span>&#x000A;71:         <span class="ruby-identifier">idle!</span>&#x000A;72:         <span class="ruby-keyword kw">false</span>&#x000A;73:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000125'>
-                <a name='M000125'>      </a>
+              <div class='method public-instance' id='method-M000136'>
+                <a name='M000136'>      </a>
                 <div class='synopsis'>
                   <span class='name'>test_enqueue_packet</span>
                   <span class='arguments'>(payload)</span>
@@ -117,19 +117,19 @@
                   <p>
                   The testing version of Net::SSH::Transport::PacketStream#enqueued_packet.
                   Simply calls <a
-                  href="../Script.html#M000174">Net::SSH::Test::Script#process</a> on the
+                  href="../Script.html#M000176">Net::SSH::Test::Script#process</a> on the
                   packet.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000125-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000136-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000125-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/extensions.rb, line 77</span>&#x000A;77:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">test_enqueue_packet</span>(<span class="ruby-identifier">payload</span>)&#x000A;78:         <span class="ruby-identifier">packet</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">payload</span>.<span class="ruby-identifier">to_s</span>)&#x000A;79:         <span class="ruby-identifier">script</span>.<span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)&#x000A;80:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000136-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/extensions.rb, line 77</span>&#x000A;77:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">test_enqueue_packet</span>(<span class="ruby-identifier">payload</span>)&#x000A;78:         <span class="ruby-identifier">packet</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">payload</span>.<span class="ruby-identifier">to_s</span>)&#x000A;79:         <span class="ruby-identifier">script</span>.<span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)&#x000A;80:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000126'>
-                <a name='M000126'>      </a>
+              <div class='method public-instance' id='method-M000137'>
+                <a name='M000137'>      </a>
                 <div class='synopsis'>
                   <span class='name'>test_poll_next_packet</span>
                   <span class='arguments'>()</span>
@@ -137,16 +137,16 @@
                 <div class='description'>
                   <p>
                   The testing version of <a
-                  href="../../Transport/PacketStream.html#M000208">Net::SSH::Transport::PacketStream#poll_next_packet</a>.
+                  href="../../Transport/PacketStream.html#M000210">Net::SSH::Transport::PacketStream#poll_next_packet</a>.
                   Reads the next available packet from the <a href="IO.html">IO</a> object
                   and returns it.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000126-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000137-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000126-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/extensions.rb, line 84</span>&#x000A;84:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">test_poll_next_packet</span>&#x000A;85:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">available</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">0</span>&#x000A;86:         <span class="ruby-identifier">packet</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">read_available</span>(<span class="ruby-value">4</span>))&#x000A;87:         <span class="ruby-identifier">length</span> = <span class="ruby-identifier">packet</span>.<span class="ruby-identifier">read_long</span>&#x000A;88:         <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Packet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">read_available</span>(<span class="ruby-identifier">length</span>))&#x000A;89:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000137-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/extensions.rb, line 84</span>&#x000A;84:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">test_poll_next_packet</span>&#x000A;85:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">available</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">0</span>&#x000A;86:         <span class="ruby-identifier">packet</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">read_available</span>(<span class="ruby-value">4</span>))&#x000A;87:         <span class="ruby-identifier">length</span> = <span class="ruby-identifier">packet</span>.<span class="ruby-identifier">read_long</span>&#x000A;88:         <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Packet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">read_available</span>(<span class="ruby-identifier">length</span>))&#x000A;89:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

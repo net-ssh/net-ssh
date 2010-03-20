@@ -31,12 +31,38 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2010-02-10 15:18:33 -0500</span>
+          <span class='datetime'>2010-03-20 14:37:17 -0400</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
+            <h3>2.0.21 / 20 Mar 2010</h3>
+            <ul>
+            <li>Fix for &#8220;IdentifyFile&#8221; in ~/.ssh/config does not work if no
+            &#8220;Host&#8221; statement is given (<a
+            href="http://net-ssh.lighthouseapp.com/projects/36253/tickets/9-identifyfile-in-sshconfig-does-not-work-if-no-host-statement-is-given#ticket-9-5">net-ssh.lighthouseapp.com/projects/36253/tickets/9-identifyfile-in-sshconfig-does-not-work-if-no-host-statement-is-given#ticket-9-5</a>)
+            [xbaldauf, Delano Mandelbaum]
+            
+            </li>
+            <li>Fix for client closes a forwarded connection, but the server is reading,
+            net-ssh terminates with IOError socket closed (<a
+            href="http://net-ssh.lighthouseapp.com/projects/36253/tickets/7">net-ssh.lighthouseapp.com/projects/36253/tickets/7</a>)
+            [Miklós Fazekas]
+            
+            </li>
+            <li>Fix for client force closes (RST) a forwarded connection, but server is
+            reading, net-ssh terminates with exception [Miklós Fazekas]
+            
+            </li>
+            <li>Fix for server closes the sending side, the on_eof is not handled. [Miklós
+            Fazekas]
+            
+            </li>
+            <li>Removed Hanna dependency in Rakefile [Delano Mandelbaum]
+            
+            </li>
+            </ul>
             <h3>2.0.20 / 10 Feb 2010</h3>
             <ul>
             <li>Support &#8220;ProxyCommand none&#8221; directive [Andy Lo-A-Foe]

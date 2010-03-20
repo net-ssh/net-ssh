@@ -58,17 +58,17 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000209">allowed_packet?</a></li>
-              <li><a href="#M000210">new</a></li>
+              <li><a href="#M000211">allowed_packet?</a></li>
+              <li><a href="#M000212">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000213">[]</a></li>
-              <li><a href="#M000212">accept_kexinit</a></li>
-              <li><a href="#M000215">allow?</a></li>
-              <li><a href="#M000216">initialized?</a></li>
-              <li><a href="#M000214">pending?</a></li>
-              <li><a href="#M000211">rekey!</a></li>
+              <li><a href="#M000215">[]</a></li>
+              <li><a href="#M000214">accept_kexinit</a></li>
+              <li><a href="#M000217">allow?</a></li>
+              <li><a href="#M000218">initialized?</a></li>
+              <li><a href="#M000216">pending?</a></li>
+              <li><a href="#M000213">rekey!</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -227,8 +227,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000209'>
-                <a name='M000209'>      </a>
+              <div class='method public-class' id='method-M000211'>
+                <a name='M000211'>      </a>
                 <div class='synopsis'>
                   <span class='name'>allowed_packet?</span>
                   <span class='arguments'>(packet)</span>
@@ -239,14 +239,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000209-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000211-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000209-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 81</span>&#x000A;81:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">allowed_packet?</span>(<span class="ruby-identifier">packet</span>)&#x000A;82:       ( <span class="ruby-value">1</span><span class="ruby-operator">..</span> <span class="ruby-value">4</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">||</span>&#x000A;83:       ( <span class="ruby-value">6</span><span class="ruby-operator">..</span><span class="ruby-value">19</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">||</span>&#x000A;84:       (<span class="ruby-value">21</span><span class="ruby-operator">..</span><span class="ruby-value">49</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>)&#x000A;85:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000211-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 81</span>&#x000A;81:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">allowed_packet?</span>(<span class="ruby-identifier">packet</span>)&#x000A;82:       ( <span class="ruby-value">1</span><span class="ruby-operator">..</span> <span class="ruby-value">4</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">||</span>&#x000A;83:       ( <span class="ruby-value">6</span><span class="ruby-operator">..</span><span class="ruby-value">19</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">||</span>&#x000A;84:       (<span class="ruby-value">21</span><span class="ruby-operator">..</span><span class="ruby-value">49</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>)&#x000A;85:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000210'>
-                <a name='M000210'>      </a>
+              <div class='method public-class' id='method-M000212'>
+                <a name='M000212'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(session, options={})</span>
@@ -259,15 +259,15 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000210-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000212-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000210-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 89</span>&#x000A;89:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>, <span class="ruby-identifier">options</span>={})&#x000A;90:       <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>&#x000A;91:       <span class="ruby-ivar">@logger</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">logger</span>&#x000A;92:       <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;93:       <span class="ruby-ivar">@algorithms</span> = {}&#x000A;94:       <span class="ruby-ivar">@pending</span> = <span class="ruby-ivar">@initialized</span> = <span class="ruby-keyword kw">false</span>&#x000A;95:       <span class="ruby-ivar">@client_packet</span> = <span class="ruby-ivar">@server_packet</span> = <span class="ruby-keyword kw">nil</span>&#x000A;96:       <span class="ruby-identifier">prepare_preferred_algorithms!</span>&#x000A;97:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000212-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 89</span>&#x000A;89:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>, <span class="ruby-identifier">options</span>={})&#x000A;90:       <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>&#x000A;91:       <span class="ruby-ivar">@logger</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">logger</span>&#x000A;92:       <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;93:       <span class="ruby-ivar">@algorithms</span> = {}&#x000A;94:       <span class="ruby-ivar">@pending</span> = <span class="ruby-ivar">@initialized</span> = <span class="ruby-keyword kw">false</span>&#x000A;95:       <span class="ruby-ivar">@client_packet</span> = <span class="ruby-ivar">@server_packet</span> = <span class="ruby-keyword kw">nil</span>&#x000A;96:       <span class="ruby-identifier">prepare_preferred_algorithms!</span>&#x000A;97:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000213'>
-                <a name='M000213'>      </a>
+              <div class='method public-instance' id='method-M000215'>
+                <a name='M000215'>      </a>
                 <div class='synopsis'>
                   <span class='name'>[]</span>
                   <span class='arguments'>(key)</span>
@@ -279,14 +279,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000213-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000215-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000213-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 126</span>&#x000A;126:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)&#x000A;127:       <span class="ruby-identifier">algorithms</span>[<span class="ruby-identifier">key</span>]&#x000A;128:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000215-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 126</span>&#x000A;126:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)&#x000A;127:       <span class="ruby-identifier">algorithms</span>[<span class="ruby-identifier">key</span>]&#x000A;128:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000212'>
-                <a name='M000212'>      </a>
+              <div class='method public-instance' id='method-M000214'>
+                <a name='M000214'>      </a>
                 <div class='synopsis'>
                   <span class='name'>accept_kexinit</span>
                   <span class='arguments'>(packet)</span>
@@ -296,19 +296,19 @@
                   Called by the transport layer when a KEXINIT packet is recieved, indicating
                   that the server wants to exchange keys. This can be spontaneous, or it can
                   be in response to a client-initiated rekey request (see <a
-                  href="Algorithms.html#M000211">rekey!</a>). Either way, this will block
+                  href="Algorithms.html#M000213">rekey!</a>). Either way, this will block
                   until the key exchange completes.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000212-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000214-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000212-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 113</span>&#x000A;113:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">accept_kexinit</span>(<span class="ruby-identifier">packet</span>)&#x000A;114:       <span class="ruby-identifier">info</span> { <span class="ruby-value str">&quot;got KEXINIT from server&quot;</span> }&#x000A;115:       <span class="ruby-ivar">@server_data</span> = <span class="ruby-identifier">parse_server_algorithm_packet</span>(<span class="ruby-identifier">packet</span>)&#x000A;116:       <span class="ruby-ivar">@server_packet</span> = <span class="ruby-ivar">@server_data</span>[<span class="ruby-identifier">:raw</span>]&#x000A;117:       <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">pending?</span>&#x000A;118:         <span class="ruby-identifier">send_kexinit</span>&#x000A;119:       <span class="ruby-keyword kw">else</span>&#x000A;120:         <span class="ruby-identifier">proceed!</span>&#x000A;121:       <span class="ruby-keyword kw">end</span>&#x000A;122:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000214-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 113</span>&#x000A;113:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">accept_kexinit</span>(<span class="ruby-identifier">packet</span>)&#x000A;114:       <span class="ruby-identifier">info</span> { <span class="ruby-value str">&quot;got KEXINIT from server&quot;</span> }&#x000A;115:       <span class="ruby-ivar">@server_data</span> = <span class="ruby-identifier">parse_server_algorithm_packet</span>(<span class="ruby-identifier">packet</span>)&#x000A;116:       <span class="ruby-ivar">@server_packet</span> = <span class="ruby-ivar">@server_data</span>[<span class="ruby-identifier">:raw</span>]&#x000A;117:       <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">pending?</span>&#x000A;118:         <span class="ruby-identifier">send_kexinit</span>&#x000A;119:       <span class="ruby-keyword kw">else</span>&#x000A;120:         <span class="ruby-identifier">proceed!</span>&#x000A;121:       <span class="ruby-keyword kw">end</span>&#x000A;122:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000215'>
-                <a name='M000215'>      </a>
+              <div class='method public-instance' id='method-M000217'>
+                <a name='M000217'>      </a>
                 <div class='synopsis'>
                   <span class='name'>allow?</span>
                   <span class='arguments'>(packet)</span>
@@ -321,14 +321,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000215-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000217-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000215-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 142</span>&#x000A;142:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">allow?</span>(<span class="ruby-identifier">packet</span>)&#x000A;143:       <span class="ruby-operator">!</span><span class="ruby-identifier">pending?</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Algorithms</span>.<span class="ruby-identifier">allowed_packet?</span>(<span class="ruby-identifier">packet</span>)&#x000A;144:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000217-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 142</span>&#x000A;142:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">allow?</span>(<span class="ruby-identifier">packet</span>)&#x000A;143:       <span class="ruby-operator">!</span><span class="ruby-identifier">pending?</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Algorithms</span>.<span class="ruby-identifier">allowed_packet?</span>(<span class="ruby-identifier">packet</span>)&#x000A;144:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000216'>
-                <a name='M000216'>      </a>
+              <div class='method public-instance' id='method-M000218'>
+                <a name='M000218'>      </a>
                 <div class='synopsis'>
                   <span class='name'>initialized?</span>
                   <span class='arguments'>()</span>
@@ -339,14 +339,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000216-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000218-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000216-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 147</span>&#x000A;147:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialized?</span>&#x000A;148:       <span class="ruby-ivar">@initialized</span>&#x000A;149:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000218-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 147</span>&#x000A;147:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialized?</span>&#x000A;148:       <span class="ruby-ivar">@initialized</span>&#x000A;149:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000214'>
-                <a name='M000214'>      </a>
+              <div class='method public-instance' id='method-M000216'>
+                <a name='M000216'>      </a>
                 <div class='synopsis'>
                   <span class='name'>pending?</span>
                   <span class='arguments'>()</span>
@@ -361,14 +361,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000214-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000216-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000214-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 135</span>&#x000A;135:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pending?</span>&#x000A;136:       <span class="ruby-ivar">@pending</span>&#x000A;137:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000216-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 135</span>&#x000A;135:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pending?</span>&#x000A;136:       <span class="ruby-ivar">@pending</span>&#x000A;137:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000211'>
-                <a name='M000211'>      </a>
+              <div class='method public-instance' id='method-M000213'>
+                <a name='M000213'>      </a>
                 <div class='synopsis'>
                   <span class='name'>rekey!</span>
                   <span class='arguments'>()</span>
@@ -382,10 +382,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000211-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000213-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000211-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 103</span>&#x000A;103:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">rekey!</span>&#x000A;104:       <span class="ruby-ivar">@client_packet</span> = <span class="ruby-ivar">@server_packet</span> = <span class="ruby-keyword kw">nil</span>&#x000A;105:       <span class="ruby-ivar">@initialized</span> = <span class="ruby-keyword kw">false</span>&#x000A;106:       <span class="ruby-identifier">send_kexinit</span>&#x000A;107:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000213-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/transport/algorithms.rb, line 103</span>&#x000A;103:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">rekey!</span>&#x000A;104:       <span class="ruby-ivar">@client_packet</span> = <span class="ruby-ivar">@server_packet</span> = <span class="ruby-keyword kw">nil</span>&#x000A;105:       <span class="ruby-ivar">@initialized</span> = <span class="ruby-keyword kw">false</span>&#x000A;106:       <span class="ruby-identifier">send_kexinit</span>&#x000A;107:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

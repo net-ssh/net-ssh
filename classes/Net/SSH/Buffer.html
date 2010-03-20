@@ -66,42 +66,42 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000264">from</a></li>
-              <li><a href="#M000265">new</a></li>
+              <li><a href="#M000266">from</a></li>
+              <li><a href="#M000267">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000269">==</a></li>
-              <li><a href="#M000275">append</a></li>
-              <li><a href="#M000267">available</a></li>
-              <li><a href="#M000273">clear!</a></li>
-              <li><a href="#M000274">consume!</a></li>
-              <li><a href="#M000270">empty?</a></li>
-              <li><a href="#M000272">eof?</a></li>
-              <li><a href="#M000266">length</a></li>
-              <li><a href="#M000278">read</a></li>
-              <li><a href="#M000279">read!</a></li>
-              <li><a href="#M000285">read_bignum</a></li>
-              <li><a href="#M000284">read_bool</a></li>
-              <li><a href="#M000288">read_buffer</a></li>
-              <li><a href="#M000282">read_byte</a></li>
-              <li><a href="#M000280">read_int64</a></li>
-              <li><a href="#M000286">read_key</a></li>
-              <li><a href="#M000287">read_keyblob</a></li>
-              <li><a href="#M000281">read_long</a></li>
-              <li><a href="#M000283">read_string</a></li>
-              <li><a href="#M000277">read_to</a></li>
-              <li><a href="#M000276">remainder_as_buffer</a></li>
-              <li><a href="#M000271">reset!</a></li>
-              <li><a href="#M000268">to_s</a></li>
-              <li><a href="#M000289">write</a></li>
-              <li><a href="#M000295">write_bignum</a></li>
-              <li><a href="#M000294">write_bool</a></li>
-              <li><a href="#M000292">write_byte</a></li>
-              <li><a href="#M000290">write_int64</a></li>
-              <li><a href="#M000296">write_key</a></li>
-              <li><a href="#M000291">write_long</a></li>
-              <li><a href="#M000293">write_string</a></li>
+              <li><a href="#M000271">==</a></li>
+              <li><a href="#M000277">append</a></li>
+              <li><a href="#M000269">available</a></li>
+              <li><a href="#M000275">clear!</a></li>
+              <li><a href="#M000276">consume!</a></li>
+              <li><a href="#M000272">empty?</a></li>
+              <li><a href="#M000274">eof?</a></li>
+              <li><a href="#M000268">length</a></li>
+              <li><a href="#M000280">read</a></li>
+              <li><a href="#M000281">read!</a></li>
+              <li><a href="#M000287">read_bignum</a></li>
+              <li><a href="#M000286">read_bool</a></li>
+              <li><a href="#M000290">read_buffer</a></li>
+              <li><a href="#M000284">read_byte</a></li>
+              <li><a href="#M000282">read_int64</a></li>
+              <li><a href="#M000288">read_key</a></li>
+              <li><a href="#M000289">read_keyblob</a></li>
+              <li><a href="#M000283">read_long</a></li>
+              <li><a href="#M000285">read_string</a></li>
+              <li><a href="#M000279">read_to</a></li>
+              <li><a href="#M000278">remainder_as_buffer</a></li>
+              <li><a href="#M000273">reset!</a></li>
+              <li><a href="#M000270">to_s</a></li>
+              <li><a href="#M000291">write</a></li>
+              <li><a href="#M000297">write_bignum</a></li>
+              <li><a href="#M000296">write_bool</a></li>
+              <li><a href="#M000294">write_byte</a></li>
+              <li><a href="#M000292">write_int64</a></li>
+              <li><a href="#M000298">write_key</a></li>
+              <li><a href="#M000293">write_long</a></li>
+              <li><a href="#M000295">write_string</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -130,8 +130,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000264'>
-                <a name='M000264'>      </a>
+              <div class='method public-class' id='method-M000266'>
+                <a name='M000266'>      </a>
                 <div class='synopsis'>
                   <span class='name'>from</span>
                   <span class='arguments'>(*args)</span>
@@ -149,34 +149,34 @@
                   </p>
                   <ul>
                   <li>:raw => write the next value verbatim (<a
-                  href="Buffer.html#M000289">write</a>)
+                  href="Buffer.html#M000291">write</a>)
                   
                   </li>
                   <li>:int64 => write an 8-byte integer (<a
-                  href="Buffer.html#M000290">write_int64</a>)
+                  href="Buffer.html#M000292">write_int64</a>)
                   
                   </li>
                   <li>:long => write a 4-byte integer (<a
-                  href="Buffer.html#M000291">write_long</a>)
+                  href="Buffer.html#M000293">write_long</a>)
                   
                   </li>
-                  <li>:byte => write a single byte (<a href="Buffer.html#M000292">write_byte</a>)
+                  <li>:byte => write a single byte (<a href="Buffer.html#M000294">write_byte</a>)
                   
                   </li>
                   <li>:string => write a 4-byte length followed by character data (<a
-                  href="Buffer.html#M000293">write_string</a>)
+                  href="Buffer.html#M000295">write_string</a>)
                   
                   </li>
                   <li>:bool => write a single byte, interpreted as a boolean (<a
-                  href="Buffer.html#M000294">write_bool</a>)
+                  href="Buffer.html#M000296">write_bool</a>)
                   
                   </li>
                   <li>:bignum => write an SSH-encoded bignum (<a
-                  href="Buffer.html#M000295">write_bignum</a>)
+                  href="Buffer.html#M000297">write_bignum</a>)
                   
                   </li>
                   <li>:key => write an SSH-encoded key value (<a
-                  href="Buffer.html#M000296">write_key</a>)
+                  href="Buffer.html#M000298">write_key</a>)
                   
                   </li>
                   </ul>
@@ -186,14 +186,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000264-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000266-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000264-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 43</span>&#x000A;43:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">from</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;44:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;odd number of arguments given&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">%</span> <span class="ruby-value">2</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;45: &#x000A;46:       <span class="ruby-identifier">buffer</span> = <span class="ruby-identifier">new</span>&#x000A;47:       <span class="ruby-value">0</span>.<span class="ruby-identifier">step</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>, <span class="ruby-value">2</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">index</span><span class="ruby-operator">|</span>&#x000A;48:         <span class="ruby-identifier">type</span> = <span class="ruby-identifier">args</span>[<span class="ruby-identifier">index</span>]&#x000A;49:         <span class="ruby-identifier">value</span> = <span class="ruby-identifier">args</span>[<span class="ruby-identifier">index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]&#x000A;50:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:raw</span>&#x000A;51:           <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>)&#x000A;52:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-constant">Array</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">value</span>&#x000A;53:           <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;write_#{type}&quot;</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">value</span>)&#x000A;54:         <span class="ruby-keyword kw">else</span>&#x000A;55:           <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;write_#{type}&quot;</span>, <span class="ruby-identifier">value</span>)&#x000A;56:         <span class="ruby-keyword kw">end</span>&#x000A;57:       <span class="ruby-keyword kw">end</span>&#x000A;58: &#x000A;59:       <span class="ruby-identifier">buffer</span>&#x000A;60:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000266-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 43</span>&#x000A;43:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">from</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;44:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;odd number of arguments given&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">%</span> <span class="ruby-value">2</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;45: &#x000A;46:       <span class="ruby-identifier">buffer</span> = <span class="ruby-identifier">new</span>&#x000A;47:       <span class="ruby-value">0</span>.<span class="ruby-identifier">step</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>, <span class="ruby-value">2</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">index</span><span class="ruby-operator">|</span>&#x000A;48:         <span class="ruby-identifier">type</span> = <span class="ruby-identifier">args</span>[<span class="ruby-identifier">index</span>]&#x000A;49:         <span class="ruby-identifier">value</span> = <span class="ruby-identifier">args</span>[<span class="ruby-identifier">index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]&#x000A;50:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:raw</span>&#x000A;51:           <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>)&#x000A;52:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-constant">Array</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">value</span>&#x000A;53:           <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;write_#{type}&quot;</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">value</span>)&#x000A;54:         <span class="ruby-keyword kw">else</span>&#x000A;55:           <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;write_#{type}&quot;</span>, <span class="ruby-identifier">value</span>)&#x000A;56:         <span class="ruby-keyword kw">end</span>&#x000A;57:       <span class="ruby-keyword kw">end</span>&#x000A;58: &#x000A;59:       <span class="ruby-identifier">buffer</span>&#x000A;60:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000265'>
-                <a name='M000265'>      </a>
+              <div class='method public-class' id='method-M000267'>
+                <a name='M000267'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(content=&quot;&quot;)</span>
@@ -205,15 +205,15 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000265-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000267-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000265-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 70</span>&#x000A;70:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">content</span>=<span class="ruby-value str">&quot;&quot;</span>)&#x000A;71:       <span class="ruby-ivar">@content</span> = <span class="ruby-identifier">content</span>.<span class="ruby-identifier">to_s</span>&#x000A;72:       <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>&#x000A;73:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000267-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 70</span>&#x000A;70:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">content</span>=<span class="ruby-value str">&quot;&quot;</span>)&#x000A;71:       <span class="ruby-ivar">@content</span> = <span class="ruby-identifier">content</span>.<span class="ruby-identifier">to_s</span>&#x000A;72:       <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>&#x000A;73:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000269'>
-                <a name='M000269'>      </a>
+              <div class='method public-instance' id='method-M000271'>
+                <a name='M000271'>      </a>
                 <div class='synopsis'>
                   <span class='name'>==</span>
                   <span class='arguments'>(buffer)</span>
@@ -225,14 +225,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000269-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000271-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000269-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 93</span>&#x000A;93:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">buffer</span>)&#x000A;94:       <span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">to_s</span>&#x000A;95:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000271-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 93</span>&#x000A;93:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">buffer</span>)&#x000A;94:       <span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">to_s</span>&#x000A;95:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000275'>
-                <a name='M000275'>      </a>
+              <div class='method public-instance' id='method-M000277'>
+                <a name='M000277'>      </a>
                 <div class='synopsis'>
                   <span class='name'>append</span>
                   <span class='arguments'>(text)</span>
@@ -244,14 +244,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000275-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000277-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000275-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 142</span>&#x000A;142:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">append</span>(<span class="ruby-identifier">text</span>)&#x000A;143:       <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">text</span>&#x000A;144:       <span class="ruby-keyword kw">self</span>&#x000A;145:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000277-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 142</span>&#x000A;142:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">append</span>(<span class="ruby-identifier">text</span>)&#x000A;143:       <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">text</span>&#x000A;144:       <span class="ruby-keyword kw">self</span>&#x000A;145:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000267'>
-                <a name='M000267'>      </a>
+              <div class='method public-instance' id='method-M000269'>
+                <a name='M000269'>      </a>
                 <div class='synopsis'>
                   <span class='name'>available</span>
                   <span class='arguments'>()</span>
@@ -263,14 +263,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000267-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000269-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000267-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 82</span>&#x000A;82:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">available</span>&#x000A;83:       <span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">position</span>&#x000A;84:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000269-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 82</span>&#x000A;82:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">available</span>&#x000A;83:       <span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">position</span>&#x000A;84:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000273'>
-                <a name='M000273'>      </a>
+              <div class='method public-instance' id='method-M000275'>
+                <a name='M000275'>      </a>
                 <div class='synopsis'>
                   <span class='name'>clear!</span>
                   <span class='arguments'>()</span>
@@ -281,14 +281,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000273-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000275-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000273-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 116</span>&#x000A;116:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear!</span>&#x000A;117:       <span class="ruby-ivar">@content</span> = <span class="ruby-value str">&quot;&quot;</span>&#x000A;118:       <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>&#x000A;119:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000275-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 116</span>&#x000A;116:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear!</span>&#x000A;117:       <span class="ruby-ivar">@content</span> = <span class="ruby-value str">&quot;&quot;</span>&#x000A;118:       <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>&#x000A;119:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000274'>
-                <a name='M000274'>      </a>
+              <div class='method public-instance' id='method-M000276'>
+                <a name='M000276'>      </a>
                 <div class='synopsis'>
                   <span class='name'>consume!</span>
                   <span class='arguments'>(n=position)</span>
@@ -306,14 +306,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000274-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000276-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000274-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 128</span>&#x000A;128:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">consume!</span>(<span class="ruby-identifier">n</span>=<span class="ruby-identifier">position</span>)&#x000A;129:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">length</span>&#x000A;130:         <span class="ruby-comment cmt"># optimize for a fairly common case</span>&#x000A;131:         <span class="ruby-identifier">clear!</span>&#x000A;132:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;133:         <span class="ruby-ivar">@content</span> = <span class="ruby-ivar">@content</span>[<span class="ruby-identifier">n</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>] <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;&quot;</span>&#x000A;134:         <span class="ruby-ivar">@position</span> <span class="ruby-operator">-=</span> <span class="ruby-identifier">n</span>&#x000A;135:         <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@position</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>&#x000A;136:       <span class="ruby-keyword kw">end</span>&#x000A;137:       <span class="ruby-keyword kw">self</span>&#x000A;138:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000276-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 128</span>&#x000A;128:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">consume!</span>(<span class="ruby-identifier">n</span>=<span class="ruby-identifier">position</span>)&#x000A;129:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">length</span>&#x000A;130:         <span class="ruby-comment cmt"># optimize for a fairly common case</span>&#x000A;131:         <span class="ruby-identifier">clear!</span>&#x000A;132:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;133:         <span class="ruby-ivar">@content</span> = <span class="ruby-ivar">@content</span>[<span class="ruby-identifier">n</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>] <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;&quot;</span>&#x000A;134:         <span class="ruby-ivar">@position</span> <span class="ruby-operator">-=</span> <span class="ruby-identifier">n</span>&#x000A;135:         <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@position</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>&#x000A;136:       <span class="ruby-keyword kw">end</span>&#x000A;137:       <span class="ruby-keyword kw">self</span>&#x000A;138:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000270'>
-                <a name='M000270'>      </a>
+              <div class='method public-instance' id='method-M000272'>
+                <a name='M000272'>      </a>
                 <div class='synopsis'>
                   <span class='name'>empty?</span>
                   <span class='arguments'>()</span>
@@ -325,14 +325,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000270-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000272-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000270-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 98</span>&#x000A; 98:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">empty?</span>&#x000A; 99:       <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">empty?</span>&#x000A;100:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000272-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 98</span>&#x000A; 98:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">empty?</span>&#x000A; 99:       <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">empty?</span>&#x000A;100:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000272'>
-                <a name='M000272'>      </a>
+              <div class='method public-instance' id='method-M000274'>
+                <a name='M000274'>      </a>
                 <div class='synopsis'>
                   <span class='name'>eof?</span>
                   <span class='arguments'>()</span>
@@ -344,14 +344,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000272-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000274-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000272-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 110</span>&#x000A;110:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">eof?</span>&#x000A;111:       <span class="ruby-ivar">@position</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">length</span>&#x000A;112:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000274-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 110</span>&#x000A;110:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">eof?</span>&#x000A;111:       <span class="ruby-ivar">@position</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">length</span>&#x000A;112:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000266'>
-                <a name='M000266'>      </a>
+              <div class='method public-instance' id='method-M000268'>
+                <a name='M000268'>      </a>
                 <div class='synopsis'>
                   <span class='name'>length</span>
                   <span class='arguments'>()</span>
@@ -362,14 +362,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000266-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000268-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000266-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 76</span>&#x000A;76:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">length</span>&#x000A;77:       <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">length</span>&#x000A;78:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000268-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 76</span>&#x000A;76:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">length</span>&#x000A;77:       <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">length</span>&#x000A;78:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000278'>
-                <a name='M000278'>      </a>
+              <div class='method public-instance' id='method-M000280'>
+                <a name='M000280'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read</span>
                   <span class='arguments'>(count=nil)</span>
@@ -382,35 +382,35 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000278-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000280-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000278-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 171</span>&#x000A;171:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">count</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;172:       <span class="ruby-identifier">count</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">length</span>&#x000A;173:       <span class="ruby-identifier">count</span> = <span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@position</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@position</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">length</span>&#x000A;174:       <span class="ruby-ivar">@position</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">count</span>&#x000A;175:       <span class="ruby-ivar">@content</span>[<span class="ruby-ivar">@position</span><span class="ruby-operator">-</span><span class="ruby-identifier">count</span>, <span class="ruby-identifier">count</span>]&#x000A;176:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000280-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 171</span>&#x000A;171:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">count</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;172:       <span class="ruby-identifier">count</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">length</span>&#x000A;173:       <span class="ruby-identifier">count</span> = <span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@position</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@position</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">length</span>&#x000A;174:       <span class="ruby-ivar">@position</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">count</span>&#x000A;175:       <span class="ruby-ivar">@content</span>[<span class="ruby-ivar">@position</span><span class="ruby-operator">-</span><span class="ruby-identifier">count</span>, <span class="ruby-identifier">count</span>]&#x000A;176:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000279'>
-                <a name='M000279'>      </a>
+              <div class='method public-instance' id='method-M000281'>
+                <a name='M000281'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read!</span>
                   <span class='arguments'>(count=nil)</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Reads (as <a href="Buffer.html#M000278">read</a>) and returns the given
+                  Reads (as <a href="Buffer.html#M000280">read</a>) and returns the given
                   number of bytes from the buffer, and then consumes (as <a
-                  href="Buffer.html#M000274">consume!</a>) all data up to the new read
+                  href="Buffer.html#M000276">consume!</a>) all data up to the new read
                   position.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000279-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000281-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000279-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 180</span>&#x000A;180:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read!</span>(<span class="ruby-identifier">count</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;181:       <span class="ruby-identifier">data</span> = <span class="ruby-identifier">read</span>(<span class="ruby-identifier">count</span>)&#x000A;182:       <span class="ruby-identifier">consume!</span>&#x000A;183:       <span class="ruby-identifier">data</span>&#x000A;184:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000281-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 180</span>&#x000A;180:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read!</span>(<span class="ruby-identifier">count</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;181:       <span class="ruby-identifier">data</span> = <span class="ruby-identifier">read</span>(<span class="ruby-identifier">count</span>)&#x000A;182:       <span class="ruby-identifier">consume!</span>&#x000A;183:       <span class="ruby-identifier">data</span>&#x000A;184:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000285'>
-                <a name='M000285'>      </a>
+              <div class='method public-instance' id='method-M000287'>
+                <a name='M000287'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_bignum</span>
                   <span class='arguments'>()</span>
@@ -423,14 +423,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000285-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000287-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000285-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 228</span>&#x000A;228:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_bignum</span>&#x000A;229:       <span class="ruby-identifier">data</span> = <span class="ruby-identifier">read_string</span>&#x000A;230:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">data</span>&#x000A;231:       <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">BN</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">data</span>, <span class="ruby-value">2</span>)&#x000A;232:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000287-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 228</span>&#x000A;228:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_bignum</span>&#x000A;229:       <span class="ruby-identifier">data</span> = <span class="ruby-identifier">read_string</span>&#x000A;230:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">data</span>&#x000A;231:       <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">BN</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">data</span>, <span class="ruby-value">2</span>)&#x000A;232:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000284'>
-                <a name='M000284'>      </a>
+              <div class='method public-instance' id='method-M000286'>
+                <a name='M000286'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_bool</span>
                   <span class='arguments'>()</span>
@@ -442,14 +442,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000284-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000286-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000284-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 220</span>&#x000A;220:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_bool</span>&#x000A;221:       <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read_byte</span> <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;222:       <span class="ruby-identifier">b</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>&#x000A;223:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000286-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 220</span>&#x000A;220:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_bool</span>&#x000A;221:       <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read_byte</span> <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;222:       <span class="ruby-identifier">b</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>&#x000A;223:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000288'>
-                <a name='M000288'>      </a>
+              <div class='method public-instance' id='method-M000290'>
+                <a name='M000290'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_buffer</span>
                   <span class='arguments'>()</span>
@@ -461,14 +461,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000288-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000290-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000288-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 267</span>&#x000A;267:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_buffer</span>&#x000A;268:       <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">read_string</span>)&#x000A;269:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000290-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 267</span>&#x000A;267:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_buffer</span>&#x000A;268:       <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">read_string</span>)&#x000A;269:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000282'>
-                <a name='M000282'>      </a>
+              <div class='method public-instance' id='method-M000284'>
+                <a name='M000284'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_byte</span>
                   <span class='arguments'>()</span>
@@ -480,14 +480,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000282-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000284-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000282-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 205</span>&#x000A;205:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_byte</span>&#x000A;206:       <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read</span>(<span class="ruby-value">1</span>) <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;207:       <span class="ruby-identifier">b</span>.<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)&#x000A;208:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000284-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 205</span>&#x000A;205:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_byte</span>&#x000A;206:       <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read</span>(<span class="ruby-value">1</span>) <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;207:       <span class="ruby-identifier">b</span>.<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)&#x000A;208:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000280'>
-                <a name='M000280'>      </a>
+              <div class='method public-instance' id='method-M000282'>
+                <a name='M000282'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_int64</span>
                   <span class='arguments'>()</span>
@@ -500,14 +500,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000280-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000282-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000280-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 189</span>&#x000A;189:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_int64</span>&#x000A;190:       <span class="ruby-identifier">hi</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;191:       <span class="ruby-identifier">lo</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;192:       <span class="ruby-keyword kw">return</span> (<span class="ruby-identifier">hi</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">32</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">lo</span>&#x000A;193:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000282-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 189</span>&#x000A;189:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_int64</span>&#x000A;190:       <span class="ruby-identifier">hi</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;191:       <span class="ruby-identifier">lo</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;192:       <span class="ruby-keyword kw">return</span> (<span class="ruby-identifier">hi</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">32</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">lo</span>&#x000A;193:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000286'>
-                <a name='M000286'>      </a>
+              <div class='method public-instance' id='method-M000288'>
+                <a name='M000288'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_key</span>
                   <span class='arguments'>()</span>
@@ -519,14 +519,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000286-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000288-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000286-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 237</span>&#x000A;237:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_key</span>&#x000A;238:       <span class="ruby-identifier">type</span> = <span class="ruby-identifier">read_string</span>&#x000A;239:       <span class="ruby-keyword kw">return</span> (<span class="ruby-identifier">type</span> <span class="ruby-value">? </span><span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">type</span>) <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>)&#x000A;240:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000288-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 237</span>&#x000A;237:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_key</span>&#x000A;238:       <span class="ruby-identifier">type</span> = <span class="ruby-identifier">read_string</span>&#x000A;239:       <span class="ruby-keyword kw">return</span> (<span class="ruby-identifier">type</span> <span class="ruby-value">? </span><span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">type</span>) <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>)&#x000A;240:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000287'>
-                <a name='M000287'>      </a>
+              <div class='method public-instance' id='method-M000289'>
+                <a name='M000289'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_keyblob</span>
                   <span class='arguments'>(type)</span>
@@ -538,14 +538,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000287-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000289-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000287-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 244</span>&#x000A;244:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">type</span>)&#x000A;245:       <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">type</span>&#x000A;246:         <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;ssh-dss&quot;</span>&#x000A;247:           <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">DSA</span>.<span class="ruby-identifier">new</span>&#x000A;248:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">p</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;249:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">q</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;250:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">g</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;251:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">pub_key</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;252: &#x000A;253:         <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;ssh-rsa&quot;</span>&#x000A;254:           <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">RSA</span>.<span class="ruby-identifier">new</span>&#x000A;255:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">e</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;256:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">n</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;257: &#x000A;258:         <span class="ruby-keyword kw">else</span>&#x000A;259:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-node">&quot;unsupported key type `#{type}'&quot;</span>&#x000A;260:       <span class="ruby-keyword kw">end</span>&#x000A;261: &#x000A;262:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">key</span>&#x000A;263:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000289-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 244</span>&#x000A;244:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">type</span>)&#x000A;245:       <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">type</span>&#x000A;246:         <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;ssh-dss&quot;</span>&#x000A;247:           <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">DSA</span>.<span class="ruby-identifier">new</span>&#x000A;248:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">p</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;249:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">q</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;250:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">g</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;251:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">pub_key</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;252: &#x000A;253:         <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;ssh-rsa&quot;</span>&#x000A;254:           <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">RSA</span>.<span class="ruby-identifier">new</span>&#x000A;255:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">e</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;256:           <span class="ruby-identifier">key</span>.<span class="ruby-identifier">n</span> = <span class="ruby-identifier">read_bignum</span>&#x000A;257: &#x000A;258:         <span class="ruby-keyword kw">else</span>&#x000A;259:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-node">&quot;unsupported key type `#{type}'&quot;</span>&#x000A;260:       <span class="ruby-keyword kw">end</span>&#x000A;261: &#x000A;262:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">key</span>&#x000A;263:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000281'>
-                <a name='M000281'>      </a>
+              <div class='method public-instance' id='method-M000283'>
+                <a name='M000283'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_long</span>
                   <span class='arguments'>()</span>
@@ -558,14 +558,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000281-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000283-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000281-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 198</span>&#x000A;198:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_long</span>&#x000A;199:       <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read</span>(<span class="ruby-value">4</span>) <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;200:       <span class="ruby-identifier">b</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-value str">&quot;N&quot;</span>).<span class="ruby-identifier">first</span>&#x000A;201:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000283-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 198</span>&#x000A;198:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_long</span>&#x000A;199:       <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read</span>(<span class="ruby-value">4</span>) <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;200:       <span class="ruby-identifier">b</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-value str">&quot;N&quot;</span>).<span class="ruby-identifier">first</span>&#x000A;201:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000283'>
-                <a name='M000283'>      </a>
+              <div class='method public-instance' id='method-M000285'>
+                <a name='M000285'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_string</span>
                   <span class='arguments'>()</span>
@@ -578,14 +578,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000283-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000285-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000283-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 213</span>&#x000A;213:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_string</span>&#x000A;214:       <span class="ruby-identifier">length</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;215:       <span class="ruby-identifier">read</span>(<span class="ruby-identifier">length</span>)&#x000A;216:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000285-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 213</span>&#x000A;213:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_string</span>&#x000A;214:       <span class="ruby-identifier">length</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;215:       <span class="ruby-identifier">read</span>(<span class="ruby-identifier">length</span>)&#x000A;216:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000277'>
-                <a name='M000277'>      </a>
+              <div class='method public-instance' id='method-M000279'>
+                <a name='M000279'>      </a>
                 <div class='synopsis'>
                   <span class='name'>read_to</span>
                   <span class='arguments'>(pattern)</span>
@@ -600,14 +600,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000277-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000279-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000277-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 158</span>&#x000A;158:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_to</span>(<span class="ruby-identifier">pattern</span>)&#x000A;159:       <span class="ruby-identifier">index</span> = <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-ivar">@position</span>) <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;160:       <span class="ruby-identifier">length</span> = <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">pattern</span>&#x000A;161:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">pattern</span>.<span class="ruby-identifier">length</span>&#x000A;162:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Fixnum</span> <span class="ruby-keyword kw">then</span> <span class="ruby-value">1</span>&#x000A;163:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Regexp</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">$&amp;</span>.<span class="ruby-identifier">length</span>&#x000A;164:       <span class="ruby-keyword kw">end</span>&#x000A;165:       <span class="ruby-identifier">index</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">index</span><span class="ruby-operator">+</span><span class="ruby-identifier">length</span>)&#x000A;166:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000279-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 158</span>&#x000A;158:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_to</span>(<span class="ruby-identifier">pattern</span>)&#x000A;159:       <span class="ruby-identifier">index</span> = <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-ivar">@position</span>) <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>&#x000A;160:       <span class="ruby-identifier">length</span> = <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">pattern</span>&#x000A;161:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">pattern</span>.<span class="ruby-identifier">length</span>&#x000A;162:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Fixnum</span> <span class="ruby-keyword kw">then</span> <span class="ruby-value">1</span>&#x000A;163:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Regexp</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">$&amp;</span>.<span class="ruby-identifier">length</span>&#x000A;164:       <span class="ruby-keyword kw">end</span>&#x000A;165:       <span class="ruby-identifier">index</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">index</span><span class="ruby-operator">+</span><span class="ruby-identifier">length</span>)&#x000A;166:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000276'>
-                <a name='M000276'>      </a>
+              <div class='method public-instance' id='method-M000278'>
+                <a name='M000278'>      </a>
                 <div class='synopsis'>
                   <span class='name'>remainder_as_buffer</span>
                   <span class='arguments'>()</span>
@@ -619,14 +619,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000276-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000278-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000276-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 149</span>&#x000A;149:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remainder_as_buffer</span>&#x000A;150:       <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@content</span>[<span class="ruby-ivar">@position</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>])&#x000A;151:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000278-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 149</span>&#x000A;149:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remainder_as_buffer</span>&#x000A;150:       <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@content</span>[<span class="ruby-ivar">@position</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>])&#x000A;151:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000271'>
-                <a name='M000271'>      </a>
+              <div class='method public-instance' id='method-M000273'>
+                <a name='M000273'>      </a>
                 <div class='synopsis'>
                   <span class='name'>reset!</span>
                   <span class='arguments'>()</span>
@@ -638,14 +638,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000271-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000273-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000271-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 104</span>&#x000A;104:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reset!</span>&#x000A;105:       <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>&#x000A;106:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000273-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 104</span>&#x000A;104:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reset!</span>&#x000A;105:       <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>&#x000A;106:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000268'>
-                <a name='M000268'>      </a>
+              <div class='method public-instance' id='method-M000270'>
+                <a name='M000270'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>
                   <span class='arguments'>()</span>
@@ -656,14 +656,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000268-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000270-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000268-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 87</span>&#x000A;87:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>&#x000A;88:       (<span class="ruby-ivar">@content</span> <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;&quot;</span>).<span class="ruby-identifier">dup</span>&#x000A;89:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000270-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 87</span>&#x000A;87:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>&#x000A;88:       (<span class="ruby-ivar">@content</span> <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;&quot;</span>).<span class="ruby-identifier">dup</span>&#x000A;89:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000289'>
-                <a name='M000289'>      </a>
+              <div class='method public-instance' id='method-M000291'>
+                <a name='M000291'>      </a>
                 <div class='synopsis'>
                   <span class='name'>write</span>
                   <span class='arguments'>(*data)</span>
@@ -675,14 +675,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000289-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000291-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000289-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 273</span>&#x000A;273:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">data</span>)&#x000A;274:       <span class="ruby-identifier">data</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">datum</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">datum</span> }&#x000A;275:       <span class="ruby-keyword kw">self</span>&#x000A;276:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000291-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 273</span>&#x000A;273:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">data</span>)&#x000A;274:       <span class="ruby-identifier">data</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">datum</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">datum</span> }&#x000A;275:       <span class="ruby-keyword kw">self</span>&#x000A;276:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000295'>
-                <a name='M000295'>      </a>
+              <div class='method public-instance' id='method-M000297'>
+                <a name='M000297'>      </a>
                 <div class='synopsis'>
                   <span class='name'>write_bignum</span>
                   <span class='arguments'>(*n)</span>
@@ -695,14 +695,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000295-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000297-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000295-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 328</span>&#x000A;328:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_bignum</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)&#x000A;329:       <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">to_ssh</span> }.<span class="ruby-identifier">join</span>&#x000A;330:       <span class="ruby-keyword kw">self</span>&#x000A;331:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000297-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 328</span>&#x000A;328:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_bignum</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)&#x000A;329:       <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">to_ssh</span> }.<span class="ruby-identifier">join</span>&#x000A;330:       <span class="ruby-keyword kw">self</span>&#x000A;331:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000294'>
-                <a name='M000294'>      </a>
+              <div class='method public-instance' id='method-M000296'>
+                <a name='M000296'>      </a>
                 <div class='synopsis'>
                   <span class='name'>write_bool</span>
                   <span class='arguments'>(*b)</span>
@@ -715,14 +715,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000294-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000296-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000294-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 320</span>&#x000A;320:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_bool</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">b</span>)&#x000A;321:       <span class="ruby-identifier">b</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">v</span> <span class="ruby-value">? </span><span class="ruby-value str">&quot;\1&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;\0&quot;</span>) }&#x000A;322:       <span class="ruby-keyword kw">self</span>&#x000A;323:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000296-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 320</span>&#x000A;320:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_bool</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">b</span>)&#x000A;321:       <span class="ruby-identifier">b</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">v</span> <span class="ruby-value">? </span><span class="ruby-value str">&quot;\1&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;\0&quot;</span>) }&#x000A;322:       <span class="ruby-keyword kw">self</span>&#x000A;323:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000292'>
-                <a name='M000292'>      </a>
+              <div class='method public-instance' id='method-M000294'>
+                <a name='M000294'>      </a>
                 <div class='synopsis'>
                   <span class='name'>write_byte</span>
                   <span class='arguments'>(*n)</span>
@@ -734,14 +734,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000292-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000294-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000292-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 300</span>&#x000A;300:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_byte</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)&#x000A;301:       <span class="ruby-identifier">n</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">chr</span> }&#x000A;302:       <span class="ruby-keyword kw">self</span>&#x000A;303:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000294-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 300</span>&#x000A;300:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_byte</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)&#x000A;301:       <span class="ruby-identifier">n</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">chr</span> }&#x000A;302:       <span class="ruby-keyword kw">self</span>&#x000A;303:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000290'>
-                <a name='M000290'>      </a>
+              <div class='method public-instance' id='method-M000292'>
+                <a name='M000292'>      </a>
                 <div class='synopsis'>
                   <span class='name'>write_int64</span>
                   <span class='arguments'>(*n)</span>
@@ -754,14 +754,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000290-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000292-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000290-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 281</span>&#x000A;281:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_int64</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)&#x000A;282:       <span class="ruby-identifier">n</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>&#x000A;283:         <span class="ruby-identifier">hi</span> = (<span class="ruby-identifier">i</span> <span class="ruby-operator">&gt;&gt;</span> <span class="ruby-value">32</span>) <span class="ruby-operator">&amp;</span> <span class="ruby-value">0x</span><span class="ruby-constant">FFFFFFFF</span>&#x000A;284:         <span class="ruby-identifier">lo</span> = <span class="ruby-identifier">i</span> <span class="ruby-operator">&amp;</span> <span class="ruby-value">0x</span><span class="ruby-constant">FFFFFFFF</span>&#x000A;285:         <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">hi</span>, <span class="ruby-identifier">lo</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;N2&quot;</span>)&#x000A;286:       <span class="ruby-keyword kw">end</span>&#x000A;287:       <span class="ruby-keyword kw">self</span>&#x000A;288:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000292-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 281</span>&#x000A;281:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_int64</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)&#x000A;282:       <span class="ruby-identifier">n</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>&#x000A;283:         <span class="ruby-identifier">hi</span> = (<span class="ruby-identifier">i</span> <span class="ruby-operator">&gt;&gt;</span> <span class="ruby-value">32</span>) <span class="ruby-operator">&amp;</span> <span class="ruby-value">0x</span><span class="ruby-constant">FFFFFFFF</span>&#x000A;284:         <span class="ruby-identifier">lo</span> = <span class="ruby-identifier">i</span> <span class="ruby-operator">&amp;</span> <span class="ruby-value">0x</span><span class="ruby-constant">FFFFFFFF</span>&#x000A;285:         <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">hi</span>, <span class="ruby-identifier">lo</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;N2&quot;</span>)&#x000A;286:       <span class="ruby-keyword kw">end</span>&#x000A;287:       <span class="ruby-keyword kw">self</span>&#x000A;288:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000296'>
-                <a name='M000296'>      </a>
+              <div class='method public-instance' id='method-M000298'>
+                <a name='M000298'>      </a>
                 <div class='synopsis'>
                   <span class='name'>write_key</span>
                   <span class='arguments'>(*key)</span>
@@ -773,14 +773,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000296-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000298-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000296-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 335</span>&#x000A;335:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_key</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">key</span>)&#x000A;336:       <span class="ruby-identifier">key</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-identifier">append</span>(<span class="ruby-identifier">k</span>.<span class="ruby-identifier">to_blob</span>) }&#x000A;337:       <span class="ruby-keyword kw">self</span>&#x000A;338:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000298-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 335</span>&#x000A;335:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_key</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">key</span>)&#x000A;336:       <span class="ruby-identifier">key</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-identifier">append</span>(<span class="ruby-identifier">k</span>.<span class="ruby-identifier">to_blob</span>) }&#x000A;337:       <span class="ruby-keyword kw">self</span>&#x000A;338:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000291'>
-                <a name='M000291'>      </a>
+              <div class='method public-instance' id='method-M000293'>
+                <a name='M000293'>      </a>
                 <div class='synopsis'>
                   <span class='name'>write_long</span>
                   <span class='arguments'>(*n)</span>
@@ -793,14 +793,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000291-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000293-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000291-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 293</span>&#x000A;293:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_long</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)&#x000A;294:       <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;N*&quot;</span>)&#x000A;295:       <span class="ruby-keyword kw">self</span>&#x000A;296:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000293-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 293</span>&#x000A;293:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_long</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)&#x000A;294:       <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;N*&quot;</span>)&#x000A;295:       <span class="ruby-keyword kw">self</span>&#x000A;296:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000293'>
-                <a name='M000293'>      </a>
+              <div class='method public-instance' id='method-M000295'>
+                <a name='M000295'>      </a>
                 <div class='synopsis'>
                   <span class='name'>write_string</span>
                   <span class='arguments'>(*text)</span>
@@ -813,10 +813,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000293-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000295-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000293-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 308</span>&#x000A;308:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_string</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">text</span>)&#x000A;309:       <span class="ruby-identifier">text</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">string</span><span class="ruby-operator">|</span>&#x000A;310:         <span class="ruby-identifier">s</span> = <span class="ruby-identifier">string</span>.<span class="ruby-identifier">to_s</span>&#x000A;311:         <span class="ruby-identifier">write_long</span>(<span class="ruby-identifier">s</span>.<span class="ruby-identifier">length</span>)&#x000A;312:         <span class="ruby-identifier">write</span>(<span class="ruby-identifier">s</span>)&#x000A;313:       <span class="ruby-keyword kw">end</span>&#x000A;314:       <span class="ruby-keyword kw">self</span>&#x000A;315:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000295-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/buffer.rb, line 308</span>&#x000A;308:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_string</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">text</span>)&#x000A;309:       <span class="ruby-identifier">text</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">string</span><span class="ruby-operator">|</span>&#x000A;310:         <span class="ruby-identifier">s</span> = <span class="ruby-identifier">string</span>.<span class="ruby-identifier">to_s</span>&#x000A;311:         <span class="ruby-identifier">write_long</span>(<span class="ruby-identifier">s</span>.<span class="ruby-identifier">length</span>)&#x000A;312:         <span class="ruby-identifier">write</span>(<span class="ruby-identifier">s</span>)&#x000A;313:       <span class="ruby-keyword kw">end</span>&#x000A;314:       <span class="ruby-keyword kw">self</span>&#x000A;315:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

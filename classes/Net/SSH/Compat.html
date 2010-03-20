@@ -51,8 +51,8 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000324">io_select</a></li>
-              <li><a href="#M000325">io_select</a></li>
+              <li><a href="#M000326">io_select</a></li>
+              <li><a href="#M000327">io_select</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -70,30 +70,30 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000324'>
-                <a name='M000324'>      </a>
+              <div class='method public-class' id='method-M000326'>
+                <a name='M000326'>      </a>
                 <div class='synopsis'>
                   <span class='name'>io_select</span>
                   <span class='arguments'>(*params)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000324-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000326-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000324-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/ruby_compat.rb, line 21</span>&#x000A;21:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">io_select</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">params</span>)&#x000A;22:         <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">params</span>)&#x000A;23:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000326-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/ruby_compat.rb, line 21</span>&#x000A;21:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">io_select</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">params</span>)&#x000A;22:         <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">params</span>)&#x000A;23:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000325'>
-                <a name='M000325'>      </a>
+              <div class='method public-class' id='method-M000327'>
+                <a name='M000327'>      </a>
                 <div class='synopsis'>
                   <span class='name'>io_select</span>
                   <span class='arguments'>(*params)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000325-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000327-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000325-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/ruby_compat.rb, line 26</span>&#x000A;26:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">io_select</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">params</span>)&#x000A;27:         <span class="ruby-comment cmt"># It should be safe to wrap calls in a mutex when the timeout is 0</span>&#x000A;28:         <span class="ruby-comment cmt"># (that is, the call is not supposed to block).</span>&#x000A;29:         <span class="ruby-comment cmt"># We leave blocking calls unprotected to avoid causing deadlocks.</span>&#x000A;30:         <span class="ruby-comment cmt"># This should still catch the main case for Capistrano users.</span>&#x000A;31:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">3</span>] <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;32:           <span class="ruby-constant">SELECT_MUTEX</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>&#x000A;33:             <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">params</span>)&#x000A;34:           <span class="ruby-keyword kw">end</span>&#x000A;35:         <span class="ruby-keyword kw">else</span>&#x000A;36:           <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">params</span>)&#x000A;37:         <span class="ruby-keyword kw">end</span>&#x000A;38:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000327-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/ruby_compat.rb, line 26</span>&#x000A;26:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">io_select</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">params</span>)&#x000A;27:         <span class="ruby-comment cmt"># It should be safe to wrap calls in a mutex when the timeout is 0</span>&#x000A;28:         <span class="ruby-comment cmt"># (that is, the call is not supposed to block).</span>&#x000A;29:         <span class="ruby-comment cmt"># We leave blocking calls unprotected to avoid causing deadlocks.</span>&#x000A;30:         <span class="ruby-comment cmt"># This should still catch the main case for Capistrano users.</span>&#x000A;31:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">3</span>] <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;32:           <span class="ruby-constant">SELECT_MUTEX</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>&#x000A;33:             <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">params</span>)&#x000A;34:           <span class="ruby-keyword kw">end</span>&#x000A;35:         <span class="ruby-keyword kw">else</span>&#x000A;36:           <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">params</span>)&#x000A;37:         <span class="ruby-keyword kw">end</span>&#x000A;38:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

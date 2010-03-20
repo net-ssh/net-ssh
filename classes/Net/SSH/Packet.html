@@ -59,12 +59,12 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000322">new</a></li>
-              <li><a href="#M000321">register</a></li>
+              <li><a href="#M000324">new</a></li>
+              <li><a href="#M000323">register</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000323">[]</a></li>
+              <li><a href="#M000325">[]</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -95,8 +95,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000322'>
-                <a name='M000322'>      </a>
+              <div class='method public-class' id='method-M000324'>
+                <a name='M000324'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(payload)</span>
@@ -105,20 +105,20 @@
                   <p>
                   Create a new packet from the given payload. This will automatically parse
                   the packet if it is one that has been previously registered with <a
-                  href="Packet.html#M000321">Packet.register</a>; otherwise, the packet will
+                  href="Packet.html#M000323">Packet.register</a>; otherwise, the packet will
                   need to be manually parsed using the methods provided in the <a
                   href="Buffer.html">Net::SSH::Buffer</a> superclass.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000322-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000324-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000322-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/packet.rb, line 73</span>&#x000A;73:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">payload</span>)&#x000A;74:       <span class="ruby-ivar">@named_elements</span> = {}&#x000A;75:       <span class="ruby-keyword kw">super</span>&#x000A;76:       <span class="ruby-ivar">@type</span> = <span class="ruby-identifier">read_byte</span>&#x000A;77:       <span class="ruby-identifier">instantiate!</span>&#x000A;78:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000324-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/packet.rb, line 73</span>&#x000A;73:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">payload</span>)&#x000A;74:       <span class="ruby-ivar">@named_elements</span> = {}&#x000A;75:       <span class="ruby-keyword kw">super</span>&#x000A;76:       <span class="ruby-ivar">@type</span> = <span class="ruby-identifier">read_byte</span>&#x000A;77:       <span class="ruby-identifier">instantiate!</span>&#x000A;78:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000321'>
-                <a name='M000321'>      </a>
+              <div class='method public-class' id='method-M000323'>
+                <a name='M000323'>      </a>
                 <div class='synopsis'>
                   <span class='name'>register</span>
                   <span class='arguments'>(type, *pairs)</span>
@@ -137,15 +137,15 @@
                   <pre>register DISCONNECT, [:reason_code, :long], [:description, :string], [:language, :string]</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000321-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000323-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000321-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/packet.rb, line 34</span>&#x000A;34:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">register</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">pairs</span>)&#x000A;35:       <span class="ruby-ivar">@@types</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-identifier">pairs</span>&#x000A;36:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000323-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/packet.rb, line 34</span>&#x000A;34:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">register</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">pairs</span>)&#x000A;35:       <span class="ruby-ivar">@@types</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-identifier">pairs</span>&#x000A;36:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000323'>
-                <a name='M000323'>      </a>
+              <div class='method public-instance' id='method-M000325'>
+                <a name='M000325'>      </a>
                 <div class='synopsis'>
                   <span class='name'>[]</span>
                   <span class='arguments'>(name)</span>
@@ -157,10 +157,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000323-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000325-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000323-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/packet.rb, line 82</span>&#x000A;82:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">name</span>)&#x000A;83:       <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>&#x000A;84:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;no such element #{name}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@named_elements</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">name</span>)&#x000A;85:       <span class="ruby-ivar">@named_elements</span>[<span class="ruby-identifier">name</span>]&#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000325-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/packet.rb, line 82</span>&#x000A;82:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">name</span>)&#x000A;83:       <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>&#x000A;84:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;no such element #{name}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@named_elements</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">name</span>)&#x000A;85:       <span class="ruby-ivar">@named_elements</span>[<span class="ruby-identifier">name</span>]&#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

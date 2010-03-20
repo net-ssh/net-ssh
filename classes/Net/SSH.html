@@ -106,10 +106,10 @@
             <a href="../../files/lib/net/ssh/proxy/errors_rb.html">lib/net/ssh/proxy/errors.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/proxy/socks4_rb.html">lib/net/ssh/proxy/socks4.rb</a>
+            <a href="../../files/lib/net/ssh/proxy/http_rb.html">lib/net/ssh/proxy/http.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/proxy/http_rb.html">lib/net/ssh/proxy/http.rb</a>
+            <a href="../../files/lib/net/ssh/proxy/socks4_rb.html">lib/net/ssh/proxy/socks4.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/ruby_compat_rb.html">lib/net/ssh/ruby_compat.rb</a>
@@ -118,10 +118,10 @@
             <a href="../../files/lib/net/ssh/proxy/socks5_rb.html">lib/net/ssh/proxy/socks5.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/test/channel_rb.html">lib/net/ssh/test/channel.rb</a>
+            <a href="../../files/lib/net/ssh/service/forward_rb.html">lib/net/ssh/service/forward.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/service/forward_rb.html">lib/net/ssh/service/forward.rb</a>
+            <a href="../../files/lib/net/ssh/test/channel_rb.html">lib/net/ssh/test/channel.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/test/extensions_rb.html">lib/net/ssh/test/extensions.rb</a>
@@ -130,10 +130,10 @@
             <a href="../../files/lib/net/ssh/test/kex_rb.html">lib/net/ssh/test/kex.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/test/local_packet_rb.html">lib/net/ssh/test/local_packet.rb</a>
+            <a href="../../files/lib/net/ssh/test/packet_rb.html">lib/net/ssh/test/packet.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/test/packet_rb.html">lib/net/ssh/test/packet.rb</a>
+            <a href="../../files/lib/net/ssh/test/local_packet_rb.html">lib/net/ssh/test/local_packet.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/test/remote_packet_rb.html">lib/net/ssh/test/remote_packet.rb</a>
@@ -178,13 +178,13 @@
             <a href="../../files/lib/net/ssh/transport/state_rb.html">lib/net/ssh/transport/state.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/verifiers/lenient_rb.html">lib/net/ssh/verifiers/lenient.rb</a>
-          </li>
-          <li class='other'>
             <a href="../../files/lib/net/ssh/verifiers/null_rb.html">lib/net/ssh/verifiers/null.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/verifiers/strict_rb.html">lib/net/ssh/verifiers/strict.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/net/ssh/verifiers/lenient_rb.html">lib/net/ssh/verifiers/lenient.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/version_rb.html">lib/net/ssh/version.rb</a>
@@ -220,7 +220,7 @@
             pending at a time), but it also adds complexity. <a
             href="SSH.html">Net::SSH</a> tries to manage this complexity by providing
             some simpler methods of synchronous communication (see <a
-            href="SSH/Connection/Session.html#M000092">Net::SSH::Connection::Session#exec!</a>).
+            href="SSH/Connection/Session.html#M000094">Net::SSH::Connection::Session#exec!</a>).
             </p>
             <p>
             In general, though, and if you want to do anything more complicated than
@@ -228,7 +228,7 @@
             use channels (<a
             href="SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a>) to
             build state machines that are executed while the event loop runs (<a
-            href="SSH/Connection/Session.html#M000084">Net::SSH::Connection::Session#loop</a>).
+            href="SSH/Connection/Session.html#M000086">Net::SSH::Connection::Session#loop</a>).
             </p>
             <p>
             <a href="SSH/Connection/Session.html">Net::SSH::Connection::Session</a> and
@@ -257,6 +257,7 @@
               Module <a href="SSH/Authentication.html" class="link">Net::SSH::Authentication</a><br />
               Module <a href="SSH/BufferedIo.html" class="link">Net::SSH::BufferedIo</a><br />
               Module <a href="SSH/Connection.html" class="link">Net::SSH::Connection</a><br />
+              Module <a href="SSH/ForwardedBufferedIo.html" class="link">Net::SSH::ForwardedBufferedIo</a><br />
               Module <a href="SSH/Loggable.html" class="link">Net::SSH::Loggable</a><br />
               Module <a href="SSH/PromptMethods.html" class="link">Net::SSH::PromptMethods</a><br />
               Module <a href="SSH/Proxy.html" class="link">Net::SSH::Proxy</a><br />
