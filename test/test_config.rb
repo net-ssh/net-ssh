@@ -38,6 +38,12 @@ class TestConfig < Test::Unit::TestCase
     assert !config.key?(:rekey_limit)
   end
   
+  def test_load_with_no_host
+    config = Net::SSH::Config.load(config(:nohost), "test.host")
+    assert_equal %w(~/.ssh/id_dsa ~/.ssh/id_rsa), config['identityfile']
+    assert_equal 1985, config['port']
+  end
+  
   def test_load_with_multiple_hosts
     config = Net::SSH::Config.load(config(:multihost), "test.host")
     assert config['compression']

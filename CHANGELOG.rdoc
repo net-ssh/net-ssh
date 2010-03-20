@@ -2,6 +2,8 @@
 
 === 2.0.21 / ?? Mar 2010
 
+* Fix for "IdentifyFile" in ~/.ssh/config does not work if no "Host" statement is given (http://net-ssh.lighthouseapp.com/projects/36253/tickets/9-identifyfile-in-sshconfig-does-not-work-if-no-host-statement-is-given#ticket-9-5) [xbaldauf, Delano Mandelbaum]
+
 * Fix for client closes a forwarded connection, but the server is reading, net-ssh terminates with IOError socket closed (http://net-ssh.lighthouseapp.com/projects/36253/tickets/7) [Miklós Fazekas]
 
 * Fix for client force closes (RST) a forwarded connection, but server is reading, net-ssh terminates with exception [Miklós Fazekas]

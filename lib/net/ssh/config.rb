@@ -55,12 +55,14 @@ module Net; module SSH
       # ones. Returns a hash containing the OpenSSH options. (See
       # #translate for how to convert the OpenSSH options into Net::SSH
       # options.)
-      def load(file, host, settings={})
-        file = File.expand_path(file)
+      def load(path, host, settings={})
+        file = File.expand_path(path)
         return settings unless File.readable?(file)
         
+        globals = {}
         matched_host = nil
         multi_host = []
+        seen_host = false
         IO.foreach(file) do |line|
           next if line =~ /^\s*(?:#.*)?$/
           
@@ -75,28 +77,36 @@ module Net; module SSH
 
           key.downcase!
           value = $1 if value =~ /^"(.*)"$/
-
+          
           value = case value.strip
             when /^\d+$/ then value.to_i
             when /^no$/i then false
             when /^yes$/i then true
             else value
             end
-
+          
           if key == 'host'
             # Support "Host host1 host2 hostN".
             # See http://github.com/net-ssh/net-ssh/issues#issue/6
             multi_host = value.split(/\s+/)
             matched_host = multi_host.select { |h| host =~ pattern2regex(h) }.first
+            seen_host = true
+          elsif !seen_host
+            if key == 'identityfile'
+              (globals[key] ||= []) << value
+            else
+              globals[key] = value unless settings.key?(key)
+            end
           elsif !matched_host.nil?
             if key == 'identityfile'
-              settings[key] ||= []
-              settings[key] << value
+              (settings[key] ||= []) << value
             else
               settings[key] = value unless settings.key?(key)
             end
           end
         end
+        
+        settings = globals.merge(settings) if globals
         
         return settings
       end
