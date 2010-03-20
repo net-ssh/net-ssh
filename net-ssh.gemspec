@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "net-ssh"
         s.rubyforge_project = 'net-ssh'
-	s.version = "2.0.20"
+	s.version = "2.0.21"
 	s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
 	s.description = s.summary
 	s.authors = ["Jamis Buck", "Delano Mandelbaum"]
@@ -91,6 +91,7 @@
   setup.rb
   support/arcfour_check.rb
   support/ssh_tunnel_bug.rb
+  test/README.txt
   test/authentication/methods/common.rb
   test/authentication/methods/test_abstract.rb
   test/authentication/methods/test_hostbased.rb
@@ -105,9 +106,11 @@
   test/configs/exact_match
   test/configs/host_plus
   test/configs/multihost
+  test/configs/nohost
   test/configs/wild_cards
   test/connection/test_channel.rb
   test/connection/test_session.rb
+  test/manual/test_forward.rb
   test/test_all.rb
   test/test_buffer.rb
   test/test_buffered_io.rb
