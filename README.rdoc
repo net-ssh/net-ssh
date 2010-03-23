@@ -1,6 +1,7 @@
 = Net::SSH
 
-* http://net-ssh.github.com/net-ssh
+* Docs: http://net-ssh.github.com/net-ssh
+* Issues: http://net-ssh.lighthouseapp.com/
 
 == DESCRIPTION:
 
