@@ -2,6 +2,7 @@
 
 * Docs: http://net-ssh.github.com/net-ssh
 * Issues: http://net-ssh.lighthouseapp.com/
+* Codes: http://github.com/net-ssh/net-ssh
 
 == DESCRIPTION:
 
