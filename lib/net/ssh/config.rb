@@ -88,7 +88,7 @@ module Net; module SSH
           if key == 'host'
             # Support "Host host1 host2 hostN".
             # See http://github.com/net-ssh/net-ssh/issues#issue/6
-            multi_host = value.split(/\s+/)
+            multi_host = value.to_s.split(/\s+/)
             matched_host = multi_host.select { |h| host =~ pattern2regex(h) }.first
             seen_host = true
           elsif !seen_host
