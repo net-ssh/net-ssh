@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "net-ssh"
         s.rubyforge_project = 'net-ssh'
-	s.version = "2.0.21"
+	s.version = "2.0.22"
 	s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
 	s.description = s.summary
 	s.authors = ["Jamis Buck", "Delano Mandelbaum"]
@@ -107,6 +107,7 @@
   test/configs/host_plus
   test/configs/multihost
   test/configs/nohost
+  test/configs/numeric_host
   test/configs/wild_cards
   test/connection/test_channel.rb
   test/connection/test_session.rb
