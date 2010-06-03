@@ -31,12 +31,23 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2010-04-20 16:32:32 -0400</span>
+          <span class='datetime'>2010-06-03 18:22:38 -0400</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
+            <h3>2.0.23 / 03 Jun 2010</h3>
+            <ul>
+            <li>delay CHANNEL_EOF packet until output buffer is empty [Rich Lane]
+            
+            </li>
+            </ul>
+            <p>
+            Previously, calling eof! after send_data would result in the CHANNEL_EOF
+            packet being sent immediately, ahead of the data in the output buffer. Now
+            buffer becomes empty.
+            </p>
             <h3>2.0.22 / 20 Apr 2010</h3>
             <ul>
             <li>Fix for: &#8220;Parsing the config errors out because it coerces the
