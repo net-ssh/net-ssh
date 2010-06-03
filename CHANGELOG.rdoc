@@ -1,4 +1,13 @@
 
+=== 2.0.23 / 03 Jun 2010
+
+* delay CHANNEL_EOF packet until output buffer is empty [Rich Lane]
+
+Previously, calling #eof! after #send_data would result in the CHANNEL_EOF
+packet being sent immediately, ahead of the data in the output buffer. Now
+buffer becomes empty.
+
+
 === 2.0.22 / 20 Apr 2010
 
 * Fix for: "Parsing the config errors out because it coerces the "1" into an integer and then tries to split it on spaces for multiple host checking." (http://net-ssh.lighthouseapp.com/projects/36253/tickets/10) [Lee Marlow]
