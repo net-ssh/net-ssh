@@ -126,7 +126,7 @@ module Net; module SSH; module Connection
       @pending_requests = []
       @on_open_failed = @on_data = @on_extended_data = @on_process = @on_close = @on_eof = nil
       @on_request = {}
-      @closing = @eof = false
+      @closing = @eof = @sent_eof = false
     end
 
     # A shortcut for accessing properties of the channel (see #properties).
@@ -298,10 +298,10 @@ module Net; module SSH; module Connection
 
     # Tells the remote end of the channel that no more data is forthcoming
     # from this end of the channel. The remote end may still send data.
+    # The CHANNEL_EOF packet will be sent once the output buffer is empty.
     def eof!
       return if eof?
       @eof = true
-      connection.send_message(Buffer.from(:byte, CHANNEL_EOF, :long, remote_id))
     end
 
     # If an #on_process handler has been set up, this will cause it to be
@@ -310,6 +310,11 @@ module Net; module SSH; module Connection
     def process
       @on_process.call(self) if @on_process
       enqueue_pending_output
+
+      if @eof and not @sent_eof and output.empty?
+        connection.send_message(Buffer.from(:byte, CHANNEL_EOF, :long, remote_id))
+        @sent_eof = true
+      end
     end
 
     # Registers a callback to be invoked when data packets are received by the

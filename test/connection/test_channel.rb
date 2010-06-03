@@ -378,6 +378,7 @@ module Connection
       channel.do_open_confirmation(0, 1000, 1000)
       connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
       channel.eof!
+      channel.process
     end
 
     def test_eof_bang_should_not_send_eof_if_eof_was_already_declared
@@ -385,6 +386,7 @@ module Connection
       connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
       channel.eof!
       assert_nothing_raised { channel.eof! }
+      channel.process
     end
 
     def test_eof_q_should_return_true_if_eof_declared
@@ -394,14 +396,27 @@ module Connection
       assert !channel.eof?
       channel.eof!
       assert channel.eof?
+      channel.process
     end
 
     def test_send_data_should_raise_exception_if_eof_declared
       channel.do_open_confirmation(0, 1000, 1000)
       connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
       channel.eof!
+      channel.process
       assert_raises(EOFError) { channel.send_data("die! die! die!") }
     end
+
+    def test_data_should_precede_eof
+      channel.do_open_confirmation(0, 1000, 1000)
+      connection.expect do |t,p|
+        assert_equal CHANNEL_DATA, p.type
+        connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
+      end
+      channel.send_data "foo"
+      channel.eof!
+      channel.process
+   end
 
     private
 
