@@ -84,12 +84,12 @@ module Authentication
         key.expects(:public_key).returns(key)
       end
 
-      def rsa(size=32)
+      def rsa(size=512)
         @rsa ||= OpenSSL::PKey::RSA.new(size)
       end
 
       def dsa
-        @dsa ||= OpenSSL::PKey::DSA.new(32)
+        @dsa ||= OpenSSL::PKey::DSA.new(512)
       end
 
       def agent

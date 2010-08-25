@@ -96,7 +96,7 @@ module Authentication
 
     def test_identities_should_augment_identities_with_comment_field
       key1 = key
-      key2 = OpenSSL::PKey::DSA.new(32)
+      key2 = OpenSSL::PKey::DSA.new(512)
 
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
@@ -180,7 +180,7 @@ module Authentication
       end
 
       def key
-        @key ||= OpenSSL::PKey::RSA.new(32)
+        @key ||= OpenSSL::PKey::RSA.new(512)
       end
 
       def socket

@@ -95,9 +95,9 @@ module Transport; module Kex
         Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1
       end
 
-      # 368 bits is the smallest possible key that will work with this, so
+      # 512 bits is the smallest possible key that will work with this, so
       # we use it for speed reasons
-      def server_key(bits=368)
+      def server_key(bits=512)
         @server_key ||= OpenSSL::PKey::RSA.new(bits)
       end
 

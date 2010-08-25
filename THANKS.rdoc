@@ -5,7 +5,7 @@ contributions:
 GOTOU Yuuzou <gotoyuzo@notwork.org>
   * help and code related to OpenSSL
 
-Guillaume Marçais <guillaume.marcais@free.fr>
+Guillaume MarÃ§ais <guillaume.marcais@free.fr>
   * support for communicating with the the PuTTY "pageant" process
 
 Daniel Berger <djberg96@yahoo.com>
@@ -14,3 +14,6 @@ Daniel Berger <djberg96@yahoo.com>
 
 Chris Andrews <chris@nodnol.org> and Lee Jensen <lee@outerim.com>
   * support for ssh agent forwarding
+
+Hiroshi Nakamura
+  * fixed errors with JRuby tests

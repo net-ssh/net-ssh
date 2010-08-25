@@ -114,12 +114,18 @@ module Transport
     end
 
     def test_compress_when_compression_is_enabled_should_return_compressed_text
-      state.set :compression => :standard
+      state.set :compression => :standard     
+      # JRuby Zlib implementation (1.4 & 1.5) does not have byte-to-byte compatibility with MRI's.
+      # skip this test under JRuby.
+      return if defined?(JRUBY_VERSION)
       assert_equal "x\234\312H\315\311\311WH-K-\252L\312O\251\004\000\000\000\377\377", state.compress("hello everybody")
     end
 
     def test_decompress_when_compression_is_enabled_should_return_decompressed_text
-      state.set :compression => :standard
+      state.set :compression => :standard     
+      # JRuby Zlib implementation (1.4 & 1.5) does not have byte-to-byte compatibility with MRI's.
+      # skip this test under JRuby.
+      return if defined?(JRUBY_VERSION)
       assert_equal "hello everybody", state.decompress("x\234\312H\315\311\311WH-K-\252L\312O\251\004\000\000\000\377\377")
     end
 
