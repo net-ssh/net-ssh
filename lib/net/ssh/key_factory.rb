@@ -11,7 +11,7 @@ module Net; module SSH
   #   klass = Net::SSH::KeyFactory.get("rsa")
   #   assert klass.is_a?(OpenSSL::PKey::RSA)
   #
-  #   key = Net::SSH::KeyFacory.load_public_key("~/.ssh/id_dsa.pub")
+  #   key = Net::SSH::KeyFactory.load_public_key("~/.ssh/id_dsa.pub")
   class KeyFactory
     # Specifies the mapping of SSH names to OpenSSL key classes.
     MAP = {
