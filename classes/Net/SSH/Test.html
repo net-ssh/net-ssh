@@ -87,11 +87,11 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000132">assert_scripted</a></li>
-              <li><a href="#M000130">connection</a></li>
-              <li><a href="#M000129">socket</a></li>
-              <li><a href="#M000128">story</a></li>
-              <li><a href="#M000131">transport</a></li>
+              <li><a href="#M000123">assert_scripted</a></li>
+              <li><a href="#M000121">connection</a></li>
+              <li><a href="#M000120">socket</a></li>
+              <li><a href="#M000119">story</a></li>
+              <li><a href="#M000122">transport</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -108,8 +108,8 @@
             </div>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000132'>
-                <a name='M000132'>      </a>
+              <div class='method public-instance' id='method-M000123'>
+                <a name='M000123'>      </a>
                 <div class='synopsis'>
                   <span class='name'>assert_scripted</span>
                   <span class='arguments'>() {|| ...}</span>
@@ -117,7 +117,7 @@
                 <div class='description'>
                   <p>
                   First asserts that a story has been described (see <a
-                  href="Test.html#M000128">story</a>). Then yields, and then asserts that all
+                  href="Test.html#M000119">story</a>). Then yields, and then asserts that all
                   items described in the script have been processed. Typically, this is
                   called immediately after a story has been built, and the <a
                   href="../SSH.html">SSH</a> commands being tested are then executed within
@@ -125,14 +125,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000132-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000123-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000132-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test.rb, line 82</span>&#x000A;82:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">assert_scripted</span>&#x000A;83:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;there is no script to be processed&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>.<span class="ruby-identifier">events</span>.<span class="ruby-identifier">empty?</span>&#x000A;84:       <span class="ruby-keyword kw">yield</span>&#x000A;85:       <span class="ruby-identifier">assert</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>.<span class="ruby-identifier">events</span>.<span class="ruby-identifier">empty?</span>, <span class="ruby-node">&quot;there should not be any remaining scripted events, but there are still #{socket.script.events.length} pending&quot;</span>&#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000123-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test.rb, line 82</span>&#x000A;82:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">assert_scripted</span>&#x000A;83:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;there is no script to be processed&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>.<span class="ruby-identifier">events</span>.<span class="ruby-identifier">empty?</span>&#x000A;84:       <span class="ruby-keyword kw">yield</span>&#x000A;85:       <span class="ruby-identifier">assert</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>.<span class="ruby-identifier">events</span>.<span class="ruby-identifier">empty?</span>, <span class="ruby-node">&quot;there should not be any remaining scripted events, but there are still #{socket.script.events.length} pending&quot;</span>&#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000130'>
-                <a name='M000130'>      </a>
+              <div class='method public-instance' id='method-M000121'>
+                <a name='M000121'>      </a>
                 <div class='synopsis'>
                   <span class='name'>connection</span>
                   <span class='arguments'>(options={})</span>
@@ -143,18 +143,18 @@
                   href="Connection/Session.html">Net::SSH::Connection::Session</a>) for use
                   in these tests. It is a fully functional <a href="../SSH.html">SSH</a>
                   session, operating over a mock socket (<a
-                  href="Test.html#M000129">socket</a>).
+                  href="Test.html#M000120">socket</a>).
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000130-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000121-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000130-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test.rb, line 66</span>&#x000A;66:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">connection</span>(<span class="ruby-identifier">options</span>={})&#x000A;67:       <span class="ruby-ivar">@connection</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Connection</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transport</span>(<span class="ruby-identifier">options</span>), <span class="ruby-identifier">options</span>)&#x000A;68:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000121-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test.rb, line 66</span>&#x000A;66:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">connection</span>(<span class="ruby-identifier">options</span>={})&#x000A;67:       <span class="ruby-ivar">@connection</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Connection</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transport</span>(<span class="ruby-identifier">options</span>), <span class="ruby-identifier">options</span>)&#x000A;68:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000129'>
-                <a name='M000129'>      </a>
+              <div class='method public-instance' id='method-M000120'>
+                <a name='M000120'>      </a>
                 <div class='synopsis'>
                   <span class='name'>socket</span>
                   <span class='arguments'>(options={})</span>
@@ -166,14 +166,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000129-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000120-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000129-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test.rb, line 59</span>&#x000A;59:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">socket</span>(<span class="ruby-identifier">options</span>={})&#x000A;60:       <span class="ruby-ivar">@socket</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Test</span><span class="ruby-operator">::</span><span class="ruby-constant">Socket</span>.<span class="ruby-identifier">new</span>&#x000A;61:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000120-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test.rb, line 59</span>&#x000A;59:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">socket</span>(<span class="ruby-identifier">options</span>={})&#x000A;60:       <span class="ruby-ivar">@socket</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Test</span><span class="ruby-operator">::</span><span class="ruby-constant">Socket</span>.<span class="ruby-identifier">new</span>&#x000A;61:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000128'>
-                <a name='M000128'>      </a>
+              <div class='method public-instance' id='method-M000119'>
+                <a name='M000119'>      </a>
                 <div class='synopsis'>
                   <span class='name'>story</span>
                   <span class='arguments'>() {|socket.script if block_given?| ...}</span>
@@ -181,20 +181,20 @@
                 <div class='description'>
                   <p>
                   If a block is given, yields the script for the test socket (<a
-                  href="Test.html#M000129">socket</a>). Otherwise, simply returns the
+                  href="Test.html#M000120">socket</a>). Otherwise, simply returns the
                   socket&#8217;s script. See <a
                   href="Test/Script.html">Net::SSH::Test::Script</a>.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000128-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000119-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000128-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test.rb, line 52</span>&#x000A;52:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">story</span>&#x000A;53:       <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>&#x000A;54:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>&#x000A;55:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000119-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test.rb, line 52</span>&#x000A;52:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">story</span>&#x000A;53:       <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>&#x000A;54:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>&#x000A;55:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000131'>
-                <a name='M000131'>      </a>
+              <div class='method public-instance' id='method-M000122'>
+                <a name='M000122'>      </a>
                 <div class='synopsis'>
                   <span class='name'>transport</span>
                   <span class='arguments'>(options={})</span>
@@ -205,14 +205,14 @@
                   href="Transport/Session.html">Net::SSH::Transport::Session</a>) for use in
                   these tests. It is a fully functional <a href="../SSH.html">SSH</a>
                   transport session, operating over a mock socket (<a
-                  href="Test.html#M000129">socket</a>).
+                  href="Test.html#M000120">socket</a>).
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000131-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000122-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000131-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test.rb, line 73</span>&#x000A;73:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">transport</span>(<span class="ruby-identifier">options</span>={})&#x000A;74:       <span class="ruby-ivar">@transport</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:host</span>] <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;localhost&quot;</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">:kex</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;test&quot;</span>, <span class="ruby-identifier">:host_key</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;ssh-rsa&quot;</span>, <span class="ruby-identifier">:paranoid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">false</span>, <span class="ruby-identifier">:proxy</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">socket</span>(<span class="ruby-identifier">options</span>)))&#x000A;75:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000122-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test.rb, line 73</span>&#x000A;73:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">transport</span>(<span class="ruby-identifier">options</span>={})&#x000A;74:       <span class="ruby-ivar">@transport</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:host</span>] <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;localhost&quot;</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">:kex</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;test&quot;</span>, <span class="ruby-identifier">:host_key</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;ssh-rsa&quot;</span>, <span class="ruby-identifier">:paranoid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">false</span>, <span class="ruby-identifier">:proxy</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">socket</span>(<span class="ruby-identifier">options</span>)))&#x000A;75:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
