@@ -42,6 +42,7 @@ Rake::GemPackageTask.new(@spec) do |p|
   p.need_tar = true if RUBY_PLATFORM !~ /mswin/
 end
 
+task :build => [ :package ]
 task :release => [ :rdoc, :package ]
 task :install => [ :rdoc, :package ] do
 	sh %{sudo gem install pkg/#{name}-#{version}.gem}
