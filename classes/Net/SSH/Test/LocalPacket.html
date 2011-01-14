@@ -55,12 +55,12 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000146">new</a></li>
+              <li><a href="#M000155">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000147">local?</a></li>
-              <li><a href="#M000148">process</a></li>
+              <li><a href="#M000156">local?</a></li>
+              <li><a href="#M000157">process</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -78,8 +78,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000146'>
-                <a name='M000146'>      </a>
+              <div class='method public-class' id='method-M000155'>
+                <a name='M000155'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(type, *args, &amp;block)</span>
@@ -89,19 +89,19 @@
                   Extend the default <a href="Packet.html">Net::SSH::Test::Packet</a>
                   constructor to also accept an optional block, which is used to finalize the
                   initialization of the packet when <a
-                  href="LocalPacket.html#M000148">process</a> is first called.
+                  href="LocalPacket.html#M000157">process</a> is first called.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000146-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000155-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000146-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/local_packet.rb, line 16</span>&#x000A;16:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;17:       <span class="ruby-keyword kw">super</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;18:       <span class="ruby-ivar">@init</span> = <span class="ruby-identifier">block</span>&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000155-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/local_packet.rb, line 16</span>&#x000A;16:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;17:       <span class="ruby-keyword kw">super</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;18:       <span class="ruby-ivar">@init</span> = <span class="ruby-identifier">block</span>&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000147'>
-                <a name='M000147'>      </a>
+              <div class='method public-instance' id='method-M000156'>
+                <a name='M000156'>      </a>
                 <div class='synopsis'>
                   <span class='name'>local?</span>
                   <span class='arguments'>()</span>
@@ -112,14 +112,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000147-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000156-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000147-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/local_packet.rb, line 22</span>&#x000A;22:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">local?</span>&#x000A;23:       <span class="ruby-keyword kw">true</span>&#x000A;24:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000156-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/local_packet.rb, line 22</span>&#x000A;22:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">local?</span>&#x000A;23:       <span class="ruby-keyword kw">true</span>&#x000A;24:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000148'>
-                <a name='M000148'>      </a>
+              <div class='method public-instance' id='method-M000157'>
+                <a name='M000157'>      </a>
                 <div class='synopsis'>
                   <span class='name'>process</span>
                   <span class='arguments'>(packet)</span>
@@ -127,7 +127,7 @@
                 <div class='description'>
                   <p>
                   Called by <a
-                  href="Extensions/PacketStream.html#M000127">Net::SSH::Test::Extensions::PacketStream#test_enqueue_packet</a>
+                  href="Extensions/PacketStream.html#M000136">Net::SSH::Test::Extensions::PacketStream#test_enqueue_packet</a>
                   to mimic remote processing of a locally-sent packet. It compares the packet
                   it was given with the contents of this LocalPacket&#8217;s data, to see if
                   what was sent matches what was scripted. If it differs in any way, an
@@ -135,10 +135,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000148-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000157-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000148-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/local_packet.rb, line 31</span>&#x000A;31:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)&#x000A;32:       <span class="ruby-ivar">@init</span>.<span class="ruby-identifier">call</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Packet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">to_s</span>)) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@init</span>&#x000A;33:       <span class="ruby-identifier">type</span> = <span class="ruby-identifier">packet</span>.<span class="ruby-identifier">read_byte</span>&#x000A;34:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;expected #{@type}, but got #{type}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">type</span>&#x000A;35: &#x000A;36:       <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">types</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">expected</span>, <span class="ruby-identifier">type</span><span class="ruby-operator">|</span>&#x000A;37:         <span class="ruby-identifier">type</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">expected</span>&#x000A;38:           <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">then</span> <span class="ruby-keyword kw">break</span>&#x000A;39:           <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Numeric</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">:long</span>&#x000A;40:           <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">:string</span>&#x000A;41:           <span class="ruby-keyword kw">when</span> <span class="ruby-constant">TrueClass</span>, <span class="ruby-constant">FalseClass</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">:bool</span>&#x000A;42:           <span class="ruby-keyword kw">end</span>&#x000A;43: &#x000A;44:         <span class="ruby-identifier">actual</span> = <span class="ruby-identifier">packet</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;read_#{type}&quot;</span>)&#x000A;45:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">expected</span>.<span class="ruby-identifier">nil?</span>&#x000A;46:         <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;expected #{type} #{expected.inspect} but got #{actual.inspect}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">expected</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">actual</span>&#x000A;47:       <span class="ruby-keyword kw">end</span>&#x000A;48:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000157-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/local_packet.rb, line 31</span>&#x000A;31:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)&#x000A;32:       <span class="ruby-ivar">@init</span>.<span class="ruby-identifier">call</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Packet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">to_s</span>)) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@init</span>&#x000A;33:       <span class="ruby-identifier">type</span> = <span class="ruby-identifier">packet</span>.<span class="ruby-identifier">read_byte</span>&#x000A;34:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;expected #{@type}, but got #{type}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">type</span>&#x000A;35: &#x000A;36:       <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">types</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">expected</span>, <span class="ruby-identifier">type</span><span class="ruby-operator">|</span>&#x000A;37:         <span class="ruby-identifier">type</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">expected</span>&#x000A;38:           <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">then</span> <span class="ruby-keyword kw">break</span>&#x000A;39:           <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Numeric</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">:long</span>&#x000A;40:           <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">:string</span>&#x000A;41:           <span class="ruby-keyword kw">when</span> <span class="ruby-constant">TrueClass</span>, <span class="ruby-constant">FalseClass</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">:bool</span>&#x000A;42:           <span class="ruby-keyword kw">end</span>&#x000A;43: &#x000A;44:         <span class="ruby-identifier">actual</span> = <span class="ruby-identifier">packet</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;read_#{type}&quot;</span>)&#x000A;45:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">expected</span>.<span class="ruby-identifier">nil?</span>&#x000A;46:         <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;expected #{type} #{expected.inspect} but got #{actual.inspect}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">expected</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">actual</span>&#x000A;47:       <span class="ruby-keyword kw">end</span>&#x000A;48:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

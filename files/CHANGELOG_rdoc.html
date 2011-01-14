@@ -31,12 +31,22 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2010-06-03 18:24:17 -0400</span>
+          <span class='datetime'>2011-01-14 18:46:46 -0500</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
+            <h3>2.0.24 / 14 Jan 2011</h3>
+            <ul>
+            <li>Fix for process code to correctly wait until remote_id is set before
+            sending any output, including eof. [Daniel Pittman, Markus Roberts]
+            
+            </li>
+            <li>Fix circular require warning in Ruby 1.9.2 [Gavin Brock]
+            
+            </li>
+            </ul>
             <h3>2.0.23 / 03 Jun 2010</h3>
             <ul>
             <li>delay CHANNEL_EOF packet until output buffer is empty [Rich Lane]
