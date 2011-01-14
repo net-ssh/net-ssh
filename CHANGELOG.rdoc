@@ -1,4 +1,9 @@
 
+=== 2.0.23 / 14 Jan 2011
+
+* Fix for process code to correctly wait until remote_id is set before sending any output, including eof. [Markus Roberts]
+
+
 === 2.0.23 / 03 Jun 2010
 
 * delay CHANNEL_EOF packet until output buffer is empty [Rich Lane]

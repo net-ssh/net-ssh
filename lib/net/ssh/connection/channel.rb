@@ -311,7 +311,7 @@ module Net; module SSH; module Connection
       @on_process.call(self) if @on_process
       enqueue_pending_output
 
-      if @eof and not @sent_eof and output.empty?
+      if @eof and not @sent_eof and output.empty? and remote_id
         connection.send_message(Buffer.from(:byte, CHANNEL_EOF, :long, remote_id))
         @sent_eof = true
       end
