@@ -3,6 +3,7 @@
 * Docs: http://net-ssh.github.com/net-ssh
 * Issues: http://net-ssh.lighthouseapp.com/
 * Codes: http://github.com/net-ssh/net-ssh
+* Email: net-ssh@solutious.com
 
 == DESCRIPTION:
 
@@ -120,7 +121,7 @@ which should produce the following:
 
 (The MIT License)
 
-Copyright (c) 2008 Jamis Buck <jamis@37signals.com>
+Copyright (c) 2008 Jamis Buck
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
