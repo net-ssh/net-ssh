@@ -2,6 +2,7 @@
 === 2.0.24 / 14 Jan 2011
 
 * Fix for process code to correctly wait until remote_id is set before sending any output, including eof. [Daniel Pittman, Markus Roberts]
+* Fix circular require warning in Ruby 1.9.2 [Gavin Brock]
 
 
 === 2.0.23 / 03 Jun 2010

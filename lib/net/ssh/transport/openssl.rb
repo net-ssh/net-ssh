@@ -1,5 +1,4 @@
 require 'openssl'
-require 'net/ssh/buffer'
 
 module OpenSSL
 
