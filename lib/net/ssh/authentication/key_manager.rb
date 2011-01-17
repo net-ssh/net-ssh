@@ -90,40 +90,30 @@ module Net
         # The origin of the identities may be from files on disk or from an
         # ssh-agent. Note that identities from an ssh-agent are always listed
         # first in the array, with other identities coming after.
+        #
+        # If key manager was created with :keys_only option, any identity
+        # from ssh-agent will be ignored unless it present in key_files or
+        # key_data.
         def each_identity
+          user_identities = load_identities_from_files + load_identities_from_data
+
           if agent
             agent.identities.each do |key|
-              known_identities[key] = { :from => :agent }
-              yield key
-            end
-          end
-          
-          key_files.each do |file|
-            public_key_file = file + ".pub"
-            if File.readable?(public_key_file)
-              begin
-                key = KeyFactory.load_public_key(public_key_file)
-                known_identities[key] = { :from => :file, :file => file }
+              corresponding_user_identity = user_identities.detect { |identity|
+                identity[:public_key].to_pem == key.to_pem
+              }
+              user_identities.delete(corresponding_user_identity) if corresponding_user_identity
+
+              if !options[:keys_only] || corresponding_user_identity
+                known_identities[key] = { :from => :agent }
                 yield key
-              rescue Exception => e
-                error { "could not load public key file `#{public_key_file}': #{e.class} (#{e.message})" }
-              end
-            elsif File.readable?(file)
-              begin
-                private_key = KeyFactory.load_private_key(file, options[:passphrase])
-                key = private_key.send(:public_key)
-                known_identities[key] = { :from => :file, :file => file, :key => private_key }
-                yield key
-              rescue Exception => e
-                error { "could not load private key file `#{file}': #{e.class} (#{e.message})" }
               end
             end
           end
 
-          key_data.each do |data|
-            private_key = KeyFactory.load_data_private_key(data)
-            key = private_key.send(:public_key)
-            known_identities[key] = { :from => :key_data, :data => data, :key => private_key }
+          user_identities.each do |identity|
+            key = identity.delete(:public_key)
+            known_identities[key] = identity
             yield key
           end
 
@@ -186,8 +176,44 @@ module Net
           @use_agent = false
           nil
         end
-      end
 
+        private
+
+        # Extracts identities from user key_files, preserving their order and sources.
+        def load_identities_from_files
+          key_files.map do |file|
+            public_key_file = file + ".pub"
+            if File.readable?(public_key_file)
+              begin
+                key = KeyFactory.load_public_key(public_key_file)
+                { :public_key => key, :from => :file, :file => file }
+              rescue Exception => e
+                error { "could not load public key file `#{public_key_file}': #{e.class} (#{e.message})" }
+                nil
+              end
+            elsif File.readable?(file)
+              begin
+                private_key = KeyFactory.load_private_key(file, options[:passphrase])
+                key = private_key.send(:public_key)
+                { :public_key => key, :from => :file, :file => file, :key => private_key }
+              rescue Exception => e
+                error { "could not load private key file `#{file}': #{e.class} (#{e.message})" }
+                nil
+              end
+            end
+          end.compact
+        end
+
+        # Extraccts identities from user key_data, preserving their order and sources.
+        def load_identities_from_data
+          key_data.map do |data|
+            private_key = KeyFactory.load_data_private_key(data)
+            key = private_key.send(:public_key)
+            { :public_key => key, :from => :key_data, :data => data, :key => private_key }
+          end
+        end
+
+      end
     end
   end
 end

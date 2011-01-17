@@ -59,6 +59,20 @@ module Authentication
       assert_equal({:from => :agent}, manager.known_identities[dsa])
     end
 
+    def test_only_identities_with_key_files_should_load_from_agent_of_keys_only_set
+      manager(:keys_only => true).stubs(:agent).returns(agent)
+
+      stub_file_key "/first", rsa
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 1, identities.length
+      assert_equal rsa.to_blob, identities.first.to_blob
+
+      assert_equal({:from => :agent}, manager.known_identities[rsa])
+    end
+
     def test_sign_with_agent_originated_key_should_request_signature_from_agent
       manager.stubs(:agent).returns(agent)
       manager.each_identity { |identity| } # preload the known_identities
@@ -96,8 +110,8 @@ module Authentication
         @agent ||= stub("agent", :identities => [rsa, dsa])
       end
 
-      def manager
-        @manager ||= Net::SSH::Authentication::KeyManager.new(nil)
+      def manager(options = {})
+        @manager ||= Net::SSH::Authentication::KeyManager.new(nil, options)
       end
 
   end
