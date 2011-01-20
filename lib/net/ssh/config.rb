@@ -19,6 +19,7 @@ module Net; module SSH
   # * HostKeyAlias => :host_key_alias
   # * HostName => :host_name
   # * IdentityFile => maps to the :keys option
+  # * IdentitiesOnly => :keys_only
   # * Macs => maps to the :hmac option
   # * PasswordAuthentication => maps to the :auth_methods option
   # * Port => :port
@@ -128,6 +129,8 @@ module Net; module SSH
             hash[:timeout] = value
           when 'forwardagent' then
             hash[:forward_agent] = value
+          when 'identitiesonly' then
+            hash[:keys_only] = value
           when 'globalknownhostsfile'
             hash[:global_known_hosts_file] = value
           when 'hostbasedauthentication' then

@@ -66,7 +66,7 @@ module Net
       :logger, :paranoid, :password, :port, :proxy, :rekey_blocks_limit,
       :rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
-      :host_name, :user, :properties, :passphrase
+      :host_name, :user, :properties, :passphrase, :keys_only
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -125,6 +125,10 @@ module Net
     #   and hostbased authentication
     # * :key_data => an array of strings, with each element of the array being
     #   a raw private key in PEM format.
+    # * :keys_only => set to +true+ to use only private keys from +keys+ and
+    #   +key_data+ parameters, even if ssh-agent offers more identities. This
+    #   option is intended for situations where ssh-agent offers many different
+    #   identites.
     # * :logger => the logger instance to use when logging
     # * :paranoid => either true, false, or :very, specifying how strict
     #   host-key verification should be
