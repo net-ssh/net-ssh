@@ -2,8 +2,8 @@
 
 === 2.1 / 19 Jan 2011
 
-* Support "IdentitiesOnly" directive [Edmund Haselwanter]
-* Speeding up the Loggable module [robbebob]
+* Support "IdentitiesOnly" directive (LH-24) [Musy Bite]
+* Speeding up the Loggable module (LH-23) [robbebob]
 
 
 === 2.0.24 / 14 Jan 2011
