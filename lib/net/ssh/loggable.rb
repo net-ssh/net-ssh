@@ -22,31 +22,31 @@ module Net; module SSH
     # Displays the result of yielding if the log level is Logger::DEBUG or
     # greater.
     def debug
-      logger.add(Logger::DEBUG, nil, facility) { yield } if logger
+      logger.add(Logger::DEBUG, nil, facility) { yield } if logger && logger.debug?
     end
 
     # Displays the result of yielding if the log level is Logger::INFO or
     # greater.
     def info
-      logger.add(Logger::INFO, nil, facility) { yield } if logger
+      logger.add(Logger::INFO, nil, facility) { yield } if logger && logger.info?
     end
 
     # Displays the result of yielding if the log level is Logger::WARN or
     # greater. (Called lwarn to avoid shadowing with Kernel#warn.)
     def lwarn
-      logger.add(Logger::WARN, nil, facility) { yield } if logger
+      logger.add(Logger::WARN, nil, facility) { yield } if logger && logger.warn?
     end
 
     # Displays the result of yielding if the log level is Logger:ERROR or
     # greater.
     def error
-      logger.add(Logger::ERROR, nil, facility) { yield } if logger
+      logger.add(Logger::ERROR, nil, facility) { yield } if logger && logger.error?
     end
 
     # Displays the result of yielding if the log level is Logger::FATAL or
     # greater.
     def fatal
-      logger.add(Logger::FATAL, nil, facility) { yield } if logger
+      logger.add(Logger::FATAL, nil, facility) { yield } if logger && logger.fatal?
     end
 
     private
