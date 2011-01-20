@@ -1,4 +1,4 @@
-2010-03-16
+2011-01-19
 
 RUNNING TESTS
 
@@ -17,7 +17,7 @@ EXPECTED RESULTS
 
 * Ruby 1.9: all tests pass
 
-* JRuby 1.4: 96% tests pass (242 tests, 554 assertions, 0 failures, 8 errors)
+* JRuby 1.5: 99% tests pass (448 tests, 1846 assertions, 1 failures)
 
 
 PORT FORWARDING TESTS
