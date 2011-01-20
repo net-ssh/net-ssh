@@ -1,4 +1,11 @@
 
+
+=== 2.1 / 19 Jan 2011
+
+* Support "IdentitiesOnly" directive [Edmund Haselwanter]
+* Speeding up the Loggable module [robbebob]
+
+
 === 2.0.24 / 14 Jan 2011
 
 * Fix for process code to correctly wait until remote_id is set before sending any output, including eof. [Daniel Pittman, Markus Roberts]
