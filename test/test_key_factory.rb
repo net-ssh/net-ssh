@@ -2,47 +2,51 @@ require 'common'
 require 'net/ssh/key_factory'
 
 class TestKeyFactory < Test::Unit::TestCase
+  def setup
+    @key_file = File.expand_path("/key-file")
+  end
+  
   def test_load_unencrypted_private_RSA_key_should_return_key
-    File.expects(:read).with("/key-file").returns(rsa_key.export)
-    assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
+    File.expects(:read).with(@key_file).returns(rsa_key.export)
+    assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
   end
 
   def test_load_unencrypted_private_DSA_key_should_return_key
-    File.expects(:read).with("/key-file").returns(dsa_key.export)
-    assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
+    File.expects(:read).with(@key_file).returns(dsa_key.export)
+    assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
   end
 
   def test_load_encrypted_private_RSA_key_should_prompt_for_password_and_return_key
-    File.expects(:read).with("/key-file").returns(encrypted(rsa_key, "password"))
-    Net::SSH::KeyFactory.expects(:prompt).with("Enter passphrase for /key-file:", false).returns("password")
-    assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
+    File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
+    Net::SSH::KeyFactory.expects(:prompt).with("Enter passphrase for #{@key_file}:", false).returns("password")
+    assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
   end
 
   def test_load_encrypted_private_RSA_key_with_password_should_not_prompt_and_return_key
-    File.expects(:read).with("/key-file").returns(encrypted(rsa_key, "password"))
-    assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file", "password").to_der
+    File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
+    assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file, "password").to_der
   end
 
   def test_load_encrypted_private_DSA_key_should_prompt_for_password_and_return_key
-    File.expects(:read).with("/key-file").returns(encrypted(dsa_key, "password"))
-    Net::SSH::KeyFactory.expects(:prompt).with("Enter passphrase for /key-file:", false).returns("password")
-    assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
+    File.expects(:read).with(@key_file).returns(encrypted(dsa_key, "password"))
+    Net::SSH::KeyFactory.expects(:prompt).with("Enter passphrase for #{@key_file}:", false).returns("password")
+    assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
   end
 
   def test_load_encrypted_private_DSA_key_with_password_should_not_prompt_and_return_key
-    File.expects(:read).with("/key-file").returns(encrypted(dsa_key, "password"))
-    assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file", "password").to_der
+    File.expects(:read).with(@key_file).returns(encrypted(dsa_key, "password"))
+    assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file, "password").to_der
   end
 
   def test_load_encrypted_private_key_should_give_three_tries_for_the_password_and_then_raise_exception
-    File.expects(:read).with("/key-file").returns(encrypted(rsa_key, "password"))
-    Net::SSH::KeyFactory.expects(:prompt).times(3).with("Enter passphrase for /key-file:", false).returns("passwod","passphrase","passwd")
-    assert_raises(OpenSSL::PKey::RSAError) { Net::SSH::KeyFactory.load_private_key("/key-file") }
+    File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
+    Net::SSH::KeyFactory.expects(:prompt).times(3).with("Enter passphrase for #{@key_file}:", false).returns("passwod","passphrase","passwd")
+    assert_raises(OpenSSL::PKey::RSAError) { Net::SSH::KeyFactory.load_private_key(@key_file) }
   end
 
   def test_load_public_rsa_key_should_return_key
-    File.expects(:read).with("/key-file").returns(public(rsa_key))
-    assert_equal rsa_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
+    File.expects(:read).with(@key_file).returns(public(rsa_key))
+    assert_equal rsa_key.to_blob, Net::SSH::KeyFactory.load_public_key(@key_file).to_blob
   end
 
   private

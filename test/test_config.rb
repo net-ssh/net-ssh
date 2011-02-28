@@ -3,8 +3,9 @@ require 'net/ssh/config'
 
 class TestConfig < Test::Unit::TestCase
   def test_load_for_non_existant_file_should_return_empty_hash
-    File.expects(:readable?).with("/bogus/file").returns(false)
-    assert_equal({}, Net::SSH::Config.load("/bogus/file", "host.name"))
+    bogus_file = File.expand_path("/bogus/file")
+    File.expects(:readable?).with(bogus_file).returns(false)
+    assert_equal({}, Net::SSH::Config.load(bogus_file, "host.name"))
   end
 
   def test_load_should_expand_path

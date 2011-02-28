@@ -146,7 +146,7 @@ module Transport
     def test_allow_when_not_pending_should_be_true_for_all_packets
       (0..255).each do |type|
         packet = stub("packet", :type => type)
-        assert algorithms.allow?(packet), type
+        assert_true algorithms.allow?(packet)
       end
     end
 
