@@ -18,7 +18,9 @@ module Authentication
       manager.add "/second"
       manager.add "/third"
       manager.add "/second"
-      assert_equal %w(/first /second /third), manager.key_files
+      assert_true manager.key_files.length == 3
+      final_files = manager.key_files.map {|item| item.split('/').last}
+      assert_equal %w(first second third), final_files
     end
 
     def test_use_agent_should_be_set_to_false_if_agent_could_not_be_found
@@ -30,9 +32,10 @@ module Authentication
 
     def test_each_identity_should_load_from_key_files
       manager.stubs(:agent).returns(nil)
-
-      stub_file_key "/first", rsa
-      stub_file_key "/second", dsa      
+      first = File.expand_path("/first")
+      second = File.expand_path("/second")
+      stub_file_key first, rsa
+      stub_file_key second, dsa      
 
       identities = []
       manager.each_identity { |identity| identities << identity }
@@ -41,8 +44,8 @@ module Authentication
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
       
-      assert_equal({:from => :file, :file => "/first", :key => rsa}, manager.known_identities[rsa])
-      assert_equal({:from => :file, :file => "/second", :key => dsa}, manager.known_identities[dsa])
+      assert_equal({:from => :file, :file => first, :key => rsa}, manager.known_identities[rsa])
+      assert_equal({:from => :file, :file => second, :key => dsa}, manager.known_identities[dsa])
     end
 
     def test_identities_should_load_from_agent
@@ -61,8 +64,8 @@ module Authentication
 
     def test_only_identities_with_key_files_should_load_from_agent_of_keys_only_set
       manager(:keys_only => true).stubs(:agent).returns(agent)
-
-      stub_file_key "/first", rsa
+      first = File.expand_path("/first")
+      stub_file_key first, rsa
 
       identities = []
       manager.each_identity { |identity| identities << identity }
@@ -82,7 +85,8 @@ module Authentication
 
     def test_sign_with_file_originated_key_should_load_private_key_and_sign_with_it
       manager.stubs(:agent).returns(nil)
-      stub_file_key "/first", rsa(512), true
+      first = File.expand_path("/first")
+      stub_file_key first, rsa(512), true
       rsa.expects(:ssh_do_sign).with("hello, world").returns("abcxyz123")
       manager.each_identity { |identity| } # preload the known_identities
       assert_equal "\0\0\0\assh-rsa\0\0\0\011abcxyz123", manager.sign(rsa, "hello, world")
