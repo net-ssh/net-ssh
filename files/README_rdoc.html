@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2011-01-14 18:50:39 -0500</span>
+          <span class='datetime'>2011-01-20 01:20:09 -0500</span>
         </div>
       </div>
       <div id='content'>
@@ -166,6 +166,46 @@
             which should produce the following:
             </p>
             <pre>arcfour128: [16, 8] OpenSSL::Cipher::Cipher&#x000A;arcfour256: [32, 8] OpenSSL::Cipher::Cipher&#x000A;arcfour512: [64, 8] OpenSSL::Cipher::Cipher</pre>
+            <h2>RUNNING TESTS</h2>
+            <p>
+            Run the test suite from the net-ssh directory with the following command:
+            </p>
+            <pre>ruby -Ilib -Itest -rrubygems test/test_all.rb</pre>
+            <p>
+            Run a single test file like this:
+            </p>
+            <pre>ruby -Ilib -Itest -rrubygems test/transport/test_server_version.rb</pre>
+            <h3>EXPECTED RESULTS</h3>
+            <ul>
+            <li>Ruby 1.8: all tests pass
+            
+            </li>
+            <li>Ruby 1.9: all tests pass
+            
+            </li>
+            <li>JRuby 1.5: 99% tests pass (448 tests, 1846 assertions, 1 failures)
+            
+            </li>
+            </ul>
+            <h3>PORT FORWARDING TESTS</h3>
+            <pre>ruby -Ilib -Itest -rrubygems test/manual/test_forward.rb</pre>
+            <p>
+            test_forward.rb must be run separately from the test suite because it
+            requires authorizing your public SSH keys on you localhost.
+            </p>
+            <p>
+            If you already have keys you can do this:
+            </p>
+            <pre>cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</pre>
+            <p>
+            If you don&#8217;t have keys see:
+            </p>
+            <pre>http://kimmo.suominen.com/docs/ssh/#ssh-keygen</pre>
+            <p>
+            You should now be able to login to your localhost with out bring prompted
+            for a password:
+            </p>
+            <pre>ssh localhost</pre>
             <h2>LICENSE:</h2>
             <p>
             (The MIT License)
