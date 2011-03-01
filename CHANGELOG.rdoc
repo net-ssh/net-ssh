@@ -1,5 +1,5 @@
 
-=== 2.1.1 / 1 Mar 2011
+=== 2.1.2 / 1 Mar 2011
 
 * Fix for Net::SSH Continues to attempt authentication when notified it is not allowed [Eric Hodel]
     (see: http://net-ssh.lighthouseapp.com/projects/36253-net-ssh/tickets/26)
