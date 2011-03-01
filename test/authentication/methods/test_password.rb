@@ -7,7 +7,7 @@ module Authentication; module Methods
   class TestPassword < Test::Unit::TestCase
     include Common
 
-    def test_authenticate_when_password_is_unacceptible_should_return_false
+    def test_authenticate_should_raise_if_password_disallowed
       transport.expect do |t,packet|
         assert_equal USERAUTH_REQUEST, packet.type
         assert_equal "jamis", packet.read_string
@@ -19,7 +19,9 @@ module Authentication; module Methods
         t.return(USERAUTH_FAILURE, :string, "publickey")
       end
 
-      assert !subject.authenticate("ssh-connection", "jamis", "the-password")
+      assert_raises Net::SSH::Authentication::DisallowedMethod do
+        subject.authenticate("ssh-connection", "jamis", "the-password")
+      end
     end
 
     def test_authenticate_when_password_is_acceptible_should_return_true

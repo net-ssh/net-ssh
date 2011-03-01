@@ -32,7 +32,7 @@ module Authentication
       manager.stubs(:agent).returns(nil)
 
       stub_file_key "/first", rsa
-      stub_file_key "/second", dsa      
+      stub_file_key "/second", dsa
 
       identities = []
       manager.each_identity { |identity| identities << identity }
@@ -40,7 +40,7 @@ module Authentication
       assert_equal 2, identities.length
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
-      
+
       assert_equal({:from => :file, :file => "/first", :key => rsa}, manager.known_identities[rsa])
       assert_equal({:from => :file, :file => "/second", :key => dsa}, manager.known_identities[dsa])
     end
@@ -82,15 +82,25 @@ module Authentication
 
     def test_sign_with_file_originated_key_should_load_private_key_and_sign_with_it
       manager.stubs(:agent).returns(nil)
-      stub_file_key "/first", rsa(512), true
+      stub_file_key "/first", rsa(512)
       rsa.expects(:ssh_do_sign).with("hello, world").returns("abcxyz123")
       manager.each_identity { |identity| } # preload the known_identities
       assert_equal "\0\0\0\assh-rsa\0\0\0\011abcxyz123", manager.sign(rsa, "hello, world")
     end
 
+    def test_sign_with_file_originated_key_should_raise_key_manager_error_if_unloadable
+      manager.known_identities[rsa] = { :from => :file, :file => "/first" }
+
+      Net::SSH::KeyFactory.expects(:load_private_key).raises(OpenSSL::PKey::RSAError)
+
+      assert_raises Net::SSH::Authentication::KeyManagerError do
+        manager.sign(rsa, "hello, world")
+      end
+    end
+
     private
 
-      def stub_file_key(name, key, also_private=false)
+      def stub_file_key(name, key)
         manager.add(name)
         File.expects(:readable?).with(name).returns(true)
         File.expects(:readable?).with(name + ".pub").returns(false)

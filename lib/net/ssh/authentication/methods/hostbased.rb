@@ -51,6 +51,10 @@ module Net
                   return true
                 when USERAUTH_FAILURE
                   info { "hostbased failed (#{identity.fingerprint})" }
+
+                  raise Net::SSH::Authentication::DisallowedMethod unless
+                    message[:authentications].split(/,/).include? 'hostbased'
+
                   return false
                 else
                   raise Net::SSH::Exception, "unexpected server response to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"

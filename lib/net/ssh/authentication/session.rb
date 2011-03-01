@@ -9,6 +9,10 @@ require 'net/ssh/authentication/methods/keyboard_interactive'
 
 module Net; module SSH; module Authentication
 
+  # Raised if the current authentication method is not allowed
+  class DisallowedMethod < Net::SSH::Exception
+  end
+
   # Represents an authentication session. It manages the authentication of
   # a user over an established connection (the "transport" object, see
   # Net::SSH::Transport::Session).
@@ -59,13 +63,16 @@ module Net; module SSH; module Authentication
       attempted = []
 
       @auth_methods.each do |name|
-        next unless @allowed_auth_methods.include?(name)
-        attempted << name
+        begin
+          next unless @allowed_auth_methods.include?(name)
+          attempted << name
 
-        debug { "trying #{name}" }
-        method = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join).new(self, :key_manager => key_manager)
+          debug { "trying #{name}" }
+          method = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join).new(self, :key_manager => key_manager)
 
-        return true if method.authenticate(next_service, username, password)
+          return true if method.authenticate(next_service, username, password)
+        rescue Net::SSH::Authentication::DisallowedMethod
+        end
       end
 
       error { "all authorization methods failed (tried #{attempted.join(', ')})" }

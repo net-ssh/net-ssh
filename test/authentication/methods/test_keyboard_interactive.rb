@@ -10,7 +10,7 @@ module Authentication; module Methods
     USERAUTH_INFO_REQUEST  = 60
     USERAUTH_INFO_RESPONSE = 61
 
-    def test_authenticate_should_be_false_when_server_does_not_support_this_method
+    def test_authenticate_should_raise_if_keyboard_interactive_disallowed
       transport.expect do |t,packet|
         assert_equal USERAUTH_REQUEST, packet.type
         assert_equal "jamis", packet.read_string
@@ -22,7 +22,9 @@ module Authentication; module Methods
         t.return(USERAUTH_FAILURE, :string, "password")
       end
 
-      assert_equal false, subject.authenticate("ssh-connection", "jamis")
+      assert_raises Net::SSH::Authentication::DisallowedMethod do
+        subject.authenticate("ssh-connection", "jamis")
+      end
     end
 
     def test_authenticate_should_be_false_if_given_password_is_not_accepted
@@ -33,7 +35,7 @@ module Authentication; module Methods
           assert_equal USERAUTH_INFO_RESPONSE, packet2.type
           assert_equal 1, packet2.read_long
           assert_equal "the-password", packet2.read_string
-          t2.return(USERAUTH_FAILURE, :string, "publickey")
+          t2.return(USERAUTH_FAILURE, :string, "keyboard-interactive")
         end
       end
 

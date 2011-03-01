@@ -23,6 +23,10 @@ module Net
                 return true
               when USERAUTH_FAILURE
                 debug { "password failed" }
+
+                raise Net::SSH::Authentication::DisallowedMethod unless
+                  message[:authentications].split(/,/).include? 'password'
+
                 return false
               when USERAUTH_PASSWD_CHANGEREQ
                 debug { "password change request received, failing" }

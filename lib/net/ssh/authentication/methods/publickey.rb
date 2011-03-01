@@ -70,6 +70,10 @@ module Net
                       return true
                     when USERAUTH_FAILURE
                       debug { "publickey failed (#{identity.fingerprint})" }
+
+                      raise Net::SSH::Authentication::DisallowedMethod unless
+                        message[:authentications].split(/,/).include? 'publickey'
+
                       return false
                     else
                       raise Net::SSH::Exception,

@@ -27,6 +27,10 @@ module Net
                 return true
               when USERAUTH_FAILURE
                 debug { "keyboard-interactive failed" }
+
+                raise Net::SSH::Authentication::DisallowedMethod unless
+                  message[:authentications].split(/,/).include? 'keyboard-interactive'
+
                 return false
               when USERAUTH_INFO_REQUEST
                 name = message.read_string

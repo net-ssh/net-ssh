@@ -31,6 +31,27 @@ module Authentication; module Methods
       assert_equal false, subject.authenticate("ssh-connection", "jamis")
     end
 
+    def test_authenticate_should_raise_if_publickey_disallowed
+      key_manager.expects(:sign).with(&signature_parameters(keys.first)).returns("sig-one")
+
+      transport.expect do |t, packet|
+        assert_equal USERAUTH_REQUEST, packet.type
+        assert verify_userauth_request_packet(packet, keys.first, false)
+        t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
+
+        t.expect do |t2,packet2|
+          assert_equal USERAUTH_REQUEST, packet2.type
+          assert verify_userauth_request_packet(packet2, keys.first, true)
+          assert_equal "sig-one", packet2.read_string
+          t2.return(USERAUTH_FAILURE, :string, "hostbased,password")
+        end
+      end
+
+      assert_raises Net::SSH::Authentication::DisallowedMethod do
+        subject.authenticate("ssh-connection", "jamis")
+      end
+    end
+
     def test_authenticate_should_return_false_if_signature_exchange_fails
       key_manager.expects(:sign).with(&signature_parameters(keys.first)).returns("sig-one")
       key_manager.expects(:sign).with(&signature_parameters(keys.last)).returns("sig-two")
@@ -44,7 +65,7 @@ module Authentication; module Methods
           assert_equal USERAUTH_REQUEST, packet2.type
           assert verify_userauth_request_packet(packet2, keys.first, true)
           assert_equal "sig-one", packet2.read_string
-          t2.return(USERAUTH_FAILURE, :string, "hostbased,password")
+          t2.return(USERAUTH_FAILURE, :string, "publickey")
 
           t2.expect do |t3, packet3|
             assert_equal USERAUTH_REQUEST, packet3.type
@@ -55,7 +76,7 @@ module Authentication; module Methods
               assert_equal USERAUTH_REQUEST, packet4.type
               assert verify_userauth_request_packet(packet4, keys.last, true)
               assert_equal "sig-two", packet4.read_string
-              t4.return(USERAUTH_FAILURE, :string, "hostbased,password")
+              t4.return(USERAUTH_FAILURE, :string, "publickey")
             end
           end
         end

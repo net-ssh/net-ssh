@@ -12,6 +12,19 @@ module Authentication
       assert_equal session.auth_methods, session.allowed_auth_methods
     end
 
+    def test_authenticate_should_continue_if_method_disallowed
+      transport.expect do |t, packet|
+        assert_equal SERVICE_REQUEST, packet.type
+        assert_equal "ssh-userauth", packet.read_string
+        t.return(SERVICE_ACCEPT)
+      end
+
+      Net::SSH::Authentication::Methods::Publickey.any_instance.expects(:authenticate).with("next service", "username", "password").raises(Net::SSH::Authentication::DisallowedMethod)
+      Net::SSH::Authentication::Methods::Hostbased.any_instance.expects(:authenticate).with("next service", "username", "password").returns(true)
+
+      assert session.authenticate("next service", "username", "password")
+    end
+
     def test_authenticate_should_raise_error_if_service_request_fails
       transport.expect do |t, packet|
         assert_equal SERVICE_REQUEST, packet.type
