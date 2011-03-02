@@ -193,7 +193,7 @@ module Net
           return connection
         end
       else
-        transport.closed
+        transport.close
         raise AuthenticationFailed, user
       end
     end

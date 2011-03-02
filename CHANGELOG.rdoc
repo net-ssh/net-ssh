@@ -1,4 +1,10 @@
 
+
+=== 2.1.3 / 2 Mar 2011
+
+* Call to transport.closed should be transport.close [Woon Jung]
+
+
 === 2.1.2 / 1 Mar 2011
 
 * Fix for Net::SSH Continues to attempt authentication when notified it is not allowed [Eric Hodel]
