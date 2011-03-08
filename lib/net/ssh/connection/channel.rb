@@ -435,9 +435,9 @@ module Net; module SSH; module Connection
     #   data, via data.read_string. (Not all SSH servers support this channel
     #   request type.)
     #
-    #   channel.on_request "exit-status" do |ch, data|
-    #     puts "process terminated with exit status: #{data.read_long}"
-    #   end
+    #     channel.on_request "exit-status" do |ch, data|
+    #       puts "process terminated with exit status: #{data.read_long}"
+    #     end
     def on_request(type, &block)
       old, @on_request[type] = @on_request[type], block
       old
