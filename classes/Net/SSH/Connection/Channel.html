@@ -762,13 +762,7 @@
                   data, via data.read_string. (Not all <a href="../../SSH.html">SSH</a>
                   servers support this channel request type.)
                   
-                  <p>
-                  channel.on_request &#8220;exit-status&#8221; do |ch, data|
-                  </p>
-                  <pre>puts &quot;process terminated with exit status: #{data.read_long}&quot;</pre>
-                  <p>
-                  end
-                  </p>
+                  <pre>channel.on_request &quot;exit-status&quot; do |ch, data|&#x000A;  puts &quot;process terminated with exit status: #{data.read_long}&quot;&#x000A;end</pre>
                   </li>
                   </ul>
                 </div>
