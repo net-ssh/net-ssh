@@ -7,6 +7,9 @@ module Net; module SSH
   # public key authentication, password authentication, or whatever).
   class AuthenticationFailed < Exception; end
 
+  # This exception is raised when a connection attempt times out.
+  class ConnectionTimeout < Exception; end
+
   # This exception is raised when the remote host has disconnected
   # unexpectedly.
   class Disconnect < Exception; end
