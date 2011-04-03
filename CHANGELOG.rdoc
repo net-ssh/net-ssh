@@ -1,4 +1,9 @@
 
+=== 2.1.4 / 3 Apr 2011
+
+* Add ConnectionTimeout exception class. [Joel Watson]
+    See: https://github.com/net-ssh/net-ssh-multi/pull/1
+
 
 === 2.1.3 / 2 Mar 2011
 
