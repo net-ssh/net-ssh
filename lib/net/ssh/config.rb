@@ -119,6 +119,8 @@ module Net; module SSH
       def translate(settings)
         settings.inject({}) do |hash, (key, value)|
           case key
+          when 'bindaddress' then
+            hash[:bind_address] = value
           when 'ciphers' then
             hash[:encryption] = value.split(/,/)
           when 'compression' then
