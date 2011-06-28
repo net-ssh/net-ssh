@@ -61,10 +61,10 @@ module Net
     # This is the set of options that Net::SSH.start recognizes. See
     # Net::SSH.start for a description of each option.
     VALID_OPTIONS = [
-      :auth_methods, :compression, :compression_level, :config, :encryption,
-      :forward_agent, :hmac, :host_key, :kex, :keys, :key_data, :languages,
-      :logger, :paranoid, :password, :port, :proxy, :rekey_blocks_limit,
-      :rekey_limit, :rekey_packet_limit, :timeout, :verbose,
+      :auth_methods, :bind_address, :compression, :compression_level, :config, 
+      :encryption, :forward_agent, :hmac, :host_key, :kex, :keys, :key_data, 
+      :languages, :logger, :paranoid, :password, :port, :proxy, 
+      :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only
     ]
@@ -98,6 +98,9 @@ module Net
     # This method accepts the following options (all are optional):
     #
     # * :auth_methods => an array of authentication methods to try
+    # * :bind_address => the IP address on the connecting machine to use in
+    #   establishing connection. (:bind_address is discarded if :proxy
+    #   is set.)
     # * :compression => the compression algorithm to use, or +true+ to use
     #   whatever is supported.
     # * :compression_level => the compression level to use when sending data
