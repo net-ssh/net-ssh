@@ -67,6 +67,7 @@ class TestConfig < Test::Unit::TestCase
 
   def test_translate_should_correctly_translate_from_openssh_to_net_ssh_names
     open_ssh = {
+      'bindaddress'             => "127.0.0.1",
       'ciphers'                 => "a,b,c",
       'compression'             => true,
       'compressionlevel'        => 6,
@@ -95,6 +96,7 @@ class TestConfig < Test::Unit::TestCase
     assert_equal %w(j k l), net_ssh[:hmac]
     assert_equal 1234,      net_ssh[:port]
     assert_equal 1024,      net_ssh[:rekey_limit]
+    assert_equal "127.0.0.1", net_ssh[:bind_address]
   end
   
   def test_load_with_plus_sign_hosts

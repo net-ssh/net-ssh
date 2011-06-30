@@ -58,11 +58,12 @@ module Net; module SSH; module Transport
 
       @host = host
       @port = options[:port] || DEFAULT_PORT
+      @bind_address = options[:bind_address] || nil
       @options = options
 
       debug { "establishing connection to #{@host}:#{@port}" }
       factory = options[:proxy] || TCPSocket
-      @socket = timeout(options[:timeout] || 0) { factory.open(@host, @port) }
+      @socket = timeout(options[:timeout] || 0) { @bind_address.nil? || options[:proxy] ? factory.open(@host, @port) : factory.open(@host,@port,@bind_address) }
       @socket.extend(PacketStream)
       @socket.logger = @logger
 
