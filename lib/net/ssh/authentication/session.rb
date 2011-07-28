@@ -127,8 +127,7 @@ module Net; module SSH; module Authentication
       # attempting any key-based authentication mechanism.
       def keys
         Array(
-          options[:keys] ||
-          %w(~/.ssh/id_dsa ~/.ssh/id_rsa ~/.ssh2/id_dsa ~/.ssh2/id_rsa)
+          options[:keys]
         )
       end
 
