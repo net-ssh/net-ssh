@@ -53,22 +53,27 @@ module Net; module SSH; module Service
         raise ArgumentError, "expected 3 or 4 parameters, got #{args.length}"
       end
 
-      bind_address = "127.0.0.1"
-      bind_address = args.shift if args.first.is_a?(String) && args.first =~ /\D/
+      socket = begin
+        if args.first.class == UNIXServer
+          args.shift
+        else
+          bind_address = "127.0.0.1"
+          bind_address = args.shift if args.first.is_a?(String) && args.first =~ /\D/
+          local_port = args.shift.to_i
+          TCPServer.new(bind_address, local_port)
+        end
+      end
 
-      local_port = args.shift.to_i
       remote_host = args.shift
       remote_port = args.shift.to_i
-
-      socket = TCPServer.new(bind_address, local_port)
 
       @local_forwarded_ports[[local_port, bind_address]] = socket
 
       session.listen_to(socket) do |server|
         client = server.accept
-        debug { "received connection on #{bind_address}:#{local_port}" }
+        debug { "received connection on #{socket}" }
 
-        channel = session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, :long, local_port) do |achannel|
+        channel = session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, :string, local_port) do |achannel|
           achannel.info { "direct channel established" }
         end
 
