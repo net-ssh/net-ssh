@@ -18,6 +18,7 @@ require 'common'
 require 'net/ssh/buffer'
 require 'net/ssh'
 require 'timeout'
+require 'tempfile'
 
 class TestForward < Test::Unit::TestCase
   
@@ -120,7 +121,44 @@ class TestForward < Test::Unit::TestCase
     session.loop(0.1) { client_done.empty? }
     assert_equal "Broken pipe", "#{server_exc.pop}" unless server_exc.empty?
   end
+
+  def create_local_socket(&blk)
+    tempfile = Tempfile.new("net_ssh_forward_test")
+    path = tempfile.path
+    tempfile.delete
+    yield UNIXServer.open(path)
+    File.delete(path)
+  end
   
+  def test_forward_local_unix_socket_to_remote_port
+    session = Net::SSH.start(*ssh_start_params) 
+    server_exc = Queue.new
+    server = start_server_sending_lot_of_data(server_exc)
+    remote_port = server.addr[1]
+    client_data = nil
+
+    create_local_socket do |local_socket|
+      session.forward.local(local_socket, localhost, remote_port)
+      client_done = Queue.new
+
+      Thread.start do
+        begin
+          client = UNIXSocket.new(local_socket.path)
+          client_data = client.recv(1024)
+          client.close
+          sleep(0.2)
+        ensure
+          client_done << true
+        end
+      end
+
+      session.loop(0.1) { client_done.empty? }
+    end
+
+    assert_not_nil(client_data, "client should have received data")
+    assert(client_data.match(/item\d/), 'client should have received the string item')
+  end
+
   def test_loop_should_not_abort_when_server_side_of_forward_is_closed
     session = Net::SSH.start(*ssh_start_params)    
     server = start_server_closing_soon
