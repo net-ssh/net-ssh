@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'net/ssh/loggable'
 
 module Net; module SSH; module Service
@@ -53,13 +54,17 @@ module Net; module SSH; module Service
         raise ArgumentError, "expected 3 or 4 parameters, got #{args.length}"
       end
 
+      local_port_type = :long
+
       socket = begin
         if args.first.class == UNIXServer
+          local_port_type = :string
           args.shift
         else
           bind_address = "127.0.0.1"
           bind_address = args.shift if args.first.is_a?(String) && args.first =~ /\D/
           local_port = args.shift.to_i
+          local_port_type = :long
           TCPServer.new(bind_address, local_port)
         end
       end
@@ -73,7 +78,7 @@ module Net; module SSH; module Service
         client = server.accept
         debug { "received connection on #{socket}" }
 
-        channel = session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, :string, local_port) do |achannel|
+        channel = session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, local_port_type, local_port) do |achannel|
           achannel.info { "direct channel established" }
         end
 
