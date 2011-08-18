@@ -1,4 +1,8 @@
 
+=== 2.2.0 / 16 Aug 2011
+
+* Add support for forward a local UNIX domain socket to a remote TCP socket. [Mark Imbriaco]
+
 === 2.1.4 / 3 Apr 2011
 
 * Add ConnectionTimeout exception class. [Joel Watson]
