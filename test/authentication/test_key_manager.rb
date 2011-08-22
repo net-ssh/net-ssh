@@ -31,8 +31,8 @@ module Authentication
     def test_each_identity_should_load_from_key_files
       manager.stubs(:agent).returns(nil)
 
-      stub_file_key "/first", rsa
-      stub_file_key "/second", dsa
+      stub_file_private_key "/first", rsa
+      stub_file_private_key "/second", dsa
 
       identities = []
       manager.each_identity { |identity| identities << identity }
@@ -62,7 +62,7 @@ module Authentication
     def test_only_identities_with_key_files_should_load_from_agent_of_keys_only_set
       manager(:keys_only => true).stubs(:agent).returns(agent)
 
-      stub_file_key "/first", rsa
+      stub_file_private_key "/first", rsa
 
       identities = []
       manager.each_identity { |identity| identities << identity }
@@ -71,6 +71,22 @@ module Authentication
       assert_equal rsa.to_blob, identities.first.to_blob
 
       assert_equal({:from => :agent}, manager.known_identities[rsa])
+    end
+
+    def test_identities_without_public_key_files_should_not_be_touched_if_identity_loaded_from_agent
+      manager.stubs(:agent).returns(agent)
+
+      stub_file_public_key  "/first", rsa
+      stub_file_private_key "/second", dsa, :known_passphrase => false
+
+      identities = []
+      manager.each_identity do |identity|
+        identities << identity
+        break if identity[:from] == :agent
+      end
+
+      assert_equal 1, identities.length
+      assert_equal rsa.to_blob, identities.first.to_blob
     end
 
     def test_sign_with_agent_originated_key_should_request_signature_from_agent
@@ -82,7 +98,7 @@ module Authentication
 
     def test_sign_with_file_originated_key_should_load_private_key_and_sign_with_it
       manager.stubs(:agent).returns(nil)
-      stub_file_key "/first", rsa(512)
+      stub_file_private_key "/first", rsa(512)
       rsa.expects(:ssh_do_sign).with("hello, world").returns("abcxyz123")
       manager.each_identity { |identity| } # preload the known_identities
       assert_equal "\0\0\0\assh-rsa\0\0\0\011abcxyz123", manager.sign(rsa, "hello, world")
@@ -100,12 +116,27 @@ module Authentication
 
     private
 
-      def stub_file_key(name, key)
+      def stub_file_private_key(name, key, options = {})
         manager.add(name)
-        File.expects(:readable?).with(name).returns(true)
-        File.expects(:readable?).with(name + ".pub").returns(false)
-        Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil).returns(key).at_least_once
-        key.expects(:public_key).returns(key)
+        File.stubs(:readable?).with(name).returns(true)
+        File.stubs(:readable?).with(name + ".pub").returns(false)
+
+        passphrase_request_expected = Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil).returns(key)
+        if options.fetch(:known_passphrase, true)
+          passphrase_request_expected.at_least_once
+        else
+          passphrase_request_expected.never
+        end
+
+        key.stubs(:public_key).returns(key)
+      end
+
+      def stub_file_public_key(name, key)
+        manager.add(name)
+        File.stubs(:readable?).with(name).returns(false)
+        File.stubs(:readable?).with(name + ".pub").returns(true)
+
+        Net::SSH::KeyFactory.expects(:load_public_key).with(name + ".pub").returns(key).at_least_once
       end
 
       def rsa(size=512)
