@@ -77,12 +77,12 @@ module Authentication
       manager.stubs(:agent).returns(agent)
 
       stub_file_public_key  "/first", rsa
-      stub_file_private_key "/second", dsa, :known_passphrase => false
+      stub_file_private_key "/second", dsa, :passphrase => :should_not_be_asked
 
       identities = []
       manager.each_identity do |identity|
         identities << identity
-        break if identity[:from] == :agent
+        break if manager.known_identities[identity][:from] == :agent
       end
 
       assert_equal 1, identities.length
@@ -121,11 +121,15 @@ module Authentication
         File.stubs(:readable?).with(name).returns(true)
         File.stubs(:readable?).with(name + ".pub").returns(false)
 
-        passphrase_request_expected = Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil).returns(key)
-        if options.fetch(:known_passphrase, true)
-          passphrase_request_expected.at_least_once
-        else
-          passphrase_request_expected.never
+        case options.fetch(:passphrase, :indifferently)
+        when :should_be_asked
+          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, false).raises(OpenSSL::PKey::RSAError).at_least_once
+          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, true).returns(key).at_least_once
+        when :should_not_be_asked
+          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, false).raises(OpenSSL::PKey::RSAError).at_least_once
+          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, true).never
+        else # :indifferently
+          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, any_of(true, false)).returns(key).at_least_once
         end
 
         key.stubs(:public_key).returns(key)

@@ -134,7 +134,7 @@ module Net
 
           if info[:key].nil? && info[:from] == :file
             begin
-              info[:key] = KeyFactory.load_private_key(info[:file], options[:passphrase])
+              info[:key] = KeyFactory.load_private_key(info[:file], options[:passphrase], true)
             rescue Exception, OpenSSL::OpenSSLError => e 
               raise KeyManagerError, "the given identity is known, but the private key could not be loaded: #{e.class} (#{e.message})"
             end
@@ -193,7 +193,7 @@ module Net
               end
             elsif File.readable?(file)
               begin
-                private_key = KeyFactory.load_private_key(file, options[:passphrase])
+                private_key = KeyFactory.load_private_key(file, options[:passphrase], true)
                 key = private_key.send(:public_key)
                 { :public_key => key, :from => :file, :file => file, :key => private_key }
               rescue Exception => e
