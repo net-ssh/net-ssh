@@ -40,6 +40,12 @@ class TestKeyFactory < Test::Unit::TestCase
     assert_raises(OpenSSL::PKey::RSAError) { Net::SSH::KeyFactory.load_private_key("/key-file") }
   end
 
+  def test_load_encrypted_private_key_should_raise_exception_without_asking_passphrase
+    File.expects(:read).with("/key-file").returns(encrypted(rsa_key, "password"))
+    Net::SSH::KeyFactory.expects(:prompt).never
+    assert_raises(OpenSSL::PKey::RSAError) { Net::SSH::KeyFactory.load_private_key("/key-file", nil, false) }
+  end
+
   def test_load_public_rsa_key_should_return_key
     File.expects(:read).with("/key-file").returns(public(rsa_key))
     assert_equal rsa_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
