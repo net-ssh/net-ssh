@@ -1,4 +1,9 @@
 
+=== 2.2.1 / 24 Aug 2011
+
+* Do not prompt any passphrases before trying all identities from agent. [musybite]
+    (see: http://net-ssh.lighthouseapp.com/projects/36253-net-ssh/tickets/30)
+
 === 2.2.0 / 16 Aug 2011
 
 * Add support for forward a local UNIX domain socket to a remote TCP socket. [Mark Imbriaco]
