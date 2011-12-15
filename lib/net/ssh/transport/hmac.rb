@@ -29,9 +29,7 @@ module Net::SSH::Transport::HMAC
   # Retrieves a new hmac instance of the given SSH type (+name+). If +key+ is
   # given, the new instance will be initialized with that key.
   def self.get(name, key="", parameters = {})
-    puts "digest key len: " + key.length.to_s
     impl = MAP[name] or raise ArgumentError, "hmac not found: #{name.inspect}"
-
     impl.new(make_key(impl.key_length, key, parameters))
   end
 
