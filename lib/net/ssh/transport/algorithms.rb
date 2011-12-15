@@ -347,10 +347,9 @@ module Net; module SSH; module Transport
         mac_key_client = key["E"]
         mac_key_server = key["F"]
 
-        parameters = { :iv => iv_client, :key => key_client, :shared => secret,
-          :hash => hash, :digester => digester }
+        parameters = { :shared => secret, :hash => hash, :digester => digester }
         
-        cipher_client = CipherFactory.get(encryption_client, parameters.merge(:encrypt => true))
+        cipher_client = CipherFactory.get(encryption_client, parameters.merge(:iv => iv_client, :key => key_client, :encrypt => true))
         cipher_server = CipherFactory.get(encryption_server, parameters.merge(:iv => iv_server, :key => key_server, :decrypt => true))
 
         mac_client = HMAC.get(hmac_client, mac_key_client, parameters)
