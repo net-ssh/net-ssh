@@ -54,6 +54,10 @@ lib/net/ssh/transport/hmac/md5_96.rb
 lib/net/ssh/transport/hmac/none.rb
 lib/net/ssh/transport/hmac/sha1.rb
 lib/net/ssh/transport/hmac/sha1_96.rb
+lib/net/ssh/transport/hmac/sha2_256.rb
+lib/net/ssh/transport/hmac/sha2_256_96.rb
+lib/net/ssh/transport/hmac/sha2_512.rb
+lib/net/ssh/transport/hmac/sha2_512_96.rb
 lib/net/ssh/transport/identity_cipher.rb
 lib/net/ssh/transport/kex.rb
 lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb
