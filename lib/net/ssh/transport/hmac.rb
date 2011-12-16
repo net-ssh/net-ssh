@@ -1,3 +1,4 @@
+require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/hmac/md5'
 require 'net/ssh/transport/hmac/md5_96'
 require 'net/ssh/transport/hmac/sha1'
@@ -30,34 +31,12 @@ module Net::SSH::Transport::HMAC
   # given, the new instance will be initialized with that key.
   def self.get(name, key="", parameters = {})
     impl = MAP[name] or raise ArgumentError, "hmac not found: #{name.inspect}"
-    impl.new(make_key(impl.key_length, key, parameters))
+    impl.new(Net::SSH::Transport::KeyExpander.expand_key(impl.key_length, key, parameters))
   end
 
   # Retrieves the key length for the hmac of the given SSH type (+name+).
   def self.key_length(name)
     impl = MAP[name] or raise ArgumentError, "hmac not found: #{name.inspect}"
     impl.key_length
-  end
-
-  # XXX copied
-  # Generate a key value in accordance with the SSH2 specification.
-  def self.make_key(bytes, start, options={})
-    if bytes == 0
-      return ""
-    end
-
-    k = start[0, bytes]
-
-    digester = options[:digester] or raise 'No digester supplied'
-    shared   = options[:shared] or raise 'No shared secret supplied'
-    hash     = options[:hash] or raise 'No hash supplied'
-
-    while k.length < bytes
-      step = digester.digest(shared + hash + k)
-      bytes_needed = bytes - k.length
-      k << step[0, bytes_needed]
-    end
-
-    return k
   end
 end
