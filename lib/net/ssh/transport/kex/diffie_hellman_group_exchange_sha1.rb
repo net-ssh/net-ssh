@@ -19,7 +19,10 @@ module Net::SSH::Transport::Kex
 
       # Compute the number of bits needed for the given number of bytes.
       def compute_need_bits
-        need_bits = data[:need_bytes] * 8
+
+        # for Compatibility: OpenSSH requires (need_bits * 2 + 1) length of parameter
+        need_bits = data[:need_bytes] * 8 * 2 + 1
+
         if need_bits < MINIMUM_BITS
           need_bits = MINIMUM_BITS
         elsif need_bits > MAXIMUM_BITS
