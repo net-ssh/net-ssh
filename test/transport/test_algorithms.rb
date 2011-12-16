@@ -18,7 +18,7 @@ module Transport
 
     def test_constructor_should_build_default_list_of_preferred_algorithms
       assert_equal %w(ssh-rsa ssh-dss), algorithms[:host_key]
-      assert_equal %w(diffie-hellman-group-exchange-sha1 diffie-hellman-group1-sha1), algorithms[:kex]
+      assert_equal %w(diffie-hellman-group-exchange-sha1 diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha256), algorithms[:kex]
       assert_equal %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256), algorithms[:encryption]
       if defined?(OpenSSL::Digest::SHA256)
         assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms[:hmac]
@@ -50,7 +50,7 @@ module Transport
     end
 
     def test_constructor_with_preferred_kex_should_put_preferred_kex_first
-      assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1), algorithms(:kex => "diffie-hellman-group1-sha1")[:kex]
+      assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group-exchange-sha256), algorithms(:kex => "diffie-hellman-group1-sha1")[:kex]
     end
 
     def test_constructor_with_unrecognized_kex_should_raise_exception
@@ -256,7 +256,7 @@ module Transport
       def kexinit(options={})
         @kexinit ||= P(:byte, KEXINIT,
           :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF),
-          :string, options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1",
+          :string, options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha256",
           :string, options[:host_key] || "ssh-rsa,ssh-dss",
           :string, options[:encryption_client] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
           :string, options[:encryption_server] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
@@ -272,7 +272,7 @@ module Transport
       def assert_kexinit(buffer, options={})
         assert_equal KEXINIT, buffer.type
         assert_equal 16, buffer.read(16).length
-        assert_equal options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1", buffer.read_string
+        assert_equal options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha256", buffer.read_string
         assert_equal options[:host_key] || "ssh-rsa,ssh-dss", buffer.read_string
         assert_equal options[:encryption_client] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none,arcfour128,arcfour256", buffer.read_string
         assert_equal options[:encryption_server] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none,arcfour128,arcfour256", buffer.read_string
