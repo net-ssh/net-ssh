@@ -104,6 +104,10 @@ test/transport/hmac/test_md5_96.rb
 test/transport/hmac/test_none.rb
 test/transport/hmac/test_sha1.rb
 test/transport/hmac/test_sha1_96.rb
+test/transport/hmac/test_sha2_256.rb
+test/transport/hmac/test_sha2_256_96.rb
+test/transport/hmac/test_sha2_512.rb
+test/transport/hmac/test_sha2_512_96.rb
 test/transport/kex/test_diffie_hellman_group1_sha1.rb
 test/transport/kex/test_diffie_hellman_group_exchange_sha1.rb
 test/transport/kex/test_diffie_hellman_group_exchange_sha256.rb
