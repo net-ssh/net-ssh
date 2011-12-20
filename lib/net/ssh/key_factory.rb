@@ -17,8 +17,11 @@ module Net; module SSH
     MAP = {
       "dh"  => OpenSSL::PKey::DH,
       "rsa" => OpenSSL::PKey::RSA,
-      "dsa" => OpenSSL::PKey::DSA
+      "dsa" => OpenSSL::PKey::DSA,
     }
+    if defined?(OpenSSL::PKey::EC)
+      MAP["ecdsa"] = OpenSSL::PKey::EC
+    end
 
     class <<self
       include Prompt
@@ -49,6 +52,8 @@ module Net; module SSH
           key_type = OpenSSL::PKey::DSA
         elsif data.match(/-----BEGIN RSA PRIVATE KEY-----/)
           key_type = OpenSSL::PKey::RSA
+	elsif data.match(/-----BEGIN EC PRIVATE KEY-----/) && defined?(OpenSSL::PKey::EC)
+          key_type = OpenSSL::PKey::EC
         elsif data.match(/-----BEGIN (.*) PRIVATE KEY-----/)
           raise OpenSSL::PKey::PKeyError, "not a supported key type '#{$1}'"
         else
@@ -60,7 +65,7 @@ module Net; module SSH
 
         begin
           return key_type.new(data, passphrase || 'invalid')
-        rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError => e
+        rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError => e
           if encrypted_key && ask_passphrase
             tries += 1
             if tries <= 3

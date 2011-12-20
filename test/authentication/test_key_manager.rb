@@ -62,6 +62,28 @@ module Authentication
       assert_equal({:from => :agent}, manager.known_identities[dsa])
     end
 
+    if defined?(OpenSSL::PKey::EC)
+      def test_identities_with_ecdsa_should_load_from_agent
+        manager.stubs(:agent).returns(agent_with_ecdsa_keys)
+
+        identities = []
+        manager.each_identity { |identity| identities << identity }
+        assert_equal 5, identities.length
+
+        assert_equal rsa.to_blob, identities[0].to_blob
+        assert_equal dsa.to_blob, identities[1].to_blob
+        assert_equal ecdsa_sha2_nistp256.to_blob, identities[2].to_blob
+        assert_equal ecdsa_sha2_nistp384.to_blob, identities[3].to_blob
+        assert_equal ecdsa_sha2_nistp521.to_blob, identities[4].to_blob
+
+        assert_equal({:from => :agent}, manager.known_identities[rsa])
+        assert_equal({:from => :agent}, manager.known_identities[dsa])
+        assert_equal({:from => :agent}, manager.known_identities[ecdsa_sha2_nistp256])
+        assert_equal({:from => :agent}, manager.known_identities[ecdsa_sha2_nistp384])
+        assert_equal({:from => :agent}, manager.known_identities[ecdsa_sha2_nistp521])
+      end
+    end
+
     def test_only_identities_with_key_files_should_load_from_agent_of_keys_only_set
       manager(:keys_only => true).stubs(:agent).returns(agent)
 
@@ -139,7 +161,11 @@ module Authentication
           Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, any_of(true, false)).returns(key).at_least_once
         end
 
-        key.stubs(:public_key).returns(key)
+        # do not override OpenSSL::PKey::EC#public_key
+        # (it will be called in transport/openssl.rb.)
+        unless defined?(OpenSSL::PKey::EC) && key.public_key.kind_of?(OpenSSL::PKey::EC::Point)
+          key.stubs(:public_key).returns(key)
+        end
       end
 
       def stub_file_public_key(name, key)
@@ -158,8 +184,29 @@ module Authentication
         @dsa ||= OpenSSL::PKey::DSA.new(512)
       end
 
+      if defined?(OpenSSL::PKey::EC)
+        def ecdsa_sha2_nistp256
+          @ecdsa_sha2_nistp256 ||= OpenSSL::PKey::EC.new("prime256v1").generate_key
+        end
+
+        def ecdsa_sha2_nistp384
+          @ecdsa_sha2_nistp384 ||= OpenSSL::PKey::EC.new("secp384r1").generate_key
+        end
+
+        def ecdsa_sha2_nistp521
+          @ecdsa_sha2_nistp521 ||= OpenSSL::PKey::EC.new("secp521r1").generate_key
+        end
+      end
+
       def agent
         @agent ||= stub("agent", :identities => [rsa, dsa])
+      end
+
+      def agent_with_ecdsa_keys
+        @agent ||= stub("agent", :identities => [rsa, dsa,
+                                                 ecdsa_sha2_nistp256,
+                                                 ecdsa_sha2_nistp384,
+                                                 ecdsa_sha2_nistp521])
       end
 
       def manager(options = {})

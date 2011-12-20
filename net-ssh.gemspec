@@ -67,11 +67,13 @@
   lib/net/ssh/transport/algorithms.rb
   lib/net/ssh/transport/cipher_factory.rb
   lib/net/ssh/transport/constants.rb
+  lib/net/ssh/transport/ctr.rb
   lib/net/ssh/transport/hmac.rb
   lib/net/ssh/transport/hmac/abstract.rb
   lib/net/ssh/transport/hmac/md5.rb
   lib/net/ssh/transport/hmac/md5_96.rb
   lib/net/ssh/transport/hmac/none.rb
+  lib/net/ssh/transport/hmac/ripemd160.rb
   lib/net/ssh/transport/hmac/sha1.rb
   lib/net/ssh/transport/hmac/sha1_96.rb
   lib/net/ssh/transport/hmac/sha2_256.rb
@@ -82,8 +84,12 @@
   lib/net/ssh/transport/key_expander.rb
   lib/net/ssh/transport/kex.rb
   lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb
+  lib/net/ssh/transport/kex/diffie_hellman_group14_sha1.rb
   lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha1.rb
   lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha256.rb
+  lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb
+  lib/net/ssh/transport/kex/ecdh_sha2_nistp384.rb
+  lib/net/ssh/transport/kex/ecdh_sha2_nistp521.rb
   lib/net/ssh/transport/openssl.rb
   lib/net/ssh/transport/packet_stream.rb
   lib/net/ssh/transport/server_version.rb
@@ -122,6 +128,7 @@
   test/transport/hmac/test_md5.rb
   test/transport/hmac/test_md5_96.rb
   test/transport/hmac/test_none.rb
+  test/transport/hmac/test_ripemd160.rb
   test/transport/hmac/test_sha1.rb
   test/transport/hmac/test_sha1_96.rb
   test/transport/hmac/test_sha2_256.rb
@@ -129,8 +136,12 @@
   test/transport/hmac/test_sha2_512.rb
   test/transport/hmac/test_sha2_512_96.rb
   test/transport/kex/test_diffie_hellman_group1_sha1.rb
+  test/transport/kex/test_diffie_hellman_group14_sha1.rb
   test/transport/kex/test_diffie_hellman_group_exchange_sha1.rb
   test/transport/kex/test_diffie_hellman_group_exchange_sha256.rb
+  test/transport/kex/test_ecdh_sha2_nistp256.rb
+  test/transport/kex/test_ecdh_sha2_nistp384.rb
+  test/transport/kex/test_ecdh_sha2_nistp521.rb
   test/transport/test_algorithms.rb
   test/transport/test_cipher_factory.rb
   test/transport/test_hmac.rb

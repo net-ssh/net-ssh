@@ -40,8 +40,8 @@ module Net; module SSH; module Transport; module Kex
     # required by this algorithm, which was acquired during earlier
     # processing.
     def initialize(algorithms, connection, data)
-      @p = OpenSSL::BN.new(P_s, P_r)
-      @g = G
+      @p = get_p
+      @g = get_g
 
       @digester = OpenSSL::Digest::SHA1
       @algorithms = algorithms
@@ -76,7 +76,15 @@ module Net; module SSH; module Transport; module Kex
     end
 
     private
-    
+
+      def get_p
+        OpenSSL::BN.new(P_s, P_r)
+      end
+
+      def get_g
+        G
+      end
+
       # Returns the DH key parameters for the current connection.
       def get_parameters
         [p, g]

@@ -222,7 +222,7 @@ module Net
                 identity
               end
 
-            rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError => e
+            rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError => e
               if ask_passphrase
                 process_identity_loading_error(identity, e)
                 nil

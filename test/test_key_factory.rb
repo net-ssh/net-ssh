@@ -55,6 +55,34 @@ class TestKeyFactory < Test::Unit::TestCase
     assert_equal rsa_key.to_blob, Net::SSH::KeyFactory.load_public_key(@key_file).to_blob
   end
 
+  if defined?(OpenSSL::PKey::EC)
+    def test_load_unencrypted_private_ecdsa_sha2_nistp256_key_should_return_key
+      File.expects(:read).with("/key-file").returns(ecdsa_sha2_nistp256_key.to_pem)
+      assert_equal ecdsa_sha2_nistp256_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
+    end
+    def test_load_unencrypted_private_ecdsa_sha2_nistp384_key_should_return_key
+      File.expects(:read).with("/key-file").returns(ecdsa_sha2_nistp384_key.to_pem)
+      assert_equal ecdsa_sha2_nistp384_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
+    end
+    def test_load_unencrypted_private_ecdsa_sha2_nistp521_key_should_return_key
+      File.expects(:read).with("/key-file").returns(ecdsa_sha2_nistp521_key.to_pem)
+      assert_equal ecdsa_sha2_nistp521_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
+    end
+
+    def test_load_public_ecdsa_sha2_nistp256_key_should_return_key
+      File.expects(:read).with("/key-file").returns(public(ecdsa_sha2_nistp256_key))
+      assert_equal ecdsa_sha2_nistp256_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
+    end
+    def test_load_public_ecdsa_sha2_nistp384_key_should_return_key
+      File.expects(:read).with("/key-file").returns(public(ecdsa_sha2_nistp384_key))
+      assert_equal ecdsa_sha2_nistp384_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
+    end
+    def test_load_public_ecdsa_sha2_nistp521_key_should_return_key
+      File.expects(:read).with("/key-file").returns(public(ecdsa_sha2_nistp521_key))
+      assert_equal ecdsa_sha2_nistp521_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
+    end
+  end
+
   private
 
     def rsa_key
@@ -65,6 +93,20 @@ class TestKeyFactory < Test::Unit::TestCase
     def dsa_key
       # 512 bits
       @dsa_key ||= OpenSSL::PKey::DSA.new("0\201\367\002\001\000\002A\000\203\316/\037u\272&J\265\003l3\315d\324h\372{\t8\252#\331_\026\006\035\270\266\255\343\353Z\302\276\335\336\306\220\375\202L\244\244J\206>\346\b\315\211\302L\246x\247u\a\376\366\345\302\016#\002\025\000\244\274\302\221Og\275/\302+\356\346\360\024\373wI\2573\361\002@\027\215\270r*\f\213\350C\245\021:\350 \006\\\376\345\022`\210b\262\3643\023XLKS\320\370\002\276\347A\nU\204\276\324\256`=\026\240\330\306J\316V\213\024\e\030\215\355\006\037q\337\356ln\002@\017\257\034\f\260\333'S\271#\237\230E\321\312\027\021\226\331\251Vj\220\305\316\036\v\266+\000\230\270\177B\003?t\a\305]e\344\261\334\023\253\323\251\223M\2175)a(\004\"lI8\312\303\307\a\002\024_\aznW\345\343\203V\326\246ua\203\376\201o\350\302\002")
+    end
+
+    if defined?(OpenSSL::PKey::EC)
+      def ecdsa_sha2_nistp256_key
+        @ecdsa_sha2_nistp256_key ||= OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEINv6pPVLlkqvT1v5MJlWgaSWGwqupISG4U79bUXQDNCaoAoGCCqGSM49\nAwEHoUQDQgAElqubvi/GkSme+bwtncU1NiE0dWQ0EO07VufUQg8lUJ5+Fi6f96qa\n95T1zwOMQhY1h8PP9rQIZr4S48vN/ZnQLw==\n-----END EC PRIVATE KEY-----\n")
+      end
+
+      def ecdsa_sha2_nistp384_key
+        @ecdsa_sha2_nistp384_key ||= OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDBxwkmydCn4mP4KMhlMpeBvIroQolWKVNoRPXpG7brFgK+Yiikqw8wd\nIZW5OlL4y3mgBwYFK4EEACKhZANiAARkoIR1oABi+aQJbKcmvzeYSKURQOyXM0HU\nR4T68v4hd/lJE4fFQRczj3wAaECe9u3CWI/oDlow4Vr0vab82ZGjIoblxblKQWYl\nyzENgzl226waGg1bLBo8Auilyf1B5yI=\n-----END EC PRIVATE KEY-----\n")
+      end
+
+      def ecdsa_sha2_nistp521_key
+        @ecdsa_sha2_nistp521_key ||= OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIHbAgEBBEHQ2i7kjEGQHQB4pUQW9a2eCLWR2S5Go8U3CDyfbRCrYEp/pTSgI8uu\nMXyR3bf3SjqFQgZ6MZk5lkyrissJuwmvZKAHBgUrgQQAI6GBiQOBhgAEAN14FACK\nbs/KTqw4rxijeozGTVJTh1hNzBl2XaIhM4Fv8o3fE/pvogymyFu53GCng6gC4dmx\n/hycF41iIM29xVKPAeBnRNl6MdFBjuthOmE8eCRezgk1Bak8aBDUrzNT8OQssscw\npvQK4nc6ga/wTDaQGy5kV8tCOHNs2wKH+p2LpWTJ\n-----END EC PRIVATE KEY-----\n")
+      end
     end
 
     def encrypted(key, password)

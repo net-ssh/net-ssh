@@ -7,6 +7,7 @@ require 'net/ssh/transport/hmac/sha2_256'
 require 'net/ssh/transport/hmac/sha2_256_96'
 require 'net/ssh/transport/hmac/sha2_512'
 require 'net/ssh/transport/hmac/sha2_512_96'
+require 'net/ssh/transport/hmac/ripemd160'
 require 'net/ssh/transport/hmac/none'
 
 # Implements a simple factory interface for fetching hmac implementations, or
@@ -14,11 +15,13 @@ require 'net/ssh/transport/hmac/none'
 module Net::SSH::Transport::HMAC
   # The mapping of SSH hmac algorithms to their implementations
   MAP = {
-    'hmac-md5'     => MD5,
-    'hmac-md5-96'  => MD5_96,
-    'hmac-sha1'    => SHA1,
-    'hmac-sha1-96' => SHA1_96,
-    'none'         => None
+    'hmac-md5'       => MD5,
+    'hmac-md5-96'    => MD5_96,
+    'hmac-sha1'      => SHA1,
+    'hmac-sha1-96'   => SHA1_96,
+    'hmac-ripemd160' => RIPEMD160,
+    'hmac-ripemd160@openssh.com' => RIPEMD160,
+    'none'           => None
   }
 
   # add mapping to sha2 hmac algorithms if they're available

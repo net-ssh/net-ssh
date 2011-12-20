@@ -27,7 +27,7 @@ class TestForward < Test::Unit::TestCase
   end
   
   def ssh_start_params
-    [localhost ,ENV['USER']] #:verbose => :debug
+    [localhost ,ENV['USER'], {:keys => "~/.ssh/id_rsa", :verbose => :debug}]
   end
   
   def find_free_port 
