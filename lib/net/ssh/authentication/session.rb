@@ -68,7 +68,12 @@ module Net; module SSH; module Authentication
           attempted << name
 
           debug { "trying #{name}" }
-          method = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join).new(self, :key_manager => key_manager)
+          begin 
+            method = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join).new(self, :key_manager => key_manager)
+          rescue NameError => ne
+            debug{"Mechanism #{name} was requested, but isn't a known type.  Ignoring it."}
+            next
+          end
 
           return true if method.authenticate(next_service, username, password)
         rescue Net::SSH::Authentication::DisallowedMethod
