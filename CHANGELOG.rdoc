@@ -1,4 +1,9 @@
 
+=== 2.2.2 / 04 Jan 2012
+
+* Fixed: Connection hangs on ServerVersion.new(socket, logger) [muffl0n]
+* Avoid dying when unsupported auth mechanisms are defined [pcn]
+
 === 2.2.1 / 24 Aug 2011
 
 * Do not prompt any passphrases before trying all identities from agent. [musybite]
