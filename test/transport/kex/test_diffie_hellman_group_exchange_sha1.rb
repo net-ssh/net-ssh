@@ -18,7 +18,7 @@ module Transport; module Kex
 
     def test_exchange_with_fewer_than_maximum_bits_uses_need_bits
       dh_options :need_bytes => 500
-      need_bits(4000)
+      need_bits(8001)
       assert_nothing_raised { exchange! }
     end
 
