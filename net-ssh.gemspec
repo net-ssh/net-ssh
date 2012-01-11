@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "net-ssh"
         s.rubyforge_project = 'net-ssh'
-	s.version = "2.2.2"
+	s.version = "2.3.0"
 	s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
 	s.description = s.summary
 	s.authors = ["Jamis Buck", "Delano Mandelbaum"]
@@ -74,10 +74,16 @@
   lib/net/ssh/transport/hmac/none.rb
   lib/net/ssh/transport/hmac/sha1.rb
   lib/net/ssh/transport/hmac/sha1_96.rb
+  lib/net/ssh/transport/hmac/sha2_256.rb
+  lib/net/ssh/transport/hmac/sha2_256_96.rb
+  lib/net/ssh/transport/hmac/sha2_512.rb
+  lib/net/ssh/transport/hmac/sha2_512_96.rb
   lib/net/ssh/transport/identity_cipher.rb
+  lib/net/ssh/transport/key_expander.rb
   lib/net/ssh/transport/kex.rb
   lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb
   lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha1.rb
+  lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha256.rb
   lib/net/ssh/transport/openssl.rb
   lib/net/ssh/transport/packet_stream.rb
   lib/net/ssh/transport/server_version.rb
@@ -91,7 +97,6 @@
   setup.rb
   support/arcfour_check.rb
   support/ssh_tunnel_bug.rb
-  test/README.txt
   test/authentication/methods/common.rb
   test/authentication/methods/test_abstract.rb
   test/authentication/methods/test_hostbased.rb
@@ -106,12 +111,9 @@
   test/configs/exact_match
   test/configs/host_plus
   test/configs/multihost
-  test/configs/nohost
-  test/configs/numeric_host
   test/configs/wild_cards
   test/connection/test_channel.rb
   test/connection/test_session.rb
-  test/manual/test_forward.rb
   test/test_all.rb
   test/test_buffer.rb
   test/test_buffered_io.rb
@@ -122,8 +124,13 @@
   test/transport/hmac/test_none.rb
   test/transport/hmac/test_sha1.rb
   test/transport/hmac/test_sha1_96.rb
+  test/transport/hmac/test_sha2_256.rb
+  test/transport/hmac/test_sha2_256_96.rb
+  test/transport/hmac/test_sha2_512.rb
+  test/transport/hmac/test_sha2_512_96.rb
   test/transport/kex/test_diffie_hellman_group1_sha1.rb
   test/transport/kex/test_diffie_hellman_group_exchange_sha1.rb
+  test/transport/kex/test_diffie_hellman_group_exchange_sha256.rb
   test/transport/test_algorithms.rb
   test/transport/test_cipher_factory.rb
   test/transport/test_hmac.rb

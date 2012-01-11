@@ -1,4 +1,8 @@
 
+=== 2.3.0 / 11 Jan 2012
+
+* Support for hmac-sha2 and diffie-hellman-group-exchange-sha256 [Ryosuke Yamazaki]
+
 === 2.2.2 / 04 Jan 2012
 
 * Fixed: Connection hangs on ServerVersion.new(socket, logger) [muffl0n]
