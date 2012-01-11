@@ -24,11 +24,14 @@ module Net; module SSH; module Transport
     ALGORITHMS = {
       :host_key    => %w(ssh-rsa ssh-dss),
       :kex         => %w(diffie-hellman-group-exchange-sha1
-                         diffie-hellman-group1-sha1),
+                         diffie-hellman-group1-sha1
+                         diffie-hellman-group-exchange-sha256),
       :encryption  => %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc
                          aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se
                          idea-cbc none arcfour128 arcfour256),
-      :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 none),
+      :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
+                         hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96
+                         hmac-sha2-512-96 none),
       :compression => %w(none zlib@openssh.com zlib),
       :language    => %w() 
     }
@@ -345,14 +348,13 @@ module Net; module SSH; module Transport
         mac_key_client = key["E"]
         mac_key_server = key["F"]
 
-        parameters = { :iv => iv_client, :key => key_client, :shared => secret,
-          :hash => hash, :digester => digester }
+        parameters = { :shared => secret, :hash => hash, :digester => digester }
         
-        cipher_client = CipherFactory.get(encryption_client, parameters.merge(:encrypt => true))
+        cipher_client = CipherFactory.get(encryption_client, parameters.merge(:iv => iv_client, :key => key_client, :encrypt => true))
         cipher_server = CipherFactory.get(encryption_server, parameters.merge(:iv => iv_server, :key => key_server, :decrypt => true))
 
-        mac_client = HMAC.get(hmac_client, mac_key_client)
-        mac_server = HMAC.get(hmac_server, mac_key_server)
+        mac_client = HMAC.get(hmac_client, mac_key_client, parameters)
+        mac_server = HMAC.get(hmac_server, mac_key_server, parameters)
 
         session.configure_client :cipher => cipher_client, :hmac => mac_client,
           :compression => normalize_compression_name(compression_client),

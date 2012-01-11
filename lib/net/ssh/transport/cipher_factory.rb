@@ -1,4 +1,5 @@
 require 'openssl'
+require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/identity_cipher'
 
 module Net; module SSH; module Transport
@@ -50,10 +51,10 @@ module Net; module SSH; module Transport
       cipher.send(options[:encrypt] ? :encrypt : :decrypt)
 
       cipher.padding = 0
-      cipher.iv      = make_key(cipher.iv_len, options[:iv], options) if ossl_name != "rc4"
+      cipher.iv      = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options) if ossl_name != "rc4"
       key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
       cipher.key_len = key_len
-      cipher.key     = make_key(key_len, options[:key], options)
+      cipher.key     = Net::SSH::Transport::KeyExpander.expand_key(key_len, options[:key], options)
       cipher.update(" " * 1536) if ossl_name == "rc4"
 
       return cipher
@@ -73,25 +74,6 @@ module Net; module SSH; module Transport
       
       return [key_len, ossl_name=="rc4" ? 8 : cipher.block_size]
     end
-
-    private
-
-      # Generate a key value in accordance with the SSH2 specification.
-      def self.make_key(bytes, start, options={})
-        k = start[0, bytes]
-        
-        digester = options[:digester] or raise 'No digester supplied'
-        shared   = options[:shared] or raise 'No shared secret supplied'
-        hash     = options[:hash] or raise 'No hash supplied'
-
-        while k.length < bytes
-          step = digester.digest(shared + hash + k)
-          bytes_needed = bytes - k.length
-          k << step[0, bytes_needed]
-        end
-
-        return k
-      end
   end
 
 end; end; end
