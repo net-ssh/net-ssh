@@ -56,16 +56,16 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000319">add</a></li>
-              <li><a href="#M000318">hostfiles</a></li>
-              <li><a href="#M000320">new</a></li>
-              <li><a href="#M000316">search_for</a></li>
-              <li><a href="#M000317">search_in</a></li>
+              <li><a href="#M000321">add</a></li>
+              <li><a href="#M000320">hostfiles</a></li>
+              <li><a href="#M000322">new</a></li>
+              <li><a href="#M000318">search_for</a></li>
+              <li><a href="#M000319">search_in</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000322">add</a></li>
-              <li><a href="#M000321">keys_for</a></li>
+              <li><a href="#M000324">add</a></li>
+              <li><a href="#M000323">keys_for</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -87,8 +87,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000319'>
-                <a name='M000319'></a>
+              <div class='method public-class' id='method-M000321'>
+                <a name='M000321'></a>
                 <div class='synopsis'>
                   <span class='name'>add</span>
                   <span class='arguments'>(host, key, options={})</span>
@@ -96,19 +96,19 @@
                 <div class='description'>
                   <p>
                   Looks in all user known host files (see <a
-                  href="KnownHosts.html#M000318">KnownHosts.hostfiles</a>) and tries to add
+                  href="KnownHosts.html#M000320">KnownHosts.hostfiles</a>) and tries to add
                   an entry for the given host and key to the first file it is able to.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000319-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000321-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000319-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 52</span>&#x000A;52:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">options</span>={})&#x000A;53:         <span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">:user</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>&#x000A;54:           <span class="ruby-keyword kw">begin</span>&#x000A;55:             <span class="ruby-constant">KnownHosts</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>).<span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>)&#x000A;56:             <span class="ruby-keyword kw">return</span>&#x000A;57:           <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">SystemCallError</span>&#x000A;58:             <span class="ruby-comment cmt"># try the next hostfile</span>&#x000A;59:           <span class="ruby-keyword kw">end</span>&#x000A;60:         <span class="ruby-keyword kw">end</span>&#x000A;61:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000321-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 52</span>&#x000A;52:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">options</span>={})&#x000A;53:         <span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">:user</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>&#x000A;54:           <span class="ruby-keyword kw">begin</span>&#x000A;55:             <span class="ruby-constant">KnownHosts</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>).<span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>)&#x000A;56:             <span class="ruby-keyword kw">return</span>&#x000A;57:           <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">SystemCallError</span>&#x000A;58:             <span class="ruby-comment cmt"># try the next hostfile</span>&#x000A;59:           <span class="ruby-keyword kw">end</span>&#x000A;60:         <span class="ruby-keyword kw">end</span>&#x000A;61:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000318'>
-                <a name='M000318'></a>
+              <div class='method public-class' id='method-M000320'>
+                <a name='M000320'></a>
                 <div class='synopsis'>
                   <span class='name'>hostfiles</span>
                   <span class='arguments'>(options, which=:all)</span>
@@ -128,14 +128,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000318-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000320-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000318-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 35</span>&#x000A;35:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">which</span>=<span class="ruby-identifier">:all</span>)&#x000A;36:         <span class="ruby-identifier">files</span> = []&#x000A;37: &#x000A;38:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:all</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:user</span>&#x000A;39:           <span class="ruby-identifier">files</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:user_known_hosts_file</span>] <span class="ruby-operator">||</span> <span class="ruby-node">%w(~/.ssh/known_hosts ~/.ssh/known_hosts2)</span>)&#x000A;40:         <span class="ruby-keyword kw">end</span>&#x000A;41: &#x000A;42:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:all</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:global</span>&#x000A;43:           <span class="ruby-identifier">files</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:global_known_hosts_file</span>] <span class="ruby-operator">||</span> <span class="ruby-node">%w(/etc/ssh/known_hosts /etc/ssh/known_hosts2)</span>)&#x000A;44:         <span class="ruby-keyword kw">end</span>&#x000A;45: &#x000A;46:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">files</span>&#x000A;47:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000320-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 35</span>&#x000A;35:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">which</span>=<span class="ruby-identifier">:all</span>)&#x000A;36:         <span class="ruby-identifier">files</span> = []&#x000A;37: &#x000A;38:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:all</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:user</span>&#x000A;39:           <span class="ruby-identifier">files</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:user_known_hosts_file</span>] <span class="ruby-operator">||</span> <span class="ruby-node">%w(~/.ssh/known_hosts ~/.ssh/known_hosts2)</span>)&#x000A;40:         <span class="ruby-keyword kw">end</span>&#x000A;41: &#x000A;42:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:all</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:global</span>&#x000A;43:           <span class="ruby-identifier">files</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:global_known_hosts_file</span>] <span class="ruby-operator">||</span> <span class="ruby-node">%w(/etc/ssh/known_hosts /etc/ssh/known_hosts2)</span>)&#x000A;44:         <span class="ruby-keyword kw">end</span>&#x000A;45: &#x000A;46:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">files</span>&#x000A;47:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000320'>
-                <a name='M000320'></a>
+              <div class='method public-class' id='method-M000322'>
+                <a name='M000322'></a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(source)</span>
@@ -148,14 +148,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000320-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000322-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000320-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 70</span>&#x000A;70:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">source</span>)&#x000A;71:       <span class="ruby-ivar">@source</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">source</span>)&#x000A;72:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000322-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 70</span>&#x000A;70:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">source</span>)&#x000A;71:       <span class="ruby-ivar">@source</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">source</span>)&#x000A;72:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000316'>
-                <a name='M000316'></a>
+              <div class='method public-class' id='method-M000318'>
+                <a name='M000318'></a>
                 <div class='synopsis'>
                   <span class='name'>search_for</span>
                   <span class='arguments'>(host, options={})</span>
@@ -163,19 +163,19 @@
                 <div class='description'>
                   <p>
                   Searches all known host files (see <a
-                  href="KnownHosts.html#M000318">KnownHosts.hostfiles</a>) for all keys of
+                  href="KnownHosts.html#M000320">KnownHosts.hostfiles</a>) for all keys of
                   the given host. Returns an array of keys found.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000316-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000318-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000316-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 16</span>&#x000A;16:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">search_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>={})&#x000A;17:         <span class="ruby-identifier">search_in</span>(<span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>), <span class="ruby-identifier">host</span>)&#x000A;18:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000318-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 16</span>&#x000A;16:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">search_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>={})&#x000A;17:         <span class="ruby-identifier">search_in</span>(<span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>), <span class="ruby-identifier">host</span>)&#x000A;18:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000317'>
-                <a name='M000317'></a>
+              <div class='method public-class' id='method-M000319'>
+                <a name='M000319'></a>
                 <div class='synopsis'>
                   <span class='name'>search_in</span>
                   <span class='arguments'>(files, host)</span>
@@ -187,15 +187,15 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000317-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000319-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000317-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 22</span>&#x000A;22:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">search_in</span>(<span class="ruby-identifier">files</span>, <span class="ruby-identifier">host</span>)&#x000A;23:         <span class="ruby-identifier">files</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span> <span class="ruby-constant">KnownHosts</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>).<span class="ruby-identifier">keys_for</span>(<span class="ruby-identifier">host</span>) }.<span class="ruby-identifier">flatten</span>&#x000A;24:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000319-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 22</span>&#x000A;22:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">search_in</span>(<span class="ruby-identifier">files</span>, <span class="ruby-identifier">host</span>)&#x000A;23:         <span class="ruby-identifier">files</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span> <span class="ruby-constant">KnownHosts</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>).<span class="ruby-identifier">keys_for</span>(<span class="ruby-identifier">host</span>) }.<span class="ruby-identifier">flatten</span>&#x000A;24:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000322'>
-                <a name='M000322'></a>
+              <div class='method public-instance' id='method-M000324'>
+                <a name='M000324'></a>
                 <div class='synopsis'>
                   <span class='name'>add</span>
                   <span class='arguments'>(host, key)</span>
@@ -208,14 +208,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000322-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000324-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000322-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 121</span>&#x000A;121:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>)&#x000A;122:       <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">source</span>, <span class="ruby-value str">&quot;a&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>&#x000A;123:         <span class="ruby-identifier">blob</span> = [<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:key</span>, <span class="ruby-identifier">key</span>).<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;m*&quot;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\s/</span>, <span class="ruby-value str">&quot;&quot;</span>)&#x000A;124:         <span class="ruby-identifier">file</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{host} #{key.ssh_type} #{blob}&quot;</span>&#x000A;125:       <span class="ruby-keyword kw">end</span>&#x000A;126:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000324-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 121</span>&#x000A;121:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>)&#x000A;122:       <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">source</span>, <span class="ruby-value str">&quot;a&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>&#x000A;123:         <span class="ruby-identifier">blob</span> = [<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:key</span>, <span class="ruby-identifier">key</span>).<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;m*&quot;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\s/</span>, <span class="ruby-value str">&quot;&quot;</span>)&#x000A;124:         <span class="ruby-identifier">file</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{host} #{key.ssh_type} #{blob}&quot;</span>&#x000A;125:       <span class="ruby-keyword kw">end</span>&#x000A;126:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000321'>
-                <a name='M000321'></a>
+              <div class='method public-instance' id='method-M000323'>
+                <a name='M000323'></a>
                 <div class='synopsis'>
                   <span class='name'>keys_for</span>
                   <span class='arguments'>(host)</span>
@@ -232,10 +232,10 @@
                   <pre>&quot;net.ssh.test&quot;&#x000A;&quot;1.2.3.4&quot;&#x000A;&quot;net.ssh.test,1.2.3.4&quot;&#x000A;&quot;[net.ssh.test]:5555&quot;&#x000A;&quot;[1,2,3,4]:5555&quot;&#x000A;&quot;[net.ssh.test]:5555,[1.2.3.4]:5555</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000321-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000323-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000321-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 87</span>&#x000A; 87:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">keys_for</span>(<span class="ruby-identifier">host</span>)&#x000A; 88:       <span class="ruby-identifier">keys</span> = []&#x000A; 89:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">keys</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">source</span>)&#x000A; 90: &#x000A; 91:       <span class="ruby-identifier">entries</span> = <span class="ruby-identifier">host</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/,/</span>)&#x000A; 92: &#x000A; 93:       <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">source</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>&#x000A; 94:         <span class="ruby-identifier">scanner</span> = <span class="ruby-constant">StringScanner</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">&quot;&quot;</span>)&#x000A; 95:         <span class="ruby-identifier">file</span>.<span class="ruby-identifier">each_line</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>&#x000A; 96:           <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">string</span> = <span class="ruby-identifier">line</span>&#x000A; 97: &#x000A; 98:           <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">skip</span>(<span class="ruby-regexp re">/\s*/</span>)&#x000A; 99:           <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">match?</span>(<span class="ruby-regexp re">/$|#/</span>)&#x000A;100: &#x000A;101:           <span class="ruby-identifier">hostlist</span> = <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp re">/\S+/</span>).<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/,/</span>)&#x000A;102:           <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span> <span class="ruby-identifier">hostlist</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">entry</span>) }&#x000A;103: &#x000A;104:           <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">skip</span>(<span class="ruby-regexp re">/\s*/</span>)&#x000A;105:           <span class="ruby-identifier">type</span> = <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp re">/\S+/</span>)&#x000A;106: &#x000A;107:           <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-node">%w(ssh-rsa ssh-dss)</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">type</span>)&#x000A;108: &#x000A;109:           <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">skip</span>(<span class="ruby-regexp re">/\s*/</span>)&#x000A;110:           <span class="ruby-identifier">blob</span> = <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">rest</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-value str">&quot;m*&quot;</span>).<span class="ruby-identifier">first</span>&#x000A;111:           <span class="ruby-identifier">keys</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">blob</span>).<span class="ruby-identifier">read_key</span>&#x000A;112:         <span class="ruby-keyword kw">end</span>&#x000A;113:       <span class="ruby-keyword kw">end</span>&#x000A;114: &#x000A;115:       <span class="ruby-identifier">keys</span>&#x000A;116:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000323-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/known_hosts.rb, line 87</span>&#x000A; 87:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">keys_for</span>(<span class="ruby-identifier">host</span>)&#x000A; 88:       <span class="ruby-identifier">keys</span> = []&#x000A; 89:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">keys</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">source</span>)&#x000A; 90: &#x000A; 91:       <span class="ruby-identifier">entries</span> = <span class="ruby-identifier">host</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/,/</span>)&#x000A; 92: &#x000A; 93:       <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">source</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>&#x000A; 94:         <span class="ruby-identifier">scanner</span> = <span class="ruby-constant">StringScanner</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">&quot;&quot;</span>)&#x000A; 95:         <span class="ruby-identifier">file</span>.<span class="ruby-identifier">each_line</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>&#x000A; 96:           <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">string</span> = <span class="ruby-identifier">line</span>&#x000A; 97: &#x000A; 98:           <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">skip</span>(<span class="ruby-regexp re">/\s*/</span>)&#x000A; 99:           <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">match?</span>(<span class="ruby-regexp re">/$|#/</span>)&#x000A;100: &#x000A;101:           <span class="ruby-identifier">hostlist</span> = <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp re">/\S+/</span>).<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/,/</span>)&#x000A;102:           <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span> <span class="ruby-identifier">hostlist</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">entry</span>) }&#x000A;103: &#x000A;104:           <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">skip</span>(<span class="ruby-regexp re">/\s*/</span>)&#x000A;105:           <span class="ruby-identifier">type</span> = <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp re">/\S+/</span>)&#x000A;106: &#x000A;107:           <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-node">%w(ssh-rsa ssh-dss)</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">type</span>)&#x000A;108: &#x000A;109:           <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">skip</span>(<span class="ruby-regexp re">/\s*/</span>)&#x000A;110:           <span class="ruby-identifier">blob</span> = <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">rest</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-value str">&quot;m*&quot;</span>).<span class="ruby-identifier">first</span>&#x000A;111:           <span class="ruby-identifier">keys</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">blob</span>).<span class="ruby-identifier">read_key</span>&#x000A;112:         <span class="ruby-keyword kw">end</span>&#x000A;113:       <span class="ruby-keyword kw">end</span>&#x000A;114: &#x000A;115:       <span class="ruby-identifier">keys</span>&#x000A;116:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

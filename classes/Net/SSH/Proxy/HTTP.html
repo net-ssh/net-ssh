@@ -62,11 +62,11 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000113">new</a></li>
+              <li><a href="#M000115">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000114">open</a></li>
+              <li><a href="#M000116">open</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -104,8 +104,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000113'>
-                <a name='M000113'></a>
+              <div class='method public-class' id='method-M000115'>
+                <a name='M000115'></a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(proxy_host, proxy_port=80, options={})</span>
@@ -127,15 +127,15 @@
                   </ul>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000113-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000115-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000113-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/proxy/http.rb, line 43</span>&#x000A;43:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>=<span class="ruby-value">80</span>, <span class="ruby-identifier">options</span>={})&#x000A;44:       <span class="ruby-ivar">@proxy_host</span> = <span class="ruby-identifier">proxy_host</span>&#x000A;45:       <span class="ruby-ivar">@proxy_port</span> = <span class="ruby-identifier">proxy_port</span>&#x000A;46:       <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000115-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/proxy/http.rb, line 43</span>&#x000A;43:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>=<span class="ruby-value">80</span>, <span class="ruby-identifier">options</span>={})&#x000A;44:       <span class="ruby-ivar">@proxy_host</span> = <span class="ruby-identifier">proxy_host</span>&#x000A;45:       <span class="ruby-ivar">@proxy_port</span> = <span class="ruby-identifier">proxy_port</span>&#x000A;46:       <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000114'>
-                <a name='M000114'></a>
+              <div class='method public-instance' id='method-M000116'>
+                <a name='M000116'></a>
                 <div class='synopsis'>
                   <span class='name'>open</span>
                   <span class='arguments'>(host, port)</span>
@@ -147,10 +147,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000114-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000116-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000114-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/proxy/http.rb, line 51</span>&#x000A;51:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>)&#x000A;52:       <span class="ruby-identifier">socket</span> = <span class="ruby-constant">TCPSocket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>)&#x000A;53:       <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-node">&quot;CONNECT #{host}:#{port} HTTP/1.0\r\n&quot;</span>&#x000A;54: &#x000A;55:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:user</span>]&#x000A;56:         <span class="ruby-identifier">credentials</span> = [<span class="ruby-node">&quot;#{options[:user]}:#{options[:password]}&quot;</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;m*&quot;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\s/</span>, <span class="ruby-value str">&quot;&quot;</span>)&#x000A;57:         <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-node">&quot;Proxy-Authorization: Basic #{credentials}\r\n&quot;</span>&#x000A;58:       <span class="ruby-keyword kw">end</span>&#x000A;59: &#x000A;60:       <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-value str">&quot;\r\n&quot;</span>&#x000A;61: &#x000A;62:       <span class="ruby-identifier">resp</span> = <span class="ruby-identifier">parse_response</span>(<span class="ruby-identifier">socket</span>)&#x000A;63: &#x000A;64:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">socket</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">resp</span>[<span class="ruby-identifier">:code</span>] <span class="ruby-operator">==</span> <span class="ruby-value">200</span>&#x000A;65: &#x000A;66:       <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">close</span>&#x000A;67:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConnectError</span>, <span class="ruby-identifier">resp</span>.<span class="ruby-identifier">inspect</span>&#x000A;68:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000116-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/proxy/http.rb, line 51</span>&#x000A;51:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>)&#x000A;52:       <span class="ruby-identifier">socket</span> = <span class="ruby-constant">TCPSocket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>)&#x000A;53:       <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-node">&quot;CONNECT #{host}:#{port} HTTP/1.0\r\n&quot;</span>&#x000A;54: &#x000A;55:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:user</span>]&#x000A;56:         <span class="ruby-identifier">credentials</span> = [<span class="ruby-node">&quot;#{options[:user]}:#{options[:password]}&quot;</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;m*&quot;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\s/</span>, <span class="ruby-value str">&quot;&quot;</span>)&#x000A;57:         <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-node">&quot;Proxy-Authorization: Basic #{credentials}\r\n&quot;</span>&#x000A;58:       <span class="ruby-keyword kw">end</span>&#x000A;59: &#x000A;60:       <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-value str">&quot;\r\n&quot;</span>&#x000A;61: &#x000A;62:       <span class="ruby-identifier">resp</span> = <span class="ruby-identifier">parse_response</span>(<span class="ruby-identifier">socket</span>)&#x000A;63: &#x000A;64:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">socket</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">resp</span>[<span class="ruby-identifier">:code</span>] <span class="ruby-operator">==</span> <span class="ruby-value">200</span>&#x000A;65: &#x000A;66:       <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">close</span>&#x000A;67:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConnectError</span>, <span class="ruby-identifier">resp</span>.<span class="ruby-identifier">inspect</span>&#x000A;68:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

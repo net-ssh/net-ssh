@@ -49,6 +49,18 @@
             <a href="../../../../files/lib/net/ssh/transport/hmac/sha1_96_rb.html">lib/net/ssh/transport/hmac/sha1_96.rb</a>
           </li>
           <li class='other'>
+            <a href="../../../../files/lib/net/ssh/transport/hmac/sha2_256_rb.html">lib/net/ssh/transport/hmac/sha2_256.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../../files/lib/net/ssh/transport/hmac/sha2_512_rb.html">lib/net/ssh/transport/hmac/sha2_512.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../../files/lib/net/ssh/transport/hmac/sha2_256_96_rb.html">lib/net/ssh/transport/hmac/sha2_256_96.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../../files/lib/net/ssh/transport/hmac/sha2_512_96_rb.html">lib/net/ssh/transport/hmac/sha2_512_96.rb</a>
+          </li>
+          <li class='other'>
             <a href="../../../../files/lib/net/ssh/transport/hmac_rb.html">lib/net/ssh/transport/hmac.rb</a>
           </li>
           <li>
@@ -81,6 +93,10 @@
               Class <a href="HMAC/None.html" class="link">Net::SSH::Transport::HMAC::None</a><br />
               Class <a href="HMAC/SHA1.html" class="link">Net::SSH::Transport::HMAC::SHA1</a><br />
               Class <a href="HMAC/SHA1_96.html" class="link">Net::SSH::Transport::HMAC::SHA1_96</a><br />
+              Class <a href="HMAC/SHA2_256.html" class="link">Net::SSH::Transport::HMAC::SHA2_256</a><br />
+              Class <a href="HMAC/SHA2_256_96.html" class="link">Net::SSH::Transport::HMAC::SHA2_256_96</a><br />
+              Class <a href="HMAC/SHA2_512.html" class="link">Net::SSH::Transport::HMAC::SHA2_512</a><br />
+              Class <a href="HMAC/SHA2_512_96.html" class="link">Net::SSH::Transport::HMAC::SHA2_512_96</a><br />
             </div>
             <div id='constants-list'>
               <h2>Constants</h2>
@@ -106,7 +122,7 @@
                 <a name='M000186'></a>
                 <div class='synopsis'>
                   <span class='name'>get</span>
-                  <span class='arguments'>(name, key=&quot;&quot;)</span>
+                  <span class='arguments'>(name, key=&quot;&quot;, parameters = {})</span>
                 </div>
                 <div class='description'>
                   <p>
@@ -119,7 +135,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000186-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000186-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac.rb, line 21</span>&#x000A;21:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">key</span>=<span class="ruby-value str">&quot;&quot;</span>)&#x000A;22:     <span class="ruby-identifier">impl</span> = <span class="ruby-constant">MAP</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;hmac not found: #{name.inspect}&quot;</span>&#x000A;23:     <span class="ruby-identifier">impl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">key</span>)&#x000A;24:   <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000186-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac.rb, line 32</span>&#x000A;32:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">key</span>=<span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-identifier">parameters</span> = {})&#x000A;33:     <span class="ruby-identifier">impl</span> = <span class="ruby-constant">MAP</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;hmac not found: #{name.inspect}&quot;</span>&#x000A;34:     <span class="ruby-identifier">impl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyExpander</span>.<span class="ruby-identifier">expand_key</span>(<span class="ruby-identifier">impl</span>.<span class="ruby-identifier">key_length</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">parameters</span>))&#x000A;35:   <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-M000187'>
@@ -138,7 +154,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000187-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000187-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac.rb, line 27</span>&#x000A;27:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">key_length</span>(<span class="ruby-identifier">name</span>)&#x000A;28:     <span class="ruby-identifier">impl</span> = <span class="ruby-constant">MAP</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;hmac not found: #{name.inspect}&quot;</span>&#x000A;29:     <span class="ruby-identifier">impl</span>.<span class="ruby-identifier">key_length</span>&#x000A;30:   <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000187-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac.rb, line 38</span>&#x000A;38:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">key_length</span>(<span class="ruby-identifier">name</span>)&#x000A;39:     <span class="ruby-identifier">impl</span> = <span class="ruby-constant">MAP</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;hmac not found: #{name.inspect}&quot;</span>&#x000A;40:     <span class="ruby-identifier">impl</span>.<span class="ruby-identifier">key_length</span>&#x000A;41:   <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

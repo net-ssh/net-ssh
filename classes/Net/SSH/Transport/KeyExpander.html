@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::Transport::KeyExpander [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Module</span>
+          Net::SSH::Transport::KeyExpander
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../files/lib/net/ssh/transport/key_expander_rb.html">lib/net/ssh/transport/key_expander.rb</a>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000201">expand_key</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='method public-class' id='method-M000201'>
+                <a name='M000201'></a>
+                <div class='synopsis'>
+                  <span class='name'>expand_key</span>
+                  <span class='arguments'>(bytes, start, options={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Generate a key value in accordance with the SSH2 specification. (RFC4253
+                  7.2. &#8220;Output from Key Exchange&#8221;)
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000201-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000201-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/key_expander.rb, line 6</span>&#x000A; 6:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">expand_key</span>(<span class="ruby-identifier">bytes</span>, <span class="ruby-identifier">start</span>, <span class="ruby-identifier">options</span>={})&#x000A; 7:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">bytes</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A; 8:       <span class="ruby-keyword kw">return</span> <span class="ruby-value str">&quot;&quot;</span>&#x000A; 9:     <span class="ruby-keyword kw">end</span>&#x000A;10: &#x000A;11:     <span class="ruby-identifier">k</span> = <span class="ruby-identifier">start</span>[<span class="ruby-value">0</span>, <span class="ruby-identifier">bytes</span>]&#x000A;12: &#x000A;13:     <span class="ruby-identifier">digester</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:digester</span>] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-value str">'No digester supplied'</span>&#x000A;14:     <span class="ruby-identifier">shared</span>   = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:shared</span>] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-value str">'No shared secret supplied'</span>&#x000A;15:     <span class="ruby-identifier">hash</span>     = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:hash</span>] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-value str">'No hash supplied'</span>&#x000A;16: &#x000A;17:     <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">k</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">bytes</span>&#x000A;18:       <span class="ruby-identifier">step</span> = <span class="ruby-identifier">digester</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-identifier">shared</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">hash</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">k</span>)&#x000A;19:       <span class="ruby-identifier">bytes_needed</span> = <span class="ruby-identifier">bytes</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">k</span>.<span class="ruby-identifier">length</span>&#x000A;20:       <span class="ruby-identifier">k</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">step</span>[<span class="ruby-value">0</span>, <span class="ruby-identifier">bytes_needed</span>]&#x000A;21:     <span class="ruby-keyword kw">end</span>&#x000A;22: &#x000A;23:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">k</span>&#x000A;24:   <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
