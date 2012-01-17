@@ -41,7 +41,7 @@ module Net; module SSH; module Authentication
       self.logger = transport.logger
       @transport = transport
 
-      @auth_methods = options[:auth_methods] || %w(publickey hostbased password keyboard-interactive)
+      @auth_methods = options[:auth_methods] || %w(none publickey hostbased password keyboard-interactive)
       @options = options
 
       @allowed_auth_methods = @auth_methods
