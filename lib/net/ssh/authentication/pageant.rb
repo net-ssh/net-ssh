@@ -1,5 +1,13 @@
 require 'dl/import'
-require 'dl/struct'
+
+if RUBY_VERSION < "1.9"
+	require 'dl/struct'
+end
+
+if RUBY_VERSION =~ /^1.9/
+	require 'dl/types'
+	require 'dl'
+end
 
 require 'net/ssh/errors'
 
@@ -21,10 +29,18 @@ module Net; module SSH; module Authentication
     # The definition of the Windows methods and data structures used in
     # communicating with the pageant process.
     module Win
-      extend DL::Importable
+	  if RUBY_VERSION < "1.9"
+		extend DL::Importable
       
-      dlload 'user32'
-      dlload 'kernel32'
+		dlload 'user32'
+		dlload 'kernel32'
+	  end
+	  
+	  if RUBY_VERSION =~ /^1.9/
+        extend DL::Importer
+		dlload 'user32','kernel32'
+		include DL::Win32Types
+	  end
       
       typealias("LPCTSTR", "char *")         # From winnt.h
       typealias("LPVOID", "void *")          # From winnt.h
@@ -67,8 +83,12 @@ module Net; module SSH; module Authentication
       # args: hWnd, Msg, wParam, lParam, fuFlags, uTimeout, lpdwResult
       extern 'LRESULT SendMessageTimeout(HWND, UINT, WPARAM, LPARAM, ' +
                                         'UINT, UINT, PDWORD_PTR)'
+      if RUBY_VERSION < "1.9"
+        alias_method :FindWindow,:findWindow
+        module_function :FindWindow
+	  end
     end
-
+	
     # This is the pseudo-socket implementation that mimics the interface of
     # a socket, translating each request into a Windows messaging call to
     # the pageant daemon. This allows pageant support to be implemented
@@ -87,7 +107,7 @@ module Net; module SSH; module Authentication
       # Create a new instance that communicates with the running pageant 
       # instance. If no such instance is running, this will cause an error.
       def initialize
-        @win = Win.findWindow("Pageant", "Pageant")
+        @win = Win.FindWindow("Pageant", "Pageant")
 
         if @win == 0
           raise Net::SSH::Exception,
@@ -177,7 +197,68 @@ module Net; module SSH; module Authentication
       end
 
     end
+	
+	# Socket changes for Ruby 1.9
+	# Functionality is the same as Ruby 1.8 but it includes the new calls to 
+	# the DL module as well as other pointer transformations
+	class Socket19 < Socket
+      # Packages the given query string and sends it to the pageant
+      # process via the Windows messaging subsystem. The result is
+      # cached, to be returned piece-wise when #read is called.
+      def send_query(query)
+        res = nil
+        filemap = 0
+        ptr = nil
+        id = DL.malloc(DL::SIZEOF_LONG)
 
+        mapname = "PageantRequest%08x\000" % Win.GetCurrentThreadId()
+		
+        filemap = Win.CreateFileMapping(Win::INVALID_HANDLE_VALUE, 
+                                        Win::NULL,
+                                        Win::PAGE_READWRITE, 0, 
+                                        AGENT_MAX_MSGLEN, mapname)
+										
+        if filemap == 0 || filemap == Win::INVALID_HANDLE_VALUE
+          raise Net::SSH::Exception,
+            "Creation of file mapping failed"
+        end
+
+        ptr = Win.MapViewOfFile(filemap, Win::FILE_MAP_WRITE, 0, 0, 
+                                0)
+
+        if ptr.nil? || ptr.null?
+          raise Net::SSH::Exception, "Mapping of file failed"
+        end
+		
+        DL::CPtr.new(ptr)[0,query.size]=query
+		
+        cds = DL::CPtr.to_ptr [AGENT_COPYDATA_ID, mapname.size + 1, mapname].
+          pack("LLp")
+        succ = Win.SendMessageTimeout(@win, Win::WM_COPYDATA, Win::NULL,
+          cds, Win::SMTO_NORMAL, 5000, id)
+
+        if succ > 0
+          retlen = 4 + ptr.to_s(4).unpack("N")[0]
+          res = ptr.to_s(retlen)
+        end        
+
+        return res
+      ensure
+        Win.UnmapViewOfFile(ptr) unless ptr.nil? || ptr.null?
+        Win.CloseHandle(filemap) if filemap != 0
+      end
+	end
+	
+    # Selects which socket to use depending on the ruby version
+	# This is needed due changes in the DL module.
+	def self.socket_factory
+	  if RUBY_VERSION < "1.9"
+	    Socket
+      else
+        Socket19
+      end
+	end
+	
   end
 
 end; end; end

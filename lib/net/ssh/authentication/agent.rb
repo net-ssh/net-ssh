@@ -3,8 +3,8 @@ require 'net/ssh/errors'
 require 'net/ssh/loggable'
 require 'net/ssh/transport/server_version'
 
-# Only load pageant on Windows, Ruby 1.8.x
-if File::ALT_SEPARATOR && !(RUBY_PLATFORM =~ /java/) && RUBY_VERSION < "1.9"
+# Only load pageant on Windows
+if File::ALT_SEPARATOR && !(RUBY_PLATFORM =~ /java/)
   require 'net/ssh/authentication/pageant' 
 end
 
@@ -135,7 +135,7 @@ module Net; module SSH; module Authentication
       # Returns the agent socket factory to use.
       def agent_socket_factory
         if File::ALT_SEPARATOR
-          Pageant::Socket
+          Pageant::socket_factory
         else
           UNIXSocket
         end
