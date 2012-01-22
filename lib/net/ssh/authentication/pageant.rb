@@ -1,12 +1,12 @@
 require 'dl/import'
 
 if RUBY_VERSION < "1.9"
-	require 'dl/struct'
+  require 'dl/struct'
 end
 
 if RUBY_VERSION =~ /^1.9/
-	require 'dl/types'
-	require 'dl'
+  require 'dl/types'
+  require 'dl'
 end
 
 require 'net/ssh/errors'
@@ -25,23 +25,23 @@ module Net; module SSH; module Authentication
     # From Putty pageant.c
     AGENT_MAX_MSGLEN = 8192
     AGENT_COPYDATA_ID = 0x804e50ba
-    
+
     # The definition of the Windows methods and data structures used in
     # communicating with the pageant process.
     module Win
-	  if RUBY_VERSION < "1.9"
-		extend DL::Importable
-      
-		dlload 'user32'
-		dlload 'kernel32'
-	  end
-	  
-	  if RUBY_VERSION =~ /^1.9/
+      if RUBY_VERSION < "1.9"
+        extend DL::Importable
+
+        dlload 'user32'
+        dlload 'kernel32'
+      end
+
+      if RUBY_VERSION =~ /^1.9/
         extend DL::Importer
-		dlload 'user32','kernel32'
-		include DL::Win32Types
-	  end
-      
+        dlload 'user32','kernel32'
+        include DL::Win32Types
+      end
+
       typealias("LPCTSTR", "char *")         # From winnt.h
       typealias("LPVOID", "void *")          # From winnt.h
       typealias("LPCVOID", "const void *")   # From windef.h
@@ -68,7 +68,7 @@ module Net; module SSH; module Authentication
       # args: hFile, (ignored), flProtect, dwMaximumSizeHigh,
       #           dwMaximumSizeLow, lpName
       extern 'HANDLE CreateFileMapping(HANDLE, void *, DWORD, DWORD, ' +
-                                      'DWORD, LPCTSTR)'
+        'DWORD, LPCTSTR)'
 
       # args: hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh, 
       #           dwfileOffsetLow, dwNumberOfBytesToMap
@@ -82,13 +82,13 @@ module Net; module SSH; module Authentication
 
       # args: hWnd, Msg, wParam, lParam, fuFlags, uTimeout, lpdwResult
       extern 'LRESULT SendMessageTimeout(HWND, UINT, WPARAM, LPARAM, ' +
-                                        'UINT, UINT, PDWORD_PTR)'
+        'UINT, UINT, PDWORD_PTR)'
       if RUBY_VERSION < "1.9"
         alias_method :FindWindow,:findWindow
         module_function :FindWindow
-	  end
+      end
     end
-	
+
     # This is the pseudo-socket implementation that mimics the interface of
     # a socket, translating each request into a Windows messaging call to
     # the pageant daemon. This allows pageant support to be implemented
@@ -117,7 +117,7 @@ module Net; module SSH; module Authentication
         @res = nil
         @pos = 0
       end
-      
+
       # Forwards the data to #send_query, ignoring any arguments after
       # the first. Returns 0.
       def send(data, *args)
@@ -152,11 +152,11 @@ module Net; module SSH; module Authentication
         end
 
         ptr[0] = query
-        
+
         cds = [AGENT_COPYDATA_ID, mapname.size + 1, mapname].
           pack("LLp").to_ptr
         succ = Win.sendMessageTimeout(@win, Win::WM_COPYDATA, Win::NULL,
-          cds, Win::SMTO_NORMAL, 5000, id)
+                                      cds, Win::SMTO_NORMAL, 5000, id)
 
         if succ > 0
           retlen = 4 + ptr.to_s(4).unpack("N")[0]
@@ -197,11 +197,11 @@ module Net; module SSH; module Authentication
       end
 
     end
-	
-	# Socket changes for Ruby 1.9
-	# Functionality is the same as Ruby 1.8 but it includes the new calls to 
-	# the DL module as well as other pointer transformations
-	class Socket19 < Socket
+
+    # Socket changes for Ruby 1.9
+    # Functionality is the same as Ruby 1.8 but it includes the new calls to 
+    # the DL module as well as other pointer transformations
+    class Socket19 < Socket
       # Packages the given query string and sends it to the pageant
       # process via the Windows messaging subsystem. The result is
       # cached, to be returned piece-wise when #read is called.
@@ -212,12 +212,12 @@ module Net; module SSH; module Authentication
         id = DL.malloc(DL::SIZEOF_LONG)
 
         mapname = "PageantRequest%08x\000" % Win.GetCurrentThreadId()
-		
+
         filemap = Win.CreateFileMapping(Win::INVALID_HANDLE_VALUE, 
                                         Win::NULL,
                                         Win::PAGE_READWRITE, 0, 
                                         AGENT_MAX_MSGLEN, mapname)
-										
+
         if filemap == 0 || filemap == Win::INVALID_HANDLE_VALUE
           raise Net::SSH::Exception,
             "Creation of file mapping failed"
@@ -229,13 +229,13 @@ module Net; module SSH; module Authentication
         if ptr.nil? || ptr.null?
           raise Net::SSH::Exception, "Mapping of file failed"
         end
-		
+
         DL::CPtr.new(ptr)[0,query.size]=query
-		
+
         cds = DL::CPtr.to_ptr [AGENT_COPYDATA_ID, mapname.size + 1, mapname].
           pack("LLp")
         succ = Win.SendMessageTimeout(@win, Win::WM_COPYDATA, Win::NULL,
-          cds, Win::SMTO_NORMAL, 5000, id)
+                                      cds, Win::SMTO_NORMAL, 5000, id)
 
         if succ > 0
           retlen = 4 + ptr.to_s(4).unpack("N")[0]
@@ -247,18 +247,18 @@ module Net; module SSH; module Authentication
         Win.UnmapViewOfFile(ptr) unless ptr.nil? || ptr.null?
         Win.CloseHandle(filemap) if filemap != 0
       end
-	end
-	
+    end
+
     # Selects which socket to use depending on the ruby version
-	# This is needed due changes in the DL module.
-	def self.socket_factory
-	  if RUBY_VERSION < "1.9"
-	    Socket
+    # This is needed due changes in the DL module.
+    def self.socket_factory
+      if RUBY_VERSION < "1.9"
+        Socket
       else
         Socket19
       end
-	end
-	
+    end
+
   end
 
 end; end; end
