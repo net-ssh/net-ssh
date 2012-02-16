@@ -14,6 +14,8 @@
   s.require_paths = %w[lib]
   s.rubygems_version = '1.3.2'
 
+  s.add_dependency 'jruby-pageant', :platform => "java"
+
   s.executables = %w[]
 
   # = MANIFEST =

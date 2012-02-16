@@ -1,26 +1,13 @@
-require 'java'
-dir = File.dirname(__FILE__) + '/../../../../../ext/java'
-require "#{dir}/jna.jar"
-require "#{dir}/platform.jar"
-require "#{dir}/jsch-0.1.46.jar"
-require "#{dir}/jsch-agent-proxy-0.0.2.jar"
-require "#{dir}/jsch-agent-proxy-pageant-0.0.2.jar"
+require 'jruby_pageant'
 
 module Net; module SSH; module Authentication
 
-  # This class implements a simple client for the ssh-agent protocol. It
-  # does not implement any specific protocol, but instead copies the
-  # behavior of the ssh-agent functions in the OpenSSH library (3.8).
+  # This class implements an agent for JRuby + Pageant.
   #
-  # This means that although it behaves like a SSH1 client, it also has
-  # some SSH2 functionality (like signing data).
+  # Written by Artūras Šlajus <arturas.slajus@gmail.com>
   class Agent
     include Loggable
-
-    java_import com.jcraft.jsch.agentproxy.AgentProxy
-    java_import com.jcraft.jsch.agentproxy.AgentProxyException
-    java_import com.jcraft.jsch.agentproxy.Identity
-    java_import com.jcraft.jsch.agentproxy.connector.PageantConnector
+    include JRubyPageant
 
     # A simple module for extending keys, to allow blobs and comments to be
     # specified for them.
@@ -50,7 +37,7 @@ module Net; module SSH; module Authentication
     # (it only supports the ssh-agent distributed by OpenSSH).
     def connect!
       debug { "connecting to Pageant ssh-agent (via java connector)" }
-      @agent_proxy = AgentProxy.new(PageantConnector.new)
+      @agent_proxy = JRubyPageant.create
       unless @agent_proxy.is_running
         raise AgentNotAvailable, "Pageant is not running!"
       end
