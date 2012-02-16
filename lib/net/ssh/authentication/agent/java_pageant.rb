@@ -65,7 +65,7 @@ module Net; module SSH; module Authentication
     # to the comment returned by the agent for that key.
     def identities
       debug { "getting identities from Pageant" }
-      identities = @agent_proxy.get_identities.map do |identity|
+      @agent_proxy.get_identities.map do |identity|
         blob = identity.get_blob
         key = Buffer.new(String.from_java_bytes(blob)).read_key
         key.extend(Key)
@@ -73,8 +73,6 @@ module Net; module SSH; module Authentication
         key.comment = String.from_java_bytes(identity.get_comment)
         key
       end
-      puts identities.inspect
-      identities
     rescue AgentProxyException => e
       raise AgentError, "Cannot get identities: #{e.message}", e.backtrace
     end
