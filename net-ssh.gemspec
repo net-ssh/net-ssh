@@ -14,7 +14,10 @@
   s.require_paths = %w[lib]
   s.rubygems_version = '1.3.2'
 
-  s.add_dependency 'jruby-pageant', :platform => "java"
+  # This has two flavours with java one actually doing something and other
+  # one just raising error. This is a workaround for no ability to specify
+  # platform specific dependencies in gemspecs.
+  s.add_dependency 'jruby-pageant', ">=1.0.1"
 
   s.executables = %w[]
 
