@@ -142,7 +142,7 @@ module Net; module SSH; module Test
     #   # peek at the next event
     #   event = script.next(:first)
     def next(mode=:shift)
-      events.send(mode)
+      events.__send__(mode)
     end
 
     # Compare the given packet against the next event in the list. If there is

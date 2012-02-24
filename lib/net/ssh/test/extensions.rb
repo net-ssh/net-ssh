@@ -146,7 +146,7 @@ module Net; module SSH; module Test
 
 end; end; end
 
-Net::SSH::BufferedIo.send(:include, Net::SSH::Test::Extensions::BufferedIo)
-Net::SSH::Transport::PacketStream.send(:include, Net::SSH::Test::Extensions::PacketStream)
-Net::SSH::Connection::Channel.send(:include, Net::SSH::Test::Extensions::Channel)
-IO.send(:include, Net::SSH::Test::Extensions::IO)
+Net::SSH::BufferedIo.__send__(:include, Net::SSH::Test::Extensions::BufferedIo)
+Net::SSH::Transport::PacketStream.__send__(:include, Net::SSH::Test::Extensions::PacketStream)
+Net::SSH::Connection::Channel.__send__(:include, Net::SSH::Test::Extensions::Channel)
+IO.__send__(:include, Net::SSH::Test::Extensions::IO)

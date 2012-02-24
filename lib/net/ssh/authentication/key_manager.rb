@@ -212,11 +212,11 @@ module Net
                 { :public_key => key, :from => :file, :file => identity[:file] }
               when :privkey_file
                 private_key = KeyFactory.load_private_key(identity[:file], options[:passphrase], ask_passphrase)
-                key = private_key.send(:public_key)
+                key = private_key.__send__(:public_key)
                 { :public_key => key, :from => :file, :file => identity[:file], :key => private_key }
               when :data
                 private_key = KeyFactory.load_data_private_key(identity[:data], options[:passphrase], ask_passphrase)
-                key = private_key.send(:public_key)
+                key = private_key.__send__(:public_key)
                 { :public_key => key, :from => :key_data, :data => identity[:data], :key => private_key }
               else
                 identity

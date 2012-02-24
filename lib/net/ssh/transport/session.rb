@@ -182,7 +182,7 @@ module Net; module SSH; module Transport
           lwarn { "UNIMPLEMENTED: #{packet[:number]}" }
 
         when DEBUG
-          send(packet[:always_display] ? :fatal : :debug) { packet[:message] }
+          __send__(packet[:always_display] ? :fatal : :debug) { packet[:message] }
 
         when KEXINIT
           algorithms.accept_kexinit(packet)

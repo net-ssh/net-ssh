@@ -50,9 +50,9 @@ module Net; module SSH
         if type == :raw
           buffer.append(value.to_s)
         elsif Array === value
-          buffer.send("write_#{type}", *value)
+          buffer.__send__("write_#{type}", *value)
         else
-          buffer.send("write_#{type}", value)
+          buffer.__send__("write_#{type}", value)
         end
       end
 

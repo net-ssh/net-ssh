@@ -48,7 +48,7 @@ module Net; module SSH; module Transport
       return IdentityCipher if ossl_name == "none"
 
       cipher = OpenSSL::Cipher::Cipher.new(ossl_name)
-      cipher.send(options[:encrypt] ? :encrypt : :decrypt)
+      cipher.__send__(options[:encrypt] ? :encrypt : :decrypt)
 
       cipher.padding = 0
       cipher.iv      = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options) if ossl_name != "rc4"

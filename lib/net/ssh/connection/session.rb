@@ -453,7 +453,7 @@ module Net; module SSH; module Connection
             raise Net::SSH::Exception, "unexpected response #{packet.type} (#{packet.inspect})"
           end
 
-          send(MAP[packet.type], packet)
+          __send__(MAP[packet.type], packet)
         end
       end
 
