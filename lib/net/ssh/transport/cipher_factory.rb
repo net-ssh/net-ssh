@@ -1,4 +1,5 @@
 require 'openssl'
+require 'net/ssh/transport/ctr.rb'
 require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/identity_cipher'
 
@@ -19,9 +20,30 @@ module Net; module SSH; module Transport
       "arcfour128"                  => "rc4",
       "arcfour256"                  => "rc4",
       "arcfour512"                  => "rc4",
-      "none"                        => "none"
+      "arcfour"                     => "rc4",
+      "camellia128-cbc"             => "camellia-128-cbc",
+      "camellia192-cbc"             => "camellia-192-cbc",
+      "camellia256-cbc"             => "camellia-256-cbc",
+      "camellia128-cbc@openssh.org" => "camellia-128-cbc",
+      "camellia192-cbc@openssh.org" => "camellia-192-cbc",
+      "camellia256-cbc@openssh.org" => "camellia-256-cbc",
+
+      "3des-ctr"                    => "des-ede3",
+      "blowfish-ctr"                => "bf-ecb",
+      "aes256-ctr"                  => "aes-256-ecb",
+      "aes192-ctr"                  => "aes-192-ecb",
+      "aes128-ctr"                  => "aes-128-ecb",
+      "cast128-ctr"                 => "cast5-ecb",
+      "camellia128-ctr"             => "camellia-128-ecb",
+      "camellia192-ctr"             => "camellia-192-ecb",
+      "camellia256-ctr"             => "camellia-256-ecb",
+      "camellia128-ctr@openssh.org" => "camellia-128-ecb",
+      "camellia192-ctr@openssh.org" => "camellia-192-ecb",
+      "camellia256-ctr@openssh.org" => "camellia-256-ecb",
+
+      "none"                        => "none",
     }
-    
+
     # Ruby's OpenSSL bindings always return a key length of 16 for RC4 ciphers
     # resulting in the error: OpenSSL::CipherError: key length too short. 
     # The following ciphers will override this key length. 
@@ -29,7 +51,8 @@ module Net; module SSH; module Transport
       "arcfour256"                  => 32,
       "arcfour512"                  => 64
     }
-    
+
+
     # Returns true if the underlying OpenSSL library supports the given cipher,
     # and false otherwise.
     def self.supported?(name)
@@ -46,16 +69,20 @@ module Net; module SSH; module Transport
     def self.get(name, options={})
       ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
       return IdentityCipher if ossl_name == "none"
-
       cipher = OpenSSL::Cipher::Cipher.new(ossl_name)
+
       cipher.send(options[:encrypt] ? :encrypt : :decrypt)
 
       cipher.padding = 0
+
+      cipher.extend(Net::SSH::Transport::CTR) if (name =~ /-ctr(@openssh.org)?$/)
+
       cipher.iv      = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options) if ossl_name != "rc4"
+
       key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
       cipher.key_len = key_len
       cipher.key     = Net::SSH::Transport::KeyExpander.expand_key(key_len, options[:key], options)
-      cipher.update(" " * 1536) if ossl_name == "rc4"
+      cipher.update(" " * 1536) if (ossl_name == "rc4" && name != "arcfour")
 
       return cipher
     end

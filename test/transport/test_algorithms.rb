@@ -17,13 +17,18 @@ module Transport
     end
 
     def test_constructor_should_build_default_list_of_preferred_algorithms
-      assert_equal %w(ssh-rsa ssh-dss), algorithms[:host_key]
-      assert_equal %w(diffie-hellman-group-exchange-sha1 diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha256), algorithms[:kex]
-      assert_equal %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256), algorithms[:encryption]
-      if defined?(OpenSSL::Digest::SHA256)
-        assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms[:hmac]
+      if defined?(OpenSSL::PKey::EC)
+        assert_equal %w(ssh-rsa ssh-dss ecdsa-sha2-nistp256 ecdsa-sha2-nistp384 ecdsa-sha2-nistp521), algorithms[:host_key]
+        assert_equal %w(diffie-hellman-group-exchange-sha1 diffie-hellman-group1-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256 ecdh-sha2-nistp256 ecdh-sha2-nistp384 ecdh-sha2-nistp521), algorithms[:kex]
       else
-        assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 none), algorithms[:hmac]
+        assert_equal %w(ssh-rsa ssh-dss), algorithms[:host_key]
+        assert_equal %w(diffie-hellman-group-exchange-sha1 diffie-hellman-group1-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256), algorithms[:kex]
+      end
+      assert_equal %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr camellia128-cbc camellia192-cbc camellia256-cbc camellia128-cbc@openssh.org camellia192-cbc@openssh.org camellia256-cbc@openssh.org camellia128-ctr camellia192-ctr camellia256-ctr camellia128-ctr@openssh.org camellia192-ctr@openssh.org camellia256-ctr@openssh.org cast128-ctr blowfish-ctr 3des-ctr), algorithms[:encryption]
+      if defined?(OpenSSL::Digest::SHA256)
+        assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms[:hmac]
+      else
+        assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-ripemd160 hmac-ripemd160@openssh.com none), algorithms[:hmac]
       end
       assert_equal %w(none zlib@openssh.com zlib), algorithms[:compression]
       assert_equal %w(), algorithms[:language]
@@ -37,12 +42,20 @@ module Transport
     end
 
     def test_constructor_with_preferred_host_key_type_should_put_preferred_host_key_type_first
-      assert_equal %w(ssh-dss ssh-rsa), algorithms(:host_key => "ssh-dss")[:host_key]
+      if defined?(OpenSSL::PKey::EC)
+        assert_equal %w(ssh-dss ssh-rsa ecdsa-sha2-nistp256 ecdsa-sha2-nistp384 ecdsa-sha2-nistp521),  algorithms(:host_key => "ssh-dss")[:host_key]
+      else
+        assert_equal %w(ssh-dss ssh-rsa), algorithms(:host_key => "ssh-dss")[:host_key]
+      end
     end
 
     def test_constructor_with_known_hosts_reporting_known_host_key_should_use_that_host_key_type
       Net::SSH::KnownHosts.expects(:search_for).with("net.ssh.test,127.0.0.1", {}).returns([stub("key", :ssh_type => "ssh-dss")])
-      assert_equal %w(ssh-dss ssh-rsa), algorithms[:host_key]
+      if defined?(OpenSSL::PKey::EC)
+        assert_equal %w(ssh-dss ssh-rsa ecdsa-sha2-nistp256 ecdsa-sha2-nistp384 ecdsa-sha2-nistp521), algorithms[:host_key]
+      else
+        assert_equal %w(ssh-dss ssh-rsa), algorithms[:host_key]
+      end
     end
 
     def test_constructor_with_unrecognized_host_key_type_should_raise_exception
@@ -50,7 +63,11 @@ module Transport
     end
 
     def test_constructor_with_preferred_kex_should_put_preferred_kex_first
-      assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group-exchange-sha256), algorithms(:kex => "diffie-hellman-group1-sha1")[:kex]
+      if defined?(OpenSSL::PKey::EC)
+        assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256 ecdh-sha2-nistp256 ecdh-sha2-nistp384 ecdh-sha2-nistp521), algorithms(:kex => "diffie-hellman-group1-sha1")[:kex]
+      else
+        assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256), algorithms(:kex => "diffie-hellman-group1-sha1")[:kex]
+      end
     end
 
     def test_constructor_with_unrecognized_kex_should_raise_exception
@@ -58,11 +75,11 @@ module Transport
     end
 
     def test_constructor_with_preferred_encryption_should_put_preferred_encryption_first
-      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256), algorithms(:encryption => "aes256-cbc")[:encryption]
+      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr camellia128-cbc camellia192-cbc camellia256-cbc camellia128-cbc@openssh.org camellia192-cbc@openssh.org camellia256-cbc@openssh.org camellia128-ctr camellia192-ctr camellia256-ctr camellia128-ctr@openssh.org camellia192-ctr@openssh.org camellia256-ctr@openssh.org cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => "aes256-cbc")[:encryption]
     end
 
     def test_constructor_with_multiple_preferred_encryption_should_put_all_preferred_encryption_first
-      assert_equal %w(aes256-cbc 3des-cbc idea-cbc aes128-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se none arcfour128 arcfour256), algorithms(:encryption => %w(aes256-cbc 3des-cbc idea-cbc))[:encryption]
+      assert_equal %w(aes256-cbc 3des-cbc idea-cbc aes128-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr camellia128-cbc camellia192-cbc camellia256-cbc camellia128-cbc@openssh.org camellia192-cbc@openssh.org camellia256-cbc@openssh.org camellia128-ctr camellia192-ctr camellia256-ctr camellia128-ctr@openssh.org camellia192-ctr@openssh.org camellia256-ctr@openssh.org cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => %w(aes256-cbc 3des-cbc idea-cbc))[:encryption]
     end
 
     def test_constructor_with_unrecognized_encryption_should_raise_exception
@@ -70,11 +87,11 @@ module Transport
     end
 
     def test_constructor_with_preferred_hmac_should_put_preferred_hmac_first
-      assert_equal %w(hmac-md5-96 hmac-sha1 hmac-md5 hmac-sha1-96 hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(:hmac => "hmac-md5-96")[:hmac]
+      assert_equal %w(hmac-md5-96 hmac-sha1 hmac-md5 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(:hmac => "hmac-md5-96")[:hmac]
     end
 
     def test_constructor_with_multiple_preferred_hmac_should_put_all_preferred_hmac_first
-      assert_equal %w(hmac-md5-96 hmac-sha1-96 hmac-sha1 hmac-md5 hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(:hmac => %w(hmac-md5-96 hmac-sha1-96))[:hmac]
+      assert_equal %w(hmac-md5-96 hmac-sha1-96 hmac-sha1 hmac-md5  hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(:hmac => %w(hmac-md5-96 hmac-sha1-96))[:hmac]
     end
 
     def test_constructor_with_unrecognized_hmac_should_raise_exception
@@ -256,7 +273,7 @@ module Transport
       def kexinit(options={})
         @kexinit ||= P(:byte, KEXINIT,
           :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF),
-          :string, options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha256",
+          :string, options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha256",
           :string, options[:host_key] || "ssh-rsa,ssh-dss",
           :string, options[:encryption_client] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
           :string, options[:encryption_server] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
@@ -272,12 +289,17 @@ module Transport
       def assert_kexinit(buffer, options={})
         assert_equal KEXINIT, buffer.type
         assert_equal 16, buffer.read(16).length
-        assert_equal options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha256", buffer.read_string
-        assert_equal options[:host_key] || "ssh-rsa,ssh-dss", buffer.read_string
-        assert_equal options[:encryption_client] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none,arcfour128,arcfour256", buffer.read_string
-        assert_equal options[:encryption_server] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none,arcfour128,arcfour256", buffer.read_string
-        assert_equal options[:hmac_client] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96,hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-96,hmac-sha2-512-96,none", buffer.read_string
-        assert_equal options[:hmac_server] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96,hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-96,hmac-sha2-512-96,none", buffer.read_string
+        if defined?(OpenSSL::PKey::EC)
+          assert_equal options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha256,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521", buffer.read_string
+          assert_equal options[:host_key] || "ssh-rsa,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521", buffer.read_string
+        else
+          assert_equal options[:kex] || "diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha256", buffer.read_string
+          assert_equal options[:host_key] || "ssh-rsa,ssh-dss", buffer.read_string
+        end
+        assert_equal options[:encryption_client] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none,arcfour128,arcfour256,arcfour,aes128-ctr,aes192-ctr,aes256-ctr,camellia128-cbc,camellia192-cbc,camellia256-cbc,camellia128-cbc@openssh.org,camellia192-cbc@openssh.org,camellia256-cbc@openssh.org,camellia128-ctr,camellia192-ctr,camellia256-ctr,camellia128-ctr@openssh.org,camellia192-ctr@openssh.org,camellia256-ctr@openssh.org,cast128-ctr,blowfish-ctr,3des-ctr", buffer.read_string
+        assert_equal options[:encryption_server] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none,arcfour128,arcfour256,arcfour,aes128-ctr,aes192-ctr,aes256-ctr,camellia128-cbc,camellia192-cbc,camellia256-cbc,camellia128-cbc@openssh.org,camellia192-cbc@openssh.org,camellia256-cbc@openssh.org,camellia128-ctr,camellia192-ctr,camellia256-ctr,camellia128-ctr@openssh.org,camellia192-ctr@openssh.org,camellia256-ctr@openssh.org,cast128-ctr,blowfish-ctr,3des-ctr", buffer.read_string
+        assert_equal options[:hmac_client] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96,hmac-ripemd160,hmac-ripemd160@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-96,hmac-sha2-512-96,none", buffer.read_string
+        assert_equal options[:hmac_server] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96,hmac-ripemd160,hmac-ripemd160@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-96,hmac-sha2-512-96,none", buffer.read_string
         assert_equal options[:compression_client] || "none,zlib@openssh.com,zlib", buffer.read_string
         assert_equal options[:compression_server] || "none,zlib@openssh.com,zlib", buffer.read_string
         assert_equal options[:language_client] || "", buffer.read_string

@@ -5,6 +5,14 @@ class String
     def getbyte(index)
       self[index]
     end
+    def setbyte(index, c)
+      self[index] = c
+    end
+  end
+  if RUBY_VERSION < "1.8.7"
+    def bytesize
+      self.size
+    end
   end
 end
 

@@ -25,16 +25,37 @@ module Net; module SSH; module Transport
       :host_key    => %w(ssh-rsa ssh-dss),
       :kex         => %w(diffie-hellman-group-exchange-sha1
                          diffie-hellman-group1-sha1
+                         diffie-hellman-group14-sha1
                          diffie-hellman-group-exchange-sha256),
       :encryption  => %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc
                          aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se
-                         idea-cbc none arcfour128 arcfour256),
+                         idea-cbc none arcfour128 arcfour256 arcfour
+                         aes128-ctr aes192-ctr aes256-ctr
+                         camellia128-cbc camellia192-cbc camellia256-cbc
+                         camellia128-cbc@openssh.org
+                         camellia192-cbc@openssh.org
+                         camellia256-cbc@openssh.org
+                         camellia128-ctr camellia192-ctr camellia256-ctr
+                         camellia128-ctr@openssh.org
+                         camellia192-ctr@openssh.org
+                         camellia256-ctr@openssh.org
+                         cast128-ctr blowfish-ctr 3des-ctr
+                        ),
       :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
+                         hmac-ripemd160 hmac-ripemd160@openssh.com
                          hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96
                          hmac-sha2-512-96 none),
       :compression => %w(none zlib@openssh.com zlib),
       :language    => %w() 
     }
+    if defined?(OpenSSL::PKey::EC)
+      ALGORITHMS[:host_key] += %w(ecdsa-sha2-nistp256
+                                  ecdsa-sha2-nistp384
+                                  ecdsa-sha2-nistp521)
+      ALGORITHMS[:kex] += %w(ecdh-sha2-nistp256
+                             ecdh-sha2-nistp384
+                             ecdh-sha2-nistp521)
+    end
 
     # The underlying transport layer session that supports this object
     attr_reader :session
