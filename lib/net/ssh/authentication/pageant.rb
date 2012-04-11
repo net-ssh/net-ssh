@@ -120,7 +120,7 @@ module Net; module SSH; module Authentication
 
       # Forwards the data to #send_query, ignoring any arguments after
       # the first. Returns 0.
-      def __send__(data, *args)
+      def send(data, *args)
         @res = send_query(data)
         @pos = 0
       end
