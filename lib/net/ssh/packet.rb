@@ -94,7 +94,7 @@ module Net; module SSH
           @named_elements[name.to_sym] = if datatype == :buffer
             remainder_as_buffer
           else
-            send("read_#{datatype}")
+            __send__("read_#{datatype}")
           end
         end
       end

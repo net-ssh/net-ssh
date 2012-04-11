@@ -60,7 +60,7 @@ module Net; module SSH; module Proxy
       end
       @command_line = command_line
       class << io
-        def send(data, flag)
+        def __send__(data, flag)
           write_nonblock(data)
         end
 
