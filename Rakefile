@@ -19,6 +19,7 @@ task :default => :package
 README = "README.rdoc"
 CHANGES = "CHANGELOG.rdoc"
 THANKS = 'THANKS.rdoc'
+LICENSE = "LICENSE.rdoc"
 
 # Files and directories to be deleted when you run "rake clean"
 CLEAN.include [ 'pkg', '*.gem', '.config', 'doc']
@@ -81,6 +82,7 @@ Rake::RDocTask.new do |t|
 	t.rdoc_files.include(README)
 	t.rdoc_files.include(CHANGES)
 	t.rdoc_files.include(THANKS)
+ 	t.rdoc_files.include(LICENSE)
 	t.rdoc_files.include('lib/**/*.rb')
 end
 

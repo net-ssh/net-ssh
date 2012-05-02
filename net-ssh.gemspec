@@ -21,6 +21,7 @@
   CHANGELOG.rdoc
   Manifest
   README.rdoc
+  LICENSE.rdoc
   Rakefile
   Rudyfile
   THANKS.rdoc
