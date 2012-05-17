@@ -1,4 +1,8 @@
 
+=== 2.4.0 / 17 May 2012
+
+* Support for JRuby + Pageant + Windows [arturaz]
+
 === 2.3.0 / 11 Jan 2012
 
 * Support for hmac-sha2 and diffie-hellman-group-exchange-sha256 [Ryosuke Yamazaki]
