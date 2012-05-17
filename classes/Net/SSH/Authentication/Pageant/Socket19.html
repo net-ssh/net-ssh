@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::Authentication::Pageant::Socket19 [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Net::SSH::Authentication::Pageant::Socket19
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../../files/lib/net/ssh/authentication/pageant_rb.html">lib/net/ssh/authentication/pageant.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a href="Socket.html">Net::SSH::Authentication::Pageant::Socket</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            <a href="Socket.html">Socket</a> changes for Ruby 1.9 Functionality is the
+            same as Ruby 1.8 but it includes the new calls to the DL module as well as
+            other pointer transformations
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000020">send_query</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public instance methods</h2>
+              <div class='method public-instance' id='method-M000020'>
+                <a name='M000020'></a>
+                <div class='synopsis'>
+                  <span class='name'>send_query</span>
+                  <span class='arguments'>(query)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Packages the given query string and sends it to the pageant process via the
+                  Windows messaging subsystem. The result is cached, to be returned
+                  piece-wise when read is called.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000020-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000020-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 208</span>&#x000A;208:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_query</span>(<span class="ruby-identifier">query</span>)&#x000A;209:         <span class="ruby-identifier">res</span> = <span class="ruby-keyword kw">nil</span>&#x000A;210:         <span class="ruby-identifier">filemap</span> = <span class="ruby-value">0</span>&#x000A;211:         <span class="ruby-identifier">ptr</span> = <span class="ruby-keyword kw">nil</span>&#x000A;212:         <span class="ruby-identifier">id</span> = <span class="ruby-constant">DL</span>.<span class="ruby-identifier">malloc</span>(<span class="ruby-constant">DL</span><span class="ruby-operator">::</span><span class="ruby-constant">SIZEOF_LONG</span>)&#x000A;213: &#x000A;214:         <span class="ruby-identifier">mapname</span> = <span class="ruby-value str">&quot;PageantRequest%08x\000&quot;</span> <span class="ruby-operator">%</span> <span class="ruby-constant">Win</span>.<span class="ruby-constant">GetCurrentThreadId</span>()&#x000A;215: &#x000A;216:         <span class="ruby-identifier">filemap</span> = <span class="ruby-constant">Win</span>.<span class="ruby-constant">CreateFileMapping</span>(<span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">INVALID_HANDLE_VALUE</span>, &#x000A;217:                                         <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">NULL</span>,&#x000A;218:                                         <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">PAGE_READWRITE</span>, <span class="ruby-value">0</span>, &#x000A;219:                                         <span class="ruby-constant">AGENT_MAX_MSGLEN</span>, <span class="ruby-identifier">mapname</span>)&#x000A;220: &#x000A;221:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">filemap</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">filemap</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">INVALID_HANDLE_VALUE</span>&#x000A;222:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>,&#x000A;223:             <span class="ruby-value str">&quot;Creation of file mapping failed&quot;</span>&#x000A;224:         <span class="ruby-keyword kw">end</span>&#x000A;225: &#x000A;226:         <span class="ruby-identifier">ptr</span> = <span class="ruby-constant">Win</span>.<span class="ruby-constant">MapViewOfFile</span>(<span class="ruby-identifier">filemap</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">FILE_MAP_WRITE</span>, <span class="ruby-value">0</span>, <span class="ruby-value">0</span>, &#x000A;227:                                 <span class="ruby-value">0</span>)&#x000A;228: &#x000A;229:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">null?</span>&#x000A;230:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>, <span class="ruby-value str">&quot;Mapping of file failed&quot;</span>&#x000A;231:         <span class="ruby-keyword kw">end</span>&#x000A;232: &#x000A;233:         <span class="ruby-constant">DL</span><span class="ruby-operator">::</span><span class="ruby-constant">CPtr</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">ptr</span>)[<span class="ruby-value">0</span>,<span class="ruby-identifier">query</span>.<span class="ruby-identifier">size</span>]=<span class="ruby-identifier">query</span>&#x000A;234: &#x000A;235:         <span class="ruby-identifier">cds</span> = <span class="ruby-constant">DL</span><span class="ruby-operator">::</span><span class="ruby-constant">CPtr</span>.<span class="ruby-identifier">to_ptr</span> [<span class="ruby-constant">AGENT_COPYDATA_ID</span>, <span class="ruby-identifier">mapname</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>, <span class="ruby-identifier">mapname</span>].&#x000A;236:           <span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;LLp&quot;</span>)&#x000A;237:         <span class="ruby-identifier">succ</span> = <span class="ruby-constant">Win</span>.<span class="ruby-constant">SendMessageTimeout</span>(<span class="ruby-ivar">@win</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">WM_COPYDATA</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">NULL</span>,&#x000A;238:                                       <span class="ruby-identifier">cds</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTO_NORMAL</span>, <span class="ruby-value">5000</span>, <span class="ruby-identifier">id</span>)&#x000A;239: &#x000A;240:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">succ</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;241:           <span class="ruby-identifier">retlen</span> = <span class="ruby-value">4</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-value">4</span>).<span class="ruby-identifier">unpack</span>(<span class="ruby-value str">&quot;N&quot;</span>)[<span class="ruby-value">0</span>]&#x000A;242:           <span class="ruby-identifier">res</span> = <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">retlen</span>)&#x000A;243:         <span class="ruby-keyword kw">end</span>        &#x000A;244: &#x000A;245:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">res</span>&#x000A;246:       <span class="ruby-keyword kw">ensure</span>&#x000A;247:         <span class="ruby-constant">Win</span>.<span class="ruby-constant">UnmapViewOfFile</span>(<span class="ruby-identifier">ptr</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">null?</span>&#x000A;248:         <span class="ruby-constant">Win</span>.<span class="ruby-constant">CloseHandle</span>(<span class="ruby-identifier">filemap</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">filemap</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>&#x000A;249:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

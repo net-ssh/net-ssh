@@ -47,14 +47,14 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000109">prompt</a></li>
+              <li><a href="#M000117">prompt</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000109'>
-                <a name='M000109'></a>
+              <div class='method public-instance' id='method-M000117'>
+                <a name='M000117'></a>
                 <div class='synopsis'>
                   <span class='name'>prompt</span>
                   <span class='arguments'>(prompt, echo=true)</span>
@@ -67,10 +67,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000109-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000117-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000109-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/prompt.rb, line 27</span>&#x000A;27:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">prompt</span>(<span class="ruby-identifier">prompt</span>, <span class="ruby-identifier">echo</span>=<span class="ruby-keyword kw">true</span>)&#x000A;28:         <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-identifier">prompt</span>)&#x000A;29:         <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">flush</span>&#x000A;30: &#x000A;31:         <span class="ruby-identifier">set_echo</span>(<span class="ruby-keyword kw">false</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">echo</span>&#x000A;32:         <span class="ruby-identifier">$stdin</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">chomp</span>&#x000A;33:       <span class="ruby-keyword kw">ensure</span>&#x000A;34:         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">echo</span>&#x000A;35:           <span class="ruby-identifier">set_echo</span>(<span class="ruby-keyword kw">true</span>)&#x000A;36:           <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">puts</span>&#x000A;37:         <span class="ruby-keyword kw">end</span>&#x000A;38:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000117-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/prompt.rb, line 27</span>&#x000A;27:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">prompt</span>(<span class="ruby-identifier">prompt</span>, <span class="ruby-identifier">echo</span>=<span class="ruby-keyword kw">true</span>)&#x000A;28:         <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-identifier">prompt</span>)&#x000A;29:         <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">flush</span>&#x000A;30: &#x000A;31:         <span class="ruby-identifier">set_echo</span>(<span class="ruby-keyword kw">false</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">echo</span>&#x000A;32:         <span class="ruby-identifier">$stdin</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">chomp</span>&#x000A;33:       <span class="ruby-keyword kw">ensure</span>&#x000A;34:         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">echo</span>&#x000A;35:           <span class="ruby-identifier">set_echo</span>(<span class="ruby-keyword kw">true</span>)&#x000A;36:           <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">puts</span>&#x000A;37:         <span class="ruby-keyword kw">end</span>&#x000A;38:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

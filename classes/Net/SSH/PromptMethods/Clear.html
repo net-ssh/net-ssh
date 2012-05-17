@@ -48,14 +48,14 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000110">prompt</a></li>
+              <li><a href="#M000118">prompt</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000110'>
-                <a name='M000110'></a>
+              <div class='method public-instance' id='method-M000118'>
+                <a name='M000118'></a>
                 <div class='synopsis'>
                   <span class='name'>prompt</span>
                   <span class='arguments'>(prompt, echo=true)</span>
@@ -71,10 +71,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000110-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000118-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000110-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/prompt.rb, line 64</span>&#x000A;64:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">prompt</span>(<span class="ruby-identifier">prompt</span>, <span class="ruby-identifier">echo</span>=<span class="ruby-keyword kw">true</span>)&#x000A;65:         <span class="ruby-ivar">@seen_warning</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">false</span>&#x000A;66:         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">echo</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@seen_warning</span>&#x000A;67:           <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Text will be echoed in the clear. Please install the HighLine or Termios libraries to suppress echoed text.&quot;</span>&#x000A;68:           <span class="ruby-ivar">@seen_warning</span> = <span class="ruby-keyword kw">true</span>&#x000A;69:         <span class="ruby-keyword kw">end</span>&#x000A;70: &#x000A;71:         <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-identifier">prompt</span>)&#x000A;72:         <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">flush</span>&#x000A;73:         <span class="ruby-identifier">$stdin</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">chomp</span>&#x000A;74:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000118-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/prompt.rb, line 64</span>&#x000A;64:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">prompt</span>(<span class="ruby-identifier">prompt</span>, <span class="ruby-identifier">echo</span>=<span class="ruby-keyword kw">true</span>)&#x000A;65:         <span class="ruby-ivar">@seen_warning</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">false</span>&#x000A;66:         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">echo</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@seen_warning</span>&#x000A;67:           <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Text will be echoed in the clear. Please install the HighLine or Termios libraries to suppress echoed text.&quot;</span>&#x000A;68:           <span class="ruby-ivar">@seen_warning</span> = <span class="ruby-keyword kw">true</span>&#x000A;69:         <span class="ruby-keyword kw">end</span>&#x000A;70: &#x000A;71:         <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-identifier">prompt</span>)&#x000A;72:         <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">flush</span>&#x000A;73:         <span class="ruby-identifier">$stdin</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">chomp</span>&#x000A;74:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

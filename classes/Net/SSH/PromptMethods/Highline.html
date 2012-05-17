@@ -47,14 +47,14 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000108">prompt</a></li>
+              <li><a href="#M000116">prompt</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000108'>
-                <a name='M000108'></a>
+              <div class='method public-instance' id='method-M000116'>
+                <a name='M000116'></a>
                 <div class='synopsis'>
                   <span class='name'>prompt</span>
                   <span class='arguments'>(prompt, echo=true)</span>
@@ -67,10 +67,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000108-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000116-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000108-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/prompt.rb, line 16</span>&#x000A;16:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">prompt</span>(<span class="ruby-identifier">prompt</span>, <span class="ruby-identifier">echo</span>=<span class="ruby-keyword kw">true</span>)&#x000A;17:         <span class="ruby-ivar">@highline</span> <span class="ruby-operator">||=</span> <span class="ruby-operator">::</span><span class="ruby-constant">HighLine</span>.<span class="ruby-identifier">new</span>&#x000A;18:         <span class="ruby-ivar">@highline</span>.<span class="ruby-identifier">ask</span>(<span class="ruby-identifier">prompt</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot; &quot;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">q</span><span class="ruby-operator">|</span> <span class="ruby-identifier">q</span>.<span class="ruby-identifier">echo</span> = <span class="ruby-identifier">echo</span> }&#x000A;19:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000116-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/prompt.rb, line 16</span>&#x000A;16:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">prompt</span>(<span class="ruby-identifier">prompt</span>, <span class="ruby-identifier">echo</span>=<span class="ruby-keyword kw">true</span>)&#x000A;17:         <span class="ruby-ivar">@highline</span> <span class="ruby-operator">||=</span> <span class="ruby-operator">::</span><span class="ruby-constant">HighLine</span>.<span class="ruby-identifier">new</span>&#x000A;18:         <span class="ruby-ivar">@highline</span>.<span class="ruby-identifier">ask</span>(<span class="ruby-identifier">prompt</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot; &quot;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">q</span><span class="ruby-operator">|</span> <span class="ruby-identifier">q</span>.<span class="ruby-identifier">echo</span> = <span class="ruby-identifier">echo</span> }&#x000A;19:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

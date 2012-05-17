@@ -61,19 +61,19 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000026">new</a></li>
+              <li><a href="#M000034">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000028">add</a></li>
-              <li><a href="#M000029">add_key_data</a></li>
-              <li><a href="#M000035">agent</a></li>
-              <li><a href="#M000027">clear!</a></li>
-              <li><a href="#M000031">each_identity</a></li>
-              <li><a href="#M000030">finish</a></li>
-              <li><a href="#M000032">sign</a></li>
-              <li><a href="#M000034">use_agent=</a></li>
-              <li><a href="#M000033">use_agent?</a></li>
+              <li><a href="#M000036">add</a></li>
+              <li><a href="#M000037">add_key_data</a></li>
+              <li><a href="#M000043">agent</a></li>
+              <li><a href="#M000035">clear!</a></li>
+              <li><a href="#M000039">each_identity</a></li>
+              <li><a href="#M000038">finish</a></li>
+              <li><a href="#M000040">sign</a></li>
+              <li><a href="#M000042">use_agent=</a></li>
+              <li><a href="#M000041">use_agent?</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -126,8 +126,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000026'>
-                <a name='M000026'></a>
+              <div class='method public-class' id='method-M000034'>
+                <a name='M000034'></a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(logger, options={})</span>
@@ -139,15 +139,15 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000026-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000034-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000026-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 41</span>&#x000A;41:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">logger</span>, <span class="ruby-identifier">options</span>={})&#x000A;42:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">logger</span>&#x000A;43:           <span class="ruby-ivar">@key_files</span> = []&#x000A;44:           <span class="ruby-ivar">@key_data</span> = []&#x000A;45:           <span class="ruby-ivar">@use_agent</span> = <span class="ruby-keyword kw">true</span>&#x000A;46:           <span class="ruby-ivar">@known_identities</span> = {}&#x000A;47:           <span class="ruby-ivar">@agent</span> = <span class="ruby-keyword kw">nil</span>&#x000A;48:           <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;49:         <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000034-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 41</span>&#x000A;41:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">logger</span>, <span class="ruby-identifier">options</span>={})&#x000A;42:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">logger</span>&#x000A;43:           <span class="ruby-ivar">@key_files</span> = []&#x000A;44:           <span class="ruby-ivar">@key_data</span> = []&#x000A;45:           <span class="ruby-ivar">@use_agent</span> = <span class="ruby-keyword kw">true</span>&#x000A;46:           <span class="ruby-ivar">@known_identities</span> = {}&#x000A;47:           <span class="ruby-ivar">@agent</span> = <span class="ruby-keyword kw">nil</span>&#x000A;48:           <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;49:         <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000028'>
-                <a name='M000028'></a>
+              <div class='method public-instance' id='method-M000036'>
+                <a name='M000036'></a>
                 <div class='synopsis'>
                   <span class='name'>add</span>
                   <span class='arguments'>(key_file)</span>
@@ -158,14 +158,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000028-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000036-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000028-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 63</span>&#x000A;63:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">key_file</span>)&#x000A;64:           <span class="ruby-identifier">key_files</span>.<span class="ruby-identifier">push</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">key_file</span>)).<span class="ruby-identifier">uniq!</span>&#x000A;65:           <span class="ruby-keyword kw">self</span>&#x000A;66:         <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000036-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 63</span>&#x000A;63:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">key_file</span>)&#x000A;64:           <span class="ruby-identifier">key_files</span>.<span class="ruby-identifier">push</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">key_file</span>)).<span class="ruby-identifier">uniq!</span>&#x000A;65:           <span class="ruby-keyword kw">self</span>&#x000A;66:         <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000029'>
-                <a name='M000029'></a>
+              <div class='method public-instance' id='method-M000037'>
+                <a name='M000037'></a>
                 <div class='synopsis'>
                   <span class='name'>add_key_data</span>
                   <span class='arguments'>(key_data_)</span>
@@ -176,14 +176,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000029-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000037-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000029-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 69</span>&#x000A;69:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_key_data</span>(<span class="ruby-identifier">key_data_</span>)&#x000A;70:           <span class="ruby-identifier">key_data</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">key_data_</span>).<span class="ruby-identifier">uniq!</span>&#x000A;71:           <span class="ruby-keyword kw">self</span>&#x000A;72:         <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000037-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 69</span>&#x000A;69:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_key_data</span>(<span class="ruby-identifier">key_data_</span>)&#x000A;70:           <span class="ruby-identifier">key_data</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">key_data_</span>).<span class="ruby-identifier">uniq!</span>&#x000A;71:           <span class="ruby-keyword kw">self</span>&#x000A;72:         <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000035'>
-                <a name='M000035'></a>
+              <div class='method public-instance' id='method-M000043'>
+                <a name='M000043'></a>
                 <div class='synopsis'>
                   <span class='name'>agent</span>
                   <span class='arguments'>()</span>
@@ -197,14 +197,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000035-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000043-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000035-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 176</span>&#x000A;176:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">agent</span>&#x000A;177:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">use_agent?</span>&#x000A;178:           <span class="ruby-ivar">@agent</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Agent</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">logger</span>)&#x000A;179:         <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">AgentNotAvailable</span>&#x000A;180:           <span class="ruby-ivar">@use_agent</span> = <span class="ruby-keyword kw">false</span>&#x000A;181:           <span class="ruby-keyword kw">nil</span>&#x000A;182:         <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000043-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 176</span>&#x000A;176:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">agent</span>&#x000A;177:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">use_agent?</span>&#x000A;178:           <span class="ruby-ivar">@agent</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Agent</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">logger</span>)&#x000A;179:         <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">AgentNotAvailable</span>&#x000A;180:           <span class="ruby-ivar">@use_agent</span> = <span class="ruby-keyword kw">false</span>&#x000A;181:           <span class="ruby-keyword kw">nil</span>&#x000A;182:         <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000027'>
-                <a name='M000027'></a>
+              <div class='method public-instance' id='method-M000035'>
+                <a name='M000035'></a>
                 <div class='synopsis'>
                   <span class='name'>clear!</span>
                   <span class='arguments'>()</span>
@@ -217,14 +217,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000027-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000035-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000027-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 55</span>&#x000A;55:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear!</span>&#x000A;56:           <span class="ruby-identifier">key_files</span>.<span class="ruby-identifier">clear</span>&#x000A;57:           <span class="ruby-identifier">key_data</span>.<span class="ruby-identifier">clear</span>&#x000A;58:           <span class="ruby-identifier">known_identities</span>.<span class="ruby-identifier">clear</span>&#x000A;59:           <span class="ruby-keyword kw">self</span>&#x000A;60:         <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000035-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 55</span>&#x000A;55:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear!</span>&#x000A;56:           <span class="ruby-identifier">key_files</span>.<span class="ruby-identifier">clear</span>&#x000A;57:           <span class="ruby-identifier">key_data</span>.<span class="ruby-identifier">clear</span>&#x000A;58:           <span class="ruby-identifier">known_identities</span>.<span class="ruby-identifier">clear</span>&#x000A;59:           <span class="ruby-keyword kw">self</span>&#x000A;60:         <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000031'>
-                <a name='M000031'></a>
+              <div class='method public-instance' id='method-M000039'>
+                <a name='M000039'></a>
                 <div class='synopsis'>
                   <span class='name'>each_identity</span>
                   <span class='arguments'>() {|key| ...}</span>
@@ -243,14 +243,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000031-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000039-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000031-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 97</span>&#x000A; 97:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">each_identity</span>&#x000A; 98:           <span class="ruby-identifier">prepared_identities</span> = <span class="ruby-identifier">prepare_identities_from_files</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">prepare_identities_from_data</span>&#x000A; 99: &#x000A;100:           <span class="ruby-identifier">user_identities</span> = <span class="ruby-identifier">load_identities</span>(<span class="ruby-identifier">prepared_identities</span>, <span class="ruby-keyword kw">false</span>)&#x000A;101: &#x000A;102:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">agent</span>&#x000A;103:             <span class="ruby-identifier">agent</span>.<span class="ruby-identifier">identities</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>&#x000A;104:               <span class="ruby-identifier">corresponding_user_identity</span> = <span class="ruby-identifier">user_identities</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">identity</span><span class="ruby-operator">|</span>&#x000A;105:                 <span class="ruby-identifier">identity</span>[<span class="ruby-identifier">:public_key</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">identity</span>[<span class="ruby-identifier">:public_key</span>].<span class="ruby-identifier">to_pem</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_pem</span>&#x000A;106:               }&#x000A;107:               <span class="ruby-identifier">user_identities</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">corresponding_user_identity</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">corresponding_user_identity</span>&#x000A;108: &#x000A;109:               <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:keys_only</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">corresponding_user_identity</span>&#x000A;110:                 <span class="ruby-identifier">known_identities</span>[<span class="ruby-identifier">key</span>] = { <span class="ruby-identifier">:from</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:agent</span> }&#x000A;111:                 <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">key</span>&#x000A;112:               <span class="ruby-keyword kw">end</span>&#x000A;113:             <span class="ruby-keyword kw">end</span>&#x000A;114:           <span class="ruby-keyword kw">end</span>&#x000A;115: &#x000A;116:           <span class="ruby-identifier">user_identities</span> = <span class="ruby-identifier">load_identities</span>(<span class="ruby-identifier">user_identities</span>, <span class="ruby-keyword kw">true</span>)&#x000A;117: &#x000A;118:           <span class="ruby-identifier">user_identities</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">identity</span><span class="ruby-operator">|</span>&#x000A;119:             <span class="ruby-identifier">key</span> = <span class="ruby-identifier">identity</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:public_key</span>)&#x000A;120:             <span class="ruby-identifier">known_identities</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">identity</span>&#x000A;121:             <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">key</span>&#x000A;122:           <span class="ruby-keyword kw">end</span>&#x000A;123: &#x000A;124:           <span class="ruby-keyword kw">self</span>&#x000A;125:         <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000039-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 97</span>&#x000A; 97:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">each_identity</span>&#x000A; 98:           <span class="ruby-identifier">prepared_identities</span> = <span class="ruby-identifier">prepare_identities_from_files</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">prepare_identities_from_data</span>&#x000A; 99: &#x000A;100:           <span class="ruby-identifier">user_identities</span> = <span class="ruby-identifier">load_identities</span>(<span class="ruby-identifier">prepared_identities</span>, <span class="ruby-keyword kw">false</span>)&#x000A;101: &#x000A;102:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">agent</span>&#x000A;103:             <span class="ruby-identifier">agent</span>.<span class="ruby-identifier">identities</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>&#x000A;104:               <span class="ruby-identifier">corresponding_user_identity</span> = <span class="ruby-identifier">user_identities</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">identity</span><span class="ruby-operator">|</span>&#x000A;105:                 <span class="ruby-identifier">identity</span>[<span class="ruby-identifier">:public_key</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">identity</span>[<span class="ruby-identifier">:public_key</span>].<span class="ruby-identifier">to_pem</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_pem</span>&#x000A;106:               }&#x000A;107:               <span class="ruby-identifier">user_identities</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">corresponding_user_identity</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">corresponding_user_identity</span>&#x000A;108: &#x000A;109:               <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:keys_only</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">corresponding_user_identity</span>&#x000A;110:                 <span class="ruby-identifier">known_identities</span>[<span class="ruby-identifier">key</span>] = { <span class="ruby-identifier">:from</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:agent</span> }&#x000A;111:                 <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">key</span>&#x000A;112:               <span class="ruby-keyword kw">end</span>&#x000A;113:             <span class="ruby-keyword kw">end</span>&#x000A;114:           <span class="ruby-keyword kw">end</span>&#x000A;115: &#x000A;116:           <span class="ruby-identifier">user_identities</span> = <span class="ruby-identifier">load_identities</span>(<span class="ruby-identifier">user_identities</span>, <span class="ruby-keyword kw">true</span>)&#x000A;117: &#x000A;118:           <span class="ruby-identifier">user_identities</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">identity</span><span class="ruby-operator">|</span>&#x000A;119:             <span class="ruby-identifier">key</span> = <span class="ruby-identifier">identity</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:public_key</span>)&#x000A;120:             <span class="ruby-identifier">known_identities</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">identity</span>&#x000A;121:             <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">key</span>&#x000A;122:           <span class="ruby-keyword kw">end</span>&#x000A;123: &#x000A;124:           <span class="ruby-keyword kw">self</span>&#x000A;125:         <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000030'>
-                <a name='M000030'></a>
+              <div class='method public-instance' id='method-M000038'>
+                <a name='M000038'></a>
                 <div class='synopsis'>
                   <span class='name'>finish</span>
                   <span class='arguments'>()</span>
@@ -271,14 +271,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000030-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000038-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000030-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 83</span>&#x000A;83:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">finish</span>&#x000A;84:           <span class="ruby-ivar">@agent</span>.<span class="ruby-identifier">close</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@agent</span>&#x000A;85:           <span class="ruby-ivar">@agent</span> = <span class="ruby-keyword kw">nil</span>&#x000A;86:         <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000038-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 83</span>&#x000A;83:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">finish</span>&#x000A;84:           <span class="ruby-ivar">@agent</span>.<span class="ruby-identifier">close</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@agent</span>&#x000A;85:           <span class="ruby-ivar">@agent</span> = <span class="ruby-keyword kw">nil</span>&#x000A;86:         <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000032'>
-                <a name='M000032'></a>
+              <div class='method public-instance' id='method-M000040'>
+                <a name='M000040'></a>
                 <div class='synopsis'>
                   <span class='name'>sign</span>
                   <span class='arguments'>(identity, data)</span>
@@ -298,14 +298,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000032-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000040-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000032-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 136</span>&#x000A;136:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sign</span>(<span class="ruby-identifier">identity</span>, <span class="ruby-identifier">data</span>)&#x000A;137:           <span class="ruby-identifier">info</span> = <span class="ruby-identifier">known_identities</span>[<span class="ruby-identifier">identity</span>] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">KeyManagerError</span>, <span class="ruby-value str">&quot;the given identity is unknown to the key manager&quot;</span>&#x000A;138: &#x000A;139:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:key</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:from</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">:file</span>&#x000A;140:             <span class="ruby-keyword kw">begin</span>&#x000A;141:               <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:key</span>] = <span class="ruby-constant">KeyFactory</span>.<span class="ruby-identifier">load_private_key</span>(<span class="ruby-identifier">info</span>[<span class="ruby-identifier">:file</span>], <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:passphrase</span>], <span class="ruby-keyword kw">true</span>)&#x000A;142:             <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span>, <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">OpenSSLError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span> &#x000A;143:               <span class="ruby-identifier">raise</span> <span class="ruby-constant">KeyManagerError</span>, <span class="ruby-node">&quot;the given identity is known, but the private key could not be loaded: #{e.class} (#{e.message})&quot;</span>&#x000A;144:             <span class="ruby-keyword kw">end</span>&#x000A;145:           <span class="ruby-keyword kw">end</span>&#x000A;146: &#x000A;147:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:key</span>]&#x000A;148:             <span class="ruby-keyword kw">return</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:string</span>, <span class="ruby-identifier">identity</span>.<span class="ruby-identifier">ssh_type</span>,&#x000A;149:               <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:key</span>].<span class="ruby-identifier">ssh_do_sign</span>(<span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_s</span>)).<span class="ruby-identifier">to_s</span>&#x000A;150:           <span class="ruby-keyword kw">end</span>&#x000A;151: &#x000A;152:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:from</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">:agent</span>&#x000A;153:             <span class="ruby-identifier">raise</span> <span class="ruby-constant">KeyManagerError</span>, <span class="ruby-value str">&quot;the agent is no longer available&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">agent</span>&#x000A;154:             <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">agent</span>.<span class="ruby-identifier">sign</span>(<span class="ruby-identifier">identity</span>, <span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_s</span>)&#x000A;155:           <span class="ruby-keyword kw">end</span>&#x000A;156: &#x000A;157:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">KeyManagerError</span>, <span class="ruby-node">&quot;[BUG] can't determine identity origin (#{info.inspect})&quot;</span>&#x000A;158:         <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000040-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 136</span>&#x000A;136:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sign</span>(<span class="ruby-identifier">identity</span>, <span class="ruby-identifier">data</span>)&#x000A;137:           <span class="ruby-identifier">info</span> = <span class="ruby-identifier">known_identities</span>[<span class="ruby-identifier">identity</span>] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">KeyManagerError</span>, <span class="ruby-value str">&quot;the given identity is unknown to the key manager&quot;</span>&#x000A;138: &#x000A;139:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:key</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:from</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">:file</span>&#x000A;140:             <span class="ruby-keyword kw">begin</span>&#x000A;141:               <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:key</span>] = <span class="ruby-constant">KeyFactory</span>.<span class="ruby-identifier">load_private_key</span>(<span class="ruby-identifier">info</span>[<span class="ruby-identifier">:file</span>], <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:passphrase</span>], <span class="ruby-keyword kw">true</span>)&#x000A;142:             <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span>, <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">OpenSSLError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span> &#x000A;143:               <span class="ruby-identifier">raise</span> <span class="ruby-constant">KeyManagerError</span>, <span class="ruby-node">&quot;the given identity is known, but the private key could not be loaded: #{e.class} (#{e.message})&quot;</span>&#x000A;144:             <span class="ruby-keyword kw">end</span>&#x000A;145:           <span class="ruby-keyword kw">end</span>&#x000A;146: &#x000A;147:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:key</span>]&#x000A;148:             <span class="ruby-keyword kw">return</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:string</span>, <span class="ruby-identifier">identity</span>.<span class="ruby-identifier">ssh_type</span>,&#x000A;149:               <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:key</span>].<span class="ruby-identifier">ssh_do_sign</span>(<span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_s</span>)).<span class="ruby-identifier">to_s</span>&#x000A;150:           <span class="ruby-keyword kw">end</span>&#x000A;151: &#x000A;152:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-identifier">:from</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">:agent</span>&#x000A;153:             <span class="ruby-identifier">raise</span> <span class="ruby-constant">KeyManagerError</span>, <span class="ruby-value str">&quot;the agent is no longer available&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">agent</span>&#x000A;154:             <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">agent</span>.<span class="ruby-identifier">sign</span>(<span class="ruby-identifier">identity</span>, <span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_s</span>)&#x000A;155:           <span class="ruby-keyword kw">end</span>&#x000A;156: &#x000A;157:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">KeyManagerError</span>, <span class="ruby-node">&quot;[BUG] can't determine identity origin (#{info.inspect})&quot;</span>&#x000A;158:         <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000034'>
-                <a name='M000034'></a>
+              <div class='method public-instance' id='method-M000042'>
+                <a name='M000042'></a>
                 <div class='synopsis'>
                   <span class='name'>use_agent=</span>
                   <span class='arguments'>(use_agent)</span>
@@ -318,14 +318,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000034-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000042-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000034-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 168</span>&#x000A;168:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">use_agent=</span>(<span class="ruby-identifier">use_agent</span>)&#x000A;169:           <span class="ruby-identifier">finish</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">use_agent</span>&#x000A;170:           <span class="ruby-ivar">@use_agent</span> = <span class="ruby-identifier">use_agent</span>&#x000A;171:         <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000042-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 168</span>&#x000A;168:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">use_agent=</span>(<span class="ruby-identifier">use_agent</span>)&#x000A;169:           <span class="ruby-identifier">finish</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">use_agent</span>&#x000A;170:           <span class="ruby-ivar">@use_agent</span> = <span class="ruby-identifier">use_agent</span>&#x000A;171:         <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000033'>
-                <a name='M000033'></a>
+              <div class='method public-instance' id='method-M000041'>
+                <a name='M000041'></a>
                 <div class='synopsis'>
                   <span class='name'>use_agent?</span>
                   <span class='arguments'>()</span>
@@ -336,10 +336,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000033-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000041-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000033-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 161</span>&#x000A;161:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">use_agent?</span>&#x000A;162:           <span class="ruby-ivar">@use_agent</span>&#x000A;163:         <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000041-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/key_manager.rb, line 161</span>&#x000A;161:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">use_agent?</span>&#x000A;162:           <span class="ruby-ivar">@use_agent</span>&#x000A;163:         <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

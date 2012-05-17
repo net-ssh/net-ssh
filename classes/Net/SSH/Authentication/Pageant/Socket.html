@@ -54,23 +54,23 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000013">new</a></li>
-              <li><a href="#M000012">open</a></li>
+              <li><a href="#M000014">new</a></li>
+              <li><a href="#M000013">open</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000016">close</a></li>
-              <li><a href="#M000017">closed?</a></li>
-              <li><a href="#M000018">read</a></li>
-              <li><a href="#M000014">send</a></li>
-              <li><a href="#M000015">send_query</a></li>
+              <li><a href="#M000017">close</a></li>
+              <li><a href="#M000018">closed?</a></li>
+              <li><a href="#M000019">read</a></li>
+              <li><a href="#M000015">send</a></li>
+              <li><a href="#M000016">send_query</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000013'>
-                <a name='M000013'></a>
+              <div class='method public-class' id='method-M000014'>
+                <a name='M000014'></a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>()</span>
@@ -82,14 +82,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000013-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000014-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000013-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 89</span>&#x000A;89:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>&#x000A;90:         <span class="ruby-ivar">@win</span> = <span class="ruby-constant">Win</span>.<span class="ruby-identifier">findWindow</span>(<span class="ruby-value str">&quot;Pageant&quot;</span>, <span class="ruby-value str">&quot;Pageant&quot;</span>)&#x000A;91: &#x000A;92:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@win</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;93:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>,&#x000A;94:             <span class="ruby-value str">&quot;pageant process not running&quot;</span>&#x000A;95:         <span class="ruby-keyword kw">end</span>&#x000A;96: &#x000A;97:         <span class="ruby-ivar">@res</span> = <span class="ruby-keyword kw">nil</span>&#x000A;98:         <span class="ruby-ivar">@pos</span> = <span class="ruby-value">0</span>&#x000A;99:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000014-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 109</span>&#x000A;109:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>&#x000A;110:         <span class="ruby-ivar">@win</span> = <span class="ruby-constant">Win</span>.<span class="ruby-constant">FindWindow</span>(<span class="ruby-value str">&quot;Pageant&quot;</span>, <span class="ruby-value str">&quot;Pageant&quot;</span>)&#x000A;111: &#x000A;112:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@win</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;113:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>,&#x000A;114:             <span class="ruby-value str">&quot;pageant process not running&quot;</span>&#x000A;115:         <span class="ruby-keyword kw">end</span>&#x000A;116: &#x000A;117:         <span class="ruby-ivar">@res</span> = <span class="ruby-keyword kw">nil</span>&#x000A;118:         <span class="ruby-ivar">@pos</span> = <span class="ruby-value">0</span>&#x000A;119:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000012'>
-                <a name='M000012'></a>
+              <div class='method public-class' id='method-M000013'>
+                <a name='M000013'></a>
                 <div class='synopsis'>
                   <span class='name'>open</span>
                   <span class='arguments'>(location=nil)</span>
@@ -102,15 +102,15 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000012-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000013-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000012-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 83</span>&#x000A;83:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">location</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;84:         <span class="ruby-identifier">new</span>&#x000A;85:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000013-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 103</span>&#x000A;103:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">location</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;104:         <span class="ruby-identifier">new</span>&#x000A;105:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000016'>
-                <a name='M000016'></a>
+              <div class='method public-instance' id='method-M000017'>
+                <a name='M000017'></a>
                 <div class='synopsis'>
                   <span class='name'>close</span>
                   <span class='arguments'>()</span>
@@ -123,14 +123,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000016-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000017-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000016-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 154</span>&#x000A;154:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>&#x000A;155:         <span class="ruby-ivar">@res</span> = <span class="ruby-keyword kw">nil</span>&#x000A;156:         <span class="ruby-ivar">@pos</span> = <span class="ruby-value">0</span>&#x000A;157:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000017-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 174</span>&#x000A;174:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>&#x000A;175:         <span class="ruby-ivar">@res</span> = <span class="ruby-keyword kw">nil</span>&#x000A;176:         <span class="ruby-ivar">@pos</span> = <span class="ruby-value">0</span>&#x000A;177:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000017'>
-                <a name='M000017'></a>
+              <div class='method public-instance' id='method-M000018'>
+                <a name='M000018'></a>
                 <div class='synopsis'>
                   <span class='name'>closed?</span>
                   <span class='arguments'>()</span>
@@ -138,20 +138,20 @@
                 <div class='description'>
                   <p>
                   Conceptually asks if the socket is closed. As with <a
-                  href="Socket.html#M000016">close</a>, this doesn&#8217;t really do anything
+                  href="Socket.html#M000017">close</a>, this doesn&#8217;t really do anything
                   significant, but merely complies with the <a href="Socket.html">Socket</a>
                   interface.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000017-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000018-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000017-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 162</span>&#x000A;162:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">closed?</span>&#x000A;163:         <span class="ruby-ivar">@res</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@pos</span>.<span class="ruby-identifier">zero?</span>&#x000A;164:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000018-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 182</span>&#x000A;182:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">closed?</span>&#x000A;183:         <span class="ruby-ivar">@res</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@pos</span>.<span class="ruby-identifier">zero?</span>&#x000A;184:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000018'>
-                <a name='M000018'></a>
+              <div class='method public-instance' id='method-M000019'>
+                <a name='M000019'></a>
                 <div class='synopsis'>
                   <span class='name'>read</span>
                   <span class='arguments'>(n = nil)</span>
@@ -163,33 +163,33 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000018-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000019-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000018-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 168</span>&#x000A;168:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">n</span> = <span class="ruby-keyword kw">nil</span>)&#x000A;169:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@res</span>&#x000A;170:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">nil?</span>&#x000A;171:           <span class="ruby-identifier">start</span>, <span class="ruby-ivar">@pos</span> = <span class="ruby-ivar">@pos</span>, <span class="ruby-ivar">@res</span>.<span class="ruby-identifier">size</span>&#x000A;172:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@res</span>[<span class="ruby-identifier">start</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>]&#x000A;173:         <span class="ruby-keyword kw">else</span>&#x000A;174:           <span class="ruby-identifier">start</span>, <span class="ruby-ivar">@pos</span> = <span class="ruby-ivar">@pos</span>, <span class="ruby-ivar">@pos</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">n</span>&#x000A;175:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@res</span>[<span class="ruby-identifier">start</span>, <span class="ruby-identifier">n</span>]&#x000A;176:         <span class="ruby-keyword kw">end</span>&#x000A;177:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000019-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 188</span>&#x000A;188:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">n</span> = <span class="ruby-keyword kw">nil</span>)&#x000A;189:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@res</span>&#x000A;190:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">nil?</span>&#x000A;191:           <span class="ruby-identifier">start</span>, <span class="ruby-ivar">@pos</span> = <span class="ruby-ivar">@pos</span>, <span class="ruby-ivar">@res</span>.<span class="ruby-identifier">size</span>&#x000A;192:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@res</span>[<span class="ruby-identifier">start</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>]&#x000A;193:         <span class="ruby-keyword kw">else</span>&#x000A;194:           <span class="ruby-identifier">start</span>, <span class="ruby-ivar">@pos</span> = <span class="ruby-ivar">@pos</span>, <span class="ruby-ivar">@pos</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">n</span>&#x000A;195:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@res</span>[<span class="ruby-identifier">start</span>, <span class="ruby-identifier">n</span>]&#x000A;196:         <span class="ruby-keyword kw">end</span>&#x000A;197:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000014'>
-                <a name='M000014'></a>
+              <div class='method public-instance' id='method-M000015'>
+                <a name='M000015'></a>
                 <div class='synopsis'>
                   <span class='name'>send</span>
                   <span class='arguments'>(data, *args)</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Forwards the data to <a href="Socket.html#M000015">send_query</a>, ignoring
+                  Forwards the data to <a href="Socket.html#M000016">send_query</a>, ignoring
                   any arguments after the first. Returns 0.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000014-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000015-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000014-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 103</span>&#x000A;103:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send</span>(<span class="ruby-identifier">data</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;104:         <span class="ruby-ivar">@res</span> = <span class="ruby-identifier">send_query</span>(<span class="ruby-identifier">data</span>)&#x000A;105:         <span class="ruby-ivar">@pos</span> = <span class="ruby-value">0</span>&#x000A;106:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000015-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 123</span>&#x000A;123:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send</span>(<span class="ruby-identifier">data</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;124:         <span class="ruby-ivar">@res</span> = <span class="ruby-identifier">send_query</span>(<span class="ruby-identifier">data</span>)&#x000A;125:         <span class="ruby-ivar">@pos</span> = <span class="ruby-value">0</span>&#x000A;126:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000015'>
-                <a name='M000015'></a>
+              <div class='method public-instance' id='method-M000016'>
+                <a name='M000016'></a>
                 <div class='synopsis'>
                   <span class='name'>send_query</span>
                   <span class='arguments'>(query)</span>
@@ -198,14 +198,14 @@
                   <p>
                   Packages the given query string and sends it to the pageant process via the
                   Windows messaging subsystem. The result is cached, to be returned
-                  piece-wise when <a href="Socket.html#M000018">read</a> is called.
+                  piece-wise when <a href="Socket.html#M000019">read</a> is called.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000015-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000016-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000015-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 111</span>&#x000A;111:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_query</span>(<span class="ruby-identifier">query</span>)&#x000A;112:         <span class="ruby-identifier">res</span> = <span class="ruby-keyword kw">nil</span>&#x000A;113:         <span class="ruby-identifier">filemap</span> = <span class="ruby-value">0</span>&#x000A;114:         <span class="ruby-identifier">ptr</span> = <span class="ruby-keyword kw">nil</span>&#x000A;115:         <span class="ruby-identifier">id</span> = <span class="ruby-constant">DL</span><span class="ruby-operator">::</span><span class="ruby-constant">PtrData</span>.<span class="ruby-identifier">malloc</span>(<span class="ruby-constant">DL</span>.<span class="ruby-identifier">sizeof</span>(<span class="ruby-value str">&quot;L&quot;</span>))&#x000A;116: &#x000A;117:         <span class="ruby-identifier">mapname</span> = <span class="ruby-value str">&quot;PageantRequest%08x\000&quot;</span> <span class="ruby-operator">%</span> <span class="ruby-constant">Win</span>.<span class="ruby-identifier">getCurrentThreadId</span>()&#x000A;118:         <span class="ruby-identifier">filemap</span> = <span class="ruby-constant">Win</span>.<span class="ruby-identifier">createFileMapping</span>(<span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">INVALID_HANDLE_VALUE</span>, &#x000A;119:                                         <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">NULL</span>,&#x000A;120:                                         <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">PAGE_READWRITE</span>, <span class="ruby-value">0</span>, &#x000A;121:                                         <span class="ruby-constant">AGENT_MAX_MSGLEN</span>, <span class="ruby-identifier">mapname</span>)&#x000A;122:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">filemap</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;123:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>,&#x000A;124:             <span class="ruby-value str">&quot;Creation of file mapping failed&quot;</span>&#x000A;125:         <span class="ruby-keyword kw">end</span>&#x000A;126: &#x000A;127:         <span class="ruby-identifier">ptr</span> = <span class="ruby-constant">Win</span>.<span class="ruby-identifier">mapViewOfFile</span>(<span class="ruby-identifier">filemap</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">FILE_MAP_WRITE</span>, <span class="ruby-value">0</span>, <span class="ruby-value">0</span>, &#x000A;128:                                 <span class="ruby-constant">AGENT_MAX_MSGLEN</span>)&#x000A;129: &#x000A;130:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">null?</span>&#x000A;131:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>, <span class="ruby-value str">&quot;Mapping of file failed&quot;</span>&#x000A;132:         <span class="ruby-keyword kw">end</span>&#x000A;133: &#x000A;134:         <span class="ruby-identifier">ptr</span>[<span class="ruby-value">0</span>] = <span class="ruby-identifier">query</span>&#x000A;135:         &#x000A;136:         <span class="ruby-identifier">cds</span> = [<span class="ruby-constant">AGENT_COPYDATA_ID</span>, <span class="ruby-identifier">mapname</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>, <span class="ruby-identifier">mapname</span>].&#x000A;137:           <span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;LLp&quot;</span>).<span class="ruby-identifier">to_ptr</span>&#x000A;138:         <span class="ruby-identifier">succ</span> = <span class="ruby-constant">Win</span>.<span class="ruby-identifier">sendMessageTimeout</span>(<span class="ruby-ivar">@win</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">WM_COPYDATA</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">NULL</span>,&#x000A;139:           <span class="ruby-identifier">cds</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTO_NORMAL</span>, <span class="ruby-value">5000</span>, <span class="ruby-identifier">id</span>)&#x000A;140: &#x000A;141:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">succ</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;142:           <span class="ruby-identifier">retlen</span> = <span class="ruby-value">4</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-value">4</span>).<span class="ruby-identifier">unpack</span>(<span class="ruby-value str">&quot;N&quot;</span>)[<span class="ruby-value">0</span>]&#x000A;143:           <span class="ruby-identifier">res</span> = <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">retlen</span>)&#x000A;144:         <span class="ruby-keyword kw">end</span>        &#x000A;145: &#x000A;146:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">res</span>&#x000A;147:       <span class="ruby-keyword kw">ensure</span>&#x000A;148:         <span class="ruby-constant">Win</span>.<span class="ruby-identifier">unmapViewOfFile</span>(<span class="ruby-identifier">ptr</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">null?</span>&#x000A;149:         <span class="ruby-constant">Win</span>.<span class="ruby-identifier">closeHandle</span>(<span class="ruby-identifier">filemap</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">filemap</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>&#x000A;150:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000016-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/pageant.rb, line 131</span>&#x000A;131:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_query</span>(<span class="ruby-identifier">query</span>)&#x000A;132:         <span class="ruby-identifier">res</span> = <span class="ruby-keyword kw">nil</span>&#x000A;133:         <span class="ruby-identifier">filemap</span> = <span class="ruby-value">0</span>&#x000A;134:         <span class="ruby-identifier">ptr</span> = <span class="ruby-keyword kw">nil</span>&#x000A;135:         <span class="ruby-identifier">id</span> = <span class="ruby-constant">DL</span><span class="ruby-operator">::</span><span class="ruby-constant">PtrData</span>.<span class="ruby-identifier">malloc</span>(<span class="ruby-constant">DL</span>.<span class="ruby-identifier">sizeof</span>(<span class="ruby-value str">&quot;L&quot;</span>))&#x000A;136: &#x000A;137:         <span class="ruby-identifier">mapname</span> = <span class="ruby-value str">&quot;PageantRequest%08x\000&quot;</span> <span class="ruby-operator">%</span> <span class="ruby-constant">Win</span>.<span class="ruby-identifier">getCurrentThreadId</span>()&#x000A;138:         <span class="ruby-identifier">filemap</span> = <span class="ruby-constant">Win</span>.<span class="ruby-identifier">createFileMapping</span>(<span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">INVALID_HANDLE_VALUE</span>, &#x000A;139:                                         <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">NULL</span>,&#x000A;140:                                         <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">PAGE_READWRITE</span>, <span class="ruby-value">0</span>, &#x000A;141:                                         <span class="ruby-constant">AGENT_MAX_MSGLEN</span>, <span class="ruby-identifier">mapname</span>)&#x000A;142:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">filemap</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>&#x000A;143:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>,&#x000A;144:             <span class="ruby-value str">&quot;Creation of file mapping failed&quot;</span>&#x000A;145:         <span class="ruby-keyword kw">end</span>&#x000A;146: &#x000A;147:         <span class="ruby-identifier">ptr</span> = <span class="ruby-constant">Win</span>.<span class="ruby-identifier">mapViewOfFile</span>(<span class="ruby-identifier">filemap</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">FILE_MAP_WRITE</span>, <span class="ruby-value">0</span>, <span class="ruby-value">0</span>, &#x000A;148:                                 <span class="ruby-constant">AGENT_MAX_MSGLEN</span>)&#x000A;149: &#x000A;150:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">null?</span>&#x000A;151:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>, <span class="ruby-value str">&quot;Mapping of file failed&quot;</span>&#x000A;152:         <span class="ruby-keyword kw">end</span>&#x000A;153: &#x000A;154:         <span class="ruby-identifier">ptr</span>[<span class="ruby-value">0</span>] = <span class="ruby-identifier">query</span>&#x000A;155: &#x000A;156:         <span class="ruby-identifier">cds</span> = [<span class="ruby-constant">AGENT_COPYDATA_ID</span>, <span class="ruby-identifier">mapname</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>, <span class="ruby-identifier">mapname</span>].&#x000A;157:           <span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;LLp&quot;</span>).<span class="ruby-identifier">to_ptr</span>&#x000A;158:         <span class="ruby-identifier">succ</span> = <span class="ruby-constant">Win</span>.<span class="ruby-identifier">sendMessageTimeout</span>(<span class="ruby-ivar">@win</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">WM_COPYDATA</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">NULL</span>,&#x000A;159:                                       <span class="ruby-identifier">cds</span>, <span class="ruby-constant">Win</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTO_NORMAL</span>, <span class="ruby-value">5000</span>, <span class="ruby-identifier">id</span>)&#x000A;160: &#x000A;161:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">succ</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;162:           <span class="ruby-identifier">retlen</span> = <span class="ruby-value">4</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-value">4</span>).<span class="ruby-identifier">unpack</span>(<span class="ruby-value str">&quot;N&quot;</span>)[<span class="ruby-value">0</span>]&#x000A;163:           <span class="ruby-identifier">res</span> = <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">retlen</span>)&#x000A;164:         <span class="ruby-keyword kw">end</span>        &#x000A;165: &#x000A;166:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">res</span>&#x000A;167:       <span class="ruby-keyword kw">ensure</span>&#x000A;168:         <span class="ruby-constant">Win</span>.<span class="ruby-identifier">unmapViewOfFile</span>(<span class="ruby-identifier">ptr</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">null?</span>&#x000A;169:         <span class="ruby-constant">Win</span>.<span class="ruby-identifier">closeHandle</span>(<span class="ruby-identifier">filemap</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">filemap</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>&#x000A;170:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

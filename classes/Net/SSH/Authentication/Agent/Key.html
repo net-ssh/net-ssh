@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>: Net::SSH::Authentication::Agent::Comment [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <title>: Net::SSH::Authentication::Agent::Key [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
     <link href='../../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
@@ -27,11 +27,11 @@
       <div class='header'>
         <h1 class='name'>
           <span class='type'>Module</span>
-          Net::SSH::Authentication::Agent::Comment
+          Net::SSH::Authentication::Agent::Key
         </h1>
         <ol class='paths'>
           <li>
-            <a href="../../../../../files/lib/net/ssh/authentication/agent/socket_rb.html">lib/net/ssh/authentication/agent/socket.rb</a>
+            <a href="../../../../../files/lib/net/ssh/authentication/agent/java_pageant_rb.html">lib/net/ssh/authentication/agent/java_pageant.rb</a>
           </li>
         </ol>
       </div>
@@ -39,8 +39,8 @@
         <div id='text'>
           <div id='description'>
             <p>
-            A simple module for extending keys, to allow comments to be specified for
-            them.
+            A simple module for extending keys, to allow blobs and comments to be
+            specified for them.
             </p>
           </div>
           <div id='section'>
@@ -52,6 +52,15 @@
                     <td class='context-item-name'>comment</td>
                     <td class='context-item-value'>[RW]</td>
                     <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>java_blob</td>
+                    <td class='context-item-value'>[RW]</td>
+                    <td class='context-item-desc'>
+                      
+                      :blob is used by <a
+                      href="../../../../OpenSSL/PKey/RSA.html#M000346">OpenSSL::PKey::RSA#to_blob</a>
+                    </td>
                   </tr>
                 </table>
               </div>
