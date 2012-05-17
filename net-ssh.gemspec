@@ -1,21 +1,26 @@
 @spec = Gem::Specification.new do |s|
-	s.name = "net-ssh"
-        s.rubyforge_project = 'net-ssh'
-	s.version = "2.3.0"
-	s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
-	s.description = s.summary + " It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
-	s.authors = ["Jamis Buck", "Delano Mandelbaum"]
-	s.email = ["net-ssh@solutious.com"]
-	s.homepage = "http://github.com/net-ssh/net-ssh"
-  
+  s.name = "net-ssh"
+  s.rubyforge_project = 'net-ssh'
+  s.version = "2.3.1"
+  s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
+  s.description = s.summary + " It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
+  s.authors = ["Jamis Buck", "Delano Mandelbaum"]
+  s.email = ["net-ssh@solutious.com"]
+  s.homepage = "http://github.com/net-ssh/net-ssh"
+
   s.extra_rdoc_files = %w[README.rdoc THANKS.rdoc CHANGELOG.rdoc]
   s.has_rdoc = true
   s.rdoc_options = ["--line-numbers", "--title", s.summary, "--main", "README.rdoc"]
   s.require_paths = %w[lib]
   s.rubygems_version = '1.3.2'
-  
+
+  # This has two flavours with java one actually doing something and other
+  # one just raising error. This is a workaround for no ability to specify
+  # platform specific dependencies in gemspecs.
+  s.add_dependency 'jruby-pageant', ">=1.0.2"
+
   s.executables = %w[]
-  
+
   # = MANIFEST =
   s.files = %w(
   CHANGELOG.rdoc
@@ -26,6 +31,8 @@
   THANKS.rdoc
   lib/net/ssh.rb
   lib/net/ssh/authentication/agent.rb
+  lib/net/ssh/authentication/agent/java_pageant.rb
+  lib/net/ssh/authentication/agent/socket.rb
   lib/net/ssh/authentication/constants.rb
   lib/net/ssh/authentication/key_manager.rb
   lib/net/ssh/authentication/methods/abstract.rb
@@ -141,5 +148,5 @@
   test/transport/test_state.rb
   )
 
-  
+
 end
