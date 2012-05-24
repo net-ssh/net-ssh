@@ -33,6 +33,8 @@
   THANKS.rdoc
   lib/net/ssh.rb
   lib/net/ssh/authentication/agent.rb
+  lib/net/ssh/authentication/agent/java_pageant.rb
+  lib/net/ssh/authentication/agent/socket.rb
   lib/net/ssh/authentication/constants.rb
   lib/net/ssh/authentication/key_manager.rb
   lib/net/ssh/authentication/methods/abstract.rb
@@ -42,8 +44,6 @@
   lib/net/ssh/authentication/methods/publickey.rb
   lib/net/ssh/authentication/pageant.rb
   lib/net/ssh/authentication/session.rb
-  lib/net/ssh/authentication/agent/java_pageant.rb
-  lib/net/ssh/authentication/agent/socket.rb
   lib/net/ssh/buffer.rb
   lib/net/ssh/buffered_io.rb
   lib/net/ssh/config.rb
@@ -90,15 +90,15 @@
   lib/net/ssh/transport/hmac/sha2_512.rb
   lib/net/ssh/transport/hmac/sha2_512_96.rb
   lib/net/ssh/transport/identity_cipher.rb
-  lib/net/ssh/transport/key_expander.rb
   lib/net/ssh/transport/kex.rb
-  lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb
   lib/net/ssh/transport/kex/diffie_hellman_group14_sha1.rb
+  lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb
   lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha1.rb
   lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha256.rb
   lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb
   lib/net/ssh/transport/kex/ecdh_sha2_nistp384.rb
   lib/net/ssh/transport/kex/ecdh_sha2_nistp521.rb
+  lib/net/ssh/transport/key_expander.rb
   lib/net/ssh/transport/openssl.rb
   lib/net/ssh/transport/packet_stream.rb
   lib/net/ssh/transport/server_version.rb
@@ -112,6 +112,7 @@
   setup.rb
   support/arcfour_check.rb
   support/ssh_tunnel_bug.rb
+  test/README.txt
   test/authentication/methods/common.rb
   test/authentication/methods/test_abstract.rb
   test/authentication/methods/test_hostbased.rb
@@ -126,9 +127,13 @@
   test/configs/exact_match
   test/configs/host_plus
   test/configs/multihost
+  test/configs/nohost
+  test/configs/numeric_host
   test/configs/wild_cards
   test/connection/test_channel.rb
   test/connection/test_session.rb
+  test/manual/test_forward.rb
+  test/start/test_transport.rb
   test/test_all.rb
   test/test_buffer.rb
   test/test_buffered_io.rb
@@ -144,8 +149,8 @@
   test/transport/hmac/test_sha2_256_96.rb
   test/transport/hmac/test_sha2_512.rb
   test/transport/hmac/test_sha2_512_96.rb
-  test/transport/kex/test_diffie_hellman_group1_sha1.rb
   test/transport/kex/test_diffie_hellman_group14_sha1.rb
+  test/transport/kex/test_diffie_hellman_group1_sha1.rb
   test/transport/kex/test_diffie_hellman_group_exchange_sha1.rb
   test/transport/kex/test_diffie_hellman_group_exchange_sha256.rb
   test/transport/kex/test_ecdh_sha2_nistp256.rb
