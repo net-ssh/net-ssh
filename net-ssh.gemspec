@@ -40,6 +40,8 @@
   lib/net/ssh/authentication/methods/publickey.rb
   lib/net/ssh/authentication/pageant.rb
   lib/net/ssh/authentication/session.rb
+  lib/net/ssh/authentication/agent/java_pageant.rb
+  lib/net/ssh/authentication/agent/socket.rb
   lib/net/ssh/buffer.rb
   lib/net/ssh/buffered_io.rb
   lib/net/ssh/config.rb
