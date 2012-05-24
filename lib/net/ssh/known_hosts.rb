@@ -10,16 +10,18 @@ module Net; module SSH
   # This is used internally by Net::SSH, and will never need to be used directly
   # by consumers of the library.
   class KnownHosts
-    class <<self
 
-      if defined?(OpenSSL::PKey::EC)
-        KnownHosts::SUPPORTED_TYPE = %w(ssh-rsa ssh-dss
-                            ecdsa-sha2-nistp256
-                            ecdsa-sha2-nistp384
-                            ecdsa-sha2-nistp521)
-      else
-        KnownHosts::SUPPORTED_TYPE = %w(ssh-rsa ssh-dss)
-      end
+    if defined?(OpenSSL::PKey::EC)
+      SUPPORTED_TYPE = %w(ssh-rsa ssh-dss
+                          ecdsa-sha2-nistp256
+                          ecdsa-sha2-nistp384
+                          ecdsa-sha2-nistp521)
+    else
+      SUPPORTED_TYPE = %w(ssh-rsa ssh-dss)
+    end
+
+
+    class <<self
 
       # Searches all known host files (see KnownHosts.hostfiles) for all keys
       # of the given host. Returns an array of keys found.
