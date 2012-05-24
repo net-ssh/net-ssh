@@ -1,4 +1,25 @@
 
+=== 2.5.0 / 24 May 2012
+
+* Implement many algorithms [Ryosuke Yamazaki]
+  * Key Exchange
+     * diffie-hellman-group14-sha1
+     * ecdh-sha2-nistp{256,384,521}
+   * Host Key
+     * ecdsa-sha2-nistp{256,384,521}
+   * Authentication
+     * ecdsa-sha2-nistp{256,384,521}
+   * HMAC
+     * hmac-ripemd160
+   * Cipher:
+     * aes{128,192,256}-ctr
+     * camellia{128,192,256}-ctr
+     * blowfish-ctr
+     * cast128-ctr
+     * 3des-ctr
+     * arcfour (has problems with weak keys, and should be used with caution)
+     * camellia{128,192,256}-cbc
+
 === 2.4.0 / 17 May 2012
 
 * Support for JRuby + Pageant + Windows [arturaz]
