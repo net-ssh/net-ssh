@@ -128,13 +128,21 @@ module Net; module SSH; module Authentication
 
     private
 
+      # Returns an array of paths to the key files usually defined
+      # by system default.
+      def default_keys
+        if defined?(OpenSSL::PKey::EC)
+          %w(~/.ssh/id_dsa ~/.ssh/id_rsa ~/.ssh/id_ecdsa
+	     ~/.ssh2/id_dsa ~/.ssh2/id_rsa ~/.ssh2/id_ecdsa)
+        else
+          %w(~/.ssh/id_dsa ~/.ssh/id_rsa ~/.ssh2/id_dsa ~/.ssh2/id_rsa)
+        end
+      end
+
       # Returns an array of paths to the key files that should be used when
       # attempting any key-based authentication mechanism.
       def keys
-        Array(
-          options[:keys] ||
-          %w(~/.ssh/id_dsa ~/.ssh/id_rsa ~/.ssh2/id_dsa ~/.ssh2/id_rsa)
-        )
+        Array(options[:keys] || default_keys)
       end
 
       # Returns an array of the key data that should be used when
