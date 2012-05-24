@@ -57,11 +57,11 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000161">new</a></li>
+              <li><a href="#M000165">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000162">exchange_keys</a></li>
+              <li><a href="#M000166">exchange_keys</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -75,8 +75,8 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000161'>
-                <a name='M000161'></a>
+              <div class='method public-class' id='method-M000165'>
+                <a name='M000165'></a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(algorithms, connection, data)</span>
@@ -88,15 +88,15 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000161-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000165-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000161-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/kex.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">algorithms</span>, <span class="ruby-identifier">connection</span>, <span class="ruby-identifier">data</span>)&#x000A;22:       <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>&#x000A;23:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000165-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/kex.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">algorithms</span>, <span class="ruby-identifier">connection</span>, <span class="ruby-identifier">data</span>)&#x000A;22:       <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>&#x000A;23:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000162'>
-                <a name='M000162'></a>
+              <div class='method public-instance' id='method-M000166'>
+                <a name='M000166'></a>
                 <div class='synopsis'>
                   <span class='name'>exchange_keys</span>
                   <span class='arguments'>()</span>
@@ -108,10 +108,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000162-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000166-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000162-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/kex.rb, line 27</span>&#x000A;27:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exchange_keys</span>&#x000A;28:       <span class="ruby-identifier">result</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-constant">NEWKEYS</span>)&#x000A;29:       <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">result</span>)&#x000A;30: &#x000A;31:       <span class="ruby-identifier">buffer</span> = <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">next_message</span>&#x000A;32:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>, <span class="ruby-value str">&quot;expected NEWKEYS&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">NEWKEYS</span>&#x000A;33: &#x000A;34:       { <span class="ruby-identifier">:session_id</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;abc-xyz&quot;</span>,&#x000A;35:         <span class="ruby-identifier">:server_key</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">RSA</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">32</span>),&#x000A;36:         <span class="ruby-identifier">:shared_secret</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">BN</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">&quot;1234567890&quot;</span>, <span class="ruby-value">10</span>),&#x000A;37:         <span class="ruby-identifier">:hashing_algorithm</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span> }&#x000A;38:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000166-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/test/kex.rb, line 27</span>&#x000A;27:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exchange_keys</span>&#x000A;28:       <span class="ruby-identifier">result</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-constant">NEWKEYS</span>)&#x000A;29:       <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">result</span>)&#x000A;30: &#x000A;31:       <span class="ruby-identifier">buffer</span> = <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">next_message</span>&#x000A;32:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>, <span class="ruby-value str">&quot;expected NEWKEYS&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">NEWKEYS</span>&#x000A;33: &#x000A;34:       { <span class="ruby-identifier">:session_id</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;abc-xyz&quot;</span>,&#x000A;35:         <span class="ruby-identifier">:server_key</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">RSA</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">32</span>),&#x000A;36:         <span class="ruby-identifier">:shared_secret</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">BN</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">&quot;1234567890&quot;</span>, <span class="ruby-value">10</span>),&#x000A;37:         <span class="ruby-identifier">:hashing_algorithm</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span> }&#x000A;38:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

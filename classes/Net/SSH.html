@@ -31,10 +31,10 @@
         </div>
         <ol class='paths'>
           <li>
-            <a href="../../files/lib/net/ssh/authentication/agent/java_pageant_rb.html">lib/net/ssh/authentication/agent/java_pageant.rb</a>
+            <a href="../../files/lib/net/ssh/authentication/agent/socket_rb.html">lib/net/ssh/authentication/agent/socket.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/authentication/agent/socket_rb.html">lib/net/ssh/authentication/agent/socket.rb</a>
+            <a href="../../files/lib/net/ssh/authentication/agent/java_pageant_rb.html">lib/net/ssh/authentication/agent/java_pageant.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/authentication/agent_rb.html">lib/net/ssh/authentication/agent.rb</a>
@@ -106,16 +106,16 @@
             <a href="../../files/lib/net/ssh/prompt_rb.html">lib/net/ssh/prompt.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/proxy/errors_rb.html">lib/net/ssh/proxy/errors.rb</a>
-          </li>
-          <li class='other'>
             <a href="../../files/lib/net/ssh/proxy/command_rb.html">lib/net/ssh/proxy/command.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/proxy/http_rb.html">lib/net/ssh/proxy/http.rb</a>
+            <a href="../../files/lib/net/ssh/proxy/errors_rb.html">lib/net/ssh/proxy/errors.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/proxy/socks4_rb.html">lib/net/ssh/proxy/socks4.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/net/ssh/proxy/http_rb.html">lib/net/ssh/proxy/http.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/proxy/socks5_rb.html">lib/net/ssh/proxy/socks5.rb</a>
@@ -169,7 +169,19 @@
             <a href="../../files/lib/net/ssh/transport/identity_cipher_rb.html">lib/net/ssh/transport/identity_cipher.rb</a>
           </li>
           <li class='other'>
+            <a href="../../files/lib/net/ssh/transport/kex/diffie_hellman_group14_sha1_rb.html">lib/net/ssh/transport/kex/diffie_hellman_group14_sha1.rb</a>
+          </li>
+          <li class='other'>
             <a href="../../files/lib/net/ssh/transport/kex/diffie_hellman_group1_sha1_rb.html">lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/net/ssh/transport/kex/ecdh_sha2_nistp256_rb.html">lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/net/ssh/transport/kex/ecdh_sha2_nistp384_rb.html">lib/net/ssh/transport/kex/ecdh_sha2_nistp384.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/net/ssh/transport/kex/ecdh_sha2_nistp521_rb.html">lib/net/ssh/transport/kex/ecdh_sha2_nistp521.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/transport/key_expander_rb.html">lib/net/ssh/transport/key_expander.rb</a>
@@ -212,7 +224,7 @@
             <p>
             <a href="SSH.html">Net::SSH</a> is a library for interacting,
             programmatically, with remote processes via the SSH2 protocol. Sessions are
-            always initiated via <a href="SSH.html#M000002">Net::SSH.start</a>. From
+            always initiated via <a href="SSH.html#M000004">Net::SSH.start</a>. From
             there, a program interacts with the new <a href="SSH.html">SSH</a> session
             via the convenience methods on <a
             href="SSH/Connection/Session.html">Net::SSH::Connection::Session</a>, by
@@ -229,7 +241,7 @@
             pending at a time), but it also adds complexity. <a
             href="SSH.html">Net::SSH</a> tries to manage this complexity by providing
             some simpler methods of synchronous communication (see <a
-            href="SSH/Connection/Session.html#M000102">Net::SSH::Connection::Session#exec!</a>).
+            href="SSH/Connection/Session.html#M000106">Net::SSH::Connection::Session#exec!</a>).
             </p>
             <p>
             In general, though, and if you want to do anything more complicated than
@@ -237,7 +249,7 @@
             use channels (<a
             href="SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a>) to
             build state machines that are executed while the event loop runs (<a
-            href="SSH/Connection/Session.html#M000094">Net::SSH::Connection::Session#loop</a>).
+            href="SSH/Connection/Session.html#M000098">Net::SSH::Connection::Session#loop</a>).
             </p>
             <p>
             <a href="SSH/Connection/Session.html">Net::SSH::Connection::Session</a> and
@@ -256,8 +268,8 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000003">configuration_for</a></li>
-              <li><a href="#M000002">start</a></li>
+              <li><a href="#M000005">configuration_for</a></li>
+              <li><a href="#M000004">start</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -314,8 +326,8 @@
                     <td class='context-item-desc'>
                       
                       This is the set of options that <a
-                      href="SSH.html#M000002">Net::SSH.start</a> recognizes. See <a
-                      href="SSH.html#M000002">Net::SSH.start</a> for a description of each
+                      href="SSH.html#M000004">Net::SSH.start</a> recognizes. See <a
+                      href="SSH.html#M000004">Net::SSH.start</a> for a description of each
                       option.
                     </td>
                   </tr>
@@ -324,8 +336,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000003'>
-                <a name='M000003'></a>
+              <div class='method public-class' id='method-M000005'>
+                <a name='M000005'></a>
                 <div class='synopsis'>
                   <span class='name'>configuration_for</span>
                   <span class='arguments'>(host, use_ssh_config=true)</span>
@@ -346,14 +358,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000003-source'>     <span class="ruby-comment cmt"># File lib/net/ssh.rb, line 213</span>&#x000A;213:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">configuration_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">use_ssh_config</span>=<span class="ruby-keyword kw">true</span>)&#x000A;214:       <span class="ruby-identifier">files</span> = <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">use_ssh_config</span>&#x000A;215:         <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">default_files</span>&#x000A;216:         <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">false</span>, <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">then</span> <span class="ruby-keyword kw">return</span> {}&#x000A;217:         <span class="ruby-keyword kw">else</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">use_ssh_config</span>)&#x000A;218:         <span class="ruby-keyword kw">end</span>&#x000A;219:       &#x000A;220:       <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">files</span>)&#x000A;221:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000005-source'>     <span class="ruby-comment cmt"># File lib/net/ssh.rb, line 213</span>&#x000A;213:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">configuration_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">use_ssh_config</span>=<span class="ruby-keyword kw">true</span>)&#x000A;214:       <span class="ruby-identifier">files</span> = <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">use_ssh_config</span>&#x000A;215:         <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">default_files</span>&#x000A;216:         <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">false</span>, <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">then</span> <span class="ruby-keyword kw">return</span> {}&#x000A;217:         <span class="ruby-keyword kw">else</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">use_ssh_config</span>)&#x000A;218:         <span class="ruby-keyword kw">end</span>&#x000A;219:       &#x000A;220:       <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">files</span>)&#x000A;221:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000002'>
-                <a name='M000002'></a>
+              <div class='method public-class' id='method-M000004'>
+                <a name='M000004'></a>
                 <div class='synopsis'>
                   <span class='name'>start</span>
                   <span class='arguments'>(host, user, options={}) {|connection| ...}</span>
@@ -497,10 +509,10 @@
                   </ul>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000002-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000002-source'>     <span class="ruby-comment cmt"># File lib/net/ssh.rb, line 159</span>&#x000A;159:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;160:       <span class="ruby-identifier">invalid_options</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">keys</span> <span class="ruby-operator">-</span> <span class="ruby-constant">VALID_OPTIONS</span>&#x000A;161:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">invalid_options</span>.<span class="ruby-identifier">any?</span>&#x000A;162:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;invalid option(s): #{invalid_options.join(', ')}&quot;</span>&#x000A;163:       <span class="ruby-keyword kw">end</span>&#x000A;164: &#x000A;165:       <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:user</span>] = <span class="ruby-identifier">user</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">user</span>&#x000A;166:       <span class="ruby-identifier">options</span> = <span class="ruby-identifier">configuration_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">:config</span>, <span class="ruby-keyword kw">true</span>)).<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)&#x000A;167:       <span class="ruby-identifier">host</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">:host_name</span>, <span class="ruby-identifier">host</span>)&#x000A;168: &#x000A;169:       <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">:logger</span>)&#x000A;170:         <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:logger</span>] = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">STDERR</span>)&#x000A;171:         <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:logger</span>].<span class="ruby-identifier">level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">FATAL</span>&#x000A;172:       <span class="ruby-keyword kw">end</span>&#x000A;173: &#x000A;174:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:verbose</span>]&#x000A;175:         <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:logger</span>].<span class="ruby-identifier">level</span> = <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:verbose</span>]&#x000A;176:           <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Fixnum</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:verbose</span>]&#x000A;177:           <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:debug</span> <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">DEBUG</span>&#x000A;178:           <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:info</span>  <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">INFO</span>&#x000A;179:           <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:warn</span>  <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">WARN</span>&#x000A;180:           <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:error</span> <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">ERROR</span>&#x000A;181:           <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:fatal</span> <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">FATAL</span>&#x000A;182:           <span class="ruby-keyword kw">else</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;can't convert #{options[:verbose].inspect} to any of the Logger level constants&quot;</span>&#x000A;183:         <span class="ruby-keyword kw">end</span>&#x000A;184:       <span class="ruby-keyword kw">end</span>&#x000A;185: &#x000A;186:       <span class="ruby-identifier">transport</span> = <span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>)&#x000A;187:       <span class="ruby-identifier">auth</span> = <span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>)&#x000A;188: &#x000A;189:       <span class="ruby-identifier">user</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">:user</span>, <span class="ruby-identifier">user</span>)&#x000A;190:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">auth</span>.<span class="ruby-identifier">authenticate</span>(<span class="ruby-value str">&quot;ssh-connection&quot;</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:password</span>])&#x000A;191:         <span class="ruby-identifier">connection</span> = <span class="ruby-constant">Connection</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>)&#x000A;192:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>&#x000A;193:           <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">connection</span>&#x000A;194:           <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">close</span>&#x000A;195:         <span class="ruby-keyword kw">else</span>&#x000A;196:           <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">connection</span>&#x000A;197:         <span class="ruby-keyword kw">end</span>&#x000A;198:       <span class="ruby-keyword kw">else</span>&#x000A;199:         <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">close</span>&#x000A;200:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">AuthenticationFailed</span>, <span class="ruby-identifier">user</span>&#x000A;201:       <span class="ruby-keyword kw">end</span>&#x000A;202:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000004-source'>     <span class="ruby-comment cmt"># File lib/net/ssh.rb, line 159</span>&#x000A;159:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;160:       <span class="ruby-identifier">invalid_options</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">keys</span> <span class="ruby-operator">-</span> <span class="ruby-constant">VALID_OPTIONS</span>&#x000A;161:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">invalid_options</span>.<span class="ruby-identifier">any?</span>&#x000A;162:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;invalid option(s): #{invalid_options.join(', ')}&quot;</span>&#x000A;163:       <span class="ruby-keyword kw">end</span>&#x000A;164: &#x000A;165:       <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:user</span>] = <span class="ruby-identifier">user</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">user</span>&#x000A;166:       <span class="ruby-identifier">options</span> = <span class="ruby-identifier">configuration_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">:config</span>, <span class="ruby-keyword kw">true</span>)).<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)&#x000A;167:       <span class="ruby-identifier">host</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">:host_name</span>, <span class="ruby-identifier">host</span>)&#x000A;168: &#x000A;169:       <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">:logger</span>)&#x000A;170:         <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:logger</span>] = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">STDERR</span>)&#x000A;171:         <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:logger</span>].<span class="ruby-identifier">level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">FATAL</span>&#x000A;172:       <span class="ruby-keyword kw">end</span>&#x000A;173: &#x000A;174:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:verbose</span>]&#x000A;175:         <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:logger</span>].<span class="ruby-identifier">level</span> = <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:verbose</span>]&#x000A;176:           <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Fixnum</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:verbose</span>]&#x000A;177:           <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:debug</span> <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">DEBUG</span>&#x000A;178:           <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:info</span>  <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">INFO</span>&#x000A;179:           <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:warn</span>  <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">WARN</span>&#x000A;180:           <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:error</span> <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">ERROR</span>&#x000A;181:           <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:fatal</span> <span class="ruby-keyword kw">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">FATAL</span>&#x000A;182:           <span class="ruby-keyword kw">else</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;can't convert #{options[:verbose].inspect} to any of the Logger level constants&quot;</span>&#x000A;183:         <span class="ruby-keyword kw">end</span>&#x000A;184:       <span class="ruby-keyword kw">end</span>&#x000A;185: &#x000A;186:       <span class="ruby-identifier">transport</span> = <span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>)&#x000A;187:       <span class="ruby-identifier">auth</span> = <span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>)&#x000A;188: &#x000A;189:       <span class="ruby-identifier">user</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">:user</span>, <span class="ruby-identifier">user</span>)&#x000A;190:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">auth</span>.<span class="ruby-identifier">authenticate</span>(<span class="ruby-value str">&quot;ssh-connection&quot;</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:password</span>])&#x000A;191:         <span class="ruby-identifier">connection</span> = <span class="ruby-constant">Connection</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>)&#x000A;192:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>&#x000A;193:           <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">connection</span>&#x000A;194:           <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">close</span>&#x000A;195:         <span class="ruby-keyword kw">else</span>&#x000A;196:           <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">connection</span>&#x000A;197:         <span class="ruby-keyword kw">end</span>&#x000A;198:       <span class="ruby-keyword kw">else</span>&#x000A;199:         <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">close</span>&#x000A;200:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">AuthenticationFailed</span>, <span class="ruby-identifier">user</span>&#x000A;201:       <span class="ruby-keyword kw">end</span>&#x000A;202:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

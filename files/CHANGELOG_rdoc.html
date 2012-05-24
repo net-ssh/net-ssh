@@ -31,12 +31,24 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2012-05-17 07:34:21 -0400</span>
+          <span class='datetime'>2012-05-24 07:55:27 -0400</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
+            <h3>2.5.0 / 24 May 2012</h3>
+            <ul>
+            <li>Implement many algorithms [Ryosuke Yamazaki]
+            
+            <ul>
+            <li>Key Exchange
+            
+            <pre>* diffie-hellman-group14-sha1&#x000A;* ecdh-sha2-nistp{256,384,521}&#x000A;* Host Key&#x000A;  * ecdsa-sha2-nistp{256,384,521}&#x000A;* Authentication&#x000A;  * ecdsa-sha2-nistp{256,384,521}&#x000A;* HMAC&#x000A;  * hmac-ripemd160&#x000A;* Cipher:&#x000A;  * aes{128,192,256}-ctr&#x000A;  * camellia{128,192,256}-ctr&#x000A;  * blowfish-ctr&#x000A;  * cast128-ctr&#x000A;  * 3des-ctr&#x000A;  * arcfour (has problems with weak keys, and should be used with caution)&#x000A;  * camellia{128,192,256}-cbc</pre>
+            </li>
+            </ul>
+            </li>
+            </ul>
             <h3>2.4.0 / 17 May 2012</h3>
             <ul>
             <li>Support for JRuby + Pageant + Windows [arturaz]
@@ -266,7 +278,7 @@
             <h3>2.0.10 / 4 Feb 2009</h3>
             <ul>
             <li>Added <a
-            href="../classes/Net/SSH.html#M000003">Net::SSH.configuration_for</a> to
+            href="../classes/Net/SSH.html#M000005">Net::SSH.configuration_for</a> to
             make it easier to query the SSH configuration file(s) [Jamis Buck]
             
             </li>

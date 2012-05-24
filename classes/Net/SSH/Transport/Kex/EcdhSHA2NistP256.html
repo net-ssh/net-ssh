@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Net::SSH::Transport::Kex::EcdhSHA2NistP256 [Net::SSH: a pure-Ruby implementation of the SSH2 client protocol.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Net::SSH::Transport::Kex::EcdhSHA2NistP256
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../../files/lib/net/ssh/transport/kex/ecdh_sha2_nistp256_rb.html">lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a href="DiffieHellmanGroup1SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            A key-exchange service implementing the &#8220;ecdh-sha2-nistp256&#8221;
+            key-exchange algorithm. (defined in RFC 5656)
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000216">new</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000215">curve_name</a></li>
+              <li><a href="#M000214">digester</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+            <div id='includes'>
+              <h2>Included modules</h2>
+              <ol>
+                <li><a href="../Constants.html">Constants</a></li>
+                <li><a href="../../Loggable.html">Loggable</a></li>
+              </ol>
+            </div>
+          </div>
+          <div id='section'>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>ecdh</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='method public-class' id='method-M000216'>
+                <a name='M000216'></a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(algorithms, connection, data)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000216-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000216-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">algorithms</span>, <span class="ruby-identifier">connection</span>, <span class="ruby-identifier">data</span>)&#x000A;22:       <span class="ruby-ivar">@algorithms</span> = <span class="ruby-identifier">algorithms</span>&#x000A;23:       <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>&#x000A;24: &#x000A;25:       <span class="ruby-ivar">@digester</span> = <span class="ruby-identifier">digester</span>&#x000A;26:       <span class="ruby-ivar">@data</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">dup</span>&#x000A;27:       <span class="ruby-ivar">@ecdh</span> = <span class="ruby-identifier">generate_key</span>&#x000A;28:       <span class="ruby-ivar">@logger</span> = <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:logger</span>)&#x000A;29:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='method public-instance' id='method-M000215'>
+                <a name='M000215'></a>
+                <div class='synopsis'>
+                  <span class='name'>curve_name</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000215-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000215-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 17</span>&#x000A;17:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">curve_name</span>&#x000A;18:       <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span><span class="ruby-operator">::</span><span class="ruby-constant">CurveNameAlias</span>[<span class="ruby-value str">'nistp256'</span>]&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-M000214'>
+                <a name='M000214'></a>
+                <div class='synopsis'>
+                  <span class='name'>digester</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000214-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000214-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 13</span>&#x000A;13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digester</span>&#x000A;14:       <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA256</span>&#x000A;15:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

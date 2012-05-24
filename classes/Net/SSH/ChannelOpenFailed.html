@@ -45,7 +45,7 @@
             <p>
             This is exception is primarily used internally, but if you have a channel
             open handler (see <a
-            href="Connection/Session.html#M000107">Net::SSH::Connection::Session#on_open_channel</a>)
+            href="Connection/Session.html#M000111">Net::SSH::Connection::Session#on_open_channel</a>)
             and you want to fail in such a way that the server knows it failed, you can
             raise this exception in the handler and <a href="../SSH.html">Net::SSH</a>
             will translate that into a &#8220;channel open failed&#8221; message.
@@ -55,7 +55,7 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000313">new</a></li>
+              <li><a href="#M000325">new</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -78,17 +78,17 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000313'>
-                <a name='M000313'></a>
+              <div class='method public-class' id='method-M000325'>
+                <a name='M000325'></a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(code, reason)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000313-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000325-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000313-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 32</span>&#x000A;32:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">code</span>, <span class="ruby-identifier">reason</span>)&#x000A;33:       <span class="ruby-ivar">@code</span>, <span class="ruby-ivar">@reason</span> = <span class="ruby-identifier">code</span>, <span class="ruby-identifier">reason</span>&#x000A;34:       <span class="ruby-keyword kw">super</span> <span class="ruby-node">&quot;#{reason} (#{code})&quot;</span>&#x000A;35:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000325-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/errors.rb, line 32</span>&#x000A;32:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">code</span>, <span class="ruby-identifier">reason</span>)&#x000A;33:       <span class="ruby-ivar">@code</span>, <span class="ruby-ivar">@reason</span> = <span class="ruby-identifier">code</span>, <span class="ruby-identifier">reason</span>&#x000A;34:       <span class="ruby-keyword kw">super</span> <span class="ruby-node">&quot;#{reason} (#{code})&quot;</span>&#x000A;35:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

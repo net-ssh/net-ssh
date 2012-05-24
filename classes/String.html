@@ -45,12 +45,27 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
+              <li><a href="#M000003">bytesize</a></li>
               <li><a href="#M000001">getbyte</a></li>
+              <li><a href="#M000002">setbyte</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
+              <div class='method public-instance' id='method-M000003'>
+                <a name='M000003'></a>
+                <div class='synopsis'>
+                  <span class='name'>bytesize</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000003-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/ruby_compat.rb, line 13</span>&#x000A;13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">bytesize</span>&#x000A;14:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">size</span>&#x000A;15:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
               <div class='method public-instance' id='method-M000001'>
                 <a name='M000001'></a>
                 <div class='synopsis'>
@@ -62,6 +77,19 @@
                     [show source]
                   </a>
                   <pre id='M000001-source'>   <span class="ruby-comment cmt"># File lib/net/ssh/ruby_compat.rb, line 5</span>&#x000A;5:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getbyte</span>(<span class="ruby-identifier">index</span>)&#x000A;6:       <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">index</span>]&#x000A;7:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-M000002'>
+                <a name='M000002'></a>
+                <div class='synopsis'>
+                  <span class='name'>setbyte</span>
+                  <span class='arguments'>(index, c)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000002-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000002-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/ruby_compat.rb, line 8</span>&#x000A; 8:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">setbyte</span>(<span class="ruby-identifier">index</span>, <span class="ruby-identifier">c</span>)&#x000A; 9:       <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">index</span>] = <span class="ruby-identifier">c</span>&#x000A;10:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -51,11 +51,11 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000206">new</a></li>
+              <li><a href="#M000211">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000207">exchange_keys</a></li>
+              <li><a href="#M000212">exchange_keys</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -149,8 +149,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000206'>
-                <a name='M000206'></a>
+              <div class='method public-class' id='method-M000211'>
+                <a name='M000211'></a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(algorithms, connection, data)</span>
@@ -164,15 +164,15 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000206-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000211-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000206-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb, line 42</span>&#x000A;42:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">algorithms</span>, <span class="ruby-identifier">connection</span>, <span class="ruby-identifier">data</span>)&#x000A;43:       <span class="ruby-ivar">@p</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">BN</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">P_s</span>, <span class="ruby-constant">P_r</span>)&#x000A;44:       <span class="ruby-ivar">@g</span> = <span class="ruby-constant">G</span>&#x000A;45: &#x000A;46:       <span class="ruby-ivar">@digester</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>&#x000A;47:       <span class="ruby-ivar">@algorithms</span> = <span class="ruby-identifier">algorithms</span>&#x000A;48:       <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>&#x000A;49: &#x000A;50:       <span class="ruby-ivar">@data</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">dup</span>&#x000A;51:       <span class="ruby-ivar">@dh</span> = <span class="ruby-identifier">generate_key</span>&#x000A;52:       <span class="ruby-ivar">@logger</span> = <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:logger</span>)&#x000A;53:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000211-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb, line 42</span>&#x000A;42:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">algorithms</span>, <span class="ruby-identifier">connection</span>, <span class="ruby-identifier">data</span>)&#x000A;43:       <span class="ruby-ivar">@p</span> = <span class="ruby-identifier">get_p</span>&#x000A;44:       <span class="ruby-ivar">@g</span> = <span class="ruby-identifier">get_g</span>&#x000A;45: &#x000A;46:       <span class="ruby-ivar">@digester</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>&#x000A;47:       <span class="ruby-ivar">@algorithms</span> = <span class="ruby-identifier">algorithms</span>&#x000A;48:       <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>&#x000A;49: &#x000A;50:       <span class="ruby-ivar">@data</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">dup</span>&#x000A;51:       <span class="ruby-ivar">@dh</span> = <span class="ruby-identifier">generate_key</span>&#x000A;52:       <span class="ruby-ivar">@logger</span> = <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:logger</span>)&#x000A;53:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000207'>
-                <a name='M000207'></a>
+              <div class='method public-instance' id='method-M000212'>
+                <a name='M000212'></a>
                 <div class='synopsis'>
                   <span class='name'>exchange_keys</span>
                   <span class='arguments'>()</span>
@@ -202,10 +202,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000207-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000212-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000207-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb, line 66</span>&#x000A;66:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exchange_keys</span>&#x000A;67:       <span class="ruby-identifier">result</span> = <span class="ruby-identifier">send_kexinit</span>&#x000A;68:       <span class="ruby-identifier">verify_server_key</span>(<span class="ruby-identifier">result</span>[<span class="ruby-identifier">:server_key</span>])&#x000A;69:       <span class="ruby-identifier">session_id</span> = <span class="ruby-identifier">verify_signature</span>(<span class="ruby-identifier">result</span>)&#x000A;70:       <span class="ruby-identifier">confirm_newkeys</span>&#x000A;71: &#x000A;72:       <span class="ruby-keyword kw">return</span> { <span class="ruby-identifier">:session_id</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">session_id</span>, &#x000A;73:                <span class="ruby-identifier">:server_key</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">result</span>[<span class="ruby-identifier">:server_key</span>],&#x000A;74:                <span class="ruby-identifier">:shared_secret</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">result</span>[<span class="ruby-identifier">:shared_secret</span>],&#x000A;75:                <span class="ruby-identifier">:hashing_algorithm</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">digester</span> }&#x000A;76:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000212-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb, line 66</span>&#x000A;66:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exchange_keys</span>&#x000A;67:       <span class="ruby-identifier">result</span> = <span class="ruby-identifier">send_kexinit</span>&#x000A;68:       <span class="ruby-identifier">verify_server_key</span>(<span class="ruby-identifier">result</span>[<span class="ruby-identifier">:server_key</span>])&#x000A;69:       <span class="ruby-identifier">session_id</span> = <span class="ruby-identifier">verify_signature</span>(<span class="ruby-identifier">result</span>)&#x000A;70:       <span class="ruby-identifier">confirm_newkeys</span>&#x000A;71: &#x000A;72:       <span class="ruby-keyword kw">return</span> { <span class="ruby-identifier">:session_id</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">session_id</span>, &#x000A;73:                <span class="ruby-identifier">:server_key</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">result</span>[<span class="ruby-identifier">:server_key</span>],&#x000A;74:                <span class="ruby-identifier">:shared_secret</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">result</span>[<span class="ruby-identifier">:shared_secret</span>],&#x000A;75:                <span class="ruby-identifier">:hashing_algorithm</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">digester</span> }&#x000A;76:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -53,17 +53,17 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000348">ssh_do_sign</a></li>
-              <li><a href="#M000347">ssh_do_verify</a></li>
-              <li><a href="#M000345">ssh_type</a></li>
-              <li><a href="#M000346">to_blob</a></li>
+              <li><a href="#M000360">ssh_do_sign</a></li>
+              <li><a href="#M000359">ssh_do_verify</a></li>
+              <li><a href="#M000357">ssh_type</a></li>
+              <li><a href="#M000358">to_blob</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000348'>
-                <a name='M000348'></a>
+              <div class='method public-instance' id='method-M000360'>
+                <a name='M000360'></a>
                 <div class='synopsis'>
                   <span class='name'>ssh_do_sign</span>
                   <span class='arguments'>(data)</span>
@@ -74,14 +74,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000348-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000360-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000348-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/openssl.rb, line 73</span>&#x000A;73:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ssh_do_sign</span>(<span class="ruby-identifier">data</span>)&#x000A;74:         <span class="ruby-identifier">sign</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">data</span>)&#x000A;75:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000360-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/openssl.rb, line 74</span>&#x000A;74:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ssh_do_sign</span>(<span class="ruby-identifier">data</span>)&#x000A;75:         <span class="ruby-identifier">sign</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">data</span>)&#x000A;76:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000347'>
-                <a name='M000347'></a>
+              <div class='method public-instance' id='method-M000359'>
+                <a name='M000359'></a>
                 <div class='synopsis'>
                   <span class='name'>ssh_do_verify</span>
                   <span class='arguments'>(sig, data)</span>
@@ -92,14 +92,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000347-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000359-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000347-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/openssl.rb, line 68</span>&#x000A;68:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ssh_do_verify</span>(<span class="ruby-identifier">sig</span>, <span class="ruby-identifier">data</span>)&#x000A;69:         <span class="ruby-identifier">verify</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">sig</span>, <span class="ruby-identifier">data</span>)&#x000A;70:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000359-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/openssl.rb, line 69</span>&#x000A;69:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ssh_do_verify</span>(<span class="ruby-identifier">sig</span>, <span class="ruby-identifier">data</span>)&#x000A;70:         <span class="ruby-identifier">verify</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">sig</span>, <span class="ruby-identifier">data</span>)&#x000A;71:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000345'>
-                <a name='M000345'></a>
+              <div class='method public-instance' id='method-M000357'>
+                <a name='M000357'></a>
                 <div class='synopsis'>
                   <span class='name'>ssh_type</span>
                   <span class='arguments'>()</span>
@@ -111,14 +111,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000345-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000357-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000345-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/openssl.rb, line 58</span>&#x000A;58:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ssh_type</span>&#x000A;59:         <span class="ruby-value str">&quot;ssh-rsa&quot;</span>&#x000A;60:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000357-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/openssl.rb, line 59</span>&#x000A;59:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ssh_type</span>&#x000A;60:         <span class="ruby-value str">&quot;ssh-rsa&quot;</span>&#x000A;61:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000346'>
-                <a name='M000346'></a>
+              <div class='method public-instance' id='method-M000358'>
+                <a name='M000358'></a>
                 <div class='synopsis'>
                   <span class='name'>to_blob</span>
                   <span class='arguments'>()</span>
@@ -129,10 +129,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000346-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000358-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000346-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/openssl.rb, line 63</span>&#x000A;63:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_blob</span>&#x000A;64:         <span class="ruby-ivar">@blob</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:string</span>, <span class="ruby-identifier">ssh_type</span>, <span class="ruby-identifier">:bignum</span>, <span class="ruby-identifier">e</span>, <span class="ruby-identifier">:bignum</span>, <span class="ruby-identifier">n</span>).<span class="ruby-identifier">to_s</span>&#x000A;65:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000358-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/openssl.rb, line 64</span>&#x000A;64:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_blob</span>&#x000A;65:         <span class="ruby-ivar">@blob</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:string</span>, <span class="ruby-identifier">ssh_type</span>, <span class="ruby-identifier">:bignum</span>, <span class="ruby-identifier">e</span>, <span class="ruby-identifier">:bignum</span>, <span class="ruby-identifier">n</span>).<span class="ruby-identifier">to_s</span>&#x000A;66:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

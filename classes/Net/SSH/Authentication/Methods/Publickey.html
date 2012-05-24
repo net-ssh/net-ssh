@@ -51,14 +51,14 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000011">authenticate</a></li>
+              <li><a href="#M000013">authenticate</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000011'>
-                <a name='M000011'></a>
+              <div class='method public-instance' id='method-M000013'>
+                <a name='M000013'></a>
                 <div class='synopsis'>
                   <span class='name'>authenticate</span>
                   <span class='arguments'>(next_service, username, password=nil)</span>
@@ -72,10 +72,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000011-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000013-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000011-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/methods/publickey.rb, line 16</span>&#x000A;16:           <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authenticate</span>(<span class="ruby-identifier">next_service</span>, <span class="ruby-identifier">username</span>, <span class="ruby-identifier">password</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;17:             <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">key_manager</span>&#x000A;18: &#x000A;19:             <span class="ruby-identifier">key_manager</span>.<span class="ruby-identifier">each_identity</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">identity</span><span class="ruby-operator">|</span>&#x000A;20:               <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">authenticate_with</span>(<span class="ruby-identifier">identity</span>, <span class="ruby-identifier">next_service</span>, <span class="ruby-identifier">username</span>)&#x000A;21:             <span class="ruby-keyword kw">end</span>&#x000A;22: &#x000A;23:             <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>&#x000A;24:           <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000013-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/methods/publickey.rb, line 16</span>&#x000A;16:           <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authenticate</span>(<span class="ruby-identifier">next_service</span>, <span class="ruby-identifier">username</span>, <span class="ruby-identifier">password</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;17:             <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">key_manager</span>&#x000A;18: &#x000A;19:             <span class="ruby-identifier">key_manager</span>.<span class="ruby-identifier">each_identity</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">identity</span><span class="ruby-operator">|</span>&#x000A;20:               <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">authenticate_with</span>(<span class="ruby-identifier">identity</span>, <span class="ruby-identifier">next_service</span>, <span class="ruby-identifier">username</span>)&#x000A;21:             <span class="ruby-keyword kw">end</span>&#x000A;22: &#x000A;23:             <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>&#x000A;24:           <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
