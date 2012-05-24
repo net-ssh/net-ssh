@@ -51,12 +51,12 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000216">new</a></li>
+              <li><a href="#M000214">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000215">curve_name</a></li>
-              <li><a href="#M000214">digester</a></li>
+              <li><a href="#M000213">curve_name</a></li>
+              <li><a href="#M000212">digester</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -83,44 +83,44 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000216'>
-                <a name='M000216'></a>
+              <div class='method public-class' id='method-M000214'>
+                <a name='M000214'></a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(algorithms, connection, data)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000216-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000214-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000216-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">algorithms</span>, <span class="ruby-identifier">connection</span>, <span class="ruby-identifier">data</span>)&#x000A;22:       <span class="ruby-ivar">@algorithms</span> = <span class="ruby-identifier">algorithms</span>&#x000A;23:       <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>&#x000A;24: &#x000A;25:       <span class="ruby-ivar">@digester</span> = <span class="ruby-identifier">digester</span>&#x000A;26:       <span class="ruby-ivar">@data</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">dup</span>&#x000A;27:       <span class="ruby-ivar">@ecdh</span> = <span class="ruby-identifier">generate_key</span>&#x000A;28:       <span class="ruby-ivar">@logger</span> = <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:logger</span>)&#x000A;29:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000214-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">algorithms</span>, <span class="ruby-identifier">connection</span>, <span class="ruby-identifier">data</span>)&#x000A;22:       <span class="ruby-ivar">@algorithms</span> = <span class="ruby-identifier">algorithms</span>&#x000A;23:       <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>&#x000A;24: &#x000A;25:       <span class="ruby-ivar">@digester</span> = <span class="ruby-identifier">digester</span>&#x000A;26:       <span class="ruby-ivar">@data</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">dup</span>&#x000A;27:       <span class="ruby-ivar">@ecdh</span> = <span class="ruby-identifier">generate_key</span>&#x000A;28:       <span class="ruby-ivar">@logger</span> = <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:logger</span>)&#x000A;29:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000215'>
-                <a name='M000215'></a>
+              <div class='method public-instance' id='method-M000213'>
+                <a name='M000213'></a>
                 <div class='synopsis'>
                   <span class='name'>curve_name</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000215-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000213-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000215-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 17</span>&#x000A;17:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">curve_name</span>&#x000A;18:       <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span><span class="ruby-operator">::</span><span class="ruby-constant">CurveNameAlias</span>[<span class="ruby-value str">'nistp256'</span>]&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000213-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 17</span>&#x000A;17:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">curve_name</span>&#x000A;18:       <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span><span class="ruby-operator">::</span><span class="ruby-constant">CurveNameAlias</span>[<span class="ruby-value str">'nistp256'</span>]&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000214'>
-                <a name='M000214'></a>
+              <div class='method public-instance' id='method-M000212'>
+                <a name='M000212'></a>
                 <div class='synopsis'>
                   <span class='name'>digester</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000214-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000212-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000214-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 13</span>&#x000A;13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digester</span>&#x000A;14:       <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA256</span>&#x000A;15:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000212-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 13</span>&#x000A;13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digester</span>&#x000A;14:       <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA256</span>&#x000A;15:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

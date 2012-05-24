@@ -31,10 +31,10 @@
         </div>
         <ol class='paths'>
           <li>
-            <a href="../../files/lib/net/ssh/authentication/agent/socket_rb.html">lib/net/ssh/authentication/agent/socket.rb</a>
+            <a href="../../files/lib/net/ssh/authentication/agent/java_pageant_rb.html">lib/net/ssh/authentication/agent/java_pageant.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/authentication/agent/java_pageant_rb.html">lib/net/ssh/authentication/agent/java_pageant.rb</a>
+            <a href="../../files/lib/net/ssh/authentication/agent/socket_rb.html">lib/net/ssh/authentication/agent/socket.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/authentication/agent_rb.html">lib/net/ssh/authentication/agent.rb</a>
@@ -100,22 +100,22 @@
             <a href="../../files/lib/net/ssh/loggable_rb.html">lib/net/ssh/loggable.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/packet_rb.html">lib/net/ssh/packet.rb</a>
-          </li>
-          <li class='other'>
             <a href="../../files/lib/net/ssh/prompt_rb.html">lib/net/ssh/prompt.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/proxy/command_rb.html">lib/net/ssh/proxy/command.rb</a>
+            <a href="../../files/lib/net/ssh/packet_rb.html">lib/net/ssh/packet.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/proxy/errors_rb.html">lib/net/ssh/proxy/errors.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/proxy/socks4_rb.html">lib/net/ssh/proxy/socks4.rb</a>
+            <a href="../../files/lib/net/ssh/proxy/command_rb.html">lib/net/ssh/proxy/command.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/proxy/http_rb.html">lib/net/ssh/proxy/http.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/net/ssh/proxy/socks4_rb.html">lib/net/ssh/proxy/socks4.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/proxy/socks5_rb.html">lib/net/ssh/proxy/socks5.rb</a>
@@ -169,10 +169,10 @@
             <a href="../../files/lib/net/ssh/transport/identity_cipher_rb.html">lib/net/ssh/transport/identity_cipher.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/transport/kex/diffie_hellman_group14_sha1_rb.html">lib/net/ssh/transport/kex/diffie_hellman_group14_sha1.rb</a>
+            <a href="../../files/lib/net/ssh/transport/kex/diffie_hellman_group1_sha1_rb.html">lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/net/ssh/transport/kex/diffie_hellman_group1_sha1_rb.html">lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb</a>
+            <a href="../../files/lib/net/ssh/transport/kex/diffie_hellman_group14_sha1_rb.html">lib/net/ssh/transport/kex/diffie_hellman_group14_sha1.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/net/ssh/transport/kex/ecdh_sha2_nistp256_rb.html">lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb</a>
@@ -241,7 +241,7 @@
             pending at a time), but it also adds complexity. <a
             href="SSH.html">Net::SSH</a> tries to manage this complexity by providing
             some simpler methods of synchronous communication (see <a
-            href="SSH/Connection/Session.html#M000106">Net::SSH::Connection::Session#exec!</a>).
+            href="SSH/Connection/Session.html#M000104">Net::SSH::Connection::Session#exec!</a>).
             </p>
             <p>
             In general, though, and if you want to do anything more complicated than
@@ -249,7 +249,7 @@
             use channels (<a
             href="SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a>) to
             build state machines that are executed while the event loop runs (<a
-            href="SSH/Connection/Session.html#M000098">Net::SSH::Connection::Session#loop</a>).
+            href="SSH/Connection/Session.html#M000096">Net::SSH::Connection::Session#loop</a>).
             </p>
             <p>
             <a href="SSH/Connection/Session.html">Net::SSH::Connection::Session</a> and

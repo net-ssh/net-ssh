@@ -53,14 +53,14 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000370">to_ssh</a></li>
+              <li><a href="#M000368">to_ssh</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000370'>
-                <a name='M000370'></a>
+              <div class='method public-instance' id='method-M000368'>
+                <a name='M000368'></a>
                 <div class='synopsis'>
                   <span class='name'>to_ssh</span>
                   <span class='arguments'>()</span>
@@ -72,10 +72,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000370-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000368-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000370-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/openssl.rb, line 13</span>&#x000A;13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_ssh</span>&#x000A;14:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">zero?</span>&#x000A;15:         <span class="ruby-keyword kw">return</span> [<span class="ruby-value">0</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;N&quot;</span>)&#x000A;16:       <span class="ruby-keyword kw">else</span>&#x000A;17:         <span class="ruby-identifier">buf</span> = <span class="ruby-identifier">to_s</span>(<span class="ruby-value">2</span>)&#x000A;18:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">buf</span>.<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)[<span class="ruby-value">7</span>] <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;19:           <span class="ruby-keyword kw">return</span> [<span class="ruby-identifier">buf</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">buf</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;NCA*&quot;</span>)&#x000A;20:         <span class="ruby-keyword kw">else</span>&#x000A;21:           <span class="ruby-keyword kw">return</span> [<span class="ruby-identifier">buf</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">buf</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;NA*&quot;</span>)&#x000A;22:         <span class="ruby-keyword kw">end</span>&#x000A;23:       <span class="ruby-keyword kw">end</span>&#x000A;24:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000368-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/openssl.rb, line 13</span>&#x000A;13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_ssh</span>&#x000A;14:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">zero?</span>&#x000A;15:         <span class="ruby-keyword kw">return</span> [<span class="ruby-value">0</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;N&quot;</span>)&#x000A;16:       <span class="ruby-keyword kw">else</span>&#x000A;17:         <span class="ruby-identifier">buf</span> = <span class="ruby-identifier">to_s</span>(<span class="ruby-value">2</span>)&#x000A;18:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">buf</span>.<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)[<span class="ruby-value">7</span>] <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;19:           <span class="ruby-keyword kw">return</span> [<span class="ruby-identifier">buf</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">buf</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;NCA*&quot;</span>)&#x000A;20:         <span class="ruby-keyword kw">else</span>&#x000A;21:           <span class="ruby-keyword kw">return</span> [<span class="ruby-identifier">buf</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">buf</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;NA*&quot;</span>)&#x000A;22:         <span class="ruby-keyword kw">end</span>&#x000A;23:       <span class="ruby-keyword kw">end</span>&#x000A;24:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

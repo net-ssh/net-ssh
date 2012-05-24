@@ -53,7 +53,7 @@
             <p>
             Channels are intended to be used asynchronously. You request that one be
             opened (via <a
-            href="Session.html#M000104">Connection::Session#open_channel</a>), and when
+            href="Session.html#M000102">Connection::Session#open_channel</a>), and when
             it is opened, your callback is invoked. Then, you set various other
             callbacks on the newly opened channel, which are called in response to the
             corresponding events. Programming with <a
@@ -84,38 +84,38 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000061">new</a></li>
+              <li><a href="#M000059">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000062">[]</a></li>
-              <li><a href="#M000063">[]=</a></li>
-              <li><a href="#M000069">active?</a></li>
-              <li><a href="#M000072">close</a></li>
-              <li><a href="#M000071">closing?</a></li>
-              <li><a href="#M000087">do_close</a></li>
-              <li><a href="#M000086">do_eof</a></li>
-              <li><a href="#M000085">do_extended_data</a></li>
-              <li><a href="#M000088">do_failure</a></li>
-              <li><a href="#M000084">do_open_failed</a></li>
-              <li><a href="#M000089">do_success</a></li>
-              <li><a href="#M000066">env</a></li>
-              <li><a href="#M000074">eof!</a></li>
-              <li><a href="#M000073">eof?</a></li>
-              <li><a href="#M000064">exec</a></li>
-              <li><a href="#M000079">on_close</a></li>
-              <li><a href="#M000076">on_data</a></li>
-              <li><a href="#M000080">on_eof</a></li>
-              <li><a href="#M000077">on_extended_data</a></li>
-              <li><a href="#M000081">on_open_failed</a></li>
-              <li><a href="#M000078">on_process</a></li>
-              <li><a href="#M000082">on_request</a></li>
-              <li><a href="#M000075">process</a></li>
-              <li><a href="#M000067">request_pty</a></li>
-              <li><a href="#M000083">send_channel_request</a></li>
-              <li><a href="#M000068">send_data</a></li>
-              <li><a href="#M000065">subsystem</a></li>
-              <li><a href="#M000070">wait</a></li>
+              <li><a href="#M000060">[]</a></li>
+              <li><a href="#M000061">[]=</a></li>
+              <li><a href="#M000067">active?</a></li>
+              <li><a href="#M000070">close</a></li>
+              <li><a href="#M000069">closing?</a></li>
+              <li><a href="#M000085">do_close</a></li>
+              <li><a href="#M000084">do_eof</a></li>
+              <li><a href="#M000083">do_extended_data</a></li>
+              <li><a href="#M000086">do_failure</a></li>
+              <li><a href="#M000082">do_open_failed</a></li>
+              <li><a href="#M000087">do_success</a></li>
+              <li><a href="#M000064">env</a></li>
+              <li><a href="#M000072">eof!</a></li>
+              <li><a href="#M000071">eof?</a></li>
+              <li><a href="#M000062">exec</a></li>
+              <li><a href="#M000077">on_close</a></li>
+              <li><a href="#M000074">on_data</a></li>
+              <li><a href="#M000078">on_eof</a></li>
+              <li><a href="#M000075">on_extended_data</a></li>
+              <li><a href="#M000079">on_open_failed</a></li>
+              <li><a href="#M000076">on_process</a></li>
+              <li><a href="#M000080">on_request</a></li>
+              <li><a href="#M000073">process</a></li>
+              <li><a href="#M000065">request_pty</a></li>
+              <li><a href="#M000081">send_channel_request</a></li>
+              <li><a href="#M000066">send_data</a></li>
+              <li><a href="#M000063">subsystem</a></li>
+              <li><a href="#M000068">wait</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -140,7 +140,7 @@
                     <td class='context-item-desc'>
                       
                       A hash of the valid PTY options (see <a
-                      href="Channel.html#M000067">request_pty</a>).
+                      href="Channel.html#M000065">request_pty</a>).
                     </td>
                   </tr>
                 </table>
@@ -250,8 +250,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000061'>
-                <a name='M000061'></a>
+              <div class='method public-class' id='method-M000059'>
+                <a name='M000059'></a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(connection, type, local_id, &amp;on_confirm_open)</span>
@@ -268,15 +268,15 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000061-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000059-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000061-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 110</span>&#x000A;110:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">connection</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">local_id</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">on_confirm_open</span>)&#x000A;111:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">logger</span>&#x000A;112: &#x000A;113:       <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>&#x000A;114:       <span class="ruby-ivar">@type</span>       = <span class="ruby-identifier">type</span>&#x000A;115:       <span class="ruby-ivar">@local_id</span>   = <span class="ruby-identifier">local_id</span>&#x000A;116: &#x000A;117:       <span class="ruby-ivar">@local_maximum_packet_size</span> = <span class="ruby-value">0x10000</span>&#x000A;118:       <span class="ruby-ivar">@local_window_size</span> = <span class="ruby-ivar">@local_maximum_window_size</span> = <span class="ruby-value">0x20000</span>&#x000A;119: &#x000A;120:       <span class="ruby-ivar">@on_confirm_open</span> = <span class="ruby-identifier">on_confirm_open</span>&#x000A;121: &#x000A;122:       <span class="ruby-ivar">@output</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>&#x000A;123: &#x000A;124:       <span class="ruby-ivar">@properties</span> = {}&#x000A;125: &#x000A;126:       <span class="ruby-ivar">@pending_requests</span> = []&#x000A;127:       <span class="ruby-ivar">@on_open_failed</span> = <span class="ruby-ivar">@on_data</span> = <span class="ruby-ivar">@on_extended_data</span> = <span class="ruby-ivar">@on_process</span> = <span class="ruby-ivar">@on_close</span> = <span class="ruby-ivar">@on_eof</span> = <span class="ruby-keyword kw">nil</span>&#x000A;128:       <span class="ruby-ivar">@on_request</span> = {}&#x000A;129:       <span class="ruby-ivar">@closing</span> = <span class="ruby-ivar">@eof</span> = <span class="ruby-ivar">@sent_eof</span> = <span class="ruby-keyword kw">false</span>&#x000A;130:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000059-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 110</span>&#x000A;110:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">connection</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">local_id</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">on_confirm_open</span>)&#x000A;111:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">logger</span>&#x000A;112: &#x000A;113:       <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>&#x000A;114:       <span class="ruby-ivar">@type</span>       = <span class="ruby-identifier">type</span>&#x000A;115:       <span class="ruby-ivar">@local_id</span>   = <span class="ruby-identifier">local_id</span>&#x000A;116: &#x000A;117:       <span class="ruby-ivar">@local_maximum_packet_size</span> = <span class="ruby-value">0x10000</span>&#x000A;118:       <span class="ruby-ivar">@local_window_size</span> = <span class="ruby-ivar">@local_maximum_window_size</span> = <span class="ruby-value">0x20000</span>&#x000A;119: &#x000A;120:       <span class="ruby-ivar">@on_confirm_open</span> = <span class="ruby-identifier">on_confirm_open</span>&#x000A;121: &#x000A;122:       <span class="ruby-ivar">@output</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>&#x000A;123: &#x000A;124:       <span class="ruby-ivar">@properties</span> = {}&#x000A;125: &#x000A;126:       <span class="ruby-ivar">@pending_requests</span> = []&#x000A;127:       <span class="ruby-ivar">@on_open_failed</span> = <span class="ruby-ivar">@on_data</span> = <span class="ruby-ivar">@on_extended_data</span> = <span class="ruby-ivar">@on_process</span> = <span class="ruby-ivar">@on_close</span> = <span class="ruby-ivar">@on_eof</span> = <span class="ruby-keyword kw">nil</span>&#x000A;128:       <span class="ruby-ivar">@on_request</span> = {}&#x000A;129:       <span class="ruby-ivar">@closing</span> = <span class="ruby-ivar">@eof</span> = <span class="ruby-ivar">@sent_eof</span> = <span class="ruby-keyword kw">false</span>&#x000A;130:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000062'>
-                <a name='M000062'></a>
+              <div class='method public-instance' id='method-M000060'>
+                <a name='M000060'></a>
                 <div class='synopsis'>
                   <span class='name'>[]</span>
                   <span class='arguments'>(name)</span>
@@ -287,14 +287,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000062-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000060-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000062-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 133</span>&#x000A;133:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">name</span>)&#x000A;134:       <span class="ruby-ivar">@properties</span>[<span class="ruby-identifier">name</span>]&#x000A;135:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000060-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 133</span>&#x000A;133:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">name</span>)&#x000A;134:       <span class="ruby-ivar">@properties</span>[<span class="ruby-identifier">name</span>]&#x000A;135:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000063'>
-                <a name='M000063'></a>
+              <div class='method public-instance' id='method-M000061'>
+                <a name='M000061'></a>
                 <div class='synopsis'>
                   <span class='name'>[]=</span>
                   <span class='arguments'>(name, value)</span>
@@ -305,14 +305,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000063-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000061-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000063-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 138</span>&#x000A;138:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]=</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span>)&#x000A;139:       <span class="ruby-ivar">@properties</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">value</span>&#x000A;140:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000061-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 138</span>&#x000A;138:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]=</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span>)&#x000A;139:       <span class="ruby-ivar">@properties</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">value</span>&#x000A;140:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000069'>
-                <a name='M000069'></a>
+              <div class='method public-instance' id='method-M000067'>
+                <a name='M000067'></a>
                 <div class='synopsis'>
                   <span class='name'>active?</span>
                   <span class='arguments'>()</span>
@@ -326,14 +326,14 @@
                   <pre>ssh.loop { channel.active? }</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000069-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000067-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000069-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 259</span>&#x000A;259:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">active?</span>&#x000A;260:       <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">channels</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">local_id</span>)&#x000A;261:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000067-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 259</span>&#x000A;259:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">active?</span>&#x000A;260:       <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">channels</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">local_id</span>)&#x000A;261:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000072'>
-                <a name='M000072'></a>
+              <div class='method public-instance' id='method-M000070'>
+                <a name='M000070'></a>
                 <div class='synopsis'>
                   <span class='name'>close</span>
                   <span class='arguments'>()</span>
@@ -347,14 +347,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000072-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000070-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000072-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 284</span>&#x000A;284:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>&#x000A;285:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@closing</span>&#x000A;286:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">remote_id</span>&#x000A;287:         <span class="ruby-ivar">@closing</span> = <span class="ruby-keyword kw">true</span>&#x000A;288:         <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-constant">CHANNEL_CLOSE</span>, <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">remote_id</span>))&#x000A;289:       <span class="ruby-keyword kw">end</span>&#x000A;290:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000070-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 284</span>&#x000A;284:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>&#x000A;285:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@closing</span>&#x000A;286:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">remote_id</span>&#x000A;287:         <span class="ruby-ivar">@closing</span> = <span class="ruby-keyword kw">true</span>&#x000A;288:         <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-constant">CHANNEL_CLOSE</span>, <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">remote_id</span>))&#x000A;289:       <span class="ruby-keyword kw">end</span>&#x000A;290:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000071'>
-                <a name='M000071'></a>
+              <div class='method public-instance' id='method-M000069'>
+                <a name='M000069'></a>
                 <div class='synopsis'>
                   <span class='name'>closing?</span>
                   <span class='arguments'>()</span>
@@ -363,79 +363,79 @@
                   <p>
                   Returns true if the channel is currently closing, but not actually closed.
                   A channel is closing when, for instance, <a
-                  href="Channel.html#M000072">close</a> has been invoked, but the server has
+                  href="Channel.html#M000070">close</a> has been invoked, but the server has
                   not yet responded with a CHANNEL_CLOSE packet of its own.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000071-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000069-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000071-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 276</span>&#x000A;276:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">closing?</span>&#x000A;277:       <span class="ruby-ivar">@closing</span>&#x000A;278:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000069-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 276</span>&#x000A;276:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">closing?</span>&#x000A;277:       <span class="ruby-ivar">@closing</span>&#x000A;278:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000087'>
-                <a name='M000087'></a>
+              <div class='method public-instance' id='method-M000085'>
+                <a name='M000085'></a>
                 <div class='synopsis'>
                   <span class='name'>do_close</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Invokes the <a href="Channel.html#M000079">on_close</a> callback when the
+                  Invokes the <a href="Channel.html#M000077">on_close</a> callback when the
                   server closes a channel. The channel is the only argument.
-                  </p>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000087-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000087-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 589</span>&#x000A;589:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_close</span>&#x000A;590:         <span class="ruby-ivar">@on_close</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@on_close</span>&#x000A;591:       <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='method public-instance' id='method-M000086'>
-                <a name='M000086'></a>
-                <div class='synopsis'>
-                  <span class='name'>do_eof</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='description'>
-                  <p>
-                  Invokes the <a href="Channel.html#M000080">on_eof</a> callback when the
-                  server indicates that no further data is forthcoming. The callback is
-                  invoked with the channel as the argument.
-                  </p>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000086-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000086-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 583</span>&#x000A;583:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_eof</span>&#x000A;584:         <span class="ruby-ivar">@on_eof</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@on_eof</span>&#x000A;585:       <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='method public-instance' id='method-M000085'>
-                <a name='M000085'></a>
-                <div class='synopsis'>
-                  <span class='name'>do_extended_data</span>
-                  <span class='arguments'>(type, data)</span>
-                </div>
-                <div class='description'>
-                  <p>
-                  Invokes the <a href="Channel.html#M000077">on_extended_data</a> callback
-                  when the server sends extended data to the channel. This will reduce the
-                  available window size on the local end. The callback is invoked with the
-                  channel, type, and data.
                   </p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000085-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000085-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 575</span>&#x000A;575:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_extended_data</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span>)&#x000A;576:         <span class="ruby-identifier">update_local_window_size</span>(<span class="ruby-identifier">data</span>.<span class="ruby-identifier">length</span>)&#x000A;577:         <span class="ruby-ivar">@on_extended_data</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@on_extended_data</span>&#x000A;578:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000085-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 589</span>&#x000A;589:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_close</span>&#x000A;590:         <span class="ruby-ivar">@on_close</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@on_close</span>&#x000A;591:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000088'>
-                <a name='M000088'></a>
+              <div class='method public-instance' id='method-M000084'>
+                <a name='M000084'></a>
+                <div class='synopsis'>
+                  <span class='name'>do_eof</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Invokes the <a href="Channel.html#M000078">on_eof</a> callback when the
+                  server indicates that no further data is forthcoming. The callback is
+                  invoked with the channel as the argument.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000084-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000084-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 583</span>&#x000A;583:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_eof</span>&#x000A;584:         <span class="ruby-ivar">@on_eof</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@on_eof</span>&#x000A;585:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-M000083'>
+                <a name='M000083'></a>
+                <div class='synopsis'>
+                  <span class='name'>do_extended_data</span>
+                  <span class='arguments'>(type, data)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Invokes the <a href="Channel.html#M000075">on_extended_data</a> callback
+                  when the server sends extended data to the channel. This will reduce the
+                  available window size on the local end. The callback is invoked with the
+                  channel, type, and data.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000083-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000083-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 575</span>&#x000A;575:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_extended_data</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span>)&#x000A;576:         <span class="ruby-identifier">update_local_window_size</span>(<span class="ruby-identifier">data</span>.<span class="ruby-identifier">length</span>)&#x000A;577:         <span class="ruby-ivar">@on_extended_data</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@on_extended_data</span>&#x000A;578:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-M000086'>
+                <a name='M000086'></a>
                 <div class='synopsis'>
                   <span class='name'>do_failure</span>
                   <span class='arguments'>()</span>
@@ -447,14 +447,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000088-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000086-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000088-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 595</span>&#x000A;595:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_failure</span>&#x000A;596:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callback</span> = <span class="ruby-identifier">pending_requests</span>.<span class="ruby-identifier">shift</span>&#x000A;597:           <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-keyword kw">false</span>)&#x000A;598:         <span class="ruby-keyword kw">else</span>&#x000A;599:           <span class="ruby-identifier">error</span> { <span class="ruby-value str">&quot;channel failure recieved with no pending request to handle it (bug?)&quot;</span> }&#x000A;600:         <span class="ruby-keyword kw">end</span>&#x000A;601:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000086-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 595</span>&#x000A;595:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_failure</span>&#x000A;596:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callback</span> = <span class="ruby-identifier">pending_requests</span>.<span class="ruby-identifier">shift</span>&#x000A;597:           <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-keyword kw">false</span>)&#x000A;598:         <span class="ruby-keyword kw">else</span>&#x000A;599:           <span class="ruby-identifier">error</span> { <span class="ruby-value str">&quot;channel failure recieved with no pending request to handle it (bug?)&quot;</span> }&#x000A;600:         <span class="ruby-keyword kw">end</span>&#x000A;601:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000084'>
-                <a name='M000084'></a>
+              <div class='method public-instance' id='method-M000082'>
+                <a name='M000082'></a>
                 <div class='synopsis'>
                   <span class='name'>do_open_failed</span>
                   <span class='arguments'>(reason_code, description)</span>
@@ -462,7 +462,7 @@
                 <div class='description'>
                   <p>
                   Invoked when the server failed to open the channel. If an <a
-                  href="Channel.html#M000081">on_open_failed</a> callback was specified, it
+                  href="Channel.html#M000079">on_open_failed</a> callback was specified, it
                   will be invoked with the channel, reason code, and description as
                   arguments. Otherwise, a <a
                   href="../ChannelOpenFailed.html">ChannelOpenFailed</a> exception will be
@@ -470,14 +470,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000084-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000082-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000084-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 520</span>&#x000A;520:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_open_failed</span>(<span class="ruby-identifier">reason_code</span>, <span class="ruby-identifier">description</span>)&#x000A;521:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@on_open_failed</span>&#x000A;522:           <span class="ruby-ivar">@on_open_failed</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">reason_code</span>, <span class="ruby-identifier">description</span>)&#x000A;523:         <span class="ruby-keyword kw">else</span>&#x000A;524:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">ChannelOpenFailed</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">reason_code</span>, <span class="ruby-identifier">description</span>)&#x000A;525:         <span class="ruby-keyword kw">end</span>          &#x000A;526:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000082-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 520</span>&#x000A;520:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_open_failed</span>(<span class="ruby-identifier">reason_code</span>, <span class="ruby-identifier">description</span>)&#x000A;521:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@on_open_failed</span>&#x000A;522:           <span class="ruby-ivar">@on_open_failed</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">reason_code</span>, <span class="ruby-identifier">description</span>)&#x000A;523:         <span class="ruby-keyword kw">else</span>&#x000A;524:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">ChannelOpenFailed</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">reason_code</span>, <span class="ruby-identifier">description</span>)&#x000A;525:         <span class="ruby-keyword kw">end</span>          &#x000A;526:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000089'>
-                <a name='M000089'></a>
+              <div class='method public-instance' id='method-M000087'>
+                <a name='M000087'></a>
                 <div class='synopsis'>
                   <span class='name'>do_success</span>
                   <span class='arguments'>()</span>
@@ -489,14 +489,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000089-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000087-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000089-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 605</span>&#x000A;605:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_success</span>&#x000A;606:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callback</span> = <span class="ruby-identifier">pending_requests</span>.<span class="ruby-identifier">shift</span>&#x000A;607:           <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-keyword kw">true</span>)&#x000A;608:         <span class="ruby-keyword kw">else</span>&#x000A;609:           <span class="ruby-identifier">error</span> { <span class="ruby-value str">&quot;channel success recieved with no pending request to handle it (bug?)&quot;</span> }&#x000A;610:         <span class="ruby-keyword kw">end</span>&#x000A;611:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000087-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 605</span>&#x000A;605:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">do_success</span>&#x000A;606:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callback</span> = <span class="ruby-identifier">pending_requests</span>.<span class="ruby-identifier">shift</span>&#x000A;607:           <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-keyword kw">true</span>)&#x000A;608:         <span class="ruby-keyword kw">else</span>&#x000A;609:           <span class="ruby-identifier">error</span> { <span class="ruby-value str">&quot;channel success recieved with no pending request to handle it (bug?)&quot;</span> }&#x000A;610:         <span class="ruby-keyword kw">end</span>&#x000A;611:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000066'>
-                <a name='M000066'></a>
+              <div class='method public-instance' id='method-M000064'>
+                <a name='M000064'></a>
                 <div class='synopsis'>
                   <span class='name'>env</span>
                   <span class='arguments'>(variable_name, variable_value, &amp;block)</span>
@@ -513,14 +513,14 @@
                   <pre>channel.env &quot;PATH&quot;, &quot;/usr/local/bin&quot;</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000066-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000064-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000066-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 187</span>&#x000A;187:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">env</span>(<span class="ruby-identifier">variable_name</span>, <span class="ruby-identifier">variable_value</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;188:       <span class="ruby-identifier">send_channel_request</span>(<span class="ruby-value str">&quot;env&quot;</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">variable_name</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">variable_value</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;189:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000064-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 187</span>&#x000A;187:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">env</span>(<span class="ruby-identifier">variable_name</span>, <span class="ruby-identifier">variable_value</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;188:       <span class="ruby-identifier">send_channel_request</span>(<span class="ruby-value str">&quot;env&quot;</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">variable_name</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">variable_value</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;189:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000074'>
-                <a name='M000074'></a>
+              <div class='method public-instance' id='method-M000072'>
+                <a name='M000072'></a>
                 <div class='synopsis'>
                   <span class='name'>eof!</span>
                   <span class='arguments'>()</span>
@@ -533,14 +533,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000074-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000072-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000074-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 302</span>&#x000A;302:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">eof!</span>&#x000A;303:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">eof?</span>&#x000A;304:       <span class="ruby-ivar">@eof</span> = <span class="ruby-keyword kw">true</span>&#x000A;305:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000072-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 302</span>&#x000A;302:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">eof!</span>&#x000A;303:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">eof?</span>&#x000A;304:       <span class="ruby-ivar">@eof</span> = <span class="ruby-keyword kw">true</span>&#x000A;305:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000073'>
-                <a name='M000073'></a>
+              <div class='method public-instance' id='method-M000071'>
+                <a name='M000071'></a>
                 <div class='synopsis'>
                   <span class='name'>eof?</span>
                   <span class='arguments'>()</span>
@@ -548,20 +548,20 @@
                 <div class='description'>
                   <p>
                   Returns true if the local end of the channel has declared that no more data
-                  is forthcoming (see <a href="Channel.html#M000074">eof!</a>). Trying to
-                  send data via <a href="Channel.html#M000068">send_data</a> when this is
+                  is forthcoming (see <a href="Channel.html#M000072">eof!</a>). Trying to
+                  send data via <a href="Channel.html#M000066">send_data</a> when this is
                   true will result in an exception being raised.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000073-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000071-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000073-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 295</span>&#x000A;295:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">eof?</span>&#x000A;296:       <span class="ruby-ivar">@eof</span>&#x000A;297:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000071-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 295</span>&#x000A;295:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">eof?</span>&#x000A;296:       <span class="ruby-ivar">@eof</span>&#x000A;297:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000064'>
-                <a name='M000064'></a>
+              <div class='method public-instance' id='method-M000062'>
+                <a name='M000062'></a>
                 <div class='synopsis'>
                   <span class='name'>exec</span>
                   <span class='arguments'>(command, &amp;block)</span>
@@ -579,14 +579,14 @@
                   <pre>channel.exec &quot;ls -l /home&quot; do |ch, success|&#x000A;  if success&#x000A;    puts &quot;command has begun executing...&quot;&#x000A;    # this is a good place to hang callbacks like #on_data...&#x000A;  else&#x000A;    puts &quot;alas! the command could not be invoked!&quot;&#x000A;  end&#x000A;end</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000064-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000062-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000064-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 158</span>&#x000A;158:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;159:       <span class="ruby-identifier">send_channel_request</span>(<span class="ruby-value str">&quot;exec&quot;</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">command</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;160:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000062-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 158</span>&#x000A;158:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;159:       <span class="ruby-identifier">send_channel_request</span>(<span class="ruby-value str">&quot;exec&quot;</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">command</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;160:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000079'>
-                <a name='M000079'></a>
+              <div class='method public-instance' id='method-M000077'>
+                <a name='M000077'></a>
                 <div class='synopsis'>
                   <span class='name'>on_close</span>
                   <span class='arguments'>(&amp;block)</span>
@@ -599,14 +599,14 @@
                   <pre>channel.on_close do |ch|&#x000A;  puts &quot;remote end is closing!&quot;&#x000A;end</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000079-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000077-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000079-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 383</span>&#x000A;383:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_close</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;384:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_close</span> = <span class="ruby-ivar">@on_close</span>, <span class="ruby-identifier">block</span>&#x000A;385:       <span class="ruby-identifier">old</span>&#x000A;386:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000077-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 383</span>&#x000A;383:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_close</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;384:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_close</span> = <span class="ruby-ivar">@on_close</span>, <span class="ruby-identifier">block</span>&#x000A;385:       <span class="ruby-identifier">old</span>&#x000A;386:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000076'>
-                <a name='M000076'></a>
+              <div class='method public-instance' id='method-M000074'>
+                <a name='M000074'></a>
                 <div class='synopsis'>
                   <span class='name'>on_data</span>
                   <span class='arguments'>(&amp;block)</span>
@@ -624,14 +624,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000076-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000074-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000076-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 330</span>&#x000A;330:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_data</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;331:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_data</span> = <span class="ruby-ivar">@on_data</span>, <span class="ruby-identifier">block</span>&#x000A;332:       <span class="ruby-identifier">old</span>&#x000A;333:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000074-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 330</span>&#x000A;330:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_data</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;331:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_data</span> = <span class="ruby-ivar">@on_data</span>, <span class="ruby-identifier">block</span>&#x000A;332:       <span class="ruby-identifier">old</span>&#x000A;333:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000080'>
-                <a name='M000080'></a>
+              <div class='method public-instance' id='method-M000078'>
+                <a name='M000078'></a>
                 <div class='synopsis'>
                   <span class='name'>on_eof</span>
                   <span class='arguments'>(&amp;block)</span>
@@ -645,14 +645,14 @@
                   <pre>channel.on_eof do |ch|&#x000A;  puts &quot;remote end is done sending data&quot;&#x000A;end</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000080-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000078-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000080-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 395</span>&#x000A;395:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_eof</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;396:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_eof</span> = <span class="ruby-ivar">@on_eof</span>, <span class="ruby-identifier">block</span>&#x000A;397:       <span class="ruby-identifier">old</span>&#x000A;398:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000078-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 395</span>&#x000A;395:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_eof</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;396:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_eof</span> = <span class="ruby-ivar">@on_eof</span>, <span class="ruby-identifier">block</span>&#x000A;397:       <span class="ruby-identifier">old</span>&#x000A;398:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000077'>
-                <a name='M000077'></a>
+              <div class='method public-instance' id='method-M000075'>
+                <a name='M000075'></a>
                 <div class='synopsis'>
                   <span class='name'>on_extended_data</span>
                   <span class='arguments'>(&amp;block)</span>
@@ -669,14 +669,14 @@
                   <pre>channel.on_extended_data do |ch, type, data|&#x000A;  puts &quot;got stderr: #{data.inspect}&quot;&#x000A;end</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000077-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000075-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000077-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 345</span>&#x000A;345:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_extended_data</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;346:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_extended_data</span> = <span class="ruby-ivar">@on_extended_data</span>, <span class="ruby-identifier">block</span>&#x000A;347:       <span class="ruby-identifier">old</span>&#x000A;348:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000075-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 345</span>&#x000A;345:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_extended_data</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;346:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_extended_data</span> = <span class="ruby-ivar">@on_extended_data</span>, <span class="ruby-identifier">block</span>&#x000A;347:       <span class="ruby-identifier">old</span>&#x000A;348:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000081'>
-                <a name='M000081'></a>
+              <div class='method public-instance' id='method-M000079'>
+                <a name='M000079'></a>
                 <div class='synopsis'>
                   <span class='name'>on_open_failed</span>
                   <span class='arguments'>(&amp;block)</span>
@@ -691,14 +691,14 @@
                   <pre>channel = session.open_channel do |ch|&#x000A;  # ..&#x000A;end&#x000A;&#x000A;channel.on_open_failed { |ch, code, desc| ... }</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000081-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000079-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000081-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 410</span>&#x000A;410:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_open_failed</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;411:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_open_failed</span> = <span class="ruby-ivar">@on_open_failed</span>, <span class="ruby-identifier">block</span>&#x000A;412:       <span class="ruby-identifier">old</span>&#x000A;413:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000079-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 410</span>&#x000A;410:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_open_failed</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;411:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_open_failed</span> = <span class="ruby-ivar">@on_open_failed</span>, <span class="ruby-identifier">block</span>&#x000A;412:       <span class="ruby-identifier">old</span>&#x000A;413:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000078'>
-                <a name='M000078'></a>
+              <div class='method public-instance' id='method-M000076'>
+                <a name='M000076'></a>
                 <div class='synopsis'>
                   <span class='name'>on_process</span>
                   <span class='arguments'>(&amp;block)</span>
@@ -719,14 +719,14 @@
                   <pre>channel[:data] = &quot;&quot;&#x000A;&#x000A;channel.on_data do |ch, data|&#x000A;  channel[:data] &lt;&lt; data&#x000A;end&#x000A;&#x000A;channel.on_process do |ch|&#x000A;  if channel[:data] =~ /^.*?\n/&#x000A;    puts $&amp;&#x000A;    channel[:data] = $'&#x000A;  end&#x000A;end</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000078-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000076-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000078-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 372</span>&#x000A;372:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_process</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;373:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_process</span> = <span class="ruby-ivar">@on_process</span>, <span class="ruby-identifier">block</span>&#x000A;374:       <span class="ruby-identifier">old</span>&#x000A;375:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000076-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 372</span>&#x000A;372:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_process</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;373:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_process</span> = <span class="ruby-ivar">@on_process</span>, <span class="ruby-identifier">block</span>&#x000A;374:       <span class="ruby-identifier">old</span>&#x000A;375:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000082'>
-                <a name='M000082'></a>
+              <div class='method public-instance' id='method-M000080'>
+                <a name='M000080'></a>
                 <div class='synopsis'>
                   <span class='name'>on_request</span>
                   <span class='arguments'>(type, &amp;block)</span>
@@ -767,35 +767,35 @@
                   </ul>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000082-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000080-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000082-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 441</span>&#x000A;441:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_request</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;442:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_request</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-ivar">@on_request</span>[<span class="ruby-identifier">type</span>], <span class="ruby-identifier">block</span>&#x000A;443:       <span class="ruby-identifier">old</span>&#x000A;444:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000080-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 441</span>&#x000A;441:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_request</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;442:       <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_request</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-ivar">@on_request</span>[<span class="ruby-identifier">type</span>], <span class="ruby-identifier">block</span>&#x000A;443:       <span class="ruby-identifier">old</span>&#x000A;444:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000075'>
-                <a name='M000075'></a>
+              <div class='method public-instance' id='method-M000073'>
+                <a name='M000073'></a>
                 <div class='synopsis'>
                   <span class='name'>process</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='description'>
                   <p>
-                  If an <a href="Channel.html#M000078">on_process</a> handler has been set
+                  If an <a href="Channel.html#M000076">on_process</a> handler has been set
                   up, this will cause it to be invoked (passing the channel itself as an
                   argument). It also causes all pending output to be enqueued as CHANNEL_DATA
                   packets (see enqueue_pending_output).
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000075-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000073-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000075-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 310</span>&#x000A;310:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process</span>&#x000A;311:       <span class="ruby-ivar">@on_process</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@on_process</span>&#x000A;312:       <span class="ruby-identifier">enqueue_pending_output</span>&#x000A;313: &#x000A;314:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@eof</span> <span class="ruby-keyword kw">and</span> <span class="ruby-keyword kw">not</span> <span class="ruby-ivar">@sent_eof</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">remote_id</span>&#x000A;315:         <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-constant">CHANNEL_EOF</span>, <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">remote_id</span>))&#x000A;316:         <span class="ruby-ivar">@sent_eof</span> = <span class="ruby-keyword kw">true</span>&#x000A;317:       <span class="ruby-keyword kw">end</span>&#x000A;318:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000073-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 310</span>&#x000A;310:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process</span>&#x000A;311:       <span class="ruby-ivar">@on_process</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@on_process</span>&#x000A;312:       <span class="ruby-identifier">enqueue_pending_output</span>&#x000A;313: &#x000A;314:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@eof</span> <span class="ruby-keyword kw">and</span> <span class="ruby-keyword kw">not</span> <span class="ruby-ivar">@sent_eof</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">remote_id</span>&#x000A;315:         <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-constant">CHANNEL_EOF</span>, <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">remote_id</span>))&#x000A;316:         <span class="ruby-ivar">@sent_eof</span> = <span class="ruby-keyword kw">true</span>&#x000A;317:       <span class="ruby-keyword kw">end</span>&#x000A;318:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000067'>
-                <a name='M000067'></a>
+              <div class='method public-instance' id='method-M000065'>
+                <a name='M000065'></a>
                 <div class='synopsis'>
                   <span class='name'>request_pty</span>
                   <span class='arguments'>(opts={}, &amp;block)</span>
@@ -819,14 +819,14 @@
                   <pre>channel.request_pty do |ch, success|&#x000A;  if success&#x000A;    puts &quot;pty successfully obtained&quot;&#x000A;  else&#x000A;    puts &quot;could not obtain pty&quot;&#x000A;  end&#x000A;end</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000067-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000065-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000067-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 218</span>&#x000A;218:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">request_pty</span>(<span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;219:       <span class="ruby-identifier">extra</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">keys</span> <span class="ruby-operator">-</span> <span class="ruby-constant">VALID_PTY_OPTIONS</span>.<span class="ruby-identifier">keys</span>&#x000A;220:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;invalid option(s) to request_pty: #{extra.inspect}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">extra</span>.<span class="ruby-identifier">any?</span>&#x000A;221: &#x000A;222:       <span class="ruby-identifier">opts</span> = <span class="ruby-constant">VALID_PTY_OPTIONS</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">opts</span>)&#x000A;223: &#x000A;224:       <span class="ruby-identifier">modes</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:modes</span>].<span class="ruby-identifier">inject</span>(<span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">memo</span>, (<span class="ruby-identifier">mode</span>, <span class="ruby-identifier">data</span>)<span class="ruby-operator">|</span>&#x000A;225:         <span class="ruby-identifier">memo</span>.<span class="ruby-identifier">write_byte</span>(<span class="ruby-identifier">mode</span>).<span class="ruby-identifier">write_long</span>(<span class="ruby-identifier">data</span>)&#x000A;226:       <span class="ruby-keyword kw">end</span>&#x000A;227:       <span class="ruby-comment cmt"># mark the end of the mode opcode list with a 0 byte</span>&#x000A;228:       <span class="ruby-identifier">modes</span>.<span class="ruby-identifier">write_byte</span>(<span class="ruby-value">0</span>)&#x000A;229: &#x000A;230:       <span class="ruby-identifier">send_channel_request</span>(<span class="ruby-value str">&quot;pty-req&quot;</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:term</span>],&#x000A;231:         <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:chars_wide</span>], <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:chars_high</span>],&#x000A;232:         <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:pixels_wide</span>], <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:pixels_high</span>],&#x000A;233:         <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">modes</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;234:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000065-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 218</span>&#x000A;218:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">request_pty</span>(<span class="ruby-identifier">opts</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;219:       <span class="ruby-identifier">extra</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">keys</span> <span class="ruby-operator">-</span> <span class="ruby-constant">VALID_PTY_OPTIONS</span>.<span class="ruby-identifier">keys</span>&#x000A;220:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;invalid option(s) to request_pty: #{extra.inspect}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">extra</span>.<span class="ruby-identifier">any?</span>&#x000A;221: &#x000A;222:       <span class="ruby-identifier">opts</span> = <span class="ruby-constant">VALID_PTY_OPTIONS</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">opts</span>)&#x000A;223: &#x000A;224:       <span class="ruby-identifier">modes</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:modes</span>].<span class="ruby-identifier">inject</span>(<span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">memo</span>, (<span class="ruby-identifier">mode</span>, <span class="ruby-identifier">data</span>)<span class="ruby-operator">|</span>&#x000A;225:         <span class="ruby-identifier">memo</span>.<span class="ruby-identifier">write_byte</span>(<span class="ruby-identifier">mode</span>).<span class="ruby-identifier">write_long</span>(<span class="ruby-identifier">data</span>)&#x000A;226:       <span class="ruby-keyword kw">end</span>&#x000A;227:       <span class="ruby-comment cmt"># mark the end of the mode opcode list with a 0 byte</span>&#x000A;228:       <span class="ruby-identifier">modes</span>.<span class="ruby-identifier">write_byte</span>(<span class="ruby-value">0</span>)&#x000A;229: &#x000A;230:       <span class="ruby-identifier">send_channel_request</span>(<span class="ruby-value str">&quot;pty-req&quot;</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:term</span>],&#x000A;231:         <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:chars_wide</span>], <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:chars_high</span>],&#x000A;232:         <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:pixels_wide</span>], <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:pixels_high</span>],&#x000A;233:         <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">modes</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;234:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000083'>
-                <a name='M000083'></a>
+              <div class='method public-instance' id='method-M000081'>
+                <a name='M000081'></a>
                 <div class='synopsis'>
                   <span class='name'>send_channel_request</span>
                   <span class='arguments'>(request_name, *data, &amp;callback)</span>
@@ -835,7 +835,7 @@
                   <p>
                   Sends a new channel request with the given name. The extra <tt>data</tt>
                   parameter must either be empty, or consist of an even number of arguments.
-                  See <a href="../Buffer.html#M000288">Net::SSH::Buffer.from</a> for a
+                  See <a href="../Buffer.html#M000286">Net::SSH::Buffer.from</a> for a
                   description of their format. If a block is given, it is registered as a
                   callback for a pending request, and the packet will be flagged so that the
                   server knows a reply is required. If no block is given, the server will
@@ -848,19 +848,19 @@
                   <pre>channel.send_channel_request &quot;shell&quot; do |ch, success|&#x000A;  if success&#x000A;    puts &quot;user shell started successfully&quot;&#x000A;  else&#x000A;    puts &quot;could not start user shell&quot;&#x000A;  end&#x000A;end</pre>
                   <p>
                   Most channel requests you&#8217;ll want to send are already wrapped in more
-                  convenient helper methods (see <a href="Channel.html#M000064">exec</a> and
-                  <a href="Channel.html#M000065">subsystem</a>).
+                  convenient helper methods (see <a href="Channel.html#M000062">exec</a> and
+                  <a href="Channel.html#M000063">subsystem</a>).
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000083-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000081-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000083-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 468</span>&#x000A;468:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_channel_request</span>(<span class="ruby-identifier">request_name</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">data</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)&#x000A;469:       <span class="ruby-identifier">info</span> { <span class="ruby-node">&quot;sending channel request #{request_name.inspect}&quot;</span> }&#x000A;470:       <span class="ruby-identifier">msg</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-constant">CHANNEL_REQUEST</span>,&#x000A;471:         <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">remote_id</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">request_name</span>,&#x000A;472:         <span class="ruby-identifier">:bool</span>, <span class="ruby-operator">!</span><span class="ruby-identifier">callback</span>.<span class="ruby-identifier">nil?</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">data</span>)&#x000A;473:       <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">msg</span>)&#x000A;474:       <span class="ruby-identifier">pending_requests</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">callback</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callback</span>&#x000A;475:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000081-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 468</span>&#x000A;468:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_channel_request</span>(<span class="ruby-identifier">request_name</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">data</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)&#x000A;469:       <span class="ruby-identifier">info</span> { <span class="ruby-node">&quot;sending channel request #{request_name.inspect}&quot;</span> }&#x000A;470:       <span class="ruby-identifier">msg</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-identifier">:byte</span>, <span class="ruby-constant">CHANNEL_REQUEST</span>,&#x000A;471:         <span class="ruby-identifier">:long</span>, <span class="ruby-identifier">remote_id</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">request_name</span>,&#x000A;472:         <span class="ruby-identifier">:bool</span>, <span class="ruby-operator">!</span><span class="ruby-identifier">callback</span>.<span class="ruby-identifier">nil?</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">data</span>)&#x000A;473:       <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">msg</span>)&#x000A;474:       <span class="ruby-identifier">pending_requests</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">callback</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callback</span>&#x000A;475:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000068'>
-                <a name='M000068'></a>
+              <div class='method public-instance' id='method-M000066'>
+                <a name='M000066'></a>
                 <div class='synopsis'>
                   <span class='name'>send_data</span>
                   <span class='arguments'>(data)</span>
@@ -878,19 +878,19 @@
                   </p>
                   <p>
                   This will raise an exception if the channel has previously declared that no
-                  more data will be sent (see <a href="Channel.html#M000074">eof!</a>).
+                  more data will be sent (see <a href="Channel.html#M000072">eof!</a>).
                   </p>
                   <pre>channel.send_data(&quot;the password\n&quot;)</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000068-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000066-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000068-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 249</span>&#x000A;249:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_data</span>(<span class="ruby-identifier">data</span>)&#x000A;250:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">EOFError</span>, <span class="ruby-value str">&quot;cannot send data if channel has declared eof&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">eof?</span>&#x000A;251:       <span class="ruby-identifier">output</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_s</span>)&#x000A;252:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000066-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 249</span>&#x000A;249:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_data</span>(<span class="ruby-identifier">data</span>)&#x000A;250:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">EOFError</span>, <span class="ruby-value str">&quot;cannot send data if channel has declared eof&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">eof?</span>&#x000A;251:       <span class="ruby-identifier">output</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_s</span>)&#x000A;252:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000065'>
-                <a name='M000065'></a>
+              <div class='method public-instance' id='method-M000063'>
+                <a name='M000063'></a>
                 <div class='synopsis'>
                   <span class='name'>subsystem</span>
                   <span class='arguments'>(subsystem, &amp;block)</span>
@@ -907,14 +907,14 @@
                   <pre>channel.subsystem(&quot;sftp&quot;) do |ch, success|&#x000A;  if success&#x000A;    puts &quot;subsystem successfully started&quot;&#x000A;  else&#x000A;    puts &quot;subsystem could not be started&quot;&#x000A;  end&#x000A;end</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000065-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000063-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000065-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 175</span>&#x000A;175:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subsystem</span>(<span class="ruby-identifier">subsystem</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;176:       <span class="ruby-identifier">send_channel_request</span>(<span class="ruby-value str">&quot;subsystem&quot;</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">subsystem</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;177:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000063-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 175</span>&#x000A;175:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subsystem</span>(<span class="ruby-identifier">subsystem</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;176:       <span class="ruby-identifier">send_channel_request</span>(<span class="ruby-value str">&quot;subsystem&quot;</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-identifier">subsystem</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;177:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000070'>
-                <a name='M000070'></a>
+              <div class='method public-instance' id='method-M000068'>
+                <a name='M000068'></a>
                 <div class='synopsis'>
                   <span class='name'>wait</span>
                   <span class='arguments'>()</span>
@@ -928,10 +928,10 @@
                   <pre>channel.exec(&quot;grep ...&quot;) { ... }&#x000A;channel.wait</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000070-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000068-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000070-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 268</span>&#x000A;268:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">wait</span>&#x000A;269:       <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">loop</span> { <span class="ruby-identifier">active?</span> }&#x000A;270:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000068-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/connection/channel.rb, line 268</span>&#x000A;268:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">wait</span>&#x000A;269:       <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">loop</span> { <span class="ruby-identifier">active?</span> }&#x000A;270:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -51,18 +51,18 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000203">digest_class</a></li>
-              <li><a href="#M000201">key_length</a></li>
-              <li><a href="#M000202">mac_length</a></li>
-              <li><a href="#M000207">new</a></li>
+              <li><a href="#M000201">digest_class</a></li>
+              <li><a href="#M000199">key_length</a></li>
+              <li><a href="#M000200">mac_length</a></li>
+              <li><a href="#M000205">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000209">digest</a></li>
-              <li><a href="#M000206">digest_class</a></li>
-              <li><a href="#M000208">key=</a></li>
-              <li><a href="#M000204">key_length</a></li>
-              <li><a href="#M000205">mac_length</a></li>
+              <li><a href="#M000207">digest</a></li>
+              <li><a href="#M000204">digest_class</a></li>
+              <li><a href="#M000206">key=</a></li>
+              <li><a href="#M000202">key_length</a></li>
+              <li><a href="#M000203">mac_length</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -83,61 +83,61 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000203'>
-                <a name='M000203'></a>
-                <div class='synopsis'>
-                  <span class='name'>digest_class</span>
-                  <span class='arguments'>(*v)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000203-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000203-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 34</span>&#x000A;34:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digest_class</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">v</span>)&#x000A;35:         <span class="ruby-ivar">@digest_class</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">defined?</span>(<span class="ruby-ivar">@digest_class</span>)&#x000A;36:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">empty?</span>&#x000A;37:           <span class="ruby-ivar">@digest_class</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">digest_class</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@digest_class</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:digest_class</span>)&#x000A;38:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@digest_class</span>&#x000A;39:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;40:           <span class="ruby-ivar">@digest_class</span> = <span class="ruby-identifier">v</span>.<span class="ruby-identifier">first</span>&#x000A;41:         <span class="ruby-keyword kw">else</span>&#x000A;42:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;wrong number of arguments (#{v.length} for 1)&quot;</span>&#x000A;43:         <span class="ruby-keyword kw">end</span>&#x000A;44:       <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
               <div class='method public-class' id='method-M000201'>
                 <a name='M000201'></a>
                 <div class='synopsis'>
-                  <span class='name'>key_length</span>
+                  <span class='name'>digest_class</span>
                   <span class='arguments'>(*v)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000201-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000201-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 10</span>&#x000A;10:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">key_length</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">v</span>)&#x000A;11:         <span class="ruby-ivar">@key_length</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">defined?</span>(<span class="ruby-ivar">@key_length</span>)&#x000A;12:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">empty?</span>&#x000A;13:           <span class="ruby-ivar">@key_length</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">key_length</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@key_length</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:key_length</span>)&#x000A;14:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@key_length</span>&#x000A;15:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;16:           <span class="ruby-ivar">@key_length</span> = <span class="ruby-identifier">v</span>.<span class="ruby-identifier">first</span>&#x000A;17:         <span class="ruby-keyword kw">else</span>&#x000A;18:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;wrong number of arguments (#{v.length} for 1)&quot;</span>&#x000A;19:         <span class="ruby-keyword kw">end</span>&#x000A;20:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000201-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 34</span>&#x000A;34:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digest_class</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">v</span>)&#x000A;35:         <span class="ruby-ivar">@digest_class</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">defined?</span>(<span class="ruby-ivar">@digest_class</span>)&#x000A;36:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">empty?</span>&#x000A;37:           <span class="ruby-ivar">@digest_class</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">digest_class</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@digest_class</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:digest_class</span>)&#x000A;38:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@digest_class</span>&#x000A;39:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;40:           <span class="ruby-ivar">@digest_class</span> = <span class="ruby-identifier">v</span>.<span class="ruby-identifier">first</span>&#x000A;41:         <span class="ruby-keyword kw">else</span>&#x000A;42:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;wrong number of arguments (#{v.length} for 1)&quot;</span>&#x000A;43:         <span class="ruby-keyword kw">end</span>&#x000A;44:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000202'>
-                <a name='M000202'></a>
+              <div class='method public-class' id='method-M000199'>
+                <a name='M000199'></a>
+                <div class='synopsis'>
+                  <span class='name'>key_length</span>
+                  <span class='arguments'>(*v)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000199-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000199-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 10</span>&#x000A;10:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">key_length</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">v</span>)&#x000A;11:         <span class="ruby-ivar">@key_length</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">defined?</span>(<span class="ruby-ivar">@key_length</span>)&#x000A;12:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">empty?</span>&#x000A;13:           <span class="ruby-ivar">@key_length</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">key_length</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@key_length</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:key_length</span>)&#x000A;14:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@key_length</span>&#x000A;15:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;16:           <span class="ruby-ivar">@key_length</span> = <span class="ruby-identifier">v</span>.<span class="ruby-identifier">first</span>&#x000A;17:         <span class="ruby-keyword kw">else</span>&#x000A;18:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;wrong number of arguments (#{v.length} for 1)&quot;</span>&#x000A;19:         <span class="ruby-keyword kw">end</span>&#x000A;20:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-M000200'>
+                <a name='M000200'></a>
                 <div class='synopsis'>
                   <span class='name'>mac_length</span>
                   <span class='arguments'>(*v)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000202-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000200-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000202-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 22</span>&#x000A;22:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mac_length</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">v</span>)&#x000A;23:         <span class="ruby-ivar">@mac_length</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">defined?</span>(<span class="ruby-ivar">@mac_length</span>)&#x000A;24:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">empty?</span>&#x000A;25:           <span class="ruby-ivar">@mac_length</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">mac_length</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@mac_length</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:mac_length</span>)&#x000A;26:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@mac_length</span>&#x000A;27:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;28:           <span class="ruby-ivar">@mac_length</span> = <span class="ruby-identifier">v</span>.<span class="ruby-identifier">first</span>&#x000A;29:         <span class="ruby-keyword kw">else</span>&#x000A;30:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;wrong number of arguments (#{v.length} for 1)&quot;</span>&#x000A;31:         <span class="ruby-keyword kw">end</span>&#x000A;32:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000200-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 22</span>&#x000A;22:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mac_length</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">v</span>)&#x000A;23:         <span class="ruby-ivar">@mac_length</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">defined?</span>(<span class="ruby-ivar">@mac_length</span>)&#x000A;24:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">empty?</span>&#x000A;25:           <span class="ruby-ivar">@mac_length</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">mac_length</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@mac_length</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:mac_length</span>)&#x000A;26:           <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@mac_length</span>&#x000A;27:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;28:           <span class="ruby-ivar">@mac_length</span> = <span class="ruby-identifier">v</span>.<span class="ruby-identifier">first</span>&#x000A;29:         <span class="ruby-keyword kw">else</span>&#x000A;30:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;wrong number of arguments (#{v.length} for 1)&quot;</span>&#x000A;31:         <span class="ruby-keyword kw">end</span>&#x000A;32:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-class' id='method-M000207'>
-                <a name='M000207'></a>
+              <div class='method public-class' id='method-M000205'>
+                <a name='M000205'></a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(key=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000207-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000205-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000207-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">key</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;63:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">key</span> = <span class="ruby-identifier">key</span>&#x000A;64:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000205-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">key</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;63:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">key</span> = <span class="ruby-identifier">key</span>&#x000A;64:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000209'>
-                <a name='M000209'></a>
+              <div class='method public-instance' id='method-M000207'>
+                <a name='M000207'></a>
                 <div class='synopsis'>
                   <span class='name'>digest</span>
                   <span class='arguments'>(data)</span>
@@ -149,27 +149,27 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000209-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000207-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000209-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 73</span>&#x000A;73:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digest</span>(<span class="ruby-identifier">data</span>)&#x000A;74:       <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">HMAC</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-identifier">digest_class</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">data</span>)[<span class="ruby-value">0</span>,<span class="ruby-identifier">mac_length</span>]&#x000A;75:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000207-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 73</span>&#x000A;73:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digest</span>(<span class="ruby-identifier">data</span>)&#x000A;74:       <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">HMAC</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-identifier">digest_class</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">data</span>)[<span class="ruby-value">0</span>,<span class="ruby-identifier">mac_length</span>]&#x000A;75:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000206'>
-                <a name='M000206'></a>
+              <div class='method public-instance' id='method-M000204'>
+                <a name='M000204'></a>
                 <div class='synopsis'>
                   <span class='name'>digest_class</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000206-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000204-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000206-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 55</span>&#x000A;55:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digest_class</span>&#x000A;56:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">digest_class</span>&#x000A;57:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000204-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 55</span>&#x000A;55:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digest_class</span>&#x000A;56:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">digest_class</span>&#x000A;57:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000208'>
-                <a name='M000208'></a>
+              <div class='method public-instance' id='method-M000206'>
+                <a name='M000206'></a>
                 <div class='synopsis'>
                   <span class='name'>key=</span>
                   <span class='arguments'>(value)</span>
@@ -181,36 +181,36 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000208-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000206-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000208-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 68</span>&#x000A;68:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">key=</span>(<span class="ruby-identifier">value</span>)&#x000A;69:       <span class="ruby-ivar">@key</span> = <span class="ruby-identifier">value</span> <span class="ruby-value">? </span><span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>[<span class="ruby-value">0</span>,<span class="ruby-identifier">key_length</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>&#x000A;70:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000206-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 68</span>&#x000A;68:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">key=</span>(<span class="ruby-identifier">value</span>)&#x000A;69:       <span class="ruby-ivar">@key</span> = <span class="ruby-identifier">value</span> <span class="ruby-value">? </span><span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>[<span class="ruby-value">0</span>,<span class="ruby-identifier">key_length</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>&#x000A;70:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000204'>
-                <a name='M000204'></a>
+              <div class='method public-instance' id='method-M000202'>
+                <a name='M000202'></a>
                 <div class='synopsis'>
                   <span class='name'>key_length</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000204-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000202-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000204-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 47</span>&#x000A;47:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">key_length</span>&#x000A;48:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">key_length</span>&#x000A;49:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000202-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 47</span>&#x000A;47:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">key_length</span>&#x000A;48:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">key_length</span>&#x000A;49:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000205'>
-                <a name='M000205'></a>
+              <div class='method public-instance' id='method-M000203'>
+                <a name='M000203'></a>
                 <div class='synopsis'>
                   <span class='name'>mac_length</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000205-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000203-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000205-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 51</span>&#x000A;51:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mac_length</span>&#x000A;52:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">mac_length</span>&#x000A;53:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000203-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/transport/hmac/abstract.rb, line 51</span>&#x000A;51:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mac_length</span>&#x000A;52:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">mac_length</span>&#x000A;53:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
