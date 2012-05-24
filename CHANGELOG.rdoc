@@ -1,4 +1,8 @@
 
+=== 2.5.1 / 24 May 2012
+
+* Added missing file to manifest [Marco Sandrini]
+
 === 2.5.0 / 24 May 2012
 
 * Implement many algorithms [Ryosuke Yamazaki]
