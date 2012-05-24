@@ -13,12 +13,12 @@ module Net; module SSH
     class <<self
 
       if defined?(OpenSSL::PKey::EC)
-        SUPPORTED_TYPE = %w(ssh-rsa ssh-dss
+        KnownHosts::SUPPORTED_TYPE = %w(ssh-rsa ssh-dss
                             ecdsa-sha2-nistp256
                             ecdsa-sha2-nistp384
                             ecdsa-sha2-nistp521)
       else
-        SUPPORTED_TYPE = %w(ssh-rsa ssh-dss)
+        KnownHosts::SUPPORTED_TYPE = %w(ssh-rsa ssh-dss)
       end
 
       # Searches all known host files (see KnownHosts.hostfiles) for all keys
