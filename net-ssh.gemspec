@@ -127,11 +127,13 @@
   test/configs/wild_cards
   test/connection/test_channel.rb
   test/connection/test_session.rb
+  test/known_hosts/github
   test/test_all.rb
   test/test_buffer.rb
   test/test_buffered_io.rb
   test/test_config.rb
   test/test_key_factory.rb
+  test/test_known_hosts.rb
   test/transport/hmac/test_md5.rb
   test/transport/hmac/test_md5_96.rb
   test/transport/hmac/test_none.rb
