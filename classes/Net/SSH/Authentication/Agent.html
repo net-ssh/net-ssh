@@ -69,14 +69,14 @@
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000029">close</a></li>
+              <li><a href="#M000030">close</a></li>
               <li><a href="#M000034">close</a></li>
-              <li><a href="#M000031">connect!</a></li>
               <li><a href="#M000025">connect!</a></li>
-              <li><a href="#M000026">identities</a></li>
+              <li><a href="#M000029">connect!</a></li>
               <li><a href="#M000033">identities</a></li>
+              <li><a href="#M000026">identities</a></li>
               <li><a href="#M000032">negotiate!</a></li>
-              <li><a href="#M000030">sign</a></li>
+              <li><a href="#M000031">sign</a></li>
               <li><a href="#M000035">sign</a></li>
             </ol>
           </div>
@@ -260,8 +260,8 @@
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000029'>
-                <a name='M000029'></a>
+              <div class='method public-instance' id='method-M000030'>
+                <a name='M000030'></a>
                 <div class='synopsis'>
                   <span class='name'>close</span>
                   <span class='arguments'>()</span>
@@ -273,10 +273,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000029-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000030-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000029-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 69</span>&#x000A;69:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>&#x000A;70:       <span class="ruby-ivar">@agent_proxy</span> = <span class="ruby-keyword kw">nil</span>&#x000A;71:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000030-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 69</span>&#x000A;69:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>&#x000A;70:       <span class="ruby-ivar">@agent_proxy</span> = <span class="ruby-keyword kw">nil</span>&#x000A;71:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-M000034'>
@@ -296,27 +296,6 @@
                     [show source]
                   </a>
                   <pre id='M000034-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/socket.rb, line 106</span>&#x000A;106:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>&#x000A;107:       <span class="ruby-ivar">@socket</span>.<span class="ruby-identifier">close</span>&#x000A;108:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='method public-instance' id='method-M000031'>
-                <a name='M000031'></a>
-                <div class='synopsis'>
-                  <span class='name'>connect!</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='description'>
-                  <p>
-                  Connect to the agent process using the socket factory and socket name given
-                  by the attribute writers. If the agent on the other end of the socket
-                  reports that it is an SSH2-compatible agent, this will fail (it only
-                  supports the ssh-agent distributed by OpenSSH).
-                  </p>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000031-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000031-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/socket.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">connect!</span>&#x000A;63:       <span class="ruby-keyword kw">begin</span>&#x000A;64:         <span class="ruby-identifier">debug</span> { <span class="ruby-value str">&quot;connecting to ssh-agent&quot;</span> }&#x000A;65:         <span class="ruby-ivar">@socket</span> = <span class="ruby-identifier">agent_socket_factory</span>.<span class="ruby-identifier">open</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'SSH_AUTH_SOCK'</span>])&#x000A;66:       <span class="ruby-keyword kw">rescue</span>&#x000A;67:         <span class="ruby-identifier">error</span> { <span class="ruby-value str">&quot;could not connect to ssh-agent&quot;</span> }&#x000A;68:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentNotAvailable</span>, <span class="ruby-identifier">$!</span>.<span class="ruby-identifier">message</span>&#x000A;69:       <span class="ruby-keyword kw">end</span>&#x000A;70:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-M000025'>
@@ -340,24 +319,25 @@
                   <pre id='M000025-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 38</span>&#x000A;38:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">connect!</span>&#x000A;39:       <span class="ruby-identifier">debug</span> { <span class="ruby-value str">&quot;connecting to Pageant ssh-agent (via java connector)&quot;</span> }&#x000A;40:       <span class="ruby-ivar">@agent_proxy</span> = <span class="ruby-constant">JRubyPageant</span>.<span class="ruby-identifier">create</span>&#x000A;41:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@agent_proxy</span>.<span class="ruby-identifier">is_running</span>&#x000A;42:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentNotAvailable</span>, <span class="ruby-value str">&quot;Pageant is not running!&quot;</span>&#x000A;43:       <span class="ruby-keyword kw">end</span>&#x000A;44:       <span class="ruby-identifier">debug</span> { <span class="ruby-value str">&quot;connection to Pageant ssh-agent (via java connector) succeeded&quot;</span> }&#x000A;45:     <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">AgentProxyException</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>&#x000A;46:       <span class="ruby-identifier">error</span> { <span class="ruby-value str">&quot;could not connect to Pageant ssh-agent (via java connector)&quot;</span> }&#x000A;47:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentNotAvailable</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>&#x000A;48:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000026'>
-                <a name='M000026'></a>
+              <div class='method public-instance' id='method-M000029'>
+                <a name='M000029'></a>
                 <div class='synopsis'>
-                  <span class='name'>identities</span>
+                  <span class='name'>connect!</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Return an array of all identities (public keys) known to the agent. Each
-                  key returned is augmented with a <tt>comment</tt> property which is set to
-                  the comment returned by the agent for that key.
+                  Connect to the agent process using the socket factory and socket name given
+                  by the attribute writers. If the agent on the other end of the socket
+                  reports that it is an SSH2-compatible agent, this will fail (it only
+                  supports the ssh-agent distributed by OpenSSH).
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000026-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000029-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000026-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 53</span>&#x000A;53:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">identities</span>&#x000A;54:       <span class="ruby-identifier">debug</span> { <span class="ruby-value str">&quot;getting identities from Pageant&quot;</span> }&#x000A;55:       <span class="ruby-ivar">@agent_proxy</span>.<span class="ruby-identifier">get_identities</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">identity</span><span class="ruby-operator">|</span>&#x000A;56:         <span class="ruby-identifier">blob</span> = <span class="ruby-identifier">identity</span>.<span class="ruby-identifier">get_blob</span>&#x000A;57:         <span class="ruby-identifier">key</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">String</span>.<span class="ruby-identifier">from_java_bytes</span>(<span class="ruby-identifier">blob</span>)).<span class="ruby-identifier">read_key</span>&#x000A;58:         <span class="ruby-identifier">key</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Key</span>)&#x000A;59:         <span class="ruby-identifier">key</span>.<span class="ruby-identifier">java_blob</span> = <span class="ruby-identifier">blob</span>&#x000A;60:         <span class="ruby-identifier">key</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-constant">String</span>.<span class="ruby-identifier">from_java_bytes</span>(<span class="ruby-identifier">identity</span>.<span class="ruby-identifier">get_comment</span>)&#x000A;61:         <span class="ruby-identifier">key</span>&#x000A;62:       <span class="ruby-keyword kw">end</span>&#x000A;63:     <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">AgentProxyException</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>&#x000A;64:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-node">&quot;Cannot get identities: #{e.message}&quot;</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>&#x000A;65:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000029-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/socket.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">connect!</span>&#x000A;63:       <span class="ruby-keyword kw">begin</span>&#x000A;64:         <span class="ruby-identifier">debug</span> { <span class="ruby-value str">&quot;connecting to ssh-agent&quot;</span> }&#x000A;65:         <span class="ruby-ivar">@socket</span> = <span class="ruby-identifier">agent_socket_factory</span>.<span class="ruby-identifier">open</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'SSH_AUTH_SOCK'</span>])&#x000A;66:       <span class="ruby-keyword kw">rescue</span>&#x000A;67:         <span class="ruby-identifier">error</span> { <span class="ruby-value str">&quot;could not connect to ssh-agent&quot;</span> }&#x000A;68:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentNotAvailable</span>, <span class="ruby-identifier">$!</span>.<span class="ruby-identifier">message</span>&#x000A;69:       <span class="ruby-keyword kw">end</span>&#x000A;70:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-M000033'>
@@ -380,6 +360,26 @@
                   <pre id='M000033-source'>     <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/socket.rb, line 88</span>&#x000A; 88:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">identities</span>&#x000A; 89:       <span class="ruby-identifier">type</span>, <span class="ruby-identifier">body</span> = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-constant">SSH2_AGENT_REQUEST_IDENTITIES</span>)&#x000A; 90:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-value str">&quot;could not get identity count&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">agent_failed</span>(<span class="ruby-identifier">type</span>)&#x000A; 91:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-node">&quot;bad authentication reply: #{type}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH2_AGENT_IDENTITIES_ANSWER</span>&#x000A; 92: &#x000A; 93:       <span class="ruby-identifier">identities</span> = []&#x000A; 94:       <span class="ruby-identifier">body</span>.<span class="ruby-identifier">read_long</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword kw">do</span>&#x000A; 95:         <span class="ruby-identifier">key</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">body</span>.<span class="ruby-identifier">read_string</span>).<span class="ruby-identifier">read_key</span>&#x000A; 96:         <span class="ruby-identifier">key</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Comment</span>)&#x000A; 97:         <span class="ruby-identifier">key</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">body</span>.<span class="ruby-identifier">read_string</span>&#x000A; 98:         <span class="ruby-identifier">identities</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">key</span>&#x000A; 99:       <span class="ruby-keyword kw">end</span>&#x000A;100: &#x000A;101:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">identities</span>&#x000A;102:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
+              <div class='method public-instance' id='method-M000026'>
+                <a name='M000026'></a>
+                <div class='synopsis'>
+                  <span class='name'>identities</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Return an array of all identities (public keys) known to the agent. Each
+                  key returned is augmented with a <tt>comment</tt> property which is set to
+                  the comment returned by the agent for that key.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000026-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000026-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 53</span>&#x000A;53:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">identities</span>&#x000A;54:       <span class="ruby-identifier">debug</span> { <span class="ruby-value str">&quot;getting identities from Pageant&quot;</span> }&#x000A;55:       <span class="ruby-ivar">@agent_proxy</span>.<span class="ruby-identifier">get_identities</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">identity</span><span class="ruby-operator">|</span>&#x000A;56:         <span class="ruby-identifier">blob</span> = <span class="ruby-identifier">identity</span>.<span class="ruby-identifier">get_blob</span>&#x000A;57:         <span class="ruby-identifier">key</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">String</span>.<span class="ruby-identifier">from_java_bytes</span>(<span class="ruby-identifier">blob</span>)).<span class="ruby-identifier">read_key</span>&#x000A;58:         <span class="ruby-identifier">key</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Key</span>)&#x000A;59:         <span class="ruby-identifier">key</span>.<span class="ruby-identifier">java_blob</span> = <span class="ruby-identifier">blob</span>&#x000A;60:         <span class="ruby-identifier">key</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-constant">String</span>.<span class="ruby-identifier">from_java_bytes</span>(<span class="ruby-identifier">identity</span>.<span class="ruby-identifier">get_comment</span>)&#x000A;61:         <span class="ruby-identifier">key</span>&#x000A;62:       <span class="ruby-keyword kw">end</span>&#x000A;63:     <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">AgentProxyException</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>&#x000A;64:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-node">&quot;Cannot get identities: #{e.message}&quot;</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>&#x000A;65:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
               <div class='method public-instance' id='method-M000032'>
                 <a name='M000032'></a>
                 <div class='synopsis'>
@@ -400,8 +400,8 @@
                   <pre id='M000032-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/socket.rb, line 74</span>&#x000A;74:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">negotiate!</span>&#x000A;75:       <span class="ruby-comment cmt"># determine what type of agent we're communicating with</span>&#x000A;76:       <span class="ruby-identifier">type</span>, <span class="ruby-identifier">body</span> = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-constant">SSH2_AGENT_REQUEST_VERSION</span>, <span class="ruby-identifier">:string</span>, <span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">ServerVersion</span><span class="ruby-operator">::</span><span class="ruby-constant">PROTO_VERSION</span>)&#x000A;77: &#x000A;78:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">SSH2_AGENT_VERSION_RESPONSE</span>&#x000A;79:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-value str">&quot;SSH2 agents are not yet supported&quot;</span>&#x000A;80:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_RSA_IDENTITIES_ANSWER1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_RSA_IDENTITIES_ANSWER2</span>&#x000A;81:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-node">&quot;unknown response from agent: #{type}, #{body.to_s.inspect}&quot;</span>&#x000A;82:       <span class="ruby-keyword kw">end</span>&#x000A;83:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000030'>
-                <a name='M000030'></a>
+              <div class='method public-instance' id='method-M000031'>
+                <a name='M000031'></a>
                 <div class='synopsis'>
                   <span class='name'>sign</span>
                   <span class='arguments'>(key, data)</span>
@@ -413,10 +413,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000030-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000031-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000030-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 75</span>&#x000A;75:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sign</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">data</span>)&#x000A;76:       <span class="ruby-identifier">signed</span> = <span class="ruby-ivar">@agent_proxy</span>.<span class="ruby-identifier">sign</span>(<span class="ruby-identifier">key</span>.<span class="ruby-identifier">java_blob</span>, <span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_java_bytes</span>)&#x000A;77:       <span class="ruby-constant">String</span>.<span class="ruby-identifier">from_java_bytes</span>(<span class="ruby-identifier">signed</span>)&#x000A;78:     <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">AgentProxyException</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>&#x000A;79:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>,&#x000A;80:         <span class="ruby-node">&quot;agent could not sign data with requested identity: #{e.message}&quot;</span>,&#x000A;81:         <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>&#x000A;82:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000031-source'>    <span class="ruby-comment cmt"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 75</span>&#x000A;75:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sign</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">data</span>)&#x000A;76:       <span class="ruby-identifier">signed</span> = <span class="ruby-ivar">@agent_proxy</span>.<span class="ruby-identifier">sign</span>(<span class="ruby-identifier">key</span>.<span class="ruby-identifier">java_blob</span>, <span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_java_bytes</span>)&#x000A;77:       <span class="ruby-constant">String</span>.<span class="ruby-identifier">from_java_bytes</span>(<span class="ruby-identifier">signed</span>)&#x000A;78:     <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">AgentProxyException</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>&#x000A;79:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>,&#x000A;80:         <span class="ruby-node">&quot;agent could not sign data with requested identity: #{e.message}&quot;</span>,&#x000A;81:         <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>&#x000A;82:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-M000035'>
