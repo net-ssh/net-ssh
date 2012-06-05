@@ -318,7 +318,7 @@ module Net; module SSH
     def write_string(*text)
       text.each do |string|
         s = string.to_s
-        write_long(s.length)
+        write_long(s.bytesize)
         write(s)
       end
       self
