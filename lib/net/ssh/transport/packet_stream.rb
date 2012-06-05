@@ -120,18 +120,18 @@ module Net; module SSH; module Transport
       payload = client.compress(payload)
 
       # the length of the packet, minus the padding
-      actual_length = 4 + payload.length + 1
+      actual_length = 4 + payload.bytesize + 1
 
       # compute the padding length
       padding_length = client.block_size - (actual_length % client.block_size)
       padding_length += client.block_size if padding_length < 4
 
       # compute the packet length (sans the length field itself)
-      packet_length = payload.length + padding_length + 1
+      packet_length = payload.bytesize + padding_length + 1
 
       if packet_length < 16
         padding_length += client.block_size
-        packet_length = payload.length + padding_length + 1
+        packet_length = payload.bytesize + padding_length + 1
       end
 
       padding = Array.new(padding_length) { rand(256) }.pack("C*")
