@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
   s.name = "net-ssh"
   s.rubyforge_project = 'net-ssh'
-  s.version = "2.5.2"
+  s.version = "2.5.3"
   s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
   s.description = s.summary + " It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
   s.authors = ["Jamis Buck", "Delano Mandelbaum"]
@@ -17,7 +17,7 @@
   # This has two flavours with java one actually doing something and other
   # one just raising error. This is a workaround for no ability to specify
   # platform specific dependencies in gemspecs.
-  s.add_dependency 'jruby-pageant', ">=1.0.2"
+  s.add_dependency 'jruby-pageant', ">=1.1.0"
 
   s.executables = %w[]
 
