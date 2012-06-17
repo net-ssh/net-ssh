@@ -128,7 +128,7 @@ class TestForward < Test::Unit::TestCase
     tempfile.delete
     yield UNIXServer.open(path)
     File.delete(path)
-  end
+  end if defined?(UNIXServer)
   
   def test_forward_local_unix_socket_to_remote_port
     session = Net::SSH.start(*ssh_start_params) 
@@ -157,7 +157,7 @@ class TestForward < Test::Unit::TestCase
 
     assert_not_nil(client_data, "client should have received data")
     assert(client_data.match(/item\d/), 'client should have received the string item')
-  end
+  end if defined?(UNIXSocket)
 
   def test_loop_should_not_abort_when_server_side_of_forward_is_closed
     session = Net::SSH.start(*ssh_start_params)    

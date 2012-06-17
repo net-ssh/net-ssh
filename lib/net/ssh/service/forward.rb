@@ -57,7 +57,7 @@ module Net; module SSH; module Service
       local_port_type = :long
 
       socket = begin
-        if args.first.class == UNIXServer
+        if defined?(UNIXServer) and args.first.class == UNIXServer
           local_port_type = :string
           args.shift
         else
