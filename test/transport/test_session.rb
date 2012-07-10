@@ -28,6 +28,10 @@ module Transport
       assert_instance_of Net::SSH::Verifiers::Strict, session(:paranoid => :very).host_key_verifier
     end
 
+    def test_paranoid_secure_uses_secure_verifier
+      assert_instance_of Net::SSH::Verifiers::Secure, session(:paranoid => :secure).host_key_verifier
+    end
+
     def test_paranoid_false_uses_null_verifier
       assert_instance_of Net::SSH::Verifiers::Null, session(:paranoid => false).host_key_verifier
     end
