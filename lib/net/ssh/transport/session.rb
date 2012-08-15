@@ -9,6 +9,7 @@ require 'net/ssh/transport/constants'
 require 'net/ssh/transport/packet_stream'
 require 'net/ssh/transport/server_version'
 require 'net/ssh/verifiers/null'
+require 'net/ssh/verifiers/secure'
 require 'net/ssh/verifiers/strict'
 require 'net/ssh/verifiers/lenient'
 
@@ -255,8 +256,9 @@ module Net; module SSH; module Transport
       # Instantiates a new host-key verification class, based on the value of
       # the parameter. When true or nil, the default Lenient verifier is
       # returned. If it is false, the Null verifier is returned, and if it is
-      # :very, the Strict verifier is returned. If the argument happens to
-      # respond to :verify, it is returned directly. Otherwise, an exception
+      # :very, the Strict verifier is returned. If it is :secure, the even more
+      # strict Secure verifier is returned. If the argument happens to respond
+      # to :verify, it is returned directly. Otherwise, an exception
       # is raised.
       def select_host_key_verifier(paranoid)
         case paranoid
@@ -266,6 +268,8 @@ module Net; module SSH; module Transport
           Net::SSH::Verifiers::Null.new
         when :very then
           Net::SSH::Verifiers::Strict.new
+        when :secure then
+          Net::SSH::Verifiers::Secure.new
         else
           if paranoid.respond_to?(:verify)
             paranoid

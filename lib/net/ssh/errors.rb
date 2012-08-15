@@ -35,12 +35,10 @@ module Net; module SSH
     end
   end
 
-  # Raised when the cached key for a particular host does not match the
-  # key given by the host, which can be indicative of a man-in-the-middle
-  # attack. When rescuing this exception, you can inspect the key fingerprint
-  # and, if you want to proceed anyway, simply call the remember_host!
-  # method on the exception, and then retry.
-  class HostKeyMismatch < Exception
+  # Base class for host key exceptions. When rescuing this exception, you can
+  # inspect the key fingerprint and, if you want to proceed anyway, simply call
+  # the remember_host! method on the exception, and then retry.
+  class HostKeyError < Exception
     # the callback to use when #remember_host! is called
     attr_writer :callback #:nodoc:
 
@@ -85,4 +83,18 @@ module Net; module SSH
       @callback.call
     end
   end
+
+  # Raised when the cached key for a particular host does not match the
+  # key given by the host, which can be indicative of a man-in-the-middle
+  # attack. When rescuing this exception, you can inspect the key fingerprint
+  # and, if you want to proceed anyway, simply call the remember_host!
+  # method on the exception, and then retry.
+  class HostKeyMismatch < HostKeyError; end
+
+  # Raised when there is no cached key for a particular host, which probably
+  # means that the host has simply not been seen before.
+  # When rescuing this exception, you can inspect the key fingerprint and, if
+  # you want to proceed anyway, simply call the remember_host! method on the
+  # exception, and then retry.
+  class HostKeyUnknown < HostKeyError; end
 end; end

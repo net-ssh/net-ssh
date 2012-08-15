@@ -107,6 +107,7 @@
   lib/net/ssh/transport/state.rb
   lib/net/ssh/verifiers/lenient.rb
   lib/net/ssh/verifiers/null.rb
+  lib/net/ssh/verifiers/secure.rb
   lib/net/ssh/verifiers/strict.rb
   lib/net/ssh/version.rb
   net-ssh.gemspec

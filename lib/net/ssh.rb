@@ -133,8 +133,8 @@ module Net
     #   option is intended for situations where ssh-agent offers many different
     #   identites.
     # * :logger => the logger instance to use when logging
-    # * :paranoid => either true, false, or :very, specifying how strict
-    #   host-key verification should be
+    # * :paranoid => either false, true, :very, or :secure specifying how
+    #   strict host-key verification should be (in increasing order here)
     # * :passphrase => the passphrase to use when loading a private key (default
     #   is +nil+, for no passphrase)
     # * :password => the password to use to login
