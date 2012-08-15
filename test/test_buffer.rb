@@ -29,6 +29,11 @@ class TestBuffer < Test::Unit::TestCase
     assert_equal "\1\2\3\4\5", buffer.to_s
   end
 
+  def test_from_should_measure_bytesize_of_utf_8_string_correctly
+    buffer = Net::SSH::Buffer.from(:string, "\u2603") # Snowman is 3 bytes
+    assert_equal "\0\0\0\3\u2603", buffer.to_s
+  end
+
   def test_read_without_argument_should_read_to_end
     buffer = new("hello world")
     assert_equal "hello world", buffer.read

@@ -165,6 +165,14 @@ module Transport
       assert_equal 24, stream.write_buffer.length
     end
 
+    def test_enqueue_utf_8_packet_should_ensure_packet_length_is_in_bytes_and_multiple_of_block_length
+      packet = Net::SSH::Buffer.from(:string, "\u2603") # Snowman is 3 bytes
+      stream.enqueue_packet(packet)
+      # When bytesize is measured wrong using length, the result is off by 2.
+      # With length instead of bytesize, you get 26 length buffer.
+      assert_equal 0, stream.write_buffer.length % 8
+    end
+
     PACKETS = {
       "3des-cbc" => {
         "hmac-md5" => {
