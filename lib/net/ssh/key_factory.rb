@@ -48,24 +48,37 @@ module Net; module SSH
       # encrypted (requiring a passphrase to use), the user will be
       # prompted to enter their password unless passphrase works. 
       def load_data_private_key(data, passphrase=nil, ask_passphrase=true, filename="")
-        if data.match(/-----BEGIN DSA PRIVATE KEY-----/)
-          key_type = OpenSSL::PKey::DSA
-        elsif data.match(/-----BEGIN RSA PRIVATE KEY-----/)
-          key_type = OpenSSL::PKey::RSA
-	elsif data.match(/-----BEGIN EC PRIVATE KEY-----/) && defined?(OpenSSL::PKey::EC)
-          key_type = OpenSSL::PKey::EC
-        elsif data.match(/-----BEGIN (.*) PRIVATE KEY-----/)
-          raise OpenSSL::PKey::PKeyError, "not a supported key type '#{$1}'"
+        if OpenSSL::PKey.respond_to?(:read)
+          pkey_read = true
+          error_class = ArgumentError
         else
-          raise OpenSSL::PKey::PKeyError, "not a private key (#{filename})"
+          pkey_read = false
+          if data.match(/-----BEGIN DSA PRIVATE KEY-----/)
+            key_type = OpenSSL::PKey::DSA
+            error_class = OpenSSL::PKey::DSAError
+          elsif data.match(/-----BEGIN RSA PRIVATE KEY-----/)
+            key_type = OpenSSL::PKey::RSA
+            error_class = OpenSSL::PKey::RSAError
+          elsif data.match(/-----BEGIN EC PRIVATE KEY-----/) && defined?(OpenSSL::PKey::EC)
+            key_type = OpenSSL::PKey::EC
+            error_class = OpenSSL::PKey::RCError
+          elsif data.match(/-----BEGIN (.+) PRIVATE KEY-----/)
+            raise OpenSSL::PKey::PKeyError, "not a supported key type '#{$1}'"
+          else
+            raise OpenSSL::PKey::PKeyError, "not a private key (#{filename})"
+          end
         end
 
         encrypted_key = data.match(/ENCRYPTED/)
         tries = 0
 
         begin
-          return key_type.new(data, passphrase || 'invalid')
-        rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError => e
+          if pkey_read
+            return OpenSSL::PKey.read(data, passphrase || 'invalid')
+          else
+            return key_type.new(data, passphrase || 'invalid')
+          end
+        rescue error_class
           if encrypted_key && ask_passphrase
             tries += 1
             if tries <= 3
