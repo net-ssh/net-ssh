@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::Test::Extensions::Channel</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>module</span>
+          Net::SSH::Test::Extensions::Channel
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../../../files/lib/net/ssh/test/extensions_rb.html">lib/net/ssh/test/extensions.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../Extensions.html">Extensions</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>An extension to <a
+            href="../../Connection/Channel.html">Net::SSH::Connection::Channel</a>.
+            Facilitates unit testing.</p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#method-i-send_data_for_test">send_data_for_test</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-send_data_for_test'>
+                <a name='method-i-send_data_for_test'></a>
+                <div class='synopsis'>
+                  <span class='name'>send_data_for_test</span>
+                  <span class='arguments'>(data)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>The testing version of <a
+                  href="../../Connection/Channel.html#method-i-send_data">Net::SSH::Connection::Channel#send_data</a>.
+                  Calls the original implementation, and then immediately enqueues the data
+                  for output so that scripted sends are properly interpreted as discrete
+                  (rather than concatenated) data packets.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-send_data_for_test-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-send_data_for_test-source'><span class="ruby-comment"># File lib/net/ssh/test/extensions.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">send_data_for_test</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">send_data_for_real</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">enqueue_pending_output</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

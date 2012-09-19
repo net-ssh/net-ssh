@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::Packet</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>class</span>
+          Net::SSH::Packet
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../files/lib/net/ssh/packet_rb.html">lib/net/ssh/packet.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../SSH.html">SSH</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>A specialization of <a href="Buffer.html">Buffer</a> that knows the format
+            of certain common packet types. It auto-parses those packet types, and
+            allows them to be accessed via the #[] accessor.</p>
+            
+            <pre>data = some_channel_request_packet&#x000A;packet = Net::SSH::Packet.new(data)&#x000A;p packet.type #-&gt; 98 (CHANNEL_REQUEST)&#x000A;p packet[:request]&#x000A;p packet[:want_reply]</pre>
+            
+            <p>This is used exclusively internally by <a href="../SSH.html">Net::SSH</a>,
+            and unless you're doing protocol-level manipulation or are extending <a
+            href="../SSH.html">Net::SSH</a> in some way, you'll never need to use this
+            class directly.</p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Class</h3>
+            <ol>
+              <li><a target="docwin" href="#method-c-new">new</a></li>
+              <li><a target="docwin" href="#method-c-register">register</a></li>
+            </ol>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#method-i-5B-5D">[]</a></li>
+              <li><a target="docwin" href="#attribute-i-type">type</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+            <div id='includes'>
+              <h2>Included modules</h2>
+              <ol>
+                <li><a target="docwin" href="Transport/Constants.html">Transport::Constants</a></li>
+                <li><a target="docwin" href="Authentication/Constants.html">Authentication::Constants</a></li>
+                <li><a target="docwin" href="Connection/Constants.html">Connection::Constants</a></li>
+              </ol>
+            </div>
+          </div>
+          <div id='section'>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>
+                      <a name='attribute-i-type'>type</a>
+                    </td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      <p>The (integer) <a href="Packet.html#attribute-i-type">#type</a> of this
+                      packet.</p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public Class methods</h2>
+              <div class='method public-class' id='method-method-c-new'>
+                <a name='method-c-new'></a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(payload)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Create a <a href="Packet.html#method-c-new">::new</a> packet from the given
+                  payload. This will automatically parse the packet if it is one that has
+                  been previously registered with <a
+                  href="Packet.html#method-c-register">::register</a>; otherwise, the packet
+                  will need to be manually parsed using the methods provided in the <a
+                  href="Buffer.html">Net::SSH::Buffer</a> superclass.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 73</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">payload</span>)&#x000A;  <span class="ruby-ivar">@named_elements</span> = {}&#x000A;  <span class="ruby-keyword">super</span>&#x000A;  <span class="ruby-ivar">@type</span> = <span class="ruby-identifier">read_byte</span>&#x000A;  <span class="ruby-identifier">instantiate!</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-register'>
+                <a name='method-c-register'></a>
+                <div class='synopsis'>
+                  <span class='name'>register</span>
+                  <span class='arguments'>(type, *pairs)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Register a <a href="Packet.html#method-c-new">::new</a> packet <a
+                  href="Packet.html#attribute-i-type">#type</a> that should be recognized and
+                  auto-parsed by <a href="Packet.html">Net::SSH::Packet</a>. Note that any
+                  packet <a href="Packet.html#attribute-i-type">#type</a> that is not
+                  preregistered will not be autoparsed.</p>
+                  
+                  <p>The <code>pairs</code> parameter must be either empty, or an array of
+                  two-element tuples, where the first element of each tuple is the name of
+                  the field, and the second is the <a
+                  href="Packet.html#attribute-i-type">#type</a>.</p>
+                  
+                  <pre>register DISCONNECT, [:reason_code, :long], [:description, :string], [:language, :string]</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-register-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-register-source'><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 34</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">register</span>(<span class="ruby-identifier">type</span>, *<span class="ruby-identifier">pairs</span>)&#x000A;  <span class="ruby-identifier">@@types</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-identifier">pairs</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-5B-5D'>
+                <a name='method-i-5B-5D'></a>
+                <div class='synopsis'>
+                  <span class='name'>[]</span>
+                  <span class='arguments'>(name)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Access one of the auto-parsed fields by name. Raises an error if no element
+                  by the given name exists.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-5B-5D-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-5B-5D-source'><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 82</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">name</span>)&#x000A;  <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;no such element #{name}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@named_elements</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">name</span>)&#x000A;  <span class="ruby-ivar">@named_elements</span>[<span class="ruby-identifier">name</span>]&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

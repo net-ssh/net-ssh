@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::Proxy::Command</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>class</span>
+          Net::SSH::Proxy::Command
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../../files/lib/net/ssh/proxy/command_rb.html">lib/net/ssh/proxy/command.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../Proxy.html">Proxy</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>An implementation of a command proxy. To use it, instantiate it, then pass
+            the instantiated object via the :proxy key to <a
+            href="../../SSH.html#method-c-start">Net::SSH.start</a>:</p>
+            
+            <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">'net/ssh/proxy/command'</span>&#x000A;&#x000A;<span class="ruby-identifier">proxy</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Proxy</span><span class="ruby-operator">::</span><span class="ruby-constant">Command</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">'ssh relay nc %h %p'</span>)&#x000A;<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span>.<span class="ruby-identifier">start</span>(<span class="ruby-string">'host'</span>, <span class="ruby-string">'user'</span>, :<span class="ruby-identifier">proxy</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">proxy</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ssh</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-operator">...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Class</h3>
+            <ol>
+              <li><a target="docwin" href="#method-c-new">new</a></li>
+            </ol>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#attribute-i-command_line">command_line</a></li>
+              <li><a target="docwin" href="#attribute-i-command_line_template">command_line_template</a></li>
+              <li><a target="docwin" href="#method-i-open">open</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>
+                      <a name='attribute-i-command_line'>command_line</a>
+                    </td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      <p>The command line for the session</p>
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>
+                      <a name='attribute-i-command_line_template'>command_line_template</a>
+                    </td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      <p>The command line template</p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public Class methods</h2>
+              <div class='method public-class' id='method-method-c-new'>
+                <a name='method-c-new'></a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(command_line_template)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Create a <a href="Command.html#method-c-new">::new</a> socket factory that
+                  tunnels via a command executed with the user's shell, which is composed
+                  from the given command template.  In the command template, `%h' will be
+                  substituted by the host name to connect and `%p' by the port.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/proxy/command.rb, line 29</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">command_line_template</span>)&#x000A;  <span class="ruby-ivar">@command_line_template</span> = <span class="ruby-identifier">command_line_template</span>&#x000A;  <span class="ruby-ivar">@command_line</span> = <span class="ruby-keyword">nil</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-open'>
+                <a name='method-i-open'></a>
+                <div class='synopsis'>
+                  <span class='name'>open</span>
+                  <span class='arguments'>(host, port)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Return a <a href="Command.html#method-c-new">::new</a> socket connected to
+                  the given host and port via the proxy that was requested when the socket
+                  factory was instantiated.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-open-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-open-source'><span class="ruby-comment"># File lib/net/ssh/proxy/command.rb, line 36</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>)&#x000A;  <span class="ruby-identifier">command_line</span> = <span class="ruby-ivar">@command_line_template</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">%r%(.)/</span>) {&#x000A;    <span class="ruby-keyword">case</span> <span class="ruby-node">$1</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-string">'h'</span>&#x000A;      <span class="ruby-identifier">host</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-string">'p'</span>&#x000A;      <span class="ruby-identifier">port</span>.<span class="ruby-identifier">to_s</span>&#x000A;    <span class="ruby-keyword">when</span> <span class="ruby-string">'%'</span>&#x000A;      <span class="ruby-string">'%'</span>&#x000A;    <span class="ruby-keyword">else</span>&#x000A;      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;unknown key: #{$1}&quot;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  }&#x000A;  <span class="ruby-keyword">begin</span>&#x000A;    <span class="ruby-identifier">io</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">popen</span>(<span class="ruby-identifier">command_line</span>, <span class="ruby-string">&quot;r+&quot;</span>)&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Compat</span>.<span class="ruby-identifier">io_select</span>([<span class="ruby-identifier">io</span>], <span class="ruby-keyword">nil</span>, [<span class="ruby-identifier">io</span>], <span class="ruby-value">60</span>)&#x000A;      <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">any?</span>&#x000A;        <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;command failed&quot;</span>&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">else</span>&#x000A;      <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;command timed out&quot;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>&#x000A;    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConnectError</span>, <span class="ruby-node">&quot;#{e}: #{command_line}&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-ivar">@command_line</span> = <span class="ruby-identifier">command_line</span>&#x000A;  <span class="ruby-keyword">class</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">io</span>&#x000A;    <span class="ruby-keyword">def</span> <span class="ruby-identifier">send</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">flag</span>)&#x000A;      <span class="ruby-identifier">write_nonblock</span>(<span class="ruby-identifier">data</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-keyword">def</span> <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">size</span>)&#x000A;      <span class="ruby-identifier">read_nonblock</span>(<span class="ruby-identifier">size</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-identifier">io</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>OpenSSL::BN</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>class</span>
+          OpenSSL::BN
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../files/lib/net/ssh/transport/openssl_rb.html">lib/net/ssh/transport/openssl.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../OpenSSL.html">OpenSSL</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>This class is originally defined in the <a
+            href="../OpenSSL.html">OpenSSL</a> module. As needed, methods have been
+            added to it by the <a href="../Net/SSH.html">Net::SSH</a> module for
+            convenience in dealing with SSH functionality.</p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#method-i-to_ssh">to_ssh</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-to_ssh'>
+                <a name='method-i-to_ssh'></a>
+                <div class='synopsis'>
+                  <span class='name'>to_ssh</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Converts a <a href="BN.html">BN</a> object to a string. The format used is
+                  that which is required by the SSH2 protocol.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-to_ssh-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-to_ssh-source'><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 12</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_ssh</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">zero?</span>&#x000A;    <span class="ruby-keyword">return</span> [<span class="ruby-value">0</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;N&quot;</span>)&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">buf</span> = <span class="ruby-identifier">to_s</span>(<span class="ruby-value">2</span>)&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">buf</span>.<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)[<span class="ruby-value">7</span>] <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;      <span class="ruby-keyword">return</span> [<span class="ruby-identifier">buf</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">buf</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;NCA*&quot;</span>)&#x000A;    <span class="ruby-keyword">else</span>&#x000A;      <span class="ruby-keyword">return</span> [<span class="ruby-identifier">buf</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">buf</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;NA*&quot;</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::Authentication::Methods::Hostbased</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>class</span>
+          Net::SSH::Authentication::Methods::Hostbased
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../../../files/lib/net/ssh/authentication/methods/hostbased_rb.html">lib/net/ssh/authentication/methods/hostbased.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../Methods.html">Methods</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>Implements the host-based <a href="../../../SSH.html">SSH</a>
+            authentication method.</p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#method-i-authenticate">authenticate</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+            <div id='includes'>
+              <h2>Included modules</h2>
+              <ol>
+                <li><a target="docwin" href="../Constants.html">Constants</a></li>
+              </ol>
+            </div>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-authenticate'>
+                <a name='method-i-authenticate'></a>
+                <div class='synopsis'>
+                  <span class='name'>authenticate</span>
+                  <span class='arguments'>(next_service, username, password=nil)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Attempts to perform host-based authorization of the user by trying all
+                  known keys.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-authenticate-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-authenticate-source'><span class="ruby-comment"># File lib/net/ssh/authentication/methods/hostbased.rb, line 14</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">authenticate</span>(<span class="ruby-identifier">next_service</span>, <span class="ruby-identifier">username</span>, <span class="ruby-identifier">password</span>=<span class="ruby-keyword">nil</span>)&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">key_manager</span>&#x000A;&#x000A;  <span class="ruby-identifier">key_manager</span>.<span class="ruby-identifier">each_identity</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">identity</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">authenticate_with</span>(<span class="ruby-identifier">identity</span>, <span class="ruby-identifier">next_service</span>,&#x000A;      <span class="ruby-identifier">username</span>, <span class="ruby-identifier">key_manager</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

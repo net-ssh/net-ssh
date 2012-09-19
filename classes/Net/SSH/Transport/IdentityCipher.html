@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::Transport::IdentityCipher</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>class</span>
+          Net::SSH::Transport::IdentityCipher
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../../files/lib/net/ssh/transport/identity_cipher_rb.html">lib/net/ssh/transport/identity_cipher.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../Transport.html">Transport</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>A cipher that does nothing but pass the data through, unchanged. This keeps
+            things in the code nice and clean when a cipher has not yet been determined
+            (i.e., during key exchange).</p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Class</h3>
+            <ol>
+              <li><a target="docwin" href="#method-c-block_size">block_size</a></li>
+              <li><a target="docwin" href="#method-c-decrypt">decrypt</a></li>
+              <li><a target="docwin" href="#method-c-encrypt">encrypt</a></li>
+              <li><a target="docwin" href="#method-c-final">final</a></li>
+              <li><a target="docwin" href="#method-c-iv-3D">iv=</a></li>
+              <li><a target="docwin" href="#method-c-iv_len">iv_len</a></li>
+              <li><a target="docwin" href="#method-c-name">name</a></li>
+              <li><a target="docwin" href="#method-c-reset">reset</a></li>
+              <li><a target="docwin" href="#method-c-update">update</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public Class methods</h2>
+              <div class='method public-class' id='method-method-c-block_size'>
+                <a name='method-c-block_size'></a>
+                <div class='synopsis'>
+                  <span class='name'>block_size</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>A default block size of 8 is required by the SSH2 protocol.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-block_size-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-block_size-source'><span class="ruby-comment"># File lib/net/ssh/transport/identity_cipher.rb, line 9</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">block_size</span>&#x000A;  <span class="ruby-value">8</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-decrypt'>
+                <a name='method-c-decrypt'></a>
+                <div class='synopsis'>
+                  <span class='name'>decrypt</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Does nothing. Returns self.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-decrypt-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-decrypt-source'><span class="ruby-comment"># File lib/net/ssh/transport/identity_cipher.rb, line 24</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">decrypt</span>&#x000A;  <span class="ruby-keyword">self</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-encrypt'>
+                <a name='method-c-encrypt'></a>
+                <div class='synopsis'>
+                  <span class='name'>encrypt</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Does nothing. Returns self.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-encrypt-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-encrypt-source'><span class="ruby-comment"># File lib/net/ssh/transport/identity_cipher.rb, line 19</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">encrypt</span>&#x000A;  <span class="ruby-keyword">self</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-final'>
+                <a name='method-c-final'></a>
+                <div class='synopsis'>
+                  <span class='name'>final</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Returns the empty string.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-final-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-final-source'><span class="ruby-comment"># File lib/net/ssh/transport/identity_cipher.rb, line 34</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">final</span>&#x000A;  <span class="ruby-string">&quot;&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-iv-3D'>
+                <a name='method-c-iv-3D'></a>
+                <div class='synopsis'>
+                  <span class='name'>iv=</span>
+                  <span class='arguments'>(v)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Does nothing. Returns nil.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-iv-3D-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-iv-3D-source'><span class="ruby-comment"># File lib/net/ssh/transport/identity_cipher.rb, line 44</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">iv=</span>(<span class="ruby-identifier">v</span>)&#x000A;  <span class="ruby-keyword">nil</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-iv_len'>
+                <a name='method-c-iv_len'></a>
+                <div class='synopsis'>
+                  <span class='name'>iv_len</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Returns an arbitrary integer.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-iv_len-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-iv_len-source'><span class="ruby-comment"># File lib/net/ssh/transport/identity_cipher.rb, line 14</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">iv_len</span>&#x000A;  <span class="ruby-value">4</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-name'>
+                <a name='method-c-name'></a>
+                <div class='synopsis'>
+                  <span class='name'>name</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>The <a href="IdentityCipher.html#method-c-name">::name</a> of this cipher,
+                  which is "identity".</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-name-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-name-source'><span class="ruby-comment"># File lib/net/ssh/transport/identity_cipher.rb, line 39</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">name</span>&#x000A;  <span class="ruby-string">&quot;identity&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-reset'>
+                <a name='method-c-reset'></a>
+                <div class='synopsis'>
+                  <span class='name'>reset</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Does nothing. Returns self.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-reset-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-reset-source'><span class="ruby-comment"># File lib/net/ssh/transport/identity_cipher.rb, line 49</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">reset</span>&#x000A;  <span class="ruby-keyword">self</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-update'>
+                <a name='method-c-update'></a>
+                <div class='synopsis'>
+                  <span class='name'>update</span>
+                  <span class='arguments'>(text)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Passes its single argument through unchanged.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-update-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-update-source'><span class="ruby-comment"># File lib/net/ssh/transport/identity_cipher.rb, line 29</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">text</span>)&#x000A;  <span class="ruby-identifier">text</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

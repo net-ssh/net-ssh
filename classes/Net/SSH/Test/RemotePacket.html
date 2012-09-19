@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::Test::RemotePacket</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>class</span>
+          Net::SSH::Test::RemotePacket
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../../files/lib/net/ssh/test/remote_packet_rb.html">lib/net/ssh/test/remote_packet.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../Test.html">Test</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>This is a specialization of <a
+            href="Packet.html">Net::SSH::Test::Packet</a> for representing mock packets
+            that are received by the local (client) host. These are created
+            automatically by <a href="Script.html">Net::SSH::Test::Script</a> and <a
+            href="Channel.html">Net::SSH::Test::Channel</a> by any of the gets_*
+            methods.</p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#method-i-process">process</a></li>
+              <li><a target="docwin" href="#method-i-remote-3F">remote?</a></li>
+              <li><a target="docwin" href="#method-i-to_s">to_s</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-process'>
+                <a name='method-i-process'></a>
+                <div class='synopsis'>
+                  <span class='name'>process</span>
+                  <span class='arguments'>(packet)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>The #<a href="RemotePacket.html#method-i-process">#process</a> method
+                  should only be called on <a
+                  href="LocalPacket.html">Net::SSH::Test::LocalPacket</a> packets; if it is
+                  attempted on a remote packet, then it is an expectation mismatch (a remote
+                  packet was received when a local packet was expected to be sent). This will
+                  happen when either your test script (<a
+                  href="Script.html">Net::SSH::Test::Script</a>) or your program are wrong.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-process-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-process-source'><span class="ruby-comment"># File lib/net/ssh/test/remote_packet.rb, line 21</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)&#x000A;  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;received packet type #{packet.read_byte} and was not expecting any packet&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-remote-3F'>
+                <a name='method-i-remote-3F'></a>
+                <div class='synopsis'>
+                  <span class='name'>remote?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Returns <code>true</code>; this is a remote packet.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-remote-3F-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-remote-3F-source'><span class="ruby-comment"># File lib/net/ssh/test/remote_packet.rb, line 12</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">remote?</span>&#x000A;  <span class="ruby-keyword">true</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-to_s'>
+                <a name='method-i-to_s'></a>
+                <div class='synopsis'>
+                  <span class='name'>to_s</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Returns this remote packet as a string, suitable for parsing by  <a
+                  href="../Transport/PacketStream.html">Net::SSH::Transport::PacketStream</a>
+                  and friends. When a remote packet is received, this method is called and
+                  the result concatenated onto the input buffer for the packet stream.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-to_s-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-to_s-source'><span class="ruby-comment"># File lib/net/ssh/test/remote_packet.rb, line 29</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>&#x000A;  <span class="ruby-ivar">@to_s</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">begin</span>&#x000A;    <span class="ruby-identifier">instantiate!</span>&#x000A;    <span class="ruby-identifier">string</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:byte</span>, <span class="ruby-ivar">@type</span>, *<span class="ruby-identifier">types</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-ivar">@data</span>).<span class="ruby-identifier">flatten</span>).<span class="ruby-identifier">to_s</span>&#x000A;    [<span class="ruby-identifier">string</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">string</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;NA*&quot;</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

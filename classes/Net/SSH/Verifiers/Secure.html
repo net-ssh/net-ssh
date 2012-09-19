@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::Verifiers::Secure</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>class</span>
+          Net::SSH::Verifiers::Secure
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../../files/lib/net/ssh/verifiers/secure_rb.html">lib/net/ssh/verifiers/secure.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../Verifiers.html">Verifiers</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>Does a strict host verification, looking the server up in the known host
+            files to see if a key has already been seen for this server. If this server
+            does not appear in any host file, an exception will be raised (<a
+            href="../HostKeyUnknown.html">HostKeyUnknown</a>). This is in contrast to
+            the "Strict" class, which will silently add the key to your known_hosts
+            file. If the server does appear at least once, but the key given does not
+            match any known for the server, an exception will be raised (<a
+            href="../HostKeyMismatch.html">HostKeyMismatch</a>). Otherwise, this
+            returns true.</p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#method-i-verify">verify</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-verify'>
+                <a name='method-i-verify'></a>
+                <div class='synopsis'>
+                  <span class='name'>verify</span>
+                  <span class='arguments'>(arguments)</span>
+                </div>
+                <div class='description'>
+                  
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-verify-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-verify-source'><span class="ruby-comment"># File lib/net/ssh/verifiers/secure.rb, line 15</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">verify</span>(<span class="ruby-identifier">arguments</span>)&#x000A;  <span class="ruby-identifier">options</span> = <span class="ruby-identifier">arguments</span>[<span class="ruby-value">:session</span>].<span class="ruby-identifier">options</span>&#x000A;  <span class="ruby-identifier">host</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:host_key_alias</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">arguments</span>[<span class="ruby-value">:session</span>].<span class="ruby-identifier">host_as_string</span>&#x000A;  <span class="ruby-identifier">matches</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">KnownHosts</span>.<span class="ruby-identifier">search_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">arguments</span>[<span class="ruby-value">:session</span>].<span class="ruby-identifier">options</span>)&#x000A;&#x000A;  <span class="ruby-comment"># We've never seen this host before, so raise an exception.</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">matches</span>.<span class="ruby-identifier">empty?</span>&#x000A;    <span class="ruby-identifier">process_cache_miss</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">arguments</span>, <span class="ruby-constant">HostKeyUnknown</span>, <span class="ruby-string">&quot;is unknown&quot;</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-comment"># If we found any matches, check to see that the key type and</span>&#x000A;  <span class="ruby-comment"># blob also match.</span>&#x000A;  <span class="ruby-identifier">found</span> = <span class="ruby-identifier">matches</span>.<span class="ruby-identifier">any?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">key</span>.<span class="ruby-identifier">ssh_type</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">arguments</span>[<span class="ruby-value">:key</span>].<span class="ruby-identifier">ssh_type</span> <span class="ruby-operator">&amp;&amp;</span>&#x000A;    <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_blob</span>  <span class="ruby-operator">==</span> <span class="ruby-identifier">arguments</span>[<span class="ruby-value">:key</span>].<span class="ruby-identifier">to_blob</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-comment"># If a match was found, return true. Otherwise, raise an exception</span>&#x000A;  <span class="ruby-comment"># indicating that the key was not recognized.</span>&#x000A;  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">found</span>&#x000A;    <span class="ruby-identifier">process_cache_miss</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">arguments</span>, <span class="ruby-constant">HostKeyMismatch</span>, <span class="ruby-string">&quot;does not match&quot;</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">found</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

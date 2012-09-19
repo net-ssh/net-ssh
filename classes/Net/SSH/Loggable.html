@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::Loggable</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>module</span>
+          Net::SSH::Loggable
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../files/lib/net/ssh/loggable_rb.html">lib/net/ssh/loggable.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../SSH.html">SSH</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>A simple module to make logging easier to deal with. It assumes that the <a
+            href="Loggable.html#attribute-i-logger">#logger</a> instance (if not nil)
+            quacks like a Logger object (in Ruby's standard library). Although used
+            primarily internally by <a href="../SSH.html">Net::SSH</a>, it can easily
+            be used to add Net::SSH-like logging to your own programs.</p>
+            
+            <pre class="ruby"><span class="ruby-keyword">class</span> <span class="ruby-constant">MyClass</span>&#x000A;  <span class="ruby-identifier">include</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Loggable</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span>.<span class="ruby-identifier">start</span>(<span class="ruby-operator">...</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ssh</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">obj</span> = <span class="ruby-constant">MyClass</span>.<span class="ruby-identifier">new</span>&#x000A;  <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">logger</span>&#x000A;  <span class="ruby-operator">...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#method-i-debug">debug</a></li>
+              <li><a target="docwin" href="#method-i-error">error</a></li>
+              <li><a target="docwin" href="#method-i-fatal">fatal</a></li>
+              <li><a target="docwin" href="#method-i-info">info</a></li>
+              <li><a target="docwin" href="#attribute-i-logger">logger</a></li>
+              <li><a target="docwin" href="#method-i-lwarn">lwarn</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>
+                      <a name='attribute-i-logger'>logger</a>
+                    </td>
+                    <td class='context-item-value'>[RW]</td>
+                    <td class='context-item-desc'>
+                      
+                      <p>The <a href="Loggable.html#attribute-i-logger">#logger</a> instance that
+                      will be used to log messages. If nil, nothing will be logged.</p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-debug'>
+                <a name='method-i-debug'></a>
+                <div class='synopsis'>
+                  <span class='name'>debug</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Displays the result of yielding if the log level is Logger::DEBUG or
+                  greater.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-debug-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-debug-source'><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 24</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">debug</span>&#x000A;  <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">add</span>(<span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">DEBUG</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">facility</span>) { <span class="ruby-keyword">yield</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">logger</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug?</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-error'>
+                <a name='method-i-error'></a>
+                <div class='synopsis'>
+                  <span class='name'>error</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Displays the result of yielding if the log level is Logger:ERROR or
+                  greater.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-error-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-error-source'><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 42</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">error</span>&#x000A;  <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">add</span>(<span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">ERROR</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">facility</span>) { <span class="ruby-keyword">yield</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">logger</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error?</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-fatal'>
+                <a name='method-i-fatal'></a>
+                <div class='synopsis'>
+                  <span class='name'>fatal</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Displays the result of yielding if the log level is Logger::FATAL or
+                  greater.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-fatal-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-fatal-source'><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 48</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">fatal</span>&#x000A;  <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">add</span>(<span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">FATAL</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">facility</span>) { <span class="ruby-keyword">yield</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">logger</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">fatal?</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-info'>
+                <a name='method-i-info'></a>
+                <div class='synopsis'>
+                  <span class='name'>info</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Displays the result of yielding if the log level is Logger::INFO or
+                  greater.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-info-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-info-source'><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 30</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">info</span>&#x000A;  <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">add</span>(<span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">INFO</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">facility</span>) { <span class="ruby-keyword">yield</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">logger</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info?</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-lwarn'>
+                <a name='method-i-lwarn'></a>
+                <div class='synopsis'>
+                  <span class='name'>lwarn</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Displays the result of yielding if the log level is Logger::WARN or
+                  greater. (Called <a href="Loggable.html#method-i-lwarn">#lwarn</a> to avoid
+                  shadowing with Kernel#warn.)</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-lwarn-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-lwarn-source'><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 36</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">lwarn</span>&#x000A;  <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">add</span>(<span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">WARN</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">facility</span>) { <span class="ruby-keyword">yield</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">logger</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">warn?</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::Test::Script</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>class</span>
+          Net::SSH::Test::Script
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../../files/lib/net/ssh/test/script_rb.html">lib/net/ssh/test/script.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../Test.html">Test</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>Represents a sequence of scripted <a
+            href="Script.html#attribute-i-events">#events</a> that identify the
+            behavior that a test expects. Methods named "sends_*" create <a
+            href="Script.html#attribute-i-events">#events</a> for packets being sent
+            from the local to the remote host, and methods named "gets_*" create <a
+            href="Script.html#attribute-i-events">#events</a> for packets being
+            received by the local from the remote host.</p>
+            
+            <p>A reference to a script. is generally obtained in a unit test via the <a
+            href="../Test.html#method-i-story">Net::SSH::Test#story</a> helper method:</p>
+            
+            <pre class="ruby"><span class="ruby-identifier">story</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">script</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">script</span>.<span class="ruby-identifier">opens_channel</span>&#x000A;  <span class="ruby-operator">...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Class</h3>
+            <ol>
+              <li><a target="docwin" href="#method-c-new">new</a></li>
+            </ol>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#attribute-i-events">events</a></li>
+              <li><a target="docwin" href="#method-i-gets">gets</a></li>
+              <li><a target="docwin" href="#method-i-gets_channel_close">gets_channel_close</a></li>
+              <li><a target="docwin" href="#method-i-gets_channel_data">gets_channel_data</a></li>
+              <li><a target="docwin" href="#method-i-gets_channel_eof">gets_channel_eof</a></li>
+              <li><a target="docwin" href="#method-i-gets_channel_request">gets_channel_request</a></li>
+              <li><a target="docwin" href="#method-i-next">next</a></li>
+              <li><a target="docwin" href="#method-i-opens_channel">opens_channel</a></li>
+              <li><a target="docwin" href="#method-i-process">process</a></li>
+              <li><a target="docwin" href="#method-i-sends">sends</a></li>
+              <li><a target="docwin" href="#method-i-sends_channel_close">sends_channel_close</a></li>
+              <li><a target="docwin" href="#method-i-sends_channel_data">sends_channel_data</a></li>
+              <li><a target="docwin" href="#method-i-sends_channel_eof">sends_channel_eof</a></li>
+              <li><a target="docwin" href="#method-i-sends_channel_request">sends_channel_request</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>
+                      <a name='attribute-i-events'>events</a>
+                    </td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      <p>The list of scripted <a href="Script.html#attribute-i-events">#events</a>.
+                      These will be <a href="LocalPacket.html">Net::SSH::Test::LocalPacket</a>
+                      and <a href="RemotePacket.html">Net::SSH::Test::RemotePacket</a> instances.</p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public Class methods</h2>
+              <div class='method public-class' id='method-method-c-new'>
+                <a name='method-c-new'></a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Create a <a href="Script.html#method-c-new">::new</a>, empty script.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 25</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>&#x000A;  <span class="ruby-ivar">@events</span> = []&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-gets'>
+                <a name='method-i-gets'></a>
+                <div class='synopsis'>
+                  <span class='name'>gets</span>
+                  <span class='arguments'>(type, *args)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>A convenience method for adding an arbitrary remote packet to the <a
+                  href="Script.html#attribute-i-events">#events</a> list.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-gets-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 56</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets</span>(<span class="ruby-identifier">type</span>, *<span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RemotePacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">type</span>, *<span class="ruby-identifier">args</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-gets_channel_close'>
+                <a name='method-i-gets_channel_close'></a>
+                <div class='synopsis'>
+                  <span class='name'>gets_channel_close</span>
+                  <span class='arguments'>(channel)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Scripts the reception of a channel close packet from the remote host by the
+                  given <a href="Channel.html">Net::SSH::Test::Channel</a>
+                  <code>channel</code>. This will typically be called via <a
+                  href="Channel.html#method-i-gets_close">Net::SSH::Test::Channel#gets_close</a>.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets_channel_close-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-gets_channel_close-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 131</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_channel_close</span>(<span class="ruby-identifier">channel</span>)&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RemotePacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_close</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_id</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-gets_channel_data'>
+                <a name='method-i-gets_channel_data'></a>
+                <div class='synopsis'>
+                  <span class='name'>gets_channel_data</span>
+                  <span class='arguments'>(channel, data)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Scripts the reception of a channel data packet from the remote host by the
+                  given <a href="Channel.html">Net::SSH::Test::Channel</a>
+                  <code>channel</code>. This will typically be called via <a
+                  href="Channel.html#method-i-gets_data">Net::SSH::Test::Channel#gets_data</a>.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets_channel_data-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-gets_channel_data-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 110</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_channel_data</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RemotePacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_data</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_id</span>, <span class="ruby-identifier">data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-gets_channel_eof'>
+                <a name='method-i-gets_channel_eof'></a>
+                <div class='synopsis'>
+                  <span class='name'>gets_channel_eof</span>
+                  <span class='arguments'>(channel)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Scripts the reception of a channel EOF packet from the remote host by the
+                  given <a href="Channel.html">Net::SSH::Test::Channel</a>
+                  <code>channel</code>. This will typically be called via <a
+                  href="Channel.html#method-i-gets_eof">Net::SSH::Test::Channel#gets_eof</a>.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets_channel_eof-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-gets_channel_eof-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 124</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_channel_eof</span>(<span class="ruby-identifier">channel</span>)&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RemotePacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_eof</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_id</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-gets_channel_request'>
+                <a name='method-i-gets_channel_request'></a>
+                <div class='synopsis'>
+                  <span class='name'>gets_channel_request</span>
+                  <span class='arguments'>(channel, request, reply, data)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Scripts the reception of a channel request packet from the remote host by
+                  the given <a href="Channel.html">Net::SSH::Test::Channel</a>
+                  <code>channel</code>. This will typically be called via <a
+                  href="Channel.html#method-i-gets_exit_status">Net::SSH::Test::Channel#gets_exit_status</a>.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets_channel_request-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-gets_channel_request-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 117</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_channel_request</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-identifier">request</span>, <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RemotePacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_request</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_id</span>, <span class="ruby-identifier">request</span>, <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-next'>
+                <a name='method-i-next'></a>
+                <div class='synopsis'>
+                  <span class='name'>next</span>
+                  <span class='arguments'>(mode=:shift)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>By default, removes the <a href="Script.html#method-i-next">#next</a> event
+                  in the list and returns it. However, this can also be used to
+                  non-destructively peek at the <a href="Script.html#method-i-next">#next</a>
+                  event in the list, by passing :first as the argument.</p>
+                  
+                  <pre># remove the next event and return it&#x000A;event = script.next&#x000A;# peek at the next event&#x000A;event = script.next(:first)</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-next-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-next-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 144</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-keyword">next</span>(<span class="ruby-identifier">mode</span>=<span class="ruby-value">:shift</span>)&#x000A;  <span class="ruby-identifier">events</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">mode</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-opens_channel'>
+                <a name='method-i-opens_channel'></a>
+                <div class='synopsis'>
+                  <span class='name'>opens_channel</span>
+                  <span class='arguments'>(confirm=true)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Scripts the opening of a channel by adding a local packet sending the
+                  channel open request, and if <code>confirm</code> is true (the default),
+                  also adding a remote packet confirming the <a
+                  href="Script.html#method-c-new">::new</a> channel.</p>
+                  
+                  <p>A <a href="Script.html#method-c-new">::new</a> <a
+                  href="Channel.html">Net::SSH::Test::Channel</a> instance is returned, which
+                  can be used to script additional channel operations.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-opens_channel-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-opens_channel-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 35</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">opens_channel</span>(<span class="ruby-identifier">confirm</span>=<span class="ruby-keyword">true</span>)&#x000A;  <span class="ruby-identifier">channel</span> = <span class="ruby-constant">Channel</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">remote_id</span> = <span class="ruby-value">5555</span>&#x000A;&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">LocalPacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_open</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_id</span> = <span class="ruby-identifier">p</span>[<span class="ruby-value">:remote_id</span>] }&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">confirm</span>&#x000A;    <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RemotePacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_open_confirmation</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_id</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">remote_id</span>, <span class="ruby-value">0x20000</span>, <span class="ruby-value">0x10000</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">channel</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-process'>
+                <a name='method-i-process'></a>
+                <div class='synopsis'>
+                  <span class='name'>process</span>
+                  <span class='arguments'>(packet)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Compare the given packet against the <a
+                  href="Script.html#method-i-next">#next</a> event in the list. If there is
+                  no <a href="Script.html#method-i-next">#next</a> event, an exception will
+                  be raised. This is called by <a
+                  href="Extensions/PacketStream.html#method-i-test_enqueue_packet">Net::SSH::Test::Extensions::PacketStream#test_enqueue_packet</a>.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-process-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-process-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 151</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)&#x000A;  <span class="ruby-identifier">event</span> = <span class="ruby-identifier">events</span>.<span class="ruby-identifier">shift</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;end of script reached, but got a packet type #{packet.read_byte}&quot;</span>&#x000A;  <span class="ruby-identifier">event</span>.<span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-sends'>
+                <a name='method-i-sends'></a>
+                <div class='synopsis'>
+                  <span class='name'>sends</span>
+                  <span class='arguments'>(type, *args, &block)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>A convenience method for adding an arbitrary local packet to the <a
+                  href="Script.html#attribute-i-events">#events</a> list.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-sends-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 50</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends</span>(<span class="ruby-identifier">type</span>, *<span class="ruby-identifier">args</span>, &amp;<span class="ruby-identifier">block</span>)&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">LocalPacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">type</span>, *<span class="ruby-identifier">args</span>, &amp;<span class="ruby-identifier">block</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-sends_channel_close'>
+                <a name='method-i-sends_channel_close'></a>
+                <div class='synopsis'>
+                  <span class='name'>sends_channel_close</span>
+                  <span class='arguments'>(channel)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Scripts the sending of a channel close packet from the given <a
+                  href="Channel.html">Net::SSH::Test::Channel</a> <code>channel</code>. This
+                  will typically be called via <a
+                  href="Channel.html#method-i-sends_close">Net::SSH::Test::Channel#sends_close</a>.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends_channel_close-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-sends_channel_close-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_channel_close</span>(<span class="ruby-identifier">channel</span>)&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">LocalPacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_close</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">remote_id</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-sends_channel_data'>
+                <a name='method-i-sends_channel_data'></a>
+                <div class='synopsis'>
+                  <span class='name'>sends_channel_data</span>
+                  <span class='arguments'>(channel, data)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Scripts the sending of a channel data packet. <code>channel</code> must be
+                  a <a href="Channel.html">Net::SSH::Test::Channel</a> object, and
+                  <code>data</code> is the (string) data to expect will be sent.</p>
+                  
+                  <p>This will typically be called via <a
+                  href="Channel.html#method-i-sends_data">Net::SSH::Test::Channel#sends_data</a>.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends_channel_data-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-sends_channel_data-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 89</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_channel_data</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">LocalPacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_data</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">remote_id</span>, <span class="ruby-identifier">data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-sends_channel_eof'>
+                <a name='method-i-sends_channel_eof'></a>
+                <div class='synopsis'>
+                  <span class='name'>sends_channel_eof</span>
+                  <span class='arguments'>(channel)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Scripts the sending of a channel EOF packet from the given <a
+                  href="Channel.html">Net::SSH::Test::Channel</a> <code>channel</code>. This
+                  will typically be called via <a
+                  href="Channel.html#method-i-sends_eof">Net::SSH::Test::Channel#sends_eof</a>.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends_channel_eof-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-sends_channel_eof-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_channel_eof</span>(<span class="ruby-identifier">channel</span>)&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">LocalPacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_eof</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">remote_id</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-sends_channel_request'>
+                <a name='method-i-sends_channel_request'></a>
+                <div class='synopsis'>
+                  <span class='name'>sends_channel_request</span>
+                  <span class='arguments'>(channel, request, reply, data, success=true)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Scripts the sending of a <a href="Script.html#method-c-new">::new</a>
+                  channel request packet to the remote host. <code>channel</code> should be
+                  an instance of <a href="Channel.html">Net::SSH::Test::Channel</a>.
+                  <code>request</code> is a string naming the request type to send,
+                  <code>reply</code> is a boolean indicating whether a response to this
+                  packet is required , and <code>data</code> is any additional
+                  request-specific data that this packet should send. <code>success</code>
+                  indicates whether the response (if one is required) should be success or
+                  failure.</p>
+                  
+                  <p>If a reply is desired, a remote packet will also be queued,
+                  :channel_success if <code>success</code> is true, or :channel_failure if
+                  <code>success</code> is false.</p>
+                  
+                  <p>This will typically be called via <a
+                  href="Channel.html#method-i-sends_exec">Net::SSH::Test::Channel#sends_exec</a>
+                  or <a
+                  href="Channel.html#method-i-sends_subsystem">Net::SSH::Test::Channel#sends_subsystem</a>.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends_channel_request-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-sends_channel_request-source'><span class="ruby-comment"># File lib/net/ssh/test/script.rb, line 73</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_channel_request</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-identifier">request</span>, <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">data</span>, <span class="ruby-identifier">success</span>=<span class="ruby-keyword">true</span>)&#x000A;  <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">LocalPacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_request</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">remote_id</span>, <span class="ruby-identifier">request</span>, <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">reply</span>&#x000A;    <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>&#x000A;      <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RemotePacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_success</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_id</span>)&#x000A;    <span class="ruby-keyword">else</span>&#x000A;      <span class="ruby-identifier">events</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RemotePacket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:channel_failure</span>, <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_id</span>)&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
