@@ -1,4 +1,13 @@
 
+=== 2.6.0 / 19 Sep 2012
+
+* Use OpenSSL::PKey.read to read arbitrary private key. [nagachika]
+* Check availability of UNIXSocket and UNIXServer for Windows [Nobuhiro IMAI]
+* Bump version to 2.5.3 and depend on newer jruby-pageant version for Java 1.5 compat. [arturaz]
+* Implementation of the "none"-authentication method [dubspeed]
+* Add class for stricter host key verification [Andy Brody]
+
+
 === 2.5.2 / 25 May 2012
 
 * Fix for Net::SSH::KnownHosts::SUPPORTED_TYPE [Marco Sandrini] 

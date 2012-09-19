@@ -48,10 +48,10 @@ module Net; module SSH
     MAJOR = 2
 
     # The minor component of this version of the Net::SSH library
-    MINOR = 5
+    MINOR = 6
 
     # The tiny component of this version of the Net::SSH library
-    TINY  = 2 
+    TINY  = 0 
 
     # The current version of the Net::SSH library as a Version instance
     CURRENT = new(MAJOR, MINOR, TINY)
