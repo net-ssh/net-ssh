@@ -8,7 +8,7 @@ module Authentication
     include Net::SSH::Authentication::Constants
 
     def test_constructor_should_set_defaults
-      assert_equal %w(publickey hostbased password keyboard-interactive), session.auth_methods
+      assert_equal %w(none publickey hostbased password keyboard-interactive), session.auth_methods
       assert_equal session.auth_methods, session.allowed_auth_methods
     end
 
@@ -21,6 +21,7 @@ module Authentication
 
       Net::SSH::Authentication::Methods::Publickey.any_instance.expects(:authenticate).with("next service", "username", "password").raises(Net::SSH::Authentication::DisallowedMethod)
       Net::SSH::Authentication::Methods::Hostbased.any_instance.expects(:authenticate).with("next service", "username", "password").returns(true)
+      Net::SSH::Authentication::Methods::None.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
 
       assert session.authenticate("next service", "username", "password")
     end
@@ -46,7 +47,8 @@ module Authentication
       Net::SSH::Authentication::Methods::Hostbased.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
       Net::SSH::Authentication::Methods::Password.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
       Net::SSH::Authentication::Methods::KeyboardInteractive.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
-
+      Net::SSH::Authentication::Methods::None.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
+      
       assert_equal false, session.authenticate("next service", "username", "password")
     end
 
