@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::PromptMethods::Clear</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>module</span>
+          Net::SSH::PromptMethods::Clear
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../../files/lib/net/ssh/prompt_rb.html">lib/net/ssh/prompt.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../PromptMethods.html">PromptMethods</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>Defines the <a href="Clear.html#method-i-prompt">#prompt</a> method to use
+            when neither <a href="Highline.html">Highline</a> nor <a
+            href="Termios.html">Termios</a> are installed.</p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#method-i-prompt">prompt</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-prompt'>
+                <a name='method-i-prompt'></a>
+                <div class='synopsis'>
+                  <span class='name'>prompt</span>
+                  <span class='arguments'>(prompt, echo=true)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Displays the <a href="Clear.html#method-i-prompt">#prompt</a> to $stdout
+                  and pulls the response from $stdin. Text is always echoed in the clear,
+                  regardless of the <code>echo</code> setting. The first time a <a
+                  href="Clear.html#method-i-prompt">#prompt</a> is given and
+                  <code>echo</code> is false, a warning will be written to $stderr
+                  recommending that either <a href="Highline.html">Highline</a> or <a
+                  href="Termios.html">Termios</a> be installed.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-prompt-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-prompt-source'><span class="ruby-comment"># File lib/net/ssh/prompt.rb, line 64</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">prompt</span>(<span class="ruby-identifier">prompt</span>, <span class="ruby-identifier">echo</span>=<span class="ruby-keyword">true</span>)&#x000A;  <span class="ruby-ivar">@seen_warning</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">false</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">echo</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@seen_warning</span>&#x000A;    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Text will be echoed in the clear. Please install the HighLine or Termios libraries to suppress echoed text.&quot;</span>&#x000A;    <span class="ruby-ivar">@seen_warning</span> = <span class="ruby-keyword">true</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-identifier">prompt</span>)&#x000A;  <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">flush</span>&#x000A;  <span class="ruby-identifier">$stdin</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">chomp</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

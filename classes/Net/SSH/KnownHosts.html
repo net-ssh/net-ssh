@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Net::SSH::KnownHosts</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>class</span>
+          Net::SSH::KnownHosts
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a target="docwin" href="../../../files/lib/net/ssh/known_hosts_rb.html">lib/net/ssh/known_hosts.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a target="docwin" href="../SSH.html">SSH</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            
+            <p>Searches an OpenSSH-style known-host file for a given host, and returns all
+            matching keys. This is used to implement host-key verification, as well as
+            to determine what key a user prefers to use for a given host.</p>
+            
+            <p>This is used internally by <a href="../SSH.html">Net::SSH</a>, and will
+            never need to be used directly by consumers of the library.</p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>Public Class</h3>
+            <ol>
+              <li><a target="docwin" href="#method-c-add">add</a></li>
+              <li><a target="docwin" href="#method-c-hostfiles">hostfiles</a></li>
+              <li><a target="docwin" href="#method-c-new">new</a></li>
+              <li><a target="docwin" href="#method-c-search_for">search_for</a></li>
+              <li><a target="docwin" href="#method-c-search_in">search_in</a></li>
+            </ol>
+            <h3>Public Instance</h3>
+            <ol>
+              <li><a target="docwin" href="#method-i-add">add</a></li>
+              <li><a target="docwin" href="#method-i-keys_for">keys_for</a></li>
+              <li><a target="docwin" href="#attribute-i-source">source</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+          </div>
+          <div id='section'>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>SUPPORTED_TYPE</td>
+                    <td>=</td>
+                    <td class='context-item-value'>
+                      %w(ssh-rsa ssh-dss
+                      ecdsa-sha2-nistp256
+                      ecdsa-sha2-nistp384
+                      ecdsa-sha2-nistp521)
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>
+                      <a name='attribute-i-source'>source</a>
+                    </td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'>
+                      
+                      <p>The host-key file name that this <a href="KnownHosts.html">KnownHosts</a>
+                      instance will use to search for keys.</p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public Class methods</h2>
+              <div class='method public-class' id='method-method-c-add'>
+                <a name='method-c-add'></a>
+                <div class='synopsis'>
+                  <span class='name'>add</span>
+                  <span class='arguments'>(host, key, options={})</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Looks in all user known host files (see <a
+                  href="KnownHosts.html#method-c-hostfiles">::hostfiles</a>) and tries to <a
+                  href="KnownHosts.html#method-c-add">::add</a> an entry for the given host
+                  and key to the first file it is able to.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-add-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-add-source'><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 64</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">options</span>={})&#x000A;  <span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>, <span class="ruby-value">:user</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-keyword">begin</span>&#x000A;      <span class="ruby-constant">KnownHosts</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>).<span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>)&#x000A;      <span class="ruby-keyword">return</span>&#x000A;    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">SystemCallError</span>&#x000A;      <span class="ruby-comment"># try the next hostfile</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-hostfiles'>
+                <a name='method-c-hostfiles'></a>
+                <div class='synopsis'>
+                  <span class='name'>hostfiles</span>
+                  <span class='arguments'>(options, which=:all)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Looks in the given <code>options</code> hash for the :user_known_hosts_file
+                  and :global_known_hosts_file keys, and returns an array of all known hosts
+                  files. If the :user_known_hosts_file key is not set, the default is
+                  returned (~/.ssh/known_hosts and ~/.ssh/known_hosts2). If
+                  :global_known_hosts_file is not set, the default is used
+                  (/etc/ssh/known_hosts and /etc/ssh/known_hosts2).</p>
+                  
+                  <p>If you only want the user known host files, you can pass :user as the
+                  second option.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-hostfiles-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-hostfiles-source'><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 47</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">which</span>=<span class="ruby-value">:all</span>)&#x000A;  <span class="ruby-identifier">files</span> = []&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-value">:all</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-value">:user</span>&#x000A;    <span class="ruby-identifier">files</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:user_known_hosts_file</span>] <span class="ruby-operator">||</span> <span class="ruby-node">%w(~/.ssh/known_hosts ~/.ssh/known_hosts2)</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-value">:all</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">which</span> <span class="ruby-operator">==</span> <span class="ruby-value">:global</span>&#x000A;    <span class="ruby-identifier">files</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:global_known_hosts_file</span>] <span class="ruby-operator">||</span> <span class="ruby-node">%w(/etc/ssh/known_hosts /etc/ssh/known_hosts2)</span>)&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-identifier">files</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-new'>
+                <a name='method-c-new'></a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(source)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Instantiate a <a href="KnownHosts.html#method-c-new">::new</a> <a
+                  href="KnownHosts.html">KnownHosts</a> instance that will search the given
+                  known-hosts file. The path is expanded file File.expand_path.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 82</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">source</span>)&#x000A;  <span class="ruby-ivar">@source</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">source</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-search_for'>
+                <a name='method-c-search_for'></a>
+                <div class='synopsis'>
+                  <span class='name'>search_for</span>
+                  <span class='arguments'>(host, options={})</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Searches all known host files (see <a
+                  href="KnownHosts.html#method-c-hostfiles">::hostfiles</a>) for all keys of
+                  the given host. Returns an array of keys found.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-search_for-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-search_for-source'><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 28</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">search_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>={})&#x000A;  <span class="ruby-identifier">search_in</span>(<span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>), <span class="ruby-identifier">host</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-method-c-search_in'>
+                <a name='method-c-search_in'></a>
+                <div class='synopsis'>
+                  <span class='name'>search_in</span>
+                  <span class='arguments'>(files, host)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Search for all known keys for the given host, in every file given in the
+                  <code>files</code> array. Returns the list of keys.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-c-search_in-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-c-search_in-source'><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 34</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">search_in</span>(<span class="ruby-identifier">files</span>, <span class="ruby-identifier">host</span>)&#x000A;  <span class="ruby-identifier">files</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span> <span class="ruby-constant">KnownHosts</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>).<span class="ruby-identifier">keys_for</span>(<span class="ruby-identifier">host</span>) }.<span class="ruby-identifier">flatten</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <h2>Public Instance methods</h2>
+              <div class='method public-instance' id='method-method-i-add'>
+                <a name='method-i-add'></a>
+                <div class='synopsis'>
+                  <span class='name'>add</span>
+                  <span class='arguments'>(host, key)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Tries to append an entry to the current <a
+                  href="KnownHosts.html#attribute-i-source">#source</a> file for the given
+                  host and key. If it is unable to (because the file is not writable, for
+                  instance), an exception will be raised.</p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-add-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-add-source'><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 133</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>)&#x000A;  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">source</span>, <span class="ruby-string">&quot;a&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">blob</span> = [<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:key</span>, <span class="ruby-identifier">key</span>).<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;m*&quot;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">%r\s/</span>, <span class="ruby-string">&quot;&quot;</span>)&#x000A;    <span class="ruby-identifier">file</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{host} #{key.ssh_type} #{blob}&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-keys_for'>
+                <a name='method-i-keys_for'></a>
+                <div class='synopsis'>
+                  <span class='name'>keys_for</span>
+                  <span class='arguments'>(host)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Returns an array of all keys that are known to be associatd with the given
+                  host. The <code>host</code> parameter is either the domain name or ip
+                  address of the host, or both (comma-separated). Additionally, if a
+                  non-standard port is being used, it may be specified by putting the host
+                  (or ip, or both) in square brackets, and appending the port outside the
+                  brackets after a colon. Possible formats for <code>host</code>, then, are;</p>
+                  
+                  <pre>&quot;net.ssh.test&quot;&#x000A;&quot;1.2.3.4&quot;&#x000A;&quot;net.ssh.test,1.2.3.4&quot;&#x000A;&quot;[net.ssh.test]:5555&quot;&#x000A;&quot;[1,2,3,4]:5555&quot;&#x000A;&quot;[net.ssh.test]:5555,[1.2.3.4]:5555</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-keys_for-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-keys_for-source'><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 99</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">keys_for</span>(<span class="ruby-identifier">host</span>)&#x000A;  <span class="ruby-identifier">keys</span> = []&#x000A;  <span class="ruby-keyword">return</span> <span class="ruby-identifier">keys</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">source</span>)&#x000A;&#x000A;  <span class="ruby-identifier">entries</span> = <span class="ruby-identifier">host</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">%r,/</span>)&#x000A;&#x000A;  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">source</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">scanner</span> = <span class="ruby-constant">StringScanner</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;&quot;</span>)&#x000A;    <span class="ruby-identifier">file</span>.<span class="ruby-identifier">each_line</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">string</span> = <span class="ruby-identifier">line</span>&#x000A;&#x000A;      <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">skip</span>(<span class="ruby-regexp">%r\s*/</span>)&#x000A;      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">match?</span>(<span class="ruby-node">%r$|#/</span>)&#x000A;&#x000A;      <span class="ruby-identifier">hostlist</span> = <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">%r\S+/</span>).<span class="ruby-identifier">split</span>(<span class="ruby-regexp">%r,/</span>)&#x000A;      <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span> <span class="ruby-identifier">hostlist</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">entry</span>) }&#x000A;&#x000A;      <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">skip</span>(<span class="ruby-regexp">%r\s*/</span>)&#x000A;      <span class="ruby-identifier">type</span> = <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">%r\S+/</span>)&#x000A;&#x000A;      <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">SUPPORTED_TYPE</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">type</span>)&#x000A;&#x000A;      <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">skip</span>(<span class="ruby-regexp">%r\s*/</span>)&#x000A;      <span class="ruby-identifier">blob</span> = <span class="ruby-identifier">scanner</span>.<span class="ruby-identifier">rest</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&quot;m*&quot;</span>).<span class="ruby-identifier">first</span>&#x000A;      <span class="ruby-identifier">keys</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">blob</span>).<span class="ruby-identifier">read_key</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-identifier">keys</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a target="docwin" href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
