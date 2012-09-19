@@ -41,13 +41,23 @@ class TestKeyFactory < Test::Unit::TestCase
   def test_load_encrypted_private_key_should_give_three_tries_for_the_password_and_then_raise_exception
     File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
     Net::SSH::KeyFactory.expects(:prompt).times(3).with("Enter passphrase for #{@key_file}:", false).returns("passwod","passphrase","passwd")
-    assert_raises(OpenSSL::PKey::RSAError) { Net::SSH::KeyFactory.load_private_key(@key_file) }
+    if OpenSSL::PKey.respond_to?(:read)
+      error_class = ArgumentError
+    else
+      error_class = OpenSSL::PKey::RSAError
+    end
+    assert_raises(error_class) { Net::SSH::KeyFactory.load_private_key(@key_file) }
   end
 
   def test_load_encrypted_private_key_should_raise_exception_without_asking_passphrase
     File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
     Net::SSH::KeyFactory.expects(:prompt).never
-    assert_raises(OpenSSL::PKey::RSAError) { Net::SSH::KeyFactory.load_private_key(@key_file, nil, false) }
+    if OpenSSL::PKey.respond_to?(:read)
+      error_class = ArgumentError
+    else
+      error_class = OpenSSL::PKey::RSAError
+    end
+    assert_raises(error_class) { Net::SSH::KeyFactory.load_private_key(@key_file, nil, false) }
   end
 
   def test_load_public_rsa_key_should_return_key
@@ -83,6 +93,15 @@ class TestKeyFactory < Test::Unit::TestCase
     end
   end
 
+  def test_load_anonymous_private_key_should_return_key_or_raise_exception
+    File.expects(:read).with(@key_file).returns(anonymous_private_key)
+    if OpenSSL::PKey.respond_to?(:read)
+      assert_equal OpenSSL::PKey::RSA.new(anonymous_private_key).to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
+    else
+      assert_raises(OpenSSL::PKey::PKeyError) { Net::SSH::KeyFactory.load_private_key(@key_file) }
+    end
+  end
+
   private
 
     def rsa_key
@@ -107,6 +126,39 @@ class TestKeyFactory < Test::Unit::TestCase
       def ecdsa_sha2_nistp521_key
         @ecdsa_sha2_nistp521_key ||= OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIHbAgEBBEHQ2i7kjEGQHQB4pUQW9a2eCLWR2S5Go8U3CDyfbRCrYEp/pTSgI8uu\nMXyR3bf3SjqFQgZ6MZk5lkyrissJuwmvZKAHBgUrgQQAI6GBiQOBhgAEAN14FACK\nbs/KTqw4rxijeozGTVJTh1hNzBl2XaIhM4Fv8o3fE/pvogymyFu53GCng6gC4dmx\n/hycF41iIM29xVKPAeBnRNl6MdFBjuthOmE8eCRezgk1Bak8aBDUrzNT8OQssscw\npvQK4nc6ga/wTDaQGy5kV8tCOHNs2wKH+p2LpWTJ\n-----END EC PRIVATE KEY-----\n")
       end
+    end
+
+    def anonymous_private_key
+      @anonymous_key = <<-EOF
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3id5gZ6bglJth
+yli8JNaRxhsqKwwPlReEI/mplzz5IP6gWQ92LogXbdBXtHf9ZpA53BeLmtcNBEY0
+Ygd7sPBhlHABS5D5///zltSSX2+L5GCEiC6dpfGsySjqymWF+SZ2PaqfZbkWLmCD
+9u4ysueaHf7xbF6txGprNp69efttWxdy+vU5tno7HVxemMZQUalpShFrdAYKKXEo
+cV7MtbkQjzubS14gaWGpWCXIl9uNKQeHpLKtre1Qn5Ft/zVpCHmhLQcYDuB1LAj9
+7eoev4rIiOE2sfdkvKDlmFxvzq3myYH4o27WwAg9OZ5SBusn2zesKkRCBBEZ55rl
+uVknOGHXAgMBAAECggEAZE0U2OxsNxkfXS6+lXswQ5PW7pF90towcsdSPgrniGIu
+pKRnHbfKKbuaewOl+zZcpTIRL/rbgUKPtzrHSiJlC36aQyrvvJ/ZWV5ZJvC+vd19
+nY/qob65NyrrkHwxRSjmiwGiR9/IaUXI+vUsMUqx5Ph1hawqhZ3sZlEAKR4LeDO8
+M+OguG77jLaqj5/SNfi+GwyUDe85de4VfEG4S9HrMQk2Cp66rx0BqDnCLacyFQaI
+R0VczMXTU52q0uETmgUr8G9A1SaRc5ZWKAfZwxJTvqdIImWC9E+CY7wm+mZD4FE6
+iVzVC0ngcdEd596kTDdU2BPVMluWzLkfqIrTt/5CeQKBgQDzgRzCPNxFtai6RAIi
+ekBSHqrDnrbeTaw32GVq5ACk1Zfk2I0svctz1iQ9qJ2SRINpygQhcyJKQ4r/LXi1
+7Av9H/d6QV4T2AZzS4WcqBkxxRXFUfARtnKChzuCzNt9tNz4EZiv75RyQmztGZjV
+i94+ZvCyqup5be4Svf4MBxin9QKBgQDA9P4nHzFWZakTMei78LGb/4Auc+r0rZp7
+8xg8Z92tvrDeJjMdesdhiFrPP1qiSYHnQ81MSWpn6BycBsHZqitejQmYnYput/s4
+qG+m7SrkN8WL6rijYsbB+U14VDjMlBlOgcEgjlSNU2oeS+68u+uVI/fgyXcXn4Jq
+33TSWSgfGwKBgA2tRdE/G9wqfOShZ0FKfoxePpcoNfs8f5zPYbrkPYkEmjh3VU6b
+Bm9mKrjv3JHXmU3608qRLe7f5lG42xvUu0OnZP4P59nTe2FEb6fB5VBfUn63wHUu
+OzZLpDMPkJB59SNV0a6oFT1pr7aNhoEQDxaQL5rJcMwLOaEB3OAOEft1AoGASz7+
+4Zi7b7rDPVYIMUpCqNfxT6wqovIUPWPmPqAuhXPIm0kAQ+2+VN2MtCc7m+/Ydawu
+IiK7GPweNAY6kDxZH00WweolstmSYVzl9Y2lXUwWgGKvUB/T7I7g1Bzb7YOPftsA
+ykZW2Kn/xwLLfdQ2oXleT82g4Jh2jmDHuMPF7qMCgYEA6QF45PvOgnrJessgmwO/
+dEmkLl07PQYJPGZLaZteuWrvfMrn+AiW5aAdHzhzNaOtNy5B3T7zGUHtgxXegqgd
+/QdCVCJgnZUO/zdAxkr22dDn+WEXkL4wgBVStQvvnQp9C2NJcoOExvex5PLzKWQg
+WEKt5v3QsUEgVrzkM4K9UbI=
+-----END PRIVATE KEY-----
+      EOF
     end
 
     def encrypted(key, password)
