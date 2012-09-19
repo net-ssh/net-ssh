@@ -75,8 +75,6 @@ RDoc::Task.new do |t|
   t.generator = 'hanna'   # gem install hanna-nouveau
 	t.rdoc_dir = 'doc'
 	t.title    = @spec.summary
-	t.options << '--line-numbers' << '-A cattr_accessor=object'
-	t.options << '--charset' << 'utf-8'
 	t.main = README
 	t.rdoc_files.include(README)
 	t.rdoc_files.include(CHANGES)
