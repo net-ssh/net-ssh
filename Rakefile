@@ -4,11 +4,7 @@ require 'rake/gempackagetask'
 require 'fileutils'
 include FileUtils
 
-begin
-  require 'hanna/rdoctask'
-rescue LoadError
-  require 'rdoc/task'
-end
+require 'rdoc/task'
 
 
 task :default => :package
@@ -74,7 +70,9 @@ end
 
 # RUBY DOCS TASK ==================================
 
-Rake::RDocTask.new do |t|
+RDoc::Task.new do |t|
+  # this only works with RDoc 3.1 or greater
+  t.generator = 'hanna'   # gem install hanna-nouveau
 	t.rdoc_dir = 'doc'
 	t.title    = @spec.summary
 	t.options << '--line-numbers' << '-A cattr_accessor=object'
@@ -85,4 +83,3 @@ Rake::RDocTask.new do |t|
  	t.rdoc_files.include(LICENSE)
 	t.rdoc_files.include('lib/**/*.rb')
 end
-
