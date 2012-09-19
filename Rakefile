@@ -1,6 +1,6 @@
 require 'rubygems'
+require 'rubygems/package_task'
 require 'rake/clean'
-require 'rake/gempackagetask'
 require 'fileutils'
 include FileUtils
 
@@ -35,7 +35,7 @@ version = @spec.version
 
 # INSTALL =============================================================
 
-Rake::GemPackageTask.new(@spec) do |p|
+Gem::PackageTask.new(@spec) do |p|
   p.need_tar = true if RUBY_PLATFORM !~ /mswin/
 end
 
