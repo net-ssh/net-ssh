@@ -1,0 +1,961 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+  <title>Module: Net::SSH</title>
+
+  <link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
+
+  <script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../js/thickbox-compressed.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../js/quicksearch.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../js/darkfish.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body id="top" class="module">
+
+  <div id="metadata">
+    <div id="home-metadata">
+      <div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../index.html">Home</a>
+          <a href="../index.html#classes">Classes</a>
+          <a href="../index.html#methods">Methods</a>
+        </h3>
+      </div>
+    </div>
+
+    <div id="file-metadata">
+      <div id="file-list-section" class="section">
+        <h3 class="section-header">In Files</h3>
+        <div class="section-body">
+          <ul>
+          
+            <li><a href="../lib/net/ssh/authentication/agent/java_pageant_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/agent/java_pageant.rb">lib/net/ssh/authentication/agent/java_pageant.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/authentication/agent/socket_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/agent/socket.rb">lib/net/ssh/authentication/agent/socket.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/authentication/agent_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/agent.rb">lib/net/ssh/authentication/agent.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/authentication/constants_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/constants.rb">lib/net/ssh/authentication/constants.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/authentication/key_manager_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/key_manager.rb">lib/net/ssh/authentication/key_manager.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/authentication/methods/abstract_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/methods/abstract.rb">lib/net/ssh/authentication/methods/abstract.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/authentication/methods/hostbased_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/methods/hostbased.rb">lib/net/ssh/authentication/methods/hostbased.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/authentication/methods/keyboard_interactive_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/methods/keyboard_interactive.rb">lib/net/ssh/authentication/methods/keyboard_interactive.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/authentication/methods/password_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/methods/password.rb">lib/net/ssh/authentication/methods/password.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/authentication/methods/publickey_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/methods/publickey.rb">lib/net/ssh/authentication/methods/publickey.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/authentication/session_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/authentication/session.rb">lib/net/ssh/authentication/session.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/buffer_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/buffer.rb">lib/net/ssh/buffer.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/buffered_io_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/buffered_io.rb">lib/net/ssh/buffered_io.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/config_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/config.rb">lib/net/ssh/config.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/connection/channel_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/connection/channel.rb">lib/net/ssh/connection/channel.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/connection/constants_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/connection/constants.rb">lib/net/ssh/connection/constants.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/connection/session_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/connection/session.rb">lib/net/ssh/connection/session.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/connection/term_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/connection/term.rb">lib/net/ssh/connection/term.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/errors_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/errors.rb">lib/net/ssh/errors.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/key_factory_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/key_factory.rb">lib/net/ssh/key_factory.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/known_hosts_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/known_hosts.rb">lib/net/ssh/known_hosts.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/loggable_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/loggable.rb">lib/net/ssh/loggable.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/packet_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/packet.rb">lib/net/ssh/packet.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/prompt_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/prompt.rb">lib/net/ssh/prompt.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/proxy/command_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/proxy/command.rb">lib/net/ssh/proxy/command.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/proxy/errors_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/proxy/errors.rb">lib/net/ssh/proxy/errors.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/proxy/http_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/proxy/http.rb">lib/net/ssh/proxy/http.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/proxy/socks4_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/proxy/socks4.rb">lib/net/ssh/proxy/socks4.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/proxy/socks5_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/proxy/socks5.rb">lib/net/ssh/proxy/socks5.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/ruby_compat_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/ruby_compat.rb">lib/net/ssh/ruby_compat.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/service/forward_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/service/forward.rb">lib/net/ssh/service/forward.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/test/channel_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/test/channel.rb">lib/net/ssh/test/channel.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/test/extensions_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/test/extensions.rb">lib/net/ssh/test/extensions.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/test/kex_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/test/kex.rb">lib/net/ssh/test/kex.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/test/local_packet_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/test/local_packet.rb">lib/net/ssh/test/local_packet.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/test/packet_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/test/packet.rb">lib/net/ssh/test/packet.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/test/remote_packet_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/test/remote_packet.rb">lib/net/ssh/test/remote_packet.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/test/script_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/test/script.rb">lib/net/ssh/test/script.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/test/socket_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/test/socket.rb">lib/net/ssh/test/socket.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/test_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/test.rb">lib/net/ssh/test.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/algorithms_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/algorithms.rb">lib/net/ssh/transport/algorithms.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/cipher_factory_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/cipher_factory.rb">lib/net/ssh/transport/cipher_factory.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/constants_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/constants.rb">lib/net/ssh/transport/constants.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/hmac/abstract_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/hmac/abstract.rb">lib/net/ssh/transport/hmac/abstract.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/identity_cipher_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/identity_cipher.rb">lib/net/ssh/transport/identity_cipher.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/kex/diffie_hellman_group14_sha1_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/kex/diffie_hellman_group14_sha1.rb">lib/net/ssh/transport/kex/diffie_hellman_group14_sha1.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/kex/diffie_hellman_group1_sha1_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb">lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/kex/ecdh_sha2_nistp256_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb">lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/kex/ecdh_sha2_nistp384_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/kex/ecdh_sha2_nistp384.rb">lib/net/ssh/transport/kex/ecdh_sha2_nistp384.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/kex/ecdh_sha2_nistp521_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/kex/ecdh_sha2_nistp521.rb">lib/net/ssh/transport/kex/ecdh_sha2_nistp521.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/key_expander_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/key_expander.rb">lib/net/ssh/transport/key_expander.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/packet_stream_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/packet_stream.rb">lib/net/ssh/transport/packet_stream.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/server_version_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/server_version.rb">lib/net/ssh/transport/server_version.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/session_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/session.rb">lib/net/ssh/transport/session.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/transport/state_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/transport/state.rb">lib/net/ssh/transport/state.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/verifiers/lenient_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/verifiers/lenient.rb">lib/net/ssh/verifiers/lenient.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/verifiers/null_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/verifiers/null.rb">lib/net/ssh/verifiers/null.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/verifiers/secure_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/verifiers/secure.rb">lib/net/ssh/verifiers/secure.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/verifiers/strict_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/verifiers/strict.rb">lib/net/ssh/verifiers/strict.rb</a></li>
+          
+            <li><a href="../lib/net/ssh/version_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh/version.rb">lib/net/ssh/version.rb</a></li>
+          
+            <li><a href="../lib/net/ssh_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/net/ssh.rb">lib/net/ssh.rb</a></li>
+          
+          </ul>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <div id="class-metadata">
+      
+
+      
+
+      
+      <!-- Namespace Contents -->
+      <div id="namespace-list-section" class="section">
+        <h3 class="section-header">Namespace</h3>
+        <ul class="link-list">
+          
+          <li><span class="type">MODULE</span> <a href="SSH/Authentication.html">Net::SSH::Authentication</a></li>
+          
+          <li><span class="type">MODULE</span> <a href="SSH/BufferedIo.html">Net::SSH::BufferedIo</a></li>
+          
+          <li><span class="type">MODULE</span> <a href="SSH/Connection.html">Net::SSH::Connection</a></li>
+          
+          <li><span class="type">MODULE</span> <a href="SSH/ForwardedBufferedIo.html">Net::SSH::ForwardedBufferedIo</a></li>
+          
+          <li><span class="type">MODULE</span> <a href="SSH/Loggable.html">Net::SSH::Loggable</a></li>
+          
+          <li><span class="type">MODULE</span> <a href="SSH/PromptMethods.html">Net::SSH::PromptMethods</a></li>
+          
+          <li><span class="type">MODULE</span> <a href="SSH/Proxy.html">Net::SSH::Proxy</a></li>
+          
+          <li><span class="type">MODULE</span> <a href="SSH/Service.html">Net::SSH::Service</a></li>
+          
+          <li><span class="type">MODULE</span> <a href="SSH/Test.html">Net::SSH::Test</a></li>
+          
+          <li><span class="type">MODULE</span> <a href="SSH/Transport.html">Net::SSH::Transport</a></li>
+          
+          <li><span class="type">MODULE</span> <a href="SSH/Verifiers.html">Net::SSH::Verifiers</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/AuthenticationFailed.html">Net::SSH::AuthenticationFailed</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/Buffer.html">Net::SSH::Buffer</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/ChannelOpenFailed.html">Net::SSH::ChannelOpenFailed</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/ChannelRequestFailed.html">Net::SSH::ChannelRequestFailed</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/Compat.html">Net::SSH::Compat</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/Config.html">Net::SSH::Config</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/ConnectionTimeout.html">Net::SSH::ConnectionTimeout</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/Disconnect.html">Net::SSH::Disconnect</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/Exception.html">Net::SSH::Exception</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/HostKeyError.html">Net::SSH::HostKeyError</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/HostKeyMismatch.html">Net::SSH::HostKeyMismatch</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/HostKeyUnknown.html">Net::SSH::HostKeyUnknown</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/KeyFactory.html">Net::SSH::KeyFactory</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/KnownHosts.html">Net::SSH::KnownHosts</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/Packet.html">Net::SSH::Packet</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="SSH/Version.html">Net::SSH::Version</a></li>
+          
+        </ul>
+      </div>
+      
+
+      
+      <!-- Method Quickref -->
+      <div id="method-list-section" class="section">
+        <h3 class="section-header">Methods</h3>
+        <ul class="link-list">
+          
+          <li><a href="#method-c-configuration_for">::configuration_for</a></li>
+          
+          <li><a href="#method-c-start">::start</a></li>
+          
+        </ul>
+      </div>
+      
+
+      
+    </div>
+
+    <div id="project-metadata">
+      
+      
+      <div id="fileindex-section" class="section project-section">
+        <h3 class="section-header">Files</h3>
+        <ul>
+        
+          <li class="file"><a href="../CHANGELOG_rdoc.html">CHANGELOG.rdoc</a></li>
+        
+          <li class="file"><a href="../LICENSE_rdoc.html">LICENSE.rdoc</a></li>
+        
+          <li class="file"><a href="../README_rdoc.html">README.rdoc</a></li>
+        
+          <li class="file"><a href="../THANKS_rdoc.html">THANKS.rdoc</a></li>
+        
+        </ul>
+      </div>
+      
+
+      <div id="classindex-section" class="section project-section">
+        <h3 class="section-header">Class/Module Index
+          <span class="search-toggle"><img src="../images/find.png"
+            height="16" width="16" alt="[+]"
+            title="show/hide quicksearch" /></span></h3>
+        <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+        <fieldset>
+          <legend>Quicksearch</legend>
+          <input type="text" name="quicksearch" value=""
+            class="quicksearch-field" />
+        </fieldset>
+        </form>
+
+        <ul class="link-list">
+        
+          <li><a href="../Net.html">Net</a></li>
+        
+          <li><a href="../Net/SSH.html">Net::SSH</a></li>
+        
+          <li><a href="../Net/SSH/Authentication.html">Net::SSH::Authentication</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Agent.html">Net::SSH::Authentication::Agent</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Agent/Comment.html">Net::SSH::Authentication::Agent::Comment</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Agent/Key.html">Net::SSH::Authentication::Agent::Key</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/AgentError.html">Net::SSH::Authentication::AgentError</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/AgentNotAvailable.html">Net::SSH::Authentication::AgentNotAvailable</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Constants.html">Net::SSH::Authentication::Constants</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/DisallowedMethod.html">Net::SSH::Authentication::DisallowedMethod</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/KeyManager.html">Net::SSH::Authentication::KeyManager</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/KeyManagerError.html">Net::SSH::Authentication::KeyManagerError</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Methods.html">Net::SSH::Authentication::Methods</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Methods/Abstract.html">Net::SSH::Authentication::Methods::Abstract</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Methods/Hostbased.html">Net::SSH::Authentication::Methods::Hostbased</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Methods/KeyboardInteractive.html">Net::SSH::Authentication::Methods::KeyboardInteractive</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Methods/Password.html">Net::SSH::Authentication::Methods::Password</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Methods/Publickey.html">Net::SSH::Authentication::Methods::Publickey</a></li>
+        
+          <li><a href="../Net/SSH/Authentication/Session.html">Net::SSH::Authentication::Session</a></li>
+        
+          <li><a href="../Net/SSH/AuthenticationFailed.html">Net::SSH::AuthenticationFailed</a></li>
+        
+          <li><a href="../Net/SSH/Buffer.html">Net::SSH::Buffer</a></li>
+        
+          <li><a href="../Net/SSH/BufferedIo.html">Net::SSH::BufferedIo</a></li>
+        
+          <li><a href="../Net/SSH/ChannelOpenFailed.html">Net::SSH::ChannelOpenFailed</a></li>
+        
+          <li><a href="../Net/SSH/ChannelRequestFailed.html">Net::SSH::ChannelRequestFailed</a></li>
+        
+          <li><a href="../Net/SSH/Compat.html">Net::SSH::Compat</a></li>
+        
+          <li><a href="../Net/SSH/Config.html">Net::SSH::Config</a></li>
+        
+          <li><a href="../Net/SSH/Connection.html">Net::SSH::Connection</a></li>
+        
+          <li><a href="../Net/SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a></li>
+        
+          <li><a href="../Net/SSH/Connection/Constants.html">Net::SSH::Connection::Constants</a></li>
+        
+          <li><a href="../Net/SSH/Connection/Session.html">Net::SSH::Connection::Session</a></li>
+        
+          <li><a href="../Net/SSH/Connection/Session/NilChannel.html">Net::SSH::Connection::Session::NilChannel</a></li>
+        
+          <li><a href="../Net/SSH/Connection/Term.html">Net::SSH::Connection::Term</a></li>
+        
+          <li><a href="../Net/SSH/ConnectionTimeout.html">Net::SSH::ConnectionTimeout</a></li>
+        
+          <li><a href="../Net/SSH/Disconnect.html">Net::SSH::Disconnect</a></li>
+        
+          <li><a href="../Net/SSH/Exception.html">Net::SSH::Exception</a></li>
+        
+          <li><a href="../Net/SSH/ForwardedBufferedIo.html">Net::SSH::ForwardedBufferedIo</a></li>
+        
+          <li><a href="../Net/SSH/HostKeyError.html">Net::SSH::HostKeyError</a></li>
+        
+          <li><a href="../Net/SSH/HostKeyMismatch.html">Net::SSH::HostKeyMismatch</a></li>
+        
+          <li><a href="../Net/SSH/HostKeyUnknown.html">Net::SSH::HostKeyUnknown</a></li>
+        
+          <li><a href="../Net/SSH/KeyFactory.html">Net::SSH::KeyFactory</a></li>
+        
+          <li><a href="../Net/SSH/KnownHosts.html">Net::SSH::KnownHosts</a></li>
+        
+          <li><a href="../Net/SSH/Loggable.html">Net::SSH::Loggable</a></li>
+        
+          <li><a href="../Net/SSH/Packet.html">Net::SSH::Packet</a></li>
+        
+          <li><a href="../Net/SSH/PromptMethods.html">Net::SSH::PromptMethods</a></li>
+        
+          <li><a href="../Net/SSH/PromptMethods/Clear.html">Net::SSH::PromptMethods::Clear</a></li>
+        
+          <li><a href="../Net/SSH/PromptMethods/Highline.html">Net::SSH::PromptMethods::Highline</a></li>
+        
+          <li><a href="../Net/SSH/PromptMethods/Termios.html">Net::SSH::PromptMethods::Termios</a></li>
+        
+          <li><a href="../Net/SSH/Proxy.html">Net::SSH::Proxy</a></li>
+        
+          <li><a href="../Net/SSH/Proxy/Command.html">Net::SSH::Proxy::Command</a></li>
+        
+          <li><a href="../Net/SSH/Proxy/ConnectError.html">Net::SSH::Proxy::ConnectError</a></li>
+        
+          <li><a href="../Net/SSH/Proxy/Error.html">Net::SSH::Proxy::Error</a></li>
+        
+          <li><a href="../Net/SSH/Proxy/HTTP.html">Net::SSH::Proxy::HTTP</a></li>
+        
+          <li><a href="../Net/SSH/Proxy/SOCKS4.html">Net::SSH::Proxy::SOCKS4</a></li>
+        
+          <li><a href="../Net/SSH/Proxy/SOCKS5.html">Net::SSH::Proxy::SOCKS5</a></li>
+        
+          <li><a href="../Net/SSH/Proxy/UnauthorizedError.html">Net::SSH::Proxy::UnauthorizedError</a></li>
+        
+          <li><a href="../Net/SSH/Service.html">Net::SSH::Service</a></li>
+        
+          <li><a href="../Net/SSH/Service/Forward.html">Net::SSH::Service::Forward</a></li>
+        
+          <li><a href="../Net/SSH/Test.html">Net::SSH::Test</a></li>
+        
+          <li><a href="../Net/SSH/Test/Channel.html">Net::SSH::Test::Channel</a></li>
+        
+          <li><a href="../Net/SSH/Test/Extensions.html">Net::SSH::Test::Extensions</a></li>
+        
+          <li><a href="../Net/SSH/Test/Extensions/BufferedIo.html">Net::SSH::Test::Extensions::BufferedIo</a></li>
+        
+          <li><a href="../Net/SSH/Test/Extensions/Channel.html">Net::SSH::Test::Extensions::Channel</a></li>
+        
+          <li><a href="../Net/SSH/Test/Extensions/IO.html">Net::SSH::Test::Extensions::IO</a></li>
+        
+          <li><a href="../Net/SSH/Test/Extensions/IO/ClassMethods.html">Net::SSH::Test::Extensions::IO::ClassMethods</a></li>
+        
+          <li><a href="../Net/SSH/Test/Extensions/PacketStream.html">Net::SSH::Test::Extensions::PacketStream</a></li>
+        
+          <li><a href="../Net/SSH/Test/Kex.html">Net::SSH::Test::Kex</a></li>
+        
+          <li><a href="../Net/SSH/Test/LocalPacket.html">Net::SSH::Test::LocalPacket</a></li>
+        
+          <li><a href="../Net/SSH/Test/Packet.html">Net::SSH::Test::Packet</a></li>
+        
+          <li><a href="../Net/SSH/Test/RemotePacket.html">Net::SSH::Test::RemotePacket</a></li>
+        
+          <li><a href="../Net/SSH/Test/Script.html">Net::SSH::Test::Script</a></li>
+        
+          <li><a href="../Net/SSH/Test/Socket.html">Net::SSH::Test::Socket</a></li>
+        
+          <li><a href="../Net/SSH/Transport.html">Net::SSH::Transport</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Algorithms.html">Net::SSH::Transport::Algorithms</a></li>
+        
+          <li><a href="../Net/SSH/Transport/CTR.html">Net::SSH::Transport::CTR</a></li>
+        
+          <li><a href="../Net/SSH/Transport/CipherFactory.html">Net::SSH::Transport::CipherFactory</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Constants.html">Net::SSH::Transport::Constants</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC.html">Net::SSH::Transport::HMAC</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/Abstract.html">Net::SSH::Transport::HMAC::Abstract</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/MD5.html">Net::SSH::Transport::HMAC::MD5</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/MD5_96.html">Net::SSH::Transport::HMAC::MD5_96</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/None.html">Net::SSH::Transport::HMAC::None</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/RIPEMD160.html">Net::SSH::Transport::HMAC::RIPEMD160</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/SHA1.html">Net::SSH::Transport::HMAC::SHA1</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/SHA1_96.html">Net::SSH::Transport::HMAC::SHA1_96</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/SHA2_256.html">Net::SSH::Transport::HMAC::SHA2_256</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/SHA2_256_96.html">Net::SSH::Transport::HMAC::SHA2_256_96</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/SHA2_512.html">Net::SSH::Transport::HMAC::SHA2_512</a></li>
+        
+          <li><a href="../Net/SSH/Transport/HMAC/SHA2_512_96.html">Net::SSH::Transport::HMAC::SHA2_512_96</a></li>
+        
+          <li><a href="../Net/SSH/Transport/IdentityCipher.html">Net::SSH::Transport::IdentityCipher</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Kex.html">Net::SSH::Transport::Kex</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Kex/DiffieHellmanGroup14SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup14SHA1</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Kex/DiffieHellmanGroup1SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA1</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA256.html">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Kex/EcdhSHA2NistP256.html">Net::SSH::Transport::Kex::EcdhSHA2NistP256</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Kex/EcdhSHA2NistP384.html">Net::SSH::Transport::Kex::EcdhSHA2NistP384</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Kex/EcdhSHA2NistP521.html">Net::SSH::Transport::Kex::EcdhSHA2NistP521</a></li>
+        
+          <li><a href="../Net/SSH/Transport/KeyExpander.html">Net::SSH::Transport::KeyExpander</a></li>
+        
+          <li><a href="../Net/SSH/Transport/PacketStream.html">Net::SSH::Transport::PacketStream</a></li>
+        
+          <li><a href="../Net/SSH/Transport/ServerVersion.html">Net::SSH::Transport::ServerVersion</a></li>
+        
+          <li><a href="../Net/SSH/Transport/Session.html">Net::SSH::Transport::Session</a></li>
+        
+          <li><a href="../Net/SSH/Transport/State.html">Net::SSH::Transport::State</a></li>
+        
+          <li><a href="../Net/SSH/Verifiers.html">Net::SSH::Verifiers</a></li>
+        
+          <li><a href="../Net/SSH/Verifiers/Lenient.html">Net::SSH::Verifiers::Lenient</a></li>
+        
+          <li><a href="../Net/SSH/Verifiers/Null.html">Net::SSH::Verifiers::Null</a></li>
+        
+          <li><a href="../Net/SSH/Verifiers/Secure.html">Net::SSH::Verifiers::Secure</a></li>
+        
+          <li><a href="../Net/SSH/Verifiers/Strict.html">Net::SSH::Verifiers::Strict</a></li>
+        
+          <li><a href="../Net/SSH/Version.html">Net::SSH::Version</a></li>
+        
+          <li><a href="../OpenSSL.html">OpenSSL</a></li>
+        
+          <li><a href="../OpenSSL/BN.html">OpenSSL::BN</a></li>
+        
+          <li><a href="../OpenSSL/PKey.html">OpenSSL::PKey</a></li>
+        
+          <li><a href="../OpenSSL/PKey/DH.html">OpenSSL::PKey::DH</a></li>
+        
+          <li><a href="../OpenSSL/PKey/DSA.html">OpenSSL::PKey::DSA</a></li>
+        
+          <li><a href="../OpenSSL/PKey/EC.html">OpenSSL::PKey::EC</a></li>
+        
+          <li><a href="../OpenSSL/PKey/OpenSSL.html">OpenSSL::PKey::OpenSSL</a></li>
+        
+          <li><a href="../OpenSSL/PKey/OpenSSL/PKey.html">OpenSSL::PKey::OpenSSL::PKey</a></li>
+        
+          <li><a href="../OpenSSL/PKey/OpenSSL/PKey/OpenSSL.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL</a></li>
+        
+          <li><a href="../OpenSSL/PKey/OpenSSL/PKey/OpenSSL/PKey.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL::PKey</a></li>
+        
+          <li><a href="../OpenSSL/PKey/OpenSSL/PKey/OpenSSL/PKey/ECError.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL::PKey::ECError</a></li>
+        
+          <li><a href="../OpenSSL/PKey/PKey.html">OpenSSL::PKey::PKey</a></li>
+        
+          <li><a href="../OpenSSL/PKey/RSA.html">OpenSSL::PKey::RSA</a></li>
+        
+          <li><a href="../String.html">String</a></li>
+        
+        </ul>
+        <div id="no-class-search-results" style="display: none;">No matching classes.</div>
+      </div>
+
+      
+    </div>
+  </div>
+
+  <div id="documentation">
+    <h1 class="module">Net::SSH</h1>
+
+    <div id="description" class="description">
+      
+<p><a href="SSH.html">Net::SSH</a> is a library for interacting,
+programmatically, with remote processes via the SSH2 protocol. Sessions are
+always initiated via <a href="SSH.html#method-c-start">Net::SSH.start</a>.
+From there, a program interacts with the new <a href="SSH.html">SSH</a>
+session via the convenience methods on <a
+href="SSH/Connection/Session.html">Net::SSH::Connection::Session</a>, by
+opening and interacting with new channels
+(Net::SSH::Connection:Session#open_channel and <a
+href="SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a>), or
+by forwarding local and/or remote ports through the connection (<a
+href="SSH/Service/Forward.html">Net::SSH::Service::Forward</a>).</p>
+
+<p>The <a href="SSH.html">SSH</a> protocol is very event-oriented. Requests
+are sent from the client to the server, and are answered asynchronously.
+This gives great flexibility (since clients can have multiple requests
+pending at a time), but it also adds complexity. <a
+href="SSH.html">Net::SSH</a> tries to manage this complexity by providing
+some simpler methods of synchronous communication (see <a
+href="SSH/Connection/Session.html#method-i-exec-21">Net::SSH::Connection::Session#exec!</a>).</p>
+
+<p>In general, though, and if you want to do anything more complicated than
+simply executing commands and capturing their output, you’ll need to use
+channels (<a
+href="SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a>) to
+build state machines that are executed while the event loop runs (<a
+href="SSH/Connection/Session.html#method-i-loop">Net::SSH::Connection::Session#loop</a>).</p>
+
+<p><a href="SSH/Connection/Session.html">Net::SSH::Connection::Session</a> and
+<a href="SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a>
+have more information about this technique.</p>
+
+<h1>“Um, all I want to do is X, just show me how!”</h1>
+
+<h2>X == “execute a command and capture the output”</h2>
+
+<pre>Net::SSH.start(&quot;host&quot;, &quot;user&quot;, :password =&gt; &quot;password&quot;) do |ssh|
+  result = ssh.exec!(&quot;ls -l&quot;)
+  puts result
+end</pre>
+
+<h2>X == “forward connections on a local port to a remote host”</h2>
+
+<pre>Net::SSH.start(&quot;host&quot;, &quot;user&quot;, :password =&gt; &quot;password&quot;) do |ssh|
+  ssh.forward.local(1234, &quot;www.google.com&quot;, 80)
+  ssh.loop { true }
+end</pre>
+
+<h2>X == “forward connections on a remote port to the local host”</h2>
+
+<pre>Net::SSH.start(&quot;host&quot;, &quot;user&quot;, :password =&gt; &quot;password&quot;) do |ssh|
+  ssh.forward.remote(80, &quot;www.google.com&quot;, 1234)
+  ssh.loop { true }
+end</pre>
+
+    </div><!-- description -->
+
+    
+    
+    
+    <div id="5Buntitled-5D" class="documentation-section">
+      
+
+      
+
+      
+      <!-- Constants -->
+      <div id="constants-list" class="section">
+        <h3 class="section-header">Constants</h3>
+        <dl>
+        
+          <dt><a name="Prompt">Prompt</a></dt>
+          
+          <dd class="description"><p>Try to load Highline and Termios in turn, selecting the corresponding <a
+href="SSH/PromptMethods.html">PromptMethods</a> module to use. If neither
+are available, choose <a
+href="SSH/PromptMethods/Clear.html">PromptMethods::Clear</a>.</p></dd>
+          
+        
+          <dt><a name="VALID_OPTIONS">VALID_OPTIONS</a></dt>
+          
+          <dd class="description"><p>This is the set of options that <a
+href="SSH.html#method-c-start">Net::SSH.start</a> recognizes. See <a
+href="SSH.html#method-c-start">Net::SSH.start</a> for a description of each
+option.</p></dd>
+          
+        
+        </dl>
+      </div>
+      
+
+      
+
+      <!-- Methods -->
+      
+      <div id="public-class-method-details" class="method-section section">
+        <h3 class="section-header">Public Class Methods</h3>
+
+      
+        <div id="configuration_for-method" class="method-detail ">
+          <a name="method-c-configuration_for"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">configuration_for</span><span
+              class="method-args">(host, use_ssh_config=true)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Returns a hash of the configuration options for the given host, as read
+from the <a href="SSH.html">SSH</a> configuration file(s). If
+<tt>use_ssh_config</tt> is true (the default), this will load configuration
+from both ~/.ssh/config and /etc/ssh_config. If <tt>use_ssh_config</tt> is
+nil or false, nothing will be loaded (and an empty hash returned).
+Otherwise, <tt>use_ssh_config</tt> may be a file name (or array of file
+names) of <a href="SSH.html">SSH</a> configuration file(s) to read.</p>
+
+<p>See <a href="SSH/Config.html">Net::SSH::Config</a> for the full description
+of all supported options.</p>
+            
+
+            
+            <div class="method-source-code" id="configuration_for-source">
+<pre>
+<span class="ruby-comment"># File lib/net/ssh.rb, line 213</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configuration_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">use_ssh_config</span>=<span class="ruby-keyword">true</span>)
+  <span class="ruby-identifier">files</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">use_ssh_config</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">then</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">default_files</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-keyword">false</span>, <span class="ruby-keyword">nil</span> <span class="ruby-keyword">then</span> <span class="ruby-keyword">return</span> {}
+    <span class="ruby-keyword">else</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">use_ssh_config</span>)
+    <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">files</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- configuration_for-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- configuration_for-method -->
+
+      
+        <div id="start-method" class="method-detail ">
+          <a name="method-c-start"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">start</span><span
+              class="method-args">(host, user, options={}, &block)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>The standard means of starting a new <a href="SSH.html">SSH</a> connection.
+When used with a block, the connection will be closed when the block
+terminates, otherwise the connection will just be returned. The yielded (or
+returned) value will be an instance of <a
+href="SSH/Connection/Session.html">Net::SSH::Connection::Session</a>
+(q.v.). (See also <a
+href="SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a> and <a
+href="SSH/Service/Forward.html">Net::SSH::Service::Forward</a>.)</p>
+
+<pre>Net::SSH.start(&quot;host&quot;, &quot;user&quot;) do |ssh|
+  ssh.exec! &quot;cp /some/file /another/location&quot;
+  hostname = ssh.exec!(&quot;hostname&quot;)
+
+  ssh.open_channel do |ch|
+    ch.exec &quot;sudo -p 'sudo password: ' ls&quot; do |ch, success|
+      abort &quot;could not execute sudo ls&quot; unless success
+
+      ch.on_data do |ch, data|
+        print data
+        if data =~ /sudo password: /
+          ch.send_data(&quot;password\n&quot;)
+        end
+      end
+    end
+  end
+
+  ssh.loop
+end</pre>
+
+<p>This method accepts the following options (all are optional):</p>
+<ul><li>
+<p>:auth_methods =&gt; an array of authentication methods to try</p>
+</li><li>
+<p>:bind_address =&gt; the IP address on the connecting machine to use in
+establishing connection. (:bind_address is discarded if :proxy is set.)</p>
+</li><li>
+<p>:compression =&gt; the compression algorithm to use, or <tt>true</tt> to
+use whatever is supported.</p>
+</li><li>
+<p>:compression_level =&gt; the compression level to use when sending data</p>
+</li><li>
+<p>:config =&gt; set to <tt>true</tt> to load the default OpenSSH config files
+(~/.ssh/config, /etc/ssh_config), or to <tt>false</tt> to not load them, or
+to a file-name (or array of file-names) to load those specific
+configuration files. Defaults to <tt>true</tt>.</p>
+</li><li>
+<p>:encryption =&gt; the encryption cipher (or ciphers) to use</p>
+</li><li>
+<p>:forward_agent =&gt; set to true if you want the <a href="SSH.html">SSH</a>
+agent connection to be forwarded</p>
+</li><li>
+<p>:global_known_hosts_file =&gt; the location of the global known hosts file.
+Set to an array if you want to specify multiple global known hosts files.
+Defaults to %w(/etc/ssh/known_hosts /etc/ssh/known_hosts2).</p>
+</li><li>
+<p>:hmac =&gt; the hmac algorithm (or algorithms) to use</p>
+</li><li>
+<p>:host_key =&gt; the host key algorithm (or algorithms) to use</p>
+</li><li>
+<p>:host_key_alias =&gt; the host name to use when looking up or adding a host
+to a known_hosts dictionary file</p>
+</li><li>
+<p>:host_name =&gt; the real host name or IP to log into. This is used instead
+of the <tt>host</tt> parameter, and is primarily only useful when specified
+in an <a href="SSH.html">SSH</a> configuration file. It lets you specify an
+“alias”, similarly to adding an entry in /etc/hosts but without needing to
+modify /etc/hosts.</p>
+</li><li>
+<p>:kex =&gt; the key exchange algorithm (or algorithms) to use</p>
+</li><li>
+<p>:keys =&gt; an array of file names of private keys to use for publickey and
+hostbased authentication</p>
+</li><li>
+<p>:key_data =&gt; an array of strings, with each element of the array being a
+raw private key in PEM format.</p>
+</li><li>
+<p>:keys_only =&gt; set to <tt>true</tt> to use only private keys from
+<tt>keys</tt> and <tt>key_data</tt> parameters, even if ssh-agent offers
+more identities. This option is intended for situations where ssh-agent
+offers many different identites.</p>
+</li><li>
+<p>:logger =&gt; the logger instance to use when logging</p>
+</li><li>
+<p>:paranoid =&gt; either false, true, :very, or :secure specifying how strict
+host-key verification should be (in increasing order here)</p>
+</li><li>
+<p>:passphrase =&gt; the passphrase to use when loading a private key (default
+is <tt>nil</tt>, for no passphrase)</p>
+</li><li>
+<p>:password =&gt; the password to use to login</p>
+</li><li>
+<p>:port =&gt; the port to use when connecting to the remote host</p>
+</li><li>
+<p>:properties =&gt; a hash of key/value pairs to add to the new connection’s
+properties (see <a
+href="SSH/Connection/Session.html#attribute-i-properties">Net::SSH::Connection::Session#properties</a>)</p>
+</li><li>
+<p>:proxy =&gt; a proxy instance (see <a href="SSH/Proxy.html">Proxy</a>) to
+use when connecting</p>
+</li><li>
+<p>:rekey_blocks_limit =&gt; the max number of blocks to process before
+rekeying</p>
+</li><li>
+<p>:rekey_limit =&gt; the max number of bytes to process before rekeying</p>
+</li><li>
+<p>:rekey_packet_limit =&gt; the max number of packets to process before
+rekeying</p>
+</li><li>
+<p>:timeout =&gt; how long to wait for the initial connection to be made</p>
+</li><li>
+<p>:user =&gt; the user name to log in as; this overrides the <tt>user</tt>
+parameter, and is primarily only useful when provided via an <a
+href="SSH.html">SSH</a> configuration file.</p>
+</li><li>
+<p>:user_known_hosts_file =&gt; the location of the user known hosts file. Set
+to an array to specify multiple user known hosts files. Defaults to
+%w(~/.ssh/known_hosts ~/.ssh/known_hosts2).</p>
+</li><li>
+<p>:verbose =&gt; how verbose to be (Logger verbosity constants, Logger::DEBUG
+is very verbose, Logger::FATAL is all but silent). Logger::FATAL is the
+default. The symbols :debug, :info, :warn, :error, and :fatal are also
+supported and are translated to the corresponding Logger constant.</p>
+</li></ul>
+            
+
+            
+            <div class="method-source-code" id="start-source">
+<pre>
+<span class="ruby-comment"># File lib/net/ssh.rb, line 159</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">start</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">options</span>={}, &amp;<span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">invalid_options</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">keys</span> <span class="ruby-operator">-</span> <span class="ruby-constant">VALID_OPTIONS</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">invalid_options</span>.<span class="ruby-identifier">any?</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;invalid option(s): #{invalid_options.join(', ')}&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">options</span>[<span class="ruby-value">:user</span>] = <span class="ruby-identifier">user</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>
+  <span class="ruby-identifier">options</span> = <span class="ruby-identifier">configuration_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:config</span>, <span class="ruby-keyword">true</span>)).<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">host</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:host_name</span>, <span class="ruby-identifier">host</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:logger</span>)
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:logger</span>] = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">STDERR</span>)
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:logger</span>].<span class="ruby-identifier">level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">FATAL</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:verbose</span>]
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:logger</span>].<span class="ruby-identifier">level</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:verbose</span>]
+      <span class="ruby-keyword">when</span> <span class="ruby-constant">Fixnum</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:verbose</span>]
+      <span class="ruby-keyword">when</span> <span class="ruby-value">:debug</span> <span class="ruby-keyword">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">DEBUG</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-value">:info</span>  <span class="ruby-keyword">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">INFO</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-value">:warn</span>  <span class="ruby-keyword">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">WARN</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-value">:error</span> <span class="ruby-keyword">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">ERROR</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-value">:fatal</span> <span class="ruby-keyword">then</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">FATAL</span>
+      <span class="ruby-keyword">else</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;can't convert #{options[:verbose].inspect} to any of the Logger level constants&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">transport</span> = <span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">auth</span> = <span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>)
+
+  <span class="ruby-identifier">user</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:user</span>, <span class="ruby-identifier">user</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">auth</span>.<span class="ruby-identifier">authenticate</span>(<span class="ruby-string">&quot;ssh-connection&quot;</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">options</span>[<span class="ruby-value">:password</span>])
+    <span class="ruby-identifier">connection</span> = <span class="ruby-constant">Connection</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+      <span class="ruby-keyword">yield</span> <span class="ruby-identifier">connection</span>
+      <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">close</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-identifier">connection</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">close</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">AuthenticationFailed</span>, <span class="ruby-identifier">user</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- start-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- start-method -->
+
+      
+      </div><!-- public-class-method-details -->
+    
+    </div><!-- 5Buntitled-5D -->
+  
+
+  </div><!-- documentation -->
+
+  <div id="validator-badges">
+    <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+      Rdoc Generator</a> 2</small>.</p>
+  </div>
+
+</body>
+</html>
+
