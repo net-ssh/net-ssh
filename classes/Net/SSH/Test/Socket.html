@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Test::Socket</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -94,9 +94,8 @@
                     <td class='context-item-desc'>
                       
                       <p>The <a href="Script.html">Net::SSH::Test::Script</a> object in use by this
-                      socket. This is the canonical <a
-                      href="Socket.html#attribute-i-script">#script</a> instance that should be
-                      used for any test depending on this socket instance.</p>
+                      socket. This is the canonical script instance that should be used for any
+                      test depending on this socket instance.</p>
                     </td>
                   </tr>
                 </table>
@@ -112,8 +111,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Create a <a href="Socket.html#method-c-new">::new</a> test socket. This
-                  will also instantiate a <a href="Socket.html#method-c-new">::new</a> <a
+                  <p>Create a new test socket. This will also instantiate a new <a
                   href="Script.html">Net::SSH::Test::Script</a> and seed it with the
                   necessary events to power the initialization of the connection.</p>
                 </div>
@@ -133,9 +131,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns a sockaddr struct for the <a
-                  href="Socket.html#attribute-i-port">#port</a> and <a
-                  href="Socket.html#attribute-i-host">#host</a> that were used when the
+                  <p>Returns a sockaddr struct for the port and host that were used when the
                   socket was instantiated.</p>
                 </div>
                 <div class='source'>
@@ -187,7 +183,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Alias to #read, but never returns nil (returns an empty string instead).</p>
+                  <p>Alias to read, but never returns nil (returns an empty string instead).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-recv-source'); return false">

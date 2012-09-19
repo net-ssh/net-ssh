@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Authentication::Session</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -44,8 +44,7 @@
           <div id='description'>
             
             <p>Represents an authentication session. It manages the authentication of a
-            user over an established connection (the "<a
-            href="Session.html#attribute-i-transport">#transport</a>" object, see <a
+            user over an established connection (the "transport" object, see <a
             href="../Transport/Session.html">Net::SSH::Transport::Session</a>).</p>
             
             <p>The use of an authentication session to manage user authentication is
@@ -113,8 +112,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>a hash of <a href="Session.html#attribute-i-options">#options</a>, given at
-                      construction time</p>
+                      <p>a hash of options, given at construction time</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -124,8 +122,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p><a href="Session.html#attribute-i-transport">#transport</a> layer
-                      abstraction</p>
+                      <p>transport layer abstraction</p>
                     </td>
                   </tr>
                 </table>
@@ -141,15 +138,14 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Instantiates a <a href="Session.html#method-c-new">::new</a> <a
-                  href="Session.html">Authentication::Session</a> object over the given <a
-                  href="Session.html#attribute-i-transport">#transport</a> layer abstraction.</p>
+                  <p>Instantiates a new <a href="Session.html">Authentication::Session</a>
+                  object over the given transport layer abstraction.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/authentication/session.rb, line 40</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>={})&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">logger</span>&#x000A;  <span class="ruby-ivar">@transport</span> = <span class="ruby-identifier">transport</span>&#x000A;&#x000A;  <span class="ruby-ivar">@auth_methods</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:auth_methods</span>] <span class="ruby-operator">||</span> <span class="ruby-node">%w(publickey hostbased password keyboard-interactive)</span>&#x000A;  <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;&#x000A;  <span class="ruby-ivar">@allowed_auth_methods</span> = <span class="ruby-ivar">@auth_methods</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/authentication/session.rb, line 40</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>={})&#x000A;  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">logger</span>&#x000A;  <span class="ruby-ivar">@transport</span> = <span class="ruby-identifier">transport</span>&#x000A;&#x000A;  <span class="ruby-ivar">@auth_methods</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:auth_methods</span>] <span class="ruby-operator">||</span> <span class="ruby-node">%w(none publickey hostbased password keyboard-interactive)</span>&#x000A;  <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>&#x000A;&#x000A;  <span class="ruby-ivar">@allowed_auth_methods</span> = <span class="ruby-ivar">@auth_methods</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <h2>Public Instance methods</h2>
@@ -161,10 +157,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Attempts to <a href="Session.html#method-i-authenticate">#authenticate</a>
-                  the given user, in preparation for the next service request. Returns true
-                  if an authentication method succeeds in authenticating the user, and false
-                  otherwise.</p>
+                  <p>Attempts to authenticate the given user, in preparation for the next
+                  service request. Returns true if an authentication method succeeds in
+                  authenticating the user, and false otherwise.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-authenticate-source'); return false">

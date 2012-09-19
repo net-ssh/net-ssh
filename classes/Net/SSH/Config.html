@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Config</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -139,12 +139,10 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Loads the configuration data <a href="Config.html#method-c-for">::for</a>
-                  the given <code>host</code> from all of the given <code>files</code>
-                  (defaulting to the list of files returned by #<a
-                  href="Config.html#method-c-default_files">::default_files</a>), translates
-                  the resulting hash into the options recognized by <a
-                  href="../SSH.html">Net::SSH</a>, and returns them.</p>
+                  <p>Loads the configuration data for the given <code>host</code> from all of
+                  the given <code>files</code> (defaulting to the list of files returned by
+                  default_files), translates the resulting hash into the options recognized
+                  by <a href="../SSH.html">Net::SSH</a>, and returns them.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-for-source'); return false">
@@ -161,14 +159,12 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Load the OpenSSH configuration settings in the given <code>file</code> <a
-                  href="Config.html#method-c-for">::for</a> the given <code>host</code>. If
-                  <code>settings</code> is given, the options are merged into that hash, with
-                  existing values taking precedence over newly parsed ones. Returns a hash
-                  containing the OpenSSH options. (See #<a
-                  href="Config.html#method-c-translate">::translate</a> <a
-                  href="Config.html#method-c-for">::for</a> how to convert the OpenSSH
-                  options into <a href="../SSH.html">Net::SSH</a> options.)</p>
+                  <p>Load the OpenSSH configuration settings in the given <code>file</code> for
+                  the given <code>host</code>. If <code>settings</code> is given, the options
+                  are merged into that hash, with existing values taking precedence over
+                  newly parsed ones. Returns a hash containing the OpenSSH options. (See
+                  translate for how to convert the OpenSSH options into <a
+                  href="../SSH.html">Net::SSH</a> options.)</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-load-source'); return false">
@@ -187,10 +183,8 @@
                   
                   <p>Given a hash of OpenSSH configuration options, converts them into a hash of
                   <a href="../SSH.html">Net::SSH</a> options. Unrecognized options are
-                  ignored. The <code>settings</code> hash must have Strings <a
-                  href="Config.html#method-c-for">::for</a> keys, all downcased, and the
-                  returned hash will have Symbols <a
-                  href="Config.html#method-c-for">::for</a> keys.</p>
+                  ignored. The <code>settings</code> hash must have Strings for keys, all
+                  downcased, and the returned hash will have Symbols for keys.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-translate-source'); return false">

@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Transport::PacketStream</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -95,9 +95,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="PacketStream.html#attribute-i-client">#client</a> state
-                      object, which encapsulates the algorithms used to build packets to send to
-                      the <a href="PacketStream.html#attribute-i-server">#server</a>.</p>
+                      <p>The client state object, which encapsulates the algorithms used to build
+                      packets to send to the server.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -107,11 +106,10 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The map of "<a href="PacketStream.html#attribute-i-hints">#hints</a>" that
-                      can be used to modify the behavior of the packet stream. For instance, when
-                      authentication succeeds, an "authenticated" hint is set, which is used to
-                      determine whether or not to compress the data when using the "delayed"
-                      compression algorithm.</p>
+                      <p>The map of "hints" that can be used to modify the behavior of the packet
+                      stream. For instance, when authentication succeeds, an "authenticated" hint
+                      is set, which is used to determine whether or not to compress the data when
+                      using the "delayed" compression algorithm.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -121,9 +119,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="PacketStream.html#attribute-i-server">#server</a> state
-                      object, which encapsulates the algorithms used to interpret packets coming
-                      from the <a href="PacketStream.html#attribute-i-server">#server</a>.</p>
+                      <p>The server state object, which encapsulates the algorithms used to
+                      interpret packets coming from the server.</p>
                     </td>
                   </tr>
                 </table>
@@ -173,9 +170,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Performs any pending <a
-                  href="PacketStream.html#method-i-cleanup">#cleanup</a> necessary on the IO
-                  and its associated state objects. (See <a
+                  <p>Performs any pending cleanup necessary on the IO and its associated state
+                  objects. (See <a
                   href="State.html#method-i-cleanup">Net::SSH::Transport::State#cleanup</a>).</p>
                 </div>
                 <div class='source'>
@@ -193,8 +189,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>The name of the <a href="PacketStream.html#attribute-i-client">#client</a>
-                  (local) end of the socket, as reported by the socket.</p>
+                  <p>The name of the client (local) end of the socket, as reported by the
+                  socket.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-client_name-source'); return false">
@@ -213,8 +209,7 @@
                   
                   <p>Enqueues a packet to be sent, but does not immediately send the packet. The
                   given payload is pre-processed according to the algorithms specified in the
-                  <a href="PacketStream.html#attribute-i-client">#client</a> state
-                  (compression, cipher, and hmac).</p>
+                  client state (compression, cipher, and hmac).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-enqueue_packet-source'); return false">
@@ -231,10 +226,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>If the IO object requires a rekey operation (as indicated by either its <a
-                  href="PacketStream.html#attribute-i-client">#client</a> or <a
-                  href="PacketStream.html#attribute-i-server">#server</a> state objects, see
-                  <a
+                  <p>If the IO object requires a rekey operation (as indicated by either its
+                  client or server state objects, see <a
                   href="State.html#method-i-needs_rekey-3F">Net::SSH::Transport::State#needs_rekey?</a>),
                   this will yield. Otherwise, this does nothing.</p>
                 </div>
@@ -331,9 +324,8 @@
                   <p>Tries to read the next packet. If there is insufficient data to read an
                   entire packet, this returns immediately, otherwise the packet is read,
                   post-processed according to the cipher, hmac, and compression algorithms
-                  specified in the <a href="PacketStream.html#attribute-i-server">#server</a>
-                  state object, and returned as a new <a href="../Packet.html">Packet</a>
-                  object.</p>
+                  specified in the server state object, and returned as a new <a
+                  href="../Packet.html">Packet</a> object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-poll_next_packet-source'); return false">

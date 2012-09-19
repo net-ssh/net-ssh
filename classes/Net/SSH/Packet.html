@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Packet</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -89,8 +89,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The (integer) <a href="Packet.html#attribute-i-type">#type</a> of this
-                      packet.</p>
+                      <p>The (integer) type of this packet.</p>
                     </td>
                   </tr>
                 </table>
@@ -106,9 +105,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Create a <a href="Packet.html#method-c-new">::new</a> packet from the given
-                  payload. This will automatically parse the packet if it is one that has
-                  been previously registered with <a
+                  <p>Create a new packet from the given payload. This will automatically parse
+                  the packet if it is one that has been previously registered with <a
                   href="Packet.html#method-c-register">::register</a>; otherwise, the packet
                   will need to be manually parsed using the methods provided in the <a
                   href="Buffer.html">Net::SSH::Buffer</a> superclass.</p>
@@ -128,16 +126,13 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Register a <a href="Packet.html#method-c-new">::new</a> packet <a
-                  href="Packet.html#attribute-i-type">#type</a> that should be recognized and
-                  auto-parsed by <a href="Packet.html">Net::SSH::Packet</a>. Note that any
-                  packet <a href="Packet.html#attribute-i-type">#type</a> that is not
-                  preregistered will not be autoparsed.</p>
+                  <p>Register a new packet type that should be recognized and auto-parsed by <a
+                  href="Packet.html">Net::SSH::Packet</a>. Note that any packet type that is
+                  not preregistered will not be autoparsed.</p>
                   
                   <p>The <code>pairs</code> parameter must be either empty, or an array of
                   two-element tuples, where the first element of each tuple is the name of
-                  the field, and the second is the <a
-                  href="Packet.html#attribute-i-type">#type</a>.</p>
+                  the field, and the second is the type.</p>
                   
                   <pre>register DISCONNECT, [:reason_code, :long], [:description, :string], [:language, :string]</pre>
                 </div>

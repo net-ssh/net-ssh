@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Transport::State</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -45,11 +45,9 @@
             
             <p>Encapsulates state information about one end of an <a
             href="../../SSH.html">SSH</a> connection. Such state includes the packet
-            sequence number, the algorithms in use, how many <a
-            href="State.html#attribute-i-packets">#packets</a> and <a
-            href="State.html#attribute-i-blocks">#blocks</a> have been processed since
-            the last reset, and so forth. This class will never be instantiated
-            directly, but is used as part of the internal state of the <a
+            sequence number, the algorithms in use, how many packets and blocks have
+            been processed since the last reset, and so forth. This class will never be
+            instantiated directly, but is used as part of the internal state of the <a
             href="PacketStream.html">PacketStream</a> module.</p>
           </div>
           <div id='method-list'>
@@ -101,7 +99,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The block size for the <a href="State.html#attribute-i-cipher">#cipher</a></p>
+                      <p>The block size for the cipher</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -111,9 +109,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The number of data <a href="State.html#attribute-i-blocks">#blocks</a>
-                      processed since the last call to #<a
-                      href="State.html#method-i-reset-21">#reset!</a></p>
+                      <p>The number of data blocks processed since the last call to <a
+                      href="State.html#method-i-reset-21">reset!</a></p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -123,8 +120,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="State.html#attribute-i-cipher">#cipher</a> algorithm in use
-                      for this <a href="State.html#attribute-i-socket">#socket</a> endpoint.</p>
+                      <p>The cipher algorithm in use for this socket endpoint.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -134,8 +130,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="State.html#attribute-i-compression">#compression</a> algorithm
-                      in use for this endpoint.</p>
+                      <p>The compression algorithm in use for this endpoint.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -145,8 +140,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="State.html#attribute-i-compression">#compression</a> level to
-                      use when compressing data (or nil, for the default).</p>
+                      <p>The compression level to use when compressing data (or nil, for the
+                      default).</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -156,8 +151,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="State.html#attribute-i-hmac">#hmac</a> algorithm in use for
-                      this endpoint.</p>
+                      <p>The hmac algorithm in use for this endpoint.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -167,8 +161,8 @@
                     <td class='context-item-value'>[RW]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The maximum number of <a href="State.html#attribute-i-blocks">#blocks</a>
-                      that this endpoint wants to process before needing a rekey.</p>
+                      <p>The maximum number of blocks that this endpoint wants to process before
+                      needing a rekey.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -178,8 +172,8 @@
                     <td class='context-item-value'>[RW]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The maximum number of <a href="State.html#attribute-i-packets">#packets</a>
-                      that this endpoint wants to process before needing a rekey.</p>
+                      <p>The maximum number of packets that this endpoint wants to process before
+                      needing a rekey.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -189,9 +183,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The number of <a href="State.html#attribute-i-packets">#packets</a>
-                      processed since the last call to #<a
-                      href="State.html#method-i-reset-21">#reset!</a></p>
+                      <p>The number of packets processed since the last call to <a
+                      href="State.html#method-i-reset-21">reset!</a></p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -212,8 +205,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="State.html#attribute-i-role">#role</a> that this state plays
-                      (either :client or :server)</p>
+                      <p>The role that this state plays (either :client or :server)</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -223,8 +215,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The next packet sequence number for this <a
-                      href="State.html#attribute-i-socket">#socket</a> endpoint.</p>
+                      <p>The next packet sequence number for this socket endpoint.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -234,8 +225,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="State.html#attribute-i-socket">#socket</a> object that owns
-                      this state object.</p>
+                      <p>The socket object that owns this state object.</p>
                     </td>
                   </tr>
                 </table>
@@ -251,9 +241,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Creates a <a href="State.html#method-c-new">::new</a> state object,
-                  belonging to the given <a href="State.html#attribute-i-socket">#socket</a>.
-                  Initializes the algorithms to "none".</p>
+                  <p>Creates a new state object, belonging to the given socket. Initializes the
+                  algorithms to "none".</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
@@ -271,9 +260,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Closes any the <a href="State.html#method-i-compressor">#compressor</a>
-                  and/or <a href="State.html#method-i-decompressor">#decompressor</a> objects
-                  that have been instantiated.</p>
+                  <p>Closes any the compressor and/or decompressor objects that have been
+                  instantiated.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-cleanup-source'); return false">
@@ -290,11 +278,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Compresses the data. If no <a
-                  href="State.html#attribute-i-compression">#compression</a> is in effect,
-                  this will just return the data unmodified, otherwise it uses #<a
-                  href="State.html#method-i-compressor">#compressor</a> to <a
-                  href="State.html#method-i-compress">#compress</a> the data.</p>
+                  <p>Compresses the data. If no compression is in effect, this will just return
+                  the data unmodified, otherwise it uses <a
+                  href="State.html#method-i-compressor">compressor</a> to compress the data.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-compress-source'); return false">
@@ -311,13 +297,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns true if data <a
-                  href="State.html#attribute-i-compression">#compression</a>/decompression is
-                  enabled. This will return true if :standard <a
-                  href="State.html#attribute-i-compression">#compression</a> is selected, or
-                  if :delayed <a href="State.html#attribute-i-compression">#compression</a>
-                  is selected and the :authenticated hint has been received by the <a
-                  href="State.html#attribute-i-socket">#socket</a>.</p>
+                  <p>Returns true if data compression/decompression is enabled. This will return
+                  true if :standard compression is selected, or if :delayed compression is
+                  selected and the :authenticated hint has been received by the socket.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-compression-3F-source'); return false">
@@ -334,9 +316,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>The <a href="State.html#method-i-compressor">#compressor</a> object to use
-                  when compressing data. This takes into account the desired <a
-                  href="State.html#attribute-i-compression">#compression</a> level.</p>
+                  <p>The compressor object to use when compressing data. This takes into account
+                  the desired compression level.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-compressor-source'); return false">
@@ -353,11 +334,10 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Deompresses the data. If no <a
-                  href="State.html#attribute-i-compression">#compression</a> is in effect,
-                  this will just return the data unmodified, otherwise it uses #<a
-                  href="State.html#method-i-decompressor">#decompressor</a> to <a
-                  href="State.html#method-i-decompress">#decompress</a> the data.</p>
+                  <p>Deompresses the data. If no compression is in effect, this will just return
+                  the data unmodified, otherwise it uses <a
+                  href="State.html#method-i-decompressor">decompressor</a> to decompress the
+                  data.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-decompress-source'); return false">
@@ -374,8 +354,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>The <a href="State.html#method-i-decompressor">#decompressor</a> object to
-                  use when decompressing data.</p>
+                  <p>The decompressor object to use when decompressing data.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-decompressor-source'); return false">
@@ -409,9 +388,8 @@
                 <div class='description'>
                   
                   <p>Increments the counters. The sequence number is incremented (and remapped
-                  so it always fits in a 32-bit integer). The number of <a
-                  href="State.html#attribute-i-packets">#packets</a> and <a
-                  href="State.html#attribute-i-blocks">#blocks</a> are also incremented.</p>
+                  so it always fits in a 32-bit integer). The number of packets and blocks
+                  are also incremented.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-increment-source'); return false">
@@ -428,12 +406,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns true if the number of <a
-                  href="State.html#attribute-i-packets">#packets</a> processed exceeds the
-                  maximum number of <a href="State.html#attribute-i-packets">#packets</a>, or
-                  if the number of <a href="State.html#attribute-i-blocks">#blocks</a>
-                  processed exceeds the maximum number of <a
-                  href="State.html#attribute-i-blocks">#blocks</a>.</p>
+                  <p>Returns true if the number of packets processed exceeds the maximum number
+                  of packets, or if the number of blocks processed exceeds the maximum number
+                  of blocks.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-needs_rekey-3F-source'); return false">

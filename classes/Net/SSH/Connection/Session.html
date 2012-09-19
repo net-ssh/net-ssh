@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Connection::Session</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -44,24 +44,21 @@
           <div id='description'>
             
             <p>A session class representing the connection service running on top of the
-            <a href="../../SSH.html">SSH</a> <a
-            href="Session.html#attribute-i-transport">#transport</a> layer. It manages
-            the creation of channels (see #<a
-            href="Session.html#method-i-open_channel">#open_channel</a>), and the
+            <a href="../../SSH.html">SSH</a> transport layer. It manages the creation
+            of channels (see <a
+            href="Session.html#method-i-open_channel">open_channel</a>), and the
             dispatching of messages to the various channels. It also encapsulates the
-            <a href="../../SSH.html">SSH</a> event <a
-            href="Session.html#method-i-loop">#loop</a> (via #<a
-            href="Session.html#method-i-loop">#loop</a> and #<a
-            href="Session.html#method-i-process">#process</a>), and serves as a central
+            <a href="../../SSH.html">SSH</a> event loop (via <a
+            href="Session.html#method-i-loop">loop</a> and <a
+            href="Session.html#method-i-process">process</a>), and serves as a central
             point-of-reference for all SSH-related services (e.g. port forwarding,
             SFTP, SCP, etc.).</p>
             
             <p>You will rarely (if ever) need to instantiate this class directly; rather,
             you'll almost always use <a
-            href="../../SSH.html#method-c-start">Net::SSH.start</a> to initialize a <a
-            href="Session.html#method-c-new">::new</a> network connection, authenticate
-            a user, and return a <a href="Session.html#method-c-new">::new</a>
-            connection session, all in one call.</p>
+            href="../../SSH.html#method-c-start">Net::SSH.start</a> to initialize a new
+            network connection, authenticate a user, and return a new connection
+            session, all in one call.</p>
             
             <pre class="ruby"><span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span>.<span class="ruby-identifier">start</span>(<span class="ruby-string">&quot;localhost&quot;</span>, <span class="ruby-string">&quot;user&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ssh</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># 'ssh' is an instance of Net::SSH::Connection::Session</span>&#x000A;  <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec!</span> <span class="ruby-string">&quot;/etc/init.d/some_process start&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
           </div>
@@ -163,8 +160,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The map of <a href="Session.html#attribute-i-options">#options</a> that
-                      were used to initialize this instance.</p>
+                      <p>The map of options that were used to initialize this instance.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -174,9 +170,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The collection of custom <a
-                      href="Session.html#attribute-i-properties">#properties</a> for this
-                      instance. (See #[] and #[]=).</p>
+                      <p>The collection of custom properties for this instance. (See #[] and #[]=).</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -186,8 +180,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The underlying <a href="Session.html#attribute-i-transport">#transport</a>
-                      layer abstraction (see <a
+                      <p>The underlying transport layer abstraction (see <a
                       href="../Transport/Session.html">Net::SSH::Transport::Session</a>).</p>
                     </td>
                   </tr>
@@ -204,10 +197,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Create a <a href="Session.html#method-c-new">::new</a> connection service
-                  instance atop the given <a
-                  href="Session.html#attribute-i-transport">#transport</a> layer. Initializes
-                  the listeners to be only the underlying socket object.</p>
+                  <p>Create a new connection service instance atop the given transport layer.
+                  Initializes the listeners to be only the underlying socket object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
@@ -267,8 +258,8 @@
                   <code>true</code> value for <code>include_invisible</code>, then those will
                   be counted.</p>
                   
-                  <p>This can be useful for determining whether the event <a
-                  href="Session.html#method-i-loop">#loop</a> should continue to be run.</p>
+                  <p>This can be useful for determining whether the event loop should continue
+                  to be run.</p>
                   
                   <pre>ssh.loop { ssh.busy? }</pre>
                 </div>
@@ -288,8 +279,8 @@
                 <div class='description'>
                   
                   <p>Closes the session gracefully, blocking until all channels have
-                  successfully closed, and then closes the underlying <a
-                  href="Session.html#attribute-i-transport">#transport</a> layer connection.</p>
+                  successfully closed, and then closes the underlying transport layer
+                  connection.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-close-source'); return false">
@@ -306,12 +297,11 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns true if the underlying <a
-                  href="Session.html#attribute-i-transport">#transport</a> has been closed.
-                  Note that this can be a little misleading, since if the remote server has
-                  closed the connection, the local end will still think it is open until the
-                  next operation on the socket. Nevertheless, this method can be useful if
-                  you just want to know if <em>you</em> have closed the connection.</p>
+                  <p>Returns true if the underlying transport has been closed. Note that this
+                  can be a little misleading, since if the remote server has closed the
+                  connection, the local end will still think it is open until the next
+                  operation on the socket. Nevertheless, this method can be useful if you
+                  just want to know if <em>you</em> have closed the connection.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-closed-3F-source'); return false">
@@ -334,13 +324,12 @@
                   arguments: the channel object, a symbol indicating the data type (:stdout
                   or :stderr), and the data (as a string).</p>
                   
-                  <p>Note that this method returns immediately, and requires an event <a
-                  href="Session.html#method-i-loop">#loop</a> (see <a
-                  href="Session.html#method-i-loop">#loop</a>) in order for the command to
+                  <p>Note that this method returns immediately, and requires an event loop (see
+                  <a href="Session.html#method-i-loop">#loop</a>) in order for the command to
                   actually execute.</p>
                   
-                  <p>This is effectively identical to calling #<a
-                  href="Session.html#method-i-open_channel">#open_channel</a>, and then <a
+                  <p>This is effectively identical to calling <a
+                  href="Session.html#method-i-open_channel">open_channel</a>, and then <a
                   href="Channel.html#method-i-exec">Net::SSH::Connection::Channel#exec</a>,
                   and then setting up the channel callbacks. However, for most uses, this
                   will be sufficient.</p>
@@ -362,7 +351,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Same as #<a href="Session.html#method-i-exec">#exec</a>, except this will
+                  <p>Same as <a href="Session.html#method-i-exec">exec</a>, except this will
                   block until the command finishes. Also, if a block is not given, this will
                   return all output (stdout and stderr) as a single string.</p>
                   
@@ -401,10 +390,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the name of the <a href="Session.html#method-i-host">#host</a> that
-                  was given to the <a
-                  href="Session.html#attribute-i-transport">#transport</a> layer to connect
-                  to.</p>
+                  <p>Returns the name of the host that was given to the transport layer to
+                  connect to.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-host-source'); return false">
@@ -421,19 +408,17 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Adds an IO object for the event <a
-                  href="Session.html#method-i-loop">#loop</a> to listen to. If a callback is
-                  given, it will be invoked when the io is ready to be read, otherwise, the
-                  io will merely have its #fill method invoked.</p>
+                  <p>Adds an IO object for the event loop to listen to. If a callback is given,
+                  it will be invoked when the io is ready to be read, otherwise, the io will
+                  merely have its fill method invoked.</p>
                   
                   <p>Any <code>io</code> value passed to this method <em>must</em> have mixed
-                  into it the Net::SSH::BufferedIo functionality, typically by calling
-                  #extend on the object.</p>
+                  into it the Net::SSH::BufferedIo functionality, typically by calling extend
+                  on the object.</p>
                   
-                  <p>The following example executes a <a
-                  href="Session.html#method-i-process">#process</a> on the remote server,
-                  opens a socket to somewhere, and then pipes data from that socket to the
-                  remote <a href="Session.html#method-i-process">#process</a>' stdin stream:</p>
+                  <p>The following example executes a process on the remote server, opens a
+                  socket to somewhere, and then pipes data from that socket to the remote
+                  process' stdin stream:</p>
                   
                   <pre class="ruby"><span class="ruby-identifier">channel</span> = <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;/some/process/that/wants/input&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">abort</span> <span class="ruby-string">&quot;can't execute!&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">success</span>&#x000A;&#x000A;    <span class="ruby-identifier">io</span> = <span class="ruby-constant">TCPSocket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">somewhere</span>, <span class="ruby-identifier">port</span>)&#x000A;    <span class="ruby-identifier">io</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">BufferedIo</span>)&#x000A;    <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">listen_to</span>(<span class="ruby-identifier">io</span>)&#x000A;&#x000A;    <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_process</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-keyword">if</span> <span class="ruby-identifier">io</span>.<span class="ruby-identifier">available</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;        <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">send_data</span>(<span class="ruby-identifier">io</span>.<span class="ruby-identifier">read_available</span>)&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_close</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">stop_listening_to</span>(<span class="ruby-identifier">io</span>)&#x000A;      <span class="ruby-identifier">io</span>.<span class="ruby-identifier">close</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">wait</span></pre>
                 </div>
@@ -452,15 +437,15 @@
                 </div>
                 <div class='description'>
                   
-                  <p>The main event <a href="Session.html#method-i-loop">#loop</a>. Calls #<a
-                  href="Session.html#method-i-process">#process</a> until #<a
-                  href="Session.html#method-i-process">#process</a> returns false. If a block
-                  is given, it is passed to #<a
-                  href="Session.html#method-i-process">#process</a>, otherwise a default proc
-                  is used that just returns true if there are any channels active (see #<a
-                  href="Session.html#method-i-busy-3F">#busy?</a>). The # <code>wait</code>
-                  parameter is also passed through to #<a
-                  href="Session.html#method-i-process">#process</a> (where it is interpreted
+                  <p>The main event loop. Calls <a
+                  href="Session.html#method-i-process">process</a> until <a
+                  href="Session.html#method-i-process">process</a> returns false. If a block
+                  is given, it is passed to <a
+                  href="Session.html#method-i-process">process</a>, otherwise a default proc
+                  is used that just returns true if there are any channels active (see <a
+                  href="Session.html#method-i-busy-3F">busy?</a>). The # <code>wait</code>
+                  parameter is also passed through to <a
+                  href="Session.html#method-i-process">process</a> (where it is interpreted
                   as the maximum number of seconds to wait for IO.select to return).</p>
                   
                   <pre># loop for as long as there are any channels active&#x000A;ssh.loop&#x000A;# loop for as long as there are any channels active, but make sure&#x000A;# the event loop runs at least once per 0.1 second&#x000A;ssh.loop(0.1)&#x000A;&#x000A;# loop until ctrl-C is pressed&#x000A;int_pressed = false&#x000A;trap(&quot;INT&quot;) { int_pressed = true }&#x000A;ssh.loop(0.1) { not int_pressed }</pre>
@@ -503,9 +488,8 @@
                 <div class='description'>
                   
                   <p>Registers a handler to be invoked when the server wants to open a channel
-                  on the client. The callback receives the connection object, the <a
-                  href="Session.html#method-c-new">::new</a> channel object, and the packet
-                  itself as arguments, and should raise <a
+                  on the client. The callback receives the connection object, the new channel
+                  object, and the packet itself as arguments, and should raise <a
                   href="../ChannelOpenFailed.html">ChannelOpenFailed</a> if it is unable to
                   open the channel for some reason. Otherwise, the channel will be opened and
                   a confirmation message sent to the server.</p>
@@ -529,19 +513,18 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Requests that a <a href="Session.html#method-c-new">::new</a> channel be
-                  opened. By default, the channel will be of type "session", but if you know
-                  what you're doing you can select any of the channel types supported by the
-                  <a href="../../SSH.html">SSH</a> protocol. The <code>extra</code>
-                  parameters must be even in number and conform to the same format as
-                  described for <a
+                  <p>Requests that a new channel be opened. By default, the channel will be of
+                  type "session", but if you know what you're doing you can select any of the
+                  channel types supported by the <a href="../../SSH.html">SSH</a> protocol.
+                  The <code>extra</code> parameters must be even in number and conform to the
+                  same format as described for <a
                   href="../Buffer.html#method-c-from">Net::SSH::Buffer.from</a>. If a
                   callback is given, it will be invoked when the server confirms that the
                   channel opened successfully. The sole parameter for the callback is the
                   channel object itself.</p>
                   
-                  <p>In general, you'll use #<a
-                  href="Session.html#method-i-open_channel">#open_channel</a> without any
+                  <p>In general, you'll use <a
+                  href="Session.html#method-i-open_channel">open_channel</a> without any
                   arguments; the only time you'd want to set the channel type or pass
                   additional initialization data is if you were implementing an <a
                   href="../../SSH.html">SSH</a> extension.</p>
@@ -563,13 +546,12 @@
                 </div>
                 <div class='description'>
                   
-                  <p>This is called internally as part of #<a
-                  href="Session.html#method-i-process">#process</a>. It loops over the given
+                  <p>This is called internally as part of <a
+                  href="Session.html#method-i-process">process</a>. It loops over the given
                   arrays of reader IO's and writer IO's, processing them as needed, and then
                   calls <a
                   href="../Transport/Session.html#method-i-rekey_as_needed">Net::SSH::Transport::Session#rekey_as_needed</a>
-                  to allow the <a href="Session.html#attribute-i-transport">#transport</a>
-                  layer to rekey. Then returns true.</p>
+                  to allow the transport layer to rekey. Then returns true.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-postprocess-source'); return false">
@@ -586,8 +568,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>This is called internally as part of #<a
-                  href="Session.html#method-i-process">#process</a>. It dispatches any
+                  <p>This is called internally as part of <a
+                  href="Session.html#method-i-process">process</a>. It dispatches any
                   available incoming packets, and then runs <a
                   href="Channel.html#method-i-process">Net::SSH::Connection::Channel#process</a>
                   for any active channels. If a block is given, it is invoked at the start of
@@ -609,12 +591,11 @@
                 </div>
                 <div class='description'>
                   
-                  <p>The core of the event <a href="Session.html#method-i-loop">#loop</a>. It
-                  processes a single iteration of the event <a
-                  href="Session.html#method-i-loop">#loop</a>. If a block is given, it should
-                  return false when the processing should abort, which causes #<a
-                  href="Session.html#method-i-process">#process</a> to return false.
-                  Otherwise, #<a href="Session.html#method-i-process">#process</a> returns
+                  <p>The core of the event loop. It processes a single iteration of the event
+                  loop. If a block is given, it should return false when the processing
+                  should abort, which causes <a
+                  href="Session.html#method-i-process">process</a> to return false.
+                  Otherwise, <a href="Session.html#method-i-process">process</a> returns
                   true. The session itself is yielded to the block as its only argument.</p>
                   
                   <p>If <code>wait</code> is nil (the default), this method will block until any
@@ -654,8 +635,7 @@
                   (success, or failure), and the second being the packet itself.</p>
                   
                   <p>Generally, <a href="../../SSH.html">Net::SSH</a> will manage global
-                  requests that need to be sent (e.g. port <a
-                  href="Session.html#method-i-forward">#forward</a> requests and such are
+                  requests that need to be sent (e.g. port forward requests and such are
                   handled in the Net::SSH::Service::Forward class, for instance). However,
                   there may be times when you need to send a global request that isn't
                   explicitly handled by <a href="../../SSH.html">Net::SSH</a>, and so this
@@ -704,8 +684,8 @@
                   
                   <p>Performs a "hard" shutdown of the connection. In general, this should never
                   be done, but it might be necessary (in a rescue clause, for instance, when
-                  the connection needs to <a href="Session.html#method-i-close">#close</a>
-                  but you don't know the status of the underlying protocol's state).</p>
+                  the connection needs to close but you don't know the status of the
+                  underlying protocol's state).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-shutdown-21-source'); return false">
@@ -723,8 +703,7 @@
                 <div class='description'>
                   
                   <p>Removes the given io object from the listeners collection, so that the
-                  event <a href="Session.html#method-i-loop">#loop</a> will no longer monitor
-                  it.</p>
+                  event loop will no longer monitor it.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-stop_listening_to-source'); return false">

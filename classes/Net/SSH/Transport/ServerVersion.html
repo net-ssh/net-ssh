@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Transport::ServerVersion</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -43,16 +43,14 @@
         <div id='text'>
           <div id='description'>
             
-            <p>Negotiates the <a href="../../SSH.html">SSH</a> protocol <a
-            href="ServerVersion.html#attribute-i-version">#version</a> and trades
+            <p>Negotiates the <a href="../../SSH.html">SSH</a> protocol version and trades
             information about server and client. This is never used directly--it is
             always called by the transport layer as part of the initialization process
             of the transport layer.</p>
             
-            <p>Note that this class also encapsulates the negotiated <a
-            href="ServerVersion.html#attribute-i-version">#version</a>, and acts as the
-            authoritative reference for any queries regarding the <a
-            href="ServerVersion.html#attribute-i-version">#version</a> in effect.</p>
+            <p>Note that this class also encapsulates the negotiated version, and acts as
+            the authoritative reference for any queries regarding the version in
+            effect.</p>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -86,9 +84,8 @@
                     <td>&nbsp;</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="../../SSH.html">SSH</a> <a
-                      href="ServerVersion.html#attribute-i-version">#version</a> string as
-                      reported by <a href="../../SSH.html">Net::SSH</a></p>
+                      <p>The <a href="../../SSH.html">SSH</a> version string as reported by <a
+                      href="../../SSH.html">Net::SSH</a></p>
                     </td>
                   </tr>
                 </table>
@@ -105,9 +102,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>Any <a href="ServerVersion.html#attribute-i-header">#header</a> text sent
-                      by the server prior to sending the <a
-                      href="ServerVersion.html#attribute-i-version">#version</a>.</p>
+                      <p>Any header text sent by the server prior to sending the version.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -117,8 +112,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="ServerVersion.html#attribute-i-version">#version</a> string
-                      reported by the server.</p>
+                      <p>The version string reported by the server.</p>
                     </td>
                   </tr>
                 </table>
@@ -134,10 +128,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Instantiates a <a href="ServerVersion.html#method-c-new">::new</a> <a
-                  href="ServerVersion.html">ServerVersion</a> and immediately (and
-                  synchronously) negotiates the <a href="../../SSH.html">SSH</a> protocol in
-                  effect, using the given socket.</p>
+                  <p>Instantiates a new <a href="ServerVersion.html">ServerVersion</a> and
+                  immediately (and synchronously) negotiates the <a
+                  href="../../SSH.html">SSH</a> protocol in effect, using the given socket.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">

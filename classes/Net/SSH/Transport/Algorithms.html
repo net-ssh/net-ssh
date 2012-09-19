@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Transport::Algorithms</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -46,10 +46,8 @@
             <p>Implements the higher-level logic behind an <a
             href="../../SSH.html">SSH</a> key-exchange. It handles both the initial
             exchange, as well as subsequent re-exchanges (as needed). It also
-            encapsulates the negotiation of the <a
-            href="Algorithms.html#attribute-i-algorithms">#algorithms</a>, and provides
-            a single point of access to the negotiated <a
-            href="Algorithms.html#attribute-i-algorithms">#algorithms</a>.</p>
+            encapsulates the negotiation of the algorithms, and provides a single point
+            of access to the negotiated algorithms.</p>
             
             <p>You will never instantiate or reference this directly. It is used
             internally by the transport layer.</p>
@@ -134,9 +132,8 @@
                     <td>&nbsp;</td>
                     <td class='context-item-desc'>
                       
-                      <p>Define the default <a
-                      href="Algorithms.html#attribute-i-algorithms">#algorithms</a>, in order of
-                      preference, supported by <a href="../../SSH.html">Net::SSH</a>.</p>
+                      <p>Define the default algorithms, in order of preference, supported by <a
+                      href="../../SSH.html">Net::SSH</a>.</p>
                     </td>
                   </tr>
                 </table>
@@ -153,9 +150,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The hash of <a
-                      href="Algorithms.html#attribute-i-algorithms">#algorithms</a> preferred by
-                      the client, which will be told to the server during algorithm negotiation.</p>
+                      <p>The hash of algorithms preferred by the client, which will be told to the
+                      server during algorithm negotiation.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -230,8 +226,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The type of host key that will be used for this <a
-                      href="Algorithms.html#attribute-i-session">#session</a>.</p>
+                      <p>The type of host key that will be used for this session.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -241,8 +236,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="Algorithms.html#attribute-i-kex">#kex</a> algorithm to use
-                      settled on between the client and server.</p>
+                      <p>The kex algorithm to use settled on between the client and server.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -272,8 +266,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The hash of <a href="Algorithms.html#attribute-i-options">#options</a> used
-                      to initialize this object</p>
+                      <p>The hash of options used to initialize this object</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -283,9 +276,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The underlying transport layer <a
-                      href="Algorithms.html#attribute-i-session">#session</a> that supports this
-                      object</p>
+                      <p>The underlying transport layer session that supports this object</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -295,9 +286,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="Algorithms.html#attribute-i-session">#session</a>-id for this
-                      <a href="Algorithms.html#attribute-i-session">#session</a>, as decided
-                      during the initial key exchange.</p>
+                      <p>The session-id for this session, as decided during the initial key
+                      exchange.</p>
                     </td>
                   </tr>
                 </table>
@@ -330,12 +320,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Instantiates a <a href="Algorithms.html#method-c-new">::new</a> <a
-                  href="Algorithms.html">Algorithms</a> object, and prepares the hash of
-                  preferred <a href="Algorithms.html#attribute-i-algorithms">#algorithms</a>
-                  based on the <a href="Algorithms.html#attribute-i-options">#options</a>
-                  parameter and the <a href="Algorithms.html#ALGORITHMS">ALGORITHMS</a>
-                  constant.</p>
+                  <p>Instantiates a new <a href="Algorithms.html">Algorithms</a> object, and
+                  prepares the hash of preferred algorithms based on the options parameter
+                  and the <a href="Algorithms.html#ALGORITHMS">ALGORITHMS</a> constant.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
@@ -354,8 +341,8 @@
                 <div class='description'>
                   
                   <p>A convenience method for accessing the list of preferred types for a
-                  specific algorithm (see #<a
-                  href="Algorithms.html#attribute-i-algorithms">#algorithms</a>).</p>
+                  specific algorithm (see <a
+                  href="Algorithms.html#attribute-i-algorithms">algorithms</a>).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-5B-5D-source'); return false">
@@ -374,9 +361,9 @@
                   
                   <p>Called by the transport layer when a KEXINIT packet is recieved, indicating
                   that the server wants to exchange keys. This can be spontaneous, or it can
-                  be in response to a client-initiated rekey request (see #<a
-                  href="Algorithms.html#method-i-rekey-21">#rekey!</a>). Either way, this
-                  will block until the key exchange completes.</p>
+                  be in response to a client-initiated rekey request (see <a
+                  href="Algorithms.html#method-i-rekey-21">rekey!</a>). Either way, this will
+                  block until the key exchange completes.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-accept_kexinit-source'); return false">
@@ -412,9 +399,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns true if the <a
-                  href="Algorithms.html#attribute-i-algorithms">#algorithms</a> have been
-                  negotiated at all.</p>
+                  <p>Returns true if the algorithms have been negotiated at all.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-initialized-3F-source'); return false">
@@ -453,10 +438,9 @@
                 <div class='description'>
                   
                   <p>Request a rekey operation. This will return immediately, and does not
-                  actually perform the rekey operation. It does cause the <a
-                  href="Algorithms.html#attribute-i-session">#session</a> to change state,
-                  however--until the key exchange finishes, no <a
-                  href="Algorithms.html#method-c-new">::new</a> packets will be processed.</p>
+                  actually perform the rekey operation. It does cause the session to change
+                  state, however--until the key exchange finishes, no new packets will be
+                  processed.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-rekey-21-source'); return false">

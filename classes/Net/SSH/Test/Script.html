@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Test::Script</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -43,13 +43,10 @@
         <div id='text'>
           <div id='description'>
             
-            <p>Represents a sequence of scripted <a
-            href="Script.html#attribute-i-events">#events</a> that identify the
-            behavior that a test expects. Methods named "sends_*" create <a
-            href="Script.html#attribute-i-events">#events</a> for packets being sent
-            from the local to the remote host, and methods named "gets_*" create <a
-            href="Script.html#attribute-i-events">#events</a> for packets being
-            received by the local from the remote host.</p>
+            <p>Represents a sequence of scripted events that identify the behavior that a
+            test expects. Methods named "sends_*" create events for packets being sent
+            from the local to the remote host, and methods named "gets_*" create events
+            for packets being received by the local from the remote host.</p>
             
             <p>A reference to a script. is generally obtained in a unit test via the <a
             href="../Test.html#method-i-story">Net::SSH::Test#story</a> helper method:</p>
@@ -94,9 +91,9 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The list of scripted <a href="Script.html#attribute-i-events">#events</a>.
-                      These will be <a href="LocalPacket.html">Net::SSH::Test::LocalPacket</a>
-                      and <a href="RemotePacket.html">Net::SSH::Test::RemotePacket</a> instances.</p>
+                      <p>The list of scripted events. These will be <a
+                      href="LocalPacket.html">Net::SSH::Test::LocalPacket</a> and <a
+                      href="RemotePacket.html">Net::SSH::Test::RemotePacket</a> instances.</p>
                     </td>
                   </tr>
                 </table>
@@ -112,7 +109,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Create a <a href="Script.html#method-c-new">::new</a>, empty script.</p>
+                  <p>Create a new, empty script.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
@@ -130,8 +127,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>A convenience method for adding an arbitrary remote packet to the <a
-                  href="Script.html#attribute-i-events">#events</a> list.</p>
+                  <p>A convenience method for adding an arbitrary remote packet to the events
+                  list.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets-source'); return false">
@@ -228,10 +225,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>By default, removes the <a href="Script.html#method-i-next">#next</a> event
-                  in the list and returns it. However, this can also be used to
-                  non-destructively peek at the <a href="Script.html#method-i-next">#next</a>
-                  event in the list, by passing :first as the argument.</p>
+                  <p>By default, removes the next event in the list and returns it. However,
+                  this can also be used to non-destructively peek at the next event in the
+                  list, by passing :first as the argument.</p>
                   
                   <pre># remove the next event and return it&#x000A;event = script.next&#x000A;# peek at the next event&#x000A;event = script.next(:first)</pre>
                 </div>
@@ -252,12 +248,10 @@
                   
                   <p>Scripts the opening of a channel by adding a local packet sending the
                   channel open request, and if <code>confirm</code> is true (the default),
-                  also adding a remote packet confirming the <a
-                  href="Script.html#method-c-new">::new</a> channel.</p>
+                  also adding a remote packet confirming the new channel.</p>
                   
-                  <p>A <a href="Script.html#method-c-new">::new</a> <a
-                  href="Channel.html">Net::SSH::Test::Channel</a> instance is returned, which
-                  can be used to script additional channel operations.</p>
+                  <p>A new <a href="Channel.html">Net::SSH::Test::Channel</a> instance is
+                  returned, which can be used to script additional channel operations.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-opens_channel-source'); return false">
@@ -274,10 +268,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Compare the given packet against the <a
-                  href="Script.html#method-i-next">#next</a> event in the list. If there is
-                  no <a href="Script.html#method-i-next">#next</a> event, an exception will
-                  be raised. This is called by <a
+                  <p>Compare the given packet against the next event in the list. If there is no
+                  next event, an exception will be raised. This is called by <a
                   href="Extensions/PacketStream.html#method-i-test_enqueue_packet">Net::SSH::Test::Extensions::PacketStream#test_enqueue_packet</a>.</p>
                 </div>
                 <div class='source'>
@@ -295,8 +287,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>A convenience method for adding an arbitrary local packet to the <a
-                  href="Script.html#attribute-i-events">#events</a> list.</p>
+                  <p>A convenience method for adding an arbitrary local packet to the events
+                  list.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends-source'); return false">
@@ -375,15 +367,14 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Scripts the sending of a <a href="Script.html#method-c-new">::new</a>
-                  channel request packet to the remote host. <code>channel</code> should be
-                  an instance of <a href="Channel.html">Net::SSH::Test::Channel</a>.
-                  <code>request</code> is a string naming the request type to send,
-                  <code>reply</code> is a boolean indicating whether a response to this
-                  packet is required , and <code>data</code> is any additional
-                  request-specific data that this packet should send. <code>success</code>
-                  indicates whether the response (if one is required) should be success or
-                  failure.</p>
+                  <p>Scripts the sending of a new channel request packet to the remote host.
+                  <code>channel</code> should be an instance of <a
+                  href="Channel.html">Net::SSH::Test::Channel</a>. <code>request</code> is a
+                  string naming the request type to send, <code>reply</code> is a boolean
+                  indicating whether a response to this packet is required , and
+                  <code>data</code> is any additional request-specific data that this packet
+                  should send. <code>success</code> indicates whether the response (if one is
+                  required) should be success or failure.</p>
                   
                   <p>If a reply is desired, a remote packet will also be queued,
                   :channel_success if <code>success</code> is true, or :channel_failure if

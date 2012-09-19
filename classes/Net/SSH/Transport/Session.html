@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Transport::Session</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -47,9 +47,9 @@
             href="../../SSH.html">SSH</a> protocol, and implements basic message
             exchanging and protocol initialization. It will never be instantiated
             directly (unless you really know what you're about), but will instead be
-            created for you automatically when you create a <a
-            href="Session.html#method-c-new">::new</a> <a href="../../SSH.html">SSH</a>
-            session via <a href="../../SSH.html#method-c-start">Net::SSH.start</a>.</p>
+            created for you automatically when you create a new <a
+            href="../../SSH.html">SSH</a> session via <a
+            href="../../SSH.html#method-c-start">Net::SSH.start</a>.</p>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -106,8 +106,7 @@
                     <td>&nbsp;</td>
                     <td class='context-item-desc'>
                       
-                      <p>The standard <a href="Session.html#attribute-i-port">#port</a> for the <a
-                      href="../../SSH.html">SSH</a> protocol.</p>
+                      <p>The standard port for the <a href="../../SSH.html">SSH</a> protocol.</p>
                     </td>
                   </tr>
                 </table>
@@ -135,8 +134,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="Session.html#attribute-i-host">#host</a> to connect to, as
-                      given to the constructor.</p>
+                      <p>The host to connect to, as given to the constructor.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -146,9 +144,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="Session.html#attribute-i-host">#host</a>-key verifier object
-                      used to verify <a href="Session.html#attribute-i-host">#host</a> keys, to
-                      ensure that the connection is not being spoofed.</p>
+                      <p>The host-key verifier object used to verify host keys, to ensure that the
+                      connection is not being spoofed.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -158,8 +155,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The hash of <a href="Session.html#attribute-i-options">#options</a> that
-                      were given to the object at initialization.</p>
+                      <p>The hash of options that were given to the object at initialization.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -169,10 +165,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="Session.html#attribute-i-port">#port</a> number to connect to,
-                      as given in the <a href="Session.html#attribute-i-options">#options</a> to
-                      the constructor. If no <a href="Session.html#attribute-i-port">#port</a>
-                      number was given, this will default to <a
+                      <p>The port number to connect to, as given in the options to the constructor.
+                      If no port number was given, this will default to <a
                       href="Session.html#DEFAULT_PORT">DEFAULT_PORT</a>.</p>
                     </td>
                   </tr>
@@ -194,9 +188,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The underlying <a href="Session.html#attribute-i-socket">#socket</a> object
-                      being used to communicate with the remote <a
-                      href="Session.html#attribute-i-host">#host</a>.</p>
+                      <p>The underlying socket object being used to communicate with the remote
+                      host.</p>
                     </td>
                   </tr>
                 </table>
@@ -212,9 +205,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Instantiates a <a href="Session.html#method-c-new">::new</a> transport
-                  layer abstraction. This will block until the initial key exchange
-                  completes, leaving you with a ready-to-use transport session.</p>
+                  <p>Instantiates a new transport layer abstraction. This will block until the
+                  initial key exchange completes, leaving you with a ready-to-use transport
+                  session.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
@@ -234,8 +227,7 @@
                   
                   <p>Cleans up (see <a
                   href="PacketStream.html#method-i-cleanup">Net::SSH::Transport::PacketStream#cleanup</a>)
-                  and closes the underlying <a
-                  href="Session.html#attribute-i-socket">#socket</a>.</p>
+                  and closes the underlying socket.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-close-source'); return false">
@@ -252,8 +244,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns true if the underlying <a
-                  href="Session.html#attribute-i-socket">#socket</a> has been closed.</p>
+                  <p>Returns true if the underlying socket has been closed.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-closed-3F-source'); return false">
@@ -270,11 +261,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Configure's the packet stream's client state with the given set of <a
-                  href="Session.html#attribute-i-options">#options</a>. This is typically
-                  used to define the cipher, compression, and hmac <a
-                  href="Session.html#attribute-i-algorithms">#algorithms</a> to use when
-                  sending packets to the server.</p>
+                  <p>Configure's the packet stream's client state with the given set of options.
+                  This is typically used to define the cipher, compression, and hmac
+                  algorithms to use when sending packets to the server.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-configure_client-source'); return false">
@@ -291,11 +280,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Configure's the packet stream's server state with the given set of <a
-                  href="Session.html#attribute-i-options">#options</a>. This is typically
-                  used to define the cipher, compression, and hmac <a
-                  href="Session.html#attribute-i-algorithms">#algorithms</a> to use when
-                  reading packets from the server.</p>
+                  <p>Configure's the packet stream's server state with the given set of options.
+                  This is typically used to define the cipher, compression, and hmac
+                  algorithms to use when reading packets from the server.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-configure_server-source'); return false">
@@ -330,9 +317,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Sets a <a href="Session.html#method-c-new">::new</a> <a
-                  href="Session.html#method-i-hint">#hint</a> for the packet stream, which
-                  the packet stream may use to change its behavior. (See <a
+                  <p>Sets a new hint for the packet stream, which the packet stream may use to
+                  change its behavior. (See <a
                   href="PacketStream.html#attribute-i-hints">Net::SSH::Transport::PacketStream#hints</a>).</p>
                 </div>
                 <div class='source'>
@@ -350,9 +336,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the <a href="Session.html#attribute-i-host">#host</a> (and possibly
-                  IP address) in a format compatible with <a href="../../SSH.html">SSH</a>
-                  known-<a href="Session.html#attribute-i-host">#host</a> files.</p>
+                  <p>Returns the host (and possibly IP address) in a format compatible with <a
+                  href="../../SSH.html">SSH</a> known-host files.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-host_as_string-source'); return false">
@@ -369,9 +354,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Blocks until a <a href="Session.html#method-c-new">::new</a> packet is
-                  available to be read, and returns that packet. See #<a
-                  href="Session.html#method-i-poll_message">#poll_message</a>.</p>
+                  <p>Blocks until a new packet is available to be read, and returns that packet.
+                  See <a href="Session.html#method-i-poll_message">poll_message</a>.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-next_message-source'); return false">
@@ -388,12 +372,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns a hash of information about the <a
-                  href="Session.html#method-i-peer">#peer</a> (remote) side of the <a
-                  href="Session.html#attribute-i-socket">#socket</a>, including :ip, :<a
-                  href="Session.html#attribute-i-port">#port</a>, :<a
-                  href="Session.html#attribute-i-host">#host</a>, and :canonized (see #<a
-                  href="Session.html#method-i-host_as_string">#host_as_string</a>).</p>
+                  <p>Returns a hash of information about the peer (remote) side of the socket,
+                  including :ip, :port, :host, and :canonized (see <a
+                  href="Session.html#method-i-host_as_string">host_as_string</a>).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-peer-source'); return false">
@@ -410,19 +391,16 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Tries to read the next packet from the <a
-                  href="Session.html#attribute-i-socket">#socket</a>. If mode is :nonblock
-                  (the default), this will not block and will return nil if there are no
-                  packets waiting to be read. Otherwise, this will block until a packet is
-                  available. Note that some packet types (DISCONNECT, IGNORE, UNIMPLEMENTED,
-                  DEBUG, and KEXINIT) are handled silently by this method, and will never be
-                  returned.</p>
+                  <p>Tries to read the next packet from the socket. If mode is :nonblock (the
+                  default), this will not block and will return nil if there are no packets
+                  waiting to be read. Otherwise, this will block until a packet is available.
+                  Note that some packet types (DISCONNECT, IGNORE, UNIMPLEMENTED, DEBUG, and
+                  KEXINIT) are handled silently by this method, and will never be returned.</p>
                   
                   <p>If a key-exchange is in process and a disallowed packet type is received,
                   it will be enqueued and otherwise ignored. When a key-exchange is not in
                   process, and consume_queue is true, packets will be first read from the
-                  queue before the <a href="Session.html#attribute-i-socket">#socket</a> is
-                  queried.</p>
+                  queue before the socket is queried.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-poll_message-source'); return false">
@@ -439,8 +417,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Adds the given packet to the packet queue. If the queue is non-empty, #<a
-                  href="Session.html#method-i-poll_message">#poll_message</a> will return
+                  <p>Adds the given packet to the packet queue. If the queue is non-empty, <a
+                  href="Session.html#method-i-poll_message">poll_message</a> will return
                   packets from the queue in the order they were received.</p>
                 </div>
                 <div class='source'>
@@ -477,8 +455,7 @@
                 <div class='description'>
                   
                   <p>Returns immediately if a rekey is already in process. Otherwise, if a rekey
-                  is needed (as indicated by the <a
-                  href="Session.html#attribute-i-socket">#socket</a>, see <a
+                  is needed (as indicated by the socket, see <a
                   href="PacketStream.html#method-i-if_needs_rekey-3F">Net::SSH::Transport::PacketStream#if_needs_rekey?</a>)
                   one is performed, causing this method to block until it completes.</p>
                 </div>
@@ -515,7 +492,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns a <a href="Session.html#method-c-new">::new</a> <a
+                  <p>Returns a new <a
                   href="Session.html#method-i-service_request">#service_request</a> packet
                   for the given service name, ready for sending to the server.</p>
                 </div>
@@ -536,8 +513,8 @@
                   
                   <p>Performs a "hard" shutdown of the connection. In general, this should never
                   be done, but it might be necessary (in a rescue clause, for instance, when
-                  the connection needs to <a href="Session.html#method-i-close">#close</a>
-                  but you don't know the status of the underlying protocol's state).</p>
+                  the connection needs to close but you don't know the status of the
+                  underlying protocol's state).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-shutdown-21-source'); return false">
@@ -556,8 +533,8 @@
                   
                   <p>Waits (blocks) until the given block returns true. If no block is given,
                   this just waits long enough to see if there are any pending packets. Any
-                  packets read are enqueued (see #<a
-                  href="Session.html#method-i-push">#push</a>).</p>
+                  packets read are enqueued (see <a
+                  href="Session.html#method-i-push">push</a>).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-wait-source'); return false">

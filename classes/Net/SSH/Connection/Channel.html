@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Connection::Channel</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -154,8 +154,8 @@
                     <td>&nbsp;</td>
                     <td class='context-item-desc'>
                       
-                      <p>A hash of the valid PTY options (see #<a
-                      href="Channel.html#method-i-request_pty">#request_pty</a>).</p>
+                      <p>A hash of the valid PTY options (see <a
+                      href="Channel.html#method-i-request_pty">request_pty</a>).</p>
                     </td>
                   </tr>
                 </table>
@@ -226,9 +226,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>A hash of <a href="Channel.html#attribute-i-properties">#properties</a> for
-                      this channel. These can be used to store state information about this
-                      channel. See also #[] and #[]=.</p>
+                      <p>A hash of properties for this channel. These can be used to store state
+                      information about this channel. See also #[] and #[]=.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -280,8 +279,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The <a href="Channel.html#attribute-i-type">#type</a> of this channel,
-                      usually "session".</p>
+                      <p>The type of this channel, usually "session".</p>
                     </td>
                   </tr>
                 </table>
@@ -297,12 +295,10 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Instantiates a <a href="Channel.html#method-c-new">::new</a> channel on the
-                  given <a href="Channel.html#attribute-i-connection">#connection</a>, of the
-                  given <a href="Channel.html#attribute-i-type">#type</a>, and with the given
-                  id. If a block is given, it will be remembered until the channel is
-                  confirmed open by the server, and will be invoked at that time (see
-                  #do_open_confirmation).</p>
+                  <p>Instantiates a new channel on the given connection, of the given type, and
+                  with the given id. If a block is given, it will be remembered until the
+                  channel is confirmed open by the server, and will be invoked at that time
+                  (see do_open_confirmation).</p>
                   
                   <p>This also sets the default maximum packet size and maximum window size.</p>
                 </div>
@@ -322,9 +318,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>A shortcut for accessing <a
-                  href="Channel.html#attribute-i-properties">#properties</a> of the channel
-                  (see #<a href="Channel.html#attribute-i-properties">#properties</a>).</p>
+                  <p>A shortcut for accessing properties of the channel (see <a
+                  href="Channel.html#attribute-i-properties">properties</a>).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-5B-5D-source'); return false">
@@ -341,9 +336,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>A shortcut for setting <a
-                  href="Channel.html#attribute-i-properties">#properties</a> of the channel
-                  (see #<a href="Channel.html#attribute-i-properties">#properties</a>).</p>
+                  <p>A shortcut for setting properties of the channel (see <a
+                  href="Channel.html#attribute-i-properties">properties</a>).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-5B-5D-3D-source'); return false">
@@ -383,7 +377,7 @@
                   
                   <p>Requests that the channel be closed. If the channel is already closing,
                   this does nothing, nor does it do anything if the channel has not yet been
-                  confirmed open (see #do_open_confirmation). Otherwise, it sends a
+                  confirmed open (see do_open_confirmation). Otherwise, it sends a
                   CHANNEL_CLOSE message and marks the channel as closing.</p>
                 </div>
                 <div class='source'>
@@ -402,8 +396,8 @@
                 <div class='description'>
                   
                   <p>Returns true if the channel is currently closing, but not actually closed.
-                  A channel is closing when, for instance, #<a
-                  href="Channel.html#method-i-close">#close</a> has been invoked, but the
+                  A channel is closing when, for instance, <a
+                  href="Channel.html#method-i-close">close</a> has been invoked, but the
                   server has not yet responded with a CHANNEL_CLOSE packet of its own.</p>
                 </div>
                 <div class='source'>
@@ -421,9 +415,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Invokes the #<a href="Channel.html#method-i-on_close">#on_close</a>
-                  callback when the server closes a channel. The channel is the only
-                  argument.</p>
+                  <p>Invokes the <a href="Channel.html#method-i-on_close">on_close</a> callback
+                  when the server closes a channel. The channel is the only argument.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-do_close-source'); return false">
@@ -440,9 +433,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Invokes the #<a href="Channel.html#method-i-on_eof">#on_eof</a> callback
-                  when the server indicates that no further data is forthcoming. The callback
-                  is invoked with the channel as the argument.</p>
+                  <p>Invokes the <a href="Channel.html#method-i-on_eof">on_eof</a> callback when
+                  the server indicates that no further data is forthcoming. The callback is
+                  invoked with the channel as the argument.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-do_eof-source'); return false">
@@ -459,12 +452,11 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Invokes the #<a
-                  href="Channel.html#method-i-on_extended_data">#on_extended_data</a>
-                  callback when the server sends extended data to the channel. This will
-                  reduce the available window size on the local end. The callback is invoked
-                  with the channel, <a href="Channel.html#attribute-i-type">#type</a>, and
-                  data.</p>
+                  <p>Invokes the <a
+                  href="Channel.html#method-i-on_extended_data">on_extended_data</a> callback
+                  when the server sends extended data to the channel. This will reduce the
+                  available window size on the local end. The callback is invoked with the
+                  channel, type, and data.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-do_extended_data-source'); return false">
@@ -499,9 +491,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Invoked when the server failed to open the channel. If an #<a
-                  href="Channel.html#method-i-on_open_failed">#on_open_failed</a> callback
-                  was specified, it will be invoked with the channel, reason code, and
+                  <p>Invoked when the server failed to open the channel. If an <a
+                  href="Channel.html#method-i-on_open_failed">on_open_failed</a> callback was
+                  specified, it will be invoked with the channel, reason code, and
                   description as arguments. Otherwise, a <a
                   href="../ChannelOpenFailed.html">ChannelOpenFailed</a> exception will be
                   raised.</p>
@@ -539,12 +531,12 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Syntactic sugar for setting an environment variable in the remote <a
-                  href="Channel.html#method-i-process">#process</a>' environment. Note that
-                  for security reasons, the server may refuse to set certain environment
-                  variables, or all, at the server's discretion. If you are connecting to an
-                  OpenSSH server, you will need to update the AcceptEnv setting in the
-                  sshd_config to include the environment variables you want to send.</p>
+                  <p>Syntactic sugar for setting an environment variable in the remote process'
+                  environment. Note that for security reasons, the server may refuse to set
+                  certain environment variables, or all, at the server's discretion. If you
+                  are connecting to an OpenSSH server, you will need to update the AcceptEnv
+                  setting in the sshd_config to include the environment variables you want to
+                  send.</p>
                   
                   <pre>channel.env &quot;PATH&quot;, &quot;/usr/local/bin&quot;</pre>
                 </div>
@@ -583,10 +575,10 @@
                 <div class='description'>
                   
                   <p>Returns true if the local end of the channel has declared that no more data
-                  is forthcoming (see #<a href="Channel.html#method-i-eof-21">#eof!</a>).
-                  Trying to send data via #<a
-                  href="Channel.html#method-i-send_data">#send_data</a> when this is true
-                  will result in an exception being raised.</p>
+                  is forthcoming (see <a href="Channel.html#method-i-eof-21">eof!</a>).
+                  Trying to send data via <a
+                  href="Channel.html#method-i-send_data">send_data</a> when this is true will
+                  result in an exception being raised.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-eof-3F-source'); return false">
@@ -654,9 +646,8 @@
                   
                   <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;got data: #{data.inspect}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                   
-                  <p>Data received this way is typically the data written by the remote <a
-                  href="Channel.html#method-i-process">#process</a> to its
-                  <code>stdout</code> stream.</p>
+                  <p>Data received this way is typically the data written by the remote process
+                  to its <code>stdout</code> stream.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_data-source'); return false">
@@ -696,11 +687,10 @@
                   
                   <p>Registers a callback to be invoked when extended data packets are received
                   by the channel. The callback is called with the channel as the first
-                  argument, the data <a href="Channel.html#attribute-i-type">#type</a> (as an
-                  integer) as the second, and the data as the third. Extended data is almost
-                  exclusively used to send <code>stderr</code> data (<code>type</code> == 1).
-                  Other extended data types are not defined by the <a
-                  href="../../SSH.html">SSH</a> protocol.</p>
+                  argument, the data type (as an integer) as the second, and the data as the
+                  third. Extended data is almost exclusively used to send <code>stderr</code>
+                  data (<code>type</code> == 1). Other extended data types are not defined by
+                  the <a href="../../SSH.html">SSH</a> protocol.</p>
                   
                   <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_extended_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;got stderr: #{data.inspect}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
@@ -743,9 +733,9 @@
                   
                   <p>Registers a callback to be invoked for each pass of the event loop for this
                   channel. There are no guarantees on timeliness in the event loop, but it
-                  will be called roughly once for each packet received by the <a
-                  href="Channel.html#attribute-i-connection">#connection</a> (not the
-                  channel). This callback is invoked with the channel as the sole argument.</p>
+                  will be called roughly once for each packet received by the connection (not
+                  the channel). This callback is invoked with the channel as the sole
+                  argument.</p>
                   
                   <p>Here's an example that accumulates the channel data into a variable on the
                   channel itself, and displays individual lines in the input one at a time
@@ -768,10 +758,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Registers a callback to be invoked when a channel request of the given <a
-                  href="Channel.html#attribute-i-type">#type</a> is received. The callback
-                  will receive the channel as the first argument, and the associated
-                  (unparsed) data as the second. The data will be a <a
+                  <p>Registers a callback to be invoked when a channel request of the given type
+                  is received. The callback will receive the channel as the first argument,
+                  and the associated (unparsed) data as the second. The data will be a <a
                   href="../Buffer.html">Net::SSH::Buffer</a> that you will need to parse,
                   yourself, according to the kind of request you are watching.</p>
                   
@@ -785,16 +774,13 @@
                   <p>Some common channel requests that your programs might want to listen for
                   are:</p>
                   <ul><li>
-                  <p>"exit-status" : the exit status of the remote <a
-                  href="Channel.html#method-i-process">#process</a> will be reported as a
+                  <p>"exit-status" : the exit status of the remote process will be reported as a
                   long integer in the data buffer, which you can grab via data.read_long.</p>
                   </li><li>
-                  <p>"exit-signal" : if the remote <a
-                  href="Channel.html#method-i-process">#process</a> died as a result of a
-                  signal being sent to it, the signal will be reported as a string in the
-                  data, via data.read_string. (Not all <a href="../../SSH.html">SSH</a>
-                  servers support this channel request <a
-                  href="Channel.html#attribute-i-type">#type</a>.)</p>
+                  <p>"exit-signal" : if the remote process died as a result of a signal being
+                  sent to it, the signal will be reported as a string in the data, via
+                  data.read_string. (Not all <a href="../../SSH.html">SSH</a> servers support
+                  this channel request type.)</p>
                   
                   <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_request</span> <span class="ruby-string">&quot;exit-status&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;process terminated with exit status: #{data.read_long}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                   </li></ul>
@@ -814,10 +800,10 @@
                 </div>
                 <div class='description'>
                   
-                  <p>If an #<a href="Channel.html#method-i-on_process">#on_process</a> handler
-                  has been set up, this will cause it to be invoked (passing the channel
-                  itself as an argument). It also causes all pending output to be enqueued as
-                  CHANNEL_DATA packets (see #enqueue_pending_output).</p>
+                  <p>If an <a href="Channel.html#method-i-on_process">on_process</a> handler has
+                  been set up, this will cause it to be invoked (passing the channel itself
+                  as an argument). It also causes all pending output to be enqueued as
+                  CHANNEL_DATA packets (see enqueue_pending_output).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-process-source'); return false">
@@ -863,9 +849,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Sends a <a href="Channel.html#method-c-new">::new</a> channel request with
-                  the given name. The extra <code>data</code> parameter must either be empty,
-                  or consist of an even number of arguments. See <a
+                  <p>Sends a new channel request with the given name. The extra
+                  <code>data</code> parameter must either be empty, or consist of an even
+                  number of arguments. See <a
                   href="../Buffer.html#method-c-from">Net::SSH::Buffer.from</a> for a
                   description of their format. If a block is given, it is registered as a
                   callback for a pending request, and the packet will be flagged so that the
@@ -879,9 +865,9 @@
                   <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">send_channel_request</span> <span class="ruby-string">&quot;shell&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;user shell started successfully&quot;</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;could not start user shell&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                   
                   <p>Most channel requests you'll want to send are already wrapped in more
-                  convenient helper methods (see #<a
-                  href="Channel.html#method-i-exec">#exec</a> and #<a
-                  href="Channel.html#method-i-subsystem">#subsystem</a>).</p>
+                  convenient helper methods (see <a
+                  href="Channel.html#method-i-exec">exec</a> and <a
+                  href="Channel.html#method-i-subsystem">subsystem</a>).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-send_channel_request-source'); return false">
@@ -899,19 +885,16 @@
                 <div class='description'>
                   
                   <p>Sends data to the channel's remote endpoint. This usually has the effect of
-                  sending the given string to the remote <a
-                  href="Channel.html#method-i-process">#process</a>' stdin stream. Note that
-                  it does not immediately send the data across the channel, but instead
-                  merely appends the given data to the channel's output buffer, preparatory
-                  to being packaged up and sent out the next time the <a
-                  href="Channel.html#attribute-i-connection">#connection</a> is accepting
-                  data. (A <a href="Channel.html#attribute-i-connection">#connection</a>
-                  might not be accepting data if, for instance, it has filled its data window
-                  and has not yet been resized by the remote end-point.)</p>
+                  sending the given string to the remote process' stdin stream. Note that it
+                  does not immediately send the data across the channel, but instead merely
+                  appends the given data to the channel's output buffer, preparatory to being
+                  packaged up and sent out the next time the connection is accepting data. (A
+                  connection might not be accepting data if, for instance, it has filled its
+                  data window and has not yet been resized by the remote end-point.)</p>
                   
                   <p>This will raise an exception if the channel has previously declared that no
-                  more data will be sent (see #<a
-                  href="Channel.html#method-i-eof-21">#eof!</a>).</p>
+                  more data will be sent (see <a
+                  href="Channel.html#method-i-eof-21">eof!</a>).</p>
                   
                   <pre>channel.send_data(&quot;the password\n&quot;)</pre>
                 </div>
@@ -930,13 +913,11 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Syntactic sugar for requesting that a <a
-                  href="Channel.html#method-i-subsystem">#subsystem</a> be started.
-                  Subsystems are a way for other protocols (like SFTP) to be run, using <a
+                  <p>Syntactic sugar for requesting that a subsystem be started. Subsystems are
+                  a way for other protocols (like SFTP) to be run, using <a
                   href="../../SSH.html">SSH</a> as the transport. Generally, you'll never
                   need to call this directly unless you are the implementor of something that
-                  consumes an <a href="../../SSH.html">SSH</a> <a
-                  href="Channel.html#method-i-subsystem">#subsystem</a>, like SFTP.</p>
+                  consumes an <a href="../../SSH.html">SSH</a> subsystem, like SFTP.</p>
                   
                   <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">subsystem</span>(<span class="ruby-string">&quot;sftp&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;subsystem successfully started&quot;</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;subsystem could not be started&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
@@ -956,8 +937,8 @@
                 <div class='description'>
                   
                   <p>Runs the <a href="../../SSH.html">SSH</a> event loop until the channel is
-                  no longer active. This is handy for blocking while you <a
-                  href="Channel.html#method-i-wait">#wait</a> for some channel to finish.</p>
+                  no longer active. This is handy for blocking while you wait for some
+                  channel to finish.</p>
                   
                   <pre>channel.exec(&quot;grep ...&quot;) { ... }&#x000A;channel.wait</pre>
                 </div>

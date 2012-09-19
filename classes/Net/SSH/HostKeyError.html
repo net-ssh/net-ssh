@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::HostKeyError</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -43,14 +43,9 @@
         <div id='text'>
           <div id='description'>
             
-            <p>Base class for <a href="HostKeyError.html#method-i-host">#host</a> <a
-            href="HostKeyError.html#method-i-key">#key</a> exceptions. When rescuing
-            this exception, you can inspect the <a
-            href="HostKeyError.html#method-i-key">#key</a> <a
-            href="HostKeyError.html#method-i-fingerprint">#fingerprint</a> and, if you
-            want to proceed anyway, simply call the <a
-            href="HostKeyError.html#method-i-remember_host-21">#remember_host!</a>
-            method on the exception, and then retry.</p>
+            <p>Base class for host key exceptions. When rescuing this exception, you can
+            inspect the key fingerprint and, if you want to proceed anyway, simply call
+            the remember_host! method on the exception, and then retry.</p>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -78,13 +73,12 @@
                 </div>
                 <div class='description'>
                   
-                  <p>An accessor for getting at the data that was used to look up the <a
-                  href="HostKeyError.html#method-i-host">#host</a> (see also #<a
-                  href="HostKeyError.html#method-i-fingerprint">#fingerprint</a>, #<a
-                  href="HostKeyError.html#method-i-host">#host</a>, #<a
-                  href="HostKeyError.html#method-i-port">#port</a>, #<a
-                  href="HostKeyError.html#method-i-ip">#ip</a>, and #<a
-                  href="HostKeyError.html#method-i-key">#key</a>).</p>
+                  <p>An accessor for getting at the data that was used to look up the host (see
+                  also <a href="HostKeyError.html#method-i-fingerprint">fingerprint</a>, <a
+                  href="HostKeyError.html#method-i-host">host</a>, <a
+                  href="HostKeyError.html#method-i-port">port</a>, <a
+                  href="HostKeyError.html#method-i-ip">ip</a>, and <a
+                  href="HostKeyError.html#method-i-key">key</a>).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-5B-5D-source'); return false">
@@ -101,11 +95,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the <a
-                  href="HostKeyError.html#method-i-fingerprint">#fingerprint</a> of the <a
-                  href="HostKeyError.html#method-i-key">#key</a> for the <a
-                  href="HostKeyError.html#method-i-host">#host</a>, which either was not
-                  found or did not match.</p>
+                  <p>Returns the fingerprint of the key for the host, which either was not found
+                  or did not match.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-fingerprint-source'); return false">
@@ -122,9 +113,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the <a href="HostKeyError.html#method-i-host">#host</a> name for
-                  the remote <a href="HostKeyError.html#method-i-host">#host</a>, as reported
-                  by the socket.</p>
+                  <p>Returns the host name for the remote host, as reported by the socket.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-host-source'); return false">
@@ -141,9 +130,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the IP address of the remote <a
-                  href="HostKeyError.html#method-i-host">#host</a>, as reported by the
-                  socket.</p>
+                  <p>Returns the IP address of the remote host, as reported by the socket.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-ip-source'); return false">
@@ -160,8 +147,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the <a href="HostKeyError.html#method-i-key">#key</a> itself, as
-                  reported by the remote <a href="HostKeyError.html#method-i-host">#host</a>.</p>
+                  <p>Returns the key itself, as reported by the remote host.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-key-source'); return false">
@@ -178,9 +164,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the <a href="HostKeyError.html#method-i-port">#port</a> number for
-                  the remote <a href="HostKeyError.html#method-i-host">#host</a>, as reported
-                  by the socket.</p>
+                  <p>Returns the port number for the remote host, as reported by the socket.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-port-source'); return false">
@@ -197,10 +181,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Tell <a href="../SSH.html">Net::SSH</a> to record this <a
-                  href="HostKeyError.html#method-i-host">#host</a> and <a
-                  href="HostKeyError.html#method-i-key">#key</a> in the known hosts file, so
-                  that subsequent connections will remember them.</p>
+                  <p>Tell <a href="../SSH.html">Net::SSH</a> to record this host and key in the
+                  known hosts file, so that subsequent connections will remember them.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-remember_host-21-source'); return false">

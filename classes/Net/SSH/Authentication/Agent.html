@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Authentication::Agent</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -184,8 +184,8 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>The underlying <a href="Agent.html#attribute-i-socket">#socket</a> being
-                      used to communicate with the <a href="../../SSH.html">SSH</a> agent.</p>
+                      <p>The underlying socket being used to communicate with the <a
+                      href="../../SSH.html">SSH</a> agent.</p>
                     </td>
                   </tr>
                 </table>
@@ -201,9 +201,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Instantiates a <a href="Agent.html#method-c-new">::new</a> agent object,
-                  connects to a running <a href="../../SSH.html">SSH</a> agent, negotiates
-                  the agent protocol version, and returns the agent object.</p>
+                  <p>Instantiates a new agent object, connects to a running <a
+                  href="../../SSH.html">SSH</a> agent, negotiates the agent protocol version,
+                  and returns the agent object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-connect-source'); return false">
@@ -220,9 +220,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Creates a <a href="Agent.html#method-c-new">::new</a> <a
-                  href="Agent.html">Agent</a> object, using the optional logger instance to
-                  report status.</p>
+                  <p>Creates a new <a href="Agent.html">Agent</a> object, using the optional
+                  logger instance to report status.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
@@ -240,8 +239,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Closes this <a href="Agent.html#attribute-i-socket">#socket</a>. This agent
-                  reference is no longer able to query the agent.</p>
+                  <p>Closes this socket. This agent reference is no longer able to query the
+                  agent.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-close-source'); return false">
@@ -258,13 +257,10 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Connect to the agent process using the <a
-                  href="Agent.html#attribute-i-socket">#socket</a> factory and <a
-                  href="Agent.html#attribute-i-socket">#socket</a> name given by the
-                  attribute writers. If the agent on the other end of the <a
-                  href="Agent.html#attribute-i-socket">#socket</a> reports that it is an
-                  SSH2-compatible agent, this will fail (it only supports the ssh-agent
-                  distributed by OpenSSH).</p>
+                  <p>Connect to the agent process using the socket factory and socket name given
+                  by the attribute writers. If the agent on the other end of the socket
+                  reports that it is an SSH2-compatible agent, this will fail (it only
+                  supports the ssh-agent distributed by OpenSSH).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-connect-21-source'); return false">
@@ -281,10 +277,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Return an array of all <a
-                  href="Agent.html#method-i-identities">#identities</a> (public keys) known
-                  to the agent. Each key returned is augmented with a <code>comment</code>
-                  property which is set to the comment returned by the agent for that key.</p>
+                  <p>Return an array of all identities (public keys) known to the agent. Each
+                  key returned is augmented with a <code>comment</code> property which is set
+                  to the comment returned by the agent for that key.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-identities-source'); return false">
@@ -320,9 +315,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Using the agent and the given public key, <a
-                  href="Agent.html#method-i-sign">#sign</a> the given data. The signature is
-                  returned in SSH2 format.</p>
+                  <p>Using the agent and the given public key, sign the given data. The
+                  signature is returned in SSH2 format.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-sign-source'); return false">

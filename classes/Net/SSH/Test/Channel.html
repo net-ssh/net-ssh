@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Test::Channel</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -128,9 +128,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Creates a <a href="Channel.html#method-c-new">::new</a> <a
-                  href="Channel.html">Test::Channel</a> instance on top of the given
-                  <code>script</code> (which must be a <a
+                  <p>Creates a new <a href="Channel.html">Test::Channel</a> instance on top of
+                  the given <code>script</code> (which must be a <a
                   href="Script.html">Net::SSH::Test::Script</a> instance).</p>
                 </div>
                 <div class='source'>
@@ -225,11 +224,11 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Because adjacent calls to #<a
-                  href="Channel.html#method-i-gets_data">#gets_data</a> will sometimes cause
+                  <p>Because adjacent calls to <a
+                  href="Channel.html#method-i-gets_data">gets_data</a> will sometimes cause
                   the data packets to be concatenated (causing expectations in tests to
-                  fail), you may need to separate those calls with calls to #<a
-                  href="Channel.html#method-i-inject_remote_delay-21">#inject_remote_delay!</a>
+                  fail), you may need to separate those calls with calls to <a
+                  href="Channel.html#method-i-inject_remote_delay-21">inject_remote_delay!</a>
                   (which essentially just mimics receiving an empty data packet):</p>
                   
                   <pre>channel.gets_data &quot;abcdefg&quot;&#x000A;channel.inject_remote_delay!&#x000A;channel.gets_data &quot;hijklmn&quot;</pre>
@@ -370,8 +369,8 @@
                 <div class='description'>
                   
                   <p>Scripts the sending of a "subsystem" channel request packet to the mock
-                  server. See #<a href="Channel.html#method-i-sends_exec">#sends_exec</a> for
-                  a discussion of the meaning of the <code>reply</code> and
+                  server. See <a href="Channel.html#method-i-sends_exec">sends_exec</a> for a
+                  discussion of the meaning of the <code>reply</code> and
                   <code>success</code> arguments.</p>
                   
                   <pre>channel.sends_subsystem &quot;sftp&quot;</pre>

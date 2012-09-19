@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Buffer</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -45,15 +45,13 @@
             
             <p><a href="Buffer.html">Net::SSH::Buffer</a> is a flexible class for building
             and parsing binary data packets. It provides a stream-like interface for
-            sequentially reading data items <a
-            href="Buffer.html#method-c-from">::from</a> the buffer, as well as a useful
-            helper method for building binary packets given a signature.</p>
+            sequentially reading data items from the buffer, as well as a useful helper
+            method for building binary packets given a signature.</p>
             
-            <p>Writing to a buffer always appends to the end, regardless of where the <a
-            href="Buffer.html#method-i-read">#read</a> cursor is. Reading, on the other
-            hand, always begins at the first byte of the buffer and increments the <a
-            href="Buffer.html#method-i-read">#read</a> cursor, with subsequent reads
-            taking up where the last left off.</p>
+            <p>Writing to a buffer always appends to the end, regardless of where the read
+            cursor is. Reading, on the other hand, always begins at the first byte of
+            the buffer and increments the read cursor, with subsequent reads taking up
+            where the last left off.</p>
             
             <p>As a consumer of the <a href="../SSH.html">Net::SSH</a> library, you will
             rarely come into contact with these buffer objects directly, but it could
@@ -119,8 +117,7 @@
                     <td class='context-item-value'>[R]</td>
                     <td class='context-item-desc'>
                       
-                      <p>exposes the raw <a href="Buffer.html#attribute-i-content">#content</a> of
-                      the buffer</p>
+                      <p>exposes the raw content of the buffer</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -130,8 +127,7 @@
                     <td class='context-item-value'>[RW]</td>
                     <td class='context-item-desc'>
                       
-                      <p>the current <a href="Buffer.html#attribute-i-position">#position</a> of the
-                      pointer in the buffer</p>
+                      <p>the current position of the pointer in the buffer</p>
                     </td>
                   </tr>
                 </table>
@@ -147,49 +143,42 @@
                 </div>
                 <div class='description'>
                   
-                  <p>This is a convenience method for creating and populating a <a
-                  href="Buffer.html#method-c-new">::new</a> buffer <a
-                  href="Buffer.html#method-c-from">::from</a> a single command. The arguments
-                  must be even in <a href="Buffer.html#method-i-length">#length</a>, with the
-                  first of each pair of arguments being a symbol naming the type of the data
-                  that follows. If the type is :raw, the value is written directly to the
-                  hash.</p>
+                  <p>This is a convenience method for creating and populating a new buffer from
+                  a single command. The arguments must be even in length, with the first of
+                  each pair of arguments being a symbol naming the type of the data that
+                  follows. If the type is :raw, the value is written directly to the hash.</p>
                   
                   <pre>b = Buffer.from(:byte, 1, :string, &quot;hello&quot;, :raw, &quot;\1\2\3\4&quot;)&#x000A;#-&gt; &quot;\1\0\0\0\5hello\1\2\3\4&quot;</pre>
                   
                   <p>The supported data types are:</p>
                   <ul><li>
-                  <p>:raw =&gt; <a href="Buffer.html#method-i-write">#write</a> the next value
-                  verbatim (#<a href="Buffer.html#method-i-write">#write</a>)</p>
+                  <p>:raw =&gt; write the next value verbatim (<a
+                  href="Buffer.html#method-i-write">write</a>)</p>
                   </li><li>
-                  <p>:int64 =&gt; <a href="Buffer.html#method-i-write">#write</a> an 8-byte
-                  integer (#<a href="Buffer.html#method-i-write_int64">#write_int64</a>)</p>
+                  <p>:int64 =&gt; write an 8-byte integer (<a
+                  href="Buffer.html#method-i-write_int64">write_int64</a>)</p>
                   </li><li>
-                  <p>:long =&gt; <a href="Buffer.html#method-i-write">#write</a> a 4-byte
-                  integer (#<a href="Buffer.html#method-i-write_long">#write_long</a>)</p>
+                  <p>:long =&gt; write a 4-byte integer (<a
+                  href="Buffer.html#method-i-write_long">write_long</a>)</p>
                   </li><li>
-                  <p>:byte =&gt; <a href="Buffer.html#method-i-write">#write</a> a single byte
-                  (#<a href="Buffer.html#method-i-write_byte">#write_byte</a>)</p>
+                  <p>:byte =&gt; write a single byte (<a
+                  href="Buffer.html#method-i-write_byte">write_byte</a>)</p>
                   </li><li>
-                  <p>:string =&gt; <a href="Buffer.html#method-i-write">#write</a> a 4-byte <a
-                  href="Buffer.html#method-i-length">#length</a> followed by character data
-                  (#<a href="Buffer.html#method-i-write_string">#write_string</a>)</p>
+                  <p>:string =&gt; write a 4-byte length followed by character data (<a
+                  href="Buffer.html#method-i-write_string">write_string</a>)</p>
                   </li><li>
-                  <p>:bool =&gt; <a href="Buffer.html#method-i-write">#write</a> a single byte,
-                  interpreted as a boolean (#<a
-                  href="Buffer.html#method-i-write_bool">#write_bool</a>)</p>
+                  <p>:bool =&gt; write a single byte, interpreted as a boolean (<a
+                  href="Buffer.html#method-i-write_bool">write_bool</a>)</p>
                   </li><li>
-                  <p>:bignum =&gt; <a href="Buffer.html#method-i-write">#write</a> an
-                  SSH-encoded bignum (#<a
-                  href="Buffer.html#method-i-write_bignum">#write_bignum</a>)</p>
+                  <p>:bignum =&gt; write an SSH-encoded bignum (<a
+                  href="Buffer.html#method-i-write_bignum">write_bignum</a>)</p>
                   </li><li>
-                  <p>:key =&gt; <a href="Buffer.html#method-i-write">#write</a> an SSH-encoded
-                  key value (#<a href="Buffer.html#method-i-write_key">#write_key</a>)</p>
+                  <p>:key =&gt; write an SSH-encoded key value (<a
+                  href="Buffer.html#method-i-write_key">write_key</a>)</p>
                   </li></ul>
                   
                   <p>Any of these, except for :raw, accepts an Array argument, to make it easier
-                  to <a href="Buffer.html#method-i-write">#write</a> multiple values of the
-                  same type in a briefer manner.</p>
+                  to write multiple values of the same type in a briefer manner.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-from-source'); return false">
@@ -206,10 +195,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Creates a <a href="Buffer.html#method-c-new">::new</a> buffer, initialized
-                  to the given <a href="Buffer.html#attribute-i-content">#content</a>. The <a
-                  href="Buffer.html#attribute-i-position">#position</a> is initialized to the
-                  beginning of the buffer.</p>
+                  <p>Creates a new buffer, initialized to the given content. The position is
+                  initialized to the beginning of the buffer.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
@@ -228,8 +215,7 @@
                 <div class='description'>
                   
                   <p>Compares the contents of the two buffers, returning <code>true</code> only
-                  if they are identical in size and <a
-                  href="Buffer.html#attribute-i-content">#content</a>.</p>
+                  if they are identical in size and content.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-3D-3D-source'); return false">
@@ -246,10 +232,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Appends the given text to the end of the buffer. Does not alter the <a
-                  href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>. Returns the buffer
-                  object itself.</p>
+                  <p>Appends the given text to the end of the buffer. Does not alter the read
+                  position. Returns the buffer object itself.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-append-source'); return false">
@@ -266,12 +250,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the number of bytes <a
-                  href="Buffer.html#method-i-available">#available</a> to be <a
-                  href="Buffer.html#method-i-read">#read</a> (e.g., how many bytes remain
-                  between the current <a
-                  href="Buffer.html#attribute-i-position">#position</a> and the end of the
-                  buffer).</p>
+                  <p>Returns the number of bytes available to be read (e.g., how many bytes
+                  remain between the current position and the end of the buffer).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-available-source'); return false">
@@ -288,9 +268,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Resets the buffer, making it empty. Also, resets the <a
-                  href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a> to 0.</p>
+                  <p>Resets the buffer, making it empty. Also, resets the read position to 0.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-clear-21-source'); return false">
@@ -307,14 +285,11 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Consumes n bytes <a href="Buffer.html#method-c-from">::from</a> the buffer,
-                  where n is the current <a
-                  href="Buffer.html#attribute-i-position">#position</a> unless otherwise
-                  specified. This is useful for removing data <a
-                  href="Buffer.html#method-c-from">::from</a> the buffer that has previously
-                  been <a href="Buffer.html#method-i-read">#read</a>, when you are expecting
-                  more data to be appended. It helps to keep the size of buffers down when
-                  they would otherwise tend to grow without bound.</p>
+                  <p>Consumes n bytes from the buffer, where n is the current position unless
+                  otherwise specified. This is useful for removing data from the buffer that
+                  has previously been read, when you are expecting more data to be appended.
+                  It helps to keep the size of buffers down when they would otherwise tend to
+                  grow without bound.</p>
                   
                   <p>Returns the buffer object itself.</p>
                 </div>
@@ -334,7 +309,7 @@
                 <div class='description'>
                   
                   <p>Returns <code>true</code> if the buffer contains no data (e.g., it is of
-                  zero <a href="Buffer.html#method-i-length">#length</a>).</p>
+                  zero length).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-empty-3F-source'); return false">
@@ -369,8 +344,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the <a href="Buffer.html#method-i-length">#length</a> of the
-                  buffer's <a href="Buffer.html#attribute-i-content">#content</a>.</p>
+                  <p>Returns the length of the buffer's content.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-length-source'); return false">
@@ -387,13 +361,10 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Reads and returns the next <code>count</code> bytes <a
-                  href="Buffer.html#method-c-from">::from</a> the buffer, starting <a
-                  href="Buffer.html#method-c-from">::from</a> the <a
-                  href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>. If
-                  <code>count</code> is <code>nil</code>, this will return all remaining text
-                  in the buffer. This method will increment the pointer.</p>
+                  <p>Reads and returns the next <code>count</code> bytes from the buffer,
+                  starting from the read position. If <code>count</code> is <code>nil</code>,
+                  this will return all remaining text in the buffer. This method will
+                  increment the pointer.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-read-source'); return false">
@@ -410,13 +381,10 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Reads (as #<a href="Buffer.html#method-i-read">#read</a>) and returns the
-                  given number of bytes <a href="Buffer.html#method-c-from">::from</a> the
-                  buffer, and then consumes (as #<a
-                  href="Buffer.html#method-i-consume-21">#consume!</a>) all data up to the <a
-                  href="Buffer.html#method-c-new">::new</a> <a
-                  href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>.</p>
+                  <p>Reads (as <a href="Buffer.html#method-i-read">read</a>) and returns the
+                  given number of bytes from the buffer, and then consumes (as <a
+                  href="Buffer.html#method-i-consume-21">consume!</a>) all data up to the new
+                  read position.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-read-21-source'); return false">
@@ -433,10 +401,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Read a bignum (<a href="../../OpenSSL/BN.html">OpenSSL::BN</a>) <a
-                  href="Buffer.html#method-c-from">::from</a> the buffer, in SSH2 format. It
-                  is essentially just a string, which is reinterpreted to be a bignum in
-                  binary format.</p>
+                  <p>Read a bignum (<a href="../../OpenSSL/BN.html">OpenSSL::BN</a>) from the
+                  buffer, in SSH2 format. It is essentially just a string, which is
+                  reinterpreted to be a bignum in binary format.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-read_bignum-source'); return false">
@@ -471,8 +438,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Reads the next string <a href="Buffer.html#method-c-from">::from</a> the
-                  buffer, and returns a <a href="Buffer.html#method-c-new">::new</a> <a
+                  <p>Reads the next string from the buffer, and returns a new <a
                   href="Buffer.html">Buffer</a> object that wraps it.</p>
                 </div>
                 <div class='source'>
@@ -509,8 +475,8 @@
                 <div class='description'>
                   
                   <p>Return the next 8 bytes as a 64-bit integer (in network byte order).
-                  Returns nil if there are less than 8 bytes remaining to be <a
-                  href="Buffer.html#method-i-read">#read</a> in the buffer.</p>
+                  Returns nil if there are less than 8 bytes remaining to be read in the
+                  buffer.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-read_int64-source'); return false">
@@ -527,10 +493,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Read a key <a href="Buffer.html#method-c-from">::from</a> the buffer. The
-                  key will start with a string describing its type. The remainder of the key
-                  is defined by the type that was <a
-                  href="Buffer.html#method-i-read">#read</a>.</p>
+                  <p>Read a key from the buffer. The key will start with a string describing its
+                  type. The remainder of the key is defined by the type that was read.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-read_key-source'); return false">
@@ -547,9 +511,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Read a keyblob of the given type <a
-                  href="Buffer.html#method-c-from">::from</a> the buffer, and return it as a
-                  key. Only RSA, DSA, and ECDSA keys are supported.</p>
+                  <p>Read a keyblob of the given type from the buffer, and return it as a key.
+                  Only RSA, DSA, and ECDSA keys are supported.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-read_keyblob-source'); return false">
@@ -567,8 +530,8 @@
                 <div class='description'>
                   
                   <p>Return the next four bytes as a long integer (in network byte order).
-                  Returns nil if there are less than 4 bytes remaining to be <a
-                  href="Buffer.html#method-i-read">#read</a> in the buffer.</p>
+                  Returns nil if there are less than 4 bytes remaining to be read in the
+                  buffer.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-read_long-source'); return false">
@@ -607,9 +570,8 @@
                   <p>Reads all data up to and including the given pattern, which may be a <a
                   href="../../String.html">String</a>, Fixnum, or Regexp and is interpreted
                   exactly as String#index does. Returns nil if nothing matches. Increments
-                  the <a href="Buffer.html#attribute-i-position">#position</a> to point
-                  immediately after the pattern, if it does match. Returns all data up to and
-                  including the text that matched the pattern.</p>
+                  the position to point immediately after the pattern, if it does match.
+                  Returns all data up to and including the text that matched the pattern.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-read_to-source'); return false">
@@ -626,10 +588,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns all text <a href="Buffer.html#method-c-from">::from</a> the current
-                  pointer to the end of the buffer as a <a
-                  href="Buffer.html#method-c-new">::new</a> <a
-                  href="Buffer.html">Net::SSH::Buffer</a> object.</p>
+                  <p>Returns all text from the current pointer to the end of the buffer as a new
+                  <a href="Buffer.html">Net::SSH::Buffer</a> object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-remainder_as_buffer-source'); return false">
@@ -647,7 +607,7 @@
                 <div class='description'>
                   
                   <p>Resets the pointer to the start of the buffer. Subsequent reads will begin
-                  at <a href="Buffer.html#attribute-i-position">#position</a> 0.</p>
+                  at position 0.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-reset-21-source'); return false">
@@ -664,8 +624,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns a copy of the buffer's <a
-                  href="Buffer.html#attribute-i-content">#content</a>.</p>
+                  <p>Returns a copy of the buffer's content.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-to_s-source'); return false">
@@ -682,10 +641,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Writes the given data literally into the string. Does not alter the <a
-                  href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>. Returns the buffer
-                  object.</p>
+                  <p>Writes the given data literally into the string. Does not alter the read
+                  position. Returns the buffer object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-write-source'); return false">
@@ -704,9 +661,7 @@
                   
                   <p>Writes each argument to the buffer as a bignum (SSH2-style). No checking is
                   done to ensure that the arguments are, in fact, bignums. Does not alter the
-                  <a href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>. Returns the buffer
-                  object.</p>
+                  read position. Returns the buffer object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-write_bignum-source'); return false">
@@ -724,10 +679,8 @@
                 <div class='description'>
                   
                   <p>Writes each argument to the buffer as a (C-style) boolean, with 1 meaning
-                  true, and 0 meaning false. Does not alter the <a
-                  href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>. Returns the buffer
-                  object.</p>
+                  true, and 0 meaning false. Does not alter the read position. Returns the
+                  buffer object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-write_bool-source'); return false">
@@ -744,10 +697,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Writes each argument to the buffer as a byte. Does not alter the <a
-                  href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>. Returns the buffer
-                  object.</p>
+                  <p>Writes each argument to the buffer as a byte. Does not alter the read
+                  position. Returns the buffer object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-write_byte-source'); return false">
@@ -765,9 +716,7 @@
                 <div class='description'>
                   
                   <p>Writes each argument to the buffer as a network-byte-order-encoded 64-bit
-                  integer (8 bytes). Does not alter the <a
-                  href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>. Returns the buffer
+                  integer (8 bytes). Does not alter the read position. Returns the buffer
                   object.</p>
                 </div>
                 <div class='source'>
@@ -786,9 +735,7 @@
                 <div class='description'>
                   
                   <p>Writes the given arguments to the buffer as SSH2-encoded keys. Does not
-                  alter the <a href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>. Returns the buffer
-                  object.</p>
+                  alter the read position. Returns the buffer object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-write_key-source'); return false">
@@ -806,9 +753,7 @@
                 <div class='description'>
                   
                   <p>Writes each argument to the buffer as a network-byte-order-encoded long
-                  (4-byte) integer. Does not alter the <a
-                  href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>. Returns the buffer
+                  (4-byte) integer. Does not alter the read position. Returns the buffer
                   object.</p>
                 </div>
                 <div class='source'>
@@ -827,11 +772,8 @@
                 <div class='description'>
                   
                   <p>Writes each argument to the buffer as an SSH2-encoded string. Each string
-                  is prefixed by its <a href="Buffer.html#method-i-length">#length</a>,
-                  encoded as a 4-byte long integer. Does not alter the <a
-                  href="Buffer.html#method-i-read">#read</a> <a
-                  href="Buffer.html#attribute-i-position">#position</a>. Returns the buffer
-                  object.</p>
+                  is prefixed by its length, encoded as a 4-byte long integer. Does not alter
+                  the read position. Returns the buffer object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-write_string-source'); return false">

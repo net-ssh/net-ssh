@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <title>Net::SSH::Test</title>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
     <link href='../../../css/style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -73,8 +73,7 @@
             <p>This module may be used in unit tests, for when you want to test that your
             <a href="../SSH.html">SSH</a> state machines are really doing what you
             expect they are doing. You will typically include this module in your unit
-            test class, and then build a "<a
-            href="Test.html#method-i-story">#story</a>" of expected sends and receives:</p>
+            test class, and then build a "story" of expected sends and receives:</p>
             
             <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">'test/unit'</span>&#x000A;<span class="ruby-identifier">require</span> <span class="ruby-string">'net/ssh/test'</span>&#x000A;&#x000A;<span class="ruby-keyword">class</span> <span class="ruby-constant">MyTest</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Test</span><span class="ruby-operator">::</span><span class="ruby-constant">Unit</span><span class="ruby-operator">::</span><span class="ruby-constant">TestCase</span>&#x000A;  <span class="ruby-identifier">include</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Test</span>&#x000A;&#x000A;  <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_exec_via_channel_works</span>&#x000A;    <span class="ruby-identifier">story</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">session</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">opens_channel</span>&#x000A;      <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">sends_exec</span> <span class="ruby-string">&quot;ls&quot;</span>&#x000A;      <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_data</span> <span class="ruby-string">&quot;result of ls&quot;</span>&#x000A;      <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_close</span>&#x000A;      <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">sends_close</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">assert_scripted</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">result</span> = <span class="ruby-keyword">nil</span>&#x000A;&#x000A;      <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">exec</span>(<span class="ruby-string">&quot;ls&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;          <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_data</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span> <span class="ruby-identifier">result</span> = <span class="ruby-identifier">data</span> }&#x000A;          <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_close</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">close</span> }&#x000A;        <span class="ruby-keyword">end</span>&#x000A;      <span class="ruby-keyword">end</span>&#x000A;&#x000A;      <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">loop</span>&#x000A;      <span class="ruby-identifier">assert_equal</span> <span class="ruby-string">&quot;result of ls&quot;</span>, <span class="ruby-identifier">result</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
             
@@ -122,11 +121,10 @@
                 </div>
                 <div class='description'>
                   
-                  <p>First asserts that a <a href="Test.html#method-i-story">#story</a> has been
-                  described (see #<a href="Test.html#method-i-story">#story</a>). Then
-                  yields, and then asserts that all items described in the script have been
-                  processed. Typically, this is called immediately after a <a
-                  href="Test.html#method-i-story">#story</a> has been built, and the <a
+                  <p>First asserts that a story has been described (see <a
+                  href="Test.html#method-i-story">story</a>). Then yields, and then asserts
+                  that all items described in the script have been processed. Typically, this
+                  is called immediately after a story has been built, and the <a
                   href="../SSH.html">SSH</a> commands being tested are then executed within
                   the block passed to this assertion.</p>
                 </div>
@@ -145,12 +143,11 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the <a href="Test.html#method-i-connection">#connection</a> session
-                  (<a href="Connection/Session.html">Net::SSH::Connection::Session</a>) for
-                  use in these tests. It is a fully functional <a href="../SSH.html">SSH</a>
-                  session, operating over a mock <a
-                  href="Test.html#method-i-socket">#socket</a> (#<a
-                  href="Test.html#method-i-socket">#socket</a>).</p>
+                  <p>Returns the connection session (<a
+                  href="Connection/Session.html">Net::SSH::Connection::Session</a>) for use
+                  in these tests. It is a fully functional <a href="../SSH.html">SSH</a>
+                  session, operating over a mock socket (<a
+                  href="Test.html#method-i-socket">socket</a>).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-connection-source'); return false">
@@ -167,8 +164,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the test <a href="Test.html#method-i-socket">#socket</a> instance
-                  to use for these tests (see <a
+                  <p>Returns the test socket instance to use for these tests (see <a
                   href="Test/Socket.html">Net::SSH::Test::Socket</a>).</p>
                 </div>
                 <div class='source'>
@@ -186,11 +182,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>If a block is given, yields the script for the test <a
-                  href="Test.html#method-i-socket">#socket</a> (#<a
-                  href="Test.html#method-i-socket">#socket</a>). Otherwise, simply returns
-                  the <a href="Test.html#method-i-socket">#socket</a>'s script. See <a
-                  href="Test/Script.html">Net::SSH::Test::Script</a>.</p>
+                  <p>If a block is given, yields the script for the test socket (<a
+                  href="Test.html#method-i-socket">socket</a>). Otherwise, simply returns the
+                  socket's script. See <a href="Test/Script.html">Net::SSH::Test::Script</a>.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-story-source'); return false">
@@ -207,12 +201,11 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the <a href="Test.html#method-i-transport">#transport</a> session
-                  (<a href="Transport/Session.html">Net::SSH::Transport::Session</a>) for use
-                  in these tests. It is a fully functional <a href="../SSH.html">SSH</a> <a
-                  href="Test.html#method-i-transport">#transport</a> session, operating over
-                  a mock <a href="Test.html#method-i-socket">#socket</a> (#<a
-                  href="Test.html#method-i-socket">#socket</a>).</p>
+                  <p>Returns the transport session (<a
+                  href="Transport/Session.html">Net::SSH::Transport::Session</a>) for use in
+                  these tests. It is a fully functional <a href="../SSH.html">SSH</a>
+                  transport session, operating over a mock socket (<a
+                  href="Test.html#method-i-socket">socket</a>).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-transport-source'); return false">
