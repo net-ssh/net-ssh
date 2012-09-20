@@ -18,7 +18,7 @@ module Net; module SSH; module Authentication
   # identities.
   #
   # This code is a slightly modified version of the original implementation
-  # by Guillaume Marçais (guillaume.marcais@free.fr). It is used and
+  # by Guillaume MarÃ§ais (guillaume.marcais@free.fr). It is used and
   # relicensed by permission.
   module Pageant
 
