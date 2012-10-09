@@ -23,6 +23,7 @@
   Rakefile
   Rudyfile
   THANKS.rdoc
+  lib/sonixlabs-net-ssh.rb
   lib/net/ssh.rb
   lib/net/ssh/authentication/agent.rb
   lib/net/ssh/authentication/constants.rb
