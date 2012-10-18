@@ -88,6 +88,7 @@ Lastly, if you want to run the tests or use any of the Rake tasks, you'll need:
 
 * gem install net-ssh (might need sudo privileges)
 
+NOTE: If you are running on jruby you need to install jruby-pageant manually (gemspec doesn't allow for platform specific dependencies).
 
 == ARCFOUR SUPPORT:
 
