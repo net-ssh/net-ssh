@@ -190,8 +190,9 @@ module Net
       if auth.authenticate("ssh-connection", user, options[:password])
         connection = Connection::Session.new(transport, options)
         if block_given?
-          yield connection
+          retval = yield connection
           connection.close
+          retval
         else
           return connection
         end
