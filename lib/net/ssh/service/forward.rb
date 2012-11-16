@@ -208,15 +208,24 @@ module Net; module SSH; module Service
       # +client+ is a socket, +channel+ is the channel that was just created,
       # and +type+ is an arbitrary string describing the type of the channel.
       def prepare_client(client, channel, type)
-        client.extend(Net::SSH::BufferedIo)
-        client.extend(Net::SSH::ForwardedBufferedIo)
-        client.logger = logger
+
+        # TODO: consider, should there be an override of this method which is Pageant specific, even though that would mean mild reimplementation
+        # would mean: no shutdown in eof
+        # no casing around class name right here
+
+        # Since Pageant sockets aren't real sockets,
+        # the client object doesn't need (and shouln't have) these modules included
+        if (client.class.name =~ /Pageant/).nil?
+          client.extend(Net::SSH::BufferedIo)
+          client.extend(Net::SSH::ForwardedBufferedIo)
+          client.logger = logger
+        end
 
         session.listen_to(client)
         channel[:socket] = client
 
         channel.on_data do |ch, data|  
-          debug { "data:#{data.length} on #{type} forwarded channel" }
+          debug { "data: enqueueing #{data.length} bytes on #{type} forwarded channel" }
           ch[:socket].enqueue(data)
         end
         
@@ -225,7 +234,9 @@ module Net; module SSH; module Service
           debug { "eof #{type} on #{type} forwarded channel" }
           begin
             ch[:socket].send_pending
+
             ch[:socket].shutdown Socket::SHUT_WR
+            ch[:socket].close
           rescue IOError => e
             if e.message =~ /closed/ then
               debug { "epipe in on_eof => shallowing exception:#{e}" }
@@ -246,13 +257,31 @@ module Net; module SSH; module Service
         end
 
         channel.on_process do |ch|
+          ch.debug { "processing #{type} forwarded connection" }
+
           if ch[:socket].closed?
             ch.info { "#{type} forwarded connection closed" }
             ch.close
-          elsif ch[:socket].available > 0
-            data = ch[:socket].read_available(8192)
-            ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
-            ch.send_data(data)
+          else
+            # For pageant sockets, the recieved and queued data (from on_data above) should be "sent" immediately
+            # That way, the read operation below is successful with that result
+
+            # Alternatively, instead of enqueuing the message in on_data, send_query could be called directly,
+            # so the pageant's response data would be available here as well.
+            # This requires special consideration when data is split into muliple segments (ex: carriage return split issue)
+            # Todo: figure out why the forwarding message starting with 000001920D... seemed to break consistantly after the first four bytes (followed by \r, in the next segment)
+            if ch[:socket].available == 0 && ch[:socket].class.name =~ /Pageant/ 
+              ch.debug { "Pageant socket: no data to read, so send pending" }
+              ch[:socket].send_pending
+            end
+
+            available = ch[:socket].available
+            if available > 0
+              ch.debug { "Pageant socket: now there are #{available} bytes" } if ch[:socket].class.name =~ /Pageant/
+              data = ch[:socket].read_available(available > 0 ? available : 8192)
+              ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
+              ch.send_data(data)
+            end
           end
         end
       end
