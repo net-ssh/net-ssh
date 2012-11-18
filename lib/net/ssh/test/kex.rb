@@ -32,7 +32,7 @@ module Net; module SSH; module Test
       raise Net::SSH::Exception, "expected NEWKEYS" unless buffer.type == NEWKEYS
 
       { :session_id        => "abc-xyz",
-        :server_key        => OpenSSL::PKey::RSA.new(32),
+        :server_key        => OpenSSL::PKey::RSA.new(512),
         :shared_secret     => OpenSSL::BN.new("1234567890", 10),
         :hashing_algorithm => OpenSSL::Digest::SHA1 }
     end
