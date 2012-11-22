@@ -82,7 +82,11 @@ module Net; module SSH; module Transport
     def next_packet(mode=:nonblock)
       case mode
       when :nonblock then
-        fill if available_for_read?
+        if available_for_read?
+          if fill <= 0
+            raise Net::SSH::Disconnect, "connection closed by remote host"
+          end
+        end
         poll_next_packet
 
       when :block then
