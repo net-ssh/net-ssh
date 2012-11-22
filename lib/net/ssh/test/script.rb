@@ -111,6 +111,15 @@ module Net; module SSH; module Test
       events << RemotePacket.new(:channel_data, channel.local_id, data)
     end
 
+    # Scripts the reception of a channel extended data packet from the remote
+    # host by the given Net::SSH::Test::Channel +channel+. This will typically
+    # be called via Net::SSH::Test::Channel#gets_extended_data.
+    #
+    # Currently the only extended data type is stderr == 1.
+    def gets_channel_extended_data(channel, data)
+      events << RemotePacket.new(:channel_extended_data, channel.local_id, 1, data)
+    end
+
     # Scripts the reception of a channel request packet from the remote host by
     # the given Net::SSH::Test::Channel +channel+. This will typically be
     # called via Net::SSH::Test::Channel#gets_exit_status.
