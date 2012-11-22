@@ -94,6 +94,16 @@ NOTE: If you are running on jruby you need to install jruby-pageant manually (ge
 
 net-ssh supports Ruby 1.8.x up until the 2.5.2 release. Later releases will work but the test suite is no longer guaranteed to pass all tests.
 
+== JRUBY 1.6 
+
+There is an issue with jruby-openssl that produces the following error in jruby 1.6:
+
+    <ArgumentError> wrong number of arguments (2 for 1)
+    /home/offers/tracking/shared/bundle/jruby/1.8/gems/net-ssh-2.6.0/lib/net/ssh/key_factory.rb:77:in `load_data_private_key'
+
+You can downgrade jruby-openssl to version 0.7.4 (before they added the PKey.read method) to resolve it or upgrade jruby to 1.7. See issue #61 for more info: https://github.com/net-ssh/net-ssh/issues/61.
+
+
 == ARCFOUR SUPPORT:
 
 from Karl Varga:
