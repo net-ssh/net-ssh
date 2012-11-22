@@ -17,8 +17,11 @@ EXPECTED RESULTS
 
 * Ruby 1.9: all tests pass
 
-* JRuby 1.5: 99% tests pass (448 tests, 1846 assertions, 1 failures)
+* JRuby 1.5: 98% tests pass (510 tests, 1914 assertions, 5 failures, 5 errors)
 
+* JRuby 1.6: DOES NOT RUN (help!)
+
+* JRuby 1.7: 98% test pass (510 tests, 1914 assertions, 2 failures, 9 errors)
 
 PORT FORWARDING TESTS
 
