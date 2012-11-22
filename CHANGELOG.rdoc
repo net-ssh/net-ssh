@@ -1,4 +1,17 @@
 
+=== 2.6.2 / 22 Nov 2012
+
+* Net::SSH.start now returns result of block [mhuffnagle]
+* Add stderr handling to Net::SSH::Test [ohrite]
+* Fix Invalid key size in JRuby [ohrite]
+
+
+=== 2.6.1 / 18 Oct 2012
+
+* Remove platform specific jruby dependency from gemspec
+* Changed encoding of file to prevent warnings when generating docs [iltempo]
+
+
 === 2.6.0 / 19 Sep 2012
 
 * Use OpenSSL::PKey.read to read arbitrary private key. [nagachika]
