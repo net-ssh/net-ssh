@@ -10,6 +10,7 @@ module Net; module SSH; module Test
   #     channel = session.opens_channel
   #     channel.sends_exec "ls"
   #     channel.gets_data "result of ls"
+  #     channel.gets_extended_data "some error coming from ls"
   #     channel.gets_close
   #     channel.sends_close
   #   end
@@ -102,6 +103,14 @@ module Net; module SSH; module Test
     #   channel.gets_data "bar"
     def gets_data(data)
       script.gets_channel_data(self, data)
+    end
+
+    # Scripts the reception of a channel extended data packet from the remote
+    # end.
+    #
+    #   channel.gets_extended_data "whoops"
+    def gets_extended_data(data)
+      script.gets_channel_extended_data(self, data)
     end
 
     # Scripts the reception of an "exit-status" channel request packet.

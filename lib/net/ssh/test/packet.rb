@@ -65,6 +65,7 @@ module Net; module SSH; module Test
         when CHANNEL_OPEN then [:string, :long, :long, :long]
         when CHANNEL_OPEN_CONFIRMATION then [:long, :long, :long, :long]
         when CHANNEL_DATA then [:long, :string]
+        when CHANNEL_EXTENDED_DATA then [:long, :long, :string]
         when CHANNEL_EOF, CHANNEL_CLOSE, CHANNEL_SUCCESS, CHANNEL_FAILURE then [:long]
         when CHANNEL_REQUEST
           parts = [:long, :string, :bool]
