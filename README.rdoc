@@ -92,7 +92,7 @@ NOTE: If you are running on jruby you need to install jruby-pageant manually (ge
 
 == RUBY 1.8 SUPPORT
 
-net-ssh supports Ruby 1.8.x up until the 2.5.2 release. Later releases will work but the test suite is no longer guaranteed to pass all tests.
+net-ssh supports Ruby 1.8.x up until the 2.5.1 release. Later releases will work but the test suite is no longer guaranteed to pass all tests.
 
 == JRUBY 1.6 
 
