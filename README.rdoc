@@ -90,6 +90,10 @@ Lastly, if you want to run the tests or use any of the Rake tasks, you'll need:
 
 NOTE: If you are running on jruby you need to install jruby-pageant manually (gemspec doesn't allow for platform specific dependencies).
 
+== RUBY 1.8 SUPPORT
+
+net-ssh supports Ruby 1.8.x up until the 2.5.2 release. Later releases will work but the test suite is no longer guaranteed to pass all tests.
+
 == ARCFOUR SUPPORT:
 
 from Karl Varga:

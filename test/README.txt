@@ -13,7 +13,7 @@ Run a single test file like this:
 
 EXPECTED RESULTS
 
-* Ruby 1.8: all tests pass
+* Ruby 1.8: all tests pass (up until 2.5)
 
 * Ruby 1.9: all tests pass
 
