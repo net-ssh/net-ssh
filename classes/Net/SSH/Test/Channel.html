@@ -49,7 +49,7 @@
             rather acts as a convenience for scripting channel-related activity for
             later comparison in a unit test.</p>
             
-            <pre class="ruby"><span class="ruby-identifier">story</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">session</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">opens_channel</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">sends_exec</span> <span class="ruby-string">&quot;ls&quot;</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_data</span> <span class="ruby-string">&quot;result of ls&quot;</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_close</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">sends_close</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre class="ruby"><span class="ruby-identifier">story</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">session</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">opens_channel</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">sends_exec</span> <span class="ruby-string">&quot;ls&quot;</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_data</span> <span class="ruby-string">&quot;result of ls&quot;</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_extended_data</span> <span class="ruby-string">&quot;some error coming from ls&quot;</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_close</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">sends_close</span>&#x000A;<span class="ruby-keyword">end</span></pre>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -63,11 +63,12 @@
               <li><a target="docwin" href="#method-i-gets_data">gets_data</a></li>
               <li><a target="docwin" href="#method-i-gets_eof">gets_eof</a></li>
               <li><a target="docwin" href="#method-i-gets_exit_status">gets_exit_status</a></li>
+              <li><a target="docwin" href="#method-i-gets_extended_data">gets_extended_data</a></li>
               <li><a target="docwin" href="#method-i-inject_remote_delay-21">inject_remote_delay!</a></li>
               <li><a target="docwin" href="#method-i-local_id">local_id</a></li>
               <li><a target="docwin" href="#attribute-i-local_id">local_id</a></li>
-              <li><a target="docwin" href="#method-i-remote_id">remote_id</a></li>
               <li><a target="docwin" href="#attribute-i-remote_id">remote_id</a></li>
+              <li><a target="docwin" href="#method-i-remote_id">remote_id</a></li>
               <li><a target="docwin" href="#attribute-i-script">script</a></li>
               <li><a target="docwin" href="#method-i-sends_close">sends_close</a></li>
               <li><a target="docwin" href="#method-i-sends_data">sends_data</a></li>
@@ -136,7 +137,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 28</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">script</span>)&#x000A;  <span class="ruby-ivar">@script</span> = <span class="ruby-identifier">script</span>&#x000A;  <span class="ruby-ivar">@local_id</span> = <span class="ruby-ivar">@remote_id</span> = <span class="ruby-keyword">nil</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 29</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">script</span>)&#x000A;  <span class="ruby-ivar">@script</span> = <span class="ruby-identifier">script</span>&#x000A;  <span class="ruby-ivar">@local_id</span> = <span class="ruby-ivar">@remote_id</span> = <span class="ruby-keyword">nil</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <h2>Public Instance methods</h2>
@@ -156,7 +157,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets_close-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-gets_close-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 124</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_close</span>&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_close</span>(<span class="ruby-keyword">self</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-gets_close-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 133</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_close</span>&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_close</span>(<span class="ruby-keyword">self</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-gets_data'>
@@ -175,7 +176,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets_data-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-gets_data-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 103</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_data</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_data</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-gets_data-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 104</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_data</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_data</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-gets_eof'>
@@ -194,7 +195,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets_eof-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-gets_eof-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 117</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_eof</span>&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_eof</span>(<span class="ruby-keyword">self</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-gets_eof-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 126</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_eof</span>&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_eof</span>(<span class="ruby-keyword">self</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-gets_exit_status'>
@@ -213,7 +214,27 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets_exit_status-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-gets_exit_status-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 110</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_exit_status</span>(<span class="ruby-identifier">status</span>=<span class="ruby-value">0</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_request</span>(<span class="ruby-keyword">self</span>, <span class="ruby-string">&quot;exit-status&quot;</span>, <span class="ruby-keyword">false</span>, <span class="ruby-identifier">status</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-gets_exit_status-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 119</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_exit_status</span>(<span class="ruby-identifier">status</span>=<span class="ruby-value">0</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_request</span>(<span class="ruby-keyword">self</span>, <span class="ruby-string">&quot;exit-status&quot;</span>, <span class="ruby-keyword">false</span>, <span class="ruby-identifier">status</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-method-i-gets_extended_data'>
+                <a name='method-i-gets_extended_data'></a>
+                <div class='synopsis'>
+                  <span class='name'>gets_extended_data</span>
+                  <span class='arguments'>(data)</span>
+                </div>
+                <div class='description'>
+                  
+                  <p>Scripts the reception of a channel extended data packet from the remote
+                  end.</p>
+                  
+                  <pre>channel.gets_extended_data &quot;whoops&quot;</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('method-i-gets_extended_data-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='method-i-gets_extended_data-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 112</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_extended_data</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_extended_data</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-inject_remote_delay-21'>
@@ -237,7 +258,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-inject_remote_delay-21-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-inject_remote_delay-21-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 55</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">inject_remote_delay!</span>&#x000A;  <span class="ruby-identifier">gets_data</span>(<span class="ruby-string">&quot;&quot;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-inject_remote_delay-21-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 56</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">inject_remote_delay!</span>&#x000A;  <span class="ruby-identifier">gets_data</span>(<span class="ruby-string">&quot;&quot;</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-local_id'>
@@ -257,7 +278,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-local_id-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-local_id-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 36</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">local_id</span>&#x000A;  <span class="ruby-ivar">@local_id</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-ivar">@local_id</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;local-id has not been set yet!&quot;</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-local_id-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 37</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">local_id</span>&#x000A;  <span class="ruby-ivar">@local_id</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-ivar">@local_id</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;local-id has not been set yet!&quot;</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-remote_id'>
@@ -277,7 +298,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-remote_id-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-remote_id-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 43</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">remote_id</span>&#x000A;  <span class="ruby-ivar">@remote_id</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-ivar">@remote_id</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;remote-id has not been set yet!&quot;</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-remote_id-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 44</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">remote_id</span>&#x000A;  <span class="ruby-ivar">@remote_id</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-ivar">@remote_id</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;remote-id has not been set yet!&quot;</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-sends_close'>
@@ -296,7 +317,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends_close-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-sends_close-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 96</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_close</span>&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_close</span>(<span class="ruby-keyword">self</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-sends_close-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 97</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_close</span>&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_close</span>(<span class="ruby-keyword">self</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-sends_data'>
@@ -315,7 +336,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends_data-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-sends_data-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 82</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_data</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_data</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-sends_data-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 83</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_data</span>(<span class="ruby-identifier">data</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_data</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">data</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-sends_eof'>
@@ -334,7 +355,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends_eof-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-sends_eof-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 89</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_eof</span>&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_eof</span>(<span class="ruby-keyword">self</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-sends_eof-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 90</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_eof</span>&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_eof</span>(<span class="ruby-keyword">self</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-sends_exec'>
@@ -357,7 +378,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends_exec-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-sends_exec-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 66</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-identifier">reply</span>=<span class="ruby-keyword">true</span>, <span class="ruby-identifier">success</span>=<span class="ruby-keyword">true</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_request</span>(<span class="ruby-keyword">self</span>, <span class="ruby-string">&quot;exec&quot;</span>, <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">command</span>, <span class="ruby-identifier">success</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-sends_exec-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 67</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-identifier">reply</span>=<span class="ruby-keyword">true</span>, <span class="ruby-identifier">success</span>=<span class="ruby-keyword">true</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_request</span>(<span class="ruby-keyword">self</span>, <span class="ruby-string">&quot;exec&quot;</span>, <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">command</span>, <span class="ruby-identifier">success</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-sends_subsystem'>
@@ -379,7 +400,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-sends_subsystem-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-sends_subsystem-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 75</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_subsystem</span>(<span class="ruby-identifier">subsystem</span>, <span class="ruby-identifier">reply</span>=<span class="ruby-keyword">true</span>, <span class="ruby-identifier">success</span>=<span class="ruby-keyword">true</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_request</span>(<span class="ruby-keyword">self</span>, <span class="ruby-string">&quot;subsystem&quot;</span>, <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">subsystem</span>, <span class="ruby-identifier">success</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-sends_subsystem-source'><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 76</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_subsystem</span>(<span class="ruby-identifier">subsystem</span>, <span class="ruby-identifier">reply</span>=<span class="ruby-keyword">true</span>, <span class="ruby-identifier">success</span>=<span class="ruby-keyword">true</span>)&#x000A;  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_request</span>(<span class="ruby-keyword">self</span>, <span class="ruby-string">&quot;subsystem&quot;</span>, <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">subsystem</span>, <span class="ruby-identifier">success</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
             </div>
