@@ -261,7 +261,7 @@ module Net; module SSH
           else
             begin
               key = OpenSSL::PKey::EC.read_keyblob($1, self)
-            rescue OpenSSL::PKey::ECError => e
+            rescue OpenSSL::PKey::ECError
               raise NotImplementedError, "unsupported key type `#{type}'"
             end
           end
