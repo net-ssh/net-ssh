@@ -105,7 +105,7 @@ module Net; module SSH
       # the file describes an RSA or DSA key, and will load it
       # appropriately. The new public key is returned.
       def load_data_public_key(data, filename="")
-        type, blob = data.split(/ /)
+        _, blob = data.split(/ /)
 
         raise Net::SSH::Exception, "public key at #{filename} is not valid" if blob.nil?
 
