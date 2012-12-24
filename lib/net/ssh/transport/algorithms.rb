@@ -263,7 +263,7 @@ module Net; module SSH; module Transport
         # TODO: if first_kex_packet_follows, we need to try to skip the
         # actual kexinit stuff and try to guess what the server is doing...
         # need to read more about this scenario.
-        first_kex_packet_follows = packet.read_bool
+        # first_kex_packet_follows = packet.read_bool
 
         return data
       end

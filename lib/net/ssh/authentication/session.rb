@@ -54,7 +54,7 @@ module Net; module SSH; module Authentication
       debug { "beginning authentication of `#{username}'" }
 
       transport.send_message(transport.service_request("ssh-userauth"))
-      message = expect_message(SERVICE_ACCEPT)
+      expect_message(SERVICE_ACCEPT)
 
       key_manager = KeyManager.new(logger, options)
       keys.each { |key| key_manager.add(key) } unless keys.empty?
@@ -70,7 +70,7 @@ module Net; module SSH; module Authentication
           debug { "trying #{name}" }
           begin 
             method = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join).new(self, :key_manager => key_manager)
-          rescue NameError => ne
+          rescue NameError
             debug{"Mechanism #{name} was requested, but isn't a known type.  Ignoring it."}
             next
           end

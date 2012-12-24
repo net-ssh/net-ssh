@@ -219,7 +219,6 @@ module Net; module SSH; module Transport
         padding_length = @packet.read_byte
 
         payload = @packet.read(@packet_length - padding_length - 1)
-        padding = @packet.read(padding_length) if padding_length > 0
 
         my_computed_hmac = server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
         raise Net::SSH::Exception, "corrupted mac detected" if real_hmac != my_computed_hmac
