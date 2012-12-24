@@ -22,5 +22,5 @@ module Net; module SSH; module Transport
 
     return k
   end
-end
+  end
 end; end; end

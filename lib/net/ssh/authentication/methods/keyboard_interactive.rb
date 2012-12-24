@@ -42,7 +42,7 @@ module Net
                   puts(instruction) unless instruction.empty?
                 end
 
-                lang_tag = message.read_string
+                _ = message.read_string # lang_tag
                 responses =[]
   
                 message.read_long.times do

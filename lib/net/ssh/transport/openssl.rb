@@ -153,7 +153,7 @@ module OpenSSL
             key.public_key = point
 
             return key
-          rescue OpenSSL::PKey::ECError => e
+          rescue OpenSSL::PKey::ECError
             raise NotImplementedError, "unsupported key type `#{type}'"
           end
 
