@@ -20,6 +20,9 @@
     s.add_dependency 'jruby-pageant', ">=1.1.1"
   end
   
+  s.add_development_dependency 'test-unit'
+  s.add_development_dependency 'mocha'
+
   s.executables = %w[]
   
   # = MANIFEST =
