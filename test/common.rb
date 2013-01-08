@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
 gem "test-unit" # http://rubyforge.org/pipermail/test-unit-tracker/2009-July/000075.html
 require 'test/unit'
-require 'mocha'
+require 'mocha/setup'
 require 'net/ssh/buffer'
 require 'net/ssh/config'
 require 'net/ssh/loggable'
