@@ -1,30 +1,30 @@
 @spec = Gem::Specification.new do |s|
   s.name = "net-ssh"
   s.rubyforge_project = 'net-ssh'
-  s.version = "2.6.2"
+  s.version = "2.6.3"
   s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
   s.description = s.summary + " It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
   s.authors = ["Jamis Buck", "Delano Mandelbaum"]
   s.email = ["net-ssh@solutious.com"]
   s.homepage = "http://github.com/net-ssh/net-ssh"
-  
+
   s.extra_rdoc_files = %w[README.rdoc THANKS.rdoc CHANGELOG.rdoc]
   s.has_rdoc = true
   s.rdoc_options = ["--line-numbers", "--title", s.summary, "--main", "README.rdoc"]
   s.require_paths = %w[lib]
   s.rubygems_version = '1.3.2'
-  
+
   # Note: this is run at package time not install time so if you are
   # running on jruby, you need to install jruby-pageant manually.
   if RUBY_PLATFORM == "java"
     s.add_dependency 'jruby-pageant', ">=1.1.1"
   end
-  
+
   s.add_development_dependency 'test-unit'
   s.add_development_dependency 'mocha'
 
   s.executables = %w[]
-  
+
   # = MANIFEST =
   s.files = %w(
   CHANGELOG.rdoc
