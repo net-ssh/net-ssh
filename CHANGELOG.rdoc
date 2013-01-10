@@ -1,4 +1,10 @@
 
+=== 2.6.3 / 10 Jan 2013
+
+* Small doc fix and correct error class for PKey::EC key type [Andreas Wolff]
+* Improve test dependencies [Kenichi Kamiya]
+
+
 === 2.6.2 / 22 Nov 2012
 
 * Net::SSH.start now returns result of block [mhuffnagle]
@@ -23,7 +29,7 @@
 
 === 2.5.2 / 25 May 2012
 
-* Fix for Net::SSH::KnownHosts::SUPPORTED_TYPE [Marco Sandrini] 
+* Fix for Net::SSH::KnownHosts::SUPPORTED_TYPE [Marco Sandrini]
 
 === 2.5.1 / 24 May 2012
 
