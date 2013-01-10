@@ -61,7 +61,7 @@ module Net; module SSH
             error_class = OpenSSL::PKey::RSAError
           elsif data.match(/-----BEGIN EC PRIVATE KEY-----/) && defined?(OpenSSL::PKey::EC)
             key_type = OpenSSL::PKey::EC
-            error_class = OpenSSL::PKey::RCError
+            error_class = OpenSSL::PKey::ECError
           elsif data.match(/-----BEGIN (.+) PRIVATE KEY-----/)
             raise OpenSSL::PKey::PKeyError, "not a supported key type '#{$1}'"
           else
