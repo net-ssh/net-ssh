@@ -177,7 +177,7 @@ module Net; module SSH; module Service
     # time a session channel is opened, when the connection was created with
     # :forward_agent set to true:
     #
-    #    Net::SSH.start("remote.host", "me", :forwrd_agent => true) do |ssh|
+    #    Net::SSH.start("remote.host", "me", :forward_agent => true) do |ssh|
     #      ssh.open_channel do |ch|
     #        # agent will be automatically forwarded by this point
     #      end
