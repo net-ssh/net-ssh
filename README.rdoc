@@ -47,12 +47,12 @@ In a nutshell:
 
         # "on_data" is called when the process writes something to stdout
         ch.on_data do |c, data|
-          $STDOUT.print data
+          $stdout.print data
         end
 
         # "on_extended_data" is called when the process writes something to stderr
         ch.on_extended_data do |c, type, data|
-          $STDERR.print data
+          $stderr.print data
         end
 
         ch.on_close { puts "done!" }
