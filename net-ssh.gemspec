@@ -7,6 +7,7 @@
   s.authors = ["Jamis Buck", "Delano Mandelbaum"]
   s.email = ["net-ssh@solutious.com"]
   s.homepage = "http://github.com/net-ssh/net-ssh"
+  s.license = "MIT"
 
   s.extra_rdoc_files = %w[README.rdoc THANKS.rdoc CHANGELOG.rdoc]
   s.has_rdoc = true
