@@ -1,9 +1,13 @@
-= Net::SSH
+= Net::SSH 2.x
 
 * Docs: http://net-ssh.github.com/net-ssh
 * Issues: https://github.com/net-ssh/net-ssh/issues
-* Codes: http://github.com/net-ssh/net-ssh
+* Codes: https://github.com/net-ssh/net-ssh
 * Email: net-ssh@solutious.com
+
+
+<em>As of v2.6.4, all gem releases are signed. See INSTALL.</em>
+
 
 == DESCRIPTION:
 

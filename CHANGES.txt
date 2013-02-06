@@ -2,6 +2,7 @@
 === 2.6.4 / 06 Feb 2013
 
 * Added license info to gemspec [jordimassaguerpla]
+* Added public cert. All gem releases are now signed.
 
 
 === 2.6.3 / 10 Jan 2013
