@@ -19,8 +19,6 @@ Chris Andrews <chris@nodnol.org> and Lee Jensen <lee@outerim.com>
 Hiroshi Nakamura
   * fixed errors with JRuby tests
 
-
-Additional Contributors:
 Andreas Wolff
 mhuffnagle
 ohrite
@@ -74,18 +72,14 @@ Brian Candler
 Francis Sullivan
 James Rosen
 Mike Timm
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+guns
+devrandom
+kachick
+Pablo Merino
+thedarkone
+czarneckid
+jbarnette
+watsonian
+Grant Hutchins
+Michael Schubert
+mtrudel
