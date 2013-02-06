@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "net-ssh"
-  s.version = "2.6.3"
+  s.version = "2.6.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jamis Buck", "Delano Mandelbaum"]
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "Rudyfile",
     "THANKS.txt",
+    "gem-public_cert.pem",
     "lib/net/ssh.rb",
     "lib/net/ssh/authentication/agent.rb",
     "lib/net/ssh/authentication/agent/java_pageant.rb",
@@ -165,6 +166,7 @@ Gem::Specification.new do |s|
     "test/transport/test_state.rb"
   ]
   s.homepage = "https://github.com/net-ssh/net-ssh"
+  s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubyforge_project = "net-ssh"
   s.rubygems_version = "1.8.25"

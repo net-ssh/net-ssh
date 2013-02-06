@@ -1,4 +1,9 @@
 
+=== 2.6.4 / 06 Feb 2013
+
+* Added license info to gemspec [jordimassaguerpla]
+
+
 === 2.6.3 / 10 Jan 2013
 
 * Small doc fix and correct error class for PKey::EC key type [Andreas Wolff]
