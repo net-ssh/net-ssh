@@ -33,17 +33,17 @@ module Net; module SSH; module Test
       type = packet.read_byte
       raise "expected #{@type}, but got #{type}" if @type != type
 
-      @data.zip(types).each do |expected, type|
-        type ||= case expected
+      @data.zip(types).each do |expected, _type|
+        _type ||= case expected
           when nil then break
           when Numeric then :long
           when String then :string
           when TrueClass, FalseClass then :bool
           end
 
-        actual = packet.send("read_#{type}")
+        actual = packet.send("read_#{_type}")
         next if expected.nil?
-        raise "expected #{type} #{expected.inspect} but got #{actual.inspect}" unless expected == actual
+        raise "expected #{_type} #{expected.inspect} but got #{actual.inspect}" unless expected == actual
       end
     end
   end
