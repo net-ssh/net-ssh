@@ -1,84 +1,55 @@
-require 'rubygems'
-require 'rubygems/package_task'
-require 'rake/clean'
-require 'fileutils'
-include FileUtils
+require "rubygems"
+require "rake"
+require "rake/clean"
+require "rdoc/task"
 
-require 'rdoc/task'
+task :default => ["build"]
+CLEAN.include [ 'pkg', 'rdoc' ]
+name = "net-ssh"
 
+$:.unshift File.join(File.dirname(__FILE__), 'lib')
+require name
+version = Net::SSH::VERSION.to_s
 
-task :default => :package
- 
-# CONFIG =============================================================
+begin
+  require "jeweler"
+  Jeweler::Tasks.new do |s|
+    s.version = version
+    s.name = name
+    s.rubyforge_project = s.name
+    s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
+    s.description = s.summary + " It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
+    s.email = "net-ssh@solutious.com"
+    s.homepage = "https://github.com/net-ssh/net-ssh"
+    s.authors = ["Jamis Buck", "Delano Mandelbaum"]
 
-# Change the following according to your needs
-README = "README.rdoc"
-CHANGES = "CHANGELOG.rdoc"
-THANKS = 'THANKS.rdoc'
-LICENSE = "LICENSE.rdoc"
-
-# Files and directories to be deleted when you run "rake clean"
-CLEAN.include [ 'pkg', '*.gem', '.config', 'doc']
-
-# Virginia assumes your project and gemspec have the same name
-name = 'net-ssh'
-load "#{name}.gemspec"
-version = @spec.version
-
-# That's it! The following defaults should allow you to get started
-# on other things. 
-
-
-# TESTS/SPECS =========================================================
-
-
-
-# INSTALL =============================================================
-
-Gem::PackageTask.new(@spec) do |p|
-  p.need_tar = true if RUBY_PLATFORM !~ /mswin/
-end
-
-task :build => [ :package ]
-task :release => [ :rdoc, :package ]
-task :install => [ :rdoc, :package ] do
-	sh %{sudo gem install pkg/#{name}-#{version}.gem}
-end
-task :uninstall => [ :clean ] do
-	sh %{sudo gem uninstall #{name}}
-end
-
-
-# RUBYFORGE RELEASE / PUBLISH TASKS ==================================
-
-if @spec.rubyforge_project
-  desc 'Publish website to rubyforge'
-  task 'publish:rdoc' => 'doc/index.html' do
-    sh "scp -r doc/* rubyforge.org:/var/www/gforge-projects/#{name}/ssh/v2/api/"
-  end
-
-  desc 'Public release to rubyforge'
-  task 'publish:gem' => [:package] do |t|
-    sh <<-end
-      rubyforge add_release -o Any -a #{CHANGES} -f -n #{README} #{name} #{name} #{@spec.version} pkg/#{name}-#{@spec.version}.gem &&
-      rubyforge add_file -o Any -a #{CHANGES} -f -n #{README} #{name} #{name} #{@spec.version} pkg/#{name}-#{@spec.version}.tgz 
+    # Note: this is run at package time not install time so if you are
+    # running on jruby, you need to install jruby-pageant manually.
+    if RUBY_PLATFORM == "java"
+      s.add_dependency 'jruby-pageant', ">=1.1.1"
     end
+
+    s.add_development_dependency 'test-unit'
+    s.add_development_dependency 'mocha'
+
+    s.signing_key = File.join('/mnt/gem/', 'gem-private_key.pem')
+    s.cert_chain  = ['gem-public_cert.pem']
   end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-
-
-# RUBY DOCS TASK ==================================
-
-RDoc::Task.new do |t|
-  # this only works with RDoc 3.1 or greater
-  t.generator = 'hanna'   # gem install hanna-nouveau
-	t.rdoc_dir = 'doc'
-	t.title    = @spec.summary
-	t.main = README
-	t.rdoc_files.include(README)
-	t.rdoc_files.include(CHANGES)
-	t.rdoc_files.include(THANKS)
- 	t.rdoc_files.include(LICENSE)
-	t.rdoc_files.include('lib/**/*.rb')
+RDoc::Task.new do |rdoc|
+  rdoc.rdoc_dir = "rdoc"
+  rdoc.title = "#{name} #{version}"
+  rdoc.generator = 'hanna' # gem install hanna-nouveau
+  rdoc.main = 'README.rdoc'
+  rdoc.rdoc_files.include("README*")
+  rdoc.rdoc_files.include("LICENSE.txt")
+  rdoc.rdoc_files.include("THANKS.txt")
+  rdoc.rdoc_files.include("CHANGES.txt")
+  rdoc.rdoc_files.include("bin/*.rb")
+  rdoc.rdoc_files.include("lib/**/*.rb")
 end
+
