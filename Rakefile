@@ -8,8 +8,8 @@ CLEAN.include [ 'pkg', 'rdoc' ]
 name = "net-ssh"
 
 $:.unshift File.join(File.dirname(__FILE__), 'lib')
-require name
-version = Net::SSH::VERSION.to_s
+require "net/ssh"
+version = Net::SSH::Version::CURRENT
 
 begin
   require "jeweler"
