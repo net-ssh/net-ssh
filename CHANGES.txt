@@ -1,4 +1,8 @@
 
+=== 2.6.5 / 06 Feb 2013
+
+* Fixed path in gemspec [thanks priteau]
+
 === 2.6.4 / 06 Feb 2013
 
 * Added license info to gemspec [jordimassaguerpla]
