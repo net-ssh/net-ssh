@@ -2,9 +2,7 @@ require 'dl/import'
 
 if RUBY_VERSION < "1.9"
   require 'dl/struct'
-end
-
-if RUBY_VERSION =~ /^1.9/
+else
   require 'dl/types'
   require 'dl'
 end
@@ -34,9 +32,7 @@ module Net; module SSH; module Authentication
 
         dlload 'user32'
         dlload 'kernel32'
-      end
-
-      if RUBY_VERSION =~ /^1.9/
+      else
         extend DL::Importer
         dlload 'user32','kernel32'
         include DL::Win32Types
