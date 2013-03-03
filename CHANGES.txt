@@ -1,4 +1,7 @@
 
+=== 2.6.6 / 03 Mar 2013
+
+* Fix for ruby 2.0 in windows [jansegre]
 
 === 2.6.5 / 06 Feb 2013
 
