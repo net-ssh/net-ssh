@@ -1,3 +1,5 @@
+# encoding: ASCII-8BIT
+
 require 'common'
 require 'transport/hmac/test_sha2_512'
 require 'net/ssh/transport/hmac/sha2_512_96'
