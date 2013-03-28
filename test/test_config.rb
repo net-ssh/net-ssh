@@ -113,9 +113,10 @@ class TestConfig < Test::Unit::TestCase
   end
 
   def test_load_wildcar_with_substitutes
-    config = Net::SSH::Config.load(config(:substitutes), "*")
+    config = Net::SSH::Config.load(config(:substitutes), "toto")
     net_ssh = Net::SSH::Config.translate(config)
-    assert_equal '*', net_ssh[:host_name]
+    puts net_ssh
+    assert_equal 'toto', net_ssh[:host_name]
   end
 
   def test_load_sufix_with_substitutes
