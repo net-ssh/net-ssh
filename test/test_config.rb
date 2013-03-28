@@ -111,6 +111,25 @@ class TestConfig < Test::Unit::TestCase
     assert_equal '2G', config['rekeylimit']
     assert_equal 1980, config['port']
   end
+
+  def test_load_wildcar_with_substitutes
+    config = Net::SSH::Config.load(config(:substitutes), "toto")
+    net_ssh = Net::SSH::Config.translate(config)
+    puts net_ssh
+    assert_equal 'toto', net_ssh[:host_name]
+  end
+
+  def test_load_sufix_with_substitutes
+    config = Net::SSH::Config.load(config(:substitutes), "test")
+    net_ssh = Net::SSH::Config.translate(config)
+    assert_equal 'test.sufix', net_ssh[:host_name]
+  end
+
+  def test_load_prefix_and_sufix_with_substitutes
+    config = Net::SSH::Config.load(config(:substitutes), "1234")
+    net_ssh = Net::SSH::Config.translate(config)
+    assert_equal 'prefix.1234.sufix', net_ssh[:host_name]
+  end
   
   private
 
