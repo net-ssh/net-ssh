@@ -72,6 +72,9 @@ module Net; module SSH; module Connection
       @channel_open_handlers = {}
       @on_global_request = {}
       @properties = (options[:properties] || {}).dup
+
+      @max_pkt_size = (options.has_key?(:max_pkt_size) ? options[:max_pkt_size] : 0x8000)
+      @max_win_size = (options.has_key?(:max_win_size) ? options[:max_win_size] : 0x20000)
     end
 
     # Retrieves a custom property from this instance. This can be used to
@@ -286,8 +289,8 @@ module Net; module SSH; module Connection
     #   channel.wait
     def open_channel(type="session", *extra, &on_confirm)
       local_id = get_next_channel_id
-      channel = Channel.new(self, type, local_id, &on_confirm)
 
+      channel = Channel.new(self, type, local_id, @max_pkt_size, @max_win_size, &on_confirm)
       msg = Buffer.from(:byte, CHANNEL_OPEN, :string, type, :long, local_id,
         :long, channel.local_maximum_window_size,
         :long, channel.local_maximum_packet_size, *extra)
@@ -503,7 +506,8 @@ module Net; module SSH; module Connection
         info { "channel open #{packet[:channel_type]}" }
 
         local_id = get_next_channel_id
-        channel = Channel.new(self, packet[:channel_type], local_id)
+
+        channel = Channel.new(self, packet[:channel_type], local_id, @max_pkt_size, @max_win_size)
         channel.do_open_confirmation(packet[:remote_id], packet[:window_size], packet[:packet_size])
 
         callback = channel_open_handlers[packet[:channel_type]]
