@@ -66,7 +66,8 @@ module Net
       :languages, :logger, :paranoid, :password, :port, :proxy, 
       :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
-      :host_name, :user, :properties, :passphrase, :keys_only
+      :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
+      :max_win_size
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -133,6 +134,10 @@ module Net
     #   option is intended for situations where ssh-agent offers many different
     #   identites.
     # * :logger => the logger instance to use when logging
+    # * :max_pkt_size => maximum size we tell the other side that is supported per
+    #   packet.
+    # * :max_win_size => maximum size we tell the other side that is supported for
+    #   the window.
     # * :paranoid => either false, true, :very, or :secure specifying how
     #   strict host-key verification should be (in increasing order here)
     # * :passphrase => the passphrase to use when loading a private key (default
