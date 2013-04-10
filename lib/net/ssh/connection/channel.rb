@@ -107,15 +107,15 @@ module Net; module SSH; module Connection
     # that time (see #do_open_confirmation).
     #
     # This also sets the default maximum packet size and maximum window size.
-    def initialize(connection, type, local_id, &on_confirm_open)
+    def initialize(connection, type, local_id, max_pkt_size = 0x8000, max_win_size = 0x20000, &on_confirm_open)
       self.logger = connection.logger
 
       @connection = connection
       @type       = type
       @local_id   = local_id
 
-      @local_maximum_packet_size = 0x10000
-      @local_window_size = @local_maximum_window_size = 0x20000
+      @local_maximum_packet_size = max_pkt_size
+      @local_window_size = @local_maximum_window_size = max_win_size
 
       @on_confirm_open = on_confirm_open
 
