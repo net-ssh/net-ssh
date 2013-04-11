@@ -225,7 +225,7 @@ module Connection
       result = nil
       session.on_open_channel("auth-agent") { |*args| result = args }
       process_times(2)
-      assert_equal P(:byte, CHANNEL_OPEN_CONFIRMATION, :long, 14, :long, 0, :long, 0x20000, :long, 0x10000).to_s, socket.write_buffer
+      assert_equal P(:byte, CHANNEL_OPEN_CONFIRMATION, :long, 14, :long, 0, :long, 0x20000, :long, 0x8000).to_s, socket.write_buffer
       assert_not_nil(ch = session.channels[0])
       assert_equal [session, ch, P(:byte, CHANNEL_OPEN, :string, "auth-agent", :long, 14, :long, 0x20001, :long, 0x10001)], result
       assert_equal 0, ch.local_id
@@ -233,7 +233,7 @@ module Connection
       assert_equal 0x20001, ch.remote_maximum_window_size
       assert_equal 0x10001, ch.remote_maximum_packet_size
       assert_equal 0x20000, ch.local_maximum_window_size
-      assert_equal 0x10000, ch.local_maximum_packet_size
+      assert_equal 0x8000, ch.local_maximum_packet_size
       assert_equal "auth-agent", ch.type
     end
 

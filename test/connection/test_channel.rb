@@ -11,7 +11,7 @@ module Connection
     end
 
     def test_constructor_should_set_defaults
-      assert_equal 0x10000, channel.local_maximum_packet_size
+      assert_equal 0x8000, channel.local_maximum_packet_size
       assert_equal 0x20000, channel.local_maximum_window_size
       assert channel.pending_requests.empty?
     end
@@ -126,7 +126,7 @@ module Connection
         assert_equal CHANNEL_DATA, packet.type
         assert_equal 0, packet[:local_id]
         assert_equal "hello wo", packet[:data]
-        
+
         t.expect do |t2,packet2|
           assert_equal CHANNEL_DATA, packet2.type
           assert_equal 0, packet2[:local_id]
