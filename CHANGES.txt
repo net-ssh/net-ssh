@@ -1,4 +1,10 @@
 
+=== 2.6.7 / 11 Apr 2013
+
+* Decreased default packet size to 32768 as described in RFC 4253 [Olipro]
+* Added max_pkt_size and max_win_size options to Net::SSH.start [Olipro]
+
+
 === 2.6.6 / 03 Mar 2013
 
 * Fix for ruby 2.0 in windows [jansegre]

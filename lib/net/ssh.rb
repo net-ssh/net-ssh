@@ -61,9 +61,9 @@ module Net
     # This is the set of options that Net::SSH.start recognizes. See
     # Net::SSH.start for a description of each option.
     VALID_OPTIONS = [
-      :auth_methods, :bind_address, :compression, :compression_level, :config, 
-      :encryption, :forward_agent, :hmac, :host_key, :kex, :keys, :key_data, 
-      :languages, :logger, :paranoid, :password, :port, :proxy, 
+      :auth_methods, :bind_address, :compression, :compression_level, :config,
+      :encryption, :forward_agent, :hmac, :host_key, :kex, :keys, :key_data,
+      :languages, :logger, :paranoid, :password, :port, :proxy,
       :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
@@ -121,7 +121,7 @@ module Net
     #   host to a known_hosts dictionary file
     # * :host_name => the real host name or IP to log into. This is used
     #   instead of the +host+ parameter, and is primarily only useful when
-    #   specified in an SSH configuration file. It lets you specify an 
+    #   specified in an SSH configuration file. It lets you specify an
     #   "alias", similarly to adding an entry in /etc/hosts but without needing
     #   to modify /etc/hosts.
     # * :kex => the key exchange algorithm (or algorithms) to use
@@ -135,7 +135,8 @@ module Net
     #   identites.
     # * :logger => the logger instance to use when logging
     # * :max_pkt_size => maximum size we tell the other side that is supported per
-    #   packet.
+    #   packet. Default is 0x8000 (32768 bytes). Increase to 0x10000 (65536 bytes)
+    #   for better performance if your SSH server supports it (most do).
     # * :max_win_size => maximum size we tell the other side that is supported for
     #   the window.
     # * :paranoid => either false, true, :very, or :secure specifying how
@@ -222,7 +223,7 @@ module Net
         when false, nil then return {}
         else Array(use_ssh_config)
         end
-      
+
       Net::SSH::Config.for(host, files)
     end
   end
