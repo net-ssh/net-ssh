@@ -153,7 +153,7 @@ which should produce the following:
 
 Run the test suite from the net-ssh directory with the following command:
 
-     ruby -Ilib -Itest -rrubygems test/test_all.rb
+     bash -c 'unset HOME && ruby -Ilib -Itest -rrubygems test/test_all.rb'
 
 Run a single test file like this:
 

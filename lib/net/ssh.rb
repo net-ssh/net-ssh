@@ -1,6 +1,6 @@
 # Make sure HOME is set, regardless of OS, so that File.expand_path works
 # as expected with tilde characters.
-ENV['HOME'] ||= ENV['HOMEPATH'] ? "#{ENV['HOMEDRIVE']}#{ENV['HOMEPATH']}" : "."
+ENV['HOME'] ||= ENV['HOMEPATH'] ? "#{ENV['HOMEDRIVE']}#{ENV['HOMEPATH']}" : Dir.pwd
 
 require 'logger'
 
