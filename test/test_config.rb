@@ -8,6 +8,13 @@ class TestConfig < Test::Unit::TestCase
     assert_equal({}, Net::SSH::Config.load(bogus_file, "host.name"))
   end
 
+  def test_load_for_relative_home_user_should_return_empty_hash
+    home, ENV["HOME"] = ENV["HOME"], "."
+    assert_equal({}, Net::SSH::Config.load("~/.ssh/config", "host.name"))
+  ensure
+    ENV["HOME"] = home
+  end
+
   def test_load_should_expand_path
     expected = File.expand_path("~/.ssh/config")
     File.expects(:readable?).with(expected).returns(false)
