@@ -1,7 +1,12 @@
 require 'common'
 require 'net/ssh/config'
+require 'pathname'
 
 class TestConfig < Test::Unit::TestCase
+  def test_home_should_be_absolute_path
+    assert Pathname.new(ENV['HOME']).absolute?
+  end
+
   def test_load_for_non_existant_file_should_return_empty_hash
     bogus_file = File.expand_path("/bogus/file")
     File.expects(:readable?).with(bogus_file).returns(false)
