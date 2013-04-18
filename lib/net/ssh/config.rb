@@ -57,8 +57,11 @@ module Net; module SSH
       # #translate for how to convert the OpenSSH options into Net::SSH
       # options.)
       def load(path, host, settings={})
-        file = File.expand_path(path)
-        return settings unless File.readable?(file)
+        begin
+          file = File.expand_path(path)
+        rescue ArgumentError
+        end
+        return settings unless file && File.readable?(file)
         
         globals = {}
         matched_host = nil
