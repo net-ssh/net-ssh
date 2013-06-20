@@ -110,7 +110,7 @@ module Net; module SSH; module Connection
     def close
       info { "closing remaining channels (#{channels.length} open)" }
       channels.each { |id, channel| channel.close }
-      loop { channels.any? }
+      loop(0.1) { channels.any? }
       transport.close
     end
 
