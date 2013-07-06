@@ -120,7 +120,6 @@ class TestConfig < Test::Unit::TestCase
   def test_load_wildcar_with_substitutes
     config = Net::SSH::Config.load(config(:substitutes), "toto")
     net_ssh = Net::SSH::Config.translate(config)
-    puts net_ssh
     assert_equal 'toto', net_ssh[:host_name]
   end
 
