@@ -92,6 +92,7 @@ module Net; module SSH
             multi_host = value.to_s.split(/\s+/)
             matched_host = multi_host.select { |h| host =~ pattern2regex(h) }.first
             seen_host = true
+            settings[key] = host
           elsif !seen_host
             if key == 'identityfile'
               (globals[key] ||= []) << value
@@ -145,7 +146,7 @@ module Net; module SSH
           when 'hostkeyalias' then
             hash[:host_key_alias] = value
           when 'hostname' then
-            hash[:host_name] = value
+            hash[:host_name] = value.gsub(/%h/, settings['host'])
           when 'identityfile' then
             hash[:keys] = value
           when 'macs' then
