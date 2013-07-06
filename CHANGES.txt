@@ -1,4 +1,11 @@
 
+=== 2.6.8 / 6 Jul 2013
+
+* Added support for host wildcard substitution [GabKlein]
+* Added a wait to the loop in close to help fix possible blocks [Josh Kalderimis]
+* Fixed test file encoding issues with Ruby 2.0 (#87) [voxik]
+
+
 === 2.6.7 / 11 Apr 2013
 
 * Decreased default packet size to 32768 as described in RFC 4253 [Olipro]
