@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2013-03-03 10:42:51 -0800</span>
+          <span class='datetime'>2013-07-06 08:28:58 -0700</span>
         </div>
       </div>
       <div id='content'>
@@ -39,6 +39,10 @@
           <div id='description'>
             
             <h1 id="label-Net%3A%3ASSH+2.x"><a href="../classes/Net/SSH.html">Net::SSH</a> 2.x</h1>
+            
+            <p><strong><em>Please note: this project is in maintenance mode. It is not
+            under active development but pull requests are very much welcome. Just be
+            sure to include tests! -- delano</em></strong></p>
             <ul><li>
             <p>Docs: <a
             href="http://net-ssh.github.com/net-ssh">net-ssh.github.com/net-ssh</a></p>
@@ -120,7 +124,7 @@
             
             <p>However, in order to be sure the code you're installing hasn't been
             tampered with, it's recommended that you verify the <a
-            href="http://docs.rubygems.org/read/chapter/21">signiture</a>. To do this,
+            href="http://docs.rubygems.org/read/chapter/21">signature</a>. To do this,
             you need to add my public key as a trusted certificate (you only need to do
             this once):</p>
             
@@ -193,7 +197,7 @@
             
             <p>Run the test suite from the net-ssh directory with the following command:</p>
             
-            <pre>ruby -Ilib -Itest -rrubygems test/test_all.rb</pre>
+            <pre>bash -c 'unset HOME &amp;&amp; ruby -Ilib -Itest -rrubygems test/test_all.rb'</pre>
             
             <p>Run a single test file like this:</p>
             
