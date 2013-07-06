@@ -1,3 +1,5 @@
+# encoding: ASCII-8BIT
+
 require 'common'
 require 'transport/hmac/test_md5'
 require 'net/ssh/transport/hmac/md5_96'

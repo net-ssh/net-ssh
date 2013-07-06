@@ -1,3 +1,5 @@
+# encoding: ASCII-8BIT
+
 require 'common'
 require 'net/ssh/transport/hmac/ripemd160'
 
