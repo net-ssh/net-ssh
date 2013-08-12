@@ -3,6 +3,7 @@ require 'openssl'
 unless defined?(OpenSSL::PKey::EC)
   puts "Skipping tests for ecdh-sha2-nistp521 key exchange"
 else
+  require 'transport/kex/test_ecdh_sha2_nistp256'
   module Transport; module Kex
     class TestEcdhSHA2NistP521 < TestEcdhSHA2NistP256
 
