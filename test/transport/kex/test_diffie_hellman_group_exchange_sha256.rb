@@ -1,5 +1,6 @@
 require 'common'
 require 'net/ssh/transport/kex/diffie_hellman_group_exchange_sha1'
+require 'transport/kex/test_diffie_hellman_group_exchange_sha1'
 
 module Transport; module Kex
 
