@@ -25,6 +25,9 @@ module Net; module SSH; module Connection
   class Session
     include Constants, Loggable
 
+    # Default IO.select timeout threshold
+    DEFAULT_IO_SELECT_TIMEOUT = 300
+
     # The underlying transport layer abstraction (see Net::SSH::Transport::Session).
     attr_reader :transport
 
@@ -75,6 +78,8 @@ module Net; module SSH; module Connection
 
       @max_pkt_size = (options.has_key?(:max_pkt_size) ? options[:max_pkt_size] : 0x8000)
       @max_win_size = (options.has_key?(:max_win_size) ? options[:max_win_size] : 0x20000)
+
+      @last_keepalive_sent_at = nil
     end
 
     # Retrieves a custom property from this instance. This can be used to
@@ -201,7 +206,7 @@ module Net; module SSH; module Connection
 
       r = listeners.keys
       w = r.select { |w2| w2.respond_to?(:pending_write?) && w2.pending_write? }
-      readers, writers, = Net::SSH::Compat.io_select(r, w, nil, wait)
+      readers, writers, = Net::SSH::Compat.io_select(r, w, nil, io_select_wait(wait))
 
       postprocess(readers, writers)
     end
@@ -239,6 +244,7 @@ module Net; module SSH; module Connection
         writer.send_pending
       end
 
+      send_keepalive_as_needed(readers, writers)
       transport.rekey_as_needed
 
       return true
@@ -588,6 +594,31 @@ module Net; module SSH; module Connection
       def channel_failure(packet)
         info { "channel_failure: #{packet[:local_id]}" }
         channels[packet[:local_id]].do_failure
+      end
+
+      def io_select_wait(wait)
+        return wait if wait
+        return wait unless options[:keepalive]
+        keepalive_interval
+      end
+
+      def keepalive_interval
+        options[:keepalive_interval] || DEFAULT_IO_SELECT_TIMEOUT
+      end
+
+      def should_send_keepalive?
+        return false unless options[:keepalive]
+        return true unless @last_keepalive_sent_at
+        Time.now - @last_keepalive_sent_at >= keepalive_interval
+      end
+
+      def send_keepalive_as_needed(readers, writers)
+        return unless readers.nil? && writers.nil?
+        return unless should_send_keepalive?
+        info { "sending keepalive" }
+        msg = Net::SSH::Buffer.from(:byte, Packet::IGNORE, :string, "keepalive")
+        send_message(msg)
+        @last_keepalive_sent_at = Time.now
       end
 
       MAP = Constants.constants.inject({}) do |memo, name|
