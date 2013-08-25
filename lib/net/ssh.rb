@@ -62,7 +62,8 @@ module Net
     # Net::SSH.start for a description of each option.
     VALID_OPTIONS = [
       :auth_methods, :bind_address, :compression, :compression_level, :config,
-      :encryption, :forward_agent, :hmac, :host_key, :kex, :keys, :key_data,
+      :encryption, :forward_agent, :hmac, :host_key,
+      :keepalive, :keepalive_interval, :kex, :keys, :key_data,
       :languages, :logger, :paranoid, :password, :port, :proxy,
       :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
@@ -124,6 +125,11 @@ module Net
     #   specified in an SSH configuration file. It lets you specify an
     #   "alias", similarly to adding an entry in /etc/hosts but without needing
     #   to modify /etc/hosts.
+    #   :keepalive => set to +true+ to send a keepalive packet to the SSH server
+    #   when there's no traffic between the SSH server and Net::SSH client for
+    #   the keepalive_interval seconds. Defaults to +false+.
+    #   :keepalive_interval => the interval seconds for keepalive.
+    #   Defaults to +300+ seconds.
     # * :kex => the key exchange algorithm (or algorithms) to use
     # * :keys => an array of file names of private keys to use for publickey
     #   and hostbased authentication

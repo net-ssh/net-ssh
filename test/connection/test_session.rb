@@ -363,6 +363,44 @@ module Connection
       session.process
     end
 
+    def test_process_should_call_enqueue_message_if_io_select_timed_out
+      timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
+      options = { :keepalive => true }
+      expected_packet = P(:byte, Net::SSH::Packet::IGNORE, :string, "keepalive")
+      IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
+      transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content  }
+      session(options).process
+    end
+
+    def test_process_should_not_call_enqueue_message_unless_io_select_timed_out
+      timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
+      options = { :keepalive => true }
+      IO.stubs(:select).with([socket],[],nil,timeout).returns([[],[],[]])
+      transport.expects(:enqueue_message).never
+      session(options).process
+    end
+
+    def test_process_should_not_call_enqueue_message_unless_keepalive_interval_not_go_on
+      timeout = 10
+      options = { :keepalive => true, :keepalive_interval => timeout }
+      Time.stubs(:now).returns(Time.at(0), Time.at(9), Time.at(timeout))
+      IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
+      transport.expects(:enqueue_message).times(2)
+      3.times { session(options).process }
+    end
+
+    def test_process_should_call_io_select_with_nil_as_last_arg_if_keepalive_disabled
+      IO.expects(:select).with([socket],[],nil,nil).returns([[],[],[]])
+      session.process
+    end
+
+    def test_process_should_call_io_select_with_interval_as_last_arg_if_keepalive_interval_passed
+      timeout = 10
+      options = { :keepalive => true, :keepalive_interval => timeout }
+      IO.expects(:select).with([socket],[],nil,timeout).returns([[],[],[]])
+      session(options).process
+    end
+
     def test_loop_should_call_process_until_process_returns_false
       IO.stubs(:select).with([socket],[],nil,nil).returns([[],[],[]])
       session.expects(:process).with(nil).times(4).returns(true,true,true,false).yields
