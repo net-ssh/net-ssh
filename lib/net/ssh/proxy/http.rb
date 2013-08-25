@@ -73,7 +73,7 @@ module Net; module SSH; module Proxy
         version, code, reason = socket.gets.chomp.split(/ /, 3)
         headers = {}
 
-        while (line = socket.gets.chomp) != ""
+        while (line = socket.gets) && (line.chomp! != "")
           name, value = line.split(/:/, 2)
           headers[name.strip] = value.strip
         end
