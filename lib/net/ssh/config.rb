@@ -176,6 +176,9 @@ module Net; module SSH
             hash[:user] = value
           when 'userknownhostsfile'
             hash[:user_known_hosts_file] = value
+          when 'sendenv'
+            multi_send_env = value.to_s.split(/\s+/)
+            hash[:send_env] = multi_send_env.map { |e| Regexp.new pattern2regex(e).source, false }
           end
           hash
         end
