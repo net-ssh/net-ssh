@@ -68,7 +68,7 @@ module Net
       :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
-      :max_win_size
+      :max_win_size, :send_env
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -157,6 +157,8 @@ module Net
     # * :rekey_blocks_limit => the max number of blocks to process before rekeying
     # * :rekey_limit => the max number of bytes to process before rekeying
     # * :rekey_packet_limit => the max number of packets to process before rekeying
+    # * :send_env => an array of local environment variable names to export to the
+    #   remote environment. Names may be given as String or Regexp.
     # * :timeout => how long to wait for the initial connection to be made
     # * :user => the user name to log in as; this overrides the +user+
     #   parameter, and is primarily only useful when provided via an SSH
