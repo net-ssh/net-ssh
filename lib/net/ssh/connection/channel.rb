@@ -510,6 +510,7 @@ module Net; module SSH; module Connection
         @remote_window_size = @remote_maximum_window_size = max_window
         @remote_maximum_packet_size = max_packet
         connection.forward.agent(self) if connection.options[:forward_agent] && type == "session"
+        forward_local_env(connection.options[:send_env]) if connection.options[:send_env]
         @on_confirm_open.call(self) if @on_confirm_open
       end
 
@@ -623,6 +624,25 @@ module Net; module SSH; module Connection
             :long, remote_id, :long, 0x20000))
           @local_window_size += 0x20000
           @local_maximum_window_size += 0x20000
+        end
+      end
+
+      # Gets an +Array+ of local environment variables in the remote process'
+      # environment.
+      # A variable name can either be described by a +Regexp+ or +String+.
+      #
+      #   channel.forward_local_env [/^GIT_.*$/, "LANG"]
+      def forward_local_env(env_variable_patterns)
+        Array(env_variable_patterns).each do |env_variable_pattern|
+          matched_variables = ENV.find_all do |env_name, _|
+            case env_variable_pattern
+            when Regexp then env_name =~ env_variable_pattern
+            when String then env_name == env_variable_pattern
+            end
+          end
+          matched_variables.each do |env_name, env_value|
+            self.env(env_name, env_value)
+          end
         end
       end
   end

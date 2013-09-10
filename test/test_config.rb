@@ -86,7 +86,8 @@ class TestConfig < Test::Unit::TestCase
       'passwordauthentication'  => true,
       'port'                    => 1234,
       'pubkeyauthentication'    => true,
-      'rekeylimit'              => 1024
+      'rekeylimit'              => 1024,
+      'sendenv'                 => "LC_*"
     }
 
     net_ssh = Net::SSH::Config.translate(open_ssh)
@@ -103,6 +104,7 @@ class TestConfig < Test::Unit::TestCase
     assert_equal 1234,      net_ssh[:port]
     assert_equal 1024,      net_ssh[:rekey_limit]
     assert_equal "127.0.0.1", net_ssh[:bind_address]
+    assert_equal [/^LC_.*$/], net_ssh[:send_env]
   end
   
   def test_load_with_plus_sign_hosts
@@ -134,7 +136,13 @@ class TestConfig < Test::Unit::TestCase
     net_ssh = Net::SSH::Config.translate(config)
     assert_equal 'prefix.1234.sufix', net_ssh[:host_name]
   end
-  
+
+  def test_load_with_send_env
+    config = Net::SSH::Config.load(config(:send_env), "1234")
+    net_ssh = Net::SSH::Config.translate(config)
+    assert_equal [/^GIT_.*$/, /^LANG$/, /^LC_.*$/], net_ssh[:send_env]
+  end
+
   private
 
     def config(name)
