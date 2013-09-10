@@ -232,7 +232,6 @@ module Net
             rescue ArgumentError => e
               process_identity_loading_error(identity, e)
               nil
-              #Net::SSH::Exception or ::Exception?
             rescue Exception => e
               process_identity_loading_error(identity, e)
               nil
