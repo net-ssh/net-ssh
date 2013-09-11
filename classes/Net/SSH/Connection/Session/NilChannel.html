@@ -71,7 +71,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 51</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>)&#x000A;  <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 54</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>)&#x000A;  <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <h2>Public Instance methods</h2>
@@ -88,7 +88,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-method_missing-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-method_missing-source'><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 55</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">sym</span>, *<span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">lwarn</span> { <span class="ruby-node">&quot;ignoring request #{sym.inspect} for non-existent (closed?) channel; probably ssh server bug&quot;</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-method_missing-source'><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 58</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">sym</span>, *<span class="ruby-identifier">args</span>)&#x000A;  <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">lwarn</span> { <span class="ruby-node">&quot;ignoring request #{sym.inspect} for non-existent (closed?) channel; probably ssh server bug&quot;</span> }&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
             </div>
