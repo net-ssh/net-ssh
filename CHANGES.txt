@@ -1,4 +1,13 @@
 
+
+=== 2.7.0 / 11 Sep 2013
+
+* Fix for 'Could not parse PKey: no start line' error on private keys with passphrases (issue #101) [metametaclass]
+* Automatically forward environment variables defined in OpenSSH config files [fnordfish]
+* Guard against socket.gets being nil in Net::SSH::Proxy::HTTP [krishicks]
+* Implemented experimental keepalive feature [noric]
+
+
 === 2.6.8 / 6 Jul 2013
 
 * Added support for host wildcard substitution [GabKlein]
