@@ -76,9 +76,9 @@ module Net; module SSH; module Authentication
       type, body = send_and_wait(SSH2_AGENT_REQUEST_VERSION, :string, Transport::ServerVersion::PROTO_VERSION)
 
       if type == SSH2_AGENT_VERSION_RESPONSE
-        raise NotImplementedError, "SSH2 agents are not yet supported"
+        raise AgentNotAvailable, "SSH2 agents are not yet supported"
       elsif type != SSH_AGENT_RSA_IDENTITIES_ANSWER1 && type != SSH_AGENT_RSA_IDENTITIES_ANSWER2
-        raise AgentError, "unknown response from agent: #{type}, #{body.to_s.inspect}"
+        raise AgentNotAvailable, "unknown response from agent: #{type}, #{body.to_s.inspect}"
       end
     end
 
