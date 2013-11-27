@@ -212,7 +212,7 @@ module Net
         end
       else
         transport.close
-        raise AuthenticationFailed, user
+        raise AuthenticationFailed, "Authentication failed for user #{user}@#{host}"
       end
     end
 
