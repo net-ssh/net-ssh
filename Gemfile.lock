@@ -1,0 +1,20 @@
+PATH
+  remote: .
+  specs:
+    net-ssh (2.7.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    metaclass (0.0.1)
+    mocha (0.14.0)
+      metaclass (~> 0.0.1)
+    test-unit (2.0.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  mocha
+  net-ssh!
+  test-unit
