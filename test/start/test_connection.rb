@@ -39,6 +39,15 @@ module NetSSH
         # We aren't interested in the exception
       end
     end
+    
+    def test_return_value_is_returned
+      @connection_session.expects(:closed?).returns(false)
+      @connection_session.expects(:close).once
+      
+      val = 1
+      retval = Net::SSH.start('localhost', 'testuser') { val }
+      assert_equal(val, retval)
+    end
   end
 end
 
