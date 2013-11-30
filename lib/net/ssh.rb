@@ -207,7 +207,7 @@ module Net
           begin
             yield connection
           ensure
-            connection.close
+            connection.close unless connection.closed?
           end
         else
           return connection
