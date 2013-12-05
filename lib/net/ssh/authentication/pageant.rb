@@ -110,6 +110,7 @@ module Net; module SSH; module Authentication
             "pageant process not running"
         end
 
+        @pending_query = nil
         @res = nil
         @pos = 0
       end
@@ -168,7 +169,11 @@ module Net; module SSH; module Authentication
       # Conceptually close the socket. This doesn't really do anthing
       # significant, but merely complies with the Socket interface.
       def close
-        @res = nil
+        # hack. probably need to move closed state to a flag,
+        # since ready and closed will look equivalent
+        # also basically we never need to actually be closed
+
+        # @res = nil
         @pos = 0
       end
 
@@ -183,6 +188,7 @@ module Net; module SSH; module Authentication
       # is +nil+, returns all remaining data from the last query.
       def read(n = nil)
         return nil unless @res
+
         if n.nil?
           start, @pos = @pos, @res.size
           return @res[start..-1]
@@ -192,6 +198,35 @@ module Net; module SSH; module Authentication
         end
       end
 
+      # methods we need since they dont come from buffer/buffered_io any more
+      def available
+        return @res.nil? ? 0 : @res.length - @pos
+      end
+
+      def read_available(n=nil)
+        read(n)
+      end
+
+      def fill(n=nil)
+        @res = read(n)
+        return @res.length
+      end
+
+      def enqueue(data)
+        @pending_query = (@pending_query || '') + data
+      end
+
+      def send_pending
+        return if @pending_query.nil?
+
+        @res = send_query(@pending_query)
+        @pos = 0
+        @pending_query = nil
+      end
+
+      def shutdown(reason)
+        #no op
+      end
     end
 
     # Socket changes for Ruby 1.9
@@ -202,6 +237,8 @@ module Net; module SSH; module Authentication
       # process via the Windows messaging subsystem. The result is
       # cached, to be returned piece-wise when #read is called.
       def send_query(query)
+        query = @always_query || query
+
         res = nil
         filemap = 0
         ptr = nil

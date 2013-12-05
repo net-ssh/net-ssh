@@ -229,20 +229,26 @@ module Net; module SSH; module Connection
     # then calls Net::SSH::Transport::Session#rekey_as_needed to allow the
     # transport layer to rekey. Then returns true.
     def postprocess(readers, writers)
+      # sometimes, got an execution hang on reader.fill.zero?
+      # the reader and writer socket was the same in those cases
+      # swapping the order so that pending writes execute before readers are closed seems to work
+      
+      Array(writers).each do |writer|
+        writer.send_pending
+      end
+
       Array(readers).each do |reader|
         if listeners[reader]
           listeners[reader].call(reader)
         else
-          if reader.fill.zero?
+          z = reader.fill.zero?
+          if z
             reader.close
             stop_listening_to(reader)
           end
         end
       end
 
-      Array(writers).each do |writer|
-        writer.send_pending
-      end
 
       send_keepalive_as_needed(readers, writers)
       transport.rekey_as_needed

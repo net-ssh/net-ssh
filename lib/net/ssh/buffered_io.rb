@@ -62,7 +62,7 @@ module Net; module SSH
     # if no data was available to be read.
     def fill(n=8192)
       input.consume!
-      data = recv(n)
+      data = self.respond_to?(:recv) ? recv(n) : read(n)
       debug { "read #{data.length} bytes" }
       input.append(data)
       return data.length
@@ -71,13 +71,22 @@ module Net; module SSH
     # Read up to +length+ bytes from the input buffer. If +length+ is nil,
     # all available data is read from the buffer. (See #available.)
     def read_available(length=nil)
-      input.read(length || available)
+      if self.respond_to?(:recv)
+        input.read(length || available)
+      else
+        target = length || available
+        self.read(available < target ? available : target)
+      end
     end
 
     # Returns the number of bytes available to be read from the input buffer.
     # (See #read_available.)
     def available
-      input.available
+      if self.respond_to?(:recv)
+        input.available
+      else
+        self.available_bytes
+      end
     end
 
     # Enqueues data in the output buffer, to be written when #send_pending
