@@ -18,7 +18,7 @@ module Authentication
       manager.add "/second"
       manager.add "/third"
       manager.add "/second"
-      assert_true manager.key_files.length == 3
+      assert_equal 3, manager.key_files.length
       final_files = manager.key_files.map {|item| item.split('/').last}
       assert_equal %w(first second third), final_files
     end
@@ -30,12 +30,16 @@ module Authentication
       assert !manager.use_agent?
     end
 
+    def test_use_agent_is_false_if_keys_only
+      assert !manager(:keys_only => true).use_agent?
+    end
+
     def test_each_identity_should_load_from_key_files
       manager.stubs(:agent).returns(nil)
       first = File.expand_path("/first")
       second = File.expand_path("/second")
       stub_file_private_key first, rsa
-      stub_file_private_key second, dsa      
+      stub_file_private_key second, dsa
 
       identities = []
       manager.each_identity { |identity| identities << identity }
@@ -43,7 +47,7 @@ module Authentication
       assert_equal 2, identities.length
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
-      
+
       assert_equal({:from => :file, :file => first, :key => rsa}, manager.known_identities[rsa])
       assert_equal({:from => :file, :file => second, :key => dsa}, manager.known_identities[dsa])
     end
