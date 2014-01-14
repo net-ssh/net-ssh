@@ -257,6 +257,24 @@ module Net; module SSH; module Service
         end
       end
 
+      # not a real socket, so use a simpler behaviour
+      def prepare_simple_client(client, channel, type)
+        channel[:socket] = client
+
+        channel.on_data do |ch, data|
+          ch.debug { "data:#{data.length} on #{type} forwarded channel" }
+          ch[:socket].send(data)
+        end
+
+        channel.on_process do |ch|
+          data = ch[:socket].read(8192)
+          if data
+            ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
+            ch.send_data(data)
+          end
+        end
+      end
+
       # The callback used when a new "forwarded-tcpip" channel is requested
       # by the server.  This will open a new socket to the host/port specified
       # when the forwarded connection was first requested.
@@ -287,7 +305,11 @@ module Net; module SSH; module Service
 
         begin
           agent = Authentication::Agent.connect(logger)
-          prepare_client(agent.socket, channel, :agent)
+          if (agent.socket.is_a? ::IO)
+            prepare_client(agent.socket, channel, :agent)
+          else
+            prepare_simple_client(agent.socket, channel, :agent)
+          end
         rescue Exception => e
           error { "attempted to connect to agent but failed: #{e.class.name} (#{e.message})" }
           raise Net::SSH::ChannelOpenFailed.new(2, "could not connect to authentication agent")

@@ -126,7 +126,7 @@ module Net; module SSH; module Authentication
     # Returns the agent socket factory to use.
     def agent_socket_factory
       if Net::SSH::Authentication::PLATFORM == :win32
-        Pageant::socket_factory
+        Pageant::Socket
       else
         UNIXSocket
       end
