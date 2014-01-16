@@ -110,21 +110,49 @@ module Net; module SSH; module Authentication
             "pageant process not running"
         end
 
-        @res = nil
-        @pos = 0
+        @input_buffer = Net::SSH::Buffer.new
+        @output_buffer = Net::SSH::Buffer.new
       end
 
       # Forwards the data to #send_query, ignoring any arguments after
-      # the first. Returns 0.
+      # the first.
       def send(data, *args)
-        @res = send_query(data)
-        @pos = 0
+        @input_buffer.append(data)
+        
+        ret = data.length
+        
+        while true
+          return ret if @input_buffer.length < 4
+          msg_length = @input_buffer.read_long + 4
+          @input_buffer.reset!
+      
+          return ret if @input_buffer.length < msg_length
+          msg = @input_buffer.read!(msg_length)
+          @output_buffer.append(send_query(msg))
+        end
+      end
+      
+      # Reads +n+ bytes from the cached result of the last query. If +n+
+      # is +nil+, returns all remaining data from the last query.
+      def read(n = nil)
+        @output_buffer.read(n)
       end
 
+      def close
+      end
+      
+      def send_query(query)
+        if RUBY_VERSION < "1.9"
+          send_query_18(query)
+        else
+          send_query_19(query)
+        end
+      end
+      
       # Packages the given query string and sends it to the pageant
       # process via the Windows messaging subsystem. The result is
       # cached, to be returned piece-wise when #read is called.
-      def send_query(query)
+      def send_query_18(query)
         res = nil
         filemap = 0
         ptr = nil
@@ -165,43 +193,10 @@ module Net; module SSH; module Authentication
         Win.closeHandle(filemap) if filemap != 0
       end
 
-      # Conceptually close the socket. This doesn't really do anthing
-      # significant, but merely complies with the Socket interface.
-      def close
-        @res = nil
-        @pos = 0
-      end
-
-      # Conceptually asks if the socket is closed. As with #close,
-      # this doesn't really do anything significant, but merely
-      # complies with the Socket interface.
-      def closed?
-        @res.nil? && @pos.zero?
-      end
-
-      # Reads +n+ bytes from the cached result of the last query. If +n+
-      # is +nil+, returns all remaining data from the last query.
-      def read(n = nil)
-        return nil unless @res
-        if n.nil?
-          start, @pos = @pos, @res.size
-          return @res[start..-1]
-        else
-          start, @pos = @pos, @pos + n
-          return @res[start, n]
-        end
-      end
-
-    end
-
-    # Socket changes for Ruby 1.9
-    # Functionality is the same as Ruby 1.8 but it includes the new calls to 
-    # the DL module as well as other pointer transformations
-    class Socket19 < Socket
       # Packages the given query string and sends it to the pageant
       # process via the Windows messaging subsystem. The result is
       # cached, to be returned piece-wise when #read is called.
-      def send_query(query)
+      def send_query_19(query)
         res = nil
         filemap = 0
         ptr = nil
@@ -244,17 +239,6 @@ module Net; module SSH; module Authentication
         Win.CloseHandle(filemap) if filemap != 0
       end
     end
-
-    # Selects which socket to use depending on the ruby version
-    # This is needed due changes in the DL module.
-    def self.socket_factory
-      if RUBY_VERSION < "1.9"
-        Socket
-      else
-        Socket19
-      end
-    end
-
   end
 
 end; end; end
