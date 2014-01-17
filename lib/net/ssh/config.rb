@@ -35,7 +35,11 @@ module Net; module SSH
   class Config
     class << self
       @@default_files = %w(~/.ssh/config /etc/ssh_config /etc/ssh/ssh_config)
-      @@default_auth_methods = %w(none publickey hostbased password keyboard-interactive)
+      # The following defaults follow the openssh client ssh_config defaults.
+      # http://lwn.net/Articles/544640/
+      # "hostbased" is off and "none" is not supported but we allow it since
+      # it's used by some clients to query the server for allowed auth methods
+      @@default_auth_methods = %w(none publickey password keyboard-interactive)
 
       # Returns an array of locations of OpenSSH configuration files
       # to parse by default.
@@ -61,7 +65,9 @@ module Net; module SSH
       # ones. Returns a hash containing the OpenSSH options. (See
       # #translate for how to convert the OpenSSH options into Net::SSH
       # options.)
-      def load(path, host, settings={:auth_methods=>default_auth_methods})
+      def load(path, host, settings)
+        settings[:auth_methods] ||= default_auth_methods
+        
         file = File.expand_path(path)
         return settings unless File.readable?(file)
         
