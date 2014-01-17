@@ -35,11 +35,16 @@ module Net; module SSH
   class Config
     class << self
       @@default_files = %w(~/.ssh/config /etc/ssh_config /etc/ssh/ssh_config)
+      @@default_auth_methods = %w(none publickey hostbased password keyboard-interactive)
 
       # Returns an array of locations of OpenSSH configuration files
       # to parse by default.
       def default_files
         @@default_files
+      end
+      
+      def default_auth_methods
+        @@default_auth_methods
       end
 
       # Loads the configuration data for the given +host+ from all of the
@@ -56,7 +61,7 @@ module Net; module SSH
       # ones. Returns a hash containing the OpenSSH options. (See
       # #translate for how to convert the OpenSSH options into Net::SSH
       # options.)
-      def load(path, host, settings={})
+      def load(path, host, settings={:auth_methods=>default_auth_methods})
         file = File.expand_path(path)
         return settings unless File.readable?(file)
         
@@ -138,7 +143,6 @@ module Net; module SSH
             hash[:global_known_hosts_file] = value
           when 'hostbasedauthentication' then
             if value
-              hash[:auth_methods] ||= []
               hash[:auth_methods] << "hostbased"
             end
           when 'hostkeyalgorithms' then
@@ -152,9 +156,8 @@ module Net; module SSH
           when 'macs' then
             hash[:hmac] = value.split(/,/)
           when 'passwordauthentication'
-            if value
-              hash[:auth_methods] ||= []
-              hash[:auth_methods] << "password"
+            unless value
+              hash[:auth_methods] = hash[:auth_methods].delete('password')
             end
           when 'port'
             hash[:port] = value
@@ -165,10 +168,9 @@ module Net; module SSH
               require 'net/ssh/proxy/command'
               hash[:proxy] = Net::SSH::Proxy::Command.new(value)
             end
-	  when 'pubkeyauthentication'
-            if value
-              hash[:auth_methods] ||= []
-              hash[:auth_methods] << "publickey"
+	        when 'pubkeyauthentication'
+            unless value
+              hash[:auth_methods] = hash[:auth_methods].delete('publickey')
             end
           when 'rekeylimit'
             hash[:rekey_limit] = interpret_size(value)
