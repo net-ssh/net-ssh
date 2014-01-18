@@ -59,8 +59,6 @@ module Net; module SSH
         hash = translate(files.inject({}) { |settings, file| 
           load(file, host, settings)
         })
-        puts "FINAL AUTH METHODS: #{hash[:auth_methods]}"
-        return hash
       end
 
       # Load the OpenSSH configuration settings in the given +file+ for the
@@ -133,11 +131,8 @@ module Net; module SSH
       # +settings+ hash must have Strings for keys, all downcased, and
       # the returned hash will have Symbols for keys.
       def translate(settings)
-        puts "SETTINGS AUTH METHODS: #{settings[:auth_methods]}"
-        
         settings.inject({}) do |hash, (key, value)|
           hash[:auth_methods] ||= settings[:auth_methods]
-          puts "CONSIDERING AUTH METHODS: #{hash[:auth_methods]}"
           case key
           when 'bindaddress' then
             hash[:bind_address] = value
