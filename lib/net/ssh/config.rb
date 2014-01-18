@@ -56,7 +56,11 @@ module Net; module SSH
       # #default_files), translates the resulting hash into the options
       # recognized by Net::SSH, and returns them.
       def for(host, files=default_files)
-        translate(files.inject({}) { |settings, file| load(file, host, settings) })
+        hash = translate(files.inject({}) { |settings, file| 
+          load(file, host, settings)
+        })
+        puts "FINAL AUTH METHODS: #{hash[:auth_methods]}"
+        return hash
       end
 
       # Load the OpenSSH configuration settings in the given +file+ for the
@@ -129,7 +133,11 @@ module Net; module SSH
       # +settings+ hash must have Strings for keys, all downcased, and
       # the returned hash will have Symbols for keys.
       def translate(settings)
+        puts "SETTINGS AUTH METHODS: #{settings[:auth_methods]}"
+        
         settings.inject({}) do |hash, (key, value)|
+          hash[:auth_methods] ||= settings[:auth_methods]
+          puts "CONSIDERING AUTH METHODS: #{hash[:auth_methods]}"
           case key
           when 'bindaddress' then
             hash[:bind_address] = value
@@ -163,7 +171,7 @@ module Net; module SSH
             hash[:hmac] = value.split(/,/)
           when 'passwordauthentication'
             unless value
-              hash[:auth_methods] = hash[:auth_methods].delete('password')
+              hash[:auth_methods].delete('password')
             end
           when 'port'
             hash[:port] = value
@@ -176,7 +184,7 @@ module Net; module SSH
             end
 	        when 'pubkeyauthentication'
             unless value
-              hash[:auth_methods] = hash[:auth_methods].delete('publickey')
+              hash[:auth_methods].delete('publickey')
             end
           when 'rekeylimit'
             hash[:rekey_limit] = interpret_size(value)
