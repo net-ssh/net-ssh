@@ -243,14 +243,14 @@ module Net; module SSH
     # a key. Only RSA, DSA, and ECDSA keys are supported.
     def read_keyblob(type)
       case type
-        when "ssh-dss"
+        when /^ssh-dss(-cert-v01@openssh\.com)?$/
           key = OpenSSL::PKey::DSA.new
           key.p = read_bignum
           key.q = read_bignum
           key.g = read_bignum
           key.pub_key = read_bignum
 
-        when "ssh-rsa"
+        when /^ssh-rsa(-cert-v01@openssh\.com)?$/
           key = OpenSSL::PKey::RSA.new
           key.e = read_bignum
           key.n = read_bignum
