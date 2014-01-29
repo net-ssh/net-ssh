@@ -8,6 +8,7 @@ module Net; module SSH
   #
   # Only a subset of OpenSSH configuration options are understood:
   #
+  # * ChallengeResponseAuthentication => maps to the :auth_methods option
   # * Ciphers => maps to the :encryption option
   # * Compression => :compression
   # * CompressionLevel => :compression_level
@@ -25,6 +26,7 @@ module Net; module SSH
   # * Port => :port
   # * PreferredAuthentications => maps to the :auth_methods option
   # * ProxyCommand => maps to the :proxy option
+  # * PubKeyAuthentication => maps to the :auth_methods option
   # * RekeyLimit => :rekey_limit
   # * User => :user
   # * UserKnownHostsFile => :user_known_hosts_file
@@ -67,11 +69,11 @@ module Net; module SSH
       # ones. Returns a hash containing the OpenSSH options. (See
       # #translate for how to convert the OpenSSH options into Net::SSH
       # options.)
-      def load(path, host, settings)
-        settings[:auth_methods] ||= default_auth_methods
-        
+      def load(path, host, settings={})
         file = File.expand_path(path)
         return settings unless File.readable?(file)
+
+        settings[:auth_methods] ||= default_auth_methods.clone
         
         globals = {}
         matched_host = nil
@@ -132,7 +134,7 @@ module Net; module SSH
       # the returned hash will have Symbols for keys.
       def translate(settings)
         settings.inject({}) do |hash, (key, value)|
-          hash[:auth_methods] ||= settings[:auth_methods]
+          hash[:auth_methods] ||= settings[:auth_methods] || default_auth_methods.clone
           case key
           when 'bindaddress' then
             hash[:bind_address] = value
@@ -152,7 +154,9 @@ module Net; module SSH
             hash[:global_known_hosts_file] = value
           when 'hostbasedauthentication' then
             if value
-              hash[:auth_methods] << "hostbased"
+              (hash[:auth_methods] << "hostbased").uniq!
+            else
+              hash[:auth_methods].delete("hostbased")
             end
           when 'hostkeyalgorithms' then
             hash[:host_key] = value.split(/,/)
@@ -165,8 +169,16 @@ module Net; module SSH
           when 'macs' then
             hash[:hmac] = value.split(/,/)
           when 'passwordauthentication'
-            unless value
+            if value
+              (hash[:auth_methods] << 'password').uniq!
+            else
               hash[:auth_methods].delete('password')
+            end
+          when 'challengeresponseauthentication'
+            if value
+              (hash[:auth_methods] << 'keyboard-interactive').uniq!
+            else
+              hash[:auth_methods].delete('keyboard-interactive')
             end
           when 'port'
             hash[:port] = value
@@ -178,7 +190,9 @@ module Net; module SSH
               hash[:proxy] = Net::SSH::Proxy::Command.new(value)
             end
 	        when 'pubkeyauthentication'
-            unless value
+            if value
+              (hash[:auth_methods] << 'publickey').uniq!
+            else
               hash[:auth_methods].delete('publickey')
             end
           when 'rekeylimit'
