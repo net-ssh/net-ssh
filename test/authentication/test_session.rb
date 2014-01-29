@@ -20,7 +20,7 @@ module Authentication
       end
 
       Net::SSH::Authentication::Methods::Publickey.any_instance.expects(:authenticate).with("next service", "username", "password").raises(Net::SSH::Authentication::DisallowedMethod)
-      Net::SSH::Authentication::Methods::Hostbased.any_instance.expects(:authenticate).with("next service", "username", "password").returns(true)
+      Net::SSH::Authentication::Methods::Password.any_instance.expects(:authenticate).with("next service", "username", "password").returns(true)
       Net::SSH::Authentication::Methods::None.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
 
       assert session.authenticate("next service", "username", "password")
