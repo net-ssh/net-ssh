@@ -97,7 +97,7 @@ class TestConfig < Test::Unit::TestCase
     assert_equal 6,         net_ssh[:compression_level]
     assert_equal 100,       net_ssh[:timeout]
     assert_equal true,      net_ssh[:forward_agent]
-    assert_equal %w(hostbased password publickey), net_ssh[:auth_methods].sort
+    assert_equal %w(hostbased keyboard-interactive none password publickey), net_ssh[:auth_methods].sort
     assert_equal %w(d e f), net_ssh[:host_key]
     assert_equal %w(g h i), net_ssh[:keys]
     assert_equal %w(j k l), net_ssh[:hmac]
@@ -105,6 +105,42 @@ class TestConfig < Test::Unit::TestCase
     assert_equal 1024,      net_ssh[:rekey_limit]
     assert_equal "127.0.0.1", net_ssh[:bind_address]
     assert_equal [/^LC_.*$/], net_ssh[:send_env]
+  end
+
+  def test_translate_should_turn_off_authentication_methods
+    open_ssh = {
+      'hostbasedauthentication'         => false,
+      'passwordauthentication'          => false,
+      'pubkeyauthentication'            => false,
+      'challengeresponseauthentication' => false
+    }
+
+    net_ssh = Net::SSH::Config.translate(open_ssh)
+
+    assert_equal %w(none), net_ssh[:auth_methods].sort
+  end
+
+  def test_translate_should_turn_on_authentication_methods
+    open_ssh = {
+      'hostbasedauthentication'         => true,
+      'passwordauthentication'          => true,
+      'pubkeyauthentication'            => true,
+      'challengeresponseauthentication' => true
+    }
+
+    net_ssh = Net::SSH::Config.translate(open_ssh)
+
+    assert_equal %w(hostbased keyboard-interactive none password publickey), net_ssh[:auth_methods].sort
+  end
+
+  def test_for_should_turn_off_authentication_methods
+    config = Net::SSH::Config.for("test.host", [config(:empty), config(:auth_off), config(:auth_on)])
+    assert_equal %w(none), config[:auth_methods].sort
+  end
+
+  def test_for_should_turn_on_authentication_methods
+    config = Net::SSH::Config.for("test.host", [config(:empty), config(:auth_on), config(:auth_off)])
+    assert_equal %w(hostbased keyboard-interactive none password publickey), config[:auth_methods].sort
   end
   
   def test_load_with_plus_sign_hosts
