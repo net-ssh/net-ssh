@@ -107,8 +107,8 @@
                   
                   <p>Create a new packet from the given payload. This will automatically parse
                   the packet if it is one that has been previously registered with <a
-                  href="Packet.html#method-c-register">::register</a>; otherwise, the packet
-                  will need to be manually parsed using the methods provided in the <a
+                  href="Packet.html#method-c-register">Packet.register</a>; otherwise, the
+                  packet will need to be manually parsed using the methods provided in the <a
                   href="Buffer.html">Net::SSH::Buffer</a> superclass.</p>
                 </div>
                 <div class='source'>
@@ -130,7 +130,7 @@
                   href="Packet.html">Net::SSH::Packet</a>. Note that any packet type that is
                   not preregistered will not be autoparsed.</p>
                   
-                  <p>The <code>pairs</code> parameter must be either empty, or an array of
+                  <p>The <tt>pairs</tt> parameter must be either empty, or an array of
                   two-element tuples, where the first element of each tuple is the name of
                   the field, and the second is the type.</p>
                   

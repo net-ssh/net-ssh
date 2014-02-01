@@ -44,14 +44,13 @@
           <div id='description'>
             
             <p>A class for describing the current version of a library. The version
-            consists of three parts: the <code>major</code> number, the
-            <code>minor</code> number, and the <code>tiny</code> (or
-            <code>patch</code>) number.</p>
+            consists of three parts: the <tt>major</tt> number, the <tt>minor</tt>
+            number, and the <tt>tiny</tt> (or <tt>patch</tt>) number.</p>
             
             <p>Two <a href="Version.html">Version</a> instances may be compared, so that
             you can test that a version of a library is what you require:</p>
             
-            <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">'net/ssh/version'</span>&#x000A;&#x000A;<span class="ruby-keyword">if</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Version</span><span class="ruby-operator">::</span><span class="ruby-constant">CURRENT</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Version</span>[<span class="ruby-value">2</span>,<span class="ruby-value">1</span>,<span class="ruby-value">0</span>]&#x000A;  <span class="ruby-identifier">abort</span> <span class="ruby-string">&quot;your software is too old!&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre>require 'net/ssh/version'&#x000A;if Net::SSH::Version::CURRENT &lt; Net::SSH::Version[2,1,0]&#x000A;  abort &quot;your software is too old!&quot;&#x000A;end</pre>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -108,7 +107,7 @@
                   <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>MINOR</td>
                     <td>=</td>
-                    <td class='context-item-value'>7</td>
+                    <td class='context-item-value'>8</td>
                     <td>&nbsp;</td>
                     <td class='context-item-desc'>
                       
@@ -180,8 +179,8 @@
                 <div class='description'>
                   
                   <p>A convenience method for instantiating a new <a
-                  href="Version.html">Version</a> instance with the given <code>major</code>,
-                  <code>minor</code>, and <code>tiny</code> components.</p>
+                  href="Version.html">Version</a> instance with the given <tt>major</tt>,
+                  <tt>minor</tt>, and <tt>tiny</tt> components.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-5B-5D-source'); return false">
@@ -217,7 +216,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Compare this version to the given <code>version</code> object.</p>
+                  <p>Compare this version to the given <tt>version</tt> object.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-3C-3D-3E-source'); return false">

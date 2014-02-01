@@ -60,7 +60,7 @@
             network connection, authenticate a user, and return a new connection
             session, all in one call.</p>
             
-            <pre class="ruby"><span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span>.<span class="ruby-identifier">start</span>(<span class="ruby-string">&quot;localhost&quot;</span>, <span class="ruby-string">&quot;user&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ssh</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># 'ssh' is an instance of Net::SSH::Connection::Session</span>&#x000A;  <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec!</span> <span class="ruby-string">&quot;/etc/init.d/some_process start&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre>Net::SSH.start(&quot;localhost&quot;, &quot;user&quot;) do |ssh|&#x000A;  # 'ssh' is an instance of Net::SSH::Connection::Session&#x000A;  ssh.exec! &quot;/etc/init.d/some_process start&quot;&#x000A;end</pre>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -262,11 +262,11 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns <code>true</code> if there are any channels currently active on
-                  this session. By default, this will not include "invisible" channels (such
-                  as those created by forwarding ports and such), but if you pass a
-                  <code>true</code> value for <code>include_invisible</code>, then those will
-                  be counted.</p>
+                  <p>Returns <tt>true</tt> if there are any channels currently active on this
+                  session. By default, this will not include "invisible" channels (such as
+                  those created by forwarding ports and such), but if you pass a
+                  <tt>true</tt> value for <tt>include_invisible</tt>, then those will be
+                  counted.</p>
                   
                   <p>This can be useful for determining whether the event loop should continue
                   to be run.</p>
@@ -335,8 +335,8 @@
                   or :stderr), and the data (as a string).</p>
                   
                   <p>Note that this method returns immediately, and requires an event loop (see
-                  <a href="Session.html#method-i-loop">#loop</a>) in order for the command to
-                  actually execute.</p>
+                  <a href="Session.html#method-i-loop">Session#loop</a>) in order for the
+                  command to actually execute.</p>
                   
                   <p>This is effectively identical to calling <a
                   href="Session.html#method-i-open_channel">open_channel</a>, and then <a
@@ -344,7 +344,7 @@
                   and then setting up the channel callbacks. However, for most uses, this
                   will be sufficient.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;grep something /some/files&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">stream</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">stream</span> <span class="ruby-operator">==</span> :<span class="ruby-identifier">stderr</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;ERROR: #{data}&quot;</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">data</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>ssh.exec &quot;grep something /some/files&quot; do |ch, stream, data|&#x000A;  if stream == :stderr&#x000A;    puts &quot;ERROR: #{data}&quot;&#x000A;  else&#x000A;    puts data&#x000A;  end&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-exec-source'); return false">
@@ -422,15 +422,15 @@
                   it will be invoked when the io is ready to be read, otherwise, the io will
                   merely have its fill method invoked.</p>
                   
-                  <p>Any <code>io</code> value passed to this method <em>must</em> have mixed
-                  into it the Net::SSH::BufferedIo functionality, typically by calling extend
-                  on the object.</p>
+                  <p>Any <tt>io</tt> value passed to this method <em>must</em> have mixed into
+                  it the Net::SSH::BufferedIo functionality, typically by calling extend on
+                  the object.</p>
                   
                   <p>The following example executes a process on the remote server, opens a
                   socket to somewhere, and then pipes data from that socket to the remote
                   process' stdin stream:</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span> = <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;/some/process/that/wants/input&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">abort</span> <span class="ruby-string">&quot;can't execute!&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">success</span>&#x000A;&#x000A;    <span class="ruby-identifier">io</span> = <span class="ruby-constant">TCPSocket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">somewhere</span>, <span class="ruby-identifier">port</span>)&#x000A;    <span class="ruby-identifier">io</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">BufferedIo</span>)&#x000A;    <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">listen_to</span>(<span class="ruby-identifier">io</span>)&#x000A;&#x000A;    <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_process</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-keyword">if</span> <span class="ruby-identifier">io</span>.<span class="ruby-identifier">available</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;        <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">send_data</span>(<span class="ruby-identifier">io</span>.<span class="ruby-identifier">read_available</span>)&#x000A;      <span class="ruby-keyword">end</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_close</span> <span class="ruby-keyword">do</span>&#x000A;      <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">stop_listening_to</span>(<span class="ruby-identifier">io</span>)&#x000A;      <span class="ruby-identifier">io</span>.<span class="ruby-identifier">close</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">wait</span></pre>
+                  <pre>channel = ssh.open_channel do |ch|&#x000A;  ch.exec &quot;/some/process/that/wants/input&quot; do |ch, success|&#x000A;    abort &quot;can't execute!&quot; unless success&#x000A;    io = TCPSocket.new(somewhere, port)&#x000A;    io.extend(Net::SSH::BufferedIo)&#x000A;    ssh.listen_to(io)&#x000A;&#x000A;    ch.on_process do&#x000A;      if io.available &gt; 0&#x000A;        ch.send_data(io.read_available)&#x000A;      end&#x000A;    end&#x000A;&#x000A;    ch.on_close do&#x000A;      ssh.stop_listening_to(io)&#x000A;      io.close&#x000A;    end&#x000A;  end&#x000A;end&#x000A;&#x000A;channel.wait</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-listen_to-source'); return false">
@@ -453,7 +453,7 @@
                   is given, it is passed to <a
                   href="Session.html#method-i-process">process</a>, otherwise a default proc
                   is used that just returns true if there are any channels active (see <a
-                  href="Session.html#method-i-busy-3F">busy?</a>). The # <code>wait</code>
+                  href="Session.html#method-i-busy-3F">busy?</a>). The # <tt>wait</tt>
                   parameter is also passed through to <a
                   href="Session.html#method-i-process">process</a> (where it is interpreted
                   as the maximum number of seconds to wait for IO.select to return).</p>
@@ -526,7 +526,7 @@
                   <p>Requests that a new channel be opened. By default, the channel will be of
                   type "session", but if you know what you're doing you can select any of the
                   channel types supported by the <a href="../../SSH.html">SSH</a> protocol.
-                  The <code>extra</code> parameters must be even in number and conform to the
+                  The <tt>extra</tt> parameters must be even in number and conform to the
                   same format as described for <a
                   href="../Buffer.html#method-c-from">Net::SSH::Buffer.from</a>. If a
                   callback is given, it will be invoked when the server confirms that the
@@ -539,7 +539,7 @@
                   additional initialization data is if you were implementing an <a
                   href="../../SSH.html">SSH</a> extension.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span> = <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;grep something /some/files&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-operator">...</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">wait</span></pre>
+                  <pre>channel = ssh.open_channel do |ch|&#x000A;  ch.exec &quot;grep something /some/files&quot; do |ch, success|&#x000A;    ...&#x000A;  end&#x000A;end&#x000A;channel.wait</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-open_channel-source'); return false">
@@ -608,8 +608,8 @@
                   Otherwise, <a href="Session.html#method-i-process">process</a> returns
                   true. The session itself is yielded to the block as its only argument.</p>
                   
-                  <p>If <code>wait</code> is nil (the default), this method will block until any
-                  of the monitored IO objects are ready to be read from or written to. If you
+                  <p>If <tt>wait</tt> is nil (the default), this method will block until any of
+                  the monitored IO objects are ready to be read from or written to. If you
                   want it to not block, you can pass 0, or you can pass any other numeric
                   value to indicate that it should block for no more than that many seconds.
                   Passing 0 is a good way to poll the connection, but if you do it too
@@ -618,7 +618,7 @@
                   <p>This will also cause all active channels to be processed once each (see <a
                   href="Channel.html#method-i-on_process">Net::SSH::Connection::Channel#on_process</a>).</p>
                   
-                  <pre class="ruby"><span class="ruby-comment"># process multiple Net::SSH connections in parallel</span>&#x000A;<span class="ruby-identifier">connections</span> = [&#x000A;  <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span>.<span class="ruby-identifier">start</span>(<span class="ruby-string">&quot;host1&quot;</span>, <span class="ruby-operator">...</span>),&#x000A;  <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span>.<span class="ruby-identifier">start</span>(<span class="ruby-string">&quot;host2&quot;</span>, <span class="ruby-operator">...</span>)&#x000A;]&#x000A;&#x000A;<span class="ruby-identifier">connections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ssh</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;grep something /in/some/files&quot;</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">condition</span> = <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">busy?</span> }&#x000A;&#x000A;<span class="ruby-identifier">loop</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">connections</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ssh</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">process</span>(<span class="ruby-value">0.1</span>, &amp;<span class="ruby-identifier">condition</span>) }&#x000A;  <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">connections</span>.<span class="ruby-identifier">empty?</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre># process multiple Net::SSH connections in parallel&#x000A;connections = [&#x000A;  Net::SSH.start(&quot;host1&quot;, ...),&#x000A;  Net::SSH.start(&quot;host2&quot;, ...)&#x000A;]&#x000A;connections.each do |ssh|&#x000A;  ssh.exec &quot;grep something /in/some/files&quot;&#x000A;end&#x000A;&#x000A;condition = Proc.new { |s| s.busy? }&#x000A;&#x000A;loop do&#x000A;  connections.delete_if { |ssh| !ssh.process(0.1, &amp;condition) }&#x000A;  break if connections.empty?&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-process-source'); return false">
@@ -635,8 +635,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Send a global request of the given type. The <code>extra</code> parameters
-                  must be even in number, and conform to the same format as described for <a
+                  <p>Send a global request of the given type. The <tt>extra</tt> parameters must
+                  be even in number, and conform to the same format as described for <a
                   href="../Buffer.html#method-c-from">Net::SSH::Buffer.from</a>. If a
                   callback is not specified, the request will not require a response from the
                   server, otherwise the server is required to respond and indicate whether

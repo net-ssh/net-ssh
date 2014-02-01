@@ -51,7 +51,7 @@
             <p>A reference to a script. is generally obtained in a unit test via the <a
             href="../Test.html#method-i-story">Net::SSH::Test#story</a> helper method:</p>
             
-            <pre class="ruby"><span class="ruby-identifier">story</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">script</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">script</span>.<span class="ruby-identifier">opens_channel</span>&#x000A;  <span class="ruby-operator">...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre>story do |script|&#x000A;  channel = script.opens_channel&#x000A;  ...&#x000A;end</pre>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -147,8 +147,8 @@
                 <div class='description'>
                   
                   <p>Scripts the reception of a channel close packet from the remote host by the
-                  given <a href="Channel.html">Net::SSH::Test::Channel</a>
-                  <code>channel</code>. This will typically be called via <a
+                  given <a href="Channel.html">Net::SSH::Test::Channel</a> <tt>channel</tt>.
+                  This will typically be called via <a
                   href="Channel.html#method-i-gets_close">Net::SSH::Test::Channel#gets_close</a>.</p>
                 </div>
                 <div class='source'>
@@ -167,8 +167,8 @@
                 <div class='description'>
                   
                   <p>Scripts the reception of a channel data packet from the remote host by the
-                  given <a href="Channel.html">Net::SSH::Test::Channel</a>
-                  <code>channel</code>. This will typically be called via <a
+                  given <a href="Channel.html">Net::SSH::Test::Channel</a> <tt>channel</tt>.
+                  This will typically be called via <a
                   href="Channel.html#method-i-gets_data">Net::SSH::Test::Channel#gets_data</a>.</p>
                 </div>
                 <div class='source'>
@@ -187,8 +187,8 @@
                 <div class='description'>
                   
                   <p>Scripts the reception of a channel EOF packet from the remote host by the
-                  given <a href="Channel.html">Net::SSH::Test::Channel</a>
-                  <code>channel</code>. This will typically be called via <a
+                  given <a href="Channel.html">Net::SSH::Test::Channel</a> <tt>channel</tt>.
+                  This will typically be called via <a
                   href="Channel.html#method-i-gets_eof">Net::SSH::Test::Channel#gets_eof</a>.</p>
                 </div>
                 <div class='source'>
@@ -208,7 +208,7 @@
                   
                   <p>Scripts the reception of a channel extended data packet from the remote
                   host by the given <a href="Channel.html">Net::SSH::Test::Channel</a>
-                  <code>channel</code>. This will typically be called via <a
+                  <tt>channel</tt>. This will typically be called via <a
                   href="Channel.html#method-i-gets_extended_data">Net::SSH::Test::Channel#gets_extended_data</a>.</p>
                   
                   <p>Currently the only extended data type is stderr == 1.</p>
@@ -230,7 +230,7 @@
                   
                   <p>Scripts the reception of a channel request packet from the remote host by
                   the given <a href="Channel.html">Net::SSH::Test::Channel</a>
-                  <code>channel</code>. This will typically be called via <a
+                  <tt>channel</tt>. This will typically be called via <a
                   href="Channel.html#method-i-gets_exit_status">Net::SSH::Test::Channel#gets_exit_status</a>.</p>
                 </div>
                 <div class='source'>
@@ -270,8 +270,8 @@
                 <div class='description'>
                   
                   <p>Scripts the opening of a channel by adding a local packet sending the
-                  channel open request, and if <code>confirm</code> is true (the default),
-                  also adding a remote packet confirming the new channel.</p>
+                  channel open request, and if <tt>confirm</tt> is true (the default), also
+                  adding a remote packet confirming the new channel.</p>
                   
                   <p>A new <a href="Channel.html">Net::SSH::Test::Channel</a> instance is
                   returned, which can be used to script additional channel operations.</p>
@@ -329,8 +329,8 @@
                 <div class='description'>
                   
                   <p>Scripts the sending of a channel close packet from the given <a
-                  href="Channel.html">Net::SSH::Test::Channel</a> <code>channel</code>. This
-                  will typically be called via <a
+                  href="Channel.html">Net::SSH::Test::Channel</a> <tt>channel</tt>. This will
+                  typically be called via <a
                   href="Channel.html#method-i-sends_close">Net::SSH::Test::Channel#sends_close</a>.</p>
                 </div>
                 <div class='source'>
@@ -348,9 +348,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Scripts the sending of a channel data packet. <code>channel</code> must be
-                  a <a href="Channel.html">Net::SSH::Test::Channel</a> object, and
-                  <code>data</code> is the (string) data to expect will be sent.</p>
+                  <p>Scripts the sending of a channel data packet. <tt>channel</tt> must be a <a
+                  href="Channel.html">Net::SSH::Test::Channel</a> object, and <tt>data</tt>
+                  is the (string) data to expect will be sent.</p>
                   
                   <p>This will typically be called via <a
                   href="Channel.html#method-i-sends_data">Net::SSH::Test::Channel#sends_data</a>.</p>
@@ -371,8 +371,8 @@
                 <div class='description'>
                   
                   <p>Scripts the sending of a channel EOF packet from the given <a
-                  href="Channel.html">Net::SSH::Test::Channel</a> <code>channel</code>. This
-                  will typically be called via <a
+                  href="Channel.html">Net::SSH::Test::Channel</a> <tt>channel</tt>. This will
+                  typically be called via <a
                   href="Channel.html#method-i-sends_eof">Net::SSH::Test::Channel#sends_eof</a>.</p>
                 </div>
                 <div class='source'>
@@ -391,17 +391,17 @@
                 <div class='description'>
                   
                   <p>Scripts the sending of a new channel request packet to the remote host.
-                  <code>channel</code> should be an instance of <a
-                  href="Channel.html">Net::SSH::Test::Channel</a>. <code>request</code> is a
-                  string naming the request type to send, <code>reply</code> is a boolean
+                  <tt>channel</tt> should be an instance of <a
+                  href="Channel.html">Net::SSH::Test::Channel</a>. <tt>request</tt> is a
+                  string naming the request type to send, <tt>reply</tt> is a boolean
                   indicating whether a response to this packet is required , and
-                  <code>data</code> is any additional request-specific data that this packet
-                  should send. <code>success</code> indicates whether the response (if one is
+                  <tt>data</tt> is any additional request-specific data that this packet
+                  should send. <tt>success</tt> indicates whether the response (if one is
                   required) should be success or failure.</p>
                   
                   <p>If a reply is desired, a remote packet will also be queued,
-                  :channel_success if <code>success</code> is true, or :channel_failure if
-                  <code>success</code> is false.</p>
+                  :channel_success if <tt>success</tt> is true, or :channel_failure if
+                  <tt>success</tt> is false.</p>
                   
                   <p>This will typically be called via <a
                   href="Channel.html#method-i-sends_exec">Net::SSH::Test::Channel#sends_exec</a>

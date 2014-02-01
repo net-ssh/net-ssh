@@ -49,7 +49,7 @@
             rather acts as a convenience for scripting channel-related activity for
             later comparison in a unit test.</p>
             
-            <pre class="ruby"><span class="ruby-identifier">story</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">session</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">opens_channel</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">sends_exec</span> <span class="ruby-string">&quot;ls&quot;</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_data</span> <span class="ruby-string">&quot;result of ls&quot;</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_extended_data</span> <span class="ruby-string">&quot;some error coming from ls&quot;</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_close</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">sends_close</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre>story do |session|&#x000A;  channel = session.opens_channel&#x000A;  channel.sends_exec &quot;ls&quot;&#x000A;  channel.gets_data &quot;result of ls&quot;&#x000A;  channel.gets_extended_data &quot;some error coming from ls&quot;&#x000A;  channel.gets_close&#x000A;  channel.sends_close&#x000A;end</pre>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -130,7 +130,7 @@
                 <div class='description'>
                   
                   <p>Creates a new <a href="Channel.html">Test::Channel</a> instance on top of
-                  the given <code>script</code> (which must be a <a
+                  the given <tt>script</tt> (which must be a <a
                   href="Script.html">Net::SSH::Test::Script</a> instance).</p>
                 </div>
                 <div class='source'>
@@ -367,10 +367,10 @@
                 <div class='description'>
                   
                   <p>Scripts the sending of an "exec" channel request packet to the mock 
-                  server. If <code>reply</code> is true, then the server is expected to reply
-                  to the request, otherwise no response to this request will be sent. If
-                  <code>success</code> is <code>true</code>, then the request will be
-                  successful, otherwise a failure will be scripted.</p>
+                  server. If <tt>reply</tt> is true, then the server is expected to reply to
+                  the request, otherwise no response to this request will be sent. If
+                  <tt>success</tt> is <tt>true</tt>, then the request will be successful,
+                  otherwise a failure will be scripted.</p>
                   
                   <pre>channel.sends_exec &quot;ls -l&quot;</pre>
                 </div>
@@ -391,8 +391,8 @@
                   
                   <p>Scripts the sending of a "subsystem" channel request packet to the mock
                   server. See <a href="Channel.html#method-i-sends_exec">sends_exec</a> for a
-                  discussion of the meaning of the <code>reply</code> and
-                  <code>success</code> arguments.</p>
+                  discussion of the meaning of the <tt>reply</tt> and <tt>success</tt>
+                  arguments.</p>
                   
                   <pre>channel.sends_subsystem &quot;sftp&quot;</pre>
                 </div>

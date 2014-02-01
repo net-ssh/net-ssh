@@ -52,7 +52,7 @@
             
             <p>Channels are intended to be used asynchronously. You request that one be
             opened (via <a
-            href="Session.html#method-i-open_channel">Net::SSH::Connection::Session#open_channel</a>),
+            href="Session.html#method-i-open_channel">Connection::Session#open_channel</a>),
             and when it is opened, your callback is invoked. Then, you set various
             other callbacks on the newly opened channel, which are called in response
             to the corresponding events. Programming with <a
@@ -62,7 +62,7 @@
             state machines can be built on top of the <a href="../../SSH.html">SSH</a>
             protocol.</p>
             
-            <pre class="ruby"><span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">channel</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">exec</span>(<span class="ruby-string">&quot;/invoke/some/command&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">abort</span> <span class="ruby-string">&quot;could not execute command&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">success</span>&#x000A;&#x000A;    <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;got stdout: #{data}&quot;</span>&#x000A;      <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">send_data</span> <span class="ruby-string">&quot;something for stdin\n&quot;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_extended_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;got stderr: #{data}&quot;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;&#x000A;    <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_close</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;channel is closing!&quot;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">loop</span></pre>
+            <pre>ssh.open_channel do |channel|&#x000A;  channel.exec(&quot;/invoke/some/command&quot;) do |ch, success|&#x000A;    abort &quot;could not execute command&quot; unless success&#x000A;    channel.on_data do |ch, data|&#x000A;      puts &quot;got stdout: #{data}&quot;&#x000A;      channel.send_data &quot;something for stdin\n&quot;&#x000A;    end&#x000A;&#x000A;    channel.on_extended_data do |ch, type, data|&#x000A;      puts &quot;got stderr: #{data}&quot;&#x000A;    end&#x000A;&#x000A;    channel.on_close do |ch|&#x000A;      puts &quot;channel is closing!&quot;&#x000A;    end&#x000A;  end&#x000A;end&#x000A;&#x000A;ssh.loop</pre>
             
             <p>Channels also have a basic hash-like interface, that allows programs to
             store arbitrary state information on a channel object. This helps simplify
@@ -473,8 +473,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Invokes the next pending request callback with <code>false</code> as the
-                  second argument.</p>
+                  <p>Invokes the next pending request callback with <tt>false</tt> as the second
+                  argument.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-do_failure-source'); return false">
@@ -513,8 +513,8 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Invokes the next pending request callback with <code>true</code> as the
-                  second argument.</p>
+                  <p>Invokes the next pending request callback with <tt>true</tt> as the second
+                  argument.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-do_success-source'); return false">
@@ -603,7 +603,7 @@
                   that it has completed, and failure means that the command altogether failed
                   to be executed.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;ls -l /home&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;command has begun executing...&quot;</span>&#x000A;    <span class="ruby-comment"># this is a good place to hang callbacks like #on_data...</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;alas! the command could not be invoked!&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.exec &quot;ls -l /home&quot; do |ch, success|&#x000A;  if success&#x000A;    puts &quot;command has begun executing...&quot;&#x000A;    # this is a good place to hang callbacks like #on_data...&#x000A;  else&#x000A;    puts &quot;alas! the command could not be invoked!&quot;&#x000A;  end&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-exec-source'); return false">
@@ -623,7 +623,7 @@
                   <p>Registers a callback to be invoked when the server acknowledges that a
                   channel is closed. This is invoked with the channel as the sole argument.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_close</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;remote end is closing!&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_close do |ch|&#x000A;  puts &quot;remote end is closing!&quot;&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_close-source'); return false">
@@ -644,10 +644,10 @@
                   channel. The callback is called with the channel as the first argument, and
                   the data as the second.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;got data: #{data.inspect}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_data do |ch, data|&#x000A;  puts &quot;got data: #{data.inspect}&quot;&#x000A;end</pre>
                   
                   <p>Data received this way is typically the data written by the remote process
-                  to its <code>stdout</code> stream.</p>
+                  to its <tt>stdout</tt> stream.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_data-source'); return false">
@@ -668,7 +668,7 @@
                   data will be sent to the channel (although the channel can still send data
                   to the server). The channel is the sole argument to the callback.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_eof</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;remote end is done sending data&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_eof do |ch|&#x000A;  puts &quot;remote end is done sending data&quot;&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_eof-source'); return false">
@@ -688,11 +688,11 @@
                   <p>Registers a callback to be invoked when extended data packets are received
                   by the channel. The callback is called with the channel as the first
                   argument, the data type (as an integer) as the second, and the data as the
-                  third. Extended data is almost exclusively used to send <code>stderr</code>
-                  data (<code>type</code> == 1). Other extended data types are not defined by
-                  the <a href="../../SSH.html">SSH</a> protocol.</p>
+                  third. Extended data is almost exclusively used to send <tt>stderr</tt>
+                  data (<tt>type</tt> == 1). Other extended data types are not defined by the
+                  <a href="../../SSH.html">SSH</a> protocol.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_extended_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;got stderr: #{data.inspect}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_extended_data do |ch, type, data|&#x000A;  puts &quot;got stderr: #{data.inspect}&quot;&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_extended_data-source'); return false">
@@ -714,7 +714,7 @@
                   with the integer "reason code" for the failure, and a textual description
                   of the failure from the server.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ..</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_open_failed</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">code</span>, <span class="ruby-identifier">desc</span><span class="ruby-operator">|</span> <span class="ruby-operator">...</span> }</pre>
+                  <pre>channel = session.open_channel do |ch|&#x000A;  # ..&#x000A;end&#x000A;channel.on_open_failed { |ch, code, desc| ... }</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_open_failed-source'); return false">
@@ -741,7 +741,7 @@
                   channel itself, and displays individual lines in the input one at a time
                   when the channel is processed:</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>[:<span class="ruby-identifier">data</span>] = <span class="ruby-string">&quot;&quot;</span>&#x000A;&#x000A;<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">channel</span>[:<span class="ruby-identifier">data</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">data</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_process</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">channel</span>[:<span class="ruby-identifier">data</span>] <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r^.*?\n/</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-node">$&amp;</span>&#x000A;    <span class="ruby-identifier">channel</span>[:<span class="ruby-identifier">data</span>] = <span class="ruby-node">$'</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel[:data] = &quot;&quot;&#x000A;channel.on_data do |ch, data|&#x000A;  channel[:data] &lt;&lt; data&#x000A;end&#x000A;&#x000A;channel.on_process do |ch|&#x000A;  if channel[:data] =~ /^.*?\n/&#x000A;    puts $&amp;&#x000A;    channel[:data] = $'&#x000A;  end&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_process-source'); return false">
@@ -782,7 +782,7 @@
                   data.read_string. (Not all <a href="../../SSH.html">SSH</a> servers support
                   this channel request type.)</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_request</span> <span class="ruby-string">&quot;exit-status&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;process terminated with exit status: #{data.read_long}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_request &quot;exit-status&quot; do |ch, data|&#x000A;  puts &quot;process terminated with exit status: #{data.read_long}&quot;&#x000A;end</pre>
                   </li></ul>
                 </div>
                 <div class='source'>
@@ -832,7 +832,7 @@
                   (.bashrc and such) are not run by default, whereas they are run when a pty
                   is not present.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">request_pty</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;pty successfully obtained&quot;</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;could not obtain pty&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.request_pty do |ch, success|&#x000A;  if success&#x000A;    puts &quot;pty successfully obtained&quot;&#x000A;  else&#x000A;    puts &quot;could not obtain pty&quot;&#x000A;  end&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-request_pty-source'); return false">
@@ -849,10 +849,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Sends a new channel request with the given name. The extra
-                  <code>data</code> parameter must either be empty, or consist of an even
-                  number of arguments. See <a
-                  href="../Buffer.html#method-c-from">Net::SSH::Buffer.from</a> for a
+                  <p>Sends a new channel request with the given name. The extra <tt>data</tt>
+                  parameter must either be empty, or consist of an even number of arguments.
+                  See <a href="../Buffer.html#method-c-from">Net::SSH::Buffer.from</a> for a
                   description of their format. If a block is given, it is registered as a
                   callback for a pending request, and the packet will be flagged so that the
                   server knows a reply is required. If no block is given, the server will
@@ -862,7 +861,7 @@
                   not. The meaning of "success" and "failure" in this context is dependent on
                   the specific request that was sent.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">send_channel_request</span> <span class="ruby-string">&quot;shell&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;user shell started successfully&quot;</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;could not start user shell&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.send_channel_request &quot;shell&quot; do |ch, success|&#x000A;  if success&#x000A;    puts &quot;user shell started successfully&quot;&#x000A;  else&#x000A;    puts &quot;could not start user shell&quot;&#x000A;  end&#x000A;end</pre>
                   
                   <p>Most channel requests you'll want to send are already wrapped in more
                   convenient helper methods (see <a
@@ -919,7 +918,7 @@
                   need to call this directly unless you are the implementor of something that
                   consumes an <a href="../../SSH.html">SSH</a> subsystem, like SFTP.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">subsystem</span>(<span class="ruby-string">&quot;sftp&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;subsystem successfully started&quot;</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;subsystem could not be started&quot;</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.subsystem(&quot;sftp&quot;) do |ch, success|&#x000A;  if success&#x000A;    puts &quot;subsystem successfully started&quot;&#x000A;  else&#x000A;    puts &quot;subsystem could not be started&quot;&#x000A;  end&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-subsystem-source'); return false">
