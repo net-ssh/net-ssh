@@ -1,5 +1,22 @@
 
 
+=== 2.8.0 / 01 Feb 2014
+
+* Handle ssh-rsa and ssh-dss certificate files [bobveznat]
+* Correctly interpret /etc/ssh_config Authentication settings based on openssh /etc/ssh_config system defaults [therealjessesanford, liggitt]
+* Fixed pageant support for Windows [jarredholman]
+* Support %r in ProxyCommand configuration in ssh_config files as defined in OpenSSH [yugui]
+* Don't use ssh-agent if :keys_only is true [SFEley]
+* Fix the bug in keys with comments [bobtfish]
+* Add a failing tests for options in pub keys [bobtfish]
+* Assert that the return value from ssh block is returned [carlhoerberg]
+* Don't close the connection it's already closed [carlhoerberg]
+* Ensure the connection closes even on exception [carlhoerberg]
+* Make the authentication error message more useful [deric]
+* Fix "ConnectionError" typo in lib/net/ssh/proxy/socks5.rb [mirakui]
+* Allow KeyManager to recover from incompatible agents [ecki, delano]
+* Fix for "Authentication Method determination can pick up a class from the root namespace" [dave.sieh]
+
 === 2.7.0 / 11 Sep 2013
 
 * Fix for 'Could not parse PKey: no start line' error on private keys with passphrases (issue #101) [metametaclass]
