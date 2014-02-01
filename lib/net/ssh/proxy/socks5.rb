@@ -108,7 +108,7 @@ module Net
             ipv6addr hostname = socket.recv(16)
           else
             socket.close
-            raise ConnectionError, "Illegal response type"
+            raise ConnectError, "Illegal response type"
           end
           portnum = socket.recv(2)
           
