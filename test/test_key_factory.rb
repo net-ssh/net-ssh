@@ -65,6 +65,20 @@ class TestKeyFactory < Test::Unit::TestCase
     assert_equal rsa_key.to_blob, Net::SSH::KeyFactory.load_public_key(@key_file).to_blob
   end
 
+  def test_load_public_rsa_key_with_comment_should_return_key
+    File.expects(:read).with(@key_file).returns(public(rsa_key) + " key_comment")
+    assert_equal rsa_key.to_blob, Net::SSH::KeyFactory.load_public_key(@key_file).to_blob
+  end
+
+  def test_load_public_rsa_key_with_options_should_return_key
+    File.expects(:read).with(@key_file).returns(public(rsa_key, 'environment="FOO=bar"'))
+    assert_equal rsa_key.to_blob, Net::SSH::KeyFactory.load_public_key(@key_file).to_blob
+  end
+
+  def test_load_public_rsa_key_with_options_and_comment_should_return_key
+    File.expects(:read).with(@key_file).returns(public(rsa_key, 'environment="FOO=bar"')  + " key_comment")
+    assert_equal rsa_key.to_blob, Net::SSH::KeyFactory.load_public_key(@key_file).to_blob
+  end
   if defined?(OpenSSL::PKey::EC)
     def test_load_unencrypted_private_ecdsa_sha2_nistp256_key_should_return_key
       File.expects(:read).with("/key-file").returns(ecdsa_sha2_nistp256_key.to_pem)
@@ -165,8 +179,12 @@ WEKt5v3QsUEgVrzkM4K9UbI=
       key.export(OpenSSL::Cipher::Cipher.new("des-ede3-cbc"), password)
     end
 
-    def public(key)
-      result = "#{key.ssh_type} "
+    def public(key, args = nil)
+      result = ""
+      if !args.nil?
+        result << "#{args} "
+      end
+      result << "#{key.ssh_type} "
       result << [Net::SSH::Buffer.from(:key, key).to_s].pack("m*").strip.tr("\n\r\t ", "")
       result << " joe@host.test"
     end
