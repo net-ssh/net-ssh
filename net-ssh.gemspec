@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "net-ssh"
-  s.version = "2.7.0"
+  s.version = "2.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jamis Buck", "Delano Mandelbaum"]
-  s.date = "2013-09-11"
+  s.date = "2014-02-01"
   s.description = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol. It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
   s.email = "net-ssh@solutious.com"
   s.extra_rdoc_files = [
@@ -120,6 +120,9 @@ Gem::Specification.new do |s|
     "test/authentication/test_key_manager.rb",
     "test/authentication/test_session.rb",
     "test/common.rb",
+    "test/configs/auth_off",
+    "test/configs/auth_on",
+    "test/configs/empty",
     "test/configs/eqsign",
     "test/configs/exact_match",
     "test/configs/host_plus",
@@ -133,6 +136,7 @@ Gem::Specification.new do |s|
     "test/connection/test_session.rb",
     "test/known_hosts/github",
     "test/manual/test_forward.rb",
+    "test/start/test_connection.rb",
     "test/start/test_options.rb",
     "test/start/test_transport.rb",
     "test/test_all.rb",
@@ -171,7 +175,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubyforge_project = "net-ssh"
-  s.rubygems_version = "1.8.25"
+  s.rubygems_version = "1.8.23"
   s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
 
   if s.respond_to? :specification_version then
