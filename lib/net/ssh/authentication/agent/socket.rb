@@ -92,10 +92,15 @@ module Net; module SSH; module Authentication
 
       identities = []
       body.read_long.times do
-        key = Buffer.new(body.read_string).read_key
-        key.extend(Comment)
-        key.comment = body.read_string
-        identities.push key
+        begin
+          key = Buffer.new(body.read_string).read_key
+        rescue NotImplementedError => e
+          info { e.message }
+        else
+          key.extend(Comment)
+          key.comment = body.read_string
+          identities.push key
+        end
       end
 
       return identities
