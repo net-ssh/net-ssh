@@ -33,13 +33,20 @@ module Net; module SSH; module Proxy
 
     # Return a new socket connected to the given host and port via the
     # proxy that was requested when the socket factory was instantiated.
-    def open(host, port)
+    def open(host, port, connection_options = nil)
       command_line = @command_line_template.gsub(/%(.)/) {
         case $1
         when 'h'
           host
         when 'p'
           port.to_s
+        when 'r'
+          remote_user = connection_options && connection_options[:remote_user]
+          if remote_user
+            remote_user
+          else
+            raise ArgumentError, "remote user name not available"
+          end
         when '%'
           '%'
         else

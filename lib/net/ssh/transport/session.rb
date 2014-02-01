@@ -64,7 +64,13 @@ module Net; module SSH; module Transport
 
       debug { "establishing connection to #{@host}:#{@port}" }
       factory = options[:proxy] || TCPSocket
-      @socket = timeout(options[:timeout] || 0) { @bind_address.nil? || options[:proxy] ? factory.open(@host, @port) : factory.open(@host,@port,@bind_address) }
+      @socket = timeout(options[:timeout] || 0) {
+        case
+        when options[:proxy] then factory.open(@host, @port, options)
+        when @bind_address.nil? then factory.open(@host, @port)
+        else factory.open(@host, @port, @bind_address)
+        end
+      }
       @socket.extend(PacketStream)
       @socket.logger = @logger
 

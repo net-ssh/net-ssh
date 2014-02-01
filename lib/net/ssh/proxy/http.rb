@@ -48,7 +48,7 @@ module Net; module SSH; module Proxy
 
     # Return a new socket connected to the given host and port via the
     # proxy that was requested when the socket factory was instantiated.
-    def open(host, port)
+    def open(host, port, connection_options = nil)
       socket = TCPSocket.new(proxy_host, proxy_port)
       socket.write "CONNECT #{host}:#{port} HTTP/1.0\r\n"
 
