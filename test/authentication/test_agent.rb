@@ -43,7 +43,7 @@ module Authentication
         assert_equal Net::SSH::Transport::ServerVersion::PROTO_VERSION, buffer.read_string
         s.return(SSH2_AGENT_VERSION_RESPONSE)
       end
-      assert_raises(NotImplementedError) { agent.negotiate! }
+      assert_raises(Net::SSH::Authentication::AgentNotAvailable) { agent.negotiate! }
     end
 
     def test_negotiate_should_raise_error_if_response_was_unexpected
@@ -51,7 +51,7 @@ module Authentication
         assert_equal SSH2_AGENT_REQUEST_VERSION, type
         s.return(255)
       end
-      assert_raises(Net::SSH::Authentication::AgentError) { agent.negotiate! }
+      assert_raises(Net::SSH::Authentication::AgentNotAvailable) { agent.negotiate! }
     end
 
     def test_negotiate_should_be_successful_with_expected_response
@@ -65,7 +65,7 @@ module Authentication
     def test_identities_should_fail_if_SSH_AGENT_FAILURE_recieved
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
-        s.return(SSH_AGENT_FAILURE) 
+        s.return(SSH_AGENT_FAILURE)
       end
       assert_raises(Net::SSH::Authentication::AgentError) { agent.identities }
     end
@@ -73,7 +73,7 @@ module Authentication
     def test_identities_should_fail_if_SSH2_AGENT_FAILURE_recieved
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
-        s.return(SSH2_AGENT_FAILURE) 
+        s.return(SSH2_AGENT_FAILURE)
       end
       assert_raises(Net::SSH::Authentication::AgentError) { agent.identities }
     end
@@ -81,7 +81,7 @@ module Authentication
     def test_identities_should_fail_if_SSH_COM_AGENT2_FAILURE_recieved
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
-        s.return(SSH_COM_AGENT2_FAILURE) 
+        s.return(SSH_COM_AGENT2_FAILURE)
       end
       assert_raises(Net::SSH::Authentication::AgentError) { agent.identities }
     end
