@@ -12,7 +12,7 @@ module Net
 
       # This class encapsulates all operations done by clients on a user's
       # private keys. In practice, the client should never need a reference
-      # to a private key; instead, they grab a list of "identities" (public 
+      # to a private key; instead, they grab a list of "identities" (public
       # keys) that are available from the KeyManager, and then use
       # the KeyManager to do various private key operations using those
       # identities.
@@ -37,12 +37,13 @@ module Net
         attr_reader :options
 
         # Create a new KeyManager. By default, the manager will
-        # use the ssh-agent (if it is running).
+        # use the ssh-agent if it is running and the `:keys_only` option
+        # is not true.
         def initialize(logger, options={})
           self.logger = logger
           @key_files = []
           @key_data = []
-          @use_agent = true
+          @use_agent = !options[:keys_only]
           @known_identities = {}
           @agent = nil
           @options = options
@@ -91,9 +92,8 @@ module Net
         # ssh-agent. Note that identities from an ssh-agent are always listed
         # first in the array, with other identities coming after.
         #
-        # If key manager was created with :keys_only option, any identity
-        # from ssh-agent will be ignored unless it present in key_files or
-        # key_data.
+        # If key manager was created with :keys_only option, no identities
+        # from ssh-agent will be loaded.
         def each_identity
           prepared_identities = prepare_identities_from_files + prepare_identities_from_data
 
@@ -139,7 +139,7 @@ module Net
           if info[:key].nil? && info[:from] == :file
             begin
               info[:key] = KeyFactory.load_private_key(info[:file], options[:passphrase], true)
-            rescue Exception, OpenSSL::OpenSSLError => e 
+            rescue Exception, OpenSSL::OpenSSLError => e
               raise KeyManagerError, "the given identity is known, but the private key could not be loaded: #{e.class} (#{e.message})"
             end
           end
