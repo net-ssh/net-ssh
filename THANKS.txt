@@ -19,6 +19,30 @@ Chris Andrews <chris@nodnol.org> and Lee Jensen <lee@outerim.com>
 Hiroshi Nakamura
   * fixed errors with JRuby tests
 
+bobveznat
+therealjessesanford
+liggitt
+jarredholman
+yugui
+SFEley
+bobtfish
+carlhoerberg
+deric
+mirakui
+ecki
+Dave Sieh
+metametaclass
+fnordfish
+krishicks
+noric
+GabKlein
+Josh Kalderimis
+voxik
+Olipro
+jansegre
+priteau
+jordimassaguerpla
+Kenichi Kamiya
 Andreas Wolff
 mhuffnagle
 ohrite
