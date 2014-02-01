@@ -1,4 +1,4 @@
-#     $ ruby -Ilib -Itest -rrubygems test/test_forward.rb
+#     $ ruby -Ilib -Itest -rrubygems test/manual/test_forward.rb
 
 # Tests for the following patch:
 #
@@ -28,14 +28,6 @@ class TestForward < Test::Unit::TestCase
   
   def ssh_start_params
     [localhost ,ENV['USER'], {:keys => "~/.ssh/id_rsa", :verbose => :debug}]
-  end
-  
-  def find_free_port 
-    server = TCPServer.open(0)
-    server.setsockopt(Socket::SOL_SOCKET,Socket::SO_REUSEADDR,true)
-    port = server.addr[1]
-    server.close
-    port
   end
   
   def start_server_sending_lot_of_data(exceptions)
@@ -77,12 +69,34 @@ class TestForward < Test::Unit::TestCase
     return server
   end
   
+  def test_local_ephemeral_port_should_work_correctly
+    session = Net::SSH.start(*ssh_start_params)
+    
+    assert_nothing_raised do
+      assigned_port = session.forward.local(0, localhost, 22)
+      assert_not_nil assigned_port
+      assert_operator assigned_port, :>, 0
+    end
+  end
+  
+  def test_remote_ephemeral_port_should_work_correctly
+    session = Net::SSH.start(*ssh_start_params)
+    
+    assert_nothing_raised do
+      session.forward.remote(22, localhost, 0, localhost)
+      session.loop { !(session.forward.active_remotes.length > 0) }
+      assigned_port = session.forward.active_remotes.first[0]
+      assert_not_nil assigned_port
+      assert_operator assigned_port, :>, 0
+    end
+  end
+  
   def test_loop_should_not_abort_when_local_side_of_forward_is_closed
     session = Net::SSH.start(*ssh_start_params) 
     server_exc = Queue.new
     server = start_server_sending_lot_of_data(server_exc)
     remote_port = server.addr[1]
-    local_port = find_free_port
+    local_port = 0 # request ephemeral port
     session.forward.local(local_port, localhost, remote_port)
     client_done = Queue.new
     Thread.start do
@@ -104,7 +118,7 @@ class TestForward < Test::Unit::TestCase
     server_exc = Queue.new    
     server = start_server_sending_lot_of_data(server_exc)
     remote_port = server.addr[1]
-    local_port = find_free_port
+    local_port = 0 # request ephemeral port
     session.forward.local(local_port, localhost, remote_port)
     client_done = Queue.new
     Thread.start do
@@ -163,7 +177,7 @@ class TestForward < Test::Unit::TestCase
     session = Net::SSH.start(*ssh_start_params)    
     server = start_server_closing_soon
     remote_port = server.addr[1]
-    local_port = find_free_port
+    local_port = 0 # request ephemeral port
     session.forward.local(local_port, localhost, remote_port)
     client_done = Queue.new
     Thread.start do
@@ -203,8 +217,7 @@ class TestForward < Test::Unit::TestCase
     client_exception = Queue.new
     client_data = Queue.new
     remote_port = server.addr[1]
-    local_port = find_free_port
-    session.forward.local(local_port, localhost, remote_port)
+    local_port = session.forward.local(0, localhost, remote_port)
     Thread.start do
       begin
         client = TCPSocket.new(localhost, local_port)

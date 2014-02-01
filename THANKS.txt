@@ -83,3 +83,4 @@ watsonian
 Grant Hutchins
 Michael Schubert
 mtrudel
+Aurélien Derouineau
