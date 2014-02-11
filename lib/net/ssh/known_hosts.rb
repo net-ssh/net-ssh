@@ -40,7 +40,7 @@ module Net; module SSH
       # hosts files. If the :user_known_hosts_file key is not set, the
       # default is returned (~/.ssh/known_hosts and ~/.ssh/known_hosts2). If
       # :global_known_hosts_file is not set, the default is used
-      # (/etc/ssh/known_hosts and /etc/ssh/known_hosts2).
+      # (/etc/ssh/ssh_known_hosts and /etc/ssh/ssh_known_hosts2).
       #
       # If you only want the user known host files, you can pass :user as
       # the second option.
@@ -52,7 +52,7 @@ module Net; module SSH
         end
 
         if which == :all || which == :global
-          files += Array(options[:global_known_hosts_file] || %w(/etc/ssh/known_hosts /etc/ssh/known_hosts2))
+          files += Array(options[:global_known_hosts_file] || %w(/etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2))
         end
 
         return files

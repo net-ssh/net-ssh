@@ -115,7 +115,7 @@ module Net
     #   be forwarded
     # * :global_known_hosts_file => the location of the global known hosts
     #   file. Set to an array if you want to specify multiple global known
-    #   hosts files. Defaults to %w(/etc/ssh/known_hosts /etc/ssh/known_hosts2).
+    #   hosts files. Defaults to %w(/etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2).
     # * :hmac => the hmac algorithm (or algorithms) to use
     # * :host_key => the host key algorithm (or algorithms) to use
     # * :host_key_alias => the host name to use when looking up or adding a
