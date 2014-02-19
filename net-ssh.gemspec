@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "net-ssh"
-  s.version = "2.8.0"
+  s.version = "2.8.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jamis Buck", "Delano Mandelbaum"]
-  s.date = "2014-02-01"
+  s.date = "2014-02-19"
   s.description = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol. It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
   s.email = "net-ssh@solutious.com"
   s.extra_rdoc_files = [

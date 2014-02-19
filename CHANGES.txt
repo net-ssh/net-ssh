@@ -1,5 +1,11 @@
 
 
+=== 2.8.1 / 19 Feb 2014
+
+* Correct location of global known_hosts files [mfischer-zd]
+* Fix for password authentication [blackpond, zachlipton, delano]
+
+
 === 2.8.0 / 01 Feb 2014
 
 * Handle ssh-rsa and ssh-dss certificate files [bobveznat]
@@ -16,6 +22,7 @@
 * Fix "ConnectionError" typo in lib/net/ssh/proxy/socks5.rb [mirakui]
 * Allow KeyManager to recover from incompatible agents [ecki, delano]
 * Fix for "Authentication Method determination can pick up a class from the root namespace" [dave.sieh]
+
 
 === 2.7.0 / 11 Sep 2013
 
