@@ -31,6 +31,13 @@ module NetSSH
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
+
+    def test_start_should_accept_remote_user_option
+      assert_nothing_raised do
+        options = { :remote_user => 'testuser' }
+        Net::SSH.start('localhost', 'testuser', options)
+      end
+    end
   end
 end
 
