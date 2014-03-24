@@ -133,7 +133,7 @@ module Net; module SSH
       # +settings+ hash must have Strings for keys, all downcased, and
       # the returned hash will have Symbols for keys.
       def translate(settings)
-        settings.inject({}) do |hash, (key, value)|
+        settings.inject({:auth_methods=>default_auth_methods.clone}) do |hash, (key, value)|
           case key
           when 'bindaddress' then
             hash[:bind_address] = value
