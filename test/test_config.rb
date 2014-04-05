@@ -112,7 +112,8 @@ class TestConfig < Test::Unit::TestCase
       'hostbasedauthentication'         => false,
       'passwordauthentication'          => false,
       'pubkeyauthentication'            => false,
-      'challengeresponseauthentication' => false
+      'challengeresponseauthentication' => false,
+      'kbdinteractiveauthentication'    => false
     }
 
     net_ssh = Net::SSH::Config.translate(open_ssh)
@@ -125,12 +126,37 @@ class TestConfig < Test::Unit::TestCase
       'hostbasedauthentication'         => true,
       'passwordauthentication'          => true,
       'pubkeyauthentication'            => true,
-      'challengeresponseauthentication' => true
+      'challengeresponseauthentication' => true,
+      'kbdinteractiveauthentication'    => true
     }
 
     net_ssh = Net::SSH::Config.translate(open_ssh)
 
     assert_equal %w(hostbased keyboard-interactive none password publickey), net_ssh[:auth_methods].sort
+  end
+
+  def test_translate_should_not_disable_keyboard_interactive_when_challange_or_keyboardinterective_is_on
+    open_ssh = {
+      'kbdinteractiveauthentication' => false
+    }
+    net_ssh = Net::SSH::Config.translate(open_ssh)
+    assert_equal %w(keyboard-interactive none password publickey), net_ssh[:auth_methods].sort
+
+    open_ssh = {
+      'challengeresponseauthentication' => false
+    }
+    net_ssh = Net::SSH::Config.translate(open_ssh)
+    assert_equal %w(keyboard-interactive none password publickey), net_ssh[:auth_methods].sort
+  end
+  
+  def test_should_ddisable_keyboard_interactive_when_challeng_and_keyboardinteractive_is_off
+    open_ssh = {
+      'challengeresponseauthentication' => false,
+      'kbdinteractiveauthentication' => false
+    }
+
+    net_ssh = Net::SSH::Config.translate(open_ssh)
+    assert_equal %w(none password publickey), net_ssh[:auth_methods].sort
   end
 
   def test_for_should_turn_off_authentication_methods

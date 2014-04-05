@@ -8,7 +8,8 @@ module Net; module SSH
   #
   # Only a subset of OpenSSH configuration options are understood:
   #
-  # * ChallengeResponseAuthentication => maps to the :auth_methods option
+  # * ChallengeResponseAuthentication => maps to the :auth_methods option challenge-response (then coleasced into keyboard-interactive)
+  # * KbdInteractiveAuthentication => maps to the :auth_methods keyboard-interactive
   # * Ciphers => maps to the :encryption option
   # * Compression => :compression
   # * CompressionLevel => :compression_level
@@ -22,7 +23,7 @@ module Net; module SSH
   # * IdentityFile => maps to the :keys option
   # * IdentitiesOnly => :keys_only
   # * Macs => maps to the :hmac option
-  # * PasswordAuthentication => maps to the :auth_methods option
+  # * PasswordAuthentication => maps to the :auth_methods option password
   # * Port => :port
   # * PreferredAuthentications => maps to the :auth_methods option
   # * ProxyCommand => maps to the :proxy option
@@ -72,8 +73,6 @@ module Net; module SSH
       def load(path, host, settings={})
         file = File.expand_path(path)
         return settings unless File.readable?(file)
-
-        settings[:auth_methods] ||= default_auth_methods.clone
 
         globals = {}
         matched_host = nil
@@ -133,7 +132,9 @@ module Net; module SSH
       # +settings+ hash must have Strings for keys, all downcased, and
       # the returned hash will have Symbols for keys.
       def translate(settings)
-        settings.inject({:auth_methods=>default_auth_methods.clone}) do |hash, (key, value)|
+        auth_methods = default_auth_methods.clone
+        (auth_methods << 'challenge-response').uniq!
+        ret = settings.inject({:auth_methods=>auth_methods}) do |hash, (key, value)|
           case key
           when 'bindaddress' then
             hash[:bind_address] = value
@@ -175,6 +176,12 @@ module Net; module SSH
             end
           when 'challengeresponseauthentication'
             if value
+              (hash[:auth_methods] << 'challenge-response').uniq!
+            else
+              hash[:auth_methods].delete('challenge-response')
+            end
+          when 'kbdinteractiveauthentication'
+            if value
               (hash[:auth_methods] << 'keyboard-interactive').uniq!
             else
               hash[:auth_methods].delete('keyboard-interactive')
@@ -182,7 +189,7 @@ module Net; module SSH
           when 'port'
             hash[:port] = value
           when 'preferredauthentications'
-            hash[:auth_methods] = value.split(/,/)
+            hash[:auth_methods] = value.split(/,/) # TODO we should place to preferred_auth_methods rather than auth_methods
           when 'proxycommand'
             if value and !(value =~ /^none$/)
               require 'net/ssh/proxy/command'
@@ -206,6 +213,7 @@ module Net; module SSH
           end
           hash
         end
+        merge_challenge_response_with_keyboard_interactive(ret)
       end
 
       private
@@ -228,6 +236,14 @@ module Net; module SSH
           when /g$/i then size.to_i * 1024 * 1024 * 1024
           else size.to_i
           end
+        end
+        
+        def merge_challenge_response_with_keyboard_interactive(hash)
+          if hash[:auth_methods].include?('challenge-response')
+            hash[:auth_methods].delete('challenge-response')
+            (hash[:auth_methods] << 'keyboard-interactive').uniq!
+          end
+          hash
         end
     end
   end
