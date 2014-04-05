@@ -37,13 +37,13 @@ module Net
         attr_reader :options
 
         # Create a new KeyManager. By default, the manager will
-        # use the ssh-agent if it is running and the `:keys_only` option
-        # is not true.
+        # use the ssh-agent if it is running and the `:use_agent` option
+        # is not false.
         def initialize(logger, options={})
           self.logger = logger
           @key_files = []
           @key_data = []
-          @use_agent = !options[:keys_only]
+          @use_agent = !(options[:use_agent] == false)
           @known_identities = {}
           @agent = nil
           @options = options
@@ -92,8 +92,9 @@ module Net
         # ssh-agent. Note that identities from an ssh-agent are always listed
         # first in the array, with other identities coming after.
         #
-        # If key manager was created with :keys_only option, no identities
-        # from ssh-agent will be loaded.
+        # If key manager was created with :keys_only option, any identity
+        # from ssh-agent will be ignored unless it present in key_files or
+        # key_data.
         def each_identity
           prepared_identities = prepare_identities_from_files + prepare_identities_from_data
 
