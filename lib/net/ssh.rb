@@ -166,7 +166,7 @@ module Net
     # * :user_known_hosts_file => the location of the user known hosts file.
     #   Set to an array to specify multiple user known hosts files.
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
-    # * :use_agent => Set false to disable the use of user_agent. Defaults to 
+    # * :use_agent => Set false to disable the use of ssh-agent. Defaults to 
     #   true
     # * :verbose => how verbose to be (Logger verbosity constants, Logger::DEBUG
     #   is very verbose, Logger::FATAL is all but silent). Logger::FATAL is the
