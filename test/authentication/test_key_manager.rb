@@ -30,8 +30,12 @@ module Authentication
       assert !manager.use_agent?
     end
 
-    def test_use_agent_is_false_if_keys_only
-      assert !manager(:keys_only => true).use_agent?
+    def test_agent_should_be_used_by_default
+      assert manager().use_agent?
+    end
+
+    def test_agent_should_not_be_used_with_no_agent
+      assert !manager(:use_agent => false).use_agent?
     end
 
     def test_each_identity_should_load_from_key_files
@@ -101,6 +105,7 @@ module Authentication
       assert_equal rsa.to_blob, identities.first.to_blob
 
       assert_equal({:from => :agent}, manager.known_identities[rsa])
+      assert manager.use_agent?
     end
 
     def test_identities_without_public_key_files_should_not_be_touched_if_identity_loaded_from_agent
