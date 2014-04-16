@@ -22,7 +22,9 @@ module Net; module SSH; module Transport
     # Define the default algorithms, in order of preference, supported by
     # Net::SSH.
     ALGORITHMS = {
-      :host_key    => %w(ssh-rsa ssh-dss),
+      :host_key    => %w(ssh-rsa ssh-dss
+                         ssh-rsa-cert-v01@openssh.com
+                         ssh-rsa-cert-v00@openssh.com),
       :kex         => %w(diffie-hellman-group-exchange-sha1
                          diffie-hellman-group1-sha1
                          diffie-hellman-group14-sha1
@@ -40,21 +42,28 @@ module Net; module SSH; module Transport
                          camellia192-ctr@openssh.org
                          camellia256-ctr@openssh.org
                          cast128-ctr blowfish-ctr 3des-ctr
+                         aes256-gcm@openssh.com aes128-gcm@openssh.com
                         ),
       :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
                          hmac-ripemd160 hmac-ripemd160@openssh.com
                          hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96
-                         hmac-sha2-512-96 none),
+                         hmac-sha2-512-96 none
+                         hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
+                         umac-128-etm@openssh.com),
+
       :compression => %w(none zlib@openssh.com zlib),
       :language    => %w() 
     }
     if defined?(OpenSSL::PKey::EC)
       ALGORITHMS[:host_key] += %w(ecdsa-sha2-nistp256
                                   ecdsa-sha2-nistp384
-                                  ecdsa-sha2-nistp521)
+                                  ecdsa-sha2-nistp521
+                                  ssh-ed25519-cert-v01@openssh.com
+                                  ssh-ed25519)
       ALGORITHMS[:kex] += %w(ecdh-sha2-nistp256
                              ecdh-sha2-nistp384
-                             ecdh-sha2-nistp521)
+                             ecdh-sha2-nistp521
+                             curve25519-sha256@libssh.org)
     end
 
     # The underlying transport layer session that supports this object
