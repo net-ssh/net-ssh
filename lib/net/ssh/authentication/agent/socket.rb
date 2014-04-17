@@ -77,6 +77,8 @@ module Net; module SSH; module Authentication
 
       if type == SSH2_AGENT_VERSION_RESPONSE
         raise AgentNotAvailable, "SSH2 agents are not yet supported"
+      elsif type == SSH2_AGENT_FAILURE
+        debug { "Unexpected response type==#{type}, this will be ignored" }
       elsif type != SSH_AGENT_RSA_IDENTITIES_ANSWER1 && type != SSH_AGENT_RSA_IDENTITIES_ANSWER2
         raise AgentNotAvailable, "unknown response from agent: #{type}, #{body.to_s.inspect}"
       end
