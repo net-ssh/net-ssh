@@ -1,5 +1,18 @@
 
 
+=== 2.9.0 / 30 Apr 2014
+
+* New ciphers [chr4]
+  * Added host keys: ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-ed25519-cert-v01@openssh.com ssh-ed25519
+  * Added HMACs: hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com umac-128-etm@openssh.com
+  * Added Kex: aes256-gcm@openssh.com aes128-gcm@openssh.com curve25519-sha256@libssh.org
+  * Added private key support for id_ed25519
+* IdentiesOnly will not disable ssh_agent - fixes #148 and new fix for #137 [mfazekas]
+* Ignore errors during ssh agent negotiation [simonswine, jasiek]
+* Added an optional "options" argument to test socket open method [jefmathiot]
+* Added gem signing (again) with new cert [delano]
+
+
 === 2.8.1 / 19 Feb 2014
 
 * Correct location of global known_hosts files [mfischer-zd]
