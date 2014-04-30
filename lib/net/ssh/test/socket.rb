@@ -39,7 +39,7 @@ module Net; module SSH; module Test
 
     # Allows the socket to also mimic a socket factory, simply returning
     # +self+.
-    def open(host, port)
+    def open(host, port, options={})
       @host, @port = host, port
       self
     end
