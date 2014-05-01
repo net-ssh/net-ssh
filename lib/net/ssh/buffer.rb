@@ -255,7 +255,7 @@ module Net; module SSH
           key.e = read_bignum
           key.n = read_bignum
 
-        when /^ecdsa\-sha2\-(\w*)$/
+        when /^ecdsa\-sha2\-(\w*)$/, /^ssh-ed25519(-cert-v01@openssh.com)?$/
           unless defined?(OpenSSL::PKey::EC)
             raise NotImplementedError, "unsupported key type `#{type}'"
           else
