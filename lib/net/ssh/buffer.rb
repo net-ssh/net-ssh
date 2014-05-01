@@ -240,7 +240,7 @@ module Net; module SSH
     end
 
     # Read a keyblob of the given type from the buffer, and return it as
-    # a key. Only RSA, DSA, and ECDSA keys are supported.
+    # a key. RSA, DSA, ECDSA and EdDSA keys are supported.
     def read_keyblob(type)
       case type
         when /^ssh-dss(-cert-v01@openssh\.com)?$/
