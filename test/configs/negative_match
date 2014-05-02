@@ -1,0 +1,6 @@
+Host test.* !test.host
+  Port 1234
+  Compression no
+
+Host test.host
+  Port 9876

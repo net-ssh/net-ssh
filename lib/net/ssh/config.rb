@@ -103,8 +103,18 @@ module Net; module SSH
           if key == 'host'
             # Support "Host host1 host2 hostN".
             # See http://github.com/net-ssh/net-ssh/issues#issue/6
-            multi_host = value.to_s.split(/\s+/)
-            matched_host = multi_host.select { |h| host =~ pattern2regex(h) }.first
+            negative_hosts, positive_hosts = value.to_s.split(/\s+/).partition { |h| h.start_with?('!') }
+
+            # Check for negative patterns first. If the host matches, that overrules any other positive match.
+            # The host substring code is used to strip out the starting "!" so the regexp will be correct.
+            negative_match = negative_hosts.select { |h| host =~ pattern2regex(h[1..-1]) }.first
+
+            if negative_match
+              matched_host = nil
+            else
+              matched_host = positive_hosts.select { |h| host =~ pattern2regex(h) }.first
+            end
+
             seen_host = true
             settings[key] = host
           elsif !seen_host
