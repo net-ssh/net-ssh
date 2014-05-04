@@ -32,9 +32,10 @@ module Net; module SSH; module Authentication
 
         dlload 'user32'
         dlload 'kernel32'
+        dlload 'advapi32'
       else
         extend DL::Importer
-        dlload 'user32','kernel32'
+        dlload 'user32','kernel32', 'advapi32'
         include DL::Win32Types
       end
 
@@ -79,6 +80,25 @@ module Net; module SSH; module Authentication
       # args: hWnd, Msg, wParam, lParam, fuFlags, uTimeout, lpdwResult
       extern 'LRESULT SendMessageTimeout(HWND, UINT, WPARAM, LPARAM, ' +
         'UINT, UINT, PDWORD_PTR)'
+      
+      # args: none
+      extern 'HANDLE GetCurrentProcess()'
+
+      # args: hProcessHandle, dwDesiredAccess, (out) phNewTokenHandle
+      extern 'BOOL OpenProcessToken(HANDLE, DWORD, PHANDLE)'
+
+      # args: hTokenHandle, uTokenInformationClass,
+      #           (out) lpTokenInformation, dwTokenInformationLength
+      #           (out) pdwInfoReturnLength
+      extern 'BOOL GetTokenInformation(HANDLE, UINT, LPVOID, DWORD, ' +
+        'PDWORD)'
+
+      # args: (out) lpSecurityDescriptor, dwRevisionLevel
+      extern 'BOOL InitializeSecurityDescriptor(LPVOID, DWORD)'
+
+      # args: (out) lpSecurityDescriptor, lpOwnerSid, bOwnerDefaulted
+      extern 'BOOL SetSecurityDescriptorOwner(LPVOID, LPVOID, BOOL)'
+
       if RUBY_VERSION < "1.9"
         alias_method :FindWindow,:findWindow
         module_function :FindWindow
