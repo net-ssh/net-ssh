@@ -67,7 +67,7 @@ module Net; module SSH; module Authentication
 
       # args: hFile, (ignored), flProtect, dwMaximumSizeHigh,
       #           dwMaximumSizeLow, lpName
-      extern 'HANDLE CreateFileMappingW(HANDLE, void *, DWORD, DWORD, ' +
+      extern 'HANDLE CreateFileMapping(HANDLE, void *, DWORD, DWORD, ' +
         'DWORD, LPCTSTR)'
 
       # args: hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh, 
@@ -137,64 +137,67 @@ module Net; module SSH; module Authentication
         # can be used in constructing the shared file mapping.
         def self.get_security_attributes_for_user
           user = get_current_user
-          sid = DL::CPtr.new(user.SID)
-
-          sd_information = DL::CPtr.malloc(SECURITY_DESCRIPTOR.size, DL::RUBY_FREE)
+          #psid = DL::CPtr.new(user.SID.to_i)
+          psd_information = DL::CPtr.malloc(Win::SECURITY_DESCRIPTOR.size, DL::RUBY_FREE)
           raise_error_if_zero(
-            InitializeSecurityDescriptor(sd_information.ref, REVISION))
+            Win.InitializeSecurityDescriptor(psd_information, Win::REVISION))
           
+          #puts "SID: #{user.SID.ptr.to_i}"
           raise_error_if_zero(
-            SetSecurityDescriptorOwner(sd_information.ref, user.SID.ref, 0))
+            Win.SetSecurityDescriptorOwner(psd_information, user.SID, 0))
           raise_error_if_zero(
-            IsValidSecurityDescriptor(sd_information.ref))
-          nLength = SECURITY_ATTRIBUTES.size
-          lpSecurityDescriptor = sd_information.ref
+            Win.IsValidSecurityDescriptor(psd_information))
+          nLength = Win::SECURITY_ATTRIBUTES.size
+          lpSecurityDescriptor = psd_information
           bInheritHandle = 1
-          sa = [nLength2, lpSecurityDescriptor, bInheritHandle].pack("LLC")
+          sa = [nLength, lpSecurityDescriptor, bInheritHandle].pack("LLC")
 
           return sa
         end
 
         def self.get_current_user
           token_handle = open_process_token(Win.GetCurrentProcess,
-                                            TOKEN_QUERY)
-          return get_token_information(token_handle,
-                                       TOKEN_USER_INFORMATION_CLASS)
+                                            Win::TOKEN_QUERY)
+          token_user =  get_token_information(token_handle,
+                                       Win::TOKEN_USER_INFORMATION_CLASS)
+          return token_user
         end
 
         def self.open_process_token(process_handle, desired_access)
-          token_handle = DL::CPtr.malloc(DL::SIZEOF_VOIDP, DL::RUBY_FREE)
+          ptoken_handle = DL::CPtr.malloc(DL::SIZEOF_VOIDP, DL::RUBY_FREE)
 
           raise_error_if_zero(
-            OpenProcessToken(process_handle, desired_access,
-                             token_handle.ref))
+            Win.OpenProcessToken(process_handle, desired_access,
+                             ptoken_handle))
+          token_handle = ptoken_handle.ptr.to_i
           return token_handle
         end
 
         def self.get_token_information(token_handle,
                                        token_information_class)
           # Hold the size of the information to be returned
-          return_length = DL::CPtr.malloc(SIZEOF_DWORD, DL::RUBY_FREE)
-
+          preturn_length = DL::CPtr.malloc(Win::SIZEOF_DWORD, DL::RUBY_FREE)
+          
           # Going to throw an INSUFFICIENT_BUFFER_ERROR, but that is ok
           # here. This is retrieving the size of the information to be
           # returned.
-          GetTokenInformation(token_handle.to_i,
+          Win.GetTokenInformation(token_handle,
                               token_information_class,
-                              NULL, 0, return_length.ref)
-
-          token_information = DL::CPtr.malloc(return_length.to_i, DL::RUBY_FREE)
+                              Win::NULL, 0, preturn_length)
+          ptoken_information = DL::CPtr.malloc(preturn_length.ptr.to_i, DL::RUBY_FREE)
 
           # This call is going to write the requested information to
           # the memory location referenced by token_information.
           raise_error_if_zero(
-            GetTokenInformation(token_handle.to_i,
+            Win.GetTokenInformation(token_handle,
                                 token_information_class,
-                                token_information.ref,
-                                token_information.size,
-                                return_length.ref))
-
-          return TOKEN_USER.new(token_information)
+                                ptoken_information,
+                                ptoken_information.size,
+                                preturn_length))
+          token_information = ptoken_information.ptr.to_i
+          #puts "token_information: #{token_information.inspect}"
+          #puts "token_information int: #{token_information.to_i}"
+          return TOKEN_USER.new(ptoken_information)
         end
 
         def self.raise_error_if_zero(result)
@@ -324,15 +327,14 @@ module Net; module SSH; module Authentication
 
         mapname = "PageantRequest%08x\000" % Win.GetCurrentThreadId()
         security_attributes = DL::CPtr.to_ptr Win.get_security_attributes_for_user
-        filemap = Win.CreateFileMappingW(Win::INVALID_HANDLE_VALUE, 
+        filemap = Win.CreateFileMapping(Win::INVALID_HANDLE_VALUE, 
                                         security_attributes,
                                         Win::PAGE_READWRITE, 0, 
                                         AGENT_MAX_MSGLEN, mapname)
 
         if filemap == 0 || filemap == Win::INVALID_HANDLE_VALUE
-          puts "Windows error: #{Win.GetLastError}"
           raise Net::SSH::Exception,
-            "Creation of file mapping failed"
+            "Creation of file mapping failed; Windows error: #{Win.GetLastError}"
         end
 
         ptr = Win.MapViewOfFile(filemap, Win::FILE_MAP_WRITE, 0, 0, 
