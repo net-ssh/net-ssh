@@ -27,6 +27,7 @@ module Net; module SSH; module Authentication
     # The definition of the Windows methods and data structures used in
     # communicating with the pageant process.
     module Win
+      # Compatibility on initialization
       if RUBY_VERSION < "1.9"
         extend DL::Importable
 
@@ -121,34 +122,45 @@ module Net; module SSH; module Authentication
       # The initial revision level assigned to the security descriptor.
       REVISION = 1
 
+      # Structs for security attribute functions.
+      # Holds the retrieved user access token.
+      TOKEN_USER = struct ['void * SID', 'DWORD ATTRIBUTES']
+
+      # Contains the security descriptor, this gets passed to the
+      # function that constructs the shared memory map.
+      SECURITY_ATTRIBUTES = struct ['DWORD nLength',
+                                    'LPVOID lpSecurityDescriptor',
+                                    'BOOL bInheritHandle']
+
+      # The security descriptor holds security information.
+      SECURITY_DESCRIPTOR = struct ['UCHAR Revision', 'UCHAR Sbz1',
+                                    'USHORT Control', 'LPVOID Owner',
+                                    'LPVOID Group', 'LPVOID Sacl',
+                                    'LPVOID Dacl']
+
+      # Compatibility for security attribute retrieval.
       if RUBY_VERSION < "1.9"
         alias_method :FindWindow,:findWindow
         module_function :FindWindow
 
-        TOKEN_USER = struct ['void * SID', 'DWORD ATTRIBUTES']
-        SECURITY_ATTRIBUTES = struct ['DWORD nLength',
-                                      'LPVOID lpSecurityDescriptor',
-                                      'BOOL bInheritHandle']
-        SECURITY_DESCRIPTOR = struct ['UCHAR Revision', 'UCHAR Sbz1',
-                                      'USHORT Control', 'LPVOID Owner',
-                                      'LPVOID Group', 'LPVOID Sacl',
-                                      'LPVOID Dacl']
         def self.get_security_attributes_for_user
           user = get_current_user
-          #psid = DL::CPtr.new(user.SID.to_i)
+
           psd_information = DL.malloc(Win::SECURITY_DESCRIPTOR.size)
           raise_error_if_zero(
-            Win.initializeSecurityDescriptor(psd_information, Win::REVISION))
-          
-          #puts "SID: #{user.SID.ptr.to_i}"
+            Win.initializeSecurityDescriptor(psd_information,
+                                             Win::REVISION))
           raise_error_if_zero(
-            Win.setSecurityDescriptorOwner(psd_information, user.SID, 0))
+            Win.setSecurityDescriptorOwner(psd_information, user.SID,
+                                           0))
           raise_error_if_zero(
             Win.isValidSecurityDescriptor(psd_information))
+
           nLength = Win::SECURITY_ATTRIBUTES.size
           lpSecurityDescriptor = psd_information
           bInheritHandle = 1
-          sa = [nLength, lpSecurityDescriptor.to_i, bInheritHandle].pack("LLC")
+          sa = [nLength, lpSecurityDescriptor.to_i,
+                bInheritHandle].pack("LLC")
 
           return sa
         end
@@ -157,7 +169,7 @@ module Net; module SSH; module Authentication
           token_handle = open_process_token(Win.getCurrentProcess,
                                             Win::TOKEN_QUERY)
           token_user =  get_token_information(token_handle,
-                                       Win::TOKEN_USER_INFORMATION_CLASS)
+                          Win::TOKEN_USER_INFORMATION_CLASS)
           return token_user
         end
 
@@ -166,8 +178,9 @@ module Net; module SSH; module Authentication
 
           raise_error_if_zero(
             Win.openProcessToken(process_handle, desired_access,
-                             ptoken_handle))
+                                 ptoken_handle))
           token_handle = ptoken_handle.ptr.to_i
+
           return token_handle
         end
 
@@ -175,26 +188,24 @@ module Net; module SSH; module Authentication
                                        token_information_class)
           # Hold the size of the information to be returned
           preturn_length = DL.malloc(Win::SIZEOF_DWORD)
-          
+
           # Going to throw an INSUFFICIENT_BUFFER_ERROR, but that is ok
           # here. This is retrieving the size of the information to be
           # returned.
           Win.getTokenInformation(token_handle,
-                              token_information_class,
-                              Win::NULL, 0, preturn_length)
+                                  token_information_class,
+                                  Win::NULL, 0, preturn_length)
           ptoken_information = DL.malloc(preturn_length.ptr.to_i)
 
           # This call is going to write the requested information to
           # the memory location referenced by token_information.
           raise_error_if_zero(
             Win.getTokenInformation(token_handle,
-                                token_information_class,
-                                ptoken_information,
-                                ptoken_information.size,
-                                preturn_length))
-          token_information = ptoken_information.ptr.to_i
-          #puts "token_information: #{token_information.inspect}"
-          #puts "token_information int: #{token_information.to_i}"
+                                    token_information_class,
+                                    ptoken_information,
+                                    ptoken_information.size,
+                                    preturn_length))
+
           return TOKEN_USER.new(ptoken_information)
         end
 
@@ -204,34 +215,28 @@ module Net; module SSH; module Authentication
           end
         end
       else
-        # Structs for security attribute functions.
-        TOKEN_USER = struct ['void * SID', 'DWORD ATTRIBUTES']
-        SECURITY_ATTRIBUTES = struct ['DWORD nLength',
-                                      'LPVOID lpSecurityDescriptor',
-                                      'BOOL bInheritHandle']
-        SECURITY_DESCRIPTOR = struct ['UCHAR Revision', 'UCHAR Sbz1',
-                                      'USHORT Control', 'LPVOID Owner',
-                                      'LPVOID Group', 'LPVOID Sacl',
-                                      'LPVOID Dacl']
-
         # Retrieves the security attributes for the current user, which
         # can be used in constructing the shared file mapping.
         def self.get_security_attributes_for_user
           user = get_current_user
-          #psid = DL::CPtr.new(user.SID.to_i)
-          psd_information = DL::CPtr.malloc(Win::SECURITY_DESCRIPTOR.size, DL::RUBY_FREE)
+
+          psd_information = DL::CPtr.malloc(
+                              Win::SECURITY_DESCRIPTOR.size,
+                              DL::RUBY_FREE)
           raise_error_if_zero(
-            Win.InitializeSecurityDescriptor(psd_information, Win::REVISION))
-          
-          #puts "SID: #{user.SID.ptr.to_i}"
+            Win.InitializeSecurityDescriptor(psd_information,
+                                             Win::REVISION))
           raise_error_if_zero(
-            Win.SetSecurityDescriptorOwner(psd_information, user.SID, 0))
+            Win.SetSecurityDescriptorOwner(psd_information, user.SID,
+                                           0))
           raise_error_if_zero(
             Win.IsValidSecurityDescriptor(psd_information))
+
           nLength = Win::SECURITY_ATTRIBUTES.size
           lpSecurityDescriptor = psd_information
           bInheritHandle = 1
-          sa = [nLength, lpSecurityDescriptor, bInheritHandle].pack("LLC")
+          sa = [nLength, lpSecurityDescriptor,
+                bInheritHandle].pack("LLC")
 
           return sa
         end
@@ -240,12 +245,13 @@ module Net; module SSH; module Authentication
           token_handle = open_process_token(Win.GetCurrentProcess,
                                             Win::TOKEN_QUERY)
           token_user =  get_token_information(token_handle,
-                                       Win::TOKEN_USER_INFORMATION_CLASS)
+                          Win::TOKEN_USER_INFORMATION_CLASS)
           return token_user
         end
 
         def self.open_process_token(process_handle, desired_access)
-          ptoken_handle = DL::CPtr.malloc(DL::SIZEOF_VOIDP, DL::RUBY_FREE)
+          ptoken_handle = DL::CPtr.malloc(DL::SIZEOF_VOIDP,
+                                          DL::RUBY_FREE)
 
           raise_error_if_zero(
             Win.OpenProcessToken(process_handle, desired_access,
@@ -257,27 +263,27 @@ module Net; module SSH; module Authentication
         def self.get_token_information(token_handle,
                                        token_information_class)
           # Hold the size of the information to be returned
-          preturn_length = DL::CPtr.malloc(Win::SIZEOF_DWORD, DL::RUBY_FREE)
+          preturn_length = DL::CPtr.malloc(Win::SIZEOF_DWORD,
+                                           DL::RUBY_FREE)
           
           # Going to throw an INSUFFICIENT_BUFFER_ERROR, but that is ok
           # here. This is retrieving the size of the information to be
           # returned.
           Win.GetTokenInformation(token_handle,
-                              token_information_class,
-                              Win::NULL, 0, preturn_length)
-          ptoken_information = DL::CPtr.malloc(preturn_length.ptr.to_i, DL::RUBY_FREE)
+                                  token_information_class,
+                                  Win::NULL, 0, preturn_length)
+          ptoken_information = DL::CPtr.malloc(preturn_length.ptr.to_i,
+                                               DL::RUBY_FREE)
 
           # This call is going to write the requested information to
           # the memory location referenced by token_information.
           raise_error_if_zero(
             Win.GetTokenInformation(token_handle,
-                                token_information_class,
-                                ptoken_information,
-                                ptoken_information.size,
-                                preturn_length))
-          token_information = ptoken_information.ptr.to_i
-          #puts "token_information: #{token_information.inspect}"
-          #puts "token_information int: #{token_information.to_i}"
+                                    token_information_class,
+                                    ptoken_information,
+                                    ptoken_information.size,
+                                    preturn_length))
+
           return TOKEN_USER.new(ptoken_information)
         end
 
