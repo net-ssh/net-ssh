@@ -140,157 +140,99 @@ module Net; module SSH; module Authentication
 
       # Compatibility for security attribute retrieval.
       if RUBY_VERSION < "1.9"
-        alias_method :FindWindow,:findWindow
-        module_function :FindWindow
-
-        def self.get_security_attributes_for_user
-          user = get_current_user
-
-          psd_information = DL.malloc(Win::SECURITY_DESCRIPTOR.size)
-          raise_error_if_zero(
-            Win.initializeSecurityDescriptor(psd_information,
-                                             Win::REVISION))
-          raise_error_if_zero(
-            Win.setSecurityDescriptorOwner(psd_information, user.SID,
-                                           0))
-          raise_error_if_zero(
-            Win.isValidSecurityDescriptor(psd_information))
-
-          nLength = Win::SECURITY_ATTRIBUTES.size
-          lpSecurityDescriptor = psd_information
-          bInheritHandle = 1
-          sa = [nLength, lpSecurityDescriptor.to_i,
-                bInheritHandle].pack("LLC")
-
-          return sa
+        # Alias functions to > 1.9 capitalization
+        %w(findWindow
+           getCurrentProcess
+           initializeSecurityDescriptor
+           setSecurityDescriptorOwner
+           isValidSecurityDescriptor
+           openProcessToken
+           getTokenInformation
+           getLastError).each do |name|
+          new_name = name[0].chr.upcase + name[1..name.length]
+          alias_method new_name, name
+          module_function new_name
         end
 
-        def self.get_current_user
-          token_handle = open_process_token(Win.getCurrentProcess,
-                                            Win::TOKEN_QUERY)
-          token_user =  get_token_information(token_handle,
-                          Win::TOKEN_USER_INFORMATION_CLASS)
-          return token_user
-        end
-
-        def self.open_process_token(process_handle, desired_access)
-          ptoken_handle = DL.malloc(Win::SIZEOF_DWORD)
-
-          raise_error_if_zero(
-            Win.openProcessToken(process_handle, desired_access,
-                                 ptoken_handle))
-          token_handle = ptoken_handle.ptr.to_i
-
-          return token_handle
-        end
-
-        def self.get_token_information(token_handle,
-                                       token_information_class)
-          # Hold the size of the information to be returned
-          preturn_length = DL.malloc(Win::SIZEOF_DWORD)
-
-          # Going to throw an INSUFFICIENT_BUFFER_ERROR, but that is ok
-          # here. This is retrieving the size of the information to be
-          # returned.
-          Win.getTokenInformation(token_handle,
-                                  token_information_class,
-                                  Win::NULL, 0, preturn_length)
-          ptoken_information = DL.malloc(preturn_length.ptr.to_i)
-
-          # This call is going to write the requested information to
-          # the memory location referenced by token_information.
-          raise_error_if_zero(
-            Win.getTokenInformation(token_handle,
-                                    token_information_class,
-                                    ptoken_information,
-                                    ptoken_information.size,
-                                    preturn_length))
-
-          return TOKEN_USER.new(ptoken_information)
-        end
-
-        def self.raise_error_if_zero(result)
-          if result == 0
-            raise "Windows error: #{Win.GetLastError}"
-          end
+        def self.malloc_ptr(size)
+          return DL.malloc(size)
         end
       else
-        # Retrieves the security attributes for the current user, which
-        # can be used in constructing the shared file mapping.
-        def self.get_security_attributes_for_user
-          user = get_current_user
-
-          psd_information = DL::CPtr.malloc(
-                              Win::SECURITY_DESCRIPTOR.size,
-                              DL::RUBY_FREE)
-          raise_error_if_zero(
-            Win.InitializeSecurityDescriptor(psd_information,
-                                             Win::REVISION))
-          raise_error_if_zero(
-            Win.SetSecurityDescriptorOwner(psd_information, user.SID,
-                                           0))
-          raise_error_if_zero(
-            Win.IsValidSecurityDescriptor(psd_information))
-
-          nLength = Win::SECURITY_ATTRIBUTES.size
-          lpSecurityDescriptor = psd_information
-          bInheritHandle = 1
-          sa = [nLength, lpSecurityDescriptor,
-                bInheritHandle].pack("LLC")
-
-          return sa
+        def self.malloc_ptr(size)
+          return DL::CPtr.malloc(size, DL::RUBY_FREE)
         end
+      end
 
-        def self.get_current_user
-          token_handle = open_process_token(Win.GetCurrentProcess,
-                                            Win::TOKEN_QUERY)
-          token_user =  get_token_information(token_handle,
-                          Win::TOKEN_USER_INFORMATION_CLASS)
-          return token_user
-        end
 
-        def self.open_process_token(process_handle, desired_access)
-          ptoken_handle = DL::CPtr.malloc(DL::SIZEOF_VOIDP,
-                                          DL::RUBY_FREE)
+      def self.get_security_attributes_for_user
+        user = get_current_user
 
-          raise_error_if_zero(
-            Win.OpenProcessToken(process_handle, desired_access,
-                             ptoken_handle))
-          token_handle = ptoken_handle.ptr.to_i
-          return token_handle
-        end
+        psd_information = malloc_ptr(Win::SECURITY_DESCRIPTOR.size)
+        raise_error_if_zero(
+          Win.InitializeSecurityDescriptor(psd_information,
+                                           Win::REVISION))
+        raise_error_if_zero(
+          Win.SetSecurityDescriptorOwner(psd_information, user.SID,
+                                         0))
+        raise_error_if_zero(
+          Win.IsValidSecurityDescriptor(psd_information))
 
-        def self.get_token_information(token_handle,
-                                       token_information_class)
-          # Hold the size of the information to be returned
-          preturn_length = DL::CPtr.malloc(Win::SIZEOF_DWORD,
-                                           DL::RUBY_FREE)
-          
-          # Going to throw an INSUFFICIENT_BUFFER_ERROR, but that is ok
-          # here. This is retrieving the size of the information to be
-          # returned.
+        nLength = Win::SECURITY_ATTRIBUTES.size
+        lpSecurityDescriptor = psd_information
+        bInheritHandle = 1
+        sa = [nLength, lpSecurityDescriptor.to_i,
+              bInheritHandle].pack("LLC")
+
+        return sa
+      end
+
+      def self.get_current_user
+        token_handle = open_process_token(Win.GetCurrentProcess,
+                                          Win::TOKEN_QUERY)
+        token_user =  get_token_information(token_handle,
+                        Win::TOKEN_USER_INFORMATION_CLASS)
+        return token_user
+      end
+
+      def self.open_process_token(process_handle, desired_access)
+        ptoken_handle = malloc_ptr(Win::SIZEOF_DWORD)
+
+        raise_error_if_zero(
+          Win.OpenProcessToken(process_handle, desired_access,
+                               ptoken_handle))
+        token_handle = ptoken_handle.ptr.to_i
+
+        return token_handle
+      end
+
+      def self.get_token_information(token_handle,
+                                     token_information_class)
+        # Hold the size of the information to be returned
+        preturn_length = malloc_ptr(Win::SIZEOF_DWORD)
+
+        # Going to throw an INSUFFICIENT_BUFFER_ERROR, but that is ok
+        # here. This is retrieving the size of the information to be
+        # returned.
+        Win.GetTokenInformation(token_handle,
+                                token_information_class,
+                                Win::NULL, 0, preturn_length)
+        ptoken_information = malloc_ptr(preturn_length.ptr.to_i)
+
+        # This call is going to write the requested information to
+        # the memory location referenced by token_information.
+        raise_error_if_zero(
           Win.GetTokenInformation(token_handle,
                                   token_information_class,
-                                  Win::NULL, 0, preturn_length)
-          ptoken_information = DL::CPtr.malloc(preturn_length.ptr.to_i,
-                                               DL::RUBY_FREE)
+                                  ptoken_information,
+                                  ptoken_information.size,
+                                  preturn_length))
 
-          # This call is going to write the requested information to
-          # the memory location referenced by token_information.
-          raise_error_if_zero(
-            Win.GetTokenInformation(token_handle,
-                                    token_information_class,
-                                    ptoken_information,
-                                    ptoken_information.size,
-                                    preturn_length))
+        return TOKEN_USER.new(ptoken_information)
+      end
 
-          return TOKEN_USER.new(ptoken_information)
-        end
-
-        def self.raise_error_if_zero(result)
-          if result == 0
-            raise "Windows error: #{Win.GetLastError}"
-          end
+      def self.raise_error_if_zero(result)
+        if result == 0
+          raise "Windows error: #{Win.GetLastError}"
         end
       end
     end
