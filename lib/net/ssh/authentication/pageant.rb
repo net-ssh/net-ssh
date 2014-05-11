@@ -70,8 +70,8 @@ module Net; module SSH; module Authentication
 
       # args: hFile, (ignored), flProtect, dwMaximumSizeHigh,
       #           dwMaximumSizeLow, lpName
-      extern 'HANDLE CreateFileMapping(HANDLE, void *, DWORD, DWORD, ' +
-        'DWORD, LPCTSTR)'
+      extern 'HANDLE CreateFileMapping(HANDLE, void *, DWORD, ' +
+        'DWORD, DWORD, LPCTSTR)'
 
       # args: hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh, 
       #           dwfileOffsetLow, dwNumberOfBytesToMap
@@ -111,8 +111,6 @@ module Net; module SSH; module Authentication
       # args: pSecurityDescriptor
       extern 'BOOL IsValidSecurityDescriptor(LPVOID)'
 
-      extern 'BOOL IsWindowUnicode(HWND)'
-
       # Constants needed for security attribute retrieval.
       # Specifies the access mask corresponding to the desired access 
       # rights. 
@@ -151,7 +149,6 @@ module Net; module SSH; module Authentication
            openProcessToken
            getTokenInformation
            getLastError
-           isWindowUnicode
            getCurrentThreadId
            createFileMapping
            mapViewOfFile
@@ -187,7 +184,6 @@ module Net; module SSH; module Authentication
           DL::CPtr.new(ptr)[0,data.size] = data
         end
       end
-
 
       def self.get_security_attributes_for_user
         user = get_current_user
@@ -287,11 +283,6 @@ module Net; module SSH; module Authentication
             "pageant process not running"
         end
 
-        res = Win.IsWindowUnicode(@win)
-
-        @unicode = (res != 0)
-        puts @unicode
-
         @input_buffer = Net::SSH::Buffer.new
         @output_buffer = Net::SSH::Buffer.new
       end
@@ -334,9 +325,10 @@ module Net; module SSH; module Authentication
 
         mapname = "PageantRequest%08x\000" % Win.GetCurrentThreadId()
         security_attributes = Win.get_ptr Win.get_security_attributes_for_user
-        filemap = Win.CreateFileMapping(Win::INVALID_HANDLE_VALUE, 
+
+        filemap = Win.CreateFileMapping(Win::INVALID_HANDLE_VALUE,
                                         security_attributes,
-                                        Win::PAGE_READWRITE, 0, 
+                                        Win::PAGE_READWRITE, 0,
                                         AGENT_MAX_MSGLEN, mapname)
 
         if filemap == 0 || filemap == Win::INVALID_HANDLE_VALUE
@@ -353,7 +345,11 @@ module Net; module SSH; module Authentication
 
         Win.set_ptr_data(ptr, query)
         
-        cds = Win.get_ptr [AGENT_COPYDATA_ID, mapname.size + 1,
+        # The second element should be (mapname.size + 1) to mirror the
+        # implementation in PuTTY/Pageant. Because strlen in C does not
+        # count null-terminator but String#size in Ruby does, we will
+        # leave it as-is and call it even.
+        cds = Win.get_ptr [AGENT_COPYDATA_ID, mapname.size,
                            mapname].pack("LLp")
         succ = Win.SendMessageTimeout(@win, Win::WM_COPYDATA, Win::NULL,
                                       cds, Win::SMTO_NORMAL, 5000, id)
