@@ -1,12 +1,14 @@
-#     $ ruby -Ilib -Itest -rrubygems test/manual/test_pageant.rb
-
 #
-# Tests for communication capability with Pageant process running in
-# different UAC context.
-# 
-# Test prerequisite:
-# - Pageant process running on machine in different UAC context from
-#   the command prompt running the test.
+# Tests for communication capability with Pageant (or KeeAgent)
+# process, to include the case where it is running in different UAC
+# context.
+#
+# To run:
+# - Ensure that Pageant is running (not as administrator).
+# - Open two command prompts, one as an administrator and one limited
+#     (normal).
+# - Within each, from the root net/ssh project directory, execute:
+#       ruby -Ilib -Itest -rrubygems test/manual/test_pageant.rb
 #
 
 require 'common'
