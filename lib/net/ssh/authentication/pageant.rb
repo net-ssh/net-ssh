@@ -256,6 +256,11 @@ module Net; module SSH; module Authentication
           raise "Windows error: #{Win.GetLastError}"
         end
       end
+
+      # Get a null-terminated string given a string.
+      def self.get_cstr(str)
+        return str + "\000"
+      end
     end
 
     # This is the pseudo-socket implementation that mimics the interface of
@@ -323,7 +328,7 @@ module Net; module SSH; module Authentication
         ptr = nil
         id = Win.malloc_ptr(Win::SIZEOF_DWORD)
 
-        mapname = "PageantRequest%08x\000" % Win.GetCurrentThreadId()
+        mapname = "PageantRequest%08x" % Win.GetCurrentThreadId()
         security_attributes = Win.get_ptr Win.get_security_attributes_for_user
 
         filemap = Win.CreateFileMapping(Win::INVALID_HANDLE_VALUE,
@@ -344,13 +349,9 @@ module Net; module SSH; module Authentication
         end
 
         Win.set_ptr_data(ptr, query)
-        
-        # The second element should be (mapname.size + 1) to mirror the
-        # implementation in PuTTY/Pageant. Because strlen in C does not
-        # count null-terminator but String#size in Ruby does, we will
-        # leave it as-is and call it even.
-        cds = Win.get_ptr [AGENT_COPYDATA_ID, mapname.size,
-                           mapname].pack("LLp")
+
+        cds = Win.get_ptr [AGENT_COPYDATA_ID, mapname.size + 1,
+                           Win.get_cstr(mapname)].pack("LLp")
         succ = Win.SendMessageTimeout(@win, Win::WM_COPYDATA, Win::NULL,
                                       cds, Win::SMTO_NORMAL, 5000, id)
 
