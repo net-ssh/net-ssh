@@ -111,6 +111,8 @@ module Net; module SSH; module Authentication
       # args: pSecurityDescriptor
       extern 'BOOL IsValidSecurityDescriptor(LPVOID)'
 
+      extern 'BOOL IsWindowUnicode(HWND)'
+
       # Constants needed for security attribute retrieval.
       # Specifies the access mask corresponding to the desired access 
       # rights. 
@@ -148,7 +150,14 @@ module Net; module SSH; module Authentication
            isValidSecurityDescriptor
            openProcessToken
            getTokenInformation
-           getLastError).each do |name|
+           getLastError
+           isWindowUnicode
+           getCurrentThreadId
+           createFileMapping
+           mapViewOfFile
+           sendMessageTimeout
+           unmapViewOfFile
+           closeHandle).each do |name|
           new_name = name[0].chr.upcase + name[1..name.length]
           alias_method new_name, name
           module_function new_name
@@ -157,9 +166,25 @@ module Net; module SSH; module Authentication
         def self.malloc_ptr(size)
           return DL.malloc(size)
         end
+
+        def self.get_ptr(data)
+          return data.to_ptr
+        end
+
+        def self.set_ptr_data(ptr, data)
+          ptr[0] = data
+        end
       else
         def self.malloc_ptr(size)
           return DL::CPtr.malloc(size, DL::RUBY_FREE)
+        end
+
+        def self.get_ptr(data)
+          return DL::CPtr.to_ptr data
+        end
+
+        def self.set_ptr_data(ptr, data)
+          DL::CPtr.new(ptr)[0,data.size] = data
         end
       end
 
@@ -262,6 +287,11 @@ module Net; module SSH; module Authentication
             "pageant process not running"
         end
 
+        res = Win.IsWindowUnicode(@win)
+
+        @unicode = (res != 0)
+        puts @unicode
+
         @input_buffer = Net::SSH::Buffer.new
         @output_buffer = Net::SSH::Buffer.new
       end
@@ -292,71 +322,18 @@ module Net; module SSH; module Authentication
 
       def close
       end
-      
+
+      # Packages the given query string and sends it to the pageant
+      # process via the Windows messaging subsystem. The result is
+      # cached, to be returned piece-wise when #read is called.
       def send_query(query)
-        if RUBY_VERSION < "1.9"
-          send_query_18(query)
-        else
-          send_query_19(query)
-        end
-      end
-      
-      # Packages the given query string and sends it to the pageant
-      # process via the Windows messaging subsystem. The result is
-      # cached, to be returned piece-wise when #read is called.
-      def send_query_18(query)
         res = nil
         filemap = 0
         ptr = nil
-        id = DL::PtrData.malloc(DL.sizeof("L"))
-
-        mapname = "PageantRequest%08x\000" % Win.getCurrentThreadId()
-        security_attributes = Win.get_security_attributes_for_user.to_ptr
-        filemap = Win.createFileMapping(Win::INVALID_HANDLE_VALUE, 
-                                        security_attributes,
-                                        Win::PAGE_READWRITE, 0, 
-                                        AGENT_MAX_MSGLEN, mapname)
-        if filemap == 0
-          raise Net::SSH::Exception,
-            "Creation of file mapping failed"
-        end
-
-        ptr = Win.mapViewOfFile(filemap, Win::FILE_MAP_WRITE, 0, 0, 
-                                AGENT_MAX_MSGLEN)
-
-        if ptr.nil? || ptr.null?
-          raise Net::SSH::Exception, "Mapping of file failed"
-        end
-
-        ptr[0] = query
-
-        cds = [AGENT_COPYDATA_ID, mapname.size + 1, mapname].
-          pack("LLp").to_ptr
-        succ = Win.sendMessageTimeout(@win, Win::WM_COPYDATA, Win::NULL,
-                                      cds, Win::SMTO_NORMAL, 5000, id)
-
-        if succ > 0
-          retlen = 4 + ptr.to_s(4).unpack("N")[0]
-          res = ptr.to_s(retlen)
-        end        
-
-        return res
-      ensure
-        Win.unmapViewOfFile(ptr) unless ptr.nil? || ptr.null?
-        Win.closeHandle(filemap) if filemap != 0
-      end
-
-      # Packages the given query string and sends it to the pageant
-      # process via the Windows messaging subsystem. The result is
-      # cached, to be returned piece-wise when #read is called.
-      def send_query_19(query)
-        res = nil
-        filemap = 0
-        ptr = nil
-        id = DL.malloc(DL::SIZEOF_LONG)
+        id = Win.malloc_ptr(Win::SIZEOF_DWORD)
 
         mapname = "PageantRequest%08x\000" % Win.GetCurrentThreadId()
-        security_attributes = DL::CPtr.to_ptr Win.get_security_attributes_for_user
+        security_attributes = Win.get_ptr Win.get_security_attributes_for_user
         filemap = Win.CreateFileMapping(Win::INVALID_HANDLE_VALUE, 
                                         security_attributes,
                                         Win::PAGE_READWRITE, 0, 
@@ -364,7 +341,7 @@ module Net; module SSH; module Authentication
 
         if filemap == 0 || filemap == Win::INVALID_HANDLE_VALUE
           raise Net::SSH::Exception,
-            "Creation of file mapping failed; Windows error: #{Win.GetLastError}"
+            "Creation of file mapping failed with error: #{Win.GetLastError}"
         end
 
         ptr = Win.MapViewOfFile(filemap, Win::FILE_MAP_WRITE, 0, 0, 
@@ -374,10 +351,10 @@ module Net; module SSH; module Authentication
           raise Net::SSH::Exception, "Mapping of file failed"
         end
 
-        DL::CPtr.new(ptr)[0,query.size]=query
-
-        cds = DL::CPtr.to_ptr [AGENT_COPYDATA_ID, mapname.size + 1, mapname].
-          pack("LLp")
+        Win.set_ptr_data(ptr, query)
+        
+        cds = Win.get_ptr [AGENT_COPYDATA_ID, mapname.size + 1,
+                           mapname].pack("LLp")
         succ = Win.SendMessageTimeout(@win, Win::WM_COPYDATA, Win::NULL,
                                       cds, Win::SMTO_NORMAL, 5000, id)
 
