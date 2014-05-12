@@ -35,6 +35,12 @@ class TestConfig < Test::Unit::TestCase
     assert !config.key?('rekeylimit')
   end
 
+  def test_load_with_wild_card_and_negative_pattern_does_not_match
+    config = Net::SSH::Config.load(config(:negative_match), "test.host")
+    assert_equal 9876, config['port']
+    assert !config.key?('compression')
+  end
+
   def test_for_should_load_all_files_and_translate_to_net_ssh_options
     config = Net::SSH::Config.for("test.host", [config(:exact_match), config(:wild_cards)])
     assert_equal 1234, config[:port]
