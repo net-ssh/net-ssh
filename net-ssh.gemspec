@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = "net-ssh"
-  s.version = "2.9.0"
+  s.version = "2.9.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jamis Buck", "Delano Mandelbaum"]
   s.cert_chain = ["gem-public_cert.pem"]
-  s.date = "2014-04-30"
+  s.date = "2014-05-13"
   s.description = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol. It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
   s.email = "net-ssh@solutious.com"
   s.extra_rdoc_files = [
@@ -129,6 +129,7 @@ Gem::Specification.new do |s|
     "test/configs/exact_match",
     "test/configs/host_plus",
     "test/configs/multihost",
+    "test/configs/negative_match",
     "test/configs/nohost",
     "test/configs/numeric_host",
     "test/configs/send_env",
@@ -138,6 +139,7 @@ Gem::Specification.new do |s|
     "test/connection/test_session.rb",
     "test/known_hosts/github",
     "test/manual/test_forward.rb",
+    "test/manual/test_pageant.rb",
     "test/start/test_connection.rb",
     "test/start/test_options.rb",
     "test/start/test_transport.rb",

@@ -1,5 +1,11 @@
 
 
+=== 2.9.1 / 13 May 2014
+
+* Fix for unknown response from agent on Windows with 64-bit PuTTY [chrahunt]
+* Support negative patterns in host lookup from the SSH config file [nirvdrum]
+
+
 === 2.9.0 / 30 Apr 2014
 
 * New ciphers [chr4]
