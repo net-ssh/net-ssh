@@ -26,9 +26,9 @@ module Transport
       end
       assert_equal %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr camellia128-cbc camellia192-cbc camellia256-cbc camellia128-cbc@openssh.org camellia192-cbc@openssh.org camellia256-cbc@openssh.org camellia128-ctr camellia192-ctr camellia256-ctr camellia128-ctr@openssh.org camellia192-ctr@openssh.org camellia256-ctr@openssh.org cast128-ctr blowfish-ctr 3des-ctr aes256-gcm@openssh.com aes128-gcm@openssh.com chacha20-poly1305@openssh.com), algorithms[:encryption]
       if defined?(OpenSSL::Digest::SHA256)
-        assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com umac-128-etm@openssh.com), algorithms[:hmac]
+        assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com umac-128-etm@openssh.com umac-64@openssh.com), algorithms[:hmac]
       else
-        assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-ripemd160 hmac-ripemd160@openssh.com none umac-128-etm@openssh.com), algorithms[:hmac] end
+        assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-ripemd160 hmac-ripemd160@openssh.com none umac-128-etm@openssh.com umac-64@openssh.com), algorithms[:hmac] end
       assert_equal %w(none zlib@openssh.com zlib), algorithms[:compression]
       assert_equal %w(), algorithms[:language]
     end
@@ -86,11 +86,11 @@ module Transport
     end
 
     def test_constructor_with_preferred_hmac_should_put_preferred_hmac_first
-      assert_equal %w(hmac-md5-96 hmac-sha1 hmac-md5 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com umac-128-etm@openssh.com), algorithms(:hmac => "hmac-md5-96")[:hmac]
+      assert_equal %w(hmac-md5-96 hmac-sha1 hmac-md5 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com umac-128-etm@openssh.com umac-64@openssh.com), algorithms(:hmac => "hmac-md5-96")[:hmac]
     end
 
     def test_constructor_with_multiple_preferred_hmac_should_put_all_preferred_hmac_first
-      assert_equal %w(hmac-md5-96 hmac-sha1-96 hmac-sha1 hmac-md5 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com umac-128-etm@openssh.com), algorithms(:hmac => %w(hmac-md5-96 hmac-sha1-96))[:hmac]
+      assert_equal %w(hmac-md5-96 hmac-sha1-96 hmac-sha1 hmac-md5 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com umac-128-etm@openssh.com umac-64@openssh.com), algorithms(:hmac => %w(hmac-md5-96 hmac-sha1-96))[:hmac]
     end
 
     def test_constructor_with_unrecognized_hmac_should_raise_exception
@@ -297,8 +297,8 @@ module Transport
         end
         assert_equal options[:encryption_client] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none,arcfour128,arcfour256,arcfour,aes128-ctr,aes192-ctr,aes256-ctr,camellia128-cbc,camellia192-cbc,camellia256-cbc,camellia128-cbc@openssh.org,camellia192-cbc@openssh.org,camellia256-cbc@openssh.org,camellia128-ctr,camellia192-ctr,camellia256-ctr,camellia128-ctr@openssh.org,camellia192-ctr@openssh.org,camellia256-ctr@openssh.org,cast128-ctr,blowfish-ctr,3des-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com,chacha20-poly1305@openssh.com", buffer.read_string
         assert_equal options[:encryption_server] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc,none,arcfour128,arcfour256,arcfour,aes128-ctr,aes192-ctr,aes256-ctr,camellia128-cbc,camellia192-cbc,camellia256-cbc,camellia128-cbc@openssh.org,camellia192-cbc@openssh.org,camellia256-cbc@openssh.org,camellia128-ctr,camellia192-ctr,camellia256-ctr,camellia128-ctr@openssh.org,camellia192-ctr@openssh.org,camellia256-ctr@openssh.org,cast128-ctr,blowfish-ctr,3des-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com,chacha20-poly1305@openssh.com", buffer.read_string
-        assert_equal options[:hmac_client] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96,hmac-ripemd160,hmac-ripemd160@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-96,hmac-sha2-512-96,none,hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com", buffer.read_string
-        assert_equal options[:hmac_server] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96,hmac-ripemd160,hmac-ripemd160@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-96,hmac-sha2-512-96,none,hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com", buffer.read_string
+        assert_equal options[:hmac_client] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96,hmac-ripemd160,hmac-ripemd160@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-96,hmac-sha2-512-96,none,hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,umac-64@openssh.com", buffer.read_string
+        assert_equal options[:hmac_server] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96,hmac-ripemd160,hmac-ripemd160@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-96,hmac-sha2-512-96,none,hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,umac-64@openssh.com", buffer.read_string
         assert_equal options[:compression_client] || "none,zlib@openssh.com,zlib", buffer.read_string
         assert_equal options[:compression_server] || "none,zlib@openssh.com,zlib", buffer.read_string
         assert_equal options[:language_client] || "", buffer.read_string

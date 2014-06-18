@@ -50,7 +50,7 @@ module Net; module SSH; module Transport
                          hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96
                          hmac-sha2-512-96 none
                          hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
-                         umac-128-etm@openssh.com),
+                         umac-128-etm@openssh.com umac-64@openssh.com),
 
       :compression => %w(none zlib@openssh.com zlib),
       :language    => %w() 
