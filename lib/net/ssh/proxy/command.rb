@@ -1,4 +1,5 @@
 require 'socket'
+require 'rubygems'
 require 'net/ssh/proxy/errors'
 require 'net/ssh/ruby_compat'
 
@@ -67,12 +68,24 @@ module Net; module SSH; module Proxy
       end
       @command_line = command_line
       class << io
-        def send(data, flag)
-          write_nonblock(data)
-        end
+        if Gem.win_platform?
+          # read_nonblock and write_nonblock are not available on Windows
+          # pipe. Use sysread and syswrite as a replacement works.
+          def send(data, flag)
+            syswrite(data)
+          end
 
-        def recv(size)
-          read_nonblock(size)
+          def recv(size)
+            sysread(size)
+          end
+        else
+          def send(data, flag)
+            write_nonblock(data)
+          end
+
+          def recv(size)
+            read_nonblock(size)
+          end
         end
       end
       io
