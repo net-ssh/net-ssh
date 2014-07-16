@@ -1694,11 +1694,11 @@ module Transport
         [false, :standard].each do |compress|
           cipher_method_name = cipher_name.gsub(/\W/, "_")
           hmac_method_name   = hmac_name.gsub(/\W/, "_")
-          
+
           define_method("test_next_packet_with_#{cipher_method_name}_and_#{hmac_method_name}_and_#{compress}_compression") do
             opts = { :shared => "123", :hash => "^&*", :digester => OpenSSL::Digest::SHA1  }
             cipher = Net::SSH::Transport::CipherFactory.get(cipher_name, opts.merge(:key => "ABC", :decrypt => true, :iv => "abc"))
-            hmac  = Net::SSH::Transport::HMAC.get(hmac_name, "{}|", opts)
+            hmac  = Net::SSH::Transport::HMAC.get(hmac_name, {}, opts)
 
             stream.server.set :cipher => cipher, :hmac => hmac, :compression => compress
             stream.stubs(:recv).returns(PACKETS[cipher_name][hmac_name][compress])
@@ -1715,7 +1715,7 @@ module Transport
           define_method("test_enqueue_packet_with_#{cipher_method_name}_and_#{hmac_method_name}_and_#{compress}_compression") do
             opts = { :shared => "123", :digester => OpenSSL::Digest::SHA1, :hash => "^&*" }
             cipher = Net::SSH::Transport::CipherFactory.get(cipher_name, opts.merge(:key => "ABC", :iv => "abc", :encrypt => true))
-            hmac  = Net::SSH::Transport::HMAC.get(hmac_name, "{}|", opts)
+            hmac  = Net::SSH::Transport::HMAC.get(hmac_name, {}, opts)
 
             srand(100)
             stream.client.set :cipher => cipher, :hmac => hmac, :compression => compress
