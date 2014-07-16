@@ -278,8 +278,8 @@ module Transport
           :string, options[:encryption_server] || "aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
           :string, options[:hmac_client] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96",
           :string, options[:hmac_server] || "hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96",
-          :string, options[:compmression_client] || "none,zlib@openssh.com,zlib",
-          :string, options[:compmression_server] || "none,zlib@openssh.com,zlib",
+          :string, options[:compression_client] || "none,zlib@openssh.com,zlib",
+          :string, options[:compression_server] || "none,zlib@openssh.com,zlib",
           :string, options[:language_client] || "",
           :string, options[:langauge_server] || "",
           :bool, options[:first_kex_follows])
