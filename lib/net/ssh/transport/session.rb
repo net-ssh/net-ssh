@@ -93,11 +93,16 @@ module Net; module SSH; module Transport
       @host_as_string ||= begin
         string = "#{host}"
         string = "[#{string}]:#{port}" if port != DEFAULT_PORT
-        if socket.peer_ip != host
-          string2 = socket.peer_ip
+
+        peer_ip = socket.peer_ip
+
+        if peer_ip != Net::SSH::Transport::PacketStream::PROXY_COMMAND_HOST_IP &&
+           peer_ip != host
+          string2 = peer_ip
           string2 = "[#{string2}]:#{port}" if port != DEFAULT_PORT
           string << "," << string2
         end
+
         string
       end
     end

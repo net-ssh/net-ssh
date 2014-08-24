@@ -45,6 +45,12 @@ module Transport
       assert_equal "1.2.3.4", stream.peer_ip
     end
 
+    def test_peer_ip_should_return_no_hostip_when_socket_has_no_peername
+      assert_equal false, stream.respond_to?(:getpeername)
+      assert_equal Net::SSH::Transport::PacketStream::PROXY_COMMAND_HOST_IP, stream.peer_ip
+      assert_equal '<no hostip for proxy command>', stream.peer_ip
+    end
+
     def test_available_for_read_should_return_nontrue_when_select_fails
       IO.expects(:select).returns(nil)
       assert !stream.available_for_read?

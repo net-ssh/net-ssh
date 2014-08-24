@@ -14,6 +14,8 @@ module Net; module SSH; module Transport
   # per the SSH2 protocol. It also adds an abstraction for polling packets,
   # to allow for both blocking and non-blocking reads.
   module PacketStream
+    PROXY_COMMAND_HOST_IP = '<no hostip for proxy command>'.freeze
+
     include BufferedIo
 
     def self.extended(object)
@@ -64,7 +66,7 @@ module Net; module SSH; module Transport
           addr = getpeername
           Socket.getnameinfo(addr, Socket::NI_NUMERICHOST | Socket::NI_NUMERICSERV).first
         else
-          "<no hostip for proxy command>"
+          PROXY_COMMAND_HOST_IP
         end
     end
     
