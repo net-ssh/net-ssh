@@ -59,7 +59,7 @@ module Net; module SSH
       # #default_files), translates the resulting hash into the options
       # recognized by Net::SSH, and returns them.
       def for(host, files=default_files)
-        hash = translate(files.inject({}) { |settings, file|
+        translate(files.inject({}) { |settings, file|
           load(file, host, settings)
         })
       end
@@ -76,7 +76,6 @@ module Net; module SSH
 
         globals = {}
         matched_host = nil
-        multi_host = []
         seen_host = false
         IO.foreach(file) do |line|
           next if line =~ /^\s*(?:#.*)?$/
