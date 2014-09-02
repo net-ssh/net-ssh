@@ -76,7 +76,6 @@ module Net; module SSH
 
         globals = {}
         matched_host = nil
-        multi_host = []
         seen_host = false
         IO.foreach(file) do |line|
           next if line =~ /^\s*(?:#.*)?$/
