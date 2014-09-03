@@ -43,13 +43,14 @@ module Net; module SSH; module Transport
                          camellia256-ctr@openssh.org
                          cast128-ctr blowfish-ctr 3des-ctr
                          aes256-gcm@openssh.com aes128-gcm@openssh.com
+                         chacha20-poly1305@openssh.com
                         ),
       :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
                          hmac-ripemd160 hmac-ripemd160@openssh.com
                          hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96
                          hmac-sha2-512-96 none
                          hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
-                         umac-128-etm@openssh.com),
+                         umac-128-etm@openssh.com umac-64@openssh.com),
 
       :compression => %w(none zlib@openssh.com zlib),
       :language    => %w() 

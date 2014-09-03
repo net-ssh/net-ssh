@@ -240,7 +240,7 @@ module Net; module SSH
     end
 
     # Read a keyblob of the given type from the buffer, and return it as
-    # a key. Only RSA, DSA, and ECDSA keys are supported.
+    # a key. RSA, DSA, ECDSA and EdDSA keys are supported.
     def read_keyblob(type)
       case type
         when /^ssh-dss(-cert-v01@openssh\.com)?$/
@@ -255,7 +255,7 @@ module Net; module SSH
           key.e = read_bignum
           key.n = read_bignum
 
-        when /^ecdsa\-sha2\-(\w*)$/, /^ssh-ed25519(-cert-v01@openssh.com)?$/
+        when /^ecdsa\-sha2\-(\w*)$/, /^ssh\-ed25519(\-)?(\w*)$/
           unless defined?(OpenSSL::PKey::EC)
             raise NotImplementedError, "unsupported key type `#{type}'"
           else
