@@ -93,7 +93,8 @@ class TestConfig < Test::Unit::TestCase
       'port'                    => 1234,
       'pubkeyauthentication'    => true,
       'rekeylimit'              => 1024,
-      'sendenv'                 => "LC_*"
+      'sendenv'                 => "LC_*",
+      'numberofpasswordprompts' => '123'
     }
 
     net_ssh = Net::SSH::Config.translate(open_ssh)
@@ -111,6 +112,7 @@ class TestConfig < Test::Unit::TestCase
     assert_equal 1024,      net_ssh[:rekey_limit]
     assert_equal "127.0.0.1", net_ssh[:bind_address]
     assert_equal [/^LC_.*$/], net_ssh[:send_env]
+    assert_equal 123,       net_ssh[:number_of_password_prompts]
   end
 
   def test_translate_should_turn_off_authentication_methods
