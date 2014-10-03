@@ -44,12 +44,11 @@ module Net; module SSH; module Transport
                          cast128-ctr blowfish-ctr 3des-ctr
                          aes256-gcm@openssh.com aes128-gcm@openssh.com
                         ),
+
       :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
                          hmac-ripemd160 hmac-ripemd160@openssh.com
                          hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96
-                         hmac-sha2-512-96 none
-                         hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
-                         umac-128-etm@openssh.com),
+                         hmac-sha2-512-96 none),
 
       :compression => %w(none zlib@openssh.com zlib),
       :language    => %w() 
@@ -57,9 +56,7 @@ module Net; module SSH; module Transport
     if defined?(OpenSSL::PKey::EC)
       ALGORITHMS[:host_key] += %w(ecdsa-sha2-nistp256
                                   ecdsa-sha2-nistp384
-                                  ecdsa-sha2-nistp521
-                                  ssh-ed25519-cert-v01@openssh.com
-                                  ssh-ed25519)
+                                  ecdsa-sha2-nistp521)
       ALGORITHMS[:kex] += %w(ecdh-sha2-nistp256
                              ecdh-sha2-nistp384
                              ecdh-sha2-nistp521
@@ -221,8 +218,13 @@ module Net; module SSH; module Transport
           # apply the preferred algorithm order, if any
           if options[algorithm]
             algorithms[algorithm] = Array(options[algorithm]).compact.uniq
-            invalid = algorithms[algorithm].detect { |name| !ALGORITHMS[algorithm].include?(name) }
-            raise NotImplementedError, "unsupported #{algorithm} algorithm: `#{invalid}'" if invalid
+            unsupported = []
+            algorithms[algorithm].select! do |name|
+              supported = ALGORITHMS[algorithm].include?(name)
+              unsupported << name unless supported
+              supported
+            end
+            lwarn { "unsupported #{algorithm} algorithm: `#{unsupported}'" } unless unsupported.empty?
 
             # make sure all of our supported algorithms are tacked onto the
             # end, so that if the user tries to give a list of which none are
