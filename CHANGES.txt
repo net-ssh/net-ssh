@@ -1,4 +1,7 @@
+=== 2.9.2
 
+* Remove advertised algorithms that were not working (ssh-rsa-cert-* *ed25519 acm*-gcm@openssh.com) [mfazekas]
+* Unkown algorithms now ignored instead of failed [mfazekas]
 
 === 2.9.1 / 13 May 2014
 

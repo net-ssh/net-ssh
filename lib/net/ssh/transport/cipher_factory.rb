@@ -41,9 +41,6 @@ module Net; module SSH; module Transport
       "camellia192-ctr@openssh.org" => "camellia-192-ecb",
       "camellia256-ctr@openssh.org" => "camellia-256-ecb",
 
-      "aes256-gcm@openssh.com"      => "aes-256-gcm",
-      "aes128-gcm@openssh.com"      => "aes-128-gcm",
-
       "none"                        => "none",
     }
 

@@ -42,7 +42,6 @@ module Net; module SSH; module Transport
                          camellia192-ctr@openssh.org
                          camellia256-ctr@openssh.org
                          cast128-ctr blowfish-ctr 3des-ctr
-                         aes256-gcm@openssh.com aes128-gcm@openssh.com
                         ),
 
       :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
