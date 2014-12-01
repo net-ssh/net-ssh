@@ -80,6 +80,7 @@ module Net; module SSH; module Connection
       @max_win_size = (options.has_key?(:max_win_size) ? options[:max_win_size] : 0x20000)
 
       @last_keepalive_sent_at = nil
+      @unresponded_keepalive_count = 0
     end
 
     # Retrieves a custom property from this instance. This can be used to
@@ -612,12 +613,23 @@ module Net; module SSH; module Connection
         Time.now - @last_keepalive_sent_at >= keepalive_interval
       end
 
+      def keepalive_maxcount
+        (options[:keepalive_maxcount] || 3).to_i
+      end
+
       def send_keepalive_as_needed(readers, writers)
         return unless readers.nil? && writers.nil?
         return unless should_send_keepalive?
-        info { "sending keepalive" }
-        msg = Net::SSH::Buffer.from(:byte, Packet::IGNORE, :string, "keepalive")
-        send_message(msg)
+        info { "sending keepalive #{@unresponded_keepalive_count}" }
+
+        @unresponded_keepalive_count += 1
+        send_global_request("keepalive@openssh.com") { |success, response|
+          @unresponded_keepalive_count = 0
+        }
+        if keepalive_maxcount > 0 && @unresponded_keepalive_count > keepalive_maxcount
+          error { "Timeout, server #{host} not responding. Missed #{@unresponded_keepalive_count} timeouts." }
+          raise Net::SSH::Timeout, "Timeout, server #{host} not responding."
+        end
         @last_keepalive_sent_at = Time.now
       end
 
