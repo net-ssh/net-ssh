@@ -366,10 +366,27 @@ module Connection
     def test_process_should_call_enqueue_message_if_io_select_timed_out
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
       options = { :keepalive => true }
-      expected_packet = P(:byte, Net::SSH::Packet::IGNORE, :string, "keepalive")
+      expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
       IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
-      transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content  }
+      transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
       session(options).process
+    end
+
+    def test_process_should_raise_if_keepalives_not_answered
+      timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
+      options = { :keepalive => true, :keepalive_interval => 300, :keepalive_maxcount => 3 }
+      expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
+      [1,2,3].each do |i|
+        Time.stubs(:now).returns(i*300)
+        IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
+        transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content  }
+        session(options).process
+      end
+
+      Time.stubs(:now).returns(4*300)
+      IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
+      transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
+      assert_raises(Net::SSH::Timeout) { session(options).process }
     end
 
     def test_process_should_not_call_enqueue_message_unless_io_select_timed_out

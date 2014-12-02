@@ -63,7 +63,7 @@ module Net
     VALID_OPTIONS = [
       :auth_methods, :bind_address, :compression, :compression_level, :config,
       :encryption, :forward_agent, :hmac, :host_key,
-      :keepalive, :keepalive_interval, :kex, :keys, :key_data,
+      :keepalive, :keepalive_interval, :keepalive_maxcount, :kex, :keys, :key_data,
       :languages, :logger, :paranoid, :password, :port, :proxy,
       :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
@@ -130,6 +130,7 @@ module Net
     #   the keepalive_interval seconds. Defaults to +false+.
     #   :keepalive_interval => the interval seconds for keepalive.
     #   Defaults to +300+ seconds.
+    #   :keepalive_countmax => the maximun number of keepalive packet miss allowed.
     # * :kex => the key exchange algorithm (or algorithms) to use
     # * :keys => an array of file names of private keys to use for publickey
     #   and hostbased authentication
