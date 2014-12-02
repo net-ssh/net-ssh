@@ -16,15 +16,15 @@ module Net; module SSH
 
     # A convenience method for instantiating a new Version instance with the
     # given +major+, +minor+, and +tiny+ components.
-    def self.[](major, minor, tiny)
-      new(major, minor, tiny)
+    def self.[](major, minor, tiny, pre = nil)
+      new(major, minor, tiny, pre)
     end
 
     attr_reader :major, :minor, :tiny
 
     # Create a new Version object with the given components.
-    def initialize(major, minor, tiny)
-      @major, @minor, @tiny = major, minor, tiny
+    def initialize(major, minor, tiny, pre = nil)
+      @major, @minor, @tiny, @pre = major, minor, tiny, pre
     end
 
     # Compare this version to the given +version+ object.
@@ -35,7 +35,7 @@ module Net; module SSH
     # Converts this version object to a string, where each of the three
     # version components are joined by the '.' character. E.g., 2.0.0.
     def to_s
-      @to_s ||= [@major, @minor, @tiny].join(".")
+      @to_s ||= [@major, @minor, @tiny, @pre].compact.join(".")
     end
 
     # Converts this version to a canonical integer that may be compared
@@ -51,10 +51,14 @@ module Net; module SSH
     MINOR = 9
 
     # The tiny component of this version of the Net::SSH library
-    TINY  = 1
+    TINY  = 2
+
+    # The prerelease component of this version of the Net::SSH library 
+    # nil allowed
+    PRE   = "beta"
 
     # The current version of the Net::SSH library as a Version instance
-    CURRENT = new(MAJOR, MINOR, TINY)
+    CURRENT = new(*[MAJOR, MINOR, TINY, PRE].compact)
 
     # The current version of the Net::SSH library as a String
     STRING = CURRENT.to_s
