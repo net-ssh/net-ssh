@@ -34,10 +34,11 @@ module Keepalive
 
     @unresponded_keepalive_count += 1
     send_global_request("keepalive@openssh.com") { |success, response|
+      puts "before zero => #{@unresponded_keepalive_count}"
       @unresponded_keepalive_count = 0
     }
     if keepalive_maxcount > 0 && @unresponded_keepalive_count > keepalive_maxcount
-      error { "Timeout, server #{host} not responding. Missed #{@unresponded_keepalive_count} timeouts." }
+      error { "Timeout, server #{host} not responding. Missed #{@unresponded_keepalive_count-1} timeouts." }
       raise Net::SSH::Timeout, "Timeout, server #{host} not responding."
     end
     @last_keepalive_sent_at = Time.now
