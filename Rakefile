@@ -1,3 +1,10 @@
+# coding: UTF-8
+#
+# Also in your terminal environment run:
+#   $ export LANG=en_US.UTF-8
+#   $ export LANGUAGE=en_US.UTF-8
+#   $ export LC_ALL=en_US.UTF-8
+
 require "rubygems"
 require "rake"
 require "rake/clean"
@@ -21,7 +28,7 @@ begin
     s.description = s.summary + " It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
     s.email = "net-ssh@solutious.com"
     s.homepage = "https://github.com/net-ssh/net-ssh"
-    s.authors = ["Jamis Buck", "Delano Mandelbaum"]
+    s.authors = ["Jamis Buck", "Delano Mandelbaum", "Miklós Fazekas"]
 
     # Note: this is run at package time not install time so if you are
     # running on jruby, you need to install jruby-pageant manually.
