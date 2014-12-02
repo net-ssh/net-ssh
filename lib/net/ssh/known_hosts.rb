@@ -15,17 +15,9 @@ module Net; module SSH
       SUPPORTED_TYPE = %w(ssh-rsa ssh-dss
                           ecdsa-sha2-nistp256
                           ecdsa-sha2-nistp384
-                          ecdsa-sha2-nistp521
-                          ssh-ed25519-cert-v01@openssh.com
-                          ssh-rsa-cert-v01@openssh.com
-                          ssh-rsa-cert-v00@openssh.com
-                          ssh-ed25519
-                          )
+                          ecdsa-sha2-nistp521)
     else
-      SUPPORTED_TYPE = %w(ssh-rsa ssh-dss
-                          ssh-rsa-cert-v01@openssh.com
-                          ssh-rsa-cert-v00@openssh.com
-                         )
+      SUPPORTED_TYPE = %w(ssh-rsa ssh-dss)
     end
 
 

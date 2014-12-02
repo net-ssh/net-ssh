@@ -88,13 +88,13 @@ module Net; module SSH; module Service
         end
 
         prepare_client(client, channel, :local)
-  
+
         channel.on_open_failed do |ch, code, description|
           channel.error { "could not establish direct channel: #{description} (#{code})" }
           channel[:socket].close
         end
       end
-      
+
       local_port
     end
 
@@ -131,22 +131,52 @@ module Net; module SSH; module Service
     # the port number. The assigned port will show up in the # #active_remotes
     # list.
     #
+    # remote_host is interpreted by the server per RFC 4254, which has these
+    # special values:
+    #
+    # - "" means that connections are to be accepted on all protocol
+    #   families supported by the SSH implementation.
+    # - "0.0.0.0" means to listen on all IPv4 addresses.
+    # - "::" means to listen on all IPv6 addresses.
+    # - "localhost" means to listen on all protocol families supported by
+    #   the SSH implementation on loopback addresses only ([RFC3330] and
+    #   [RFC3513]).
+    # - "127.0.0.1" and "::1" indicate listening on the loopback
+    #   interfaces for IPv4 and IPv6, respectively.
+    #
+    # You may pass a block that will be called when the the port forward
+    # request receives a response.  This block will be passed the remote_port
+    # that was actually bound to, or nil if the binding failed.  If the block
+    # returns :no_exception, the "failed binding" exception will not be thrown.
+    #
     # If you want to block until the port is active, you could do something
     # like this:
     #
-    #   old_active_remotes = ssh.forward.active_remotes
-    #   ssh.forward.remote(80, "www.google.com", 0, "0.0.0.0")
-    #   ssh.loop { !(ssh.forward.active_remotes.length > old_active_remotes.length) }
-    #   assigned_port = (ssh.forward.active_remotes - old_active_remotes).first[0]
+    #   got_remote_port = nil
+    #   remote(port, host, remote_port, remote_host) do |actual_remote_port|
+    #     got_remote_port = actual_remote_port || :error
+    #     :no_exception # will yield the exception on my own thread
+    #   end
+    #   session.loop { !got_remote_port }
+    #   if got_remote_port == :error
+    #     raise Net::SSH::Exception, "remote forwarding request failed"
+    #   end
+    #
     def remote(port, host, remote_port, remote_host="127.0.0.1")
       session.send_global_request("tcpip-forward", :string, remote_host, :long, remote_port) do |success, response|
         if success
           remote_port = response.read_long if remote_port == 0
           debug { "remote forward from remote #{remote_host}:#{remote_port} to #{host}:#{port} established" }
           @remote_forwarded_ports[[remote_port, remote_host]] = Remote.new(host, port)
+          yield remote_port, remote_host if block_given?
         else
-          error { "remote forwarding request failed" }
-          raise Net::SSH::Exception, "remote forwarding request failed"
+          instruction = if block_given?
+            yield :error
+          end
+          unless instruction == :no_exception
+            error { "remote forwarding request failed" }
+            raise Net::SSH::Exception, "remote forwarding request failed"
+          end
         end
       end
     end
@@ -183,6 +213,16 @@ module Net; module SSH; module Service
       @remote_forwarded_ports.keys
     end
 
+    # Returns all active remote forwarded ports and where they forward to. The
+    # returned value is a hash from [<forwarding port on the local host>, <local forwarding address>]
+    # to [<port on the remote host>, <remote bind address>].
+    def active_remote_destinations
+      @remote_forwarded_ports.inject({}) do |result, (remote, local)|
+        result[[local.port, local.host]] = remote
+        result
+      end
+    end
+
     # Enables SSH agent forwarding on the given channel. The forwarded agent
     # will remain active even after the channel closes--the channel is only
     # used as the transport for enabling the forwarded connection. You should
@@ -216,7 +256,7 @@ module Net; module SSH; module Service
     end
 
     private
-      
+
       # Perform setup operations that are common to all forwarded channels.
       # +client+ is a socket, +channel+ is the channel that was just created,
       # and +type+ is an arbitrary string describing the type of the channel.
@@ -228,11 +268,11 @@ module Net; module SSH; module Service
         session.listen_to(client)
         channel[:socket] = client
 
-        channel.on_data do |ch, data|  
+        channel.on_data do |ch, data|
           debug { "data:#{data.length} on #{type} forwarded channel" }
           ch[:socket].enqueue(data)
         end
-        
+
         # Handles server close on the sending side by Miklós Fazekas
         channel.on_eof do |ch|
           debug { "eof #{type} on #{type} forwarded channel" }
@@ -251,7 +291,7 @@ module Net; module SSH; module Service
             debug { "enotconn in on_eof => shallowing exception:#{e}" }
           end
         end
-        
+
         channel.on_close do |ch|
           debug { "closing #{type} forwarded channel" }
           ch[:socket].close if !client.closed?

@@ -31,6 +31,7 @@ module Net; module SSH
   # * RekeyLimit => :rekey_limit
   # * User => :user
   # * UserKnownHostsFile => :user_known_hosts_file
+  # * NumberOfPasswordPrompts => :number_of_password_prompts
   #
   # Note that you will never need to use this class directly--you can control
   # whether the OpenSSH configuration files are read by passing the :config
@@ -59,7 +60,7 @@ module Net; module SSH
       # #default_files), translates the resulting hash into the options
       # recognized by Net::SSH, and returns them.
       def for(host, files=default_files)
-        hash = translate(files.inject({}) { |settings, file|
+        translate(files.inject({}) { |settings, file|
           load(file, host, settings)
         })
       end
@@ -76,7 +77,6 @@ module Net; module SSH
 
         globals = {}
         matched_host = nil
-        multi_host = []
         seen_host = false
         IO.foreach(file) do |line|
           next if line =~ /^\s*(?:#.*)?$/
@@ -220,6 +220,8 @@ module Net; module SSH
           when 'sendenv'
             multi_send_env = value.to_s.split(/\s+/)
             hash[:send_env] = multi_send_env.map { |e| Regexp.new pattern2regex(e).source, false }
+          when 'numberofpasswordprompts'
+            hash[:number_of_password_prompts] = value.to_i
           end
           hash
         end

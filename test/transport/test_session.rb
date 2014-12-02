@@ -69,6 +69,18 @@ module Transport
       assert_equal "[1.2.3.4]:1234", session.host_as_string
     end
 
+    def test_host_as_string_should_return_only_host_when_proxy_command_is_set
+      session!(:host => "1.2.3.4")
+      socket.stubs(:peer_ip).returns(Net::SSH::Transport::PacketStream::PROXY_COMMAND_HOST_IP)
+      assert_equal "1.2.3.4", session.host_as_string
+    end
+
+    def test_host_as_string_should_return_only_host_and_port_when_host_is_ip_and_port_is_not_default_and_proxy_command_is_set
+      session!(:host => "1.2.3.4", :port => 1234)
+      socket.stubs(:peer_ip).returns(Net::SSH::Transport::PacketStream::PROXY_COMMAND_HOST_IP)
+      assert_equal "[1.2.3.4]:1234", session.host_as_string
+    end
+
     def test_close_should_cleanup_and_close_socket
       session!
       socket.expects(:cleanup)

@@ -94,10 +94,16 @@ module Net; module SSH; module Authentication
 
       identities = []
       body.read_long.times do
-        key = Buffer.new(body.read_string).read_key
-        key.extend(Comment)
-        key.comment = body.read_string
-        identities.push key
+        key_str = body.read_string
+        comment_str = body.read_string
+        begin
+          key = Buffer.new(key_str).read_key
+          key.extend(Comment)
+          key.comment = comment_str
+          identities.push key
+        rescue NotImplementedError => e
+          error { "ignoring unimplemented key:#{e.message} #{comment_str}" }
+        end
       end
 
       return identities

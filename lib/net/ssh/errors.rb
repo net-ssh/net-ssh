@@ -14,6 +14,10 @@ module Net; module SSH
   # unexpectedly.
   class Disconnect < Exception; end
 
+  # This exception is raised when the remote host has disconnected/
+  # timeouted unexpectedly.
+  class Timeout < Disconnect; end
+
   # This exception is primarily used internally, but if you have a channel
   # request handler (see Net::SSH::Connection::Channel#on_request) that you
   # want to fail in such a way that the server knows it failed, you can
