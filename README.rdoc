@@ -175,7 +175,7 @@ Run a single test file like this:
 
 Since building the gem requires the private key if you want to build a .gem locally please use the NET_SSH_NOKEY=1 envirnoment variable:
 
-     rake -T build NET_SSH_NOKEY=1
+     rake build NET_SSH_NOKEY=1
 
 === PORT FORWARDING TESTS
 
