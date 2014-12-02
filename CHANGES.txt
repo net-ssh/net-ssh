@@ -1,7 +1,9 @@
-=== 2.9.2
+=== 2.9.2-beta
 
 * Remove advertised algorithms that were not working (ssh-rsa-cert-* *ed25519 acm*-gcm@openssh.com) [mfazekas]
 * Unkown algorithms now ignored instead of failed [mfazekas]
+* Asks for password with password auth (up to number_of_password_prompts) [mfazekas]
+* Removed warnings [amatsuda]
 
 === 2.9.1 / 13 May 2014
 

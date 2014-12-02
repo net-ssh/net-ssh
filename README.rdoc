@@ -171,6 +171,11 @@ Run a single test file like this:
 
 * JRuby 1.5: 99% tests pass (448 tests, 1846 assertions, 1 failures)
 
+=== BUILDING GEM
+
+Since building the gem requires the private key if you want to build a .gem locally please use the NET_SSH_NOKEY=1 envirnoment variable:
+
+     rake -T build NET_SSH_NOKEY=1
 
 === PORT FORWARDING TESTS
 
