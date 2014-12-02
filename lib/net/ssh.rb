@@ -125,10 +125,10 @@ module Net
     #   specified in an SSH configuration file. It lets you specify an
     #   "alias", similarly to adding an entry in /etc/hosts but without needing
     #   to modify /etc/hosts.
-    #   :keepalive => set to +true+ to send a keepalive packet to the SSH server
+    # * :keepalive => set to +true+ to send a keepalive packet to the SSH server
     #   when there's no traffic between the SSH server and Net::SSH client for
     #   the keepalive_interval seconds. Defaults to +false+.
-    #   :keepalive_interval => the interval seconds for keepalive.
+    # * :keepalive_interval => the interval seconds for keepalive.
     #   Defaults to +300+ seconds.
     #   :keepalive_countmax => the maximun number of keepalive packet miss allowed.
     # * :kex => the key exchange algorithm (or algorithms) to use
