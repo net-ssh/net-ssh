@@ -37,11 +37,11 @@ module Keepalive
       puts "before zero => #{@unresponded_keepalive_count}"
       @unresponded_keepalive_count = 0
     }
+    @last_keepalive_sent_at = Time.now
     if keepalive_maxcount > 0 && @unresponded_keepalive_count > keepalive_maxcount
       error { "Timeout, server #{host} not responding. Missed #{@unresponded_keepalive_count-1} timeouts." }
       raise Net::SSH::Timeout, "Timeout, server #{host} not responding."
     end
-    @last_keepalive_sent_at = Time.now
   end
 end
 
