@@ -130,7 +130,7 @@ module Net
     #   the keepalive_interval seconds. Defaults to +false+.
     # * :keepalive_interval => the interval seconds for keepalive.
     #   Defaults to +300+ seconds.
-    #   :keepalive_countmax => the maximun number of keepalive packet miss allowed.
+    #   :keepalive_maxcount => the maximun number of keepalive packet miss allowed.
     # * :kex => the key exchange algorithm (or algorithms) to use
     # * :keys => an array of file names of private keys to use for publickey
     #   and hostbased authentication
