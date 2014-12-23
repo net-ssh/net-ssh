@@ -130,7 +130,7 @@ module Net
     #   the keepalive_interval seconds. Defaults to +false+.
     # * :keepalive_interval => the interval seconds for keepalive.
     #   Defaults to +300+ seconds.
-    #   :keepalive_maxcount => the maximun number of keepalive packet miss allowed.
+    # * :keepalive_maxcount => the maximun number of keepalive packet miss allowed.
     # * :kex => the key exchange algorithm (or algorithms) to use
     # * :keys => an array of file names of private keys to use for publickey
     #   and hostbased authentication
@@ -147,7 +147,11 @@ module Net
     # * :max_win_size => maximum size we tell the other side that is supported for
     #   the window.
     # * :paranoid => either false, true, :very, or :secure specifying how
-    #   strict host-key verification should be (in increasing order here)
+    #   strict host-key verification should be (in increasing order here).
+    #   You can also provide an own Object which responds to +verify+. The argument
+    #   given to +verify+ is a hash consisting of the +:key+, the +:key_blob+,
+    #   the +:fingerprint+ and the +:session+. Returning true accepts the host key,
+    #   returning false declines it and closes the connection.
     # * :passphrase => the passphrase to use when loading a private key (default
     #   is +nil+, for no passphrase)
     # * :password => the password to use to login
