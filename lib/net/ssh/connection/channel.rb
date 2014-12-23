@@ -523,7 +523,7 @@ module Net; module SSH; module Connection
           @on_open_failed.call(self, reason_code, description)
         else
           raise ChannelOpenFailed.new(reason_code, description)
-        end          
+        end
       end
 
       # Invoked when the server sends a CHANNEL_WINDOW_ADJUST packet, and
