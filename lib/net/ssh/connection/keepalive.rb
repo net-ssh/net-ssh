@@ -1,6 +1,10 @@
+require 'net/ssh/loggable'
+
 module Net; module SSH; module Connection
 
 module Keepalive
+  include Loggable
+
   # Default IO.select timeout threshold
   DEFAULT_IO_SELECT_TIMEOUT = 300
 
@@ -34,12 +38,13 @@ module Keepalive
 
     @unresponded_keepalive_count += 1
     send_global_request("keepalive@openssh.com") { |success, response|
-      puts "before zero => #{@unresponded_keepalive_count}"
+      debug { "keepalive response successful. Missed #{@unresponded_keepalive_count-1} keepalives" }
       @unresponded_keepalive_count = 0
     }
     @last_keepalive_sent_at = Time.now
     if keepalive_maxcount > 0 && @unresponded_keepalive_count > keepalive_maxcount
       error { "Timeout, server #{host} not responding. Missed #{@unresponded_keepalive_count-1} timeouts." }
+      @unresponded_keepalive_count = 0
       raise Net::SSH::Timeout, "Timeout, server #{host} not responding."
     end
   end
