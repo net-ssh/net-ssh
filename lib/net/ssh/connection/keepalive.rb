@@ -1,51 +1,53 @@
 require 'net/ssh/loggable'
-
 module Net; module SSH; module Connection
 
-module Keepalive
+class Keepalive
   include Loggable
 
-  # Default IO.select timeout threshold
-  DEFAULT_IO_SELECT_TIMEOUT = 300
-
-  def initialize_keepalive
+  def initialize(session)
     @last_keepalive_sent_at = nil
     @unresponded_keepalive_count = 0
+    @session = session
+    self.logger = session.logger
   end
 
-  def keepalive_enabled?
+  def options
+    @session.options
+  end
+
+  def enabled?
     options[:keepalive]
   end
 
-  def keepalive_interval
-    options[:keepalive_interval] || DEFAULT_IO_SELECT_TIMEOUT
+  def interval
+    options[:keepalive_interval] || Session::DEFAULT_IO_SELECT_TIMEOUT
   end
 
-  def should_send_keepalive?
-    return false unless keepalive_enabled?
+  def should_send?
+    return false unless enabled?
     return true unless @last_keepalive_sent_at
-    Time.now - @last_keepalive_sent_at >= keepalive_interval
+    Time.now - @last_keepalive_sent_at >= interval
   end
 
   def keepalive_maxcount
     (options[:keepalive_maxcount] || 3).to_i
   end
 
-  def send_keepalive_as_needed(readers, writers)
+  def send_as_needed(readers, writers)
     return unless readers.nil? && writers.nil?
-    return unless should_send_keepalive?
+    return unless should_send?
     info { "sending keepalive #{@unresponded_keepalive_count}" }
 
     @unresponded_keepalive_count += 1
-    send_global_request("keepalive@openssh.com") { |success, response|
+    @session.send_global_request("keepalive@openssh.com") { |success, response|
       debug { "keepalive response successful. Missed #{@unresponded_keepalive_count-1} keepalives" }
       @unresponded_keepalive_count = 0
     }
     @last_keepalive_sent_at = Time.now
     if keepalive_maxcount > 0 && @unresponded_keepalive_count > keepalive_maxcount
-      error { "Timeout, server #{host} not responding. Missed #{@unresponded_keepalive_count-1} timeouts." }
+      error { "Timeout, server #{@session.host} not responding. Missed #{@unresponded_keepalive_count-1} timeouts." }
       @unresponded_keepalive_count = 0
-      raise Net::SSH::Timeout, "Timeout, server #{host} not responding."
+      raise Net::SSH::Timeout, "Timeout, server #{@session.host} not responding."
     end
   end
 end
