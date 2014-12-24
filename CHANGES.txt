@@ -1,3 +1,7 @@
+=== 2.9.2-rc1
+
+* Documentation fixes and refactoring to keepalive [detiber, mfazekas]
+
 === 2.9.2-beta
 
 * Remove advertised algorithms that were not working (ssh-rsa-cert-* *ed25519 acm*-gcm@openssh.com) [mfazekas]
