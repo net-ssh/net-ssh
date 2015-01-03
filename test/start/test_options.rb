@@ -31,6 +31,13 @@ module NetSSH
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
+
+    def test_star_should_accept_number_of_password_prompts_option
+      assert_nothing_raised do
+        options = { :number_of_password_prompts => 2 }
+        Net::SSH.start('localhost', 'testuser', options)
+      end
+    end
   end
 end
 
