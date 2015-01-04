@@ -1,3 +1,7 @@
+=== 2.9.2-rc2
+
+* number_of_password_prompts is now accepted as ssh option, by setting it 0 net-ssh will not ask for password for password auth as with previous versions [mfazekas]
+
 === 2.9.2-rc1
 
 * Documentation fixes and refactoring to keepalive [detiber, mfazekas]

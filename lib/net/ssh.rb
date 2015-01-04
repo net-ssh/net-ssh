@@ -68,7 +68,7 @@ module Net
       :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
-      :max_win_size, :send_env, :use_agent
+      :max_win_size, :send_env, :use_agent, :number_of_password_prompts
     ]
 
     # The standard means of starting a new SSH connection. When used with a
