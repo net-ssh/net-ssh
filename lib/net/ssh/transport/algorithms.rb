@@ -58,8 +58,7 @@ module Net; module SSH; module Transport
                                   ecdsa-sha2-nistp521)
       ALGORITHMS[:kex] += %w(ecdh-sha2-nistp256
                              ecdh-sha2-nistp384
-                             ecdh-sha2-nistp521
-                             curve25519-sha256@libssh.org)
+                             ecdh-sha2-nistp521)
     end
 
     # The underlying transport layer session that supports this object
