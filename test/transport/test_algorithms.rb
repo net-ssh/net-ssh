@@ -58,7 +58,7 @@ module Transport
 
     def ec_kex
       if defined?(OpenSSL::PKey::EC)
-        %w(ecdh-sha2-nistp256 ecdh-sha2-nistp384 ecdh-sha2-nistp521 curve25519-sha256@libssh.org)
+        %w(ecdh-sha2-nistp256 ecdh-sha2-nistp384 ecdh-sha2-nistp521)
       else
         []
       end
