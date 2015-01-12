@@ -156,7 +156,9 @@ module Authentication
 
       def stub_file_private_key(name, key, options = {})
         manager.add(name)
+        File.stubs(:file?).with(name).returns(true)
         File.stubs(:readable?).with(name).returns(true)
+        File.stubs(:file?).with(name + ".pub").returns(true)
         File.stubs(:readable?).with(name + ".pub").returns(false)
 
         case options.fetch(:passphrase, :indifferently)
@@ -179,7 +181,9 @@ module Authentication
 
       def stub_file_public_key(name, key)
         manager.add(name)
+        File.stubs(:file?).with(name).returns(true)
         File.stubs(:readable?).with(name).returns(false)
+        File.stubs(:file?).with(name + ".pub").returns(true)
         File.stubs(:readable?).with(name + ".pub").returns(true)
 
         Net::SSH::KeyFactory.expects(:load_public_key).with(name + ".pub").returns(key).at_least_once

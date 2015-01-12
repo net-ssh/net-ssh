@@ -188,9 +188,9 @@ module Net
         def prepare_identities_from_files
           key_files.map do |file|
             public_key_file = file + ".pub"
-            if File.readable?(public_key_file)
-              { :load_from => :pubkey_file, :file => file }
-            elsif File.readable?(file)
+            if File.file?(public_key_file) and File.readable?(public_key_file)
+              { :load_from => :pubkey_file, :file => public_key_file }
+            elsif File.file?(file) and File.readable?(file)
               { :load_from => :privkey_file, :file => file }
             end
           end.compact
@@ -209,7 +209,7 @@ module Net
             begin
               case identity[:load_from]
               when :pubkey_file
-                key = KeyFactory.load_public_key(identity[:file] + ".pub")
+                key = KeyFactory.load_public_key(identity[:file])
                 { :public_key => key, :from => :file, :file => identity[:file] }
               when :privkey_file
                 private_key = KeyFactory.load_private_key(identity[:file], options[:passphrase], ask_passphrase)
