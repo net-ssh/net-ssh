@@ -188,12 +188,16 @@ module Net
         def prepare_identities_from_files
           key_files.map do |file|
             public_key_file = file + ".pub"
-            if File.file?(public_key_file) and File.readable?(public_key_file)
+            if readable_file?(public_key_file)
               { :load_from => :pubkey_file, :file => public_key_file }
-            elsif File.file?(file) and File.readable?(file)
+            elsif readable_file?(file)
               { :load_from => :privkey_file, :file => file }
             end
           end.compact
+        end
+
+        def readable_file?(path)
+          File.file?(path) && File.readable?(path)
         end
 
         # Prepared identities from user key_data, preserving their order and sources.
