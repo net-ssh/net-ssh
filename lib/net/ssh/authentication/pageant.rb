@@ -1,10 +1,14 @@
-require 'dl/import'
-
 if RUBY_VERSION < "1.9"
+  require 'dl/import'
   require 'dl/struct'
-else
+elsif RUBY_VERSION < "2.2"
+  require 'dl/import'
   require 'dl/types'
   require 'dl'
+else
+  require 'fiddle'
+  require 'fiddle/types'
+  require 'fiddle/import'
 end
 
 require 'net/ssh/errors'
@@ -36,12 +40,17 @@ module Net; module SSH; module Authentication
         dlload 'advapi32'
 
         SIZEOF_DWORD = DL.sizeof('L')
-      else
+      elsif RUBY_VERSION < "2.2"
         extend DL::Importer
         dlload 'user32','kernel32', 'advapi32'
         include DL::Win32Types
 
         SIZEOF_DWORD = DL::SIZEOF_LONG
+      else
+        extend Fiddle::Importer
+        dlload 'user32','kernel32', 'advapi32'
+        include Fiddle::Win32Types
+        SIZEOF_DWORD = Fiddle::SIZEOF_LONG
       end
 
       typealias("LPCTSTR", "char *")         # From winnt.h
