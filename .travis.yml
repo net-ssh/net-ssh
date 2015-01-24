@@ -4,6 +4,8 @@ rvm:
   - "2.0.0"
   - "2.1.0"
   - "2.2.0"
+  - 'jruby-head'
+  - '1.8.7'
 
 install: gem install jeweler test-unit mocha
 
