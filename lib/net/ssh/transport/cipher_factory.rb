@@ -76,7 +76,6 @@ module Net; module SSH; module Transport
       cipher.padding = 0
 
       cipher.extend(Net::SSH::Transport::CTR) if (name =~ /-ctr(@openssh.org)?$/)
-
       cipher.iv      = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options) if ossl_name != "rc4"
 
       key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len

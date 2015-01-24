@@ -8,6 +8,7 @@
 require "rubygems"
 require "rake"
 require "rake/clean"
+if RUBY_VERSION >= '1.9.0'
 require "rdoc/task"
 
 task :default => ["build"]
@@ -55,11 +56,6 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-require 'rake/testtask'
-Rake::TestTask.new do |t|
-  t.libs = ["lib", "test"]
-end
-
 extra_files = %w[LICENSE.txt THANKS.txt CHANGES.txt ]
 RDoc::Task.new do |rdoc|
   rdoc.rdoc_dir = "rdoc"
@@ -72,4 +68,13 @@ RDoc::Task.new do |rdoc|
   extra_files.each { |file|
     rdoc.rdoc_files.include(file) if File.exists?(file)
   }
+end
+end
+
+require 'rake/testtask'
+Rake::TestTask.new do |t|
+  t.libs = ["lib", "test"]
+  if RUBY_VERSION < '1.9.0'
+    t.ruby_opts << '-rubygems'
+  end
 end
