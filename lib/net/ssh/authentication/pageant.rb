@@ -9,6 +9,12 @@ else
   require 'fiddle'
   require 'fiddle/types'
   require 'fiddle/import'
+
+  # For now map DL to Fiddler versus updating all the code below
+  module DL
+    CPtr = Fiddle::Pointer
+    RUBY_FREE = Fiddle::RUBY_FREE
+  end
 end
 
 require 'net/ssh/errors'
