@@ -1,3 +1,10 @@
+=== 2.9.4-beta1
+
+* Use sysread and syswrite on Windows instead of read_nonblock and write [marc-etienne]
+* Windows/peagant: use fiddle on ruby 2.2+/windows [Charlie Savage]
+* Check if ssh key is a file [kiela]
+
+=== 2.9.3
 === 2.9.2-rc3
 
 * Remove advertised algorithms that were not working (curve25519-sha256@libssh.org) [mfazekas]
