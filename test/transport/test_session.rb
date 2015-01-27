@@ -315,7 +315,7 @@ module Transport
       def session(options={})
         @session ||= begin
           host = options.delete(:host) || "net.ssh.test"
-          TCPSocket.stubs(:open).with(host, options[:port] || 22).returns(socket)
+          TCPSocket.stubs(:open).with(host, options[:port] || 22, nil).returns(socket)
           Net::SSH::Transport::ServerVersion.stubs(:new).returns(server_version)
           Net::SSH::Transport::Algorithms.stubs(:new).returns(algorithms)
 
