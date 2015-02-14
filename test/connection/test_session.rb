@@ -377,13 +377,13 @@ module Connection
       options = { :keepalive => true, :keepalive_interval => 300, :keepalive_maxcount => 3 }
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
       [1,2,3].each do |i|
-        Time.stubs(:now).returns(i*300)
+        Time.stubs(:now).returns(Time.at(i*300))
         IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
-        transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content  }
+        transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
         session(options).process
       end
 
-      Time.stubs(:now).returns(4*300)
+      Time.stubs(:now).returns(Time.at(4*300))
       IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
       transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
       assert_raises(Net::SSH::Timeout) { session(options).process }

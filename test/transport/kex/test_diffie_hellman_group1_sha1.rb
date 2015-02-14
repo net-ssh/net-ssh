@@ -12,12 +12,16 @@ module Transport; module Kex
         @packet_data = @shared_secret = nil
     end
 
+    def digest_type
+      OpenSSL::Digest::SHA1
+    end
+
     def test_exchange_keys_should_return_expected_results_when_successful
       result = exchange!
       assert_equal session_id, result[:session_id]
       assert_equal server_key.to_blob, result[:server_key].to_blob
       assert_equal shared_secret, result[:shared_secret]
-      assert_equal OpenSSL::Digest::SHA1, result[:hashing_algorithm]
+      assert_equal digest_type, result[:hashing_algorithm]
     end
 
     def test_exchange_keys_with_unverifiable_host_should_raise_exception

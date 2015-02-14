@@ -69,6 +69,10 @@ module Transport; module Kex
         Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA1
       end
 
+      def digest_type
+        OpenSSL::Digest::SHA1
+      end
+
       def session_id
         @session_id ||= begin
           buffer = Net::SSH::Buffer.from(:string, packet_data[:client_version_string],
@@ -84,7 +88,7 @@ module Transport; module Kex
             :bignum, dh.dh.pub_key,
             :bignum, server_dh_pubkey,
             :bignum, shared_secret)
-          OpenSSL::Digest::SHA1.digest(buffer.to_s)
+          digest_type.digest(buffer.to_s)
         end
       end
   end
