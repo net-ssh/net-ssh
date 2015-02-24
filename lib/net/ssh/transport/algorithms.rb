@@ -223,11 +223,6 @@ module Net; module SSH; module Transport
               supported
             end
             lwarn { "unsupported #{algorithm} algorithm: `#{unsupported}'" } unless unsupported.empty?
-
-            # make sure all of our supported algorithms are tacked onto the
-            # end, so that if the user tries to give a list of which none are
-            # supported, we can still proceed.
-            list.each { |name| algorithms[algorithm] << name unless algorithms[algorithm].include?(name) }
           end
         end
 
