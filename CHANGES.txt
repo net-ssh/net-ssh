@@ -1,3 +1,9 @@
+=== 2.10.0-?
+
+* Configuration change: we no longer append all supported algorithms, this is so you can exclude insecure algorithms. If you want to use the old behaviour specify append_all_supported_algorithms => true [voidus, mfazekas]
+* Configuration change: password will now ask for password up to the :number_of_password_prompts times. If you want the
+2.9.1 behaviour of never asking password please set number_of_password_prompts to 0.
+
 === 2.9.4-beta1
 
 * Use sysread and syswrite on Windows instead of read_nonblock and write [marc-etienne]
@@ -5,6 +11,7 @@
 * Check if ssh key is a file [kiela]
 
 === 2.9.3
+
 === 2.9.2-rc3
 
 * Remove advertised algorithms that were not working (curve25519-sha256@libssh.org) [mfazekas]
@@ -21,7 +28,7 @@
 
 * Remove advertised algorithms that were not working (ssh-rsa-cert-* *ed25519 acm*-gcm@openssh.com) [mfazekas]
 * Unkown algorithms now ignored instead of failed [mfazekas]
-* Asks for password with password auth (up to number_of_password_prompts) [mfazekas]
+* Configuration change: Asks for password with password auth (up to number_of_password_prompts) [mfazekas]
 * Removed warnings [amatsuda]
 
 === 2.9.1 / 13 May 2014

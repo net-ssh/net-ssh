@@ -223,6 +223,10 @@ module Net; module SSH; module Transport
               supported
             end
             lwarn { "unsupported #{algorithm} algorithm: `#{unsupported}'" } unless unsupported.empty?
+
+            if options[:append_all_supported_algorithms]
+              list.each { |name| algorithms[algorithm] << name unless algorithms[algorithm].include?(name) }
+            end
           end
         end
 
