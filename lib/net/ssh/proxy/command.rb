@@ -67,25 +67,23 @@ module Net; module SSH; module Proxy
         raise ConnectError, "#{e}: #{command_line}"
       end
       @command_line = command_line
-      class << io
-        if Gem.win_platform?
-          # read_nonblock and write_nonblock are not available on Windows
-          # pipe. Use sysread and syswrite as a replacement works.
-          def send(data, flag)
-            syswrite(data)
-          end
+      if Gem.win_platform?
+        # read_nonblock and write_nonblock are not available on Windows
+        # pipe. Use sysread and syswrite as a replacement works.
+        def io.send(data, flag)
+          syswrite(data)
+        end
 
-          def recv(size)
-            sysread(size)
-          end
-        else
-          def send(data, flag)
-            write_nonblock(data)
-          end
+        def io.recv(size)
+          sysread(size)
+        end
+      else
+        def io.send(data, flag)
+          write_nonblock(data)
+        end
 
-          def recv(size)
-            read_nonblock(size)
-          end
+        def io.recv(size)
+          read_nonblock(size)
         end
       end
       io
