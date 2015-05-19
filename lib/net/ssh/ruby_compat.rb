@@ -9,11 +9,6 @@ class String
       self[index] = c
     end
   end
-  if RUBY_VERSION < "1.8.7"
-    def bytesize
-      self.size
-    end
-  end
 end
 
 module Net; module SSH

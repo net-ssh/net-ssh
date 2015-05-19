@@ -6,7 +6,6 @@ rvm:
   - 2.2.0
   - jruby-head
   - jruby-19mode
-  - 1.8.7
   - rbx-2
 
 install: gem install test-unit mocha
@@ -16,4 +15,3 @@ script: rake test
 matrix:
   allow_failures:
     - rvm: jruby-head
-    - rvm: 1.8.7
