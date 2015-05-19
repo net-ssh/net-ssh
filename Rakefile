@@ -74,7 +74,4 @@ end
 require 'rake/testtask'
 Rake::TestTask.new do |t|
   t.libs = ["lib", "test"]
-  if RUBY_VERSION < '1.9.0'
-    t.ruby_opts << '-rubygems'
-  end
 end

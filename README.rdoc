@@ -112,7 +112,7 @@ If you don't add the public key, you'll see an error like "Couldn't verify data 
 
 == RUBY 1.8 SUPPORT
 
-net-ssh supports Ruby 1.8.x up until the 2.5.1 release. Later releases will work but the test suite is no longer guaranteed to pass all tests.
+net-ssh supports Ruby 1.8.x up until the 2.5.1 release. Current version requires ruby 1.9 or later.
 
 == JRUBY 1.6
 
