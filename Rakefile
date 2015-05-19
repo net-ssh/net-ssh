@@ -78,3 +78,8 @@ Rake::TestTask.new do |t|
     t.ruby_opts << '-rubygems'
   end
 end
+
+Rake::TestTask.new(:'integration-test') do |t|
+  t.libs = ["lib", "test/integration"]
+  t.pattern = 'test/integration/test_*.rb'
+end

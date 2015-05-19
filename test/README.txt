@@ -21,8 +21,10 @@ EXPECTED RESULTS
 
 * JRuby 1.6: 98% test pass (510 tests, 1914 assertions, 4 failures, 5 errors)
 
-* JRuby 1.5: 98% tests pass (510 tests, 1914 assertions, 5 failures, 5 errors)
+INTEGRATION TESTS
 
+     brew install ansible ; ansible-galaxy install rvm_io.rvm1-ruby ; vagrant up ; vagrant ssh
+     cd /net-ssh ; rake integration-test
 
 PORT FORWARDING TESTS
 

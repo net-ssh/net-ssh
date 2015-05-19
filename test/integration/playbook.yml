@@ -1,0 +1,46 @@
+---
+- hosts: all
+  sudo: yes
+  vars:
+    ruby_version: '2.0.0-p598'
+    rvm1_install_path: '/usr/local/rvm'
+    foopwd: "$6$mhOzf/yapZwS$3RwDl4GfWZ5VcfcsHrK9xNNTxyzLOJBsmMttDNaegIbXxMahV86.v/5HsNtit16MEl0EFf5CSW8Dz2yXV.8GB0"
+    foo2pwd: "$6$JiB7y7.M0yI$Abt.ZGIc4DwkRWeI6nKxzzPUZcux7hLRXSdpoKoZvswJz1SZyg5GRQWn9pGID0dgC6e4wFglfW6ev/qZoTqGk/"
+  pre_tasks:
+    - name: get currently installed ruby version
+      command: "{{rvm1_install_path}}/rubies/ruby-{{ruby_version}}/bin/ruby -e 'puts \"#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}\"'"
+      register: current_ruby_version
+      ignore_errors: True
+  roles:
+    - { role: rvm_io.rvm1-ruby,
+        tags: ruby, sudo: True,
+        rvm1_rubies: ["ruby-{{ruby_version}}"],
+        rvm1_install_path: "{{rvm1_install_path}}",
+        when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}'" }
+  tasks:
+    - user: name=net_ssh_1 password="{{foopwd}}" group=vagrant state=present
+    - user: name=net_ssh_2 password="{{foo2pwd}}" group=vagrant state=present
+    - file: dest=/home/net_ssh_1/.ssh/ state=directory mode=0740 owner=net_ssh_1
+    - file: dest=/home/net_ssh_2/.ssh/ state=directory mode=0740 owner=net_ssh_2
+    - lineinfile: dest=/etc/sudoers.d/net_ssh_1 mode=0440 state=present create=yes
+        line='net_ssh_1 ALL=(ALL) NOPASSWD:ALL' regexp=net_ssh_1
+    - lineinfile: dest=/etc/sudoers.d/net_ssh_1 mode=0440 state=present create=yes
+        line='net_ssh_2 ALL=(ALL) NOPASSWD:ALL' regexp=net_ssh_2
+    - command: ssh-keygen -A
+      args:
+        creates: /etc/ssh/ssh_host_ed25519_key
+      notify: restart sshd
+    - name: sshd debug
+      lineinfile: dest='/etc/ssh/sshd_config' line='LogLevel DEBUG' regexp=LogLevel
+      notify: restart sshd
+    - gem: name="{{item}}" state=present executable=/usr/local/rvm/rubies/ruby-{{ruby_version}}/bin/gem
+      with_items:
+        - byebug
+        - jeweler
+        - mocha
+        - rbnacl
+        - rbnacl-libsodium
+  handlers:
+    - name: restart sshd
+      service: name=ssh state=restarted
+
