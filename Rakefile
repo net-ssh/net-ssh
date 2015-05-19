@@ -75,3 +75,8 @@ require 'rake/testtask'
 Rake::TestTask.new do |t|
   t.libs = ["lib", "test"]
 end
+
+Rake::TestTask.new(:'integration-test') do |t|
+  t.libs = ["lib", "test/integration"]
+  t.pattern = 'test/integration/test_*.rb'
+end
