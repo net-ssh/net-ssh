@@ -182,7 +182,7 @@ module Authentication
       def stub_file_public_key(name, key)
         manager.add(name)
         File.stubs(:file?).with(name).returns(true)
-        File.stubs(:readable?).with(name).returns(false)
+        File.stubs(:readable?).with(name).returns(true)
         File.stubs(:file?).with(name + ".pub").returns(true)
         File.stubs(:readable?).with(name + ".pub").returns(true)
 
