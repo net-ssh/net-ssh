@@ -38,6 +38,13 @@ module NetSSH
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
+
+    def test_start_should_accept_non_interactive_option
+      assert_nothing_raised do
+        options = { :non_interactive => true }
+        Net::SSH.start('localhost', 'testuser', options)
+      end
+    end
   end
 end
 

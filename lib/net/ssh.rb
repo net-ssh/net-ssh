@@ -69,7 +69,7 @@ module Net
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
       :max_win_size, :send_env, :use_agent, :number_of_password_prompts,
-      :append_supported_algorithms
+      :append_supported_algorithms, :non_interactive
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -174,12 +174,19 @@ module Net
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
     # * :use_agent => Set false to disable the use of ssh-agent. Defaults to 
     #   true
+    # * :non_interactive => set to true if your app is non interactive and prefers
+    #   authentication failure vs password prompt
     # * :verbose => how verbose to be (Logger verbosity constants, Logger::DEBUG
     #   is very verbose, Logger::FATAL is all but silent). Logger::FATAL is the
     #   default. The symbols :debug, :info, :warn, :error, and :fatal are also
     #   supported and are translated to the corresponding Logger constant.
     # * :append_all_supported_algorithms => set to +true+ to append all supported
     #   algorithms by net-ssh. Was the default behaviour until 2.10
+    # * :number_of_password_prompts => Number of prompts for the password
+    #   authentication method defaults to 3 set to 0 to disable prompt for
+    #   password auth method
+    # * :non_interactive => non interactive applications should set it to true
+    #   to prefer failing a password/etc auth methods vs asking for password
     def self.start(host, user, options={}, &block)
       invalid_options = options.keys - VALID_OPTIONS
       if invalid_options.any?
@@ -193,6 +200,11 @@ module Net
       if !options.key?(:logger)
         options[:logger] = Logger.new(STDERR)
         options[:logger].level = Logger::FATAL
+      end
+
+      if options[:non_interactive]
+        options[:number_of_password_prompts] = 0
+        options[:passphrase] = false
       end
 
       if options[:verbose]

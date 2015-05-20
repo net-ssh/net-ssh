@@ -58,7 +58,9 @@ module Net
           end
 
           def get_max_retries
-            (session.transport.options||{})[:number_of_password_prompts] || NUMBER_OF_PASSWORD_PROMPTS
+            options = session.transport.options || {}
+            result = options[:number_of_password_prompts] || NUMBER_OF_PASSWORD_PROMPTS
+            options[:non_interactive] ? 0 : result
           end
         end
 
