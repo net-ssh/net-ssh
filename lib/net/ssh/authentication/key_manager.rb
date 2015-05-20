@@ -187,11 +187,10 @@ module Net
         # Prepares identities from user key_files for loading, preserving their order and sources.
         def prepare_identities_from_files
           key_files.map do |file|
-            public_key_file = file + ".pub"
-            if readable_file?(public_key_file)
-              { :load_from => :pubkey_file, :file => public_key_file }
-            elsif readable_file?(file)
+            if readable_file?(file)
               { :load_from => :privkey_file, :file => file }
+            elsif readable_file?(public_key_file = file + ".pub")
+              { :load_from => :pubkey_file, :file => public_key_file }
             end
           end.compact
         end
