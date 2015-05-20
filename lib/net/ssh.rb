@@ -68,7 +68,8 @@ module Net
       :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
-      :max_win_size, :send_env, :use_agent, :number_of_password_prompts
+      :max_win_size, :send_env, :use_agent, :number_of_password_prompts,
+      :append_supported_algorithms
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -177,6 +178,8 @@ module Net
     #   is very verbose, Logger::FATAL is all but silent). Logger::FATAL is the
     #   default. The symbols :debug, :info, :warn, :error, and :fatal are also
     #   supported and are translated to the corresponding Logger constant.
+    # * :append_all_supported_algorithms => set to +true+ to append all supported
+    #   algorithms by net-ssh. Was the default behaviour until 2.10
     def self.start(host, user, options={}, &block)
       invalid_options = options.keys - VALID_OPTIONS
       if invalid_options.any?

@@ -36,7 +36,7 @@ module Transport
     end
 
     def test_constructor_with_preferred_host_key_type_should_put_preferred_host_key_type_first
-      assert_equal %w(ssh-dss ssh-rsa ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com)+ec_host_keys, algorithms(:host_key => "ssh-dss")[:host_key]
+      assert_equal %w(ssh-dss ssh-rsa ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com)+ec_host_keys, algorithms(:host_key => "ssh-dss", :append_all_supported_algorithms => true)[:host_key]
     end
 
     def test_constructor_with_known_hosts_reporting_known_host_key_should_use_that_host_key_type
@@ -53,7 +53,7 @@ module Transport
     end
 
     def test_constructor_with_unrecognized_host_key_type_should_return_whats_supported
-      assert_equal %w(ssh-rsa ssh-dss ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com )+ec_host_keys, algorithms(:host_key => "bogus ssh-rsa")[:host_key]
+      assert_equal %w(ssh-rsa ssh-dss ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com )+ec_host_keys, algorithms(:host_key => "bogus ssh-rsa",:append_all_supported_algorithms => true)[:host_key]
     end
 
     def ec_kex
@@ -65,52 +65,56 @@ module Transport
     end
 
     def test_constructor_with_preferred_kex_should_put_preferred_kex_first
-      assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256)+ec_kex, algorithms(:kex => "diffie-hellman-group1-sha1")[:kex]
+      assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256)+ec_kex, algorithms(:kex => "diffie-hellman-group1-sha1", :append_all_supported_algorithms => true)[:kex]
     end
 
-    def test_constructor_with_unrecognized_kex_should_raise_exception
-      assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256)+ec_kex, algorithms(:kex => %w(bogus diffie-hellman-group1-sha1))[:kex]
+    def test_constructor_with_unrecognized_kex_should_not_raise_exception
+      assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256)+ec_kex, algorithms(
+        :kex => %w(bogus diffie-hellman-group1-sha1),:append_all_supported_algorithms => true)[:kex]
     end
 
     def test_constructor_with_preferred_encryption_should_put_preferred_encryption_first
-      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr camellia128-cbc camellia192-cbc camellia256-cbc camellia128-cbc@openssh.org camellia192-cbc@openssh.org camellia256-cbc@openssh.org camellia128-ctr camellia192-ctr camellia256-ctr camellia128-ctr@openssh.org camellia192-ctr@openssh.org camellia256-ctr@openssh.org cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => "aes256-cbc")[:encryption]
+      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr camellia128-cbc camellia192-cbc camellia256-cbc camellia128-cbc@openssh.org camellia192-cbc@openssh.org camellia256-cbc@openssh.org camellia128-ctr camellia192-ctr camellia256-ctr camellia128-ctr@openssh.org camellia192-ctr@openssh.org camellia256-ctr@openssh.org cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => "aes256-cbc",
+      :append_all_supported_algorithms => true)[:encryption]
     end
 
     def test_constructor_with_multiple_preferred_encryption_should_put_all_preferred_encryption_first
-      assert_equal %w(aes256-cbc 3des-cbc idea-cbc aes128-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr camellia128-cbc camellia192-cbc camellia256-cbc camellia128-cbc@openssh.org camellia192-cbc@openssh.org camellia256-cbc@openssh.org camellia128-ctr camellia192-ctr camellia256-ctr camellia128-ctr@openssh.org camellia192-ctr@openssh.org camellia256-ctr@openssh.org cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => %w(aes256-cbc 3des-cbc idea-cbc))[:encryption]
+      assert_equal %w(aes256-cbc 3des-cbc idea-cbc aes128-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr camellia128-cbc camellia192-cbc camellia256-cbc camellia128-cbc@openssh.org camellia192-cbc@openssh.org camellia256-cbc@openssh.org camellia128-ctr camellia192-ctr camellia256-ctr camellia128-ctr@openssh.org camellia192-ctr@openssh.org camellia256-ctr@openssh.org cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => %w(aes256-cbc 3des-cbc idea-cbc), :append_all_supported_algorithms => true)[:encryption]
     end
 
     def test_constructor_with_unrecognized_encryption_should_keep_whats_supported
-      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr camellia128-cbc camellia192-cbc camellia256-cbc camellia128-cbc@openssh.org camellia192-cbc@openssh.org camellia256-cbc@openssh.org camellia128-ctr camellia192-ctr camellia256-ctr camellia128-ctr@openssh.org camellia192-ctr@openssh.org camellia256-ctr@openssh.org cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => %w(bogus aes256-cbc))[:encryption]
+      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr camellia128-cbc camellia192-cbc camellia256-cbc camellia128-cbc@openssh.org camellia192-cbc@openssh.org camellia256-cbc@openssh.org camellia128-ctr camellia192-ctr camellia256-ctr camellia128-ctr@openssh.org camellia192-ctr@openssh.org camellia256-ctr@openssh.org cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => %w(bogus aes256-cbc), :append_all_supported_algorithms => true)[:encryption]
     end
 
     def test_constructor_with_preferred_hmac_should_put_preferred_hmac_first
-      assert_equal %w(hmac-md5-96 hmac-sha1 hmac-md5 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(:hmac => "hmac-md5-96")[:hmac]
+      assert_equal %w(hmac-md5-96 hmac-sha1 hmac-md5 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(:hmac => "hmac-md5-96", :append_all_supported_algorithms => true)[:hmac]
     end
 
     def test_constructor_with_multiple_preferred_hmac_should_put_all_preferred_hmac_first
-      assert_equal %w(hmac-md5-96 hmac-sha1-96 hmac-sha1 hmac-md5 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(:hmac => %w(hmac-md5-96 hmac-sha1-96))[:hmac]
+      assert_equal %w(hmac-md5-96 hmac-sha1-96 hmac-sha1 hmac-md5 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(:hmac => %w(hmac-md5-96 hmac-sha1-96), :append_all_supported_algorithms => true)[:hmac]
     end
 
     def test_constructor_with_unrecognized_hmac_should_ignore_those
       assert_equal %w(hmac-md5-96 hmac-sha1 hmac-md5 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), 
-        algorithms(:hmac => "hmac-md5-96")[:hmac]
+        algorithms(:hmac => "hmac-md5-96", :append_all_supported_algorithms => true)[:hmac]
     end
 
     def test_constructor_with_preferred_compression_should_put_preferred_compression_first
-      assert_equal %w(zlib none zlib@openssh.com), algorithms(:compression => "zlib")[:compression]
+      assert_equal %w(zlib none zlib@openssh.com), algorithms(:compression => "zlib", :append_all_supported_algorithms => true)[:compression]
     end
 
     def test_constructor_with_multiple_preferred_compression_should_put_all_preferred_compression_first
-      assert_equal %w(zlib@openssh.com zlib none), algorithms(:compression => %w(zlib@openssh.com zlib))[:compression]
+      assert_equal %w(zlib@openssh.com zlib none), algorithms(:compression => %w(zlib@openssh.com zlib),
+         :append_all_supported_algorithms => true)[:compression]
     end
 
     def test_constructor_with_general_preferred_compression_should_put_none_last
-      assert_equal %w(zlib@openssh.com zlib none), algorithms(:compression => true)[:compression]
+      assert_equal %w(zlib@openssh.com zlib none), algorithms(
+        :compression => true, :append_all_supported_algorithms => true)[:compression]
     end
 
     def test_constructor_with_unrecognized_compression_should_return_whats_supported
-      assert_equal %w(none zlib zlib@openssh.com), algorithms(:compression => %w(bogus none zlib))[:compression]
+      assert_equal %w(none zlib zlib@openssh.com), algorithms(:compression => %w(bogus none zlib), :append_all_supported_algorithms => true)[:compression]
     end
 
     def test_initial_state_should_be_neither_pending_nor_initialized
@@ -185,7 +189,7 @@ module Transport
     end
 
     def test_exchange_with_zlib_compression_enabled_sets_compression_to_standard
-      algorithms :compression => "zlib"
+      algorithms :compression => "zlib", :append_all_supported_algorithms => true
 
       transport.expect do |t, buffer|
         assert_kexinit(buffer, :compression_client => "zlib,none,zlib@openssh.com", :compression_server => "zlib,none,zlib@openssh.com")
@@ -200,7 +204,7 @@ module Transport
     end
 
     def test_exchange_with_zlib_at_openssh_dot_com_compression_enabled_sets_compression_to_delayed
-      algorithms :compression => "zlib@openssh.com"
+      algorithms :compression => "zlib@openssh.com", :append_all_supported_algorithms => true
 
       transport.expect do |t, buffer|
         assert_kexinit(buffer, :compression_client => "zlib@openssh.com,none,zlib", :compression_server => "zlib@openssh.com,none,zlib")
