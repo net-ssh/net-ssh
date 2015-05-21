@@ -48,10 +48,10 @@ module Net; module SSH
     MAJOR = 2
 
     # The minor component of this version of the Net::SSH library
-    MINOR = 9
+    MINOR = 10
 
     # The tiny component of this version of the Net::SSH library
-    TINY  = 3
+    TINY  = 0
 
     # The prerelease component of this version of the Net::SSH library 
     # nil allowed
