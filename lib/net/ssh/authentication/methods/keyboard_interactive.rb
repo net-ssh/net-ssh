@@ -38,8 +38,10 @@ module Net
                 debug { "keyboard-interactive info request" }
 
                 unless password
-                  puts(name) unless name.empty?
-                  puts(instruction) unless instruction.empty?
+                  if interactive?
+                    puts(name) unless name.empty?
+                    puts(instruction) unless instruction.empty?
+                  end
                 end
 
                 _ = message.read_string # lang_tag
@@ -48,7 +50,8 @@ module Net
                 message.read_long.times do
                   text = message.read_string
                   echo = message.read_bool
-                  responses << (password || prompt(text, echo))
+                  password_to_send = password || (interactive? ? prompt(text, echo) : nil)
+                  responses << password_to_send
                 end
 
                 # if the password failed the first time around, don't try
@@ -62,8 +65,12 @@ module Net
               end
             end
           end
-        end
 
+          def interactive?
+            options = session.transport.options || {}
+            !options[:non_interactive]
+          end
+        end
       end
     end
   end

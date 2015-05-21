@@ -1,6 +1,9 @@
 === 2.10.0-?
 
+* Fix could not parse PKey error. [Andrey Voronkov]
+* Workaround for threading issue in MRI + singleton method declaration [Matt Brictson]
 * Configuration change: we no longer append all supported algorithms, this is so you can exclude insecure algorithms. If you want to use the old behaviour specify append_all_supported_algorithms => true [voidus, mfazekas]
+* New configuration option: :non_interactive => true in case you prefer an authmethod to fail rather than prompt. [mfazekas]
 * Configuration change: password will now ask for password up to the :number_of_password_prompts times. If you want the
 2.9.1 behaviour of never asking password please set number_of_password_prompts to 0.
 

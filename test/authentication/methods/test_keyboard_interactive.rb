@@ -71,6 +71,27 @@ module Authentication; module Methods
       assert subject.authenticate("ssh-connection", "jamis", "the-password")
     end
 
+    def test_authenticate_should_not_prompt_for_input_when_in_non_interactive_mode
+
+      def transport.options
+        {non_interactive: true}
+      end
+      transport.expect do |t,packet|
+        assert_equal USERAUTH_REQUEST, packet.type
+        t.return(USERAUTH_INFO_REQUEST, :string, "", :string, "", :string, "", :long, 2, :string, "Name:", :bool, true, :string, "Password:", :bool, false)
+        t.expect do |t2,packet2|
+          assert_equal USERAUTH_INFO_RESPONSE, packet2.type
+          assert_equal 2, packet2.read_long
+          assert_equal "", packet2.read_string
+          assert_equal "", packet2.read_string
+          t2.return(USERAUTH_SUCCESS)
+        end
+      end
+
+      assert subject.authenticate("ssh-connection", "jamis", nil)
+    end
+
+
     def test_authenticate_should_prompt_for_input_when_password_is_not_given
       subject.expects(:prompt).with("Name:", true).returns("name")
       subject.expects(:prompt).with("Password:", false).returns("password")
