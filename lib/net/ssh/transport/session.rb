@@ -1,5 +1,4 @@
 require 'socket'
-require 'timeout'
 
 require 'net/ssh/errors'
 require 'net/ssh/loggable'
@@ -66,9 +65,7 @@ module Net; module SSH; module Transport
 
       @socket =
         if (factory = options[:proxy])
-          timeout(options[:timeout] || 0) do
-            factory.open(@host, @port, options)
-          end
+          factory.open(@host, @port, options)
         else
           Socket.tcp(@host, @port, @bind_address, nil,
                      connect_timeout: options[:timeout])
