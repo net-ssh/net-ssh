@@ -25,11 +25,11 @@ module Net; module SSH; module Transport
 
     # Instantiates a new ServerVersion and immediately (and synchronously)
     # negotiates the SSH protocol in effect, using the given socket.
-    def initialize(socket, logger)
+    def initialize(socket, logger, timeout = nil)
       @header = ""
       @version = nil
       @logger = logger
-      negotiate!(socket)
+      negotiate!(socket, timeout)
     end
 
     private
@@ -37,9 +37,12 @@ module Net; module SSH; module Transport
       # Negotiates the SSH protocol to use, via the given socket. If the server
       # reports an incompatible SSH version (e.g., SSH1), this will raise an
       # exception.
-      def negotiate!(socket)
+      def negotiate!(socket, timeout)
         info { "negotiating protocol version" }
 
+        if timeout && !IO.select([socket], nil, nil, timeout)
+          raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating"
+        end
         loop do
           @version = ""
           loop do
@@ -63,6 +66,9 @@ module Net; module SSH; module Transport
           raise Net::SSH::Exception, "incompatible SSH version `#{@version}'"
         end
 
+        if timeout && !IO.select(nil, [socket], nil, timeout)
+          raise Net::SSH::ConnectionTimeout, "timeout during client version negotiating"
+        end
         debug { "local is `#{PROTO_VERSION}'" }
         socket.write "#{PROTO_VERSION}\r\n"
         socket.flush
