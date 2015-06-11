@@ -56,6 +56,15 @@ module Authentication
       assert_equal({:from => :file, :file => second, :key => dsa}, manager.known_identities[dsa])
     end
 
+    def test_each_identity_should_not_prompt_for_passphrase_in_non_interactive_mode
+      manager(:non_interactive => true).stubs(:agent).returns(nil)
+      first = File.expand_path("/first")
+      stub_file_private_key first, rsa, :passphrase => :should_not_be_asked
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+      assert_equal(identities, [])
+    end
+
     def test_identities_should_load_from_agent
       manager.stubs(:agent).returns(agent)
 

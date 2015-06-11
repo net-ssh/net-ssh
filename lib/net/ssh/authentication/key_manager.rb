@@ -98,7 +98,7 @@ module Net
         def each_identity
           prepared_identities = prepare_identities_from_files + prepare_identities_from_data
 
-          user_identities = load_identities(prepared_identities, false)
+          user_identities = load_identities(prepared_identities, false, true)
 
           if agent
             agent.identities.each do |key|
@@ -114,7 +114,7 @@ module Net
             end
           end
 
-          user_identities = load_identities(user_identities, true)
+          user_identities = load_identities(user_identities, !options[:non_interactive], false)
 
           user_identities.each do |identity|
             key = identity.delete(:public_key)
@@ -139,7 +139,7 @@ module Net
 
           if info[:key].nil? && info[:from] == :file
             begin
-              info[:key] = KeyFactory.load_private_key(info[:file], options[:passphrase], true)
+              info[:key] = KeyFactory.load_private_key(info[:file], options[:passphrase], !options[:non_interactive])
             rescue Exception, OpenSSL::OpenSSLError => e
               raise KeyManagerError, "the given identity is known, but the private key could not be loaded: #{e.class} (#{e.message})"
             end
@@ -212,8 +212,8 @@ module Net
           end
         end
 
-        # Load prepared identities. Private key decryption errors ignored if passphrase was not prompted.
-        def load_identities(identities, ask_passphrase)
+        # Load prepared identities. Private key decryption errors ignored if delay_passphrase
+        def load_identities(identities, ask_passphrase, delay_passphrase)
           identities.map do |identity|
             begin
               case identity[:load_from]
@@ -233,11 +233,11 @@ module Net
               end
 
             rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError => e
-              if ask_passphrase
+              if delay_passphrase
+                identity
+              else
                 process_identity_loading_error(identity, e)
                 nil
-              else
-                identity
               end
             rescue ArgumentError => e
               process_identity_loading_error(identity, e)

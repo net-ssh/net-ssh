@@ -204,7 +204,6 @@ module Net
 
       if options[:non_interactive]
         options[:number_of_password_prompts] = 0
-        options[:passphrase] = false
       end
 
       if options[:verbose]
