@@ -1,6 +1,7 @@
 # encoding: ASCII-8BIT
 
 require 'common'
+require 'timeout'
 require 'net/ssh/transport/packet_stream'
 
 module Transport

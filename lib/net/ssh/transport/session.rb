@@ -1,5 +1,4 @@
 require 'socket'
-require 'timeout'
 
 require 'net/ssh/errors'
 require 'net/ssh/loggable'
@@ -64,13 +63,13 @@ module Net; module SSH; module Transport
 
       debug { "establishing connection to #{@host}:#{@port}" }
 
-      @socket = timeout(options[:timeout] || 0) do
+      @socket =
         if (factory = options[:proxy])
           factory.open(@host, @port, options)
         else
-          TCPSocket.open(@host, @port, @bind_address)
+          Socket.tcp(@host, @port, @bind_address, nil,
+                     connect_timeout: options[:timeout])
         end
-      end
 
       @socket.extend(PacketStream)
       @socket.logger = @logger
@@ -82,7 +81,7 @@ module Net; module SSH; module Transport
       @host_key_verifier = select_host_key_verifier(options[:paranoid])
 
 
-      @server_version = timeout(options[:timeout] || 0) { ServerVersion.new(socket, logger) }
+      @server_version = ServerVersion.new(socket, logger, options[:timeout])
 
       @algorithms = Algorithms.new(self, options)
       wait { algorithms.initialized? }
