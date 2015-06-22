@@ -1,4 +1,6 @@
 require 'strscan'
+require 'openssl'
+require 'base64'
 require 'net/ssh/buffer'
 
 module Net; module SSH
@@ -111,7 +113,9 @@ module Net; module SSH
           next if scanner.match?(/$|#/)
 
           hostlist = scanner.scan(/\S+/).split(/,/)
-          next unless entries.all? { |entry| hostlist.include?(entry) }
+          found = entries.all? { |entry| hostlist.include?(entry) } ||
+            known_host_hash?(hostlist, entries, scanner)
+          next unless found
 
           scanner.skip(/\s*/)
           type = scanner.scan(/\S+/)
@@ -125,6 +129,21 @@ module Net; module SSH
       end
 
       keys
+    end
+
+    # Indicates whether one of the entries matches an hostname that has been
+    # stored as a HMAC-SHA1 hash in the known hosts.
+    def known_host_hash?(hostlist, entries, scanner)
+      if hostlist.size == 1 && hostlist.first =~ /\A\|1(\|.+){2}\z/
+        chunks = hostlist.first.split(/\|/)
+        salt = Base64.decode64(chunks[2])
+        digest = OpenSSL::Digest.new('sha1')
+        entries.each do |entry|
+          hmac = OpenSSL::HMAC.digest(digest, salt, entry)
+          return true if Base64.encode64(hmac).chomp == chunks[3]
+        end
+      end
+      false
     end
 
     # Tries to append an entry to the current source file for the given host
