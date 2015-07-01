@@ -145,6 +145,7 @@ Gem::Specification.new do |s|
     "test/integration/playbook.yml",
     "test/integration/test_id_rsa_keys.rb",
     "test/known_hosts/github",
+    "test/known_hosts/github_hash",
     "test/manual/test_forward.rb",
     "test/manual/test_pageant.rb",
     "test/start/test_connection.rb",
