@@ -1,4 +1,11 @@
-=== 2.10.0-?
+=== 2.10.0-beta2
+
+* Fix :passphrase option with :non_interactive [Jeremy Stanley]
+* Use Socket.tcp with connect_timeout instead of Timeout::timeout [Carl Hörberg]
+* Support for hostname hashes [Jef Mathiot]
+* Ruby 1.9.3 is no longer supported but should moslty work expect for stuff like connect_timeout
+
+=== 2.10.0-beta1
 
 * Fix could not parse PKey error. [Andrey Voronkov]
 * Workaround for threading issue in MRI + singleton method declaration [Matt Brictson]
