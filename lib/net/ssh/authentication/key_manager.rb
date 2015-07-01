@@ -212,8 +212,8 @@ module Net
           end
         end
 
-        # Load prepared identities. Private key decryption errors ignored if delay_passphrase
-        def load_identities(identities, ask_passphrase, delay_passphrase)
+        # Load prepared identities. Private key decryption errors ignored if ignore_decryption_errors
+        def load_identities(identities, ask_passphrase, ignore_decryption_errors)
           identities.map do |identity|
             begin
               case identity[:load_from]
@@ -233,7 +233,7 @@ module Net
               end
 
             rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError => e
-              if delay_passphrase
+              if ignore_decryption_errors
                 identity
               else
                 process_identity_loading_error(identity, e)
