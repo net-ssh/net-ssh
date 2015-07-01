@@ -10,8 +10,14 @@ require 'net/ssh'
 class TestIDRSAPKeys < Test::Unit::TestCase
   include IntegrationTestHelpers
 
+  def tmpdir(&block)
+    Dir.mktmpdir do |dir|
+      yield(dir)
+    end
+  end
+
   def test_in_file_no_password
-    Dir.mktmpdir do |dir| dir = "/tmp/test"
+    tmpdir do |dir|
       sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
       sh "ssh-keygen -f #{dir}/id_rsa -t rsa -N ''"
       set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
@@ -28,7 +34,7 @@ class TestIDRSAPKeys < Test::Unit::TestCase
 
 
   def test_ssh_agent
-    Dir.mktmpdir do |dir| dir = "/tmp/test"
+    tmpdir do |dir|
       with_agent do
         sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
         sh "ssh-keygen -f #{dir}/id_rsa -t rsa -N 'pwd123'"
@@ -44,7 +50,7 @@ class TestIDRSAPKeys < Test::Unit::TestCase
   end
 
   def test_ssh_agent_ignores_if_already_in_agent
-    Dir.mktmpdir do |dir| dir = "/tmp/test"
+    tmpdir do |dir|
       with_agent do
         sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
         sh "ssh-keygen -f #{dir}/id_rsa -t rsa -N 'pwd123'"
@@ -60,7 +66,7 @@ class TestIDRSAPKeys < Test::Unit::TestCase
   end
 
   def test_in_file_with_password
-    Dir.mktmpdir do |dir| dir = "/tmp/test"
+    tmpdir do |dir|
       sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
       sh "ssh-keygen -f #{dir}/id_rsa -t rsa -N 'pwd12'"
       set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
