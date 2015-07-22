@@ -32,6 +32,7 @@ In a nutshell:
   Net::SSH.start('host', 'user', :password => "password") do |ssh|
     # capture all stderr and stdout output from a remote process
     output = ssh.exec!("hostname")
+    puts output
 
     # capture only stdout matching a particular pattern
     stdout = ""
@@ -112,10 +113,9 @@ If you don't add the public key, you'll see an error like "Couldn't verify data 
 
 == RUBY 1.x SUPPORT
 
-net-ssh supports Ruby 1.8.x up until the 2.5.1 release.
-net-ssh supports Ruby 1.9.x up until the 2.9.x release.
-Current version requires ruby 2.0 or later.
-
+* Ruby 1.8.x is supported up until the net-ssh 2.5.1 release.
+* Ruby 1.9.x is supported up until the net-ssh 2.9.x release.
+* Current net-ssh releases require Ruby 2.0 or later.
 
 == RUNNING TESTS
 
