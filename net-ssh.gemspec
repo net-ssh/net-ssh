@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.authors = ["Jamis Buck", "Delano Mandelbaum", "Mikl\u{f3}s Fazekas"]
   s.cert_chain = ["net-ssh-public_cert.pem"]
-  s.date = "2015-07-31"
+  s.date = "2015-08-02"
   s.description = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol. It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
   s.email = "net-ssh@solutious.com"
   s.extra_rdoc_files = [
