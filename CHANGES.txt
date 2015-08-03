@@ -1,3 +1,7 @@
+=== 2.10.1.rc1
+
+* Added ruby 2.0 requirement to gemspec [Alex Schultz]
+
 === 2.10.0
 
 === 2.10.0-beta2
