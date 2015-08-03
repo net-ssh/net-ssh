@@ -30,6 +30,7 @@ begin
     s.email = "net-ssh@solutious.com"
     s.homepage = "https://github.com/net-ssh/net-ssh"
     s.authors = ["Jamis Buck", "Delano Mandelbaum", "Miklós Fazekas"]
+    s.required_ruby_version = '>= 2.0'
 
     # Note: this is run at package time not install time so if you are
     # running on jruby, you need to install jruby-pageant manually.
