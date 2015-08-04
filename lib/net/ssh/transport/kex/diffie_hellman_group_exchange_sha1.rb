@@ -24,7 +24,7 @@ module Net::SSH::Transport::Kex
         need_bits = data[:need_bytes] * 8 * 2 + 1
 
         data[:minimum_dh_bits] ||=  MINIMUM_BITS
-        
+
         if need_bits < data[:minimum_dh_bits]
           need_bits = data[:minimum_dh_bits]
         elsif need_bits > MAXIMUM_BITS
@@ -40,7 +40,7 @@ module Net::SSH::Transport::Kex
         compute_need_bits
 
         # request the DH key parameters for the given number of bits.
-        buffer = Net::SSH::Buffer.from(:byte, KEXDH_GEX_REQUEST, :long, MINIMUM_BITS,
+        buffer = Net::SSH::Buffer.from(:byte, KEXDH_GEX_REQUEST, :long, data[:minimum_dh_bits],
           :long, data[:need_bits], :long, MAXIMUM_BITS)
         connection.send_message(buffer)
 
