@@ -23,8 +23,10 @@ module Net::SSH::Transport::Kex
         # for Compatibility: OpenSSH requires (need_bits * 2 + 1) length of parameter
         need_bits = data[:need_bytes] * 8 * 2 + 1
 
-        if need_bits < MINIMUM_BITS
-          need_bits = MINIMUM_BITS
+        data[:minimum_dh_bits] ||=  MINIMUM_BITS
+        
+        if need_bits < data[:minimum_dh_bits]
+          need_bits = data[:minimum_dh_bits]
         elsif need_bits > MAXIMUM_BITS
           need_bits = MAXIMUM_BITS
         end
