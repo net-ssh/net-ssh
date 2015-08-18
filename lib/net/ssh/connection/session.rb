@@ -351,8 +351,8 @@ module Net; module SSH; module Connection
     end
 
     # Same as #exec, except this will block until the command finishes. Also,
-    # if a block is not given, this will return all output (stdout and stderr)
-    # as a single string.
+    # if no block is given, this will return all output (stdout and stderr)
+    # as a single string or nil if there was no output from the command.
     #
     #   matches = ssh.exec!("grep something /some/files")
     def exec!(command, &block)
