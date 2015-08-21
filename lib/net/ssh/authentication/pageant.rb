@@ -1,7 +1,7 @@
 if RUBY_VERSION < "1.9"
   require 'dl/import'
   require 'dl/struct'
-elsif RUBY_VERSION < "2.2"
+elsif RUBY_VERSION < "2.1"
   require 'dl/import'
   require 'dl/types'
   require 'dl'
@@ -46,7 +46,7 @@ module Net; module SSH; module Authentication
         dlload 'advapi32'
 
         SIZEOF_DWORD = DL.sizeof('L')
-      elsif RUBY_VERSION < "2.2"
+      elsif RUBY_VERSION < "2.1"
         extend DL::Importer
         dlload 'user32','kernel32', 'advapi32'
         include DL::Win32Types
@@ -88,7 +88,7 @@ module Net; module SSH; module Authentication
       extern 'HANDLE CreateFileMapping(HANDLE, void *, DWORD, ' +
         'DWORD, DWORD, LPCTSTR)'
 
-      # args: hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh, 
+      # args: hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh,
       #           dwfileOffsetLow, dwNumberOfBytesToMap
       extern 'LPVOID MapViewOfFile(HANDLE, DWORD, DWORD, DWORD, DWORD)'
 
@@ -101,7 +101,7 @@ module Net; module SSH; module Authentication
       # args: hWnd, Msg, wParam, lParam, fuFlags, uTimeout, lpdwResult
       extern 'LRESULT SendMessageTimeout(HWND, UINT, WPARAM, LPARAM, ' +
         'UINT, UINT, PDWORD_PTR)'
-      
+
       # args: none
       extern 'DWORD GetLastError()'
 
@@ -127,8 +127,8 @@ module Net; module SSH; module Authentication
       extern 'BOOL IsValidSecurityDescriptor(LPVOID)'
 
       # Constants needed for security attribute retrieval.
-      # Specifies the access mask corresponding to the desired access 
-      # rights. 
+      # Specifies the access mask corresponding to the desired access
+      # rights.
       TOKEN_QUERY = 0x8
 
       # The value of TOKEN_USER from the TOKEN_INFORMATION_CLASS enum.
@@ -295,7 +295,7 @@ module Net; module SSH; module Authentication
         new
       end
 
-      # Create a new instance that communicates with the running pageant 
+      # Create a new instance that communicates with the running pageant
       # instance. If no such instance is running, this will cause an error.
       def initialize
         @win = Win.FindWindow("Pageant", "Pageant")
@@ -313,20 +313,20 @@ module Net; module SSH; module Authentication
       # the first.
       def send(data, *args)
         @input_buffer.append(data)
-        
+
         ret = data.length
-        
+
         while true
           return ret if @input_buffer.length < 4
           msg_length = @input_buffer.read_long + 4
           @input_buffer.reset!
-      
+
           return ret if @input_buffer.length < msg_length
           msg = @input_buffer.read!(msg_length)
           @output_buffer.append(send_query(msg))
         end
       end
-      
+
       # Reads +n+ bytes from the cached result of the last query. If +n+
       # is +nil+, returns all remaining data from the last query.
       def read(n = nil)
@@ -358,7 +358,7 @@ module Net; module SSH; module Authentication
             "Creation of file mapping failed with error: #{Win.GetLastError}"
         end
 
-        ptr = Win.MapViewOfFile(filemap, Win::FILE_MAP_WRITE, 0, 0, 
+        ptr = Win.MapViewOfFile(filemap, Win::FILE_MAP_WRITE, 0, 0,
                                 0)
 
         if ptr.nil? || ptr.null?
