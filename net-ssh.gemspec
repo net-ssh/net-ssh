@@ -191,19 +191,14 @@ Gem::Specification.new do |s|
   s.signing_key = "/mnt/gem/net-ssh-private_key.pem"
   s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
 
-  if s.respond_to? :specification_version then
-    s.specification_version = 4
+  s.specification_version = 4 if s.respond_to? :specification_version
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<test-unit>, [">= 0"])
-      s.add_development_dependency(%q<mocha>, [">= 0"])
+  %w(mocha rake test-unit).each do |gem_name|
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0')
+      s.add_development_dependency gem_name
     else
-      s.add_dependency(%q<test-unit>, [">= 0"])
-      s.add_dependency(%q<mocha>, [">= 0"])
+      s.add_dependency gem_name
     end
-  else
-    s.add_dependency(%q<test-unit>, [">= 0"])
-    s.add_dependency(%q<mocha>, [">= 0"])
   end
 end
 
