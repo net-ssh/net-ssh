@@ -85,6 +85,8 @@ module Net; module SSH; module Transport
 
       @algorithms = Algorithms.new(self, options)
       wait { algorithms.initialized? }
+    rescue Errno::ETIMEDOUT
+      raise Net::SSH::ConnectionTimeout
     end
 
     # Returns the host (and possibly IP address) in a format compatible with
