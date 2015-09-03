@@ -169,6 +169,7 @@ module Net
     # * :user => the user name to log in as; this overrides the +user+
     #   parameter, and is primarily only useful when provided via an SSH
     #   configuration file.
+    # * :remote_user => used for substitution into the '%r' part of a ProxyCommand
     # * :user_known_hosts_file => the location of the user known hosts file.
     #   Set to an array to specify multiple user known hosts files.
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
