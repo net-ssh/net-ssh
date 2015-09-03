@@ -213,6 +213,12 @@ class TestConfig < Test::Unit::TestCase
     assert_equal [/^GIT_.*$/, /^LANG$/, /^LC_.*$/], net_ssh[:send_env]
   end
 
+  def test_load_with_remote_user
+    config = Net::SSH::Config.load(config(:proxy_remote_user), "behind-proxy")
+    net_ssh = Net::SSH::Config.translate(config)
+    assert net_ssh[:proxy]
+  end
+
   private
 
     def config(name)
