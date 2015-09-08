@@ -1,3 +1,5 @@
 source 'https://rubygems.org/'
 
-gemspec
+unless ARGV == ['build']
+  gemspec
+end
