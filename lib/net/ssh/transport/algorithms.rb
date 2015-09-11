@@ -22,14 +22,14 @@ module Net; module SSH; module Transport
     # Define the default algorithms, in order of preference, supported by
     # Net::SSH.
     ALGORITHMS = {
-      :host_key    => %w(ssh-rsa ssh-dss
+      host_key: %w(ssh-rsa ssh-dss
                          ssh-rsa-cert-v01@openssh.com
                          ssh-rsa-cert-v00@openssh.com),
-      :kex         => %w(diffie-hellman-group-exchange-sha1
+      kex: %w(diffie-hellman-group-exchange-sha1
                          diffie-hellman-group1-sha1
                          diffie-hellman-group14-sha1
                          diffie-hellman-group-exchange-sha256),
-      :encryption  => %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc
+      encryption: %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc
                          aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se
                          idea-cbc none arcfour128 arcfour256 arcfour
                          aes128-ctr aes192-ctr aes256-ctr
@@ -44,13 +44,13 @@ module Net; module SSH; module Transport
                          cast128-ctr blowfish-ctr 3des-ctr
                         ),
 
-      :hmac        => %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
+      hmac: %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
                          hmac-ripemd160 hmac-ripemd160@openssh.com
                          hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96
                          hmac-sha2-512-96 none),
 
-      :compression => %w(none zlib@openssh.com zlib),
-      :language    => %w() 
+      compression: %w(none zlib@openssh.com zlib),
+      language: %w() 
     }
     if defined?(OpenSSL::PKey::EC)
       ALGORITHMS[:host_key] += %w(ecdsa-sha2-nistp256
@@ -253,7 +253,7 @@ module Net; module SSH; module Transport
 
       # Parses a KEXINIT packet from the server.
       def parse_server_algorithm_packet(packet)
-        data = { :raw => packet.content }
+        data = { raw: packet.content }
 
         packet.read(16) # skip the cookie value
 
@@ -354,12 +354,12 @@ module Net; module SSH; module Transport
         debug { "exchanging keys" }
 
         algorithm = Kex::MAP[kex].new(self, session,
-          :client_version_string => Net::SSH::Transport::ServerVersion::PROTO_VERSION,
-          :server_version_string => session.server_version.version,
-          :server_algorithm_packet => @server_packet,
-          :client_algorithm_packet => @client_packet,
-          :need_bytes => kex_byte_requirement,
-          :logger => logger)
+          client_version_string: Net::SSH::Transport::ServerVersion::PROTO_VERSION,
+          server_version_string: session.server_version.version,
+          server_algorithm_packet: @server_packet,
+          client_algorithm_packet: @client_packet,
+          need_bytes: kex_byte_requirement,
+          logger: logger)
         result = algorithm.exchange_keys
 
         secret   = result[:shared_secret].to_ssh
@@ -377,26 +377,26 @@ module Net; module SSH; module Transport
         mac_key_client = key["E"]
         mac_key_server = key["F"]
 
-        parameters = { :shared => secret, :hash => hash, :digester => digester }
+        parameters = { shared: secret, hash: hash, digester: digester }
         
-        cipher_client = CipherFactory.get(encryption_client, parameters.merge(:iv => iv_client, :key => key_client, :encrypt => true))
-        cipher_server = CipherFactory.get(encryption_server, parameters.merge(:iv => iv_server, :key => key_server, :decrypt => true))
+        cipher_client = CipherFactory.get(encryption_client, parameters.merge(iv: iv_client, key: key_client, encrypt: true))
+        cipher_server = CipherFactory.get(encryption_server, parameters.merge(iv: iv_server, key: key_server, decrypt: true))
 
         mac_client = HMAC.get(hmac_client, mac_key_client, parameters)
         mac_server = HMAC.get(hmac_server, mac_key_server, parameters)
 
-        session.configure_client :cipher => cipher_client, :hmac => mac_client,
-          :compression => normalize_compression_name(compression_client),
-          :compression_level => options[:compression_level],
-          :rekey_limit => options[:rekey_limit],
-          :max_packets => options[:rekey_packet_limit],
-          :max_blocks => options[:rekey_blocks_limit]
+        session.configure_client cipher: cipher_client, hmac: mac_client,
+          compression: normalize_compression_name(compression_client),
+          compression_level: options[:compression_level],
+          rekey_limit: options[:rekey_limit],
+          max_packets: options[:rekey_packet_limit],
+          max_blocks: options[:rekey_blocks_limit]
 
-        session.configure_server :cipher => cipher_server, :hmac => mac_server,
-          :compression => normalize_compression_name(compression_server),
-          :rekey_limit => options[:rekey_limit],
-          :max_packets => options[:rekey_packet_limit],
-          :max_blocks  => options[:rekey_blocks_limit]
+        session.configure_server cipher: cipher_server, hmac: mac_server,
+          compression: normalize_compression_name(compression_server),
+          rekey_limit: options[:rekey_limit],
+          max_packets: options[:rekey_packet_limit],
+          max_blocks: options[:rekey_blocks_limit]
 
         @initialized = true
       end

@@ -14,7 +14,7 @@ require 'net/ssh'
 [['arcfour128', 16], ['arcfour256', 32], ['arcfour512', 64]].each do |cipher|
   print "#{cipher[0]}: "
   a = Net::SSH::Transport::CipherFactory.get_lengths(cipher[0])
-  b = Net::SSH::Transport::CipherFactory.get(cipher[0], :key => ([].fill('x', 0, cipher[1]).join))
+  b = Net::SSH::Transport::CipherFactory.get(cipher[0], key: ([].fill('x', 0, cipher[1]).join))
   puts "#{a} #{b.class}"
 end
 

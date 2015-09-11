@@ -12,7 +12,7 @@ module Net; module SSH; module Proxy
   #   require 'net/ssh/proxy/command'
   #
   #   proxy = Net::SSH::Proxy::Command.new('ssh relay nc %h %p')
-  #   Net::SSH.start('host', 'user', :proxy => proxy) do |ssh|
+  #   Net::SSH.start('host', 'user', proxy: proxy) do |ssh|
   #     ...
   #   end
   class Command

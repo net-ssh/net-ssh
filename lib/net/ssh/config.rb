@@ -144,7 +144,7 @@ module Net; module SSH
       def translate(settings)
         auth_methods = default_auth_methods.clone
         (auth_methods << 'challenge-response').uniq!
-        ret = settings.inject({:auth_methods=>auth_methods}) do |hash, (key, value)|
+        ret = settings.inject({auth_methods:auth_methods}) do |hash, (key, value)|
           case key
           when 'bindaddress' then
             hash[:bind_address] = value

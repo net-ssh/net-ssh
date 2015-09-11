@@ -69,10 +69,10 @@ module Net; module SSH; module Transport; module Kex
       session_id = verify_signature(result)
       confirm_newkeys
 
-      return { :session_id        => session_id, 
-               :server_key        => result[:server_key],
-               :shared_secret     => result[:shared_secret],
-               :hashing_algorithm => digester }
+      return { session_id: session_id, 
+               server_key: result[:server_key],
+               shared_secret: result[:shared_secret],
+               hashing_algorithm: digester }
     end
 
     private
@@ -170,7 +170,7 @@ module Net; module SSH; module Transport; module Kex
 
         blob, fingerprint = generate_key_fingerprint(key)
 
-        unless connection.host_key_verifier.verify(:key => key, :key_blob => blob, :fingerprint => fingerprint, :session => connection)
+        unless connection.host_key_verifier.verify(key: key, key_blob: blob, fingerprint: fingerprint, session: connection)
           raise Net::SSH::Exception, "host key verification failed"
         end
       end

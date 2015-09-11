@@ -29,14 +29,14 @@ module Net; module SSH
     #
     # The supported data types are:
     #
-    # * :raw => write the next value verbatim (#write)
-    # * :int64 => write an 8-byte integer (#write_int64)
-    # * :long => write a 4-byte integer (#write_long)
-    # * :byte => write a single byte (#write_byte)
-    # * :string => write a 4-byte length followed by character data (#write_string)
-    # * :bool => write a single byte, interpreted as a boolean (#write_bool)
-    # * :bignum => write an SSH-encoded bignum (#write_bignum)
-    # * :key => write an SSH-encoded key value (#write_key)
+    # * raw: write the next value verbatim (#write)
+    # * int64: write an 8-byte integer (#write_int64)
+    # * long: write a 4-byte integer (#write_long)
+    # * byte: write a single byte (#write_byte)
+    # * string: write a 4-byte length followed by character data (#write_string)
+    # * bool: write a single byte, interpreted as a boolean (#write_bool)
+    # * bignum: write an SSH-encoded bignum (#write_bignum)
+    # * key: write an SSH-encoded key value (#write_key)
     #
     # Any of these, except for :raw, accepts an Array argument, to make it
     # easier to write multiple values of the same type in a briefer manner.

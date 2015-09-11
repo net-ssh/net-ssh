@@ -12,8 +12,8 @@ module Net
       #
       #   require 'net/ssh/proxy/socks4'
       #
-      #   proxy = Net::SSH::Proxy::SOCKS4.new('proxy.host', proxy_port, :user => 'user')
-      #   Net::SSH.start('host', 'user', :proxy => proxy) do |ssh|
+      #   proxy = Net::SSH::Proxy::SOCKS4.new('proxy.host', proxy_port, user: 'user')
+      #   Net::SSH.start('host', 'user', proxy: proxy) do |ssh|
       #     ...
       #   end
       class SOCKS4

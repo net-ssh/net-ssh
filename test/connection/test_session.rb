@@ -365,7 +365,7 @@ module Connection
 
     def test_process_should_call_enqueue_message_if_io_select_timed_out
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
-      options = { :keepalive => true }
+      options = { keepalive: true }
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
       IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
       transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
@@ -374,7 +374,7 @@ module Connection
 
     def test_process_should_raise_if_keepalives_not_answered
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
-      options = { :keepalive => true, :keepalive_interval => 300, :keepalive_maxcount => 3 }
+      options = { keepalive: true, keepalive_interval: 300, keepalive_maxcount: 3 }
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
       [1,2,3].each do |i|
         Time.stubs(:now).returns(Time.at(i*300))
@@ -391,7 +391,7 @@ module Connection
 
     def test_process_should_not_call_enqueue_message_unless_io_select_timed_out
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
-      options = { :keepalive => true }
+      options = { keepalive: true }
       IO.stubs(:select).with([socket],[],nil,timeout).returns([[],[],[]])
       transport.expects(:enqueue_message).never
       session(options).process
@@ -399,7 +399,7 @@ module Connection
 
     def test_process_should_not_call_enqueue_message_unless_keepalive_interval_not_go_on
       timeout = 10
-      options = { :keepalive => true, :keepalive_interval => timeout }
+      options = { keepalive: true, keepalive_interval: timeout }
       Time.stubs(:now).returns(Time.at(0), Time.at(9), Time.at(timeout))
       IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
       transport.expects(:enqueue_message).times(2)
@@ -413,7 +413,7 @@ module Connection
 
     def test_process_should_call_io_select_with_interval_as_last_arg_if_keepalive_interval_passed
       timeout = 10
-      options = { :keepalive => true, :keepalive_interval => timeout }
+      options = { keepalive: true, keepalive_interval: timeout }
       IO.expects(:select).with([socket],[],nil,timeout).returns([[],[],[]])
       session(options).process
     end
@@ -523,11 +523,11 @@ module Connection
       end
 
       def channel_at(local_id)
-        session.channels[local_id] = stub("channel", :process => true, :closing? => false)
+        session.channels[local_id] = stub("channel", process: true, :closing? => false)
       end
 
       def transport(options={})
-        @transport ||= MockTransport.new(options.merge(:socket => socket))
+        @transport ||= MockTransport.new(options.merge(socket: socket))
       end
 
       def session(options={})

@@ -37,7 +37,7 @@ module Connection
 
     def test_request_pty_with_invalid_option_should_raise_error
       assert_raises(ArgumentError) do
-        channel.request_pty(:bogus => "thing")
+        channel.request_pty(bogus: "thing")
       end
     end
 
@@ -52,8 +52,8 @@ module Connection
     def test_request_pty_with_options_should_honor_options
       channel.expects(:send_channel_request).with("pty-req", :string, "vanilla",
         :long, 60, :long, 15, :long, 400, :long, 200, :string, "\5\0\0\0\1\0")
-      channel.request_pty :term => "vanilla", :chars_wide => 60, :chars_high => 15,
-        :pixels_wide => 400, :pixels_high => 200, :modes => { 5 => 1 }
+      channel.request_pty term: "vanilla", chars_wide: 60, chars_high: 15,
+        pixels_wide: 400, pixels_high: 200, modes: { 5 => 1 }
     end
 
     def test_send_data_should_append_to_channels_output_buffer
@@ -289,7 +289,7 @@ module Connection
     end
 
     def test_do_open_confirmation_with_session_channel_should_invoke_agent_forwarding_if_agent_forwarding_requested
-      connection :forward_agent => true
+      connection forward_agent: true
       forward = mock("forward")
       forward.expects(:agent).with(channel)
       connection.expects(:forward).returns(forward)
@@ -297,8 +297,8 @@ module Connection
     end
 
     def test_do_open_confirmation_with_non_session_channel_should_not_invoke_agent_forwarding_even_if_agent_forwarding_requested
-      connection :forward_agent => true
-      channel :type => "direct-tcpip"
+      connection forward_agent: true
+      channel type: "direct-tcpip"
       connection.expects(:forward).never
       channel.do_open_confirmation(1,2,3)
     end

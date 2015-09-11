@@ -11,25 +11,25 @@ module Transport; module Kex
     KEXDH_GEX_REQUEST = 34
 
     def test_exchange_with_fewer_than_minimum_bits_uses_minimum_bits
-      dh_options :need_bytes => 20
+      dh_options need_bytes: 20
       assert_equal 1024, need_bits
       assert_nothing_raised { exchange! }
     end
 
     def test_exchange_with_fewer_than_maximum_bits_uses_need_bits
-      dh_options :need_bytes => 500
+      dh_options need_bytes: 500
       need_bits(8001)
       assert_nothing_raised { exchange! }
     end
 
     def test_exchange_with_more_than_maximum_bits_uses_maximum_bits
-      dh_options :need_bytes => 2000
+      dh_options need_bytes: 2000
       need_bits(8192)
       assert_nothing_raised { exchange! }
     end
 
     def test_that_p_and_g_are_provided_by_the_server
-      assert_nothing_raised { exchange! :p => default_p+2, :g => 3 }
+      assert_nothing_raised { exchange! p: default_p+2, g: 3 }
       assert_equal default_p+2, dh.dh.p
       assert_equal 3, dh.dh.g
     end
