@@ -1,3 +1,11 @@
+=== 3.0.0.rc1
+
+* SemVer: Major version change because of dropping of ruby 1.9
+
+=== 2.10.1.rc2
+
+* Win: Use fiddle on ruby 2.1 too [Charlie Savage]
+
 === 2.10.1.rc1
 
 * Added ruby 2.0 requirement to gemspec [Alex Schultz]
