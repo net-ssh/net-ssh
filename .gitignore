@@ -3,3 +3,4 @@ doc
 ri
 pkg
 *.swp
+test/integration/.vagrant
