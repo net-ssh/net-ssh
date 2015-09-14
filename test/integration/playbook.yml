@@ -16,6 +16,7 @@
         tags: ruby, sudo: True,
         rvm1_rubies: ["ruby-{{ruby_version}}"],
         rvm1_install_path: "{{rvm1_install_path}}",
+        rvm1_gpg_key_server: pool.sks-keyservers.net,
         when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}'" }
   tasks:
     - user: name=net_ssh_1 password="{{foopwd}}" group=vagrant state=present
@@ -40,6 +41,7 @@
         - mocha
         - rbnacl
         - rbnacl-libsodium
+    - copy: content='echo "cd /net-ssh ; rake integration-test"' dest=/etc/update-motd.d/99-net-ssh-tests mode=0755
   handlers:
     - name: restart sshd
       service: name=ssh state=restarted
