@@ -473,9 +473,9 @@ module Connection
       assert_equal "some data", session.exec!("ls")
     end
 
-    def test_exec_bang_without_block_should_return_nil_for_empty_command_output
+    def test_exec_bang_without_block_should_return_empty_string_for_empty_command_output
       prep_exec('ls', :stdout, '')
-      assert_equal nil, session.exec!('ls')
+      assert_equal "", session.exec!('ls')
     end
 
     private

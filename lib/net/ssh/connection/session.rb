@@ -352,17 +352,19 @@ module Net; module SSH; module Connection
 
     # Same as #exec, except this will block until the command finishes. Also,
     # if no block is given, this will return all output (stdout and stderr)
-    # as a single string or nil if there was no output from the command.
+    # as a single string.
     #
     #   matches = ssh.exec!("grep something /some/files")
     def exec!(command, &block)
-      block ||= Proc.new do |ch, type, data|
+      block_or_concat = block || Proc.new do |ch, type, data|
         ch[:result] ||= ""
         ch[:result] << data
       end
 
-      channel = exec(command, &block)
+      channel = exec(command, &block_or_concat)
       channel.wait
+
+      channel[:result] ||= "" unless block
 
       return channel[:result]
     end
