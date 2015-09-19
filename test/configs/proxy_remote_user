@@ -1,0 +1,2 @@
+Host behind-proxy
+  ProxyCommand ssh %r@proxy -W %h:%p
