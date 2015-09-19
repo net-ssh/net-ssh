@@ -473,6 +473,11 @@ module Connection
       assert_equal "some data", session.exec!("ls")
     end
 
+    def test_exec_bang_without_block_should_return_nil_for_empty_command_output
+      prep_exec('ls', :stdout, '')
+      assert_equal nil, session.exec!('ls')
+    end
+
     private
 
       def prep_exec(command, *data)
@@ -488,10 +493,8 @@ module Connection
 
             t2.return(CHANNEL_SUCCESS, :long, p[:remote_id])
 
-            0.step(data.length-1, 2) do |index|
-              type = data[index]
-              datum = data[index+1]
-
+            data.each_slice(2) do |type, datum|
+              next if datum.empty?
               if type == :stdout
                 t2.return(CHANNEL_DATA, :long, p[:remote_id], :string, datum)
               else
