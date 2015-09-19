@@ -1,3 +1,9 @@
+=== 3.0.1.rc1
+
+* Breaking change from 2.* series: exec! without block now returns empty string instread of nil if command has no output [https://github.com/net-ssh/net-ssh/pull/273]
+* Support remote_user as %r in proxy commands [Dominic Scheirlinck]
+* Raise Net::SSH::ConnectionTimeout from connection timeout [Carl Hoerberg]
+
 === 3.0.0.rc1
 
 * SemVer: Major version change because of dropping of ruby 1.9
