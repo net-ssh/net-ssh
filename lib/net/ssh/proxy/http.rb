@@ -9,7 +9,7 @@ module Net; module SSH; module Proxy
   #   require 'net/ssh/proxy/http'
   #
   #   proxy = Net::SSH::Proxy::HTTP.new('proxy.host', proxy_port)
-  #   Net::SSH.start('host', 'user', :proxy => proxy) do |ssh|
+  #   Net::SSH.start('host', 'user', proxy: proxy) do |ssh|
   #     ...
   #   end
   #
@@ -17,7 +17,7 @@ module Net; module SSH; module Proxy
   # to the proxy's constructor:
   #
   #   proxy = Net::SSH::Proxy::HTTP.new('proxy.host', proxy_port,
-  #      :user => "user", :password => "password")
+  #      user: "user", password: "password")
   #
   # Note that HTTP digest authentication is not supported; Basic only at
   # this point.
@@ -38,8 +38,8 @@ module Net; module SSH; module Proxy
     # can be used to tweak this proxy connection. Specifically, the following
     # options are supported:
     #
-    # * :user => the user name to use when authenticating to the proxy
-    # * :password => the password to use when authenticating
+    # * user: the user name to use when authenticating to the proxy
+    # * password: the password to use when authenticating
     def initialize(proxy_host, proxy_port=80, options={})
       @proxy_host = proxy_host
       @proxy_port = proxy_port
@@ -83,11 +83,11 @@ module Net; module SSH; module Proxy
           body = socket.read(headers["Content-Length"].to_i)
         end
 
-        return { :version => version,
-                 :code => code.to_i,
-                 :reason => reason,
-                 :headers => headers,
-                 :body => body }
+        return { version: version,
+                 code: code.to_i,
+                 reason: reason,
+                 headers: headers,
+                 body: body }
       end
 
   end

@@ -21,28 +21,28 @@ module Transport
     end
 
     def test_paranoid_true_uses_lenient_verifier
-      assert_instance_of Net::SSH::Verifiers::Lenient, session(:paranoid => true).host_key_verifier
+      assert_instance_of Net::SSH::Verifiers::Lenient, session(paranoid: true).host_key_verifier
     end
 
     def test_paranoid_very_uses_strict_verifier
-      assert_instance_of Net::SSH::Verifiers::Strict, session(:paranoid => :very).host_key_verifier
+      assert_instance_of Net::SSH::Verifiers::Strict, session(paranoid: :very).host_key_verifier
     end
 
     def test_paranoid_secure_uses_secure_verifier
-      assert_instance_of Net::SSH::Verifiers::Secure, session(:paranoid => :secure).host_key_verifier
+      assert_instance_of Net::SSH::Verifiers::Secure, session(paranoid: :secure).host_key_verifier
     end
 
     def test_paranoid_false_uses_null_verifier
-      assert_instance_of Net::SSH::Verifiers::Null, session(:paranoid => false).host_key_verifier
+      assert_instance_of Net::SSH::Verifiers::Null, session(paranoid: false).host_key_verifier
     end
 
     def test_unknown_paranoid_value_raises_exception_if_value_does_not_respond_to_verify
-      assert_raises(ArgumentError) { session(:paranoid => :bogus).host_key_verifier }
+      assert_raises(ArgumentError) { session(paranoid: :bogus).host_key_verifier }
     end
 
     def test_paranoid_value_responding_to_verify_should_pass_muster
-      object = stub("thingy", :verify => true)
-      assert_equal object, session(:paranoid => object).host_key_verifier
+      object = stub("thingy", verify: true)
+      assert_equal object, session(paranoid: object).host_key_verifier
     end
 
     def test_host_as_string_should_return_host_and_ip_when_port_is_default
@@ -52,31 +52,31 @@ module Transport
     end
 
     def test_host_as_string_should_return_host_and_ip_with_port_when_port_is_not_default
-      session(:port => 1234) # force session to be instantiated
+      session(port: 1234) # force session to be instantiated
       socket.stubs(:peer_ip).returns("1.2.3.4")
       assert_equal "[net.ssh.test]:1234,[1.2.3.4]:1234", session.host_as_string
     end
 
     def test_host_as_string_should_return_only_host_when_host_is_ip
-      session!(:host => "1.2.3.4")
+      session!(host: "1.2.3.4")
       socket.stubs(:peer_ip).returns("1.2.3.4")
       assert_equal "1.2.3.4", session.host_as_string
     end
 
     def test_host_as_string_should_return_only_host_and_port_when_host_is_ip_and_port_is_not_default
-      session!(:host => "1.2.3.4", :port => 1234)
+      session!(host: "1.2.3.4", port: 1234)
       socket.stubs(:peer_ip).returns("1.2.3.4")
       assert_equal "[1.2.3.4]:1234", session.host_as_string
     end
 
     def test_host_as_string_should_return_only_host_when_proxy_command_is_set
-      session!(:host => "1.2.3.4")
+      session!(host: "1.2.3.4")
       socket.stubs(:peer_ip).returns(Net::SSH::Transport::PacketStream::PROXY_COMMAND_HOST_IP)
       assert_equal "1.2.3.4", session.host_as_string
     end
 
     def test_host_as_string_should_return_only_host_and_port_when_host_is_ip_and_port_is_not_default_and_proxy_command_is_set
-      session!(:host => "1.2.3.4", :port => 1234)
+      session!(host: "1.2.3.4", port: 1234)
       socket.stubs(:peer_ip).returns(Net::SSH::Transport::PacketStream::PROXY_COMMAND_HOST_IP)
       assert_equal "[1.2.3.4]:1234", session.host_as_string
     end
@@ -131,8 +131,8 @@ module Transport
 
     def test_peer_should_return_hash_of_info_about_peer
       session!
-      socket.stubs(:peer_ip => "1.2.3.4")
-      assert_equal({:ip => "1.2.3.4", :port => 22, :host => "net.ssh.test", :canonized => "net.ssh.test,1.2.3.4"}, session.peer)
+      socket.stubs(peer_ip: "1.2.3.4")
+      assert_equal({ip: "1.2.3.4", port: 22, host: "net.ssh.test", canonized: "net.ssh.test,1.2.3.4"}, session.peer)
     end
 
     def test_next_message_should_block_until_next_message_is_available
@@ -283,12 +283,12 @@ module Transport
     end
 
     def test_configure_client_should_pass_options_to_socket_client_state
-      session.configure_client :compression => :standard
+      session.configure_client compression: :standard
       assert_equal :standard, socket.client.compression
     end
 
     def test_configure_server_should_pass_options_to_socket_server_state
-      session.configure_server :compression => :standard
+      session.configure_server compression: :standard
       assert_equal :standard, socket.server.compression
     end
 
@@ -301,7 +301,7 @@ module Transport
     private
 
       def socket
-        @socket ||= stub("socket", :hints => {})
+        @socket ||= stub("socket", hints: {})
       end
 
       def server_version

@@ -12,8 +12,8 @@ module Net
       #   require 'net/ssh/proxy/socks5'
       #
       #   proxy = Net::SSH::Proxy::SOCKS5.new('proxy.host', proxy_port,
-      #     :user => 'user', :password => "password")
-      #   Net::SSH.start('host', 'user', :proxy => proxy) do |ssh|
+      #     user: 'user', password: "password")
+      #   Net::SSH.start('host', 'user', proxy: proxy) do |ssh|
       #     ...
       #   end
       class SOCKS5

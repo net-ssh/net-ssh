@@ -37,7 +37,7 @@ pass = ask("Password: ") { |q| q.echo = "*" }
 puts "Configure your browser proxy to localhost:#{LOCAL_PORT}"
 
 begin
-  session = Net::SSH.start(host, user, :password => pass)  
+  session = Net::SSH.start(host, user, password: pass)  
   session.forward.local(LOCAL_PORT, host, PROXY_PORT)
   session.loop{true}
 rescue => e

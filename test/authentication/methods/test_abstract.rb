@@ -12,11 +12,11 @@ module Authentication; module Methods
     end
 
     def test_constructor_should_honor_options
-      assert_equal :manager, subject(:key_manager => :manager).key_manager
+      assert_equal :manager, subject(key_manager: :manager).key_manager
     end
 
     def test_session_id_should_query_session_id_from_key_exchange
-      transport.stubs(:algorithms).returns(stub("algorithms", :session_id => "abcxyz123"))
+      transport.stubs(:algorithms).returns(stub("algorithms", session_id: "abcxyz123"))
       assert_equal "abcxyz123", subject.session_id
     end
 

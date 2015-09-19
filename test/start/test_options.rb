@@ -13,35 +13,35 @@ module NetSSH
 
     def test_start_should_accept_keepalive_option
       assert_nothing_raised do
-        options = { :keepalive => true }
+        options = { keepalive: true }
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
 
     def test_start_should_accept_keepalive_interval_option
       assert_nothing_raised do
-        options = { :keepalive_interval => 10 }
+        options = { keepalive_interval: 10 }
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
 
     def test_start_should_accept_send_env_option
       assert_nothing_raised do
-        options = { :send_env => [ /^LC_.*$/, "LANG" ] }
+        options = { send_env: [ /^LC_.*$/, "LANG" ] }
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
 
     def test_start_should_accept_number_of_password_prompts_option
       assert_nothing_raised do
-        options = { :number_of_password_prompts => 2 }
+        options = { number_of_password_prompts: 2 }
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
 
     def test_start_should_accept_non_interactive_option
       assert_nothing_raised do
-        options = { :non_interactive => true }
+        options = { non_interactive: true }
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
