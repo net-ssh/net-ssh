@@ -8,7 +8,7 @@ module Net; module SSH; module Proxy
   #
   #   require 'net/ssh/proxy/http'
   #
-  #   proxy = Net::SSH::Proxy::HTTP.new('proxy.host', proxy_port)
+  #   proxy = Net::SSH::Proxy::HTTP.new('proxy_host', proxy_port)
   #   Net::SSH.start('host', 'user', :proxy => proxy) do |ssh|
   #     ...
   #   end
@@ -16,7 +16,7 @@ module Net; module SSH; module Proxy
   # If the proxy requires authentication, you can pass :user and :password
   # to the proxy's constructor:
   #
-  #   proxy = Net::SSH::Proxy::HTTP.new('proxy.host', proxy_port,
+  #   proxy = Net::SSH::Proxy::HTTP.new('proxy_host', proxy_port,
   #      :user => "user", :password => "password")
   #
   # Note that HTTP digest authentication is not supported; Basic only at
