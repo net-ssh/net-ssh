@@ -1,3 +1,5 @@
+* Bugfix: CHANNEL_CLOSE was sent before draining ouput buffer #280 [Christopher F. Auston]
+
 === 3.0.1
 === 3.0.1.rc1
 
