@@ -220,7 +220,7 @@ module Net; module SSH; module Connection
     def preprocess
       return false if block_given? && !yield(self)
       dispatch_incoming_packets
-      channels.each { |id, channel| channel.process unless channel.closing? }
+      channels.each { |id, channel| channel.process unless channel.local_closed? }
       return false if block_given? && !yield(self)
       return true
     end
@@ -453,6 +453,14 @@ module Net; module SSH; module Connection
       old
     end
 
+    def cleanup_channel(channel)
+        if channel.local_closed? and channel.remote_closed?
+          info { "#{host} delete channel #{channel.local_id} which closed locally and remotely" }
+          channels.delete(channel.local_id)
+      end
+    end
+
+
     private
 
       # Read all pending packets from the connection and dispatch them as
@@ -581,9 +589,10 @@ module Net; module SSH; module Connection
         info { "channel_close: #{packet[:local_id]}" }
 
         channel = channels[packet[:local_id]]
+        channel.remote_closed!
         channel.close
 
-        channels.delete(packet[:local_id])
+        cleanup_channel(channel)
         channel.do_close
       end
 
