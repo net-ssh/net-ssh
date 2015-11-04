@@ -126,7 +126,7 @@ module Net; module SSH; module Connection
       @pending_requests = []
       @on_open_failed = @on_data = @on_extended_data = @on_process = @on_close = @on_eof = nil
       @on_request = {}
-      @closing = @eof = @sent_eof = false
+      @closing = @eof = @sent_eof = @sent_close = false
     end
 
     # A shortcut for accessing properties of the channel (see #properties).
@@ -274,7 +274,7 @@ module Net; module SSH; module Connection
     # invoked, but the server has not yet responded with a CHANNEL_CLOSE
     # packet of its own.
     def closing?
-      @closing
+      @closing and @sent_close
     end
 
     # Requests that the channel be closed. If the channel is already closing,
@@ -285,7 +285,6 @@ module Net; module SSH; module Connection
       return if @closing
       if remote_id
         @closing = true
-        connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
       end
     end
 
@@ -496,6 +495,12 @@ module Net; module SSH; module Connection
           else
             break
           end
+        end
+
+        if @closing and not @sent_close and output.length < 1
+          connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
+          @sent_close = true
+          connection.cleanup_channel(self)
         end
       end
 
