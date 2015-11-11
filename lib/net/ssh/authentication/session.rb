@@ -51,9 +51,6 @@ module Net; module SSH; module Authentication
     # Attempts to authenticate the given user, in preparation for the next
     # service request. Returns true if an authentication method succeeds in
     # authenticating the user, and false otherwise.
-    #
-    # NB: If +username+ is +nil+ here, it will be implicitly converted to a
-    #     "" username, rather than the local (default) username.
     def authenticate(next_service, username, password=nil)
       debug { "beginning authentication of `#{username}'" }
 

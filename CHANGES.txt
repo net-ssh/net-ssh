@@ -1,3 +1,4 @@
+* if Net::SSH.start user is nil and config has no entry we default to Etc.getlogin
 * Bugfix: CHANNEL_CLOSE was sent before draining ouput buffer #280 [Christopher F. Auston]
 
 === 3.0.1
