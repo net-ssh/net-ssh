@@ -188,7 +188,7 @@ module Net
     #   password auth method
     # * :non_interactive => non interactive applications should set it to true
     #   to prefer failing a password/etc auth methods vs asking for password
-    def self.start(host, user, options={}, &block)
+    def self.start(host, user=nil, options={}, &block)
       invalid_options = options.keys - VALID_OPTIONS
       if invalid_options.any?
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
@@ -222,7 +222,7 @@ module Net
       transport = Transport::Session.new(host, options)
       auth = Authentication::Session.new(transport, options)
 
-      user = options.fetch(:user, user)
+      user = options.fetch(:user, user) || Etc.getlogin
       if auth.authenticate("ssh-connection", user, options[:password])
         connection = Connection::Session.new(transport, options)
         if block_given?
