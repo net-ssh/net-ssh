@@ -104,6 +104,15 @@ module Net; module SSH; module Test
       events << LocalPacket.new(:channel_close, channel.remote_id)
     end
 
+    # Scripts the sending of a channel request pty packets from the given
+    # Net::SSH::Test::Channel +channel+. This will typically be called via
+    # Net::SSH::Test::Channel#sends_request_pty.
+    def sends_channel_request_pty(channel)
+      data = ['pty-req', false]
+      data += Net::SSH::Connection::Channel::VALID_PTY_OPTIONS.merge(:modes => "\0").values
+      events << LocalPacket.new(:channel_request, channel.remote_id, *data)
+    end
+
     # Scripts the reception of a channel data packet from the remote host by
     # the given Net::SSH::Test::Channel +channel+. This will typically be
     # called via Net::SSH::Test::Channel#gets_data.

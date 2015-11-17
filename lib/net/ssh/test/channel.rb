@@ -98,6 +98,13 @@ module Net; module SSH; module Test
       script.sends_channel_close(self)
     end
 
+    # Scripts the sending of a "request pty" request packet across the channel.
+    #
+    #   channel.sends_request_pty
+    def sends_request_pty
+      script.sends_channel_request_pty(self)
+    end
+
     # Scripts the reception of a channel data packet from the remote end.
     #
     #   channel.gets_data "bar"
