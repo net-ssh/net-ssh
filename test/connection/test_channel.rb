@@ -74,7 +74,10 @@ module Connection
       assert !channel.closing?
 
       connection.expect { |t,packet| assert_equal CHANNEL_CLOSE, packet.type }
+      connection.expects(:cleanup_channel).with(channel)
       channel.close
+
+      channel.process
 
       assert channel.closing?
     end

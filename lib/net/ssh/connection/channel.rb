@@ -310,9 +310,15 @@ module Net; module SSH; module Connection
       @on_process.call(self) if @on_process
       enqueue_pending_output
 
-      if @eof and not @sent_eof and output.empty? and remote_id
+      if @eof and not @sent_eof and output.empty? and remote_id and not @sent_close
         connection.send_message(Buffer.from(:byte, CHANNEL_EOF, :long, remote_id))
         @sent_eof = true
+      end
+
+      if @closing and not @sent_close and output.length < 1 and remote_id
+        connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
+        @sent_close = true
+        connection.cleanup_channel(self)
       end
     end
 
@@ -495,12 +501,6 @@ module Net; module SSH; module Connection
           else
             break
           end
-        end
-
-        if @closing and not @sent_close and output.length < 1
-          connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
-          @sent_close = true
-          connection.cleanup_channel(self)
         end
       end
 
