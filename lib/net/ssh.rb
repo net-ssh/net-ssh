@@ -98,6 +98,10 @@ module Net
     #     ssh.loop
     #   end
     #
+    # NB: If the +user+ parameter is omitted or nil, then the username of the
+    #     process used to invoke Net::SSH.start is used, instead (via
+    #     Etc.getlogin).
+    #
     # This method accepts the following options (all are optional):
     #
     # * :auth_methods => an array of authentication methods to try
