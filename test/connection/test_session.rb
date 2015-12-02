@@ -299,8 +299,17 @@ module Connection
     end
 
     def test_channel_close_packet_should_be_routed_to_corresponding_channel_and_channel_should_be_closed_and_removed
-      channel_at(14).expects(:do_close).with()
-      session.channels[14].expects(:close).with()
+      session.channels[14] = stub("channel") do
+          # this simulates the case where we closed the channel first, sent
+          # CHANNEL_CLOSE to server and are waiting for server's response.
+          expects(:closing?).returns(true)
+          expects(:do_close)
+          expects(:[]=).with(:remote_closed, true)
+          expects(:close).with()
+          expects(:[]).with(:remote_closed).returns(true)
+          expects(:local_id).returns(14)
+      end
+
       transport.return(CHANNEL_CLOSE, :long, 14)
       process_times(2)
       assert session.channels.empty?
