@@ -14,6 +14,12 @@ module IntegrationTestHelpers
     raise "Command: #{command} failed:#{status.exitstatus}" unless res
   end
 
+  def tmpdir(&block)
+    Dir.mktmpdir do |dir|
+      yield(dir)
+    end
+  end
+
   def set_authorized_key(user,pubkey)
     authorized_key = "/home/#{user}/.ssh/authorized_keys"
     sh "sudo cp #{pubkey} #{authorized_key}"
