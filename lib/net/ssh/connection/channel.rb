@@ -269,12 +269,18 @@ module Net; module SSH; module Connection
       connection.loop { active? }
     end
 
-    # Returns true if the channel is currently closing, but not actually
-    # closed. A channel is closing when, for instance, #close has been
-    # invoked, but the server has not yet responded with a CHANNEL_CLOSE
-    # packet of its own.
+    # True if close() has been called; NOTE: if the channel has data waiting to
+    # be sent then the channel will close after all the data is sent. See
+    # closed?() to determine if we have actually sent CHANNEL_CLOSE to server.
+    # This may be true for awhile before closed? returns true if we are still
+    # sending buffered output to server.
     def closing?
-      @closing and @sent_close
+      @closing
+    end
+
+    # True if we have sent CHANNEL_CLOSE to the remote server.
+    def closed?
+        @sent_close
     end
 
     # Requests that the channel be closed. If the channel is already closing,
