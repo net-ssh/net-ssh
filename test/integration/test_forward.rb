@@ -299,16 +299,121 @@ class TestForward < Test::Unit::TestCase
     return server
   end
 
-  def test_server_eof_should_be_handled
+  def test_client_close_should_be_handled_remote
     setup_ssh_env do
+      message = "This is a small message!"*1000
+      session = Net::SSH.start(*ssh_start_params)
+      server_done = Queue.new
+      server = start_server do |client|
+        begin
+          data = client.read message.size
+          server_done << data
+          client.close
+        rescue
+          server_done << $!
+        end
+      end
+      client_done = Queue.new
+      got_remote_port = Queue.new
+      local_port = server.addr[1]
+      session.forward.remote(0, localhost, local_port) do |actual_remote_port|
+        got_remote_port << actual_remote_port
+      end
+      session.loop(0.1) { got_remote_port.empty? }
+      remote_port = got_remote_port.pop
+      Thread.start do
+        begin
+          client = TCPSocket.new(localhost, remote_port)
+          client.write(message)
+          client.close
+          client_done << true
+        rescue
+          client_done << $!
+        end
+      end
+      timeout(5) do
+        session.loop(0.1) { server_done.empty? }
+        assert_equal message, server_done.pop
+      end
+    end
+  end
+
+  def test_client_close_should_be_handled
+    setup_ssh_env do
+      message = "This is a small message!"*1000
+      session = Net::SSH.start(*ssh_start_params)
+      server_done = Queue.new
+      server = start_server do |client|
+        begin
+          data = client.read message.size
+          server_done << data
+          client.close
+        rescue
+          server_done << $!
+        end
+      end
+      client_done = Queue.new
+      remote_port = server.addr[1]
+      local_port = session.forward.local(0, localhost, remote_port)
+      Thread.start do
+        begin
+          client = TCPSocket.new(localhost, local_port)
+          client.write(message)
+          client.close
+          client_done << true
+        rescue
+          client_done << $!
+        end
+      end
+      timeout(5) do
+        session.loop(0.1) { server_done.empty? }
+        assert_equal message, server_done.pop
+      end
+    end
+  end
+
+  def test_server_eof_should_be_handled_remote
+    setup_ssh_env do
+      message = "This is a small message!"
       session = Net::SSH.start(*ssh_start_params)
       server = start_server do |client|
-        client.write "This is a small message!"
+        client.write message
         client.close
       end
       client_done = Queue.new
-      client_exception = Queue.new
-      client_data = Queue.new
+      got_remote_port = Queue.new
+      local_port = server.addr[1]
+      session.forward.remote(0, localhost, local_port) do |actual_remote_port|
+        got_remote_port << actual_remote_port
+      end
+      session.loop(0.1) { got_remote_port.empty? }
+      remote_port = got_remote_port.pop
+      Thread.start do
+        begin
+          client = TCPSocket.new(localhost, remote_port)
+          data = client.read(4096)
+          client.close
+          client_done << data
+        rescue
+          client_done << $!
+        end
+      end
+      timeout(5) do
+        session.loop(0.1) { client_done.empty? }
+        assert_equal message, client_done.pop
+      end
+    end
+  end
+
+  def test_server_eof_should_be_handled
+    setup_ssh_env do
+      message = "This is a small message!"
+      session = Net::SSH.start(*ssh_start_params)
+      server = start_server do |client|
+        client.write message
+        client.close
+      end
+      client_done = Queue.new
       remote_port = server.addr[1]
       local_port = session.forward.local(0, localhost, remote_port)
       Thread.start do
@@ -323,7 +428,7 @@ class TestForward < Test::Unit::TestCase
       end
       timeout(5) do
         session.loop(0.1) { client_done.empty? }
-        assert_equal "This is a small message!", client_done.pop
+        assert_equal message, client_done.pop
       end
     end
   end
