@@ -10,12 +10,6 @@ require 'net/ssh'
 class TestIDRSAPKeys < Test::Unit::TestCase
   include IntegrationTestHelpers
 
-  def tmpdir(&block)
-    Dir.mktmpdir do |dir|
-      yield(dir)
-    end
-  end
-
   def test_in_file_no_password
     tmpdir do |dir|
       sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
