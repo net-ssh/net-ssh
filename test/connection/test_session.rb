@@ -117,14 +117,14 @@ module Connection
     end
 
     def test_process_should_exit_after_processing_if_block_is_true_then_false
-      session.channels[0] = stub("channel", :closed? => false)
+      session.channels[0] = stub("channel", :local_closed? => false)
       session.channels[0].expects(:process)
       IO.expects(:select).never
       process_times(2)
     end
 
     def test_process_should_not_process_channels_that_are_closing
-      session.channels[0] = stub("channel", :closed? => true)
+      session.channels[0] = stub("channel", :local_closed? => true)
       session.channels[0].expects(:process).never
       IO.expects(:select).never
       process_times(2)
@@ -302,11 +302,11 @@ module Connection
       session.channels[14] = stub("channel") do
           # this simulates the case where we closed the channel first, sent
           # CHANNEL_CLOSE to server and are waiting for server's response.
-          expects(:closed?).returns(true)
+          expects(:local_closed?).returns(true)
           expects(:do_close)
-          expects(:[]=).with(:remote_closed, true)
           expects(:close).with()
-          expects(:[]).with(:remote_closed).returns(true)
+          expects(:remote_closed).with()
+          expects(:remote_closed?).with().returns(true)
           expects(:local_id).returns(14)
       end
 
@@ -532,7 +532,7 @@ module Connection
       end
 
       def channel_at(local_id)
-        session.channels[local_id] = stub("channel", :process => true, :closed? => false)
+        session.channels[local_id] = stub("channel", :process => true, :local_closed? => false)
       end
 
       def transport(options={})
