@@ -232,16 +232,13 @@ module Net
                 identity
               end
 
-            rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError => e
+            rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError, ArgumentError => e
               if ignore_decryption_errors
                 identity
               else
                 process_identity_loading_error(identity, e)
                 nil
               end
-            rescue ArgumentError => e
-              process_identity_loading_error(identity, e)
-              nil
             rescue Exception => e
               process_identity_loading_error(identity, e)
               nil
