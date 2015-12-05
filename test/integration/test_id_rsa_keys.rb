@@ -75,4 +75,22 @@ class TestIDRSAPKeys < Test::Unit::TestCase
       assert_equal "hello from:net_ssh_1\n", ret
     end
   end
+
+  def test_asks_for_passwords_when_read_from_memory
+    tmpdir do |dir|
+      sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
+      sh "ssh-keygen -f #{dir}/id_rsa -t rsa -N 'pwd12'"
+      set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
+      private_key = File.read("#{dir}/id_rsa")
+
+      options = {keys: [], key_data: [private_key]}
+
+      key_manager = Net::SSH::Authentication::KeyManager.new(nil, options)
+
+      Net::SSH::KeyFactory.expects(:prompt).with('Enter passphrase for :', false).returns('pwd12')
+      Net::SSH.start("localhost", "net_ssh_1", options) do |ssh|
+        ssh.exec! 'whoami'
+      end
+    end
+  end
 end

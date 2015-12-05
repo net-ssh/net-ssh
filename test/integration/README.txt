@@ -8,10 +8,8 @@ Requirements:
 Setup:
 
     ansible-galaxy install rvm_io.rvm1-ruby
-    vagrant up
-    vagrant ssh
-    cd /net-ssh
-    rake integration-test
+    vagrant up ; vagrant ssh
+    rake test
 
 # TODO
 

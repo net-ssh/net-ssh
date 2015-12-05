@@ -34,6 +34,11 @@
     - name: sshd debug
       lineinfile: dest='/etc/ssh/sshd_config' line='LogLevel DEBUG' regexp=LogLevel
       notify: restart sshd
+    - name: put NET_SSH_RUN_INTEGRATION_TESTS=YES environment
+      lineinfile: dest='/etc/environment' line='NET_SSH_RUN_INTEGRATION_TESTS=YES'
+    - name: change dir in bashrc
+      lineinfile: dest=/home/vagrant/.bashrc owner=vagrant mode=0644
+        regexp='^cd ' line='cd /net-ssh'
     - gem: name="{{item}}" state=present executable=/usr/local/rvm/rubies/ruby-{{ruby_version}}/bin/gem
       with_items:
         - byebug

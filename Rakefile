@@ -74,7 +74,11 @@ end
 
 require 'rake/testtask'
 Rake::TestTask.new do |t|
-  t.libs = ["lib", "test"]
+  if ENV['NET_SSH_RUN_INTEGRATION_TESTS']
+    t.libs = ["lib","test","test/integration"]
+  else
+    t.libs = ["lib", "test"]
+  end
 end
 
 Rake::TestTask.new(:'integration-test') do |t|
