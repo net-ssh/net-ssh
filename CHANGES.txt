@@ -1,6 +1,8 @@
-=== 2.9.2.1-rc1
+=== 2.9.4-rc1
 
 * Bugfix: CHANNEL_CLOSE was sent before draining ouput buffer #280 [Christopher F. Auston]
+
+[Note: 2.9.3 release changes went to 3.0, 2.9.4 is backport of fix form 3.0]
 
 === 2.9.2
 === 2.9.2-rc3
