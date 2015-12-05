@@ -126,7 +126,7 @@ module Net; module SSH; module Connection
       @pending_requests = []
       @on_open_failed = @on_data = @on_extended_data = @on_process = @on_close = @on_eof = nil
       @on_request = {}
-      @closing = @eof = @sent_eof = false
+      @closing = @eof = @sent_eof = @local_closed = @remote_closed = false
     end
 
     # A shortcut for accessing properties of the channel (see #properties).
@@ -269,12 +269,26 @@ module Net; module SSH; module Connection
       connection.loop { active? }
     end
 
-    # Returns true if the channel is currently closing, but not actually
-    # closed. A channel is closing when, for instance, #close has been
-    # invoked, but the server has not yet responded with a CHANNEL_CLOSE
-    # packet of its own.
+    # True if close() has been called; NOTE: if the channel has data waiting to
+    # be sent then the channel will close after all the data is sent. See
+    # closed?() to determine if we have actually sent CHANNEL_CLOSE to server.
+    # This may be true for awhile before closed? returns true if we are still
+    # sending buffered output to server.
     def closing?
       @closing
+    end
+
+    # True if we have sent CHANNEL_CLOSE to the remote server.
+    def local_closed?
+        @local_closed
+    end
+
+    def remote_closed?
+        @remote_closed
+    end
+
+    def remote_closed
+        @remote_closed = true
     end
 
     # Requests that the channel be closed. If the channel is already closing,
@@ -285,7 +299,6 @@ module Net; module SSH; module Connection
       return if @closing
       if remote_id
         @closing = true
-        connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
       end
     end
 
@@ -311,9 +324,15 @@ module Net; module SSH; module Connection
       @on_process.call(self) if @on_process
       enqueue_pending_output
 
-      if @eof and not @sent_eof and output.empty? and remote_id
+      if @eof and not @sent_eof and output.empty? and remote_id and not @local_closed
         connection.send_message(Buffer.from(:byte, CHANNEL_EOF, :long, remote_id))
         @sent_eof = true
+      end
+
+      if @closing and not @local_closed and output.empty? and remote_id
+        connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
+        @local_closed = true
+        connection.cleanup_channel(self)
       end
     end
 
