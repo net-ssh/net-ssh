@@ -82,7 +82,11 @@ module Net; module SSH
           if encrypted_key && ask_passphrase
             tries += 1
             if tries <= 3
-              passphrase = prompt("Enter passphrase for #{filename}:", false)
+              if filename.blank?
+                passphrase = prompt("Enter passphrase for the encrypted key:", false)
+              else
+                passphrase = prompt("Enter passphrase for #{filename}:", false)
+              end
               retry
             else
               raise
