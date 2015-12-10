@@ -39,6 +39,9 @@
     - name: change dir in bashrc
       lineinfile: dest=/home/vagrant/.bashrc owner=vagrant mode=0644
         regexp='^cd ' line='cd /net-ssh'
+    - apt: name="{{item}}" state=present
+      with_items:
+        - pv
     - gem: name="{{item}}" state=present executable=/usr/local/rvm/rubies/ruby-{{ruby_version}}/bin/gem
       with_items:
         - byebug
