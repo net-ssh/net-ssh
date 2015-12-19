@@ -252,7 +252,7 @@ module Net
     # to read.
     #
     # See Net::SSH::Config for the full description of all supported options.
-    def self.configuration_for(host, use_ssh_config=true)
+    def self.configuration_for(host, use_ssh_config)
       files = case use_ssh_config
         when true then Net::SSH::Config.default_files
         when false, nil then return {}
