@@ -14,7 +14,7 @@
   roles:
     - { role: rvm_io.rvm1-ruby,
         tags: ruby, sudo: True,
-        rvm1_rubies: ["ruby-{{ruby_version}}"],
+        rvm1_rubies: ["ruby-{{ruby_version}}","ruby-2.3.0"],
         rvm1_install_path: "{{rvm1_install_path}}",
         rvm1_gpg_key_server: pool.sks-keyservers.net,
         when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}'" }
