@@ -109,7 +109,7 @@ module Transport
     def test_next_packet_should_not_block_by_default
       IO.expects(:select).returns(nil)
       assert_nothing_raised do
-        timeout(1) { stream.next_packet }
+        Timeout.timeout(1) { stream.next_packet }
       end
     end
 
@@ -1701,7 +1701,7 @@ module Transport
         [false, :standard].each do |compress|
           cipher_method_name = cipher_name.gsub(/\W/, "_")
           hmac_method_name   = hmac_name.gsub(/\W/, "_")
-          
+
           define_method("test_next_packet_with_#{cipher_method_name}_and_#{hmac_method_name}_and_#{compress}_compression") do
             opts = { :shared => "123", :hash => "^&*", :digester => OpenSSL::Digest::SHA1  }
             cipher = Net::SSH::Transport::CipherFactory.get(cipher_name, opts.merge(:key => "ABC", :decrypt => true, :iv => "abc"))
