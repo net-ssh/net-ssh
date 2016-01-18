@@ -45,7 +45,7 @@ class TestBufferedIo < NetSSHTest
     io.expects(:send).with("me data", 0).returns(4)
     io.expects(:send).with("ata", 0).returns(3)
 
-    IO.expects(:select).times(2).with(nil, [io]).returns([[], [io]])
+    io.expects(:wait_writable).times(2).returns(io)
 
     assert_nothing_raised { io.wait_for_pending_sends }
     assert !io.pending_write?

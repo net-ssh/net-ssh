@@ -16,7 +16,7 @@ module Net; module SSH
   # add data to the write buffer, and then #send_pending or #wait_for_pending_sends
   # to actually send the data across the wire.
   #
-  # In this way you can easily use the object as an argument to IO.select,
+  # In this way you can easily use wait on the descriptor,
   # calling #fill when it is available for read, or #send_pending when it is
   # available for write, and then call #enqueue and #read_available during
   # the idle times.
@@ -110,8 +110,8 @@ module Net; module SSH
     def wait_for_pending_sends
       send_pending
       while output.length > 0
-        result = Net::SSH::Compat.io_select(nil, [self]) or next
-        next unless result[1].any?
+        result = self.wait_writable or next
+        next unless result
         send_pending
       end
     end

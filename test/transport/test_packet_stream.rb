@@ -53,17 +53,17 @@ module Transport
     end
 
     def test_available_for_read_should_return_nontrue_when_select_fails
-      IO.expects(:select).returns(nil)
+      stream.expects(:ready?).returns(nil)
       assert !stream.available_for_read?
     end
 
     def test_available_for_read_should_return_nontrue_when_self_is_not_ready
-      IO.expects(:select).with([stream], nil, nil, 0).returns([[],[],[]])
+      stream.expects(:ready?).returns(false)
       assert !stream.available_for_read?
     end
 
     def test_available_for_read_should_return_true_when_self_is_ready
-      IO.expects(:select).with([stream], nil, nil, 0).returns([[self],[],[]])
+      stream.expects(:ready?).returns(true)
       assert stream.available_for_read?
     end
 
@@ -107,26 +107,26 @@ module Transport
     end
 
     def test_next_packet_should_not_block_by_default
-      IO.expects(:select).returns(nil)
+      stream.expects(:available_for_read?).returns(false)
       assert_nothing_raised do
         Timeout.timeout(1) { stream.next_packet }
       end
     end
 
     def test_next_packet_should_return_nil_when_non_blocking_and_not_ready
-      IO.expects(:select).returns(nil)
+      stream.expects(:available_for_read?).returns(false)
       assert_nil stream.next_packet(:nonblock)
     end
 
     def test_next_packet_should_return_nil_when_non_blocking_and_partial_read
-      IO.expects(:select).returns([[stream]])
+      stream.expects(:available_for_read?).returns(true)
       stream.expects(:recv).returns([8].pack("N"))
       assert_nil stream.next_packet(:nonblock)
       assert !stream.read_buffer.empty?
     end
 
     def test_next_packet_should_return_packet_when_non_blocking_and_full_read
-      IO.expects(:select).returns([[stream]])
+      stream.expects(:available_for_read?).returns(true)
       stream.expects(:recv).returns(packet)
       packet = stream.next_packet(:nonblock)
       assert_not_nil packet
@@ -134,7 +134,7 @@ module Transport
     end
 
     def test_next_packet_should_eventually_return_packet_when_non_blocking_and_partial_read
-      IO.stubs(:select).returns([[stream]])
+      stream.stubs(:available_for_read?).returns(true)
       stream.stubs(:recv).returns(packet[0,10], packet[10..-1])
       assert_nil stream.next_packet(:nonblock)
       packet = stream.next_packet(:nonblock)
@@ -143,7 +143,7 @@ module Transport
     end
 
     def test_next_packet_should_block_when_requested_until_entire_packet_is_available
-      IO.stubs(:select).returns([[stream]])
+      stream.stubs(:wait_readable).returns(true)
       stream.stubs(:recv).returns(packet[0,10], packet[10,20], packet[20..-1])
       packet = stream.next_packet(:block)
       assert_not_nil packet
@@ -151,7 +151,7 @@ module Transport
     end
 
     def test_next_packet_when_blocking_should_fail_when_fill_could_not_read_any_data
-      IO.stubs(:select).returns([[stream]])
+      stream.stubs(:wait_readable).returns(true)
       stream.stubs(:recv).returns("")
       assert_raises(Net::SSH::Disconnect) { stream.next_packet(:block) }
     end
@@ -162,7 +162,7 @@ module Transport
 
     def test_send_packet_should_enqueue_and_send_data_immediately
       stream.expects(:send).times(3).with { |a,b| a == stream.write_buffer && b == 0 }.returns(15)
-      IO.expects(:select).times(2).returns([[], [stream]])
+      stream.expects(:wait_writable).times(2).returns(stream)
       stream.send_packet(ssh_packet)
       assert !stream.pending_write?
     end
@@ -1133,7 +1133,8 @@ module Transport
 
             stream.server.set :cipher => cipher, :hmac => hmac, :compression => compress
             stream.stubs(:recv).returns(PACKETS[cipher_name][hmac_name][compress])
-            IO.stubs(:select).returns([[stream]])
+            stream.stubs(:wait_readable).returns(stream)
+            stream.stubs(:available_for_read?).returns(true)
             packet = stream.next_packet(:nonblock)
             assert_not_nil packet
             assert_equal DEBUG, packet.type

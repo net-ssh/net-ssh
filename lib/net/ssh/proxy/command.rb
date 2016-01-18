@@ -56,8 +56,8 @@ module Net; module SSH; module Proxy
       }
       begin
         io = IO.popen(command_line, "r+")
-        if result = Net::SSH::Compat.io_select([io], nil, [io], 60)
-          if result.last.any?
+        if result = self.wait_readable(60)
+          if result == false
             raise "command failed"
           end
         else
@@ -82,7 +82,7 @@ module Net; module SSH; module Proxy
           begin
             result = write_nonblock(data)
           rescue IO::WaitWritable, Errno::EINTR
-            IO.select(nil, [self])
+            wait_writable
             retry
           end
           result
@@ -93,7 +93,7 @@ module Net; module SSH; module Proxy
             result = read_nonblock(size)
           rescue IO::WaitReadable, Errno::EINTR
             timeout_in_seconds = 20
-            if IO.select([self], nil, [self], timeout_in_seconds) == nil
+            if wait_readable(timeout_in_seconds) == nil
               raise "Unexpected spurious read wakeup"
             end
             retry

@@ -1,4 +1,5 @@
 require 'thread'
+require 'io/wait'
 
 module Net; module SSH
   
