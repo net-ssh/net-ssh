@@ -262,6 +262,7 @@ module Net; module SSH; module Connection
           end
         end
       end
+    end
 
     # processes the reader IO which can read from the buffer
     def process_reader(reader)
