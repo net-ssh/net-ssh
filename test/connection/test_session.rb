@@ -130,14 +130,16 @@ module Connection
     def test_process_should_exit_after_processing_if_block_is_true_then_false
       session.channels[0] = stub("channel", :local_closed? => false)
       session.channels[0].expects(:process)
-      IO.expects(:select).never
+      socket.expects(:wait_readable).never
+      socket.expects(:wait_writable).never
       process_times(2)
     end
 
     def test_process_should_not_process_channels_that_are_closing
       session.channels[0] = stub("channel", :local_closed? => true)
       session.channels[0].expects(:process).never
-      IO.expects(:select).never
+      socket.expects(:wait_readable).never
+      socket.expects(:wait_writable).never
       process_times(2)
     end
 
@@ -336,19 +338,20 @@ module Connection
     end
 
     def test_writers_without_pending_writes_should_not_be_considered_for_select
-      IO.expects(:select).with([socket],[],nil,nil).returns([[],[],[]])
+      socket.expects(:wait_readable).returns(nil)
       session.process
     end
 
     def test_writers_with_pending_writes_should_be_considered_for_select
       socket.enqueue("laksdjflasdkf")
-      IO.expects(:select).with([socket],[socket],nil,nil).returns([[],[],[]])
+      socket.expects(:wait_writable).returns(nil)
+      socket.expects(:wait_readable).returns(nil)
       session.process
     end
 
     def test_ready_readers_should_be_filled
       socket.expects(:recv).returns("this is some data")
-      IO.expects(:select).with([socket],[],nil,nil).returns([[socket],[],[]])
+      socket.expects(:wait_readable).returns(socket)
       session.process
       assert_equal [socket], session.listeners.keys
     end
@@ -356,7 +359,7 @@ module Connection
     def test_ready_readers_that_cant_be_filled_should_be_removed
       socket.expects(:recv).returns("")
       socket.expects(:close)
-      IO.expects(:select).with([socket],[],nil,nil).returns([[socket],[],[]])
+      socket.expects(:wait_readable).returns(socket)
       session.process
       assert session.listeners.empty?
     end
@@ -366,7 +369,7 @@ module Connection
       flag = false
       session.stop_listening_to(socket) # so that we only have to test the presence of a single IO object
       session.listen_to(io) { flag = true }
-      IO.expects(:select).with([io],[],nil,nil).returns([[io],[],[]])
+      io.expects(:wait_readable).returns(io)
       session.process
       assert flag, "callback should have been invoked"
     end
@@ -374,13 +377,14 @@ module Connection
     def test_ready_writers_should_call_send_pending
       socket.enqueue("laksdjflasdkf")
       socket.expects(:send).with("laksdjflasdkf", 0).returns(13)
-      IO.expects(:select).with([socket],[socket],nil,nil).returns([[],[socket],[]])
+      socket.expects(:wait_writable).returns(socket)
+      socket.expects(:wait_readable).returns(nil)
       session.process
     end
 
     def test_process_should_call_rekey_as_needed
       transport.expects(:rekey_as_needed)
-      IO.expects(:select).with([socket],[],nil,nil).returns([[],[],[]])
+      socket.expects(:wait_readable).returns(nil)
       session.process
     end
 
@@ -388,7 +392,7 @@ module Connection
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
       options = { :keepalive => true }
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
-      IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
+      socket.stubs(:wait_readable).with(timeout).returns(nil)
       transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
       session(options).process
     end
@@ -399,13 +403,13 @@ module Connection
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
       [1,2,3].each do |i|
         Time.stubs(:now).returns(Time.at(i*300))
-        IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
+        socket.stubs(:wait_readable).with(timeout).returns(nil)
         transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
         session(options).process
       end
 
       Time.stubs(:now).returns(Time.at(4*300))
-      IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
+      socket.stubs(:wait_readable).with(timeout).returns(nil)
       transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
       assert_raises(Net::SSH::Timeout) { session(options).process }
     end
@@ -413,7 +417,7 @@ module Connection
     def test_process_should_not_call_enqueue_message_unless_io_select_timed_out
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
       options = { :keepalive => true }
-      IO.stubs(:select).with([socket],[],nil,timeout).returns([[socket],[],[]])
+      socket.stubs(:wait_readable).with(timeout).returns(nil)
       socket.stubs(:recv).returns("x")
       transport.expects(:enqueue_message).never
       session(options).process
@@ -423,20 +427,20 @@ module Connection
       timeout = 10
       options = { :keepalive => true, :keepalive_interval => timeout }
       Time.stubs(:now).returns(Time.at(0), Time.at(9), Time.at(timeout))
-      IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
+      socket.stubs(:wait_readable).with(timeout).returns(nil)
       transport.expects(:enqueue_message).times(2)
       3.times { session(options).process }
     end
 
     def test_process_should_call_io_select_with_nil_as_last_arg_if_keepalive_disabled
-      IO.expects(:select).with([socket],[],nil,nil).returns([[],[],[]])
+      socket.stubs(:wait_readable).returns(nil)
       session.process
     end
 
     def test_process_should_call_io_select_with_interval_as_last_arg_if_keepalive_interval_passed
       timeout = 10
       options = { :keepalive => true, :keepalive_interval => timeout }
-      IO.expects(:select).with([socket],[],nil,timeout).returns([[],[],[]])
+      socket.stubs(:wait_readable).with(timeout).returns(nil)
       session(options).process
     end
 
@@ -449,7 +453,7 @@ module Connection
     end
 
     def test_loop_should_call_process_until_process_returns_false
-      IO.stubs(:select).with([socket],[],nil,nil).returns([[],[],[]])
+      socket.stubs(:wait_readable).returns(nil)
       session.expects(:process).with(nil).times(4).returns(true,true,true,false).yields
       n = 0
       session.loop { n += 1 }
