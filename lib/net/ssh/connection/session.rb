@@ -274,7 +274,6 @@ module Net; module SSH; module Connection
           stop_listening_to(reader)
         end
       end
-    end
 
     # calls Net::SSH::Transport::Session#rekey_as_needed to allow the
     # transport layer to rekey
