@@ -417,12 +417,10 @@ module Connection
     def test_process_should_not_call_enqueue_message_unless_io_select_timed_out
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
       options = { :keepalive => true }
-      socket.stubs(:wait_readable).with(timeout).returns(socket)
+      socket.stubs(:wait_readable).with(timeout).returns(nil)
       socket.stubs(:recv).returns("x")
       transport.expects(:enqueue_message).never
-      sess = session(options)
-      sess.stubs(:process_reader).with(socket)
-      sess.process
+      session(options).process
     end
 
     def test_process_should_not_call_enqueue_message_unless_keepalive_interval_not_go_on
