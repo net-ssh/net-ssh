@@ -12,8 +12,8 @@ else
 
   # For now map DL to Fiddler versus updating all the code below
   module DL
-    CPtr = Fiddle::Pointer
-    RUBY_FREE = Fiddle::RUBY_FREE
+    CPtr ||= Fiddle::Pointer
+    RUBY_FREE ||= Fiddle::RUBY_FREE
   end
 end
 
