@@ -15,11 +15,12 @@ module Net; module SSH; module Verifiers
     def verify(arguments)
       options = arguments[:session].options
       host = options[:host_key_alias] || arguments[:session].host_as_string
-      matches = Net::SSH::KnownHosts.search_for(host, arguments[:session].options)
+      known_hosts = options.fetch(:known_hosts, KnownHosts)
+      matches = known_hosts.search_for(host, arguments[:session].options)
 
       # We've never seen this host before, so raise an exception.
       if matches.empty?
-        process_cache_miss(host, arguments, HostKeyUnknown, "is unknown")
+        process_cache_miss(known_hosts, host, arguments, HostKeyUnknown, "is unknown")
       end
 
       # If we found any matches, check to see that the key type and
@@ -40,12 +41,12 @@ module Net; module SSH; module Verifiers
 
     private
 
-    def process_cache_miss(host, args, exc_class, message)
+    def process_cache_miss(known_hosts, host, args, exc_class, message)
       exception = exc_class.new("fingerprint #{args[:fingerprint]} " +
                                 "#{message} for #{host.inspect}")
       exception.data = args
       exception.callback = Proc.new do
-        Net::SSH::KnownHosts.add(host, args[:key], args[:session].options)
+        known_hosts.add(host, args[:key], args[:session].options)
       end
       raise exception
     end

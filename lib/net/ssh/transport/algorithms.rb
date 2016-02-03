@@ -242,7 +242,8 @@ module Net; module SSH; module Transport
           # make sure the host keys are specified in preference order, where any
           # existing known key for the host has preference.
 
-          existing_keys = KnownHosts.search_for(options[:host_key_alias] || session.host_as_string, options)
+          known_hosts = options.fetch(:known_hosts, KnownHosts)
+          existing_keys = known_hosts.search_for(options[:host_key_alias] || session.host_as_string, options)
           host_keys = existing_keys.map { |key| key.ssh_type }.uniq
           algorithms[:host_key].each do |name|
             host_keys << name unless host_keys.include?(name)
