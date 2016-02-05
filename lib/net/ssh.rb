@@ -66,7 +66,7 @@ module Net
       :keepalive, :keepalive_interval, :keepalive_maxcount, :kex, :keys, :key_data,
       :languages, :logger, :paranoid, :password, :port, :proxy,
       :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
-      :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
+      :known_hosts, :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
       :max_win_size, :send_env, :use_agent, :number_of_password_prompts,
       :append_supported_algorithms, :non_interactive
@@ -114,6 +114,8 @@ module Net
     # * :encryption => the encryption cipher (or ciphers) to use
     # * :forward_agent => set to true if you want the SSH agent connection to
     #   be forwarded
+    # * :known_hosts => a custom object holding known hosts records.
+    #   It must implement #search_for and #add.
     # * :global_known_hosts_file => the location of the global known hosts
     #   file. Set to an array if you want to specify multiple global known
     #   hosts files. Defaults to %w(/etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2).
