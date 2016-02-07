@@ -4,6 +4,7 @@ require 'net/ssh/connection/channel'
 require 'net/ssh/connection/constants'
 require 'net/ssh/service/forward'
 require 'net/ssh/connection/keepalive'
+require 'net/ssh/connection/event_loop'
 
 module Net; module SSH; module Connection
 
@@ -81,6 +82,9 @@ module Net; module SSH; module Connection
       @max_win_size = (options.has_key?(:max_win_size) ? options[:max_win_size] : 0x20000)
 
       @keepalive = Keepalive.new(self)
+
+      @event_loop = options[:event_loop] || SingleSessionEventLoop.new
+      @event_loop.register(self)
     end
 
     # Retrieves a custom property from this instance. This can be used to
@@ -186,6 +190,8 @@ module Net; module SSH; module Connection
     # This will also cause all active channels to be processed once each (see
     # Net::SSH::Connection::Channel#on_process).
     #
+    # TODO revise example
+    #
     #   # process multiple Net::SSH connections in parallel
     #   connections = [
     #     Net::SSH.start("host1", ...),
@@ -203,13 +209,7 @@ module Net; module SSH; module Connection
     #     break if connections.empty?
     #   end
     def process(wait=nil, &block)
-      return false unless preprocess(&block)
-
-      r = listeners.keys
-      w = r.select { |w2| w2.respond_to?(:pending_write?) && w2.pending_write? }
-      readers, writers, = Net::SSH::Compat.io_select(r, w, nil, io_select_wait(wait))
-
-      postprocess(readers, writers)
+      @event_loop.process(wait, &block)
     rescue
       force_channel_cleanup_on_close if closed?
       raise
@@ -220,19 +220,38 @@ module Net; module SSH; module Connection
     # for any active channels. If a block is given, it is invoked at the
     # start of the method and again at the end, and if the block ever returns
     # false, this method returns false. Otherwise, it returns true.
-    def preprocess
+    def preprocess(&block)
       return false if block_given? && !yield(self)
-      dispatch_incoming_packets
-      each_channel { |id, channel| channel.process unless channel.local_closed? }
+      ev_preprocess(&block)
       return false if block_given? && !yield(self)
       return true
     end
 
-    # This is called internally as part of #process. It loops over the given
-    # arrays of reader IO's and writer IO's, processing them as needed, and
+    # Called by event loop to process available data before going to
+    # event multiplexing
+    def ev_preprocess(&block)
+      dispatch_incoming_packets
+      each_channel { |id, channel| channel.process unless channel.local_closed? }
+    end
+
+    # Returns the file descriptors the event loop should wait for read/write events,
+    # we also return the max wait
+    def ev_do_calculate_rw_wait(wait)
+      r = listeners.keys
+      w = r.select { |w2| w2.respond_to?(:pending_write?) && w2.pending_write? }
+      [r,w,io_select_wait(wait)]
+    end
+
+    # This is called internally as part of #process.
+    def postprocess(readers, writers)
+      ev_do_handle_events(readers, writers)
+    end
+
+    # It loops over the given arrays of reader IO's and writer IO's,
+    # processing them as needed, and
     # then calls Net::SSH::Transport::Session#rekey_as_needed to allow the
     # transport layer to rekey. Then returns true.
-    def postprocess(readers, writers)
+    def ev_do_handle_events(readers, writers)
       Array(readers).each do |reader|
         if listeners[reader]
           listeners[reader].call(reader)
@@ -247,11 +266,14 @@ module Net; module SSH; module Connection
       Array(writers).each do |writer|
         writer.send_pending
       end
+    end
 
-      @keepalive.send_as_needed(readers, writers)
+    # calls Net::SSH::Transport::Session#rekey_as_needed to allow the
+    # transport layer to rekey
+    def ev_do_postprocess(was_events)
+      @keepalive.send_as_needed(was_events)
       transport.rekey_as_needed
-
-      return true
+      true
     end
 
     # Send a global request of the given type. The +extra+ parameters must
@@ -333,7 +355,7 @@ module Net; module SSH; module Connection
       open_channel do |channel|
         channel.exec(command) do |ch, success|
           raise "could not execute command: #{command.inspect}" unless success
-          
+
           channel.on_data do |ch2, data|
             if block
               block.call(ch2, :stdout, data)
