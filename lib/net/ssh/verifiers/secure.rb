@@ -16,7 +16,7 @@ module Net; module SSH; module Verifiers
       options = arguments[:session].options
       host = options[:host_key_alias] || arguments[:session].host_as_string
       known_hosts = options.fetch(:known_hosts, KnownHosts)
-      matches = known_hosts.search_for(host, arguments[:session].options)
+      matches = arguments[:session].host_keys
 
       # We've never seen this host before, so raise an exception.
       if matches.empty?
