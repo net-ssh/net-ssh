@@ -40,6 +40,10 @@ module Net; module SSH; module Transport
       def negotiate!(socket, timeout)
         info { "negotiating protocol version" }
 
+        debug { "local is `#{PROTO_VERSION}'" }
+        socket.write "#{PROTO_VERSION}\r\n"
+        socket.flush
+
         if timeout && !IO.select([socket], nil, nil, timeout)
           raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating"
         end
@@ -69,9 +73,6 @@ module Net; module SSH; module Transport
         if timeout && !IO.select(nil, [socket], nil, timeout)
           raise Net::SSH::ConnectionTimeout, "timeout during client version negotiating"
         end
-        debug { "local is `#{PROTO_VERSION}'" }
-        socket.write "#{PROTO_VERSION}\r\n"
-        socket.flush
       end
   end
 end; end; end
