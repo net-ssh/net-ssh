@@ -63,10 +63,10 @@ module Connection
       assert_equal "helloworld", channel.output.to_s
     end
 
-    def test_close_before_channel_has_been_confirmed_should_do_nothing
+    def test_close_before_channel_has_been_confirmed_should_set_closing
       assert !channel.closing?
       channel.close
-      assert !channel.closing?
+      assert channel.closing?
     end
 
     def test_close_should_set_closing_and_send_message
@@ -261,6 +261,14 @@ module Connection
       assert channel.pending_requests.empty?
     end
 
+    def test_send_channel_request_should_wait_for_remote_id
+      channel.expects(:remote_id).times(1).returns(nil)
+      assert_raises("Channel open not yet confirmed, please call send_channel_request(or exec) from block of open_channel") do
+        channel.send_channel_request("exec", :string, "ls")
+      end
+      assert channel.pending_requests.empty?
+    end
+
     def test_send_channel_request_with_callback_should_want_reply
       channel.do_open_confirmation(0, 100, 100)
       connection.expect do |t,p|
@@ -375,6 +383,11 @@ module Connection
     def test_wait_should_block_while_channel_is_active?
       channel.expects(:active?).times(3).returns(true,true,false)
       channel.wait
+    end
+
+    def test_wait_until_open_confirmed_should_block_while_remote_id_nil
+      channel.expects(:remote_id).times(3).returns(nil,nil,3)
+      channel.send(:wait_until_open_confirmed)
     end
 
     def test_eof_bang_should_send_eof_to_server

@@ -291,15 +291,11 @@ module Net; module SSH; module Connection
       @remote_closed = true
     end
 
-    # Requests that the channel be closed. If the channel is already closing,
-    # this does nothing, nor does it do anything if the channel has not yet
-    # been confirmed open (see #do_open_confirmation). Otherwise, it sends a
-    # CHANNEL_CLOSE message and marks the channel as closing.
+    # Requests that the channel be closed. It only marks the channel to be closed
+    # the CHANNEL_CLOSE message will be sent from event loop
     def close
       return if @closing
-      if remote_id
-        @closing = true
-      end
+      @closing = true
     end
 
     # Returns true if the local end of the channel has declared that no more
@@ -486,6 +482,7 @@ module Net; module SSH; module Connection
     # convenient helper methods (see #exec and #subsystem).
     def send_channel_request(request_name, *data, &callback)
       info { "sending channel request #{request_name.inspect}" }
+      fail "Channel open not yet confirmed, please call send_channel_request(or exec) from block of open_channel" unless remote_id
       msg = Buffer.from(:byte, CHANNEL_REQUEST,
         :long, remote_id, :string, request_name,
         :bool, !callback.nil?, *data)
@@ -631,6 +628,12 @@ module Net; module SSH; module Connection
       end
 
     private
+
+      # Runs the SSH event loop until the remote confirmed channel open
+      # experimental api
+      def wait_until_open_confirmed
+        connection.loop { !remote_id }
+      end
 
       # Updates the local window size by the given amount. If the window
       # size drops to less than half of the local maximum (an arbitrary
