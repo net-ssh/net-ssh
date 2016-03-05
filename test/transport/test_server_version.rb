@@ -47,6 +47,9 @@ module Transport
       def socket(good, version_header, raise_eot=false)
         socket = mock("socket")
 
+        socket.expects(:write).with("#{Net::SSH::Transport::ServerVersion::PROTO_VERSION}\r\n")
+        socket.expects(:flush)
+
         data = version_header.split('')
         recv_times = data.length
         recv_times += 1 if data[-1] != "\n"
@@ -58,13 +61,6 @@ module Transport
           socket.expects(:readpartial).with(1).times(recv_times).returns(*data).then.returns(nil)
         else
           socket.expects(:readpartial).with(1).times(recv_times+1).returns(*data).then.raises(EOFError, "end of file reached")
-        end
-
-        if good
-          socket.expects(:write).with("#{Net::SSH::Transport::ServerVersion::PROTO_VERSION}\r\n")
-          socket.expects(:flush)
-        else
-          socket.expects(:write).never
         end
 
         socket
