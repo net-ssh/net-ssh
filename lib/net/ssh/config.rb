@@ -178,6 +178,15 @@ module Net; module SSH
             hash[:keys] = value
           when 'macs' then
             hash[:hmac] = value.split(/,/)
+          when 'serveralivecountmax'
+            hash[:keepalive_maxcount] = value.to_i if value
+          when 'serveraliveinterval'
+            if value && value.to_i > 0
+              hash[:keepalive] = true
+              hash[:keepalive_interval] = value.to_i
+            else
+              hash[:keepalive] = false
+            end
           when 'passwordauthentication'
             if value
               (hash[:auth_methods] << 'password').uniq!
