@@ -263,9 +263,13 @@ module Connection
 
     def test_send_channel_request_should_wait_for_remote_id
       channel.expects(:remote_id).times(1).returns(nil)
-      assert_raises("Channel open not yet confirmed, please call send_channel_request(or exec) from block of open_channel") do
+      msg = nil
+      begin
         channel.send_channel_request("exec", :string, "ls")
+      rescue RuntimeError => e
+        msg = e.message
       end
+      assert_equal "Channel open not yet confirmed, please call send_channel_request(or exec) from block of open_channel", msg
       assert channel.pending_requests.empty?
     end
 
