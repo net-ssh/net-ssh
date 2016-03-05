@@ -89,6 +89,13 @@ module Net; module SSH; module Transport
       raise Net::SSH::ConnectionTimeout
     end
 
+    def host_keys
+      @host_keys ||= begin
+        known_hosts = options.fetch(:known_hosts, KnownHosts)
+        known_hosts.search_for(options[:host_key_alias] || host_as_string, options)
+      end
+    end
+
     # Returns the host (and possibly IP address) in a format compatible with
     # SSH known-host files.
     def host_as_string
