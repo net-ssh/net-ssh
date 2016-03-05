@@ -13,7 +13,7 @@ module Net; module SSH; module Verifiers
   # Otherwise, this returns true.
   class Secure
     def verify(arguments)
-      host_keys = arguments[:session].host_key
+      host_keys = arguments[:session].host_keys
 
       # We've never seen this host before, so raise an exception.
       if host_keys.empty?

@@ -24,6 +24,10 @@ module Net; module SSH
     def each(&block)
        @host_keys.each(&block)
     end
+
+    def empty?
+      @host_keys.empty?
+    end
   end
 
   # Searches an OpenSSH-style known-host file for a given host, and returns all
