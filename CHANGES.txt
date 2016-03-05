@@ -1,3 +1,12 @@
+=== 3.1.0.beta1
+
+* trying to execute something on a not yet opend channel throws nicer messag [Miklos Fazekas]
+* calling close on a not opened channel marks the channel for close [Miklos Fazekas]
+* read keepalive configuration from ssh config files [Miklos Fazekas]
+* send client version on hadshake before waiting for server to reduce handshake time [Miklos Fazekas]
+* allow custom Net::SSH::KnownHosts implementations [Jean Boussier]
+* memoize known host so we only search it once per session [Jean Boussier, Miklos Fazekas]
+
 === 3.0.2
 === 3.0.2.rc1
 
