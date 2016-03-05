@@ -5,6 +5,27 @@ require 'net/ssh/buffer'
 
 module Net; module SSH
 
+  class HostKeys
+    include Enumerable
+    attr_reader :host
+
+    def initialize(host_keys, host, known_hosts, options = {})
+       @host_keys = host_keys
+       @host = host
+       @known_hosts = known_hosts
+       @options = options
+    end
+
+    def add_host_key(key)
+       @known_hosts.add(@host, key, options)
+       push(key)
+    end
+
+    def each(&block)
+       @host_keys.each(&block)
+    end
+  end
+
   # Searches an OpenSSH-style known-host file for a given host, and returns all
   # matching keys. This is used to implement host-key verification, as well as
   # to determine what key a user prefers to use for a given host.
@@ -28,7 +49,7 @@ module Net; module SSH
       # Searches all known host files (see KnownHosts.hostfiles) for all keys
       # of the given host. Returns an array of keys found.
       def search_for(host, options={})
-        search_in(hostfiles(options), host)
+        HostKeys.new(search_in(hostfiles(options), host), host, self, options)
       end
 
       # Search for all known keys for the given host, in every file given in
