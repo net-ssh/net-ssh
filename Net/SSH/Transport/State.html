@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Net::SSH::Transport::State - net-ssh 3.1.0.beta2</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../../";
+</script>
+
+<script src="../../../js/jquery.js"></script>
+<script src="../../../js/darkfish.js"></script>
+
+<link href="../../../css/fonts.css" rel="stylesheet">
+<link href="../../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../../table_of_contents.html#pages">Pages</a>
+    <a href="../../../table_of_contents.html#classes">Classes</a>
+    <a href="../../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-cleanup">#cleanup</a>
+    
+    <li ><a href="#method-i-compress">#compress</a>
+    
+    <li ><a href="#method-i-compression-3F">#compression?</a>
+    
+    <li ><a href="#method-i-compressor">#compressor</a>
+    
+    <li ><a href="#method-i-decompress">#decompress</a>
+    
+    <li ><a href="#method-i-decompressor">#decompressor</a>
+    
+    <li ><a href="#method-i-final_cipher">#final_cipher</a>
+    
+    <li ><a href="#method-i-increment">#increment</a>
+    
+    <li ><a href="#method-i-needs_rekey-3F">#needs_rekey?</a>
+    
+    <li ><a href="#method-i-reset-21">#reset!</a>
+    
+    <li ><a href="#method-i-set">#set</a>
+    
+    <li ><a href="#method-i-update_cipher">#update_cipher</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Net::SSH::Transport::State">
+  <h1 id="class-Net::SSH::Transport::State" class="class">
+    class Net::SSH::Transport::State
+  </h1>
+
+  <section class="description">
+    
+<p>Encapsulates state information about one end of an <a
+href="../../SSH.html">SSH</a> connection. Such state includes the packet
+sequence number, the algorithms in use, how many packets and blocks have
+been processed since the last reset, and so forth. This class will never be
+instantiated directly, but is used as part of the internal state of the <a
+href="PacketStream.html">PacketStream</a> module.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-block_size" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">block_size</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The block size for the cipher</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-blocks" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">blocks</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The number of data blocks processed since the last call to <a
+href="State.html#method-i-reset-21">reset!</a></p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-cipher" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">cipher</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The cipher algorithm in use for this socket endpoint.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-compression" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">compression</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The compression algorithm in use for this endpoint.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-compression_level" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">compression_level</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The compression level to use when compressing data (or nil, for the
+default).</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-hmac" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">hmac</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The hmac algorithm in use for this endpoint.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-max_blocks" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">max_blocks</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The maximum number of blocks that this endpoint wants to process before
+needing a rekey.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-max_packets" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">max_packets</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The maximum number of packets that this endpoint wants to process before
+needing a rekey.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-packets" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">packets</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The number of packets processed since the last call to <a
+href="State.html#method-i-reset-21">reset!</a></p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-rekey_limit" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">rekey_limit</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The user-specified maximum number of bytes that this endpoint ought to
+process before needing a rekey.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-role" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">role</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The role that this state plays (either :client or :server)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-sequence_number" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">sequence_number</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The next packet sequence number for this socket endpoint.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-socket" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">socket</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The socket object that owns this state object.</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(socket, role)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new state object, belonging to the given socket. Initializes the
+algorithms to “none”.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 57</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">socket</span>, <span class="ruby-identifier">role</span>)
+  <span class="ruby-ivar">@socket</span> = <span class="ruby-identifier">socket</span>
+  <span class="ruby-ivar">@role</span> = <span class="ruby-identifier">role</span>
+  <span class="ruby-ivar">@sequence_number</span> = <span class="ruby-ivar">@packets</span> = <span class="ruby-ivar">@blocks</span> = <span class="ruby-value">0</span>
+  <span class="ruby-ivar">@cipher</span> = <span class="ruby-constant">CipherFactory</span>.<span class="ruby-identifier">get</span>(<span class="ruby-string">&quot;none&quot;</span>)
+  <span class="ruby-ivar">@block_size</span> = <span class="ruby-value">8</span>
+  <span class="ruby-ivar">@hmac</span> = <span class="ruby-constant">HMAC</span>.<span class="ruby-identifier">get</span>(<span class="ruby-string">&quot;none&quot;</span>)
+  <span class="ruby-ivar">@compression</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@compressor</span> = <span class="ruby-ivar">@decompressor</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@next_iv</span> = <span class="ruby-string">&quot;&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-cleanup" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cleanup</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Closes any the compressor and/or decompressor objects that have been
+instantiated.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="cleanup-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">cleanup</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@compressor</span>
+    <span class="ruby-ivar">@compressor</span>.<span class="ruby-identifier">finish</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@compressor</span>.<span class="ruby-identifier">finished?</span>
+    <span class="ruby-ivar">@compressor</span>.<span class="ruby-identifier">close</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@decompressor</span>
+    <span class="ruby-comment"># we call reset here so that we don&#39;t get warnings when we try to</span>
+    <span class="ruby-comment"># close the decompressor</span>
+    <span class="ruby-ivar">@decompressor</span>.<span class="ruby-identifier">reset</span>
+    <span class="ruby-ivar">@decompressor</span>.<span class="ruby-identifier">close</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@compressor</span> = <span class="ruby-ivar">@decompressor</span> = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-compress" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">compress</span><span
+            class="method-args">(data)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Compresses the data. If no compression is in effect, this will just return
+the data unmodified, otherwise it uses <a
+href="State.html#method-i-compressor">compressor</a> to compress the data.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="compress-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 120</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">compress</span>(<span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">data</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">data</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">compression?</span>
+  <span class="ruby-identifier">compressor</span>.<span class="ruby-identifier">deflate</span>(<span class="ruby-identifier">data</span>, <span class="ruby-constant">Zlib</span><span class="ruby-operator">::</span><span class="ruby-constant">SYNC_FLUSH</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-compression-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">compression?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if data compression/decompression is enabled. This will return
+true if :standard compression is selected, or if :delayed compression is
+selected and the :authenticated hint has been received by the socket.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="compression-3F-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">compression?</span>
+  <span class="ruby-identifier">compression</span> <span class="ruby-operator">==</span> <span class="ruby-value">:standard</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">compression</span> <span class="ruby-operator">==</span> <span class="ruby-value">:delayed</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">hints</span>[<span class="ruby-value">:authenticated</span>])
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-compressor" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">compressor</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The compressor object to use when compressing data. This takes into account
+the desired compression level.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="compressor-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 101</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">compressor</span>
+  <span class="ruby-ivar">@compressor</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Zlib</span><span class="ruby-operator">::</span><span class="ruby-constant">Deflate</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">compression_level</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Zlib</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_COMPRESSION</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-decompress" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">decompress</span><span
+            class="method-args">(data)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Deompresses the data. If no compression is in effect, this will just return
+the data unmodified, otherwise it uses <a
+href="State.html#method-i-decompressor">decompressor</a> to decompress the
+data.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="decompress-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 128</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">decompress</span>(<span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">data</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">data</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">compression?</span>
+  <span class="ruby-identifier">decompressor</span>.<span class="ruby-identifier">inflate</span>(<span class="ruby-identifier">data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-decompressor" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">decompressor</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The decompressor object to use when decompressing data.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="decompressor-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 106</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">decompressor</span>
+  <span class="ruby-ivar">@decompressor</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Zlib</span><span class="ruby-operator">::</span><span class="ruby-constant">Inflate</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-final_cipher" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">final_cipher</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="final_cipher-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">final_cipher</span>
+  <span class="ruby-identifier">result</span> = <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">final</span>
+  <span class="ruby-identifier">update_next_iv</span>(<span class="ruby-identifier">role</span> <span class="ruby-operator">==</span> <span class="ruby-value">:client</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">result</span> <span class="ruby-operator">:</span> <span class="ruby-string">&quot;&quot;</span>, <span class="ruby-keyword">true</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-increment" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">increment</span><span
+            class="method-args">(packet_length)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Increments the counters. The sequence number is incremented (and remapped
+so it always fits in a 32-bit integer). The number of packets and blocks
+are also incremented.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="increment-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 93</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">increment</span>(<span class="ruby-identifier">packet_length</span>)
+  <span class="ruby-ivar">@sequence_number</span> = (<span class="ruby-ivar">@sequence_number</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>) <span class="ruby-operator">&amp;</span> <span class="ruby-value">0xFFFFFFFF</span>
+  <span class="ruby-ivar">@packets</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+  <span class="ruby-ivar">@blocks</span> <span class="ruby-operator">+=</span> (<span class="ruby-identifier">packet_length</span> <span class="ruby-operator">+</span> <span class="ruby-value">4</span>) <span class="ruby-operator">/</span> <span class="ruby-ivar">@block_size</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-needs_rekey-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">needs_rekey?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if the number of packets processed exceeds the maximum number
+of packets, or if the number of blocks processed exceeds the maximum number
+of blocks.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="needs_rekey-3F-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 186</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">needs_rekey?</span>
+  <span class="ruby-identifier">max_packets</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">packets</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">max_packets</span> <span class="ruby-operator">||</span>
+  <span class="ruby-identifier">max_blocks</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">blocks</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">max_blocks</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-reset-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reset!</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Resets the counters on the state object, but leaves the <a
+href="State.html#attribute-i-sequence_number">#sequence_number</a>
+unchanged. It also sets defaults for and recomputes the <a
+href="State.html#attribute-i-max_packets">#max_packets</a> and <a
+href="State.html#attribute-i-max_blocks">#max_blocks</a> values.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="reset-21-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 137</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reset!</span>
+  <span class="ruby-ivar">@packets</span> = <span class="ruby-ivar">@blocks</span> = <span class="ruby-value">0</span>
+
+  <span class="ruby-ivar">@max_packets</span> <span class="ruby-operator">||=</span> <span class="ruby-value">1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">31</span>
+
+  <span class="ruby-ivar">@block_size</span> = <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;RC4&quot;</span> <span class="ruby-operator">?</span> <span class="ruby-value">8</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">block_size</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">max_blocks</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-comment"># cargo-culted from openssh. the idea is that &quot;the 2^(blocksize*2)</span>
+    <span class="ruby-comment"># limit is too expensive for 3DES, blowfish, etc., so enforce a 1GB</span>
+    <span class="ruby-comment"># limit for small blocksizes.&quot;</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@block_size</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">16</span>
+      <span class="ruby-ivar">@max_blocks</span> = <span class="ruby-value">1</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-ivar">@block_size</span> <span class="ruby-operator">*</span> <span class="ruby-value">2</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@max_blocks</span> = (<span class="ruby-value">1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">30</span>) <span class="ruby-operator">/</span> <span class="ruby-ivar">@block_size</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># if a limit on the # of bytes has been given, convert that into a</span>
+    <span class="ruby-comment"># minimum number of blocks processed.</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">rekey_limit</span>
+      <span class="ruby-ivar">@max_blocks</span> = [<span class="ruby-ivar">@max_blocks</span>, <span class="ruby-identifier">rekey_limit</span> <span class="ruby-operator">/</span> <span class="ruby-ivar">@block_size</span>].<span class="ruby-identifier">min</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">cleanup</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-set" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set</span><span
+            class="method-args">(values)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>A convenience method for quickly setting multiple values in a single
+command.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="set-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 71</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set</span>(<span class="ruby-identifier">values</span>)
+  <span class="ruby-identifier">values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-node">&quot;@#{key}&quot;</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">reset!</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-update_cipher" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_cipher</span><span
+            class="method-args">(data)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="update_cipher-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/state.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_cipher</span>(<span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">result</span> = <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">update_next_iv</span>(<span class="ruby-identifier">role</span> <span class="ruby-operator">==</span> <span class="ruby-value">:client</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">result</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">data</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

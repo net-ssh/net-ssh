@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>CHANGES - net-ssh 3.1.0.beta2</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-3.1.0.beta1">3.1.0.beta1</a>
+    <li><a href="#label-3.0.2">3.0.2</a>
+    <li><a href="#label-3.0.2.rc1">3.0.2.rc1</a>
+    <li><a href="#label-3.0.1">3.0.1</a>
+    <li><a href="#label-3.0.1.rc1">3.0.1.rc1</a>
+    <li><a href="#label-3.0.0.rc1">3.0.0.rc1</a>
+    <li><a href="#label-2.10.1.rc2">2.10.1.rc2</a>
+    <li><a href="#label-2.10.1.rc1">2.10.1.rc1</a>
+    <li><a href="#label-2.10.0">2.10.0</a>
+    <li><a href="#label-2.10.0-beta2">2.10.0-beta2</a>
+    <li><a href="#label-2.10.0-beta1">2.10.0-beta1</a>
+    <li><a href="#label-2.9.4-beta1">2.9.4-beta1</a>
+    <li><a href="#label-2.9.3">2.9.3</a>
+    <li><a href="#label-2.9.2-rc3">2.9.2-rc3</a>
+    <li><a href="#label-2.9.2-rc2">2.9.2-rc2</a>
+    <li><a href="#label-2.9.2-rc1">2.9.2-rc1</a>
+    <li><a href="#label-2.9.2-beta">2.9.2-beta</a>
+    <li><a href="#label-2.9.1+-2F+13+May+2014">2.9.1 / 13 May 2014</a>
+    <li><a href="#label-2.9.0+-2F+30+Apr+2014">2.9.0 / 30 Apr 2014</a>
+    <li><a href="#label-2.8.1+-2F+19+Feb+2014">2.8.1 / 19 Feb 2014</a>
+    <li><a href="#label-2.8.0+-2F+01+Feb+2014">2.8.0 / 01 Feb 2014</a>
+    <li><a href="#label-2.7.0+-2F+11+Sep+2013">2.7.0 / 11 Sep 2013</a>
+    <li><a href="#label-2.6.8+-2F+6+Jul+2013">2.6.8 / 6 Jul 2013</a>
+    <li><a href="#label-2.6.7+-2F+11+Apr+2013">2.6.7 / 11 Apr 2013</a>
+    <li><a href="#label-2.6.6+-2F+03+Mar+2013">2.6.6 / 03 Mar 2013</a>
+    <li><a href="#label-2.6.5+-2F+06+Feb+2013">2.6.5 / 06 Feb 2013</a>
+    <li><a href="#label-2.6.4+-2F+06+Feb+2013">2.6.4 / 06 Feb 2013</a>
+    <li><a href="#label-2.6.3+-2F+10+Jan+2013">2.6.3 / 10 Jan 2013</a>
+    <li><a href="#label-2.6.2+-2F+22+Nov+2012">2.6.2 / 22 Nov 2012</a>
+    <li><a href="#label-2.6.1+-2F+18+Oct+2012">2.6.1 / 18 Oct 2012</a>
+    <li><a href="#label-2.6.0+-2F+19+Sep+2012">2.6.0 / 19 Sep 2012</a>
+    <li><a href="#label-2.5.2+-2F+25+May+2012">2.5.2 / 25 May 2012</a>
+    <li><a href="#label-2.5.1+-2F+24+May+2012">2.5.1 / 24 May 2012</a>
+    <li><a href="#label-2.5.0+-2F+24+May+2012">2.5.0 / 24 May 2012</a>
+    <li><a href="#label-2.4.0+-2F+17+May+2012">2.4.0 / 17 May 2012</a>
+    <li><a href="#label-2.3.0+-2F+11+Jan+2012">2.3.0 / 11 Jan 2012</a>
+    <li><a href="#label-2.2.2+-2F+04+Jan+2012">2.2.2 / 04 Jan 2012</a>
+    <li><a href="#label-2.2.1+-2F+24+Aug+2011">2.2.1 / 24 Aug 2011</a>
+    <li><a href="#label-2.2.0+-2F+16+Aug+2011">2.2.0 / 16 Aug 2011</a>
+    <li><a href="#label-2.1.4+-2F+3+Apr+2011">2.1.4 / 3 Apr 2011</a>
+    <li><a href="#label-2.1.3+-2F+2+Mar+2011">2.1.3 / 2 Mar 2011</a>
+    <li><a href="#label-2.1.2+-2F+1+Mar+2011">2.1.2 / 1 Mar 2011</a>
+    <li><a href="#label-2.1+-2F+19+Jan+2011">2.1 / 19 Jan 2011</a>
+    <li><a href="#label-2.0.24+-2F+14+Jan+2011">2.0.24 / 14 Jan 2011</a>
+    <li><a href="#label-2.0.23+-2F+03+Jun+2010">2.0.23 / 03 Jun 2010</a>
+    <li><a href="#label-2.0.22+-2F+20+Apr+2010">2.0.22 / 20 Apr 2010</a>
+    <li><a href="#label-2.0.21+-2F+20+Mar+2010">2.0.21 / 20 Mar 2010</a>
+    <li><a href="#label-2.0.20+-2F+10+Feb+2010">2.0.20 / 10 Feb 2010</a>
+    <li><a href="#label-2.0.19+-2F+16+Jan+2010">2.0.19 / 16 Jan 2010</a>
+    <li><a href="#label-2.0.18+-2F+15+Jan+2010">2.0.18 / 15 Jan 2010</a>
+    <li><a href="#label-2.0.17+-2F+14+Dec+2009">2.0.17 / 14 Dec 2009</a>
+    <li><a href="#label-2.0.16+-2F+28+Nov+2009">2.0.16 / 28 Nov 2009</a>
+    <li><a href="#label-2.0.15+-2F+03+Sep+2009">2.0.15 / 03 Sep 2009</a>
+    <li><a href="#label-2.0.14+-2F+28+Aug+2009">2.0.14 / 28 Aug 2009</a>
+    <li><a href="#label-2.0.13+-2F+17+Aug+2009">2.0.13 / 17 Aug 2009</a>
+    <li><a href="#label-2.0.12+-2F+08+Jun+2009">2.0.12 / 08 Jun 2009</a>
+    <li><a href="#label-2.0.11+-2F+24+Feb+2009">2.0.11 / 24 Feb 2009</a>
+    <li><a href="#label-2.0.10+-2F+4+Feb+2009">2.0.10 / 4 Feb 2009</a>
+    <li><a href="#label-2.0.9+-2F+1+Feb+2009">2.0.9 / 1 Feb 2009</a>
+    <li><a href="#label-2.0.8+-2F+29+December+2008">2.0.8 / 29 December 2008</a>
+    <li><a href="#label-2.0.7+-2F+29+December+2008">2.0.7 / 29 December 2008</a>
+    <li><a href="#label-2.0.6+-2F+6+December+2008">2.0.6 / 6 December 2008</a>
+    <li><a href="#label-2.0.5+-2F+6+December+2008">2.0.5 / 6 December 2008</a>
+    <li><a href="#label-2.0.4+-2F+27+Aug+2008">2.0.4 / 27 Aug 2008</a>
+    <li><a href="#label-2.0.3+-2F+27+Jun+2008">2.0.3 / 27 Jun 2008</a>
+    <li><a href="#label-2.0.2+-2F+29+May+2008">2.0.2 / 29 May 2008</a>
+    <li><a href="#label-2.0.1+-2F+5+May+2008">2.0.1 / 5 May 2008</a>
+    <li><a href="#label-2.0.0+-2F+1+May+2008">2.0.0 / 1 May 2008</a>
+    <li><a href="#label-2.0+Preview+Release+4+-281.99.3-29+-2F+19+Apr+2008">2.0 Preview Release 4 (1.99.3) / 19 Apr 2008</a>
+    <li><a href="#label-2.0+Preview+Release+3+-281.99.2-29+-2F+10+Apr+2008">2.0 Preview Release 3 (1.99.2) / 10 Apr 2008</a>
+    <li><a href="#label-2.0+Preview+Release+2+-281.99.1-29+-2F+22+Mar+2008">2.0 Preview Release 2 (1.99.1) / 22 Mar 2008</a>
+    <li><a href="#label-2.0+Preview+Release+1+-281.99.0-29+-2F+21+Aug+2007">2.0 Preview Release 1 (1.99.0) / 21 Aug 2007</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./CHANGES_txt.html">CHANGES</a>
+  
+    <li><a href="./LICENSE_txt.html">LICENSE</a>
+  
+    <li><a href="./README_rdoc.html">README</a>
+  
+    <li><a href="./THANKS_txt.html">THANKS</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page CHANGES.txt">
+
+<h3 id="label-3.1.0.beta1">3.1.0.beta1<span><a href="#label-3.1.0.beta1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>trying to execute something on a not yet opend channel throws nicer messag
+[Miklos Fazekas]</p>
+</li><li>
+<p>calling close on a not opened channel marks the channel for close [Miklos
+Fazekas]</p>
+</li><li>
+<p>read keepalive configuration from ssh config files [Miklos Fazekas]</p>
+</li><li>
+<p>send client version on hadshake before waiting for server to reduce
+handshake time [Miklos Fazekas]</p>
+</li><li>
+<p>allow custom <a href="Net/SSH/KnownHosts.html">Net::SSH::KnownHosts</a>
+implementations [Jean Boussier]</p>
+</li><li>
+<p>memoize known host so we only search it once per session [Jean Boussier,
+Miklos Fazekas]</p>
+</li></ul>
+
+<h3 id="label-3.0.2">3.0.2<span><a href="#label-3.0.2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h3 id="label-3.0.2.rc1">3.0.2.rc1<span><a href="#label-3.0.2.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>fixed rare WaitWritable error with proxy commands [Miklos Fazkas, Andre
+Meij]]</p>
+</li><li>
+<p>if <a href="Net/SSH.html#method-c-start">Net::SSH.start</a> user is nil and
+config has no entry we default to Etc.getlogin</p>
+</li><li>
+<p>Bugfix: CHANNEL_CLOSE was sent before draining ouput buffer #280
+[Christopher F. Auston]</p>
+</li></ul>
+
+<h3 id="label-3.0.1">3.0.1<span><a href="#label-3.0.1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h3 id="label-3.0.1.rc1">3.0.1.rc1<span><a href="#label-3.0.1.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Breaking change from 2.* series: exec! without block now returns empty
+string instread of nil if command has no output [<a
+href="https://github.com/net-ssh/net-ssh/pull/273">github.com/net-ssh/net-ssh/pull/273</a>]</p>
+</li><li>
+<p>Support remote_user as %r in proxy commands [Dominic Scheirlinck]</p>
+</li><li>
+<p>Raise <a
+href="Net/SSH/ConnectionTimeout.html">Net::SSH::ConnectionTimeout</a> from
+connection timeout [Carl Hoerberg]</p>
+</li></ul>
+
+<h3 id="label-3.0.0.rc1">3.0.0.rc1<span><a href="#label-3.0.0.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>SemVer: Major version change because of dropping of ruby 1.9</p>
+</li></ul>
+
+<h3 id="label-2.10.1.rc2">2.10.1.rc2<span><a href="#label-2.10.1.rc2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Win: Use fiddle on ruby 2.1 too [Charlie Savage]</p>
+</li></ul>
+
+<h3 id="label-2.10.1.rc1">2.10.1.rc1<span><a href="#label-2.10.1.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Added ruby 2.0 requirement to gemspec [Alex Schultz]</p>
+</li></ul>
+
+<h3 id="label-2.10.0">2.10.0<span><a href="#label-2.10.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h3 id="label-2.10.0-beta2">2.10.0-beta2<span><a href="#label-2.10.0-beta2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix :passphrase option with :non_interactive [Jeremy Stanley]</p>
+</li><li>
+<p>Use Socket.tcp with connect_timeout instead of Timeout::timeout [Carl
+Hörberg]</p>
+</li><li>
+<p>Support for hostname hashes [Jef Mathiot]</p>
+</li><li>
+<p>Ruby 1.9.3 is no longer supported but should moslty work expect for stuff
+like connect_timeout</p>
+</li></ul>
+
+<h3 id="label-2.10.0-beta1">2.10.0-beta1<span><a href="#label-2.10.0-beta1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix could not parse PKey error. [Andrey Voronkov]</p>
+</li><li>
+<p>Workaround for threading issue in MRI + singleton method declaration [Matt
+Brictson]</p>
+</li><li>
+<p>Configuration change: we no longer append all supported algorithms, this is
+so you can exclude insecure algorithms. If you want to use the old
+behaviour specify append_all_supported_algorithms =&gt; true [voidus,
+mfazekas]</p>
+</li><li>
+<p>New configuration option: :non_interactive =&gt; true in case you prefer an
+authmethod to fail rather than prompt. [mfazekas]</p>
+</li><li>
+<p>Configuration change: password will now ask for password up to the
+:number_of_password_prompts times. If you want the</p>
+</li></ul>
+
+<p>2.9.1 behaviour of never asking password please set
+number_of_password_prompts to 0.</p>
+
+<h3 id="label-2.9.4-beta1">2.9.4-beta1<span><a href="#label-2.9.4-beta1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Use sysread and syswrite on Windows instead of read_nonblock and write
+[marc-etienne]</p>
+</li><li>
+<p>Windows/peagant: use fiddle on ruby 2.2+/windows [Charlie Savage]</p>
+</li><li>
+<p>Check if ssh key is a file [kiela]</p>
+</li></ul>
+
+<h3 id="label-2.9.3">2.9.3<span><a href="#label-2.9.3">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h3 id="label-2.9.2-rc3">2.9.2-rc3<span><a href="#label-2.9.2-rc3">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Remove advertised algorithms that were not working
+(curve25519-sha256@libssh.org) [mfazekas]</p>
+</li></ul>
+
+<h3 id="label-2.9.2-rc2">2.9.2-rc2<span><a href="#label-2.9.2-rc2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>number_of_password_prompts is now accepted as ssh option, by setting it 0
+net-ssh will not ask for password for password auth as with previous
+versions [mfazekas]</p>
+</li></ul>
+
+<h3 id="label-2.9.2-rc1">2.9.2-rc1<span><a href="#label-2.9.2-rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Documentation fixes and refactoring to keepalive [detiber, mfazekas]</p>
+</li></ul>
+
+<h3 id="label-2.9.2-beta">2.9.2-beta<span><a href="#label-2.9.2-beta">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Remove advertised algorithms that were not working (ssh-rsa-cert-* *ed25519
+acm*-gcm@openssh.com) [mfazekas]</p>
+</li><li>
+<p>Unkown algorithms now ignored instead of failed [mfazekas]</p>
+</li><li>
+<p>Configuration change: Asks for password with password auth (up to
+number_of_password_prompts) [mfazekas]</p>
+</li><li>
+<p>Removed warnings [amatsuda]</p>
+</li></ul>
+
+<h3 id="label-2.9.1+-2F+13+May+2014">2.9.1 / 13 May 2014<span><a href="#label-2.9.1+-2F+13+May+2014">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix for unknown response from agent on Windows with 64-bit PuTTY [chrahunt]</p>
+</li><li>
+<p>Support negative patterns in host lookup from the SSH config file
+[nirvdrum]</p>
+</li></ul>
+
+<h3 id="label-2.9.0+-2F+30+Apr+2014">2.9.0 / 30 Apr 2014<span><a href="#label-2.9.0+-2F+30+Apr+2014">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>New ciphers [chr4]</p>
+<ul><li>
+<p>Added host keys: ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com
+ssh-ed25519-cert-v01@openssh.com ssh-ed25519</p>
+</li><li>
+<p>Added HMACs: hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
+umac-128-etm@openssh.com</p>
+</li><li>
+<p>Added Kex: aes256-gcm@openssh.com aes128-gcm@openssh.com
+curve25519-sha256@libssh.org</p>
+</li><li>
+<p>Added private key support for id_ed25519</p>
+</li></ul>
+</li><li>
+<p>IdentiesOnly will not disable ssh_agent - fixes #148 and new fix for #137
+[mfazekas]</p>
+</li><li>
+<p>Ignore errors during ssh agent negotiation [simonswine, jasiek]</p>
+</li><li>
+<p>Added an optional “options” argument to test socket open method
+[jefmathiot]</p>
+</li><li>
+<p>Added gem signing (again) with new cert [delano]</p>
+</li></ul>
+
+<h3 id="label-2.8.1+-2F+19+Feb+2014">2.8.1 / 19 Feb 2014<span><a href="#label-2.8.1+-2F+19+Feb+2014">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Correct location of global known_hosts files [mfischer-zd]</p>
+</li><li>
+<p>Fix for password authentication [blackpond, zachlipton, delano]</p>
+</li></ul>
+
+<h3 id="label-2.8.0+-2F+01+Feb+2014">2.8.0 / 01 Feb 2014<span><a href="#label-2.8.0+-2F+01+Feb+2014">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Handle ssh-rsa and ssh-dss certificate files [bobveznat]</p>
+</li><li>
+<p>Correctly interpret /etc/ssh_config Authentication settings based on
+openssh /etc/ssh_config system defaults [therealjessesanford, liggitt]</p>
+</li><li>
+<p>Fixed pageant support for Windows [jarredholman]</p>
+</li><li>
+<p>Support %r in ProxyCommand configuration in ssh_config files as defined in
+OpenSSH [yugui]</p>
+</li><li>
+<p>Don&#39;t use ssh-agent if :keys_only is true [SFEley]</p>
+</li><li>
+<p>Fix the bug in keys with comments [bobtfish]</p>
+</li><li>
+<p>Add a failing tests for options in pub keys [bobtfish]</p>
+</li><li>
+<p>Assert that the return value from ssh block is returned [carlhoerberg]</p>
+</li><li>
+<p>Don&#39;t close the connection it&#39;s already closed [carlhoerberg]</p>
+</li><li>
+<p>Ensure the connection closes even on exception [carlhoerberg]</p>
+</li><li>
+<p>Make the authentication error message more useful [deric]</p>
+</li><li>
+<p>Fix “ConnectionError” typo in lib/net/ssh/proxy/socks5.rb [mirakui]</p>
+</li><li>
+<p>Allow KeyManager to recover from incompatible agents [ecki, delano]</p>
+</li><li>
+<p>Fix for “Authentication Method determination can pick up a class from the
+root namespace” [dave.sieh]</p>
+</li></ul>
+
+<h3 id="label-2.7.0+-2F+11+Sep+2013">2.7.0 / 11 Sep 2013<span><a href="#label-2.7.0+-2F+11+Sep+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix for &#39;Could not parse PKey: no start line&#39; error on private keys
+with passphrases (issue #101) [metametaclass]</p>
+</li><li>
+<p>Automatically forward environment variables defined in OpenSSH config files
+[fnordfish]</p>
+</li><li>
+<p>Guard against socket.gets being nil in <a
+href="Net/SSH/Proxy/HTTP.html">Net::SSH::Proxy::HTTP</a> [krishicks]</p>
+</li><li>
+<p>Implemented experimental keepalive feature [noric]</p>
+</li></ul>
+
+<h3 id="label-2.6.8+-2F+6+Jul+2013">2.6.8 / 6 Jul 2013<span><a href="#label-2.6.8+-2F+6+Jul+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Added support for host wildcard substitution [GabKlein]</p>
+</li><li>
+<p>Added a wait to the loop in close to help fix possible blocks [Josh
+Kalderimis]</p>
+</li><li>
+<p>Fixed test file encoding issues with Ruby 2.0 (#87) [voxik]</p>
+</li></ul>
+
+<h3 id="label-2.6.7+-2F+11+Apr+2013">2.6.7 / 11 Apr 2013<span><a href="#label-2.6.7+-2F+11+Apr+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Decreased default packet size to 32768 as described in RFC 4253 [Olipro]</p>
+</li><li>
+<p>Added max_pkt_size and max_win_size options to <a
+href="Net/SSH.html#method-c-start">Net::SSH.start</a> [Olipro]</p>
+</li></ul>
+
+<h3 id="label-2.6.6+-2F+03+Mar+2013">2.6.6 / 03 Mar 2013<span><a href="#label-2.6.6+-2F+03+Mar+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix for ruby 2.0 in windows [jansegre]</p>
+</li></ul>
+
+<h3 id="label-2.6.5+-2F+06+Feb+2013">2.6.5 / 06 Feb 2013<span><a href="#label-2.6.5+-2F+06+Feb+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fixed path in gemspec [thanks priteau]</p>
+</li></ul>
+
+<h3 id="label-2.6.4+-2F+06+Feb+2013">2.6.4 / 06 Feb 2013<span><a href="#label-2.6.4+-2F+06+Feb+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Added license info to gemspec [jordimassaguerpla]</p>
+</li><li>
+<p>Added public cert. All gem releases are now signed.</p>
+</li></ul>
+
+<h3 id="label-2.6.3+-2F+10+Jan+2013">2.6.3 / 10 Jan 2013<span><a href="#label-2.6.3+-2F+10+Jan+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Small doc fix and correct error class for PKey::EC key type [Andreas Wolff]</p>
+</li><li>
+<p>Improve test dependencies [Kenichi Kamiya]</p>
+</li></ul>
+
+<h3 id="label-2.6.2+-2F+22+Nov+2012">2.6.2 / 22 Nov 2012<span><a href="#label-2.6.2+-2F+22+Nov+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p><a href="Net/SSH.html#method-c-start">Net::SSH.start</a> now returns result
+of block [mhuffnagle]</p>
+</li><li>
+<p>Add stderr handling to <a href="Net/SSH/Test.html">Net::SSH::Test</a>
+[ohrite]</p>
+</li><li>
+<p>Fix Invalid key size in JRuby [ohrite]</p>
+</li></ul>
+
+<h3 id="label-2.6.1+-2F+18+Oct+2012">2.6.1 / 18 Oct 2012<span><a href="#label-2.6.1+-2F+18+Oct+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Remove platform specific jruby dependency from gemspec</p>
+</li><li>
+<p>Changed encoding of file to prevent warnings when generating docs [iltempo]</p>
+</li></ul>
+
+<h3 id="label-2.6.0+-2F+19+Sep+2012">2.6.0 / 19 Sep 2012<span><a href="#label-2.6.0+-2F+19+Sep+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Use OpenSSL::PKey.read to read arbitrary private key. [nagachika]</p>
+</li><li>
+<p>Check availability of UNIXSocket and UNIXServer for Windows [Nobuhiro IMAI]</p>
+</li><li>
+<p>Bump version to 2.5.3 and depend on newer jruby-pageant version for Java
+1.5 compat. [arturaz]</p>
+</li><li>
+<p>Implementation of the “none”-authentication method [dubspeed]</p>
+</li><li>
+<p>Add class for stricter host key verification [Andy Brody]</p>
+</li></ul>
+
+<h3 id="label-2.5.2+-2F+25+May+2012">2.5.2 / 25 May 2012<span><a href="#label-2.5.2+-2F+25+May+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix for Net::SSH::KnownHosts::SUPPORTED_TYPE [Marco Sandrini]</p>
+</li></ul>
+
+<h3 id="label-2.5.1+-2F+24+May+2012">2.5.1 / 24 May 2012<span><a href="#label-2.5.1+-2F+24+May+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Added missing file to manifest [Marco Sandrini]</p>
+</li></ul>
+
+<h3 id="label-2.5.0+-2F+24+May+2012">2.5.0 / 24 May 2012<span><a href="#label-2.5.0+-2F+24+May+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Implement many algorithms [Ryosuke Yamazaki]</p>
+<ul><li>
+<p>Key Exchange</p>
+
+<pre>* diffie-hellman-group14-sha1
+* ecdh-sha2-nistp{256,384,521}</pre>
+</li><li>
+<p>Host Key</p>
+<ul><li>
+<p>ecdsa-sha2-nistp{256,384,521}</p>
+</li></ul>
+</li><li>
+<p>Authentication</p>
+<ul><li>
+<p>ecdsa-sha2-nistp{256,384,521}</p>
+</li></ul>
+</li><li>
+<p>HMAC</p>
+<ul><li>
+<p>hmac-ripemd160</p>
+</li></ul>
+</li><li>
+<p>Cipher:</p>
+<ul><li>
+<p>aes{128,192,256}-ctr</p>
+</li><li>
+<p>camellia{128,192,256}-ctr</p>
+</li><li>
+<p>blowfish-ctr</p>
+</li><li>
+<p>cast128-ctr</p>
+</li><li>
+<p>3des-ctr</p>
+</li><li>
+<p>arcfour (has problems with weak keys, and should be used with caution)</p>
+</li><li>
+<p>camellia{128,192,256}-cbc</p>
+</li></ul>
+</li></ul>
+</li></ul>
+
+<h3 id="label-2.4.0+-2F+17+May+2012">2.4.0 / 17 May 2012<span><a href="#label-2.4.0+-2F+17+May+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Support for JRuby + Pageant + Windows [arturaz]</p>
+</li></ul>
+
+<h3 id="label-2.3.0+-2F+11+Jan+2012">2.3.0 / 11 Jan 2012<span><a href="#label-2.3.0+-2F+11+Jan+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Support for hmac-sha2 and diffie-hellman-group-exchange-sha256 [Ryosuke
+Yamazaki]</p>
+</li></ul>
+
+<h3 id="label-2.2.2+-2F+04+Jan+2012">2.2.2 / 04 Jan 2012<span><a href="#label-2.2.2+-2F+04+Jan+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fixed: Connection hangs on ServerVersion.new(socket, logger) [muffl0n]</p>
+</li><li>
+<p>Avoid dying when unsupported auth mechanisms are defined [pcn]</p>
+</li></ul>
+
+<h3 id="label-2.2.1+-2F+24+Aug+2011">2.2.1 / 24 Aug 2011<span><a href="#label-2.2.1+-2F+24+Aug+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Do not prompt any passphrases before trying all identities from agent.
+[musybite]</p>
+
+<pre>(see: http://net-ssh.lighthouseapp.com/projects/36253-net-ssh/tickets/30)</pre>
+</li></ul>
+
+<h3 id="label-2.2.0+-2F+16+Aug+2011">2.2.0 / 16 Aug 2011<span><a href="#label-2.2.0+-2F+16+Aug+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add support for forward a local UNIX domain socket to a remote TCP socket.
+[Mark Imbriaco]</p>
+</li></ul>
+
+<h3 id="label-2.1.4+-2F+3+Apr+2011">2.1.4 / 3 Apr 2011<span><a href="#label-2.1.4+-2F+3+Apr+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add ConnectionTimeout exception class. [Joel Watson]</p>
+
+<pre>See: https://github.com/net-ssh/net-ssh-multi/pull/1</pre>
+</li></ul>
+
+<h3 id="label-2.1.3+-2F+2+Mar+2011">2.1.3 / 2 Mar 2011<span><a href="#label-2.1.3+-2F+2+Mar+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Call to transport.closed should be transport.close [Woon Jung]</p>
+</li></ul>
+
+<h3 id="label-2.1.2+-2F+1+Mar+2011">2.1.2 / 1 Mar 2011<span><a href="#label-2.1.2+-2F+1+Mar+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix for <a href="Net/SSH.html">Net::SSH</a> Continues to attempt
+authentication when notified it is not allowed [Eric Hodel]</p>
+
+<pre>(see: http://net-ssh.lighthouseapp.com/projects/36253-net-ssh/tickets/26)</pre>
+</li><li>
+<p>Fix for transport won&#39;t be closed if authentication fails [Patrick
+Marchi]</p>
+</li></ul>
+
+<h3 id="label-2.1+-2F+19+Jan+2011">2.1 / 19 Jan 2011<span><a href="#label-2.1+-2F+19+Jan+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Support “IdentitiesOnly” directive (LH-24) [Musy Bite, Edmund Haselwanter]</p>
+</li><li>
+<p>Speeding up the Loggable module (LH-23) [robbebob]</p>
+</li></ul>
+
+<h3 id="label-2.0.24+-2F+14+Jan+2011">2.0.24 / 14 Jan 2011<span><a href="#label-2.0.24+-2F+14+Jan+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix for process code to correctly wait until remote_id is set before
+sending any output, including eof. [Daniel Pittman, Markus Roberts]</p>
+</li><li>
+<p>Fix circular require warning in Ruby 1.9.2 [Gavin Brock]</p>
+</li></ul>
+
+<h3 id="label-2.0.23+-2F+03+Jun+2010">2.0.23 / 03 Jun 2010<span><a href="#label-2.0.23+-2F+03+Jun+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>delay CHANNEL_EOF packet until output buffer is empty [Rich Lane]</p>
+</li></ul>
+
+<p>Previously, calling eof! after send_data would result in the CHANNEL_EOF
+packet being sent immediately, ahead of the data in the output buffer. Now
+buffer becomes empty.</p>
+
+<h3 id="label-2.0.22+-2F+20+Apr+2010">2.0.22 / 20 Apr 2010<span><a href="#label-2.0.22+-2F+20+Apr+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix for: “Parsing the config errors out because it coerces the ”1“ into an
+integer and then tries to split it on spaces for multiple host checking.”
+(<a
+href="http://net-ssh.lighthouseapp.com/projects/36253/tickets/10">net-ssh.lighthouseapp.com/projects/36253/tickets/10</a>)
+[Lee Marlow]</p>
+</li></ul>
+
+<h3 id="label-2.0.21+-2F+20+Mar+2010">2.0.21 / 20 Mar 2010<span><a href="#label-2.0.21+-2F+20+Mar+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix for “IdentifyFile” in ~/.ssh/config does not work if no “Host”
+statement is given (<a
+href="http://net-ssh.lighthouseapp.com/projects/36253/tickets/9-identifyfile-in-sshconfig-does-not-work-if-no-host-statement-is-given#ticket-9-5">net-ssh.lighthouseapp.com/projects/36253/tickets/9-identifyfile-in-sshconfig-does-not-work-if-no-host-statement-is-given#ticket-9-5</a>)
+[xbaldauf, Delano Mandelbaum]</p>
+</li><li>
+<p>Fix for client closes a forwarded connection, but the server is reading,
+net-ssh terminates with IOError socket closed (<a
+href="http://net-ssh.lighthouseapp.com/projects/36253/tickets/7">net-ssh.lighthouseapp.com/projects/36253/tickets/7</a>)
+[Miklós Fazekas]</p>
+</li><li>
+<p>Fix for client force closes (RST) a forwarded connection, but server is
+reading, net-ssh terminates with exception [Miklós Fazekas]</p>
+</li><li>
+<p>Fix for server closes the sending side, the on_eof is not handled. [Miklós
+Fazekas]</p>
+</li><li>
+<p>Removed Hanna dependency in Rakefile [Delano Mandelbaum]</p>
+</li></ul>
+
+<h3 id="label-2.0.20+-2F+10+Feb+2010">2.0.20 / 10 Feb 2010<span><a href="#label-2.0.20+-2F+10+Feb+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Support “ProxyCommand none” directive [Andy Lo-A-Foe]</p>
+</li></ul>
+
+<h3 id="label-2.0.19+-2F+16+Jan+2010">2.0.19 / 16 Jan 2010<span><a href="#label-2.0.19+-2F+16+Jan+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Support plus sign in sshconfig hostname [Jason Weathered]</p>
+</li></ul>
+
+<h3 id="label-2.0.18+-2F+15+Jan+2010">2.0.18 / 15 Jan 2010<span><a href="#label-2.0.18+-2F+15+Jan+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix related to recv(1) to readpartial change in 2.0.16 [Hans de Graaff,
+Delano Mandelbaum]</p>
+</li></ul>
+
+<h3 id="label-2.0.17+-2F+14+Dec+2009">2.0.17 / 14 Dec 2009<span><a href="#label-2.0.17+-2F+14+Dec+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Don&#39;t load net/ssh/authentication/pageant on Windows with Ruby 1.9
+[Travis Reeder, Delano Mandelbaum]</p>
+</li></ul>
+
+<h3 id="label-2.0.16+-2F+28+Nov+2009">2.0.16 / 28 Nov 2009<span><a href="#label-2.0.16+-2F+28+Nov+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix for “multiple hosts are separated by whitespace” [Akinori MUSHA]</p>
+</li><li>
+<p>Add support for the ProxyCommand directive [Akinori MUSHA]</p>
+</li><li>
+<p>Switched from recv(1) to readpartial in
+lib/net/ssh/transport/server_version.rb, so that closed sockets are
+recognized [Alex Peuchert]</p>
+</li></ul>
+
+<h3 id="label-2.0.15+-2F+03+Sep+2009">2.0.15 / 03 Sep 2009<span><a href="#label-2.0.15+-2F+03+Sep+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Scale back IO#select patch so it mutexes only zero-timeout calls [Daniel
+Azuma, Will Bryant]</p>
+</li></ul>
+
+<h3 id="label-2.0.14+-2F+28+Aug+2009">2.0.14 / 28 Aug 2009<span><a href="#label-2.0.14+-2F+28+Aug+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix for IO#select threading bug in Ruby 1.8 (LH-1) [Daniel Azuma]</p>
+</li><li>
+<p>Fix for “uninitialized constant OpenSSL::Digest::MD5” exception in
+Net::SFTP [DL Redden]</p>
+</li></ul>
+
+<h3 id="label-2.0.13+-2F+17+Aug+2009">2.0.13 / 17 Aug 2009<span><a href="#label-2.0.13+-2F+17+Aug+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Added fix for hanging in ServerVersion#negotiate! when using SOCKS5 proxy
+(GH-9) [Gerald Talton]</p>
+</li><li>
+<p>Added support for specifying a list of hosts in .ssh/config, with tests
+(GH-6) [ckoehler, Delano Mandelbaum]</p>
+</li><li>
+<p>Added tests for arcfour128/256/512 lengths, encryption, and decryption
+[Delano Mandelbaum]</p>
+</li><li>
+<p>Skip packet stream tests for arcfour128/256/512 [Delano Mandelbaum]</p>
+</li><li>
+<p>Fix for <a href="OpenSSL.html">OpenSSL</a> cipher key length because it
+always returns 16, even when 32 byte keys are required, e.g. for arcfour256
+and arcfour512 ciphers [Karl Varga]</p>
+</li></ul>
+
+<h3 id="label-2.0.12+-2F+08+Jun+2009">2.0.12 / 08 Jun 2009<span><a href="#label-2.0.12+-2F+08+Jun+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Applied patch for arcfour128 and arcfour256 support [Denis Bernard]</p>
+</li><li>
+<p>Use unbuffered reads when negotiating the protocol version [Steven Hazel]</p>
+</li></ul>
+
+<h3 id="label-2.0.11+-2F+24+Feb+2009">2.0.11 / 24 Feb 2009<span><a href="#label-2.0.11+-2F+24+Feb+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Add :key_data option for specifying raw private keys in PEM format [Alex
+Holems, Andrew Babkin]</p>
+</li></ul>
+
+<h3 id="label-2.0.10+-2F+4+Feb+2009">2.0.10 / 4 Feb 2009<span><a href="#label-2.0.10+-2F+4+Feb+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Added <a
+href="Net/SSH.html#method-c-configuration_for">Net::SSH.configuration_for</a>
+to make it easier to query the SSH configuration file(s) [Jamis Buck]</p>
+</li></ul>
+
+<h3 id="label-2.0.9+-2F+1+Feb+2009">2.0.9 / 1 Feb 2009<span><a href="#label-2.0.9+-2F+1+Feb+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Specifying non-nil user argument overrides user in .ssh/config [Jamis Buck]</p>
+</li><li>
+<p>Ignore requests for non-existent channels (workaround ssh server bug)
+[Jamis Buck]</p>
+</li><li>
+<p>Add terminate! method for hard shutdown scenarios [Jamis Buck]</p>
+</li><li>
+<p>Revert to pre-2.0.7 key-loading behavior by default, but load private-key
+if public-key doesn&#39;t exist [Jamis Buck]</p>
+</li><li>
+<p>Make sure :passphrase option gets passed to key manager [Bob Cotton]</p>
+</li></ul>
+
+<h3 id="label-2.0.8+-2F+29+December+2008">2.0.8 / 29 December 2008<span><a href="#label-2.0.8+-2F+29+December+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix private key change from 2.0.7 so that keys are loaded just-in-time,
+avoiding unecessary prompts from encrypted keys. [Jamis Buck]</p>
+</li></ul>
+
+<h3 id="label-2.0.7+-2F+29+December+2008">2.0.7 / 29 December 2008<span><a href="#label-2.0.7+-2F+29+December+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Make key manager use private keys instead of requiring public key to exist
+[arilerner@mac.com]</p>
+</li><li>
+<p>Fix failing tests [arilerner@mac.com]</p>
+</li><li>
+<p>Don&#39;t include pageant when running under JRuby [Angel N. Sciortino]</p>
+</li></ul>
+
+<h3 id="label-2.0.6+-2F+6+December+2008">2.0.6 / 6 December 2008<span><a href="#label-2.0.6+-2F+6+December+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Update the Manifest file so that the gem includes all necessary files
+[Jamis Buck]</p>
+</li></ul>
+
+<h3 id="label-2.0.5+-2F+6+December+2008">2.0.5 / 6 December 2008<span><a href="#label-2.0.5+-2F+6+December+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Make the Pageant interface comply with more of the Socket interface to
+avoid related errors [Jamis Buck]</p>
+</li><li>
+<p>Don&#39;t busy-wait on session close for remaining channels to close [Will
+Bryant]</p>
+</li><li>
+<p>Ruby 1.9 compatibility [Jamis Buck]</p>
+</li><li>
+<p>Fix Cipher#final to correctly flag a need for a cipher reset [Jamis Buck]</p>
+</li></ul>
+
+<h3 id="label-2.0.4+-2F+27+Aug+2008">2.0.4 / 27 Aug 2008<span><a href="#label-2.0.4+-2F+27+Aug+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Added Connection::Session#closed? and Transport::Session#closed? [Jamis
+Buck]</p>
+</li><li>
+<p>Numeric host names in .ssh/config are now parsed correct [Yanko Ivanov]</p>
+</li><li>
+<p>Make sure the error raised when a public key file is malformed is more
+informative than a MethodMissing error [Jamis Buck]</p>
+</li><li>
+<p>Cipher#reset is now called after Cipher#final, with the last n bytes used
+as the next initialization vector [Jamis Buck]</p>
+</li></ul>
+
+<h3 id="label-2.0.3+-2F+27+Jun+2008">2.0.3 / 27 Jun 2008<span><a href="#label-2.0.3+-2F+27+Jun+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Make <a href="Net/SSH/Version.html">Net::SSH::Version</a> comparable [Brian
+Candler]</p>
+</li><li>
+<p>Fix errors in port forwarding when a channel could not be opened due to a
+typo in the exception name [Matthew Todd]</p>
+</li><li>
+<p>Use chomp instead of strip when cleaning the version string reported by the
+remote host, so that trailing whitespace is preserved (this is to play nice
+with servers like Mocana SSH) [Timo Gatsonides]</p>
+</li><li>
+<p>Correctly parse ssh_config entries with eq-sign delimiters [Jamis Buck]</p>
+</li><li>
+<p>Ignore malformed ssh_config entries [Jamis Buck]</p>
+</li></ul>
+
+<h3 id="label-2.0.2+-2F+29+May+2008">2.0.2 / 29 May 2008<span><a href="#label-2.0.2+-2F+29+May+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Make sure the agent client understands both RSA “identities answers” [Jamis
+Buck]</p>
+</li><li>
+<p>Fixed key truncation bug that caused hmacs other than SHA1 to fail with
+“corrupt hmac” errors [Jamis Buck]</p>
+</li><li>
+<p>Fix detection and loading of public keys when the keys don&#39;t actually
+exist [David Dollar]</p>
+</li></ul>
+
+<h3 id="label-2.0.1+-2F+5+May+2008">2.0.1 / 5 May 2008<span><a href="#label-2.0.1+-2F+5+May+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Teach <a href="Net/SSH.html">Net::SSH</a> about a handful of default key
+names [Jamis Buck]</p>
+</li></ul>
+
+<h3 id="label-2.0.0+-2F+1+May+2008">2.0.0 / 1 May 2008<span><a href="#label-2.0.0+-2F+1+May+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Allow the :verbose argument to accept symbols (:debug, etc.) as well as
+Logger level constants (Logger::DEBUG, etc.) [Jamis Buck]</p>
+</li></ul>
+
+<h3 id="label-2.0+Preview+Release+4+-281.99.3-29+-2F+19+Apr+2008">2.0 Preview Release 4 (1.99.3) / 19 Apr 2008<span><a href="#label-2.0+Preview+Release+4+-281.99.3-29+-2F+19+Apr+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Make sure HOME is set to something sane, even on OS&#39;s that don&#39;t
+set it by default [Jamis Buck]</p>
+</li><li>
+<p>Add a :passphrase option to specify the passphrase to use with private keys
+[Francis Sullivan]</p>
+</li><li>
+<p>Open a new auth agent connection for every auth-agent channel request
+[Jamis Buck]</p>
+</li></ul>
+
+<h3 id="label-2.0+Preview+Release+3+-281.99.2-29+-2F+10+Apr+2008">2.0 Preview Release 3 (1.99.2) / 10 Apr 2008<span><a href="#label-2.0+Preview+Release+3+-281.99.2-29+-2F+10+Apr+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Session properties [Jamis Buck]</p>
+</li><li>
+<p>Make channel open failure work with a callback so that failures can be
+handled similarly to successes [Jamis Buck]</p>
+</li></ul>
+
+<h3 id="label-2.0+Preview+Release+2+-281.99.1-29+-2F+22+Mar+2008">2.0 Preview Release 2 (1.99.1) / 22 Mar 2008<span><a href="#label-2.0+Preview+Release+2+-281.99.1-29+-2F+22+Mar+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Partial support for ~/.ssh/config (and related) SSH configuration files
+[Daniel J. Berger, Jamis Buck]</p>
+</li><li>
+<p>Added <a href="Net/SSH/Test.html">Net::SSH::Test</a> to facilitate testing
+complex SSH state machines [Jamis Buck]</p>
+</li><li>
+<p>Reworked Net::SSH::Prompt to use conditionally-selected modules [Jamis
+Buck, suggested by James Rosen]</p>
+</li><li>
+<p>Added Channel#eof? and Channel#eof! [Jamis Buck]</p>
+</li><li>
+<p>Fixed bug in strict host key verifier on cache miss [Mike Timm]</p>
+</li></ul>
+
+<h3 id="label-2.0+Preview+Release+1+-281.99.0-29+-2F+21+Aug+2007">2.0 Preview Release 1 (1.99.0) / 21 Aug 2007<span><a href="#label-2.0+Preview+Release+1+-281.99.0-29+-2F+21+Aug+2007">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>First preview release of <a href="Net/SSH.html">Net::SSH</a> v2</p>
+</li></ul>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

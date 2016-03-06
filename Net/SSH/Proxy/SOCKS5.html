@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Net::SSH::Proxy::SOCKS5 - net-ssh 3.1.0.beta2</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../../";
+</script>
+
+<script src="../../../js/jquery.js"></script>
+<script src="../../../js/darkfish.js"></script>
+
+<link href="../../../css/fonts.css" rel="stylesheet">
+<link href="../../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../../table_of_contents.html#pages">Pages</a>
+    <a href="../../../table_of_contents.html#classes">Classes</a>
+    <a href="../../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-open">#open</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Net::SSH::Proxy::SOCKS5">
+  <h1 id="class-Net::SSH::Proxy::SOCKS5" class="class">
+    class Net::SSH::Proxy::SOCKS5
+  </h1>
+
+  <section class="description">
+    
+<p>An implementation of a <a href="SOCKS5.html">SOCKS5</a> proxy. To use it,
+instantiate it, then pass the instantiated object via the :proxy key to <a
+href="../../SSH.html#method-c-start">Net::SSH.start</a>:</p>
+
+<pre>require &#39;net/ssh/proxy/socks5&#39;
+
+proxy = Net::SSH::Proxy::SOCKS5.new(&#39;proxy.host&#39;, proxy_port,
+  :user =&gt; &#39;user&#39;, :password =&gt; &quot;password&quot;)
+Net::SSH.start(&#39;host&#39;, &#39;user&#39;, :proxy =&gt; proxy) do |ssh|
+  ...
+end</pre>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="ATYP_DOMAIN">ATYP_DOMAIN
+        
+        <dd><p>The SOCKS address type for connections via domain name.</p>
+        
+      
+        <dt id="ATYP_IPV4">ATYP_IPV4
+        
+        <dd><p>The SOCKS address type for connections via IP address.</p>
+        
+      
+        <dt id="CMD_CONNECT">CMD_CONNECT
+        
+        <dd><p>The SOCKS packet type for requesting a proxy connection.</p>
+        
+      
+        <dt id="METHOD_NONE">METHOD_NONE
+        
+        <dd><p>The SOCKS authentication type for when there are no supported
+authentication methods.</p>
+        
+      
+        <dt id="METHOD_NO_AUTH">METHOD_NO_AUTH
+        
+        <dd><p>The SOCKS authentication type for requests without authentication</p>
+        
+      
+        <dt id="METHOD_PASSWD">METHOD_PASSWD
+        
+        <dd><p>The SOCKS authentication type for requests via username/password</p>
+        
+      
+        <dt id="SUCCESS">SUCCESS
+        
+        <dd><p>The SOCKS response code for a successful operation.</p>
+        
+      
+        <dt id="VERSION">VERSION
+        
+        <dd><p>The SOCKS protocol version used by this class</p>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-options" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">options</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The map of options given at initialization</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-proxy_host" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">proxy_host</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The proxy&#39;s host name or IP address</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-proxy_port" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">proxy_port</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The proxy&#39;s port number</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(proxy_host, proxy_port=1080, options={})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a new proxy connection to the given proxy host and port. Optionally,
+:user and :password options may be given to identify the username and
+password with which to authenticate.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/socks5.rb, line 57</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>=<span class="ruby-value">1080</span>, <span class="ruby-identifier">options</span>={})
+  <span class="ruby-ivar">@proxy_host</span> = <span class="ruby-identifier">proxy_host</span>
+  <span class="ruby-ivar">@proxy_port</span> = <span class="ruby-identifier">proxy_port</span>
+  <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-open" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">open</span><span
+            class="method-args">(host, port, connection_options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return a new socket connected to the given host and port via the proxy that
+was requested when the socket factory was instantiated.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="open-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/socks5.rb, line 65</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">connection_options</span>)
+  <span class="ruby-identifier">socket</span> = <span class="ruby-constant">Socket</span>.<span class="ruby-identifier">tcp</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-keyword">nil</span>,
+                      <span class="ruby-identifier">connect_timeout</span><span class="ruby-operator">:</span> <span class="ruby-identifier">connection_options</span>[<span class="ruby-value">:timeout</span>])
+
+  <span class="ruby-identifier">methods</span> = [<span class="ruby-constant">METHOD_NO_AUTH</span>]
+  <span class="ruby-identifier">methods</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">METHOD_PASSWD</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:user</span>]
+
+  <span class="ruby-identifier">packet</span> = [<span class="ruby-constant">VERSION</span>, <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">size</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">methods</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;C*&quot;</span>)
+  <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">packet</span>, <span class="ruby-value">0</span>
+
+  <span class="ruby-identifier">version</span>, <span class="ruby-identifier">method</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">2</span>).<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&quot;CC&quot;</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">version</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">VERSION</span>
+    <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">close</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Proxy</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-node">&quot;invalid SOCKS version (#{version})&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">method</span> <span class="ruby-operator">==</span> <span class="ruby-constant">METHOD_NONE</span>
+    <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">close</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Proxy</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-string">&quot;no supported authorization methods&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">negotiate_password</span>(<span class="ruby-identifier">socket</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">method</span> <span class="ruby-operator">==</span> <span class="ruby-constant">METHOD_PASSWD</span>
+
+  <span class="ruby-identifier">packet</span> = [<span class="ruby-constant">VERSION</span>, <span class="ruby-constant">CMD_CONNECT</span>, <span class="ruby-value">0</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;C*&quot;</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">host</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/</span>
+    <span class="ruby-identifier">packet</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-constant">ATYP_IPV4</span>, <span class="ruby-node">$1</span>.<span class="ruby-identifier">to_i</span>, <span class="ruby-node">$2</span>.<span class="ruby-identifier">to_i</span>, <span class="ruby-node">$3</span>.<span class="ruby-identifier">to_i</span>, <span class="ruby-node">$4</span>.<span class="ruby-identifier">to_i</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;C*&quot;</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">packet</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-constant">ATYP_DOMAIN</span>, <span class="ruby-identifier">host</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">host</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;CCA*&quot;</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">packet</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">port</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;n&quot;</span>)
+  <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">packet</span>, <span class="ruby-value">0</span>
+  
+  <span class="ruby-identifier">version</span>, <span class="ruby-identifier">reply</span>, = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">2</span>).<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&quot;C*&quot;</span>)
+  <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">1</span>)
+  <span class="ruby-identifier">address_type</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">1</span>).<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">address_type</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">4</span>)  <span class="ruby-comment"># get four bytes for IPv4 address</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">3</span>
+    <span class="ruby-identifier">len</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">1</span>).<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)
+    <span class="ruby-identifier">hostname</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-identifier">len</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-value">4</span>
+    <span class="ruby-identifier">ipv6addr</span> <span class="ruby-identifier">hostname</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">16</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">close</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConnectError</span>, <span class="ruby-string">&quot;Illegal response type&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">portnum</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">2</span>)
+  
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">reply</span> <span class="ruby-operator">==</span> <span class="ruby-constant">SUCCESS</span>
+    <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">close</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConnectError</span>, <span class="ruby-node">&quot;#{reply}&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">socket</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module Net::SSH::BufferedIo - net-ssh 3.1.0.beta2</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="Loggable.html">Net::SSH::Loggable</a>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-available">#available</a>
+    
+    <li ><a href="#method-i-enqueue">#enqueue</a>
+    
+    <li ><a href="#method-i-fill">#fill</a>
+    
+    <li ><a href="#method-i-pending_write-3F">#pending_write?</a>
+    
+    <li ><a href="#method-i-read_available">#read_available</a>
+    
+    <li ><a href="#method-i-send_pending">#send_pending</a>
+    
+    <li ><a href="#method-i-wait_for_pending_sends">#wait_for_pending_sends</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-Net::SSH::BufferedIo">
+  <h1 id="module-Net::SSH::BufferedIo" class="module">
+    module Net::SSH::BufferedIo
+  </h1>
+
+  <section class="description">
+    
+<p>This module is used to extend sockets and other IO objects, to allow them
+to be buffered for both read and write. This abstraction makes it quite
+easy to write a select-based event loop (see <a
+href="Connection/Session.html#method-i-listen_to">Net::SSH::Connection::Session#listen_to</a>).</p>
+
+<p>The general idea is that instead of calling read directly on an IO that has
+been extended with this module, you call <a
+href="BufferedIo.html#method-i-fill">fill</a> (to add pending input to the
+internal read buffer), and then <a
+href="BufferedIo.html#method-i-read_available">read_available</a> (to read
+from that buffer). Likewise, you don&#39;t call write directly, you call <a
+href="BufferedIo.html#method-i-enqueue">enqueue</a> to add data to the
+write buffer, and then <a
+href="BufferedIo.html#method-i-send_pending">send_pending</a> or <a
+href="BufferedIo.html#method-i-wait_for_pending_sends">wait_for_pending_sends</a>
+to actually send the data across the wire.</p>
+
+<p>In this way you can easily use the object as an argument to IO.select,
+calling <a href="BufferedIo.html#method-i-fill">fill</a> when it is
+available for read, or <a
+href="BufferedIo.html#method-i-send_pending">send_pending</a> when it is
+available for write, and then call <a
+href="BufferedIo.html#method-i-enqueue">enqueue</a> and <a
+href="BufferedIo.html#method-i-read_available">read_available</a> during
+the idle times.</p>
+
+<pre class="ruby"><span class="ruby-identifier">socket</span> = <span class="ruby-constant">TCPSocket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">address</span>, <span class="ruby-identifier">port</span>)
+<span class="ruby-identifier">socket</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">BufferedIo</span>)
+
+<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">listen_to</span>(<span class="ruby-identifier">socket</span>)
+
+<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">loop</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">available</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">read_available</span>
+    <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">enqueue</span>(<span class="ruby-string">&quot;response\n&quot;</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>Note that this module must be used to extend an instance, and should not be
+included in a class. If you do want to use it via an include, then you must
+make sure to invoke the private initialize_buffered_io method in your
+class&#39; initialize method:</p>
+
+<pre class="ruby"><span class="ruby-keyword">class</span> <span class="ruby-constant">Foo</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">IO</span>
+  <span class="ruby-identifier">include</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">BufferedIo</span>
+
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+    <span class="ruby-identifier">initialize_buffered_io</span>
+    <span class="ruby-comment"># ...</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-available" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">available</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the number of bytes available to be read from the input buffer.
+(See <a href="BufferedIo.html#method-i-read_available">read_available</a>.)</p>
+          
+          
+
+          
+          <div class="method-source-code" id="available-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 79</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">available</span>
+  <span class="ruby-identifier">input</span>.<span class="ruby-identifier">available</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-enqueue" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">enqueue</span><span
+            class="method-args">(data)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Enqueues data in the output buffer, to be written when <a
+href="BufferedIo.html#method-i-send_pending">send_pending</a> is called.
+Note that the data is <em>not</em> sent immediately by this method!</p>
+          
+          
+
+          
+          <div class="method-source-code" id="enqueue-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">enqueue</span>(<span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">output</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-fill" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">fill</span><span
+            class="method-args">(n=8192)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Tries to read up to <code>n</code> bytes of data from the remote end, and
+appends the data to the input buffer. It returns the number of bytes read,
+or 0 if no data was available to be read.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="fill-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 63</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">fill</span>(<span class="ruby-identifier">n</span>=<span class="ruby-value">8192</span>)
+  <span class="ruby-identifier">input</span>.<span class="ruby-identifier">consume!</span>
+  <span class="ruby-identifier">data</span> = <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)
+  <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;read #{data.length} bytes&quot;</span> }
+  <span class="ruby-identifier">input</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">data</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">length</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-pending_write-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">pending_write?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns <code>true</code> if there is data waiting in the output buffer,
+and <code>false</code> otherwise.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="pending_write-3F-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 91</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">pending_write?</span>
+  <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-read_available" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">read_available</span><span
+            class="method-args">(length=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Read up to <code>length</code> bytes from the input buffer. If
+<code>length</code> is nil, all available data is read from the buffer.
+(See <a href="BufferedIo.html#method-i-available">available</a>.)</p>
+          
+          
+
+          
+          <div class="method-source-code" id="read_available-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">read_available</span>(<span class="ruby-identifier">length</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">input</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">length</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">available</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-send_pending" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">send_pending</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Sends as much of the pending output as possible. Returns <code>true</code>
+if any data was sent, and <code>false</code> otherwise.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="send_pending-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 97</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">send_pending</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">sent</span> = <span class="ruby-identifier">send</span>(<span class="ruby-identifier">output</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-value">0</span>)
+    <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;sent #{sent} bytes&quot;</span> }
+    <span class="ruby-identifier">output</span>.<span class="ruby-identifier">consume!</span>(<span class="ruby-identifier">sent</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">sent</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-wait_for_pending_sends" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">wait_for_pending_sends</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls <a href="BufferedIo.html#method-i-send_pending">send_pending</a>
+repeatedly, if necessary, blocking until the output buffer is empty.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="wait_for_pending_sends-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">wait_for_pending_sends</span>
+  <span class="ruby-identifier">send_pending</span>
+  <span class="ruby-keyword">while</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">result</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Compat</span>.<span class="ruby-identifier">io_select</span>(<span class="ruby-keyword">nil</span>, [<span class="ruby-keyword">self</span>]) <span class="ruby-keyword">or</span> <span class="ruby-keyword">next</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">result</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">any?</span>
+    <span class="ruby-identifier">send_pending</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

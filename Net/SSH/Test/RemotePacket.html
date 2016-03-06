@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Net::SSH::Test::RemotePacket - net-ssh 3.1.0.beta2</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../../";
+</script>
+
+<script src="../../../js/jquery.js"></script>
+<script src="../../../js/darkfish.js"></script>
+
+<link href="../../../css/fonts.css" rel="stylesheet">
+<link href="../../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../../table_of_contents.html#pages">Pages</a>
+    <a href="../../../table_of_contents.html#classes">Classes</a>
+    <a href="../../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="Packet.html">Net::SSH::Test::Packet</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-process">#process</a>
+    
+    <li ><a href="#method-i-remote-3F">#remote?</a>
+    
+    <li ><a href="#method-i-to_s">#to_s</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Net::SSH::Test::RemotePacket">
+  <h1 id="class-Net::SSH::Test::RemotePacket" class="class">
+    class Net::SSH::Test::RemotePacket
+  </h1>
+
+  <section class="description">
+    
+<p>This is a specialization of <a
+href="Packet.html">Net::SSH::Test::Packet</a> for representing mock packets
+that are received by the local (client) host. These are created
+automatically by <a href="Script.html">Net::SSH::Test::Script</a> and <a
+href="Channel.html">Net::SSH::Test::Channel</a> by any of the gets_*
+methods.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-process" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">process</span><span
+            class="method-args">(packet)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a href="RemotePacket.html#method-i-process">process</a> method should
+only be called on <a
+href="LocalPacket.html">Net::SSH::Test::LocalPacket</a> packets; if it is
+attempted on a remote packet, then it is an expectation mismatch (a remote
+packet was received when a local packet was expected to be sent). This will
+happen when either your test script (Net::SSH::Test::Script) or your
+program are wrong.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="process-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/remote_packet.rb, line 21</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;received packet type #{packet.read_byte} and was not expecting any packet&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-remote-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remote?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns <code>true</code>; this is a remote packet.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="remote-3F-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/remote_packet.rb, line 12</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remote?</span>
+  <span class="ruby-keyword">true</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-to_s" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_s</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns this remote packet as a string, suitable for parsing by  <a
+href="../Transport/PacketStream.html">Net::SSH::Transport::PacketStream</a>
+and friends. When a remote packet is received, this method is called and
+the result concatenated onto the input buffer for the packet stream.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="to_s-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/remote_packet.rb, line 29</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
+  <span class="ruby-ivar">@to_s</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">instantiate!</span>
+    <span class="ruby-identifier">string</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:byte</span>, <span class="ruby-ivar">@type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">types</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-ivar">@data</span>).<span class="ruby-identifier">flatten</span>).<span class="ruby-identifier">to_s</span>
+    [<span class="ruby-identifier">string</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">string</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;NA*&quot;</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

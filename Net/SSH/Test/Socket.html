@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Net::SSH::Test::Socket - net-ssh 3.1.0.beta2</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../../";
+</script>
+
+<script src="../../../js/jquery.js"></script>
+<script src="../../../js/darkfish.js"></script>
+
+<link href="../../../css/fonts.css" rel="stylesheet">
+<link href="../../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../../table_of_contents.html#pages">Pages</a>
+    <a href="../../../table_of_contents.html#classes">Classes</a>
+    <a href="../../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">StringIO
+  
+</div>
+
+    
+    <div id="extends-section" class="nav-section">
+  <h3>Extended With Modules</h3>
+
+  <ul class="link-list">
+    
+  
+    <li><a class="extend" href="../Transport/PacketStream.html">Net::SSH::Transport::PacketStream</a>
+  
+  
+  </ul>
+</div>
+
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-getpeername">#getpeername</a>
+    
+    <li ><a href="#method-i-open">#open</a>
+    
+    <li ><a href="#method-i-readpartial">#readpartial</a>
+    
+    <li ><a href="#method-i-recv">#recv</a>
+    
+    <li ><a href="#method-i-write">#write</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Net::SSH::Test::Socket">
+  <h1 id="class-Net::SSH::Test::Socket" class="class">
+    class Net::SSH::Test::Socket
+  </h1>
+
+  <section class="description">
+    
+<p>A mock socket implementation for use in testing. It implements the minimum
+necessary interface for interacting with the rest of the <a
+href="../Test.html">Net::SSH::Test</a> system.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-host" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">host</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-port" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">port</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-script" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">script</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The <a href="Script.html">Net::SSH::Test::Script</a> object in use by this
+socket. This is the canonical script instance that should be used for any
+test depending on this socket instance.</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a new test socket. This will also instantiate a new <a
+href="Script.html">Net::SSH::Test::Script</a> and seed it with the
+necessary events to power the initialization of the connection.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 22</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+  <span class="ruby-identifier">extend</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">PacketStream</span>)
+  <span class="ruby-keyword">super</span> <span class="ruby-string">&quot;SSH-2.0-Test\r\n&quot;</span>
+
+  <span class="ruby-ivar">@script</span> = <span class="ruby-constant">Script</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets</span>(<span class="ruby-value">:kexinit</span>, <span class="ruby-value">1</span>, <span class="ruby-value">2</span>, <span class="ruby-value">3</span>, <span class="ruby-value">4</span>, <span class="ruby-string">&quot;test&quot;</span>, <span class="ruby-string">&quot;ssh-rsa&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;&quot;</span>, <span class="ruby-string">&quot;&quot;</span>, <span class="ruby-keyword">false</span>)
+  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends</span>(<span class="ruby-value">:kexinit</span>)
+  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends</span>(<span class="ruby-value">:newkeys</span>)
+  <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets</span>(<span class="ruby-value">:newkeys</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-getpeername" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">getpeername</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a sockaddr struct for the port and host that were used when the
+socket was instantiated.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="getpeername-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">getpeername</span>
+  <span class="ruby-operator">::</span><span class="ruby-constant">Socket</span>.<span class="ruby-identifier">sockaddr_in</span>(<span class="ruby-identifier">port</span>, <span class="ruby-identifier">host</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-open" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">open</span><span
+            class="method-args">(host, port, options={})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Allows the socket to also mimic a socket factory, simply returning
+<code>self</code>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="open-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 42</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">options</span>={})
+  <span class="ruby-ivar">@host</span>, <span class="ruby-ivar">@port</span> = <span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-readpartial" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">readpartial</span><span
+            class="method-args">(n)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="readpartial-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">readpartial</span>(<span class="ruby-identifier">n</span>)
+  <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-recv" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">recv</span><span
+            class="method-args">(n)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Alias to read, but never returns nil (returns an empty string instead).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="recv-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 54</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)
+  <span class="ruby-identifier">read</span>(<span class="ruby-identifier">n</span>) <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-write" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">write</span><span
+            class="method-args">(data)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This doesn&#39;t actually do anything, since we don&#39;t really care what
+gets written.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="write-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-identifier">data</span>)
+  <span class="ruby-comment"># black hole, because we don&#39;t actually care about what gets written</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

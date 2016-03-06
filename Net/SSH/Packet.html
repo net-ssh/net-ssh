@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Net::SSH::Packet - net-ssh 3.1.0.beta2</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="Buffer.html">Net::SSH::Buffer</a>
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="Transport/Constants.html">Net::SSH::Transport::Constants</a>
+  
+  
+  
+    <li><a class="include" href="Authentication/Constants.html">Net::SSH::Authentication::Constants</a>
+  
+  
+  
+    <li><a class="include" href="Connection/Constants.html">Net::SSH::Connection::Constants</a>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-c-register">::register</a>
+    
+    <li ><a href="#method-i-5B-5D">#[]</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Net::SSH::Packet">
+  <h1 id="class-Net::SSH::Packet" class="class">
+    class Net::SSH::Packet
+  </h1>
+
+  <section class="description">
+    
+<p>A specialization of <a href="Buffer.html">Buffer</a> that knows the format
+of certain common packet types. It auto-parses those packet types, and
+allows them to be accessed via the <a
+href="Packet.html#method-i-5B-5D">[]</a> accessor.</p>
+
+<pre class="ruby"><span class="ruby-identifier">data</span> = <span class="ruby-identifier">some_channel_request_packet</span>
+<span class="ruby-identifier">packet</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Packet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">data</span>)
+
+<span class="ruby-identifier">p</span> <span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span> <span class="ruby-comment">#-&gt; 98 (CHANNEL_REQUEST)</span>
+<span class="ruby-identifier">p</span> <span class="ruby-identifier">packet</span>[:<span class="ruby-identifier">request</span>]
+<span class="ruby-identifier">p</span> <span class="ruby-identifier">packet</span>[:<span class="ruby-identifier">want_reply</span>]
+</pre>
+
+<p>This is used exclusively internally by <a href="../SSH.html">Net::SSH</a>,
+and unless you&#39;re doing protocol-level manipulation or are extending <a
+href="../SSH.html">Net::SSH</a> in some way, you&#39;ll never need to use
+this class directly.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-type" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">type</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The (integer) type of this packet.</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(payload)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a new packet from the given payload. This will automatically parse
+the packet if it is one that has been previously registered with <a
+href="Packet.html#method-c-register">::register</a>; otherwise, the packet
+will need to be manually parsed using the methods provided in the <a
+href="Buffer.html">Net::SSH::Buffer</a> superclass.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="Buffer.html#method-c-new">Net::SSH::Buffer.new</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">payload</span>)
+  <span class="ruby-ivar">@named_elements</span> = {}
+  <span class="ruby-keyword">super</span>
+  <span class="ruby-ivar">@type</span> = <span class="ruby-identifier">read_byte</span>
+  <span class="ruby-identifier">instantiate!</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-register" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">register</span><span
+            class="method-args">(type, *pairs)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Register a new packet type that should be recognized and auto-parsed by <a
+href="Packet.html">Net::SSH::Packet</a>. Note that any packet type that is
+not preregistered will not be autoparsed.</p>
+
+<p>The <code>pairs</code> parameter must be either empty, or an array of
+two-element tuples, where the first element of each tuple is the name of
+the field, and the second is the type.</p>
+
+<pre class="ruby"><span class="ruby-identifier">register</span> <span class="ruby-constant">DISCONNECT</span>, [:<span class="ruby-identifier">reason_code</span>, :<span class="ruby-identifier">long</span>], [:<span class="ruby-identifier">description</span>, :<span class="ruby-identifier">string</span>], [:<span class="ruby-identifier">language</span>, :<span class="ruby-identifier">string</span>]
+</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="register-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">register</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">pairs</span>)
+  <span class="ruby-identifier">@@types</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-identifier">pairs</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-5B-5D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">[]</span><span
+            class="method-args">(name)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Access one of the auto-parsed fields by name. Raises an error if no element
+by the given name exists.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="5B-5D-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">name</span>)
+  <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;no such element #{name}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@named_elements</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">name</span>)
+  <span class="ruby-ivar">@named_elements</span>[<span class="ruby-identifier">name</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

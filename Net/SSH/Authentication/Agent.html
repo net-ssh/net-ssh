@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Net::SSH::Authentication::Agent - net-ssh 3.1.0.beta2</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../../";
+</script>
+
+<script src="../../../js/jquery.js"></script>
+<script src="../../../js/darkfish.js"></script>
+
+<link href="../../../css/fonts.css" rel="stylesheet">
+<link href="../../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../../table_of_contents.html#pages">Pages</a>
+    <a href="../../../table_of_contents.html#classes">Classes</a>
+    <a href="../../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="../Loggable.html">Net::SSH::Loggable</a>
+  
+  
+  
+    <li><span class="include">JRubyPageant</span>
+  
+  
+  </ul>
+</div>
+
+    <div id="extends-section" class="nav-section">
+  <h3>Extended With Modules</h3>
+
+  <ul class="link-list">
+    
+  
+    <li><a class="extend" href="Agent/Key.html">Net::SSH::Authentication::Agent::Key</a>
+  
+  
+  
+    <li><a class="extend" href="Agent/Comment.html">Net::SSH::Authentication::Agent::Comment</a>
+  
+  
+  </ul>
+</div>
+
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-connect">::connect</a>
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-close">#close</a>
+    
+    <li ><a href="#method-i-connect-21">#connect!</a>
+    
+    <li ><a href="#method-i-identities">#identities</a>
+    
+    <li ><a href="#method-i-negotiate-21">#negotiate!</a>
+    
+    <li ><a href="#method-i-sign">#sign</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Net::SSH::Authentication::Agent">
+  <h1 id="class-Net::SSH::Authentication::Agent" class="class">
+    class Net::SSH::Authentication::Agent
+  </h1>
+
+  <section class="description">
+    
+<p>This class implements an agent for JRuby + <a
+href="Pageant.html">Pageant</a>.</p>
+
+<p>Written by Artūras Šlajus &lt;arturas.slajus@gmail.com&gt;</p>
+
+<p>This class implements a simple client for the ssh-agent protocol. It does
+not implement any specific protocol, but instead copies the behavior of the
+ssh-agent functions in the OpenSSH library (3.8).</p>
+
+<p>This means that although it behaves like a SSH1 client, it also has some
+SSH2 functionality (like signing data).</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="SSH2_AGENT_FAILURE">SSH2_AGENT_FAILURE
+        
+        <dd>
+        
+      
+        <dt id="SSH2_AGENT_IDENTITIES_ANSWER">SSH2_AGENT_IDENTITIES_ANSWER
+        
+        <dd>
+        
+      
+        <dt id="SSH2_AGENT_REQUEST_IDENTITIES">SSH2_AGENT_REQUEST_IDENTITIES
+        
+        <dd>
+        
+      
+        <dt id="SSH2_AGENT_REQUEST_VERSION">SSH2_AGENT_REQUEST_VERSION
+        
+        <dd>
+        
+      
+        <dt id="SSH2_AGENT_SIGN_REQUEST">SSH2_AGENT_SIGN_REQUEST
+        
+        <dd>
+        
+      
+        <dt id="SSH2_AGENT_SIGN_RESPONSE">SSH2_AGENT_SIGN_RESPONSE
+        
+        <dd>
+        
+      
+        <dt id="SSH2_AGENT_VERSION_RESPONSE">SSH2_AGENT_VERSION_RESPONSE
+        
+        <dd>
+        
+      
+        <dt id="SSH_AGENT_FAILURE">SSH_AGENT_FAILURE
+        
+        <dd>
+        
+      
+        <dt id="SSH_AGENT_REQUEST_RSA_IDENTITIES">SSH_AGENT_REQUEST_RSA_IDENTITIES
+        
+        <dd>
+        
+      
+        <dt id="SSH_AGENT_RSA_IDENTITIES_ANSWER1">SSH_AGENT_RSA_IDENTITIES_ANSWER1
+        
+        <dd>
+        
+      
+        <dt id="SSH_AGENT_RSA_IDENTITIES_ANSWER2">SSH_AGENT_RSA_IDENTITIES_ANSWER2
+        
+        <dd>
+        
+      
+        <dt id="SSH_COM_AGENT2_FAILURE">SSH_COM_AGENT2_FAILURE
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-socket" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">socket</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The underlying socket being used to communicate with the <a
+href="../../SSH.html">SSH</a> agent.</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-connect" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">connect</span><span
+            class="method-args">(logger=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Instantiates a new agent object, connects to a running <a
+href="../../SSH.html">SSH</a> agent, negotiates the agent protocol version,
+and returns the agent object.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="connect-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 22</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">logger</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">agent</span> = <span class="ruby-identifier">new</span>(<span class="ruby-identifier">logger</span>)
+  <span class="ruby-identifier">agent</span>.<span class="ruby-identifier">connect!</span>
+  <span class="ruby-identifier">agent</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(logger=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new <a href="Agent.html">Agent</a> object, using the optional
+logger instance to report status.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 30</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">logger</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">logger</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-close" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">close</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Simulate agent close. This agent reference is no longer able to query the
+agent.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="close-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">close</span>
+  <span class="ruby-ivar">@agent_proxy</span> = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-connect-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">connect!</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Connect to the agent process using the socket factory and socket name given
+by the attribute writers. If the agent on the other end of the socket
+reports that it is an SSH2-compatible agent, this will fail (it only
+supports the ssh-agent distributed by OpenSSH).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="connect-21-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 38</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">connect!</span>
+  <span class="ruby-identifier">debug</span> { <span class="ruby-string">&quot;connecting to Pageant ssh-agent (via java connector)&quot;</span> }
+  <span class="ruby-ivar">@agent_proxy</span> = <span class="ruby-constant">JRubyPageant</span>.<span class="ruby-identifier">create</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@agent_proxy</span>.<span class="ruby-identifier">is_running</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentNotAvailable</span>, <span class="ruby-string">&quot;Pageant is not running!&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">debug</span> { <span class="ruby-string">&quot;connection to Pageant ssh-agent (via java connector) succeeded&quot;</span> }
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">AgentProxyException</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> { <span class="ruby-string">&quot;could not connect to Pageant ssh-agent (via java connector)&quot;</span> }
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentNotAvailable</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-identities" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">identities</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return an array of all identities (public keys) known to the agent. Each
+key returned is augmented with a <code>comment</code> property which is set
+to the comment returned by the agent for that key.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="identities-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 53</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">identities</span>
+  <span class="ruby-identifier">debug</span> { <span class="ruby-string">&quot;getting identities from Pageant&quot;</span> }
+  <span class="ruby-ivar">@agent_proxy</span>.<span class="ruby-identifier">get_identities</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">identity</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">blob</span> = <span class="ruby-identifier">identity</span>.<span class="ruby-identifier">get_blob</span>
+    <span class="ruby-identifier">key</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">String</span>.<span class="ruby-identifier">from_java_bytes</span>(<span class="ruby-identifier">blob</span>)).<span class="ruby-identifier">read_key</span>
+    <span class="ruby-identifier">key</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Key</span>)
+    <span class="ruby-identifier">key</span>.<span class="ruby-identifier">java_blob</span> = <span class="ruby-identifier">blob</span>
+    <span class="ruby-identifier">key</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-constant">String</span>.<span class="ruby-identifier">from_java_bytes</span>(<span class="ruby-identifier">identity</span>.<span class="ruby-identifier">get_comment</span>)
+    <span class="ruby-identifier">key</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">AgentProxyException</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-node">&quot;Cannot get identities: #{e.message}&quot;</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-negotiate-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">negotiate!</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Attempts to negotiate the <a href="../../SSH.html">SSH</a> agent protocol
+version. Raises an error if the version could not be negotiated
+successfully.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="negotiate-21-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent/socket.rb, line 74</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">negotiate!</span>
+  <span class="ruby-comment"># determine what type of agent we&#39;re communicating with</span>
+  <span class="ruby-identifier">type</span>, <span class="ruby-identifier">body</span> = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-constant">SSH2_AGENT_REQUEST_VERSION</span>, <span class="ruby-value">:string</span>, <span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">ServerVersion</span><span class="ruby-operator">::</span><span class="ruby-constant">PROTO_VERSION</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">SSH2_AGENT_VERSION_RESPONSE</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentNotAvailable</span>, <span class="ruby-string">&quot;SSH2 agents are not yet supported&quot;</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">SSH2_AGENT_FAILURE</span>
+    <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;Unexpected response type==#{type}, this will be ignored&quot;</span> }
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_RSA_IDENTITIES_ANSWER1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_RSA_IDENTITIES_ANSWER2</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentNotAvailable</span>, <span class="ruby-node">&quot;unknown response from agent: #{type}, #{body.to_s.inspect}&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-sign" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sign</span><span
+            class="method-args">(key, data)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Using the agent and the given public key, sign the given data. The
+signature is returned in SSH2 format.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="sign-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent/java_pageant.rb, line 75</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sign</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">signed</span> = <span class="ruby-ivar">@agent_proxy</span>.<span class="ruby-identifier">sign</span>(<span class="ruby-identifier">key</span>.<span class="ruby-identifier">java_blob</span>, <span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_java_bytes</span>)
+  <span class="ruby-constant">String</span>.<span class="ruby-identifier">from_java_bytes</span>(<span class="ruby-identifier">signed</span>)
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">AgentProxyException</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>,
+    <span class="ruby-node">&quot;agent could not sign data with requested identity: #{e.message}&quot;</span>,
+    <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

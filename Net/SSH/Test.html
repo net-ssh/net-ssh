@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module Net::SSH::Test - net-ssh 3.1.0.beta2</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-assert_scripted">#assert_scripted</a>
+    
+    <li ><a href="#method-i-connection">#connection</a>
+    
+    <li ><a href="#method-i-socket">#socket</a>
+    
+    <li ><a href="#method-i-story">#story</a>
+    
+    <li ><a href="#method-i-transport">#transport</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-Net::SSH::Test">
+  <h1 id="module-Net::SSH::Test" class="module">
+    module Net::SSH::Test
+  </h1>
+
+  <section class="description">
+    
+<p>This module may be used in unit tests, for when you want to test that your
+<a href="../SSH.html">SSH</a> state machines are really doing what you
+expect they are doing. You will typically include this module in your unit
+test class, and then build a “story” of expected sends and receives:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;test/unit&#39;</span>
+<span class="ruby-identifier">require</span> <span class="ruby-string">&#39;net/ssh/test&#39;</span>
+
+<span class="ruby-keyword">class</span> <span class="ruby-constant">MyTest</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Test</span><span class="ruby-operator">::</span><span class="ruby-constant">Unit</span><span class="ruby-operator">::</span><span class="ruby-constant">TestCase</span>
+  <span class="ruby-identifier">include</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Test</span>
+
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_exec_via_channel_works</span>
+    <span class="ruby-identifier">story</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">session</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">opens_channel</span>
+      <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">sends_exec</span> <span class="ruby-string">&quot;ls&quot;</span>
+      <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_data</span> <span class="ruby-string">&quot;result of ls&quot;</span>
+      <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">gets_close</span>
+      <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">sends_close</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">assert_scripted</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-identifier">result</span> = <span class="ruby-keyword">nil</span>
+
+      <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">exec</span>(<span class="ruby-string">&quot;ls&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">success</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_data</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span> <span class="ruby-identifier">result</span> = <span class="ruby-identifier">data</span> }
+          <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_close</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">close</span> }
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">loop</span>
+      <span class="ruby-identifier">assert_equal</span> <span class="ruby-string">&quot;result of ls&quot;</span>, <span class="ruby-identifier">result</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>See <a href="Test/Channel.html">Net::SSH::Test::Channel</a> and <a
+href="Test/Script.html">Net::SSH::Test::Script</a> for more options.</p>
+
+<p>Note that the <a href="Test.html">Net::SSH::Test</a> system is rather
+finicky yet, and can be kind of frustrating to get working. Any suggestions
+for improvement will be welcome!</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-assert_scripted" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">assert_scripted</span><span
+            class="method-args">() { || ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>First asserts that a story has been described (see <a
+href="Test.html#method-i-story">story</a>). Then yields, and then asserts
+that all items described in the script have been processed. Typically, this
+is called immediately after a story has been built, and the <a
+href="../SSH.html">SSH</a> commands being tested are then executed within
+the block passed to this assertion.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="assert_scripted-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assert_scripted</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;there is no script to be processed&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>.<span class="ruby-identifier">events</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-keyword">yield</span>
+  <span class="ruby-identifier">assert</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>.<span class="ruby-identifier">events</span>.<span class="ruby-identifier">empty?</span>, <span class="ruby-node">&quot;there should not be any remaining scripted events, but there are still #{socket.script.events.length} pending&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-connection" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">connection</span><span
+            class="method-args">(options={})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the connection session (Net::SSH::Connection::Session) for use in
+these tests. It is a fully functional <a href="../SSH.html">SSH</a>
+session, operating over a mock socket (#socket).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="connection-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">connection</span>(<span class="ruby-identifier">options</span>={})
+  <span class="ruby-ivar">@connection</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Connection</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transport</span>(<span class="ruby-identifier">options</span>), <span class="ruby-identifier">options</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-socket" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">socket</span><span
+            class="method-args">(options={})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the test socket instance to use for these tests (see <a
+href="Test/Socket.html">Net::SSH::Test::Socket</a>).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="socket-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 59</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">socket</span>(<span class="ruby-identifier">options</span>={})
+  <span class="ruby-ivar">@socket</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Test</span><span class="ruby-operator">::</span><span class="ruby-constant">Socket</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-story" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">story</span><span
+            class="method-args">() { |script| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>If a block is given, yields the script for the test socket (#socket).
+Otherwise, simply returns the socket&#39;s script. See <a
+href="Test/Script.html">Net::SSH::Test::Script</a>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="story-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">story</span>
+  <span class="ruby-keyword">yield</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-transport" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">transport</span><span
+            class="method-args">(options={})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the transport session (Net::SSH::Transport::Session) for use in
+these tests. It is a fully functional <a href="../SSH.html">SSH</a>
+transport session, operating over a mock socket (#socket).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="transport-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">transport</span>(<span class="ruby-identifier">options</span>={})
+  <span class="ruby-ivar">@transport</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:host</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&quot;localhost&quot;</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:kex</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;test&quot;</span>, <span class="ruby-value">:host_key</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;ssh-rsa&quot;</span>, <span class="ruby-value">:paranoid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>, <span class="ruby-value">:proxy</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">socket</span>(<span class="ruby-identifier">options</span>)))
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

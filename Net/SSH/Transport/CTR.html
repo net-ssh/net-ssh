@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module Net::SSH::Transport::CTR - net-ssh 3.1.0.beta2</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../../";
+</script>
+
+<script src="../../../js/jquery.js"></script>
+<script src="../../../js/darkfish.js"></script>
+
+<link href="../../../css/fonts.css" rel="stylesheet">
+<link href="../../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../../table_of_contents.html#pages">Pages</a>
+    <a href="../../../table_of_contents.html#classes">Classes</a>
+    <a href="../../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-extended">::extended</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-Net::SSH::Transport::CTR">
+  <h1 id="module-Net::SSH::Transport::CTR" class="module">
+    module Net::SSH::Transport::CTR
+  </h1>
+
+  <section class="description">
+    
+<p>Pure-Ruby implementation of Stateful Decryption Counter(SDCTR) Mode for
+Block Ciphers. See RFC4344 for detail.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-extended" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">extended</span><span
+            class="method-args">(orig)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="extended-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 8</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">extended</span>(<span class="ruby-identifier">orig</span>)
+  <span class="ruby-identifier">orig</span>.<span class="ruby-identifier">instance_eval</span> {
+    <span class="ruby-ivar">@remaining</span> = <span class="ruby-string">&quot;&quot;</span>
+    <span class="ruby-ivar">@counter</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-ivar">@counter_len</span> = <span class="ruby-identifier">orig</span>.<span class="ruby-identifier">block_size</span>
+    <span class="ruby-identifier">orig</span>.<span class="ruby-identifier">encrypt</span>
+    <span class="ruby-identifier">orig</span>.<span class="ruby-identifier">padding</span> = <span class="ruby-value">0</span>
+  }
+
+  <span class="ruby-keyword">class</span> <span class="ruby-operator">&lt;&lt;</span><span class="ruby-identifier">orig</span>
+    <span class="ruby-keyword">alias</span> <span class="ruby-value">:_update</span> <span class="ruby-operator">:</span><span class="ruby-identifier">update</span>
+    <span class="ruby-identifier">private</span> <span class="ruby-operator">:</span><span class="ruby-identifier">_update</span>
+    <span class="ruby-keyword">undef</span> <span class="ruby-value">:update</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">iv</span>
+      <span class="ruby-ivar">@counter</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">iv_len</span>
+      <span class="ruby-identifier">block_size</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">iv=</span>(<span class="ruby-identifier">iv_s</span>)
+      <span class="ruby-ivar">@counter</span> = <span class="ruby-identifier">iv_s</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">encrypt</span>
+      <span class="ruby-comment"># DO NOTHING (always set to &quot;encrypt&quot;)</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">decrypt</span>
+      <span class="ruby-comment"># DO NOTHING (always set to &quot;encrypt&quot;)</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">padding=</span>(<span class="ruby-identifier">pad</span>)
+      <span class="ruby-comment"># DO NOTHING (always 0)</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">reset</span>
+      <span class="ruby-ivar">@remaining</span> = <span class="ruby-string">&quot;&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">data</span>)
+      <span class="ruby-ivar">@remaining</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">data</span>
+
+      <span class="ruby-identifier">encrypted</span> = <span class="ruby-string">&quot;&quot;</span>
+
+      <span class="ruby-keyword">while</span> <span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">bytesize</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">block_size</span>
+        <span class="ruby-identifier">encrypted</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">xor!</span>(<span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">slice!</span>(<span class="ruby-value">0</span>, <span class="ruby-identifier">block_size</span>),
+                          <span class="ruby-identifier">_update</span>(<span class="ruby-ivar">@counter</span>))
+        <span class="ruby-identifier">increment_counter!</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">encrypted</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">final</span>
+      <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">empty?</span>
+        <span class="ruby-identifier">s</span> = <span class="ruby-identifier">xor!</span>(<span class="ruby-ivar">@remaining</span>, <span class="ruby-identifier">_update</span>(<span class="ruby-ivar">@counter</span>))
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">s</span> = <span class="ruby-string">&quot;&quot;</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-ivar">@remaining</span> = <span class="ruby-string">&quot;&quot;</span>
+
+      <span class="ruby-identifier">s</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">private</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">xor!</span>(<span class="ruby-identifier">s1</span>, <span class="ruby-identifier">s2</span>)
+      <span class="ruby-identifier">s</span> = []
+      <span class="ruby-identifier">s1</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;Q*&#39;</span>).<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">s2</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;Q*&#39;</span>)) {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">a</span><span class="ruby-operator">^</span><span class="ruby-identifier">b</span>) }
+      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">pack</span>(<span class="ruby-string">&#39;Q*&#39;</span>)
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">increment_counter!</span>
+      <span class="ruby-identifier">c</span> = <span class="ruby-ivar">@counter_len</span>
+      <span class="ruby-keyword">while</span> ((<span class="ruby-identifier">c</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">setbyte</span>(<span class="ruby-identifier">c</span>, (<span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">getbyte</span>(<span class="ruby-identifier">c</span>) <span class="ruby-operator">+</span> <span class="ruby-value">1</span>) <span class="ruby-operator">&amp;</span> <span class="ruby-value">0xff</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+          <span class="ruby-keyword">break</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
