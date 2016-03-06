@@ -242,11 +242,22 @@ module Net; module SSH
         # Converts an ssh_config pattern into a regex for matching against
         # host names.
         def pattern2regex(pattern)
-          pattern = "^" + pattern.to_s.gsub(/\./, "\\.").
-            gsub(/\?/, '.').
-            gsub(/([+\/])/, '\\\\\\0').
-            gsub(/\*/, '.*') + "$"
-          Regexp.new(pattern, true)
+          tail = pattern
+          prefix = ""
+          while !tail.empty? do
+            head,sep,tail = tail.partition(/[\*\?]/)
+            prefix = prefix + Regexp.quote(head)
+            case sep
+            when '*'
+              prefix += '.*'
+            when '?'
+              prefix += '.'
+            when ''
+            else
+              fail "Unpexpcted sep:#{sep}"
+            end
+          end
+          Regexp.new("^" + prefix + "$", true)
         end
 
         # Converts the given size into an integer number of bytes.

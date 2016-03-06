@@ -1,6 +1,7 @@
 require 'common'
 require 'net/ssh/config'
 require 'pathname'
+require 'tempfile'
 
 class TestConfig < Test::Unit::TestCase
   def test_home_should_be_absolute_path
@@ -40,6 +41,33 @@ class TestConfig < Test::Unit::TestCase
     assert_equal 9876, config['port']
     assert !config.key?('compression')
   end
+
+  def test_load_with_pattern_does_match
+    data = %q{
+      Host test.*
+        Port 1234
+        Compression no
+    }
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "test.host")
+      assert_equal 1234, config['port']
+    end
+  end
+
+  def test_load_with_regex_chars
+    data = %q{
+      Host |
+        Port 1234
+        Compression no
+    }
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "test.host")
+      assert_equal nil, config['port']
+      config = Net::SSH::Config.load(f, "|")
+      assert_equal 1234, config['port']
+    end
+  end
+
 
   def test_for_should_load_all_files_and_translate_to_net_ssh_options
     config = Net::SSH::Config.for("test.host", [config(:exact_match), config(:wild_cards)])
@@ -228,5 +256,13 @@ class TestConfig < Test::Unit::TestCase
 
     def config(name)
       "test/configs/#{name}"
+    end
+
+    def with_config_from_data(data, &block)
+      Tempfile.open('config') do |f|
+        f.write(data)
+        f.close
+        yield(f.path)
+      end
     end
 end
