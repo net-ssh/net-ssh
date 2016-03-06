@@ -69,7 +69,7 @@ module Net; module SSH; module Authentication
           attempted << name
 
           debug { "trying #{name}" }
-          begin 
+          begin
             method = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join).new(self, :key_manager => key_manager)
           rescue NameError
             debug{"Mechanism #{name} was requested, but isn't a known type.  Ignoring it."}

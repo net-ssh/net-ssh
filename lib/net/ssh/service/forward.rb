@@ -91,6 +91,7 @@ module Net; module SSH; module Service
 
         channel.on_open_failed do |ch, code, description|
           channel.error { "could not establish direct channel: #{description} (#{code})" }
+          session.stop_listening_to(channel[:socket])
           channel[:socket].close
         end
       end
@@ -273,7 +274,6 @@ module Net; module SSH; module Service
           ch[:socket].enqueue(data)
         end
 
-        # Handles server close on the sending side by Miklós Fazekas
         channel.on_eof do |ch|
           debug { "eof #{type} on #{type} forwarded channel" }
           begin

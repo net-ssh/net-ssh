@@ -1,3 +1,4 @@
+* forward/on_open_failed should stop listning closed socket otherwise it locks #269 [Miklos Fazekas,Scott McGillivray]
 * fix incorrect pattern handling in config files #310 [Miklos Fazekas]
 
 === 3.1.0.beta1
