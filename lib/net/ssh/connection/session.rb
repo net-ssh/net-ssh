@@ -95,6 +95,11 @@ module Net; module SSH; module Connection
       @properties[key] = value
     end
 
+    # used to retreive the channels id from a channel local port number
+    def lookup_channel_id_from_localport(port)
+      channels.select { |id, channel| channel.local_port == port }.keys.first
+    end
+
     # Returns the name of the host that was given to the transport layer to
     # connect to.
     def host
@@ -298,6 +303,10 @@ module Net; module SSH; module Connection
       local_id = get_next_channel_id
 
       channel = Channel.new(self, type, local_id, @max_pkt_size, @max_win_size, &on_confirm)
+
+      # store the channels local port so the channel id can be looked up using this info
+      channel.local_port = extra.last if type == 'direct-tcpip'
+
       msg = Buffer.from(:byte, CHANNEL_OPEN, :string, type, :long, local_id,
         :long, channel.local_maximum_window_size,
         :long, channel.local_maximum_packet_size, *extra)
@@ -330,7 +339,7 @@ module Net; module SSH; module Connection
       open_channel do |channel|
         channel.exec(command) do |ch, success|
           raise "could not execute command: #{command.inspect}" unless success
-          
+
           channel.on_data do |ch2, data|
             if block
               block.call(ch2, :stdout, data)
@@ -559,7 +568,8 @@ module Net; module SSH; module Connection
       def channel_open_failure(packet)
         error { "channel_open_failed: #{packet[:local_id]} #{packet[:reason_code]} #{packet[:description]}" }
         channel = channels.delete(packet[:local_id])
-        channel.do_open_failed(packet[:reason_code], packet[:description])
+        error { "channel_open_failure: seems the channel is nil"} if channel.nil?
+        channel.do_open_failed(packet[:reason_code], packet[:description]) unless channel.nil?
       end
 
       def channel_window_adjust(packet)

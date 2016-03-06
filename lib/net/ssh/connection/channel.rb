@@ -59,6 +59,9 @@ module Net; module SSH; module Connection
     # The remote id for this channel, assigned by the remote host.
     attr_reader :remote_id
 
+    # used to store the local port used by this channel
+    attr_accessor :local_port
+
     # The type of this channel, usually "session".
     attr_reader :type
 
@@ -124,7 +127,7 @@ module Net; module SSH; module Connection
       @properties = {}
 
       @pending_requests = []
-      @on_open_failed = @on_data = @on_extended_data = @on_process = @on_close = @on_eof = nil
+      @on_open_failed = @on_data = @on_extended_data = @on_process = @on_close = @on_eof = @local_port = nil
       @on_request = {}
       @closing = @eof = @sent_eof = @local_closed = @remote_closed = false
     end

@@ -91,7 +91,10 @@ module Net; module SSH; module Service
 
         channel.on_open_failed do |ch, code, description|
           channel.error { "could not establish direct channel: #{description} (#{code})" }
-          channel[:socket].close
+          session.stop_listening_to(ch[:socket])
+          channel[:socket].close unless channel[:socket].closed?
+          channel.do_close
+          session.channels.delete(ch.local_id)
         end
       end
 
@@ -105,10 +108,12 @@ module Net; module SSH; module Service
     #   ssh.forward.cancel_local(1234)
     #   ssh.forward.cancel_local(1234, "0.0.0.0")
     def cancel_local(port, bind_address="127.0.0.1")
+      channel_id = session.lookup_channel_id_from_localport(port)
       socket = @local_forwarded_ports.delete([port, bind_address])
       socket.shutdown rescue nil
       socket.close rescue nil
       session.stop_listening_to(socket)
+      session.channels.delete(channel_id)
     end
 
     # Returns a list of all active locally forwarded ports. The returned value
