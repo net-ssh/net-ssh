@@ -287,8 +287,8 @@ class TestForward < Test::Unit::TestCase
     end
   end
 
-  def start_server
-    server = TCPServer.open(0)
+  def start_server(server = nil, &block)
+    server ||= TCPServer.open(0)
     Thread.start do
       loop do
         Thread.start(server.accept) do |client|
@@ -430,6 +430,103 @@ class TestForward < Test::Unit::TestCase
         session.loop(0.1) { client_done.empty? }
         assert_equal message, client_done.pop
       end
+    end
+  end
+
+  def _run_reading_client(client_done, local_port)
+    Thread.start do
+      begin
+        client = TCPSocket.new(localhost, local_port)
+        data = client.read(4096)
+        client.close
+        client_done << data
+      rescue
+        client_done << $!
+      end
+    end
+  end
+
+  def test_cannot_open_connection_should_allow_further_connections_on_different_forward
+    setup_ssh_env do
+      session = Net::SSH.start(*ssh_start_params)
+      server = start_server do |client|
+        data = client.write "hello"
+        client.close
+      end
+      # Forward to a non existing port
+      non_existing_port = 1234
+      local_port = session.forward.local(0, localhost, non_existing_port)
+      # should return connection refused
+      client_done = Queue.new
+      _run_reading_client(client_done, local_port)
+      timeout(5) do
+        session.loop(0.1) { client_done.empty? }
+      end
+      assert_equal nil, client_done.pop
+      assert client_done.empty?
+      # Forward to existing port
+      remote_port = server.addr[1]
+      local_port = session.forward.local(0, localhost, remote_port)
+      _run_reading_client(client_done, local_port)
+      timeout(5) do
+        session.loop(0.1) { client_done.empty? }
+      end
+      assert_equal "hello", client_done.pop
+      assert client_done.empty?
+    end
+  end
+
+  def test_cannot_open_connection_should_allow_further_connections_on_same
+    setup_ssh_env do
+      session = Net::SSH.start(*ssh_start_params)
+      server = TCPServer.open(0)
+      # Forward to a non existing port
+      remote_port = server.addr[1]
+      server.close
+      local_port = session.forward.local(0, localhost, remote_port)
+      # should return connection refused
+      client_done = Queue.new
+      _run_reading_client(client_done, local_port)
+      timeout(5) do
+        session.loop(0.1) { client_done.empty? }
+      end
+      assert_equal nil, client_done.pop
+      assert client_done.empty?
+      # start server
+      server = TCPServer.open(remote_port)
+      server = start_server(server) do |client|
+        data = client.write "hello"
+        client.close
+      end
+      _run_reading_client(client_done, local_port)
+      timeout(5) do
+        session.loop(0.1) { client_done.empty? }
+      end
+      assert_equal "hello", client_done.pop
+      assert client_done.empty?
+    end
+  end
+
+  def test_cancel_local
+    setup_ssh_env do
+      session = Net::SSH.start(*ssh_start_params)
+      server = start_server(server) do |client|
+        data = client.write "hello"
+        client.close
+      end
+      remote_port = server.addr[1]
+      local_port = session.forward.local(0, localhost, remote_port)
+      # run client
+      client_done = Queue.new
+      _run_reading_client(client_done, local_port)
+      timeout(5) do
+        session.loop(0.1) { client_done.empty? }
+      end
+      assert_equal "hello", client_done.pop
+      # cancel
+      session.forward.cancel_local(local_port)
+      session.loop(0.1)
+      assert_equal({}, session.channels)
     end
   end
 end
