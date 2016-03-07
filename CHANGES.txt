@@ -1,7 +1,9 @@
+=== 3.1.0.beta3
+
 * forward/on_open_failed should stop listning closed socket otherwise it locks #269 [Miklos Fazekas,Scott McGillivray]
 * fix incorrect pattern handling in config files #310 [Miklos Fazekas]
 
-=== 3.1.0.beta1
+=== 3.1.0.beta2
 
 * trying to execute something on a not yet opend channel throws nicer messag [Miklos Fazekas]
 * calling close on a not opened channel marks the channel for close [Miklos Fazekas]
