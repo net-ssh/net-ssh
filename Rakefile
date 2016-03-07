@@ -72,6 +72,31 @@ RDoc::Task.new do |rdoc|
 end
 end
 
+namespace :rdoc do
+desc "Update gh-pages branch"
+task :publish do
+  # copy/checkout
+  rm_rf "/tmp/net-ssh-rdoc"
+  rm_rf "/tmp/net-ssh-gh-pages"
+  cp_r "./rdoc", "/tmp/net-ssh-rdoc"
+  mkdir "/tmp/net-ssh-gh-pages"
+  Dir.chdir "/tmp/net-ssh-gh-pages" do
+    sh "git clone --branch gh-pages --single-branch https://github.com/net-ssh/net-ssh"
+    rm_rf "/tmp/net-ssh-gh-pages/net-ssh/*"
+  end
+  # update
+  sh "cp -rf ./rdoc/* /tmp/net-ssh-gh-pages/net-ssh/"
+  Dir.chdir "/tmp/net-ssh-gh-pages/net-ssh" do
+    sh "git add -A ."
+    sh "git commit -m \"Update docs\""
+  end
+  # publish
+  Dir.chdir "/tmp/net-ssh-gh-pages/net-ssh" do
+    sh "git push origin gh-pages"
+  end
+end
+end
+
 require 'rake/testtask'
 Rake::TestTask.new do |t|
   if ENV['NET_SSH_RUN_INTEGRATION_TESTS']

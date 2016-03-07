@@ -51,7 +51,7 @@ module Net; module SSH
     class <<self
 
       # Searches all known host files (see KnownHosts.hostfiles) for all keys
-      # of the given host. Returns an array of keys found.
+      # of the given host. Returns an enumerable of keys found.
       def search_for(host, options={})
         HostKeys.new(search_in(hostfiles(options), host), host, self, options)
       end
