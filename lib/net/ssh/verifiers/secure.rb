@@ -30,7 +30,7 @@ module Net; module SSH; module Verifiers
       # If a match was found, return true. Otherwise, raise an exception
       # indicating that the key was not recognized.
       unless found
-        process_cache_miss(host_keys, HostKeyMismatch, "does not match")
+        process_cache_miss(host_keys, arguments, HostKeyMismatch, "does not match")
       end
 
       found
