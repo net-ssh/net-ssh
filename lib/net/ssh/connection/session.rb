@@ -609,9 +609,11 @@ module Net; module SSH; module Connection
       end
 
       def io_select_wait(wait)
-        return wait if wait
-        return wait unless @keepalive.enabled?
-        @keepalive.interval
+        if @keepalive.enabled?
+          [wait, @keepalive.interval].compact.min
+        else
+          wait
+        end
       end
 
       MAP = Constants.constants.inject({}) do |memo, name|
