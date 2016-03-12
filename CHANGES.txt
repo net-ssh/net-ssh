@@ -1,3 +1,7 @@
+=== 3.1.0.rc1
+
+* fix Secure#verify [Jean Boussier]
+
 === 3.1.0.beta3
 
 * forward/on_open_failed should stop listning closed socket otherwise it locks #269 [Miklos Fazekas,Scott McGillivray]
