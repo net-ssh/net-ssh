@@ -427,6 +427,14 @@ module Connection
       session(options).process
     end
 
+    def test_process_should_call_io_select_with_wait_if_provided_and_minimum
+      timeout = 10
+      wait = 5
+      options = { :keepalive => true, :keepalive_interval => timeout }
+      IO.expects(:select).with([socket],[],nil,wait).returns([[],[],[]])
+      session(options).process(wait)
+    end
+
     def test_loop_should_call_process_until_process_returns_false
       IO.stubs(:select).with([socket],[],nil,nil).returns([[],[],[]])
       session.expects(:process).with(nil).times(4).returns(true,true,true,false).yields
