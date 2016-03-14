@@ -17,8 +17,8 @@ module Net; module SSH
     end
 
     def add_host_key(key)
-       @known_hosts.add(@host, key, options)
-       push(key)
+       @known_hosts.add(@host, key, @options)
+       @host_keys.push(key)
     end
 
     def each(&block)
