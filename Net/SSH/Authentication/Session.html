@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Authentication::Session - net-ssh 3.1.0.beta2</title>
+<title>class Net::SSH::Authentication::Session - net-ssh 3.1.0.rc2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -289,7 +289,7 @@ authenticating the user, and false otherwise.</p>
       <span class="ruby-identifier">attempted</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">name</span>
 
       <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;trying #{name}&quot;</span> }
-      <span class="ruby-keyword">begin</span> 
+      <span class="ruby-keyword">begin</span>
         <span class="ruby-identifier">method</span> = <span class="ruby-constant">Methods</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">name</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\W+/</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">capitalize</span> }.<span class="ruby-identifier">join</span>).<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-value">:key_manager</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">key_manager</span>)
       <span class="ruby-keyword">rescue</span> <span class="ruby-constant">NameError</span>
         <span class="ruby-identifier">debug</span>{<span class="ruby-node">&quot;Mechanism #{name} was requested, but isn&#39;t a known type.  Ignoring it.&quot;</span>}

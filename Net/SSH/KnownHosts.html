@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::KnownHosts - net-ssh 3.1.0.beta2</title>
+<title>class Net::SSH::KnownHosts - net-ssh 3.1.0.rc2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -184,7 +184,7 @@ an entry for the given host and key to the first file it is able to.</p>
 
           
           <div class="method-source-code" id="add-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 91</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 84</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>, <span class="ruby-value">:user</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">begin</span>
@@ -232,7 +232,7 @@ second option.</p>
 
           
           <div class="method-source-code" id="hostfiles-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 74</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 67</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">which</span>=<span class="ruby-value">:all</span>)
   <span class="ruby-identifier">files</span> = []
 
@@ -277,7 +277,7 @@ File.expand_path.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 109</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 102</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">source</span>)
   <span class="ruby-ivar">@source</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">source</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -306,13 +306,13 @@ File.expand_path.</p>
           
           <p>Searches all known host files (see <a
 href="KnownHosts.html#method-c-hostfiles">::hostfiles</a>) for all keys of
-the given host. Returns an array of keys found.</p>
+the given host. Returns an enumerable of keys found.</p>
           
           
 
           
           <div class="method-source-code" id="search_for-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 55</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 48</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">search_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-constant">HostKeys</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">search_in</span>(<span class="ruby-identifier">hostfiles</span>(<span class="ruby-identifier">options</span>), <span class="ruby-identifier">host</span>), <span class="ruby-identifier">host</span>, <span class="ruby-keyword">self</span>, <span class="ruby-identifier">options</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -346,7 +346,7 @@ the given host. Returns an array of keys found.</p>
 
           
           <div class="method-source-code" id="search_in-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 61</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 54</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">search_in</span>(<span class="ruby-identifier">files</span>, <span class="ruby-identifier">host</span>)
   <span class="ruby-identifier">files</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span> <span class="ruby-constant">KnownHosts</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>).<span class="ruby-identifier">keys_for</span>(<span class="ruby-identifier">host</span>) }.<span class="ruby-identifier">flatten</span>
 <span class="ruby-keyword">end</span></pre>
@@ -389,7 +389,7 @@ an exception will be raised.</p>
 
           
           <div class="method-source-code" id="add-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 177</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 170</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">key</span>)
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">source</span>, <span class="ruby-string">&quot;a&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">blob</span> = [<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:key</span>, <span class="ruby-identifier">key</span>).<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;m*&quot;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/\s/</span>, <span class="ruby-string">&quot;&quot;</span>)
@@ -437,7 +437,7 @@ brackets after a colon. Possible formats for <code>host</code>, then, are;</p>
 
           
           <div class="method-source-code" id="keys_for-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 126</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 119</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">keys_for</span>(<span class="ruby-identifier">host</span>)
   <span class="ruby-identifier">keys</span> = []
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">keys</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">source</span>)
@@ -500,7 +500,7 @@ stored as a HMAC-SHA1 hash in the known hosts.</p>
 
           
           <div class="method-source-code" id="known_host_hash-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 161</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 154</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">known_host_hash?</span>(<span class="ruby-identifier">hostlist</span>, <span class="ruby-identifier">entries</span>, <span class="ruby-identifier">scanner</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">hostlist</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">hostlist</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A\|1(\|.+){2}\z/</span>
     <span class="ruby-identifier">chunks</span> = <span class="ruby-identifier">hostlist</span>.<span class="ruby-identifier">first</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\|/</span>)

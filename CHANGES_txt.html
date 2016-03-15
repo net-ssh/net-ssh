@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>CHANGES - net-ssh 3.1.0.beta2</title>
+<title>CHANGES - net-ssh 3.1.0.rc2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
@@ -55,7 +55,9 @@
   <h3>Table of Contents</h3>
 
   <ul class="link-list" role="directory">
-    <li><a href="#label-3.1.0.beta1">3.1.0.beta1</a>
+    <li><a href="#label-3.1.0.rc1">3.1.0.rc1</a>
+    <li><a href="#label-3.1.0.beta3">3.1.0.beta3</a>
+    <li><a href="#label-3.1.0.beta2">3.1.0.beta2</a>
     <li><a href="#label-3.0.2">3.0.2</a>
     <li><a href="#label-3.0.2.rc1">3.0.2.rc1</a>
     <li><a href="#label-3.0.1">3.0.1</a>
@@ -153,7 +155,23 @@
 
 <main role="main" aria-label="Page CHANGES.txt">
 
-<h3 id="label-3.1.0.beta1">3.1.0.beta1<span><a href="#label-3.1.0.beta1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-3.1.0.rc1">3.1.0.rc1<span><a href="#label-3.1.0.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>fix Secure#verify [Jean Boussier]</p>
+</li><li>
+<p>use the smallest of don&#39;t spend longer time than keepalive if it&#39;s
+configured [Eugene Kenny]</p>
+</li></ul>
+
+<h3 id="label-3.1.0.beta3">3.1.0.beta3<span><a href="#label-3.1.0.beta3">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>forward/on_open_failed should stop listning closed socket otherwise it
+locks #269 [Miklos Fazekas,Scott McGillivray]</p>
+</li><li>
+<p>fix incorrect pattern handling in config files #310 [Miklos Fazekas]</p>
+</li></ul>
+
+<h3 id="label-3.1.0.beta2">3.1.0.beta2<span><a href="#label-3.1.0.beta2">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
 <p>trying to execute something on a not yet opend channel throws nicer messag
 [Miklos Fazekas]</p>

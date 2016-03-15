@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::HostKeys - net-ssh 3.1.0.beta2</title>
+<title>class Net::SSH::HostKeys - net-ssh 3.1.0.rc2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -58,22 +58,11 @@
   <h3>Parent</h3>
 
   
-  <p class="link">Object
+  <p class="link">Array
   
 </div>
 
-    <div id="includes-section" class="nav-section">
-  <h3>Included Modules</h3>
-
-  <ul class="link-list">
-  
-  
-    <li><span class="include">Enumerable</span>
-  
-  
-  </ul>
-</div>
-
+    
     
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
@@ -81,13 +70,9 @@
 
   <ul class="link-list" role="directory">
     
-    <li ><a href="#method-c-new">::new</a>
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
     
     <li ><a href="#method-i-add_host_key">#add_host_key</a>
-    
-    <li ><a href="#method-i-each">#each</a>
-    
-    <li ><a href="#method-i-empty-3F">#empty?</a>
     
   </ul>
 </div>
@@ -102,6 +87,8 @@
 
   <section class="description">
     
+<p>Represents the result of a search in known hosts see search_for</p>
+
   </section>
 
   
@@ -160,12 +147,17 @@
           
           
           
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
+          
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 12</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 13</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">host_keys</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">known_hosts</span>, <span class="ruby-identifier">options</span> = {})
-   <span class="ruby-ivar">@host_keys</span> = <span class="ruby-identifier">host_keys</span>
+   <span class="ruby-keyword">super</span>(<span class="ruby-identifier">host_keys</span>)
    <span class="ruby-ivar">@host</span> = <span class="ruby-identifier">host</span>
    <span class="ruby-ivar">@known_hosts</span> = <span class="ruby-identifier">known_hosts</span>
    <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
@@ -207,76 +199,10 @@
 
           
           <div class="method-source-code" id="add_host_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 19</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 20</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">add_host_key</span>(<span class="ruby-identifier">key</span>)
-   <span class="ruby-ivar">@known_hosts</span>.<span class="ruby-identifier">add</span>(<span class="ruby-ivar">@host</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">options</span>)
+   <span class="ruby-ivar">@known_hosts</span>.<span class="ruby-identifier">add</span>(<span class="ruby-ivar">@host</span>, <span class="ruby-identifier">key</span>, <span class="ruby-ivar">@options</span>)
    <span class="ruby-identifier">push</span>(<span class="ruby-identifier">key</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-each" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">each</span><span
-            class="method-args">(&block)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="each-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 24</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-   <span class="ruby-ivar">@host_keys</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-empty-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">empty?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="empty-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 28</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
-  <span class="ruby-ivar">@host_keys</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

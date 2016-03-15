@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Verifiers::Secure - net-ssh 3.1.0.beta2</title>
+<title>class Net::SSH::Verifiers::Secure - net-ssh 3.1.0.rc2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -152,7 +152,7 @@ exception will be raised (HostKeyMismatch). Otherwise, this returns true.</p>
   <span class="ruby-comment"># If a match was found, return true. Otherwise, raise an exception</span>
   <span class="ruby-comment"># indicating that the key was not recognized.</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">found</span>
-    <span class="ruby-identifier">process_cache_miss</span>(<span class="ruby-identifier">host_keys</span>, <span class="ruby-constant">HostKeyMismatch</span>, <span class="ruby-string">&quot;does not match&quot;</span>)
+    <span class="ruby-identifier">process_cache_miss</span>(<span class="ruby-identifier">host_keys</span>, <span class="ruby-identifier">arguments</span>, <span class="ruby-constant">HostKeyMismatch</span>, <span class="ruby-string">&quot;does not match&quot;</span>)
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">found</span>
