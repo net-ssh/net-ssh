@@ -7,28 +7,19 @@ module Net; module SSH
 
   # Represents the result of a search in known hosts
   # see search_for
-  class HostKeys
-    include Enumerable
+  class HostKeys < Array
     attr_reader :host
 
     def initialize(host_keys, host, known_hosts, options = {})
-       @host_keys = host_keys
+       super(host_keys)
        @host = host
        @known_hosts = known_hosts
        @options = options
     end
 
     def add_host_key(key)
-       @known_hosts.add(@host, key, options)
+       @known_hosts.add(@host, key, @options)
        push(key)
-    end
-
-    def each(&block)
-       @host_keys.each(&block)
-    end
-
-    def empty?
-      @host_keys.empty?
     end
   end
 
