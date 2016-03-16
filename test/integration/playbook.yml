@@ -3,19 +3,19 @@
   sudo: yes
   vars:
     ruby_version: '2.0.0-p598'
-    rvm1_install_path: '/usr/local/rvm'
+    rvm_install_path: '/usr/local/rvm'
     foopwd: "$6$mhOzf/yapZwS$3RwDl4GfWZ5VcfcsHrK9xNNTxyzLOJBsmMttDNaegIbXxMahV86.v/5HsNtit16MEl0EFf5CSW8Dz2yXV.8GB0"
     foo2pwd: "$6$JiB7y7.M0yI$Abt.ZGIc4DwkRWeI6nKxzzPUZcux7hLRXSdpoKoZvswJz1SZyg5GRQWn9pGID0dgC6e4wFglfW6ev/qZoTqGk/"
   pre_tasks:
     - name: get currently installed ruby version
-      command: "{{rvm1_install_path}}/rubies/ruby-{{ruby_version}}/bin/ruby -e 'puts \"#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}\"'"
+      command: "{{rvm_install_path}}/rubies/ruby-{{ruby_version}}/bin/ruby -e 'puts \"#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}\"'"
       register: current_ruby_version
       ignore_errors: True
   roles:
     - { role: rvm_io.rvm1-ruby,
         tags: ruby, sudo: True,
         rvm1_rubies: ["ruby-{{ruby_version}}","ruby-2.3.0"],
-        rvm1_install_path: "{{rvm1_install_path}}",
+        rvm1_install_path: "{{rvm_install_path}}",
         rvm1_gpg_key_server: pool.sks-keyservers.net,
         when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}'" }
   tasks:
