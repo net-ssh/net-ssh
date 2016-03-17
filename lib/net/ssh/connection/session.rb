@@ -456,9 +456,9 @@ module Net; module SSH; module Connection
     end
 
     def cleanup_channel(channel)
-        if channel.local_closed? and channel.remote_closed?
-          info { "#{host} delete channel #{channel.local_id} which closed locally and remotely" }
-          channels.delete(channel.local_id)
+      if channel.local_closed? and channel.remote_closed?
+        info { "#{host} delete channel #{channel.local_id} which closed locally and remotely" }
+        channels.delete(channel.local_id)
       end
     end
 
