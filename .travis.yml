@@ -9,7 +9,7 @@ rvm:
   - jruby-19mode
   - rbx-2
 
-install: gem install test-unit mocha
+install: bundle install
 
 script: rake test
 

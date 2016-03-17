@@ -1,5 +1,6 @@
 require 'net/ssh/transport/openssl'
 require 'net/ssh/prompt'
+require 'net/ssh/authentication/ed25519'
 
 module Net; module SSH
 
@@ -21,6 +22,7 @@ module Net; module SSH
     }
     if defined?(OpenSSL::PKey::EC)
       MAP["ecdsa"] = OpenSSL::PKey::EC
+      MAP["ed25519"] = ED25519::PrivKey
     end
 
     class <<self
@@ -62,6 +64,9 @@ module Net; module SSH
           elsif data.match(/-----BEGIN EC PRIVATE KEY-----/) && defined?(OpenSSL::PKey::EC)
             key_type = OpenSSL::PKey::EC
             error_class = OpenSSL::PKey::ECError
+          elsif data.match(/-----BEGIN OPENSSH PRIVATE KEY-----/)
+            openssh_key = true
+            key_type = ED25519::PrivKey
           elsif data.match(/-----BEGIN (.+) PRIVATE KEY-----/)
             raise OpenSSL::PKey::PKeyError, "not a supported key type '#{$1}'"
           else
@@ -70,13 +75,18 @@ module Net; module SSH
         end
 
         encrypted_key = data.match(/ENCRYPTED/)
+        openssh_key = data.match(/-----BEGIN OPENSSH PRIVATE KEY-----/)
         tries = 0
 
         begin
-          if pkey_read
-            return OpenSSL::PKey.read(data, passphrase || 'invalid')
+          if openssh_key
+            ED25519::PrivKey.read(data, passphrase || 'invalid')
           else
-            return key_type.new(data, passphrase || 'invalid')
+            if pkey_read
+              return OpenSSL::PKey.read(data, passphrase || 'invalid')
+            else
+              return key_type.new(data, passphrase || 'invalid')
+            end
           end
         rescue error_class
           if encrypted_key && ask_passphrase
@@ -110,7 +120,7 @@ module Net; module SSH
         blob = nil
         begin
           blob = fields.shift
-        end while !blob.nil? && !/^(ssh-(rsa|dss)|ecdsa-sha2-nistp\d+)$/.match(blob)
+        end while !blob.nil? && !/^(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp\d+)$/.match(blob)
         blob = fields.shift
 
         raise Net::SSH::Exception, "public key at #{filename} is not valid" if blob.nil?

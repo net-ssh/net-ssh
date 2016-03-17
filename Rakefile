@@ -32,15 +32,7 @@ begin
     s.authors = ["Jamis Buck", "Delano Mandelbaum", "Miklós Fazekas"]
     s.required_ruby_version = '>= 2.0'
 
-    # Note: this is run at package time not install time so if you are
-    # running on jruby, you need to install jruby-pageant manually.
-    if RUBY_PLATFORM == "java"
-      s.add_dependency 'jruby-pageant', ">=1.1.1"
-    end
-
-    s.add_development_dependency 'test-unit'
-    s.add_development_dependency 'mocha'
-
+    # dependencies defined in Gemfile
     s.license = "MIT"
 
     unless ENV['NET_SSH_NOKEY']
@@ -50,6 +42,21 @@ begin
       unless (Rake.application.top_level_tasks & ['build','install']).empty?
         raise "No key found at #{signing_key} for signing, use rake <taskname> NET_SSH_NOKEY=1 to build without key" unless File.exist?(signing_key)
       end
+    end
+    def s.to_ruby
+      # see https://github.com/technicalpickles/jeweler/issues/170
+      result = super
+      result = result.chomp("\n").split("\n").map do |line|
+        if line =~ /%q<bcrypt_pbkdf>/
+          line += ' unless RUBY_PLATFORM == "java"'
+        else
+          line
+        end
+      end.join("\n") << "\n"
+      fail "Unexpected gemspec:#{result.inspect}" unless result.chomp!("\nend\n")
+      result << "\n  s.add_dependency('jruby-pageant', ['>= 1.1.1']) if RUBY_PLATFORM == 'jruby'"
+      result << "\nend\n"
+      result
     end
   end
   Jeweler::RubygemsDotOrgTasks.new

@@ -9,7 +9,8 @@ Setup:
 
     ansible-galaxy install rvm_io.rvm1-ruby
     vagrant up ; vagrant ssh
-    rake test
+    rvm all do bundle
+    rvm all do rake test
 
 # TODO
 

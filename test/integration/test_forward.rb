@@ -32,14 +32,14 @@ class TestForward < Test::Unit::TestCase
   end
 
   def ssh_start_params
-    [localhost ,user , {:keys => @key_id_rsa, :verbose => :debug}]
+    [localhost ,user , {:keys => @key_id_rsa}]
   end
 
   def setup_ssh_env(&block)
     tmpdir do |dir|
       @key_id_rsa = "#{dir}/id_rsa"
       sh "rm -rf #{@key_id_rsa} #{@key_id_rsa}.pub"
-      sh "ssh-keygen -f #{@key_id_rsa} -t rsa -N ''"
+      sh "ssh-keygen -q -f #{@key_id_rsa} -t rsa -N ''"
       set_authorized_key(user,"#{@key_id_rsa}.pub")
       yield
     end
@@ -331,7 +331,7 @@ class TestForward < Test::Unit::TestCase
           client_done << $!
         end
       end
-      timeout(5) do
+      Timeout.timeout(5) do
         session.loop(0.1) { server_done.empty? }
         assert_equal message, server_done.pop
       end
@@ -365,7 +365,7 @@ class TestForward < Test::Unit::TestCase
           client_done << $!
         end
       end
-      timeout(5) do
+      Timeout.timeout(5) do
         session.loop(0.1) { server_done.empty? }
         assert_equal message, server_done.pop
       end
@@ -398,7 +398,7 @@ class TestForward < Test::Unit::TestCase
           client_done << $!
         end
       end
-      timeout(5) do
+      Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
         assert_equal message, client_done.pop
       end
@@ -426,7 +426,7 @@ class TestForward < Test::Unit::TestCase
           client_done << $!
         end
       end
-      timeout(5) do
+      Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
         assert_equal message, client_done.pop
       end
@@ -450,7 +450,7 @@ class TestForward < Test::Unit::TestCase
     setup_ssh_env do
       session = Net::SSH.start(*ssh_start_params)
       server = start_server do |client|
-        data = client.write "hello"
+        _data = client.write "hello"
         client.close
       end
       # Forward to a non existing port
@@ -459,7 +459,7 @@ class TestForward < Test::Unit::TestCase
       # should return connection refused
       client_done = Queue.new
       _run_reading_client(client_done, local_port)
-      timeout(5) do
+      Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
       end
       assert_equal nil, client_done.pop
@@ -468,7 +468,7 @@ class TestForward < Test::Unit::TestCase
       remote_port = server.addr[1]
       local_port = session.forward.local(0, localhost, remote_port)
       _run_reading_client(client_done, local_port)
-      timeout(5) do
+      Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
       end
       assert_equal "hello", client_done.pop
@@ -487,7 +487,7 @@ class TestForward < Test::Unit::TestCase
       # should return connection refused
       client_done = Queue.new
       _run_reading_client(client_done, local_port)
-      timeout(5) do
+      Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
       end
       assert_equal nil, client_done.pop
@@ -495,11 +495,11 @@ class TestForward < Test::Unit::TestCase
       # start server
       server = TCPServer.open(remote_port)
       server = start_server(server) do |client|
-        data = client.write "hello"
+        _data = client.write "hello"
         client.close
       end
       _run_reading_client(client_done, local_port)
-      timeout(5) do
+      Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
       end
       assert_equal "hello", client_done.pop
@@ -511,7 +511,7 @@ class TestForward < Test::Unit::TestCase
     setup_ssh_env do
       session = Net::SSH.start(*ssh_start_params)
       server = start_server(server) do |client|
-        data = client.write "hello"
+        _data = client.write "hello"
         client.close
       end
       remote_port = server.addr[1]
@@ -519,7 +519,7 @@ class TestForward < Test::Unit::TestCase
       # run client
       client_done = Queue.new
       _run_reading_client(client_done, local_port)
-      timeout(5) do
+      Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
       end
       assert_equal "hello", client_done.pop

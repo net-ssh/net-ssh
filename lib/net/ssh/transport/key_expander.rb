@@ -9,6 +9,7 @@ module Net; module SSH; module Transport
     end
 
     k = start[0, bytes]
+    return k if k.length >= bytes
 
     digester = options[:digester] or raise 'No digester supplied'
     shared   = options[:shared] or raise 'No shared secret supplied'

@@ -64,11 +64,11 @@ module Net; module SSH; module Transport
       cipher.padding = 0
 
       cipher.extend(Net::SSH::Transport::CTR) if (name =~ /-ctr(@openssh.org)?$/)
-      cipher.iv      = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options) if ossl_name != "rc4"
+      cipher.iv = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options) if ossl_name != "rc4"
 
       key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
       cipher.key_len = key_len
-      cipher.key     = Net::SSH::Transport::KeyExpander.expand_key(key_len, options[:key], options)
+      cipher.key = Net::SSH::Transport::KeyExpander.expand_key(key_len, options[:key], options)
       cipher.update(" " * 1536) if (ossl_name == "rc4" && name != "arcfour")
 
       return cipher
@@ -78,15 +78,21 @@ module Net; module SSH; module Transport
     # block-size ] for the named cipher algorithm. If the cipher
     # algorithm is unknown, or is "none", 0 is returned for both elements
     # of the tuple.
-    def self.get_lengths(name)
+    # if :iv_len option is supplied the third return value will be ivlen
+    def self.get_lengths(name, options = {})
       ossl_name = SSH_TO_OSSL[name]
-      return [0, 0] if ossl_name.nil? || ossl_name == "none"
+      if ossl_name.nil? || ossl_name == "none"
+        result = [0, 0]
+        result << 0 if options[:iv_len]
+      else
+        cipher = OpenSSL::Cipher::Cipher.new(ossl_name)
+        key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
+        cipher.key_len = key_len
 
-      cipher = OpenSSL::Cipher::Cipher.new(ossl_name)
-      key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
-      cipher.key_len = key_len
-      
-      return [key_len, ossl_name=="rc4" ? 8 : cipher.block_size]
+        result = [key_len, ossl_name=="rc4" ? 8 : cipher.block_size]
+        result << cipher.iv_len if options[:iv_len]
+      end
+      result
     end
   end
 

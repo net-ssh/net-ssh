@@ -17,14 +17,14 @@ class TestProxy < Test::Unit::TestCase
   end
 
   def ssh_start_params(options)
-    [localhost ,user , {:keys => @key_id_rsa, :verbose => :debug}.merge(options)]
+    [localhost ,user , {:keys => @key_id_rsa}.merge(options)]
   end
 
   def setup_ssh_env(&block)
     tmpdir do |dir|
       @key_id_rsa = "#{dir}/id_rsa"
       sh "rm -rf #{@key_id_rsa} #{@key_id_rsa}.pub"
-      sh "ssh-keygen -f #{@key_id_rsa} -t rsa -N ''"
+      sh "ssh-keygen -q -f #{@key_id_rsa} -t rsa -N ''"
       set_authorized_key(user,"#{@key_id_rsa}.pub")
       yield
     end
