@@ -29,7 +29,12 @@ module Net; module SSH
         $stdout.flush
 
         set_echo(false) unless echo
-        $stdin.gets.chomp
+
+        # Since gets can return nil, handle this
+        # http://ruby-doc.org/core-2.2.0/Kernel.html#method-i-gets
+        indata = $stdin.gets
+        indata ||= ""
+        indata.chomp
       ensure
         if !echo
           set_echo(true)
@@ -70,7 +75,11 @@ module Net; module SSH
 
         $stdout.print(prompt)
         $stdout.flush
-        $stdin.gets.chomp
+        # Since gets can return nil, handle this
+        # http://ruby-doc.org/core-2.2.0/Kernel.html#method-i-gets
+        indata = $stdin.gets
+        indata ||= ""
+        indata.chomp
       end
     end
   end
