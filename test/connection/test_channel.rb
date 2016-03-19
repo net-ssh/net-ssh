@@ -429,14 +429,14 @@ module Connection
 
     def test_data_should_precede_eof
       channel.do_open_confirmation(0, 1000, 1000)
-      connection.expect do |t,p|
+      connection.expect do |_t,p|
         assert_equal CHANNEL_DATA, p.type
-        connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
+        connection.expect { |_t,p2| assert_equal CHANNEL_EOF, p2.type }
       end
       channel.send_data "foo"
       channel.eof!
       channel.process
-   end
+    end
 
     private
 

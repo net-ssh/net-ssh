@@ -13,10 +13,10 @@ class TestIDRSAPKeys < Test::Unit::TestCase
   def test_in_file_no_password
     tmpdir do |dir|
       sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
-      sh "ssh-keygen -f #{dir}/id_rsa -t rsa -N ''"
+      sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N ''"
       set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
 
-      sshopts = '-vvvv -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+      #sshopts = '-vvvv -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
       #sh "ssh -i #{dir}/id_rsa #{sshopts} net_ssh_1@localhost echo 'hello'"
 
       ret = Net::SSH.start("localhost", "net_ssh_1", {keys: "#{dir}/id_rsa"}) do |ssh|
@@ -31,11 +31,11 @@ class TestIDRSAPKeys < Test::Unit::TestCase
     tmpdir do |dir|
       with_agent do
         sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
-        sh "ssh-keygen -f #{dir}/id_rsa -t rsa -N 'pwd123'"
+        sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd123'"
         set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
         ssh_add("#{dir}/id_rsa","pwd123")
 
-        ret = Net::SSH.start("localhost", "net_ssh_1",verbose: :debug) do |ssh|
+        ret = Net::SSH.start("localhost", "net_ssh_1") do |ssh|
           ssh.exec! 'echo "hello from:$USER"'
         end
         assert_equal "hello from:net_ssh_1\n", ret
@@ -47,11 +47,11 @@ class TestIDRSAPKeys < Test::Unit::TestCase
     tmpdir do |dir|
       with_agent do
         sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
-        sh "ssh-keygen -f #{dir}/id_rsa -t rsa -N 'pwd123'"
+        sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd123'"
         set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
         ssh_add("#{dir}/id_rsa","pwd123")
 
-        ret = Net::SSH.start("localhost", "net_ssh_1",verbose: :debug, keys: ["#{dir}/id_rsa"]) do |ssh|
+        ret = Net::SSH.start("localhost", "net_ssh_1", keys: ["#{dir}/id_rsa"]) do |ssh|
           ssh.exec! 'echo "hello from:$USER"'
         end
         assert_equal "hello from:net_ssh_1\n", ret
@@ -62,14 +62,14 @@ class TestIDRSAPKeys < Test::Unit::TestCase
   def test_in_file_with_password
     tmpdir do |dir|
       sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
-      sh "ssh-keygen -f #{dir}/id_rsa -t rsa -N 'pwd12'"
+      sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd12'"
       set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
 
-      sshopts = '-vvvv -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+      #sshopts = '-vvvv -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
       #sh "ssh -i #{dir}/id_rsa #{sshopts} net_ssh_1@localhost echo 'hello'"
 
       ret = Net::SSH.start("localhost", "net_ssh_1", {keys: "#{dir}/id_rsa",
-        passphrase: 'pwd12', verbose: :debug}) do |ssh|
+        passphrase: 'pwd12'}) do |ssh|
         ssh.exec! 'echo "hello from:$USER"'
       end
       assert_equal "hello from:net_ssh_1\n", ret
@@ -79,13 +79,13 @@ class TestIDRSAPKeys < Test::Unit::TestCase
   def test_asks_for_passwords_when_read_from_memory
     tmpdir do |dir|
       sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
-      sh "ssh-keygen -f #{dir}/id_rsa -t rsa -N 'pwd12'"
+      sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd12'"
       set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
       private_key = File.read("#{dir}/id_rsa")
 
       options = {keys: [], key_data: [private_key]}
 
-      key_manager = Net::SSH::Authentication::KeyManager.new(nil, options)
+      #key_manager = Net::SSH::Authentication::KeyManager.new(nil, options)
 
       Net::SSH::KeyFactory.expects(:prompt).with('Enter passphrase for :', false).returns('pwd12')
       Net::SSH.start("localhost", "net_ssh_1", options) do |ssh|

@@ -7,8 +7,9 @@ require 'pty'
 require 'expect'
 
 module IntegrationTestHelpers
+  VERBOSE = false
   def sh command
-    puts "$ #{command}"
+    puts "$ #{command}" if VERBOSE
     res = system(command)
     status = $?
     raise "Command: #{command} failed:#{status.exitstatus}" unless res
@@ -28,18 +29,18 @@ module IntegrationTestHelpers
   end
 
   def with_agent(&block)
-    puts "/usr/bin/ssh-agent -c"
+    puts "/usr/bin/ssh-agent -c" if VERBOSE
     agent_out = `/usr/bin/ssh-agent -c`
     agent_out.split("\n").each do |line|
       if line =~ /setenv (\S+) (\S+);/
         ENV[$1] = $2
-        puts "ENV[#{$1}]=#{$2}"
+        puts "ENV[#{$1}]=#{$2}" if VERBOSE
       end
     end
     begin
       yield
     ensure
-      sh "/usr/bin/ssh-agent -k"
+      sh "/usr/bin/ssh-agent -k > /dev/null"
     end
   end
 
@@ -51,9 +52,10 @@ module IntegrationTestHelpers
         reader.expect(/Enter passphrase for .*:/) { |data| puts data }
         writer.puts(password)
         until reader.eof? do
-          puts reader.readline
+          line = reader.readline
+          puts line if VERBOSE
         end
-      rescue Errno::EIO => e
+      rescue Errno::EIO => _e
       end
       pid, status = Process.wait2 pid
     end
