@@ -1,3 +1,5 @@
+* removed camellia [Miklos Fazekas]
+
 === 3.1.0
 === 3.1.0.rc1
 

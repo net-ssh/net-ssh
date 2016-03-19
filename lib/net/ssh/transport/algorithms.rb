@@ -33,14 +33,6 @@ module Net; module SSH; module Transport
                          aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se
                          idea-cbc none arcfour128 arcfour256 arcfour
                          aes128-ctr aes192-ctr aes256-ctr
-                         camellia128-cbc camellia192-cbc camellia256-cbc
-                         camellia128-cbc@openssh.org
-                         camellia192-cbc@openssh.org
-                         camellia256-cbc@openssh.org
-                         camellia128-ctr camellia192-ctr camellia256-ctr
-                         camellia128-ctr@openssh.org
-                         camellia192-ctr@openssh.org
-                         camellia256-ctr@openssh.org
                          cast128-ctr blowfish-ctr 3des-ctr
                         ),
 
