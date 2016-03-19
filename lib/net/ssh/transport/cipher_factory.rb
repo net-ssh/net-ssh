@@ -21,12 +21,6 @@ module Net; module SSH; module Transport
       "arcfour256"                  => "rc4",
       "arcfour512"                  => "rc4",
       "arcfour"                     => "rc4",
-      "camellia128-cbc"             => "camellia-128-cbc",
-      "camellia192-cbc"             => "camellia-192-cbc",
-      "camellia256-cbc"             => "camellia-256-cbc",
-      "camellia128-cbc@openssh.org" => "camellia-128-cbc",
-      "camellia192-cbc@openssh.org" => "camellia-192-cbc",
-      "camellia256-cbc@openssh.org" => "camellia-256-cbc",
 
       "3des-ctr"                    => "des-ede3",
       "blowfish-ctr"                => "bf-ecb",
@@ -34,12 +28,6 @@ module Net; module SSH; module Transport
       "aes192-ctr"                  => "aes-192-ecb",
       "aes128-ctr"                  => "aes-128-ecb",
       "cast128-ctr"                 => "cast5-ecb",
-      "camellia128-ctr"             => "camellia-128-ecb",
-      "camellia192-ctr"             => "camellia-192-ecb",
-      "camellia256-ctr"             => "camellia-256-ecb",
-      "camellia128-ctr@openssh.org" => "camellia-128-ecb",
-      "camellia192-ctr@openssh.org" => "camellia-192-ecb",
-      "camellia256-ctr@openssh.org" => "camellia-256-ecb",
 
       "none"                        => "none",
     }

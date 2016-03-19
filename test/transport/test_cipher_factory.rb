@@ -65,24 +65,6 @@ module Transport
       assert_equal [64,8], factory.get_lengths("arcfour512")
     end
 
-    if_supported?("camellia128-cbc@openssh.org") do
-      def test_lengths_for_camellia128_cbc_openssh_org
-        assert_equal [16,16], factory.get_lengths("camellia128-cbc@openssh.org")
-      end
-    end
-
-    if_supported?("camellia192-cbc@openssh.org") do
-      def test_lengths_for_camellia192_cbc_openssh_org
-        assert_equal [24,16], factory.get_lengths("camellia192-cbc@openssh.org")
-      end
-    end
-
-    if_supported?("camellia256-cbc@openssh.org") do
-      def test_lengths_for_camellia256_cbc_openssh_org
-        assert_equal [32,16], factory.get_lengths("camellia256-cbc@openssh.org")
-      end
-    end
-
     def test_lengths_for_3des_ctr
       assert_equal [24,8], factory.get_lengths("3des-ctr")
     end
@@ -105,24 +87,6 @@ module Transport
 
     def test_lengths_for_cast128_ctr
       assert_equal [16,8], factory.get_lengths("cast128-ctr")
-    end
-
-    if_supported?("camellia128-ctr@openssh.org") do
-      def test_lengths_for_camellia128_ctr_openssh_org
-        assert_equal [16,16], factory.get_lengths("camellia128-ctr@openssh.org")
-      end
-    end
-
-    if_supported?("camellia192-ctr@openssh.org") do
-      def test_lengths_for_camellia192_ctr_openssh_org
-        assert_equal [24,16], factory.get_lengths("camellia192-ctr@openssh.org")
-      end
-    end
-
-    if_supported?("camellia256-ctr@openssh.org") do
-      def test_lengths_for_camellia256_ctr_openssh_org
-        assert_equal [32,16], factory.get_lengths("camellia256-ctr@openssh.org")
-      end
     end
 
     BLOWFISH_CBC = "\210\021\200\315\240_\026$\352\204g\233\244\242x\332e\370\001\327\224Nv@9_\323\037\252kb\037\036\237\375]\343/y\037\237\312Q\f7]\347Y\005\275%\377\0010$G\272\250B\265Nd\375\342\372\025r6}+Y\213y\n\237\267\\\374^\346BdJ$\353\220Ik\023<\236&H\277=\225"
@@ -247,36 +211,6 @@ module Transport
       assert_equal TEXT, decrypt("arcfour512", ARCFOUR512)
     end
 
-    if_supported?("camellia128-cbc@openssh.org") do
-      CAMELLIA128_CBC = "\a\b\x83+\xF1\xC5m\a\xE1\xD3\x06\xD2NA\xC3l@\\*M\xFD\x96\xAE\xA8\xB4\xA9\xACm\"8\x8E\xEE<\xC3O[\rK\xFAgu}\xCD\xAC\xF4\x04o\xDB\x94-\xB8\"\xDC\xE7{y\xA9 \x8F=y\x85\x82v\xC8\xCA\x8A\xE9\xE3:\xC4,u=a/\xC0\x05\xDA\xDAk8g\xCB\xD9\xA8\xE6\xFE\xCE_\x8E\x97\xF0\xAC\xB6\xCE"
-      def test_camellia128_cbc_for_encryption
-        assert_equal CAMELLIA128_CBC, encrypt("camellia128-cbc@openssh.org")
-      end
-      def test_camellia128_cbc_for_decryption
-        assert_equal TEXT, decrypt("camellia128-cbc@openssh.org", CAMELLIA128_CBC)
-      end
-    end
-
-    if_supported?("camellia192-cbc@openssh.org") do
-      CAMELLIA192_CBC = "\x82\xB2\x03\x90\xFA\f2\xA0\xE3\xFA\xF2B\xAB\xDBX\xD5\x04z\xD4G\x19\xB8\xAB\v\x85\x84\xCD:.\xBA\x9Dd\xD5(\xEB.\n\xAA]\xCB\xF3\x0F4\x8Bd\xF8m\xC9!\xE2\xA1=\xEBY\xA6\x83\x86\n\x13\e6\v\x06\xBBNJg\xF2-\x14',[\xC1\xB1.\x85\xF3\xC6\xBF\x1Ff\xCE\x87'\x9C\xB2\xC8!\xF3|\xE2\xD2\x9E\x96\xA1"
-      def test_camellia192_cbc_for_encryption
-        assert_equal CAMELLIA192_CBC, encrypt("camellia192-cbc@openssh.org")
-      end
-      def test_camellia192_cbc_for_decryption
-        assert_equal TEXT, decrypt("camellia192-cbc@openssh.org", CAMELLIA192_CBC)
-      end
-    end
-
-    if_supported?("camellia256-cbc@openssh.org") do
-      CAMELLIA256_CBC = ",\x80J/\xF5\x8F\xFE4\xF0@\n[2\xFF4\xB6\xA4\xD0\xF8\xF5*\x17I\xF3\xA2\x1F$L\xC6\xA1\x06\xDC\x84f\x1C\x10&\x1C\xC4/R\x859|i\x85ZP\xC8\x94\xED\xE8-\n@ w\x92\xF7\xD4\xAB\xF0\x85c\xC1\x0F\x1E#\xEB\xE5W\x87N!\xC7'/\xE3E8$\x1D\x9B:\xC9\xAF_\x05\xAC%\xD7\x945\xBBDK"
-      def test_camellia256_cbc_for_encryption
-        assert_equal CAMELLIA256_CBC, encrypt("camellia256-cbc@openssh.org")
-      end
-      def test_camellia256_cbc_for_decryption
-        assert_equal TEXT, decrypt("camellia256-cbc@openssh.org", CAMELLIA256_CBC)
-      end
-    end
-
     BLOWFISH_CTR = "\xF5\xA6\x1E{\x8F(\x85G\xFAh\xDB\x19\xDC\xDF\xA2\x9A\x99\xDD5\xFF\xEE\x8BE\xE6\xB5\x92\x82\xE80\x91\x11`\xEF\x10\xED\xE9\xD3\vG\x0E\xAF\xB2K\t\xA4\xA6\x05\xD1\x17\x0Fl\r@E\x8DJ\e\xE63\x04\xB5\x05\x99Y\xCC\xFBb\x8FK+\x8C1v\xE4N\b?B\x06Rz\xA6\xB6N/b\xCE}\x83\x8DY\xD7\x92qU\x0F"
 
     def test_blowfish_ctr_for_encryption
@@ -347,59 +281,6 @@ module Transport
       assert_equal TEXT, decrypt("aes256-ctr", AES256_CTR)
     end
 
-    CAMELLIA128_CTR = "$\xCDQ\x86\xFD;Eq\x04\xFD\xEF\xC9\x18\xBA\\ZA\xD1\xA6Z\xC7V\xDE\xCDT\xBB\xC9\xB0BW\x9BOb}O\xCANy\xEA\xBB\xC5\x126\xE3\xDF\xB8]|j\x1D\xAE\"i\x8A\xCB\xE06\x01\xC4\xDA\xF6:\xA7\xB2v\xB0\xAE\xA5m\x16\xDB\xEBR\xCC\xB4\xA3\x93\x11;\xF1\x00\xDFS6\xF8\xD0_\b\nl\xA2\x95\x8E\xF2\xB0\xC1"
-    if_supported?("camellia128-ctr@openssh.org") do
-      def test_camellia128_ctr_openssh_org_for_encryption
-        assert_equal CAMELLIA128_CTR, encrypt("camellia128-ctr@openssh.org")
-      end
-      def test_camellia128_ctr_openssh_org_for_decryption
-        assert_equal TEXT, decrypt("camellia128-ctr@openssh.org", CAMELLIA128_CTR)
-      end
-    end
-    if_supported?("camellia128-ctr") do
-      def test_camellia128_ctr_for_encryption
-        assert_equal CAMELLIA128_CTR, encrypt("camellia128-ctr")
-      end
-      def test_camellia128_ctr_for_decryption
-        assert_equal TEXT, decrypt("camellia128-ctr", CAMELLIA128_CTR)
-      end
-    end
-
-    CAMELLIA192_CTR = "\xB1O;\xA5\xB9 \xD6\x7Fw\ajz\xAF12\x1C\xF0^\xB2\x13\xA7s\xCB\x1A(3Yw\x8B\"7\xD7}\xC4\xAA\xF7\xDB\xF2\xEEi\x02\xD0\x94BK\xD9l\xBC\xBEbrk\x87\x14h\xE1'\xD2\xE4\x8C\x8D\x87\xCE\xBF\x89\xA9\x9E\xC4\f\xB8\x87(\xFE?\xD9\xEF\xBA5\xD8\xA1\rI\xD6s9\x10\xA9l\xB8S\x93}*\x9A\xB0="
-    if_supported?("camellia192-ctr@openssh.org") do
-      def test_camellia192_ctr_openssh_org_for_encryption
-        assert_equal CAMELLIA192_CTR, encrypt("camellia192-ctr@openssh.org")
-      end
-      def test_camellia192_ctr_openssh_org_for_decryption
-        assert_equal TEXT, decrypt("camellia192-ctr@openssh.org", CAMELLIA192_CTR)
-      end
-    end
-    if_supported?("camellia192-ctr") do
-      def test_camellia192_ctr_for_encryption
-        assert_equal CAMELLIA192_CTR, encrypt("camellia192-ctr")
-      end
-      def test_camellia192_ctr_for_decryption
-        assert_equal TEXT, decrypt("camellia192-ctr", CAMELLIA192_CTR)
-      end
-    end
-
-    CAMELLIA256_CTR = "`\x8F#Nqr^m\xB2/i\xF9}\x1E\xD1\xE7X\x99\xAF\x1E\xBA\v\xF3\x8E\xCA\xECZ\xCB\x8A\xC96FW\xB3\x84 bwzRM,P\xC1r\xEFHNr%\xB9\a\xD6\xE6\xE7O\b\xC8?\x98d\x9F\xD3v\x10#\xA6\x87\xB2\x85\x059\xF0-\xF9\xBC\x00V\xB2?\xAE\x1E{\e\xF1\xA9zJ\xC9=1\xB3t73\xEB"
-    if_supported?("camellia256-ctr@openssh.org") do
-      def test_camellia256_ctr_openssh_org_for_encryption
-        assert_equal CAMELLIA256_CTR, encrypt("camellia256-ctr@openssh.org")
-      end
-      def test_camellia256_ctr_openssh_org_for_decryption
-        assert_equal TEXT, decrypt("camellia256-ctr@openssh.org", CAMELLIA256_CTR)
-      end
-    end
-    if_supported?("camellia256-ctr") do
-      def test_camellia256_ctr_for_encryption
-        assert_equal CAMELLIA256_CTR, encrypt("camellia256-ctr")
-      end
-      def test_camellia256_ctr_for_decryption
-        assert_equal TEXT, decrypt("camellia256-ctr", CAMELLIA256_CTR)
-      end
-    end
 
     def test_none_for_encryption
       assert_equal TEXT, encrypt("none").strip
