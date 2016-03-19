@@ -1,3 +1,6 @@
+=== 4.0.0.alpha1
+
+* ed25519 key support [Miklos Fazekas]
 * removed camellia [Miklos Fazekas]
 
 === 3.1.0

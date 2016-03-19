@@ -1,4 +1,4 @@
-= Net::SSH 3.x
+= Net::SSH 4.x
 
 <em><b>Please note: this project is in maintenance mode. It is not under active development but pull requests are very much welcome. Just be sure to include tests! -- delano</b></em>
 

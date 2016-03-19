@@ -144,7 +144,6 @@ Gem::Specification.new do |s|
     "test/connection/test_channel.rb",
     "test/connection/test_session.rb",
     "test/integration/README.md",
-    "test/integration/README.txt",
     "test/integration/Vagrantfile",
     "test/integration/common.rb",
     "test/integration/playbook.yml",
