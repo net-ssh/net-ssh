@@ -8,11 +8,8 @@ rvm:
   - jruby-head
   - jruby-19mode
   - rbx-2
+  - rbx-3
 
 install: bundle install
 
 script: rake test
-
-matrix:
-  allow_failures:
-    - rvm: jruby-head
