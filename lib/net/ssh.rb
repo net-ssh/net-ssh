@@ -3,6 +3,7 @@
 ENV['HOME'] ||= ENV['HOMEPATH'] ? "#{ENV['HOMEDRIVE']}#{ENV['HOMEPATH']}" : Dir.pwd
 
 require 'logger'
+require 'etc'
 
 require 'net/ssh/config'
 require 'net/ssh/errors'
