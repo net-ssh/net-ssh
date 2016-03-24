@@ -1,5 +1,7 @@
 = Net::SSH 4.x
 
+{<img src="https://badges.gitter.im/net-ssh/net-ssh.svg" alt="Join the chat at https://gitter.im/net-ssh/net-ssh">}[https://gitter.im/net-ssh/net-ssh?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge]
+
 <em><b>Please note: this project is in maintenance mode. It is not under active development but pull requests are very much welcome. Just be sure to include tests! -- delano</b></em>
 
 
