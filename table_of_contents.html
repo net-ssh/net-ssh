@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Table of Contents - net-ssh 3.1.0.rc2</title>
+<title>Table of Contents - net-ssh 4.0.0.alpha2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
@@ -20,7 +20,7 @@
 
 <body id="top" class="table-of-contents">
 <main role="main">
-<h1 class="class">Table of Contents - net-ssh 3.1.0.rc2</h1>
+<h1 class="class">Table of Contents - net-ssh 4.0.0.alpha2</h1>
 
 <h2 id="pages">Pages</h2>
 <ul>
@@ -28,6 +28,9 @@
     <a href="CHANGES_txt.html">CHANGES</a>
 
     <ul>
+      <li><a href="CHANGES_txt.html#label-4.0.0.alpha2">4.0.0.alpha2</a>
+      <li><a href="CHANGES_txt.html#label-4.0.0.alpha1">4.0.0.alpha1</a>
+      <li><a href="CHANGES_txt.html#label-3.1.0">3.1.0</a>
       <li><a href="CHANGES_txt.html#label-3.1.0.rc1">3.1.0.rc1</a>
       <li><a href="CHANGES_txt.html#label-3.1.0.beta3">3.1.0.beta3</a>
       <li><a href="CHANGES_txt.html#label-3.1.0.beta2">3.1.0.beta2</a>
@@ -111,16 +114,15 @@
     <a href="README_rdoc.html">README</a>
 
     <ul>
-      <li><a href="README_rdoc.html#label-Net-3A-3ASSH+3.x">Net::SSH 3.x</a>
+      <li><a href="README_rdoc.html#label-Net-3A-3ASSH+4.x">Net::SSH 4.x</a>
       <li><a href="README_rdoc.html#label-DESCRIPTION-3A">DESCRIPTION:</a>
       <li><a href="README_rdoc.html#label-FEATURES-3A">FEATURES:</a>
       <li><a href="README_rdoc.html#label-SYNOPSIS-3A">SYNOPSIS:</a>
       <li><a href="README_rdoc.html#label-REQUIREMENTS-3A">REQUIREMENTS:</a>
       <li><a href="README_rdoc.html#label-INSTALL-3A">INSTALL:</a>
-      <li><a href="README_rdoc.html#label-RUBY+1.x+SUPPORT">RUBY 1.x SUPPORT</a>
+      <li><a href="README_rdoc.html#label-RUBY+SUPPORT">RUBY SUPPORT</a>
       <li><a href="README_rdoc.html#label-RUNNING+TESTS">RUNNING TESTS</a>
       <li><a href="README_rdoc.html#label-BUILDING+GEM">BUILDING GEM</a>
-      <li><a href="README_rdoc.html#label-PORT+FORWARDING+TESTS">PORT FORWARDING TESTS</a>
       <li><a href="README_rdoc.html#label-LICENSE-3A">LICENSE:</a>
     </ul>
   </li>
@@ -137,6 +139,15 @@
   </li>
   <li class="module">
     <a href="DL/Fiddle.html">DL::Fiddle</a>
+  </li>
+  <li class="module">
+    <a href="ED25519.html">ED25519</a>
+  </li>
+  <li class="class">
+    <a href="ED25519/PrivKey.html">ED25519::PrivKey</a>
+  </li>
+  <li class="class">
+    <a href="ED25519/PubKey.html">ED25519::PubKey</a>
   </li>
   <li class="module">
     <a href="Net.html">Net</a>
@@ -568,6 +579,18 @@
   <li class="class">
     <a href="OpenSSL/PKey/RSA.html">OpenSSL::PKey::RSA</a>
   </li>
+  <li class="module">
+    <a href="RbNaCl.html">RbNaCl</a>
+  </li>
+  <li class="module">
+    <a href="RbNaCl/Signatures.html">RbNaCl::Signatures</a>
+  </li>
+  <li class="module">
+    <a href="RbNaCl/Signatures/Ed25519.html">RbNaCl::Signatures::Ed25519</a>
+  </li>
+  <li class="class">
+    <a href="RbNaCl/Signatures/Ed25519/SigningKeyFromFile.html">RbNaCl::Signatures::Ed25519::SigningKeyFromFile</a>
+  </li>
   <li class="class">
     <a href="String.html">String</a>
   </li>
@@ -637,14 +660,14 @@
     <span class="container">Net::SSH::Transport::KeyExpander</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/CTR.html#method-c-extended">::extended</a>
-    &mdash;
-    <span class="container">Net::SSH::Transport::CTR</span>
-
-  <li class="method">
     <a href="Net/SSH/Transport/PacketStream.html#method-c-extended">::extended</a>
     &mdash;
     <span class="container">Net::SSH::Transport::PacketStream</span>
+
+  <li class="method">
+    <a href="Net/SSH/Transport/CTR.html#method-c-extended">::extended</a>
+    &mdash;
+    <span class="container">Net::SSH::Transport::CTR</span>
 
   <li class="method">
     <a href="Net/SSH/Transport/IdentityCipher.html#method-c-final">::final</a>
@@ -662,9 +685,9 @@
     <span class="container">Net::SSH::Buffer</span>
 
   <li class="method">
-    <a href="Net/SSH/KeyFactory.html#method-c-get">::get</a>
+    <a href="Net/SSH/Transport/HMAC.html#method-c-get">::get</a>
     &mdash;
-    <span class="container">Net::SSH::KeyFactory</span>
+    <span class="container">Net::SSH::Transport::HMAC</span>
 
   <li class="method">
     <a href="Net/SSH/Transport/CipherFactory.html#method-c-get">::get</a>
@@ -672,9 +695,9 @@
     <span class="container">Net::SSH::Transport::CipherFactory</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/HMAC.html#method-c-get">::get</a>
+    <a href="Net/SSH/KeyFactory.html#method-c-get">::get</a>
     &mdash;
-    <span class="container">Net::SSH::Transport::HMAC</span>
+    <span class="container">Net::SSH::KeyFactory</span>
 
   <li class="method">
     <a href="Net/SSH/Authentication/Pageant/Win.html#method-c-get_cstr">::get_cstr</a>
@@ -727,14 +750,14 @@
     <span class="container">Net::SSH::Transport::IdentityCipher</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/HMAC.html#method-c-key_length">::key_length</a>
-    &mdash;
-    <span class="container">Net::SSH::Transport::HMAC</span>
-
-  <li class="method">
     <a href="Net/SSH/Transport/HMAC/Abstract.html#method-c-key_length">::key_length</a>
     &mdash;
     <span class="container">Net::SSH::Transport::HMAC::Abstract</span>
+
+  <li class="method">
+    <a href="Net/SSH/Transport/HMAC.html#method-c-key_length">::key_length</a>
+    &mdash;
+    <span class="container">Net::SSH::Transport::HMAC</span>
 
   <li class="method">
     <a href="Net/SSH/Config.html#method-c-load">::load</a>
@@ -777,14 +800,29 @@
     <span class="container">Net::SSH::Transport::IdentityCipher</span>
 
   <li class="method">
-    <a href="Net/SSH/Proxy/SOCKS4.html#method-c-new">::new</a>
+    <a href="Net/SSH/Connection/Channel.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Net::SSH::Proxy::SOCKS4</span>
+    <span class="container">Net::SSH::Connection::Channel</span>
 
   <li class="method">
-    <a href="Net/SSH/Test/Script.html#method-c-new">::new</a>
+    <a href="Net/SSH/Authentication/Agent.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Net::SSH::Test::Script</span>
+    <span class="container">Net::SSH::Authentication::Agent</span>
+
+  <li class="method">
+    <a href="Net/SSH/Connection/Session.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Connection::Session</span>
+
+  <li class="method">
+    <a href="RbNaCl/Signatures/Ed25519/SigningKeyFromFile.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RbNaCl::Signatures::Ed25519::SigningKeyFromFile</span>
+
+  <li class="method">
+    <a href="ED25519/PubKey.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">ED25519::PubKey</span>
 
   <li class="method">
     <a href="Net/SSH/Connection/Session/NilChannel.html#method-c-new">::new</a>
@@ -792,19 +830,49 @@
     <span class="container">Net::SSH::Connection::Session::NilChannel</span>
 
   <li class="method">
-    <a href="Net/SSH/Buffer.html#method-c-new">::new</a>
+    <a href="Net/SSH/ChannelOpenFailed.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Net::SSH::Buffer</span>
+    <span class="container">Net::SSH::ChannelOpenFailed</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/HMAC/Abstract.html#method-c-new">::new</a>
+    <a href="ED25519/PrivKey.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Net::SSH::Transport::HMAC::Abstract</span>
+    <span class="container">ED25519::PrivKey</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/ServerVersion.html#method-c-new">::new</a>
+    <a href="Net/SSH/Authentication/KeyManager.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Net::SSH::Transport::ServerVersion</span>
+    <span class="container">Net::SSH::Authentication::KeyManager</span>
+
+  <li class="method">
+    <a href="Net/SSH/Connection/Keepalive.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Connection::Keepalive</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Methods/Abstract.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Methods::Abstract</span>
+
+  <li class="method">
+    <a href="Net/SSH/HostKeys.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::HostKeys</span>
+
+  <li class="method">
+    <a href="Net/SSH/Version.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Version</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Pageant/Socket.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Pageant::Socket</span>
+
+  <li class="method">
+    <a href="Net/SSH/Transport/State.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Transport::State</span>
 
   <li class="method">
     <a href="Net/SSH/Transport/Session.html#method-c-new">::new</a>
@@ -817,59 +885,29 @@
     <span class="container">Net::SSH::Authentication::Session</span>
 
   <li class="method">
-    <a href="Net/SSH/Authentication/Agent.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Authentication::Agent</span>
-
-  <li class="method">
-    <a href="Net/SSH/HostKeys.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::HostKeys</span>
-
-  <li class="method">
-    <a href="Net/SSH/ChannelOpenFailed.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::ChannelOpenFailed</span>
-
-  <li class="method">
-    <a href="Net/SSH/Test/Packet.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Test::Packet</span>
-
-  <li class="method">
-    <a href="Net/SSH/Transport/Algorithms.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Transport::Algorithms</span>
-
-  <li class="method">
-    <a href="Net/SSH/Test/LocalPacket.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Test::LocalPacket</span>
-
-  <li class="method">
-    <a href="Net/SSH/Test/Kex.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Test::Kex</span>
-
-  <li class="method">
-    <a href="Net/SSH/Authentication/Pageant/Socket.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Authentication::Pageant::Socket</span>
-
-  <li class="method">
-    <a href="Net/SSH/Connection/Session.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Connection::Session</span>
-
-  <li class="method">
-    <a href="Net/SSH/Authentication/KeyManager.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Authentication::KeyManager</span>
-
-  <li class="method">
     <a href="Net/SSH/KnownHosts.html#method-c-new">::new</a>
     &mdash;
     <span class="container">Net::SSH::KnownHosts</span>
+
+  <li class="method">
+    <a href="Net/SSH/Transport/ServerVersion.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Transport::ServerVersion</span>
+
+  <li class="method">
+    <a href="Net/SSH/Buffer.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Buffer</span>
+
+  <li class="method">
+    <a href="Net/SSH/Transport/Kex/EcdhSHA2NistP256.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Transport::Kex::EcdhSHA2NistP256</span>
+
+  <li class="method">
+    <a href="Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA256.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256</span>
 
   <li class="method">
     <a href="Net/SSH/Packet.html#method-c-new">::new</a>
@@ -882,16 +920,6 @@
     <span class="container">Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/State.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Transport::State</span>
-
-  <li class="method">
-    <a href="Net/SSH/Connection/Keepalive.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Connection::Keepalive</span>
-
-  <li class="method">
     <a href="Net/SSH/Proxy/Command.html#method-c-new">::new</a>
     &mdash;
     <span class="container">Net::SSH::Proxy::Command</span>
@@ -902,9 +930,14 @@
     <span class="container">Net::SSH::Proxy::HTTP</span>
 
   <li class="method">
-    <a href="Net/SSH/Connection/Channel.html#method-c-new">::new</a>
+    <a href="Net/SSH/Transport/HMAC/Abstract.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Net::SSH::Connection::Channel</span>
+    <span class="container">Net::SSH::Transport::HMAC::Abstract</span>
+
+  <li class="method">
+    <a href="Net/SSH/Proxy/SOCKS4.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Proxy::SOCKS4</span>
 
   <li class="method">
     <a href="Net/SSH/Proxy/SOCKS5.html#method-c-new">::new</a>
@@ -912,29 +945,34 @@
     <span class="container">Net::SSH::Proxy::SOCKS5</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/Kex/EcdhSHA2NistP256.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Net::SSH::Transport::Kex::EcdhSHA2NistP256</span>
-
-  <li class="method">
     <a href="Net/SSH/Service/Forward.html#method-c-new">::new</a>
     &mdash;
     <span class="container">Net::SSH::Service::Forward</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA256.html#method-c-new">::new</a>
+    <a href="Net/SSH/Transport/Algorithms.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256</span>
+    <span class="container">Net::SSH::Transport::Algorithms</span>
 
   <li class="method">
-    <a href="Net/SSH/Version.html#method-c-new">::new</a>
+    <a href="Net/SSH/Test/Socket.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Net::SSH::Version</span>
+    <span class="container">Net::SSH::Test::Socket</span>
 
   <li class="method">
-    <a href="Net/SSH/Authentication/Methods/Abstract.html#method-c-new">::new</a>
+    <a href="Net/SSH/Test/Script.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Net::SSH::Authentication::Methods::Abstract</span>
+    <span class="container">Net::SSH::Test::Script</span>
+
+  <li class="method">
+    <a href="Net/SSH/Test/Packet.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Test::Packet</span>
+
+  <li class="method">
+    <a href="Net/SSH/Test/LocalPacket.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Test::LocalPacket</span>
 
   <li class="method">
     <a href="Net/SSH/Test/Channel.html#method-c-new">::new</a>
@@ -942,9 +980,9 @@
     <span class="container">Net::SSH::Test::Channel</span>
 
   <li class="method">
-    <a href="Net/SSH/Test/Socket.html#method-c-new">::new</a>
+    <a href="Net/SSH/Test/Kex.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Net::SSH::Test::Socket</span>
+    <span class="container">Net::SSH::Test::Kex</span>
 
   <li class="method">
     <a href="Net/SSH/Authentication/Pageant/Socket.html#method-c-open">::open</a>
@@ -962,9 +1000,24 @@
     <span class="container">Net::SSH::Authentication::Pageant::Win</span>
 
   <li class="method">
+    <a href="ED25519/PrivKey.html#method-c-read">::read</a>
+    &mdash;
+    <span class="container">ED25519::PrivKey</span>
+
+  <li class="method">
+    <a href="ED25519/PubKey.html#method-c-read_keyblob">::read_keyblob</a>
+    &mdash;
+    <span class="container">ED25519::PubKey</span>
+
+  <li class="method">
     <a href="OpenSSL/PKey/EC.html#method-c-read_keyblob">::read_keyblob</a>
     &mdash;
     <span class="container">OpenSSL::PKey::EC</span>
+
+  <li class="method">
+    <a href="ED25519/PrivKey.html#method-c-read_keyblob">::read_keyblob</a>
+    &mdash;
+    <span class="container">ED25519::PrivKey</span>
 
   <li class="method">
     <a href="Net/SSH/Packet.html#method-c-register">::register</a>
@@ -1022,11 +1075,6 @@
     <span class="container">Net::SSH::Buffer</span>
 
   <li class="method">
-    <a href="Net/SSH/Packet.html#method-i-5B-5D">#[]</a>
-    &mdash;
-    <span class="container">Net::SSH::Packet</span>
-
-  <li class="method">
     <a href="Net/SSH/HostKeyError.html#method-i-5B-5D">#[]</a>
     &mdash;
     <span class="container">Net::SSH::HostKeyError</span>
@@ -1035,6 +1083,11 @@
     <a href="Net/SSH/Transport/Algorithms.html#method-i-5B-5D">#[]</a>
     &mdash;
     <span class="container">Net::SSH::Transport::Algorithms</span>
+
+  <li class="method">
+    <a href="Net/SSH/Packet.html#method-i-5B-5D">#[]</a>
+    &mdash;
+    <span class="container">Net::SSH::Packet</span>
 
   <li class="method">
     <a href="Net/SSH/Connection/Session.html#method-i-5B-5D">#[]</a>
@@ -1047,14 +1100,14 @@
     <span class="container">Net::SSH::Connection::Channel</span>
 
   <li class="method">
-    <a href="Net/SSH/Connection/Session.html#method-i-5B-5D-3D">#[]=</a>
-    &mdash;
-    <span class="container">Net::SSH::Connection::Session</span>
-
-  <li class="method">
     <a href="Net/SSH/Connection/Channel.html#method-i-5B-5D-3D">#[]=</a>
     &mdash;
     <span class="container">Net::SSH::Connection::Channel</span>
+
+  <li class="method">
+    <a href="Net/SSH/Connection/Session.html#method-i-5B-5D-3D">#[]=</a>
+    &mdash;
+    <span class="container">Net::SSH::Connection::Session</span>
 
   <li class="method">
     <a href="Net/SSH/Transport/Algorithms.html#method-i-accept_kexinit">#accept_kexinit</a>
@@ -1102,14 +1155,14 @@
     <span class="container">Net::SSH::Authentication::KeyManager</span>
 
   <li class="method">
-    <a href="Net/SSH/Authentication/KeyManager.html#method-i-agent">#agent</a>
-    &mdash;
-    <span class="container">Net::SSH::Authentication::KeyManager</span>
-
-  <li class="method">
     <a href="Net/SSH/Service/Forward.html#method-i-agent">#agent</a>
     &mdash;
     <span class="container">Net::SSH::Service::Forward</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/KeyManager.html#method-i-agent">#agent</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::KeyManager</span>
 
   <li class="method">
     <a href="Net/SSH/Transport/Algorithms.html#method-i-allow-3F">#allow?</a>
@@ -1127,14 +1180,9 @@
     <span class="container">Net::SSH::Test</span>
 
   <li class="method">
-    <a href="Net/SSH/Authentication/Session.html#method-i-authenticate">#authenticate</a>
+    <a href="Net/SSH/Authentication/Methods/KeyboardInteractive.html#method-i-authenticate">#authenticate</a>
     &mdash;
-    <span class="container">Net::SSH::Authentication::Session</span>
-
-  <li class="method">
-    <a href="Net/SSH/Authentication/Methods/None.html#method-i-authenticate">#authenticate</a>
-    &mdash;
-    <span class="container">Net::SSH::Authentication::Methods::None</span>
+    <span class="container">Net::SSH::Authentication::Methods::KeyboardInteractive</span>
 
   <li class="method">
     <a href="Net/SSH/Authentication/Methods/Hostbased.html#method-i-authenticate">#authenticate</a>
@@ -1147,9 +1195,14 @@
     <span class="container">Net::SSH::Authentication::Methods::Publickey</span>
 
   <li class="method">
-    <a href="Net/SSH/Authentication/Methods/KeyboardInteractive.html#method-i-authenticate">#authenticate</a>
+    <a href="Net/SSH/Authentication/Methods/None.html#method-i-authenticate">#authenticate</a>
     &mdash;
-    <span class="container">Net::SSH::Authentication::Methods::KeyboardInteractive</span>
+    <span class="container">Net::SSH::Authentication::Methods::None</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Session.html#method-i-authenticate">#authenticate</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Session</span>
 
   <li class="method">
     <a href="Net/SSH/Authentication/Methods/Password.html#method-i-authenticate">#authenticate</a>
@@ -1157,14 +1210,14 @@
     <span class="container">Net::SSH::Authentication::Methods::Password</span>
 
   <li class="method">
-    <a href="Net/SSH/BufferedIo.html#method-i-available">#available</a>
-    &mdash;
-    <span class="container">Net::SSH::BufferedIo</span>
-
-  <li class="method">
     <a href="Net/SSH/Buffer.html#method-i-available">#available</a>
     &mdash;
     <span class="container">Net::SSH::Buffer</span>
+
+  <li class="method">
+    <a href="Net/SSH/BufferedIo.html#method-i-available">#available</a>
+    &mdash;
+    <span class="container">Net::SSH::BufferedIo</span>
 
   <li class="method">
     <a href="Net/SSH/Transport/PacketStream.html#method-i-available_for_read-3F">#available_for_read?</a>
@@ -1187,14 +1240,14 @@
     <span class="container">Net::SSH::Service::Forward</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/PacketStream.html#method-i-cleanup">#cleanup</a>
-    &mdash;
-    <span class="container">Net::SSH::Transport::PacketStream</span>
-
-  <li class="method">
     <a href="Net/SSH/Transport/State.html#method-i-cleanup">#cleanup</a>
     &mdash;
     <span class="container">Net::SSH::Transport::State</span>
+
+  <li class="method">
+    <a href="Net/SSH/Transport/PacketStream.html#method-i-cleanup">#cleanup</a>
+    &mdash;
+    <span class="container">Net::SSH::Transport::PacketStream</span>
 
   <li class="method">
     <a href="Net/SSH/Connection/Session.html#method-i-cleanup_channel">#cleanup_channel</a>
@@ -1217,19 +1270,19 @@
     <span class="container">Net::SSH::Transport::PacketStream</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/Session.html#method-i-close">#close</a>
-    &mdash;
-    <span class="container">Net::SSH::Transport::Session</span>
-
-  <li class="method">
     <a href="Net/SSH/Authentication/Agent.html#method-i-close">#close</a>
     &mdash;
     <span class="container">Net::SSH::Authentication::Agent</span>
 
   <li class="method">
-    <a href="Net/SSH/Authentication/Pageant/Socket.html#method-i-close">#close</a>
+    <a href="Net/SSH/Transport/Session.html#method-i-close">#close</a>
     &mdash;
-    <span class="container">Net::SSH::Authentication::Pageant::Socket</span>
+    <span class="container">Net::SSH::Transport::Session</span>
+
+  <li class="method">
+    <a href="Net/SSH/Connection/Channel.html#method-i-close">#close</a>
+    &mdash;
+    <span class="container">Net::SSH::Connection::Channel</span>
 
   <li class="method">
     <a href="Net/SSH/Connection/Session.html#method-i-close">#close</a>
@@ -1237,9 +1290,9 @@
     <span class="container">Net::SSH::Connection::Session</span>
 
   <li class="method">
-    <a href="Net/SSH/Connection/Channel.html#method-i-close">#close</a>
+    <a href="Net/SSH/Authentication/Pageant/Socket.html#method-i-close">#close</a>
     &mdash;
-    <span class="container">Net::SSH::Connection::Channel</span>
+    <span class="container">Net::SSH::Authentication::Pageant::Socket</span>
 
   <li class="method">
     <a href="Net/SSH/Connection/Session.html#method-i-closed-3F">#closed?</a>
@@ -1302,14 +1355,14 @@
     <span class="container">Net::SSH::Transport::Kex::EcdhSHA2NistP256</span>
 
   <li class="method">
-    <a href="Net/SSH/Transport/Kex/EcdhSHA2NistP384.html#method-i-curve_name">#curve_name</a>
-    &mdash;
-    <span class="container">Net::SSH::Transport::Kex::EcdhSHA2NistP384</span>
-
-  <li class="method">
     <a href="Net/SSH/Transport/Kex/EcdhSHA2NistP521.html#method-i-curve_name">#curve_name</a>
     &mdash;
     <span class="container">Net::SSH::Transport::Kex::EcdhSHA2NistP521</span>
+
+  <li class="method">
+    <a href="Net/SSH/Transport/Kex/EcdhSHA2NistP384.html#method-i-curve_name">#curve_name</a>
+    &mdash;
+    <span class="container">Net::SSH::Transport::Kex::EcdhSHA2NistP384</span>
 
   <li class="method">
     <a href="Net/SSH/Loggable.html#method-i-debug">#debug</a>
@@ -1495,6 +1548,11 @@
     <a href="Net/SSH/HostKeyError.html#method-i-fingerprint">#fingerprint</a>
     &mdash;
     <span class="container">Net::SSH::HostKeyError</span>
+
+  <li class="method">
+    <a href="ED25519/PubKey.html#method-i-fingerprint">#fingerprint</a>
+    &mdash;
+    <span class="container">ED25519::PubKey</span>
 
   <li class="method">
     <a href="OpenSSL/PKey/PKey.html#method-i-fingerprint">#fingerprint</a>
@@ -1767,14 +1825,14 @@
     <span class="container">Net::SSH::Test::Script</span>
 
   <li class="method">
-    <a href="Net/SSH/Authentication/Session.html#method-i-next_message">#next_message</a>
-    &mdash;
-    <span class="container">Net::SSH::Authentication::Session</span>
-
-  <li class="method">
     <a href="Net/SSH/Transport/Session.html#method-i-next_message">#next_message</a>
     &mdash;
     <span class="container">Net::SSH::Transport::Session</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Session.html#method-i-next_message">#next_message</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Session</span>
 
   <li class="method">
     <a href="Net/SSH/Transport/PacketStream.html#method-i-next_packet">#next_packet</a>
@@ -1837,6 +1895,11 @@
     <span class="container">Net::SSH::Proxy::SOCKS5</span>
 
   <li class="method">
+    <a href="Net/SSH/Proxy/SOCKS4.html#method-i-open">#open</a>
+    &mdash;
+    <span class="container">Net::SSH::Proxy::SOCKS4</span>
+
+  <li class="method">
     <a href="Net/SSH/Proxy/Command.html#method-i-open">#open</a>
     &mdash;
     <span class="container">Net::SSH::Proxy::Command</span>
@@ -1845,11 +1908,6 @@
     <a href="Net/SSH/Test/Socket.html#method-i-open">#open</a>
     &mdash;
     <span class="container">Net::SSH::Test::Socket</span>
-
-  <li class="method">
-    <a href="Net/SSH/Proxy/SOCKS4.html#method-i-open">#open</a>
-    &mdash;
-    <span class="container">Net::SSH::Proxy::SOCKS4</span>
 
   <li class="method">
     <a href="Net/SSH/Connection/Session.html#method-i-open_channel">#open_channel</a>
@@ -1917,9 +1975,9 @@
     <span class="container">Net::SSH::Test::Script</span>
 
   <li class="method">
-    <a href="Net/SSH/Connection/Session.html#method-i-process">#process</a>
+    <a href="Net/SSH/Connection/Channel.html#method-i-process">#process</a>
     &mdash;
-    <span class="container">Net::SSH::Connection::Session</span>
+    <span class="container">Net::SSH::Connection::Channel</span>
 
   <li class="method">
     <a href="Net/SSH/Test/RemotePacket.html#method-i-process">#process</a>
@@ -1927,14 +1985,14 @@
     <span class="container">Net::SSH::Test::RemotePacket</span>
 
   <li class="method">
+    <a href="Net/SSH/Connection/Session.html#method-i-process">#process</a>
+    &mdash;
+    <span class="container">Net::SSH::Connection::Session</span>
+
+  <li class="method">
     <a href="Net/SSH/Test/LocalPacket.html#method-i-process">#process</a>
     &mdash;
     <span class="container">Net::SSH::Test::LocalPacket</span>
-
-  <li class="method">
-    <a href="Net/SSH/Connection/Channel.html#method-i-process">#process</a>
-    &mdash;
-    <span class="container">Net::SSH::Connection::Channel</span>
 
   <li class="method">
     <a href="Net/SSH/PromptMethods/Termios.html#method-i-prompt">#prompt</a>
@@ -1942,14 +2000,19 @@
     <span class="container">Net::SSH::PromptMethods::Termios</span>
 
   <li class="method">
+    <a href="Net/SSH/PromptMethods/Highline.html#method-i-prompt">#prompt</a>
+    &mdash;
+    <span class="container">Net::SSH::PromptMethods::Highline</span>
+
+  <li class="method">
     <a href="Net/SSH/PromptMethods/Clear.html#method-i-prompt">#prompt</a>
     &mdash;
     <span class="container">Net::SSH::PromptMethods::Clear</span>
 
   <li class="method">
-    <a href="Net/SSH/PromptMethods/Highline.html#method-i-prompt">#prompt</a>
+    <a href="ED25519/PrivKey.html#method-i-public_key">#public_key</a>
     &mdash;
-    <span class="container">Net::SSH::PromptMethods::Highline</span>
+    <span class="container">ED25519::PrivKey</span>
 
   <li class="method">
     <a href="Net/SSH/Transport/Session.html#method-i-push">#push</a>
@@ -2152,6 +2215,11 @@
     <span class="container">Net::SSH::Connection::Session</span>
 
   <li class="method">
+    <a href="Net/SSH/Authentication/Methods/Abstract.html#method-i-send_message">#send_message</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Methods::Abstract</span>
+
+  <li class="method">
     <a href="Net/SSH/Transport/Session.html#method-i-send_message">#send_message</a>
     &mdash;
     <span class="container">Net::SSH::Transport::Session</span>
@@ -2162,24 +2230,19 @@
     <span class="container">Net::SSH::Connection::Session</span>
 
   <li class="method">
-    <a href="Net/SSH/Authentication/Methods/Abstract.html#method-i-send_message">#send_message</a>
-    &mdash;
-    <span class="container">Net::SSH::Authentication::Methods::Abstract</span>
-
-  <li class="method">
     <a href="Net/SSH/Transport/PacketStream.html#method-i-send_packet">#send_packet</a>
     &mdash;
     <span class="container">Net::SSH::Transport::PacketStream</span>
 
   <li class="method">
-    <a href="Net/SSH/ForwardedBufferedIo.html#method-i-send_pending">#send_pending</a>
-    &mdash;
-    <span class="container">Net::SSH::ForwardedBufferedIo</span>
-
-  <li class="method">
     <a href="Net/SSH/BufferedIo.html#method-i-send_pending">#send_pending</a>
     &mdash;
     <span class="container">Net::SSH::BufferedIo</span>
+
+  <li class="method">
+    <a href="Net/SSH/ForwardedBufferedIo.html#method-i-send_pending">#send_pending</a>
+    &mdash;
+    <span class="container">Net::SSH::ForwardedBufferedIo</span>
 
   <li class="method">
     <a href="Net/SSH/Authentication/Pageant/Socket.html#method-i-send_query">#send_query</a>
@@ -2272,24 +2335,19 @@
     <span class="container">Net::SSH::Transport::Session</span>
 
   <li class="method">
-    <a href="Net/SSH/Authentication/KeyManager.html#method-i-sign">#sign</a>
-    &mdash;
-    <span class="container">Net::SSH::Authentication::KeyManager</span>
-
-  <li class="method">
     <a href="Net/SSH/Authentication/Agent.html#method-i-sign">#sign</a>
     &mdash;
     <span class="container">Net::SSH::Authentication::Agent</span>
 
   <li class="method">
+    <a href="Net/SSH/Authentication/KeyManager.html#method-i-sign">#sign</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::KeyManager</span>
+
+  <li class="method">
     <a href="Net/SSH/Test.html#method-i-socket">#socket</a>
     &mdash;
     <span class="container">Net::SSH::Test</span>
-
-  <li class="method">
-    <a href="OpenSSL/PKey/RSA.html#method-i-ssh_do_sign">#ssh_do_sign</a>
-    &mdash;
-    <span class="container">OpenSSL::PKey::RSA</span>
 
   <li class="method">
     <a href="OpenSSL/PKey/DSA.html#method-i-ssh_do_sign">#ssh_do_sign</a>
@@ -2302,14 +2360,19 @@
     <span class="container">OpenSSL::PKey::EC</span>
 
   <li class="method">
-    <a href="OpenSSL/PKey/EC.html#method-i-ssh_do_verify">#ssh_do_verify</a>
+    <a href="ED25519/PrivKey.html#method-i-ssh_do_sign">#ssh_do_sign</a>
     &mdash;
-    <span class="container">OpenSSL::PKey::EC</span>
+    <span class="container">ED25519::PrivKey</span>
 
   <li class="method">
-    <a href="OpenSSL/PKey/DSA.html#method-i-ssh_do_verify">#ssh_do_verify</a>
+    <a href="OpenSSL/PKey/RSA.html#method-i-ssh_do_sign">#ssh_do_sign</a>
     &mdash;
-    <span class="container">OpenSSL::PKey::DSA</span>
+    <span class="container">OpenSSL::PKey::RSA</span>
+
+  <li class="method">
+    <a href="ED25519/PubKey.html#method-i-ssh_do_verify">#ssh_do_verify</a>
+    &mdash;
+    <span class="container">ED25519::PubKey</span>
 
   <li class="method">
     <a href="OpenSSL/PKey/RSA.html#method-i-ssh_do_verify">#ssh_do_verify</a>
@@ -2317,19 +2380,34 @@
     <span class="container">OpenSSL::PKey::RSA</span>
 
   <li class="method">
+    <a href="OpenSSL/PKey/DSA.html#method-i-ssh_do_verify">#ssh_do_verify</a>
+    &mdash;
+    <span class="container">OpenSSL::PKey::DSA</span>
+
+  <li class="method">
+    <a href="OpenSSL/PKey/EC.html#method-i-ssh_do_verify">#ssh_do_verify</a>
+    &mdash;
+    <span class="container">OpenSSL::PKey::EC</span>
+
+  <li class="method">
     <a href="OpenSSL/PKey/EC.html#method-i-ssh_type">#ssh_type</a>
     &mdash;
     <span class="container">OpenSSL::PKey::EC</span>
 
   <li class="method">
-    <a href="OpenSSL/PKey/RSA.html#method-i-ssh_type">#ssh_type</a>
+    <a href="ED25519/PubKey.html#method-i-ssh_type">#ssh_type</a>
     &mdash;
-    <span class="container">OpenSSL::PKey::RSA</span>
+    <span class="container">ED25519::PubKey</span>
 
   <li class="method">
     <a href="OpenSSL/PKey/DSA.html#method-i-ssh_type">#ssh_type</a>
     &mdash;
     <span class="container">OpenSSL::PKey::DSA</span>
+
+  <li class="method">
+    <a href="OpenSSL/PKey/RSA.html#method-i-ssh_type">#ssh_type</a>
+    &mdash;
+    <span class="container">OpenSSL::PKey::RSA</span>
 
   <li class="method">
     <a href="Net/SSH/Connection/Session.html#method-i-stop_listening_to">#stop_listening_to</a>
@@ -2362,14 +2440,19 @@
     <span class="container">Net::SSH::Test::Extensions::PacketStream</span>
 
   <li class="method">
-    <a href="OpenSSL/PKey/DSA.html#method-i-to_blob">#to_blob</a>
-    &mdash;
-    <span class="container">OpenSSL::PKey::DSA</span>
-
-  <li class="method">
     <a href="OpenSSL/PKey/RSA.html#method-i-to_blob">#to_blob</a>
     &mdash;
     <span class="container">OpenSSL::PKey::RSA</span>
+
+  <li class="method">
+    <a href="ED25519/PubKey.html#method-i-to_blob">#to_blob</a>
+    &mdash;
+    <span class="container">ED25519::PubKey</span>
+
+  <li class="method">
+    <a href="OpenSSL/PKey/DSA.html#method-i-to_blob">#to_blob</a>
+    &mdash;
+    <span class="container">OpenSSL::PKey::DSA</span>
 
   <li class="method">
     <a href="OpenSSL/PKey/EC.html#method-i-to_blob">#to_blob</a>
@@ -2382,19 +2465,24 @@
     <span class="container">Net::SSH::Version</span>
 
   <li class="method">
+    <a href="ED25519/PubKey.html#method-i-to_pem">#to_pem</a>
+    &mdash;
+    <span class="container">ED25519::PubKey</span>
+
+  <li class="method">
     <a href="Net/SSH/Version.html#method-i-to_s">#to_s</a>
     &mdash;
     <span class="container">Net::SSH::Version</span>
 
   <li class="method">
-    <a href="Net/SSH/Test/RemotePacket.html#method-i-to_s">#to_s</a>
-    &mdash;
-    <span class="container">Net::SSH::Test::RemotePacket</span>
-
-  <li class="method">
     <a href="Net/SSH/Buffer.html#method-i-to_s">#to_s</a>
     &mdash;
     <span class="container">Net::SSH::Buffer</span>
+
+  <li class="method">
+    <a href="Net/SSH/Test/RemotePacket.html#method-i-to_s">#to_s</a>
+    &mdash;
+    <span class="container">Net::SSH::Test::RemotePacket</span>
 
   <li class="method">
     <a href="OpenSSL/BN.html#method-i-to_ssh">#to_ssh</a>
@@ -2437,6 +2525,16 @@
     <span class="container">OpenSSL::PKey::DH</span>
 
   <li class="method">
+    <a href="Net/SSH/Verifiers/Secure.html#method-i-verify">#verify</a>
+    &mdash;
+    <span class="container">Net::SSH::Verifiers::Secure</span>
+
+  <li class="method">
+    <a href="Net/SSH/Verifiers/Lenient.html#method-i-verify">#verify</a>
+    &mdash;
+    <span class="container">Net::SSH::Verifiers::Lenient</span>
+
+  <li class="method">
     <a href="Net/SSH/Verifiers/Strict.html#method-i-verify">#verify</a>
     &mdash;
     <span class="container">Net::SSH::Verifiers::Strict</span>
@@ -2445,16 +2543,6 @@
     <a href="Net/SSH/Verifiers/Null.html#method-i-verify">#verify</a>
     &mdash;
     <span class="container">Net::SSH::Verifiers::Null</span>
-
-  <li class="method">
-    <a href="Net/SSH/Verifiers/Lenient.html#method-i-verify">#verify</a>
-    &mdash;
-    <span class="container">Net::SSH::Verifiers::Lenient</span>
-
-  <li class="method">
-    <a href="Net/SSH/Verifiers/Secure.html#method-i-verify">#verify</a>
-    &mdash;
-    <span class="container">Net::SSH::Verifiers::Secure</span>
 
   <li class="method">
     <a href="Net/SSH/Connection/Channel.html#method-i-wait">#wait</a>
@@ -2472,14 +2560,14 @@
     <span class="container">Net::SSH::BufferedIo</span>
 
   <li class="method">
-    <a href="Net/SSH/Buffer.html#method-i-write">#write</a>
-    &mdash;
-    <span class="container">Net::SSH::Buffer</span>
-
-  <li class="method">
     <a href="Net/SSH/Test/Socket.html#method-i-write">#write</a>
     &mdash;
     <span class="container">Net::SSH::Test::Socket</span>
+
+  <li class="method">
+    <a href="Net/SSH/Buffer.html#method-i-write">#write</a>
+    &mdash;
+    <span class="container">Net::SSH::Buffer</span>
 
   <li class="method">
     <a href="Net/SSH/Buffer.html#method-i-write_bignum">#write_bignum</a>
@@ -2521,7 +2609,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

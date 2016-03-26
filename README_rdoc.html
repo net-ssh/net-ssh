@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>README - net-ssh 3.1.0.rc2</title>
+<title>README - net-ssh 4.0.0.alpha2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
@@ -55,16 +55,15 @@
   <h3>Table of Contents</h3>
 
   <ul class="link-list" role="directory">
-    <li><a href="#label-Net-3A-3ASSH+3.x">Net::SSH 3.x</a>
+    <li><a href="#label-Net-3A-3ASSH+4.x">Net::SSH 4.x</a>
     <li><a href="#label-DESCRIPTION-3A">DESCRIPTION:</a>
     <li><a href="#label-FEATURES-3A">FEATURES:</a>
     <li><a href="#label-SYNOPSIS-3A">SYNOPSIS:</a>
     <li><a href="#label-REQUIREMENTS-3A">REQUIREMENTS:</a>
     <li><a href="#label-INSTALL-3A">INSTALL:</a>
-    <li><a href="#label-RUBY+1.x+SUPPORT">RUBY 1.x SUPPORT</a>
+    <li><a href="#label-RUBY+SUPPORT">RUBY SUPPORT</a>
     <li><a href="#label-RUNNING+TESTS">RUNNING TESTS</a>
     <li><a href="#label-BUILDING+GEM">BUILDING GEM</a>
-    <li><a href="#label-PORT+FORWARDING+TESTS">PORT FORWARDING TESTS</a>
     <li><a href="#label-LICENSE-3A">LICENSE:</a>
   </ul>
 </div>
@@ -92,11 +91,7 @@
 
 <main role="main" aria-label="Page README.rdoc">
 
-<h1 id="label-Net-3A-3ASSH+3.x"><a href="Net/SSH.html">Net::SSH</a> 3.x<span><a href="#label-Net-3A-3ASSH+3.x">&para;</a> <a href="#top">&uarr;</a></span></h1>
-
-<p><strong><em>Please note: this project is in maintenance mode. It is not
-under active development but pull requests are very much welcome. Just be
-sure to include tests! – delano</em></strong></p>
+<h1 id="label-Net-3A-3ASSH+4.x"><a href="Net/SSH.html">Net::SSH</a> 4.x<span><a href="#label-Net-3A-3ASSH+4.x">&para;</a> <a href="#top">&uarr;</a></span></h1>
 <ul><li>
 <p>Docs: <a
 href="http://net-ssh.github.com/net-ssh">net-ssh.github.com/net-ssh</a></p>
@@ -206,20 +201,12 @@ certificate passphrases, you&#39;ll want to have either the Highline
 passwords don&#39;t echo in clear text.</p>
 
 <p>Lastly, if you want to run the tests or use any of the Rake tasks,
-you&#39;ll need:</p>
-<ul><li>
-<p>Echoe (for the Rakefile)</p>
-</li><li>
-<p>Mocha (for the tests)</p>
-</li></ul>
+you&#39;ll need Mocha and other dependencies listed in Gemfile</p>
 
 <h2 id="label-INSTALL-3A">INSTALL:<span><a href="#label-INSTALL-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <ul><li>
 <p>gem install net-ssh (might need sudo privileges)</p>
 </li></ul>
-
-<p>NOTE: If you are running on jruby you need to install jruby-pageant
-manually (gemspec doesn&#39;t allow for platform specific dependencies).</p>
 
 <p>However, in order to be sure the code you&#39;re installing hasn&#39;t been
 tampered with, it&#39;s recommended that you verify the <a
@@ -240,7 +227,7 @@ $ gem cert --add net-ssh-public_cert.pem</pre>
 “Couldn&#39;t verify data signature”. If you&#39;re still having trouble
 let me know and I&#39;ll give you a hand.</p>
 
-<h2 id="label-RUBY+1.x+SUPPORT">RUBY 1.x SUPPORT<span><a href="#label-RUBY+1.x+SUPPORT">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-RUBY+SUPPORT">RUBY SUPPORT<span><a href="#label-RUBY+SUPPORT">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <ul><li>
 <p>Ruby 1.8.x is supported up until the net-ssh 2.5.1 release.</p>
 </li><li>
@@ -253,41 +240,21 @@ let me know and I&#39;ll give you a hand.</p>
 
 <p>Run the test suite from the net-ssh directory with the following command:</p>
 
-<pre>bash -c &#39;unset HOME &amp;&amp; ruby -Ilib -Itest -rrubygems test/test_all.rb&#39;</pre>
+<pre class="ruby"><span class="ruby-identifier">bundle</span> <span class="ruby-identifier">exec</span> <span class="ruby-identifier">rake</span> <span class="ruby-identifier">test</span>
+</pre>
 
 <p>Run a single test file like this:</p>
 
-<pre>ruby -Ilib -Itest -rrubygems test/transport/test_server_version.rb</pre>
+<pre>ruby -Ilib -Itest test/transport/test_server_version.rb</pre>
 
 <p>To run integration tests see test/integration/README.txt</p>
 
 <h3 id="label-BUILDING+GEM">BUILDING GEM<span><a href="#label-BUILDING+GEM">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
 <p>Since building the gem requires the private key if you want to build a .gem
-locally please use the NET_SSH_NOKEY=1 envirnoment variable:</p>
+locally please use the NET_SSH_BUILDGEM_UNSIGNED=1 envirnoment variable:</p>
 
-<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">build</span> <span class="ruby-constant">NET_SSH_NOKEY</span>=<span class="ruby-value">1</span>
-</pre>
-
-<h3 id="label-PORT+FORWARDING+TESTS">PORT FORWARDING TESTS<span><a href="#label-PORT+FORWARDING+TESTS">&para;</a> <a href="#top">&uarr;</a></span></h3>
-
-<pre>ruby -Ilib -Itest -rrubygems test/manual/test_forward.rb</pre>
-
-<p>test_forward.rb must be run separately from the test suite because it
-requires authorizing your public SSH keys on you localhost.</p>
-
-<p>If you already have keys you can do this:</p>
-
-<pre>cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</pre>
-
-<p>If you don&#39;t have keys see:</p>
-
-<pre>http://kimmo.suominen.com/docs/ssh/#ssh-keygen</pre>
-
-<p>You should now be able to login to your localhost with out bring prompted
-for a password:</p>
-
-<pre class="ruby"><span class="ruby-identifier">ssh</span> <span class="ruby-identifier">localhost</span>
+<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">build</span> <span class="ruby-constant">NET_SSH_BUILDGEM_UNSIGNED</span>=<span class="ruby-value">1</span>
 </pre>
 
 <h2 id="label-LICENSE-3A">LICENSE:<span><a href="#label-LICENSE-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -320,7 +287,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::KeyFactory - net-ssh 3.1.0.rc2</title>
+<title>class Net::SSH::KeyFactory - net-ssh 4.0.0.alpha2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -174,7 +174,7 @@ given type.</p>
 
           
           <div class="method-source-code" id="get-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 31</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 33</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-constant">MAP</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">name</span>).<span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
@@ -210,7 +210,7 @@ will be prompted to enter their password unless passphrase works.</p>
 
           
           <div class="method-source-code" id="load_data_private_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 50</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load_data_private_key</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">ask_passphrase</span>=<span class="ruby-keyword">true</span>, <span class="ruby-identifier">filename</span>=<span class="ruby-string">&quot;&quot;</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:read</span>)
     <span class="ruby-identifier">pkey_read</span> = <span class="ruby-keyword">true</span>
@@ -226,6 +226,9 @@ will be prompted to enter their password unless passphrase works.</p>
     <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/-----BEGIN EC PRIVATE KEY-----/</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span>)
       <span class="ruby-identifier">key_type</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span>
       <span class="ruby-identifier">error_class</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">ECError</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/-----BEGIN OPENSSH PRIVATE KEY-----/</span>)
+      <span class="ruby-identifier">openssh_key</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">key_type</span> = <span class="ruby-constant">ED25519</span><span class="ruby-operator">::</span><span class="ruby-constant">PrivKey</span>
     <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/-----BEGIN (.+) PRIVATE KEY-----/</span>)
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">PKeyError</span>, <span class="ruby-node">&quot;not a supported key type &#39;#{$1}&#39;&quot;</span>
     <span class="ruby-keyword">else</span>
@@ -234,13 +237,18 @@ will be prompted to enter their password unless passphrase works.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">encrypted_key</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/ENCRYPTED/</span>)
+  <span class="ruby-identifier">openssh_key</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/-----BEGIN OPENSSH PRIVATE KEY-----/</span>)
   <span class="ruby-identifier">tries</span> = <span class="ruby-value">0</span>
 
   <span class="ruby-keyword">begin</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">pkey_read</span>
-      <span class="ruby-keyword">return</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;invalid&#39;</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">openssh_key</span>
+      <span class="ruby-constant">ED25519</span><span class="ruby-operator">::</span><span class="ruby-constant">PrivKey</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;invalid&#39;</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-keyword">return</span> <span class="ruby-identifier">key_type</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;invalid&#39;</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">pkey_read</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;invalid&#39;</span>)
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">key_type</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;invalid&#39;</span>)
+      <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">rescue</span> <span class="ruby-identifier">error_class</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">encrypted_key</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ask_passphrase</span>
@@ -287,14 +295,14 @@ returned.</p>
 
           
           <div class="method-source-code" id="load_data_public_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 107</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 117</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load_data_public_key</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">filename</span>=<span class="ruby-string">&quot;&quot;</span>)
   <span class="ruby-identifier">fields</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/ /</span>)
 
   <span class="ruby-identifier">blob</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">begin</span>
     <span class="ruby-identifier">blob</span> = <span class="ruby-identifier">fields</span>.<span class="ruby-identifier">shift</span>
-  <span class="ruby-keyword">end</span> <span class="ruby-keyword">while</span> <span class="ruby-operator">!</span><span class="ruby-identifier">blob</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-regexp">/^(ssh-(rsa|dss)|ecdsa-sha2-nistp\d+)$/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">blob</span>)
+  <span class="ruby-keyword">end</span> <span class="ruby-keyword">while</span> <span class="ruby-operator">!</span><span class="ruby-identifier">blob</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-regexp">/^(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp\d+)$/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">blob</span>)
   <span class="ruby-identifier">blob</span> = <span class="ruby-identifier">fields</span>.<span class="ruby-identifier">shift</span>
 
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>, <span class="ruby-node">&quot;public key at #{filename} is not valid&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">blob</span>.<span class="ruby-identifier">nil?</span>
@@ -336,7 +344,7 @@ works.</p>
 
           
           <div class="method-source-code" id="load_private_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 40</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 42</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load_private_key</span>(<span class="ruby-identifier">filename</span>, <span class="ruby-identifier">passphrase</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">ask_passphrase</span>=<span class="ruby-keyword">true</span>)
   <span class="ruby-identifier">data</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">filename</span>))
   <span class="ruby-identifier">load_data_private_key</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span>, <span class="ruby-identifier">ask_passphrase</span>, <span class="ruby-identifier">filename</span>)
@@ -372,7 +380,7 @@ public key is returned.</p>
 
           
           <div class="method-source-code" id="load_public_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 99</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 109</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load_public_key</span>(<span class="ruby-identifier">filename</span>)
   <span class="ruby-identifier">data</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">filename</span>))
   <span class="ruby-identifier">load_data_public_key</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">filename</span>)
@@ -395,7 +403,7 @@ public key is returned.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
