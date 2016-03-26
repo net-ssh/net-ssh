@@ -10,7 +10,6 @@ rvm:
   - rbx-2
   - rbx-3
   - ruby-head
-  - rbx-head
 
 matrix:
   allow_failures:
