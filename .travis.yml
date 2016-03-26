@@ -16,7 +16,6 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: rbx-3
-    - rvm: rbx-head
 
 install: bundle install
 
