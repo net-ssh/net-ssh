@@ -11,7 +11,7 @@ end
 
 module Transport
 
-  class TestSession < Test::Unit::TestCase
+  class TestSession < NetSSHTest
     include Net::SSH::Transport::Constants
 
     def test_constructor_defaults

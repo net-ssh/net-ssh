@@ -5,7 +5,7 @@ require 'net/ssh/transport/hmac/sha1'
 
 module Transport; module HMAC
 
-  class TestSHA1 < Test::Unit::TestCase
+  class TestSHA1 < NetSSHTest
     def test_expected_digest_class
       assert_equal OpenSSL::Digest::SHA1, subject.digest_class
       assert_equal OpenSSL::Digest::SHA1, subject.new.digest_class

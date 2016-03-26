@@ -5,7 +5,7 @@ require 'net/ssh/transport/state'
 
 module Transport
 
-  class TestState < Test::Unit::TestCase
+  class TestState < NetSSHTest
 
     def setup
       @socket = @state = @deflater = @inflater = nil

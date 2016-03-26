@@ -5,7 +5,7 @@ require 'net/ssh/transport/hmac/ripemd160'
 
 module Transport; module HMAC
 
-  class TestRipemd160 < Test::Unit::TestCase
+  class TestRipemd160 < NetSSHTest
     def test_expected_digest_class
       assert_equal OpenSSL::Digest::RIPEMD160, subject.digest_class
       assert_equal OpenSSL::Digest::RIPEMD160, subject.new.digest_class

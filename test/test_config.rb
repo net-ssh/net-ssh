@@ -3,7 +3,7 @@ require 'net/ssh/config'
 require 'pathname'
 require 'tempfile'
 
-class TestConfig < Test::Unit::TestCase
+class TestConfig < NetSSHTest
   def test_home_should_be_absolute_path
     assert Pathname.new(ENV['HOME']).absolute?
   end

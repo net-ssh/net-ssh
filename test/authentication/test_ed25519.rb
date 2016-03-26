@@ -4,7 +4,7 @@ require 'base64'
 
 module Authentication
 
-  class TestED25519 < Test::Unit::TestCase
+  class TestED25519 < NetSSHTest
     def test_no_pwd_key
       pub = Net::SSH::Buffer.new(Base64.decode64(public_key_no_pwd.split(' ')[1]))
       _type = pub.read_string

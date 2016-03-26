@@ -1,6 +1,6 @@
 require 'common'
 
-class TestKnownHosts < Test::Unit::TestCase
+class TestKnownHosts < NetSSHTest
 
   def perform_test(source)
     kh = Net::SSH::KnownHosts.new(source)

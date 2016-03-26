@@ -3,7 +3,7 @@ require 'net/ssh/authentication/session'
 
 module Authentication
 
-  class TestSession < Test::Unit::TestCase
+  class TestSession < NetSSHTest
     include Net::SSH::Transport::Constants
     include Net::SSH::Authentication::Constants
 

@@ -4,7 +4,7 @@ require 'authentication/methods/common'
 
 module Authentication; module Methods
 
-  class TestKeyboardInteractive < Test::Unit::TestCase
+  class TestKeyboardInteractive < NetSSHTest
     include Common
 
     USERAUTH_INFO_REQUEST  = 60

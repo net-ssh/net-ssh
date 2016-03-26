@@ -3,7 +3,7 @@ require 'net/ssh/authentication/agent'
 
 module Authentication
 
-  class TestAgent < Test::Unit::TestCase
+  class TestAgent < NetSSHTest
 
     SSH2_AGENT_REQUEST_VERSION    = 1
     SSH2_AGENT_REQUEST_IDENTITIES = 11

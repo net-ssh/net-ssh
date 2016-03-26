@@ -3,7 +3,7 @@ require 'net/ssh/connection/channel'
 
 module Connection
 
-  class TestChannel < Test::Unit::TestCase
+  class TestChannel < NetSSHTest
     include Net::SSH::Connection::Constants
 
     def teardown

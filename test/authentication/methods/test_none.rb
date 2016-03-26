@@ -4,7 +4,7 @@ require 'authentication/methods/common'
 
 module Authentication; module Methods
 
-  class TestNone < Test::Unit::TestCase
+  class TestNone < NetSSHTest
     include Common
 
     def test_authenticate_should_raise_if_none_disallowed

@@ -16,10 +16,13 @@ require 'net/ssh/authentication/agent'
 
 module Authentication
 
-  class TestPageant < Test::Unit::TestCase
+  class TestPageant < NetSSHTest
 
     def test_agent_should_be_able_to_negotiate
-      assert_nothing_raised(Net::SSH::Authentication::AgentNotAvailable) { agent.negotiate! }
+      begin
+        agent.negotiate!
+      rescue Net::SSH::Authentication::AgentNotAvailable
+      end
     end
 
     private

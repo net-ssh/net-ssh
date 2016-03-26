@@ -5,7 +5,7 @@ require 'net/ssh/transport/hmac/md5'
 
 module Transport; module HMAC
 
-  class TestMD5 < Test::Unit::TestCase
+  class TestMD5 < NetSSHTest
     def test_expected_digest_class
       assert_equal OpenSSL::Digest::MD5, subject.digest_class
       assert_equal OpenSSL::Digest::MD5, subject.new.digest_class

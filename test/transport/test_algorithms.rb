@@ -3,7 +3,7 @@ require 'net/ssh/transport/algorithms'
 
 module Transport
 
-  class TestAlgorithms < Test::Unit::TestCase
+  class TestAlgorithms < NetSSHTest
     include Net::SSH::Transport::Constants
 
     def test_allowed_packets

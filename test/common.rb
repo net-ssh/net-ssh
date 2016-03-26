@@ -1,7 +1,6 @@
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
-gem "test-unit" # http://rubyforge.org/pipermail/test-unit-tracker/2009-July/000075.html
-gem 'mocha'
-require 'test/unit'
+
+require 'minitest/autorun'
 require 'mocha/setup'
 require 'net/ssh/buffer'
 require 'net/ssh/config'
@@ -17,6 +16,16 @@ Net::SSH::Config.default_files.clear
 
 def P(*args)
   Net::SSH::Packet.new(Net::SSH::Buffer.from(*args))
+end
+
+class NetSSHTest < Minitest::Test
+  def assert_nothing_raised(&block)
+    yield
+  end
+
+  def assert_not_nil obj, msg = nil
+    refute_nil obj, msg
+  end
 end
 
 class MockTransport < Net::SSH::Transport::Session

@@ -21,7 +21,7 @@ require 'net/ssh/proxy/command'
 require 'timeout'
 require 'tempfile'
 
-class TestForward < Test::Unit::TestCase
+class TestForward < NetSSHTest
   include IntegrationTestHelpers
 
   def localhost

@@ -2,7 +2,7 @@ require 'common'
 require 'net/ssh'
 
 module NetSSH
-  class TestConnection < Test::Unit::TestCase
+  class TestConnection < NetSSHTest
     attr_reader :connection_session
     
     def setup

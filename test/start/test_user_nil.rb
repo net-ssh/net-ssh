@@ -2,7 +2,7 @@ require 'common'
 require 'net/ssh'
 
 module NetSSH
-  class TestStartUserNil < Test::Unit::TestCase
+  class TestStartUserNil < NetSSHTest
     def setup
       @authentication_session = mock('authentication_session')
       Net::SSH::Authentication::Session.stubs(:new).returns(@authentication_session)

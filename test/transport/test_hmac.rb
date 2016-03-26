@@ -3,7 +3,7 @@ require 'net/ssh/transport/hmac'
 
 module Transport
 
-  class TestHMAC < Test::Unit::TestCase
+  class TestHMAC < NetSSHTest
     Net::SSH::Transport::HMAC::MAP.each do |name, value|
       method = name.tr("-", "_")
       define_method("test_get_with_#{method}_returns_new_hmac_instance") do
