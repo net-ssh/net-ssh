@@ -48,6 +48,7 @@
       with_items:
         - pv
         - libgmp3-dev
+        - git
     - gem: name="{{ item[1] }}" state=present user_install=no executable=/usr/local/rvm/wrappers/ruby-{{ item[0] }}/gem
       with_nested:
         - "{{ruby_versions}}"
