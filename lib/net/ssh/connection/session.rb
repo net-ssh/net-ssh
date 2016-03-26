@@ -475,12 +475,25 @@ module Net; module SSH; module Connection
 
           send(MAP[packet.type], packet)
         end
+      rescue
+        force_channel_cleanup_on_close if closed?
+        raise
       end
 
       # Returns the next available channel id to be assigned, and increments
       # the counter.
       def get_next_channel_id
         @channel_id_counter += 1
+      end
+
+      def force_channel_cleanup_on_close
+        channels.each do |id, channel|
+          channel.remote_closed!
+          channel.close
+
+          cleanup_channel(channel)
+          channel.do_close
+        end
       end
 
       # Invoked when a global request is received. The registered global

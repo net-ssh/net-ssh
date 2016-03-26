@@ -6,6 +6,8 @@
     ruby_versions:
       - '2.0.0-p598'
       - '2.3.0'
+#      - 'rbx-3.19'
+#      - 'jruby-9.0.5.0'
     rvm_install_path: '/usr/local/rvm'
     foopwd: "$6$mhOzf/yapZwS$3RwDl4GfWZ5VcfcsHrK9xNNTxyzLOJBsmMttDNaegIbXxMahV86.v/5HsNtit16MEl0EFf5CSW8Dz2yXV.8GB0"
     foo2pwd: "$6$JiB7y7.M0yI$Abt.ZGIc4DwkRWeI6nKxzzPUZcux7hLRXSdpoKoZvswJz1SZyg5GRQWn9pGID0dgC6e4wFglfW6ev/qZoTqGk/"
@@ -17,7 +19,7 @@
   roles:
     - { role: rvm_io.rvm1-ruby,
         tags: ruby, sudo: True,
-        rvm1_rubies: ["ruby-{{ruby_version}}","ruby-2.3.0"],
+        rvm1_rubies: "{{ ruby_versions }}",
         rvm1_install_path: "{{rvm_install_path}}",
         rvm1_gpg_key_server: pool.sks-keyservers.net,
         when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}'" }
@@ -46,10 +48,11 @@
       with_items:
         - pv
         - libgmp3-dev
+        - git
     - gem: name="{{ item[1] }}" state=present user_install=no executable=/usr/local/rvm/wrappers/ruby-{{ item[0] }}/gem
       with_nested:
         - "{{ruby_versions}}"
-        - [ 'byebug', 'jeweler', 'mocha', 'rbnacl', 'rbnacl-libsodium' ]
+        - [ 'byebug', 'rake', 'jeweler', 'mocha', 'rbnacl', 'rbnacl-libsodium' ]
     - copy: content='echo "cd /net-ssh ; rake integration-test"' dest=/etc/update-motd.d/99-net-ssh-tests mode=0755
   handlers:
     - name: restart sshd

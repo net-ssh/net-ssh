@@ -1,3 +1,7 @@
+=== 4.0.0.alpha2
+
+* when transport closes we're cleaning up channels [Miklos Fazekas]
+
 === 4.0.0.alpha1
 
 * ed25519 key support [Miklos Fazekas]

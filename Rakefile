@@ -8,7 +8,8 @@
 require "rubygems"
 require "rake"
 require "rake/clean"
-if RUBY_VERSION >= '1.9.0'
+require "bundler/gem_tasks"
+
 require "rdoc/task"
 
 task :default => ["build"]
@@ -18,51 +19,6 @@ name = "net-ssh"
 $:.unshift File.join(File.dirname(__FILE__), 'lib')
 require "net/ssh"
 version = Net::SSH::Version::CURRENT
-
-begin
-  require "jeweler"
-  Jeweler::Tasks.new do |s|
-    s.version = version
-    s.name = name
-    s.rubyforge_project = s.name
-    s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
-    s.description = s.summary + " It allows you to write programs that invoke and interact with processes on remote servers, via SSH2."
-    s.email = "net-ssh@solutious.com"
-    s.homepage = "https://github.com/net-ssh/net-ssh"
-    s.authors = ["Jamis Buck", "Delano Mandelbaum", "Miklós Fazekas"]
-    s.required_ruby_version = '>= 2.0'
-
-    # dependencies defined in Gemfile
-    s.license = "MIT"
-
-    unless ENV['NET_SSH_NOKEY']
-      signing_key = File.join('/mnt/gem/', 'net-ssh-private_key.pem')
-      s.signing_key = File.join('/mnt/gem/', 'net-ssh-private_key.pem')
-      s.cert_chain  = ['net-ssh-public_cert.pem']
-      unless (Rake.application.top_level_tasks & ['build','install']).empty?
-        raise "No key found at #{signing_key} for signing, use rake <taskname> NET_SSH_NOKEY=1 to build without key" unless File.exist?(signing_key)
-      end
-    end
-    def s.to_ruby
-      # see https://github.com/technicalpickles/jeweler/issues/170
-      result = super
-      result = result.chomp("\n").split("\n").map do |line|
-        if line =~ /%q<bcrypt_pbkdf>/
-          line += ' unless RUBY_PLATFORM == "java"'
-        else
-          line
-        end
-      end.join("\n") << "\n"
-      fail "Unexpected gemspec:#{result.inspect}" unless result.chomp!("\nend\n")
-      result << "\n  s.add_dependency('jruby-pageant', ['>= 1.1.1']) if RUBY_PLATFORM == 'jruby'"
-      result << "\nend\n"
-      result
-    end
-  end
-  Jeweler::RubygemsDotOrgTasks.new
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
-end
 
 extra_files = %w[LICENSE.txt THANKS.txt CHANGES.txt ]
 RDoc::Task.new do |rdoc|
@@ -76,7 +32,6 @@ RDoc::Task.new do |rdoc|
   extra_files.each { |file|
     rdoc.rdoc_files.include(file) if File.exists?(file)
   }
-end
 end
 
 namespace :rdoc do
@@ -105,15 +60,8 @@ end
 end
 
 require 'rake/testtask'
-Rake::TestTask.new do |t|
-  if ENV['NET_SSH_RUN_INTEGRATION_TESTS']
-    t.libs = ["lib","test","test/integration"]
-  else
-    t.libs = ["lib", "test"]
-  end
-end
 
-Rake::TestTask.new(:'integration-test') do |t|
-  t.libs = ["lib", "test/integration"]
-  t.pattern = 'test/integration/test_*.rb'
+Rake::TestTask.new do |t|
+  t.libs = ["lib", "test"]
+  t.libs << "test/integration" if ENV['NET_SSH_RUN_INTEGRATION_TESTS']
 end

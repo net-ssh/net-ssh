@@ -1,16 +1,11 @@
 = Net::SSH 4.x
 
-<em><b>Please note: this project is in maintenance mode. It is not under active development but pull requests are very much welcome. Just be sure to include tests! -- delano</b></em>
-
-
 * Docs: http://net-ssh.github.com/net-ssh
 * Issues: https://github.com/net-ssh/net-ssh/issues
 * Codes: https://github.com/net-ssh/net-ssh
 * Email: net-ssh@solutious.com
 
-
 <em>As of v2.6.4, all gem releases are signed. See INSTALL.</em>
-
 
 == DESCRIPTION:
 
@@ -86,17 +81,12 @@ If that spits out something like "OpenSSL 0.9.8g 19 Oct 2007", then you're set. 
 
 Additionally: if you are going to be having Net::SSH prompt you for things like passwords or certificate passphrases, you'll want to have either the Highline (recommended) or Termios (unix systems only) gem installed, so that the passwords don't echo in clear text.
 
-Lastly, if you want to run the tests or use any of the Rake tasks, you'll need:
-
-* Echoe (for the Rakefile)
-* Mocha (for the tests)
+Lastly, if you want to run the tests or use any of the Rake tasks, you'll need Mocha and other dependencies listed in Gemfile
 
 
 == INSTALL:
 
 * gem install net-ssh (might need sudo privileges)
-
-NOTE: If you are running on jruby you need to install jruby-pageant manually (gemspec doesn't allow for platform specific dependencies).
 
 However, in order to be sure the code you're installing hasn't been tampered with, it's recommended that you verify the signature[http://docs.rubygems.org/read/chapter/21]. To do this, you need to add my public key as a trusted certificate (you only need to do this once):
 
@@ -111,7 +101,7 @@ Then, when install the gem, do so with high security:
 
 If you don't add the public key, you'll see an error like "Couldn't verify data signature". If you're still having trouble let me know and I'll give you a hand.
 
-== RUBY 1.x SUPPORT
+== RUBY SUPPORT
 
 * Ruby 1.8.x is supported up until the net-ssh 2.5.1 release.
 * Ruby 1.9.x is supported up until the net-ssh 2.9.x release.
@@ -121,40 +111,19 @@ If you don't add the public key, you'll see an error like "Couldn't verify data 
 
 Run the test suite from the net-ssh directory with the following command:
 
-     bash -c 'unset HOME && ruby -Ilib -Itest -rrubygems test/test_all.rb'
+     bundle exec rake test
 
 Run a single test file like this:
 
-     ruby -Ilib -Itest -rrubygems test/transport/test_server_version.rb
+     ruby -Ilib -Itest test/transport/test_server_version.rb
 
 To run integration tests see test/integration/README.txt
 
 === BUILDING GEM
 
-Since building the gem requires the private key if you want to build a .gem locally please use the NET_SSH_NOKEY=1 envirnoment variable:
+Since building the gem requires the private key if you want to build a .gem locally please use the NET_SSH_BUILDGEM_UNSIGNED=1 envirnoment variable:
 
-     rake build NET_SSH_NOKEY=1
-
-=== PORT FORWARDING TESTS
-
-     ruby -Ilib -Itest -rrubygems test/manual/test_forward.rb
-
-test_forward.rb must be run separately from the test suite because
-it requires authorizing your public SSH keys on you localhost.
-
-If you already have keys you can do this:
-
-     cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-
-If you don't have keys see:
-
-     http://kimmo.suominen.com/docs/ssh/#ssh-keygen
-
-You should now be able to login to your localhost with out
-bring prompted for a password:
-
-     ssh localhost
-
+     rake build NET_SSH_BUILDGEM_UNSIGNED=1
 
 == LICENSE:
 
