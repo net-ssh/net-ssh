@@ -17,6 +17,7 @@
 require_relative './common'
 require 'net/ssh/buffer'
 require 'net/ssh'
+require 'net/ssh/proxy/command'
 require 'timeout'
 require 'tempfile'
 
@@ -31,8 +32,8 @@ class TestForward < Test::Unit::TestCase
     'net_ssh_1'
   end
 
-  def ssh_start_params
-    [localhost ,user , {:keys => @key_id_rsa}]
+  def ssh_start_params(options = {})
+    [localhost ,user , {:keys => @key_id_rsa}.merge(options)]
   end
 
   def setup_ssh_env(&block)
@@ -334,6 +335,103 @@ class TestForward < Test::Unit::TestCase
       Timeout.timeout(5) do
         session.loop(0.1) { server_done.empty? }
         assert_equal message, server_done.pop
+      end
+    end
+  end
+
+  class TCPProxy
+    def initialize()
+      @sockets = []
+    end
+    attr_reader :sockets
+
+    def open(host, port, connection_options = nil)
+      socket = TCPSocket.new(host,port)
+      @sockets << socket
+      socket
+    end
+
+    def close_all
+      sockets.each do |socket|
+        socket.close
+      end
+    end
+  end
+
+  def test_transport_close_should_closes_channels_with_tcps
+    setup_ssh_env do
+      server = start_server do |client|
+        client.puts "Hello"
+        sleep(100)
+        client.puts "Hallo"
+      end
+      proxy = TCPProxy.new()
+      session = Net::SSH.start(*ssh_start_params(proxy: proxy))
+      remote_port = server.addr[1]
+      local_port = session.forward.local(0, localhost, remote_port)
+
+      # read on forwarded port
+      client_done = Queue.new
+      Thread.start do
+        begin
+          client = TCPSocket.new(localhost, local_port)
+          client.read(6)
+          proxy.close_all
+          client.read(7)
+          client.close
+          client_done << true
+        rescue
+          client_done << $!
+        end
+      end
+      Timeout.timeout(5) do
+        begin
+          session.loop(0.1) { true }
+        rescue EOFError, IOError
+          #puts "Error: #{$!} #{$!.backtrace.join("\n")}"
+        end
+        assert_equal true, client_done.pop
+      end
+    end
+  end
+
+  def todo_test_transport_close_should_closes_channels_with_proxy
+    setup_ssh_env do
+      server = start_server do |client|
+        client.puts "Hello"
+        sleep(100)
+        client.puts "Hallo"
+      end
+      proxy = Net::SSH::Proxy::Command.new("/bin/nc localhost 22")
+      session = Net::SSH.start(*ssh_start_params(proxy: proxy))
+      remote_port = server.addr[1]
+      local_port = session.forward.local(0, localhost, remote_port)
+
+      # read on forwarded port
+      client_done = Queue.new
+      Thread.start do
+        begin
+          client = TCPSocket.new(localhost, local_port)
+          client.read(6)
+          system("killall /bin/nc")
+          client.read(7)
+          client.close
+          client_done << true
+        rescue
+          client_done << $!
+        end
+      end
+      Timeout.timeout(5) do
+        begin
+          session.loop(0.1) { true }
+        rescue EOFError
+          begin
+            session.close
+          rescue
+          end
+          #puts "Error: #{$!} #{$!.backtrace.join("\n")}"
+        end
+        assert_equal true, client_done.pop
       end
     end
   end
