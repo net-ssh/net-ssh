@@ -18,4 +18,6 @@ install:
   - gem install bundler -v "= 1.11.2"
   - bundle _1.11.2_ install
 
-script: rake test
+script:
+  - bundle exec rake test
+  - bundle exec rubocop
