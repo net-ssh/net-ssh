@@ -11,7 +11,7 @@ require 'ostruct'
 
 # clear the default files out so that tests don't get confused by existing
 # SSH config files.
-$original_config_default_files = Net::SSH::Config.default_files.dup
+_original_config_default_files = Net::SSH::Config.default_files.dup
 Net::SSH::Config.default_files.clear
 
 def P(*args)
