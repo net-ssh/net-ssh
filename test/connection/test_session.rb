@@ -496,6 +496,16 @@ module Connection
       assert_equal "", session.exec!('ls')
     end
 
+    def test_max_select_wait_time_should_return_keepalive_interval_when_keepalive_enabled
+      options = { :keepalive => true, :keepalive_interval => 5 }
+      assert_equal 5, session(options).max_select_wait_time
+    end
+
+    def test_max_select_wait_time_should_return_nil_when_keepalive_disabled
+      options = {}
+      assert_nil session(options).max_select_wait_time
+    end
+
     private
 
       def prep_exec(command, *data)

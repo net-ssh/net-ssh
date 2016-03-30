@@ -462,6 +462,13 @@ module Net; module SSH; module Connection
       end
     end
 
+    # If the #preprocess and #postprocess callbacks for this session need to run
+    # periodically, this method returns the maximum number of seconds which may
+    # pass between callbacks.
+    def max_select_wait_time
+      @keepalive.interval if @keepalive.enabled?
+    end
+
 
     private
 
@@ -622,11 +629,7 @@ module Net; module SSH; module Connection
       end
 
       def io_select_wait(wait)
-        if @keepalive.enabled?
-          [wait, @keepalive.interval].compact.min
-        else
-          wait
-        end
+        [wait, max_select_wait_time].compact.min
       end
 
       MAP = Constants.constants.inject({}) do |memo, name|
