@@ -3,7 +3,7 @@ require 'net/ssh/connection/session'
 
 module Connection
 
-  class TestSession < Test::Unit::TestCase
+  class TestSession < NetSSHTest
     include Net::SSH::Connection::Constants
 
     def test_constructor_should_set_defaults

@@ -6,16 +6,16 @@ rvm:
   - 2.2
   - 2.3.0
   - jruby-head
-  - jruby-19mode
-  - rbx-2
-  - rbx-3
+  - rbx-3.20
   - ruby-head
 
 matrix:
   allow_failures:
     - rvm: ruby-head
-    - rvm: rbx-3
+    - rvm: rbx-3.20
 
-install: bundle install
+install:
+  - gem install bundler -v "= 1.11.2"
+  - bundle _1.11.2_ install
 
 script: rake test

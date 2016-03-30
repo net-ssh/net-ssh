@@ -2,7 +2,7 @@ require 'common'
 require 'net/ssh/verifiers/secure'
 require 'ostruct'
 
-class TestSecure < Test::Unit::TestCase
+class TestSecure < NetSSHTest
   def test_raises_unknown_key_error_if_empty
     secure_verifier = Net::SSH::Verifiers::Secure.new
     host_keys = []

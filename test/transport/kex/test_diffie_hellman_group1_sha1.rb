@@ -4,7 +4,7 @@ require 'ostruct'
 
 module Transport; module Kex
 
-  class TestDiffieHellmanGroup1SHA1 < Test::Unit::TestCase
+  class TestDiffieHellmanGroup1SHA1 < NetSSHTest
     include Net::SSH::Transport::Constants
 
     def setup

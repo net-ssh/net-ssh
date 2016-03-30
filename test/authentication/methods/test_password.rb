@@ -6,7 +6,7 @@ require 'authentication/methods/common'
 
 module Authentication; module Methods
 
-  class TestPassword < Test::Unit::TestCase
+  class TestPassword < NetSSHTest
     include Common
 
     def test_authenticate_should_raise_if_password_disallowed

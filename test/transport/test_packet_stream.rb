@@ -6,7 +6,7 @@ require 'net/ssh/transport/packet_stream'
 
 module Transport
 
-  class TestPacketStream < Test::Unit::TestCase
+  class TestPacketStream < NetSSHTest
     include Net::SSH::Transport::Constants
 
     def test_client_name_when_getnameinfo_works

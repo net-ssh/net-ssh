@@ -1,7 +1,7 @@
 require 'common'
 require 'net/ssh/buffered_io'
 
-class TestBufferedIo < Test::Unit::TestCase
+class TestBufferedIo < NetSSHTest
   def test_fill_should_pull_from_underlying_io
     io.expects(:recv).with(8192).returns("here is some data")
     assert_equal 17, io.fill

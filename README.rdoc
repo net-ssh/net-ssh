@@ -121,9 +121,7 @@ To run integration tests see test/integration/README.txt
 
 === BUILDING GEM
 
-Since building the gem requires the private key if you want to build a .gem locally please use the NET_SSH_BUILDGEM_UNSIGNED=1 envirnoment variable:
-
-     rake build NET_SSH_BUILDGEM_UNSIGNED=1
+     rake build
 
 == LICENSE:
 

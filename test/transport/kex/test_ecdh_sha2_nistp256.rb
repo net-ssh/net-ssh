@@ -10,7 +10,7 @@ else
 
   module Transport; module Kex
 
-    class TestEcdhSHA2NistP256 < Test::Unit::TestCase
+    class TestEcdhSHA2NistP256 < NetSSHTest
       include Net::SSH::Transport::Constants
 
       def setup

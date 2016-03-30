@@ -1,7 +1,7 @@
 require 'common'
 require 'net/ssh/key_factory'
 
-class TestKeyFactory < Test::Unit::TestCase
+class TestKeyFactory < NetSSHTest
   def setup
     @key_file = File.expand_path("/key-file")
   end

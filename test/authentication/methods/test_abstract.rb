@@ -4,7 +4,7 @@ require 'net/ssh/authentication/methods/abstract'
 
 module Authentication; module Methods
 
-  class TestAbstract < Test::Unit::TestCase
+  class TestAbstract < NetSSHTest
     include Common
 
     def test_constructor_should_set_defaults

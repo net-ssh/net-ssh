@@ -4,7 +4,7 @@ require 'authentication/methods/common'
 
 module Authentication; module Methods
 
-  class TestHostbased < Test::Unit::TestCase
+  class TestHostbased < NetSSHTest
     include Common
 
     def test_authenticate_should_return_false_when_no_key_manager_has_been_set

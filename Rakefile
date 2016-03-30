@@ -12,12 +12,21 @@ require "bundler/gem_tasks"
 
 require "rdoc/task"
 
+
+desc "When releasing make sure NET_SSH_BUILDGEM_SIGNED is set"
+task :check_NET_SSH_BUILDGEM_SIGNED do
+  raise "NET_SSH_BUILDGEM_SIGNED should be set to release" unless ENV['NET_SSH_BUILDGEM_SIGNED']
+end
+
+Rake::Task[:release].enhance [:check_NET_SSH_BUILDGEM_SIGNED]
+Rake::Task[:release].prerequisites.unshift(:check_NET_SSH_BUILDGEM_SIGNED)
+
+
 task :default => ["build"]
 CLEAN.include [ 'pkg', 'rdoc' ]
 name = "net-ssh"
 
-$:.unshift File.join(File.dirname(__FILE__), 'lib')
-require "net/ssh"
+require_relative "lib/net/ssh/version"
 version = Net::SSH::Version::CURRENT
 
 extra_files = %w[LICENSE.txt THANKS.txt CHANGES.txt ]
@@ -64,4 +73,7 @@ require 'rake/testtask'
 Rake::TestTask.new do |t|
   t.libs = ["lib", "test"]
   t.libs << "test/integration" if ENV['NET_SSH_RUN_INTEGRATION_TESTS']
+  test_files = FileList['test/**/test_*.rb']
+  test_files -= FileList['test/integration/**/test_*.rb'] unless ENV['NET_SSH_RUN_INTEGRATION_TESTS']
+  t.test_files =  test_files
 end

@@ -10,10 +10,10 @@ module Net; module SSH
   # typically include this module in your unit test class, and then build a
   # "story" of expected sends and receives:
   #
-  #   require 'test/unit'
+  #   require 'minitest/autorun'
   #   require 'net/ssh/test'
   #
-  #   class MyTest < Test::Unit::TestCase
+  #   class MyTest < Minitest::Test
   #     include Net::SSH::Test
   #
   #     def test_exec_via_channel_works

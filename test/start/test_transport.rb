@@ -2,7 +2,7 @@ require 'common'
 require 'net/ssh'
 
 module NetSSH
-  class TestStart < Test::Unit::TestCase
+  class TestStart < NetSSHTest
     attr_reader :transport_session
     attr_reader :authentication_session
     

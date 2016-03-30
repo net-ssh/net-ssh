@@ -5,7 +5,7 @@ require 'timeout'
 require 'tempfile'
 require 'net/ssh/proxy/command'
 
-class TestProxy < Test::Unit::TestCase
+class TestProxy < NetSSHTest
   include IntegrationTestHelpers
 
   def localhost

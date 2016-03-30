@@ -3,7 +3,7 @@
 require 'common'
 require 'net/ssh/buffer'
 
-class TestBuffer < Test::Unit::TestCase
+class TestBuffer < NetSSHTest
   def test_constructor_should_initialize_buffer_to_empty_by_default
     buffer = new
     assert buffer.empty?

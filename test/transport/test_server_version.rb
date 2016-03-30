@@ -3,7 +3,7 @@ require 'net/ssh/transport/server_version'
 
 module Transport
 
-  class TestServerVersion < Test::Unit::TestCase
+  class TestServerVersion < NetSSHTest
 
     def test_1_99_server_version_should_be_acceptible
       s = subject(socket(true, "SSH-1.99-Testing_1.0\r\n"))
