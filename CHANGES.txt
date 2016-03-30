@@ -1,3 +1,7 @@
+=== 4.0.0.alpha3
+
+* added max_select_wait_time [Eugene Kenny]
+
 === 4.0.0.alpha2
 
 * when transport closes we're cleaning up channels [Miklos Fazekas]

@@ -88,6 +88,8 @@ Lastly, if you want to run the tests or use any of the Rake tasks, you'll need M
 
 * gem install net-ssh (might need sudo privileges)
 
+NOTE: If you are running on jruby on windows you need to install jruby-pageant manually (gemspec doesn't allow for platform specific dependencies).
+
 However, in order to be sure the code you're installing hasn't been tampered with, it's recommended that you verify the signature[http://docs.rubygems.org/read/chapter/21]. To do this, you need to add my public key as a trusted certificate (you only need to do this once):
 
     # Add the public key as a trusted certificate
