@@ -12,7 +12,15 @@ Setup:
     rvm all do bundle
     rvm all do rake test
 
-# TODO
+# Debugging on travis
 
-* get it running on ci (probalby needs docker)
-* could not get gem install jeweler to work
+Logging the ssh logs might be usefull:
+
+```yml
+script:
+  - #NET_SSH_RUN_INTEGRATION_TESTS=1 bundle exec rake test
+  - sudo tail -n 3 /var/log/auth.log
+  - bundle exec ruby -Ilib:test ./test/integration/test_forward.rb -n test_client_close_should_be_handled_remote
+  - sudo tail -n 60 /var/log/auth.log
+  - bundle exec rubocop
+```
