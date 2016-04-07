@@ -317,7 +317,7 @@ class TestForward < NetSSHTest
       client_done = Queue.new
       got_remote_port = Queue.new
       local_port = server.addr[1]
-      session.forward.remote(0, localhost, local_port) do |actual_remote_port|
+      session.forward.remote(0, localhost, local_port, localhost) do |actual_remote_port|
         got_remote_port << actual_remote_port
       end
       session.loop(0.1) { got_remote_port.empty? }
@@ -384,13 +384,22 @@ class TestForward < NetSSHTest
           client_done << $!
         end
       end
+      server_error = nil
       Timeout.timeout(5) do
         begin
           session.loop(0.1) { true }
-        rescue EOFError, IOError
+        rescue EOFError, IOError, Errno::EBADF
+          server_error = $!
           #puts "Error: #{$!} #{$!.backtrace.join("\n")}"
         end
-        assert_equal true, client_done.pop
+      end
+      begin
+        Timeout.timeout(5) do
+          assert_equal true, client_done.pop
+        end
+      rescue
+        puts "Server error: #{server_error} bt:#{server_error.backtrace.join("\n")}"
+        raise
       end
     end
   end
@@ -481,7 +490,7 @@ class TestForward < NetSSHTest
       client_done = Queue.new
       got_remote_port = Queue.new
       local_port = server.addr[1]
-      session.forward.remote(0, localhost, local_port) do |actual_remote_port|
+      session.forward.remote(0, localhost, local_port, localhost) do |actual_remote_port|
         got_remote_port << actual_remote_port
       end
       session.loop(0.1) { got_remote_port.empty? }

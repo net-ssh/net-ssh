@@ -2,6 +2,9 @@
 - hosts: all
   sudo: yes
   vars:
+    myuser: vagrant
+    mygroup: vagrant
+    homedir: /home/vagrant
     ruby_version: '2.0.0-p598'
     ruby_versions:
       - '2.0.0-p598'
@@ -22,10 +25,11 @@
         rvm1_rubies: "{{ ruby_versions }}",
         rvm1_install_path: "{{rvm_install_path}}",
         rvm1_gpg_key_server: pool.sks-keyservers.net,
-        when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}'" }
+        when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}' and not no_rvm" }
   tasks:
-    - user: name=net_ssh_1 password="{{foopwd}}" group=vagrant state=present
-    - user: name=net_ssh_2 password="{{foo2pwd}}" group=vagrant state=present
+    - group: name="{{mygroup}}" state=present
+    - user: name=net_ssh_1 password="{{foopwd}}" group="{{mygroup}}" state=present
+    - user: name=net_ssh_2 password="{{foo2pwd}}" group="{{mygroup}}" state=present
     - file: dest=/home/net_ssh_1/.ssh/ state=directory mode=0740 owner=net_ssh_1
     - file: dest=/home/net_ssh_2/.ssh/ state=directory mode=0740 owner=net_ssh_2
     - lineinfile: dest=/etc/sudoers.d/net_ssh_1 mode=0440 state=present create=yes
@@ -39,10 +43,16 @@
     - name: sshd debug
       lineinfile: dest='/etc/ssh/sshd_config' line='LogLevel DEBUG' regexp=LogLevel
       notify: restart sshd
+    - name: sshd allow forward
+      lineinfile: dest='/etc/ssh/sshd_config' line='AllowTcpForwarding all' regexp=LogLevel
+      notify: restart sshd
+    - name: sshd allow forward
+      lineinfile: dest='/etc/ssh/sshd_config' line='GatewayPorts yes' regexp=LogLevel
+      notify: restart sshd
     - name: put NET_SSH_RUN_INTEGRATION_TESTS=YES environment
       lineinfile: dest='/etc/environment' line='NET_SSH_RUN_INTEGRATION_TESTS=YES'
     - name: change dir in bashrc
-      lineinfile: dest=/home/vagrant/.bashrc owner=vagrant mode=0644
+      lineinfile: dest="{{homedir}}/.bashrc" owner="{{myuser}}" mode=0644
         regexp='^cd ' line='cd /net-ssh'
     - apt: name="{{item}}" state=present
       with_items:
@@ -53,6 +63,7 @@
       with_nested:
         - "{{ruby_versions}}"
         - [ 'byebug', 'rake', 'jeweler', 'mocha', 'rbnacl', 'rbnacl-libsodium', 'minitest' ]
+      when: "not no_rvm"
     - copy: content='echo "cd /net-ssh ; rake integration-test"' dest=/etc/update-motd.d/99-net-ssh-tests mode=0755
   handlers:
     - name: restart sshd

@@ -4,6 +4,7 @@ require 'minitest/autorun'
 require 'mocha/setup'
 require 'pty'
 require 'expect'
+require_relative '../common'
 
 module IntegrationTestHelpers
   VERBOSE = false
