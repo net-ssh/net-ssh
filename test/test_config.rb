@@ -209,7 +209,15 @@ class TestConfig < NetSSHTest
     config = Net::SSH::Config.for("test.host", [config(:empty), config(:auth_on), config(:auth_off)])
     assert_equal %w(hostbased keyboard-interactive none password publickey), config[:auth_methods].sort
   end
-  
+
+  def test_config_for_when_HOME_is_null_should_not_raise
+    with_home_env(nil) do
+      with_restored_default_files do
+        Net::SSH::Config.for("test.host")
+      end
+    end
+  end
+
   def test_load_with_plus_sign_hosts
     config = Net::SSH::Config.load(config(:host_plus), "test.host")
     assert config['compression']
@@ -253,6 +261,16 @@ class TestConfig < NetSSHTest
   end
 
   private
+
+    def with_home_env(value,&block)
+      env_home_before = ENV['HOME']
+      begin
+        ENV['HOME'] = value
+        yield
+      ensure
+        ENV['HOME'] = env_home_before
+      end
+    end
 
     def config(name)
       "test/configs/#{name}"
