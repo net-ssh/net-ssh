@@ -10,6 +10,7 @@ require 'net/ssh/loggable'
 require 'net/ssh/transport/session'
 require 'net/ssh/authentication/session'
 require 'net/ssh/connection/session'
+require 'etc'
 
 module Net
 
