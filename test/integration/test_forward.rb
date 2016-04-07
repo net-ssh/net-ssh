@@ -398,7 +398,7 @@ class TestForward < NetSSHTest
           assert_equal true, client_done.pop
         end
       rescue
-        puts "Server error: #{server_error} bt:#{server_error.backtrace.join("\n")}"
+        puts "Server error: #{server_error.class} #{server_error} bt:#{server_error.backtrace.join("\n")}"
         raise
       end
     end

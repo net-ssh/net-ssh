@@ -193,7 +193,7 @@ module Connection
     end
 
     def test_global_request_handler_returning_other_value_should_raise_error
-      socket.expects(:closed?).returns(false)
+      transport.expects(:closed?).at_least_once.returns(false)
       session.on_global_request("testing") { "bug" }
       transport.return(GLOBAL_REQUEST, :string, "testing", :bool, true)
       assert_raises(RuntimeError) { process_times(2) }

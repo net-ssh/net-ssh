@@ -59,7 +59,7 @@ module Net; module SSH
       # given +files+ (defaulting to the list of files returned by
       # #default_files), translates the resulting hash into the options
       # recognized by Net::SSH, and returns them.
-      def for(host, files=default_files)
+      def for(host, files=expandable_default_files)
         translate(files.inject({}) { |settings, file|
           load(file, host, settings)
         })
@@ -238,6 +238,17 @@ module Net; module SSH
       end
 
       private
+
+        def expandable_default_files
+          default_files.keep_if do |path|
+            begin
+              File.expand_path(path)
+              true
+            rescue ArgumentError
+              false
+            end
+          end
+        end
 
         # Converts an ssh_config pattern into a regex for matching against
         # host names.
