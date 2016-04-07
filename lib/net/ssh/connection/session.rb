@@ -220,7 +220,7 @@ module Net; module SSH; module Connection
     def preprocess
       return false if block_given? && !yield(self)
       dispatch_incoming_packets
-      channels.each { |id, channel| channel.process unless channel.local_closed? }
+      each_channel { |id, channel| channel.process unless channel.local_closed? }
       return false if block_given? && !yield(self)
       return true
     end
@@ -472,6 +472,11 @@ module Net; module SSH; module Connection
 
     private
 
+      # iterate channels with the posibility of callbacks opening new channels during the iteration
+      def each_channel(&block)
+        channels.dup.each(&block)
+      end
+
       # Read all pending packets from the connection and dispatch them as
       # appropriate. Returns as soon as there are no more pending packets.
       def dispatch_incoming_packets
@@ -495,12 +500,16 @@ module Net; module SSH; module Connection
 
       def force_channel_cleanup_on_close
         channels.each do |id, channel|
-          channel.remote_closed!
-          channel.close
-
-          cleanup_channel(channel)
-          channel.do_close
+          channel_closed(channel)
         end
+      end
+
+      def channel_closed(channel)
+        channel.remote_closed!
+        channel.close
+
+        cleanup_channel(channel)
+        channel.do_close
       end
 
       # Invoked when a global request is received. The registered global
@@ -611,11 +620,7 @@ module Net; module SSH; module Connection
         info { "channel_close: #{packet[:local_id]}" }
 
         channel = channels[packet[:local_id]]
-        channel.remote_closed!
-        channel.close
-
-        cleanup_channel(channel)
-        channel.do_close
+        channel_closed(channel)
       end
 
       def channel_success(packet)

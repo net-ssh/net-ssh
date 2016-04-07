@@ -116,6 +116,17 @@ module Connection
       process_times(0)
     end
 
+    def test_can_open_channels_in_process # see #110
+      chid = session.send(:get_next_channel_id)
+      session.channels[chid] = stub("channel", :local_closed? => false)
+      session.channels[chid].expects(:process).with() do
+        session.open_channel
+        true
+      end
+      IO.expects(:select).never
+      process_times(2)
+    end
+
     def test_process_should_exit_after_processing_if_block_is_true_then_false
       session.channels[0] = stub("channel", :local_closed? => false)
       session.channels[0].expects(:process)
