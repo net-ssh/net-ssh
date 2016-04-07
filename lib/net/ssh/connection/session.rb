@@ -210,6 +210,9 @@ module Net; module SSH; module Connection
       readers, writers, = Net::SSH::Compat.io_select(r, w, nil, io_select_wait(wait))
 
       postprocess(readers, writers)
+    rescue
+      force_channel_cleanup_on_close if closed?
+      raise
     end
 
     # This is called internally as part of #process. It dispatches any
