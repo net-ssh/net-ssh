@@ -15,6 +15,18 @@ require 'ostruct'
 $original_config_default_files = Net::SSH::Config.default_files.dup
 Net::SSH::Config.default_files.clear
 
+def with_restored_default_files(&block)
+  act_default_files = Net::SSH::Config.default_files.dup
+  begin
+    Net::SSH::Config.default_files.clear
+    Net::SSH::Config.default_files.concat($_original_config_default_files) # rubocop:disable Style/GlobalVars
+    yield
+  ensure
+    Net::SSH::Config.default_files.clear
+    Net::SSH::Config.default_files.concat(act_default_files)
+  end
+end
+
 def P(*args)
   Net::SSH::Packet.new(Net::SSH::Buffer.from(*args))
 end
@@ -69,6 +81,10 @@ class MockTransport < Net::SSH::Transport::Session
     else
       super
     end
+  end
+
+  def closed?
+    false
   end
 
   def poll_message

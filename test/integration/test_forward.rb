@@ -390,7 +390,14 @@ class TestForward < Test::Unit::TestCase
         rescue EOFError, IOError
           #puts "Error: #{$!} #{$!.backtrace.join("\n")}"
         end
-        assert_equal true, client_done.pop
+      end
+      begin
+        Timeout.timeout(5) do
+          assert_equal true, client_done.pop
+        end
+      rescue
+        puts "Server error: #{server_error.class} #{server_error} bt:#{server_error.backtrace.join("\n")}"
+        raise
       end
     end
   end
