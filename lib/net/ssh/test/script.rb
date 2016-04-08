@@ -63,7 +63,8 @@ module Net; module SSH; module Test
     # indicating whether a response to this packet is required , and +data+
     # is any additional request-specific data that this packet should send.
     # +success+ indicates whether the response (if one is required) should be
-    # success or failure.
+    # success or failure. If +data+ is an array it will be treated as multiple
+    # data.
     #
     # If a reply is desired, a remote packet will also be queued, :channel_success
     # if +success+ is true, or :channel_failure if +success+ is false.
@@ -71,7 +72,11 @@ module Net; module SSH; module Test
     # This will typically be called via Net::SSH::Test::Channel#sends_exec or
     # Net::SSH::Test::Channel#sends_subsystem.
     def sends_channel_request(channel, request, reply, data, success=true)
-      events << LocalPacket.new(:channel_request, channel.remote_id, request, reply, data)
+      if data.is_a? Array
+        events << LocalPacket.new(:channel_request, channel.remote_id, request, reply, *data)
+      else
+        events << LocalPacket.new(:channel_request, channel.remote_id, request, reply, data)
+      end
       if reply
         if success
           events << RemotePacket.new(:channel_success, channel.local_id)
@@ -109,7 +114,7 @@ module Net; module SSH; module Test
     # Net::SSH::Test::Channel#sends_request_pty.
     def sends_channel_request_pty(channel)
       data = ['pty-req', false]
-      data += Net::SSH::Connection::Channel::VALID_PTY_OPTIONS.merge(:modes => "\0").values
+      data += Net::SSH::Connection::Channel::VALID_PTY_OPTIONS.merge(modes: "\0").values
       events << LocalPacket.new(:channel_request, channel.remote_id, *data)
     end
 

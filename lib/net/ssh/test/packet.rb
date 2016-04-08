@@ -17,6 +17,17 @@ module Net; module SSH; module Test
     include Net::SSH::Transport::Constants
     include Net::SSH::Connection::Constants
 
+    # Register a custom channel request. extra_parts is an array of types
+    # of extra parameters
+    def self.register_channel_request(request, extra_parts)
+      @registered_requests ||= {}
+      @registered_requests[request] = {extra_parts: extra_parts}
+    end
+
+    def self.registered_channel_requests(request)
+      @registered_requests && @registered_requests[request]
+    end
+
     # Ceate a new packet of the given +type+, and with +args+ being a list of
     # data elements in the order expected for packets of the given +type+
     # (see #types).
@@ -70,10 +81,14 @@ module Net; module SSH; module Test
         when CHANNEL_REQUEST
           parts = [:long, :string, :bool]
           case @data[1]
-          when "exec", "subsystem" then parts << :string
+          when "exec", "subsystem","shell" then parts << :string
           when "exit-status" then parts << :long
-          when "pty-req" then parts += [:string, :long, :long, :long, :long, :string]
-          else raise "don't know what to do about #{@data[1]} channel request"
+          when "pty-req" then parts.concat([:string, :long, :long, :long, :long, :string])
+          when "env" then parts.contact([:string,:string])
+          else
+            request = Packet.registered_channel_requests(@data[1])
+            raise "don't know what to do about #{@data[1]} channel request" unless request
+            parts.concat(request[:extra_parts])
           end
         else raise "don't know how to parse packet type #{@type}"
         end
