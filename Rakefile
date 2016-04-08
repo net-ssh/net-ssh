@@ -75,5 +75,15 @@ Rake::TestTask.new do |t|
   t.libs << "test/integration" if ENV['NET_SSH_RUN_INTEGRATION_TESTS']
   test_files = FileList['test/**/test_*.rb']
   test_files -= FileList['test/integration/**/test_*.rb'] unless ENV['NET_SSH_RUN_INTEGRATION_TESTS']
+  test_files -= FileList['test/test/**/test_*.rb']
+  t.test_files =  test_files
+end
+
+desc "Run tests of Net::SSH:Test"
+Rake::TestTask.new do |t|
+  t.name = "test_test"
+  # we need to run test/test separatedly as it hacks io + other modules
+  t.libs = ["lib", "test"]
+  test_files = FileList['test/test/**/test_*.rb']
   t.test_files =  test_files
 end

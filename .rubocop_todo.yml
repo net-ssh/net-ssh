@@ -1046,8 +1046,11 @@ Style/StringLiteralsInInterpolation:
 # Offense count: 17
 # Cop supports --auto-correct.
 # Configuration parameters: IgnoredMethods.
-# IgnoredMethods: respond_to
+# IgnoredMethods: respond_to, on_close
 Style/SymbolProc:
+  IgnoredMethods:
+    - respond_to
+    - on_close
   Exclude:
     - 'lib/net/ssh/authentication/session.rb'
     - 'lib/net/ssh/buffer.rb'

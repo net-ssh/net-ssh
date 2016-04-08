@@ -37,6 +37,7 @@ install:
 
 script:
   - bundle exec rake test
+  - bundle exec rake test_test
   - bundle exec rubocop
 
 
