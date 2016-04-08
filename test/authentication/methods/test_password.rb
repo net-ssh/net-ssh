@@ -47,8 +47,9 @@ module Authentication; module Methods
         end
       end
 
-      subject.expects(:prompt).with("jamis@'s password:", false).returns("the-password-2")
-      subject.authenticate("ssh-connection", "jamis", "the-password")
+      prompt = MockPrompt.new
+      prompt.expects(:_ask).with("jamis@'s password:", {type: 'password', user: 'jamis', host: nil}, false).returns("the-password-2")
+      subject(password_prompt: prompt).authenticate("ssh-connection", "jamis", "the-password")
     end
 
     def test_authenticate_ask_for_password_if_not_given
@@ -63,8 +64,9 @@ module Authentication; module Methods
       end
 
       transport.instance_eval { @host='testhost' }
-      subject.expects(:prompt).with("bill@testhost's password:", false).returns("good-password")
-      subject.authenticate("ssh-connection", "bill", nil)
+      prompt = MockPrompt.new
+      prompt.expects(:_ask).with("bill@testhost's password:", {type: 'password', user: 'bill', host: 'testhost'}, false).returns("good-password")
+      subject(password_prompt: prompt).authenticate("ssh-connection", "bill", nil)
     end
 
     def test_authenticate_when_password_is_acceptible_should_return_true

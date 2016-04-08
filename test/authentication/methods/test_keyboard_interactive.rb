@@ -1,6 +1,6 @@
-require 'common'
+require_relative '../../common'
 require 'net/ssh/authentication/methods/keyboard_interactive'
-require 'authentication/methods/common'
+require_relative 'common'
 
 module Authentication; module Methods
 
@@ -9,6 +9,10 @@ module Authentication; module Methods
 
     USERAUTH_INFO_REQUEST  = 60
     USERAUTH_INFO_RESPONSE = 61
+
+    def setup
+      reset_subject({}) if defined? @subject && !@subject.options.empty?
+    end
 
     def test_authenticate_should_raise_if_keyboard_interactive_disallowed
       transport.expect do |t,packet|
@@ -28,6 +32,8 @@ module Authentication; module Methods
     end
 
     def test_authenticate_should_be_false_if_given_password_is_not_accepted
+      reset_subject(non_interactive: true)
+
       transport.expect do |t,packet|
         assert_equal USERAUTH_REQUEST, packet.type
         t.return(USERAUTH_INFO_REQUEST, :string, "", :string, "", :string, "", :long, 1, :string, "Password:", :bool, false)
@@ -72,10 +78,7 @@ module Authentication; module Methods
     end
 
     def test_authenticate_should_not_prompt_for_input_when_in_non_interactive_mode
-
-      def transport.options
-        {non_interactive: true}
-      end
+      reset_subject(non_interactive: true)
       transport.expect do |t,packet|
         assert_equal USERAUTH_REQUEST, packet.type
         t.return(USERAUTH_INFO_REQUEST, :string, "", :string, "", :string, "", :long, 2, :string, "Name:", :bool, true, :string, "Password:", :bool, false)
@@ -93,8 +96,10 @@ module Authentication; module Methods
 
 
     def test_authenticate_should_prompt_for_input_when_password_is_not_given
-      subject.expects(:prompt).with("Name:", true).returns("name")
-      subject.expects(:prompt).with("Password:", false).returns("password")
+      prompt = MockPrompt.new
+      prompt.expects(:_ask).with("Name:", anything, true).returns("name")
+      prompt.expects(:_ask).with("Password:", anything, false).returns("password")
+      reset_subject(password_prompt: prompt)
 
       transport.expect do |t,packet|
         assert_equal USERAUTH_REQUEST, packet.type
@@ -115,6 +120,12 @@ module Authentication; module Methods
 
       def subject(options={})
         @subject ||= Net::SSH::Authentication::Methods::KeyboardInteractive.new(session(options), options)
+      end
+
+      def reset_subject(options)
+        @subject = nil
+        reset_session(options)
+        subject(options)
       end
   end
 

@@ -3,6 +3,7 @@
 ENV['HOME'] ||= ENV['HOMEPATH'] ? "#{ENV['HOMEDRIVE']}#{ENV['HOMEPATH']}" : Dir.pwd
 
 require 'logger'
+require 'etc'
 
 require 'net/ssh/config'
 require 'net/ssh/errors'
@@ -10,7 +11,7 @@ require 'net/ssh/loggable'
 require 'net/ssh/transport/session'
 require 'net/ssh/authentication/session'
 require 'net/ssh/connection/session'
-require 'etc'
+require 'net/ssh/prompt'
 
 module Net
 
@@ -70,7 +71,7 @@ module Net
       :known_hosts, :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
       :max_win_size, :send_env, :use_agent, :number_of_password_prompts,
-      :append_supported_algorithms, :non_interactive
+      :append_supported_algorithms, :non_interactive, :password_prompt
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -192,6 +193,7 @@ module Net
     #   password auth method
     # * :non_interactive => non interactive applications should set it to true
     #   to prefer failing a password/etc auth methods vs asking for password
+    # * :password_prompt => a custom prompt object with ask method. See Net::SSH::Prompt
     #
     # If +user+ parameter is nil it defaults to USER from ssh_config, or
     # local username
@@ -213,6 +215,8 @@ module Net
       if options[:non_interactive]
         options[:number_of_password_prompts] = 0
       end
+
+      options[:password_prompt] ||= Prompt.default(options)
 
       if options[:verbose]
         options[:logger].level = case options[:verbose]

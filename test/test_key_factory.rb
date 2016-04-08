@@ -1,4 +1,4 @@
-require 'common'
+require_relative 'common'
 require 'net/ssh/key_factory'
 
 class TestKeyFactory < NetSSHTest
@@ -17,9 +17,10 @@ class TestKeyFactory < NetSSHTest
   end
 
   def test_load_encrypted_private_RSA_key_should_prompt_for_password_and_return_key
+    prompt = MockPrompt.new
     File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
-    Net::SSH::KeyFactory.expects(:prompt).with("Enter passphrase for #{@key_file}:", false).returns("password")
-    assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
+    prompt.expects(:_ask).with("Enter passphrase for #{@key_file}:", has_entries(type: 'private_key', filename: @key_file), false).returns("password")
+    assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file, nil, true, prompt).to_der
   end
 
   def test_load_encrypted_private_RSA_key_with_password_should_not_prompt_and_return_key
@@ -28,9 +29,12 @@ class TestKeyFactory < NetSSHTest
   end
 
   def test_load_encrypted_private_DSA_key_should_prompt_for_password_and_return_key
-    File.expects(:read).with(@key_file).returns(encrypted(dsa_key, "password"))
-    Net::SSH::KeyFactory.expects(:prompt).with("Enter passphrase for #{@key_file}:", false).returns("password")
-    assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
+    prompt = MockPrompt.new
+    data = encrypted(dsa_key, "password")
+    File.expects(:read).with(@key_file).returns(data)
+    sha = Digest::SHA256.digest(data)
+    prompt.expects(:_ask).with("Enter passphrase for #{@key_file}:", {type: 'private_key', filename: '/key-file', sha: sha}, false).returns("password")
+    assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file, nil, true, prompt).to_der
   end
 
   def test_load_encrypted_private_DSA_key_with_password_should_not_prompt_and_return_key
@@ -39,14 +43,15 @@ class TestKeyFactory < NetSSHTest
   end
 
   def test_load_encrypted_private_key_should_give_three_tries_for_the_password_and_then_raise_exception
+    prompt = MockPrompt.new
     File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
-    Net::SSH::KeyFactory.expects(:prompt).times(3).with("Enter passphrase for #{@key_file}:", false).returns("passwod","passphrase","passwd")
+    prompt.expects(:_ask).times(3).with("Enter passphrase for #{@key_file}:", has_entries(type: 'private_key', filename: '/key-file'), false).returns("passwod","passphrase","passwd")
     if OpenSSL::PKey.respond_to?(:read)
       error_class = ArgumentError
     else
       error_class = OpenSSL::PKey::RSAError
     end
-    assert_raises(error_class) { Net::SSH::KeyFactory.load_private_key(@key_file) }
+    assert_raises(error_class) { Net::SSH::KeyFactory.load_private_key(@key_file, nil, true, prompt) }
   end
 
   def test_load_encrypted_private_key_should_raise_exception_without_asking_passphrase

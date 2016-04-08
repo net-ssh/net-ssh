@@ -26,8 +26,6 @@ module Net; module SSH
     end
 
     class <<self
-      include Prompt
-
       # Fetch an OpenSSL key instance by its SSH name. It will be a new,
       # empty key of the given type.
       def get(name)
@@ -39,9 +37,9 @@ module Net; module SSH
       # appropriately. The new key is returned. If the key itself is
       # encrypted (requiring a passphrase to use), the user will be
       # prompted to enter their password unless passphrase works. 
-      def load_private_key(filename, passphrase=nil, ask_passphrase=true)
+      def load_private_key(filename, passphrase=nil, ask_passphrase=true, prompt=Prompt.default)
         data = File.read(File.expand_path(filename))
-        load_data_private_key(data, passphrase, ask_passphrase, filename)
+        load_data_private_key(data, passphrase, ask_passphrase, filename, prompt)
       end
 
       # Loads a private key. It will correctly determine
@@ -49,7 +47,7 @@ module Net; module SSH
       # appropriately. The new key is returned. If the key itself is
       # encrypted (requiring a passphrase to use), the user will be
       # prompted to enter their password unless passphrase works. 
-      def load_data_private_key(data, passphrase=nil, ask_passphrase=true, filename="")
+      def load_data_private_key(data, passphrase=nil, ask_passphrase=true, filename="", prompt=Prompt.default)
         if OpenSSL::PKey.respond_to?(:read)
           pkey_read = true
           error_class = ArgumentError
@@ -78,29 +76,32 @@ module Net; module SSH
         openssh_key = data.match(/-----BEGIN OPENSSH PRIVATE KEY-----/)
         tries = 0
 
-        begin
-          if openssh_key
-            ED25519::PrivKey.read(data, passphrase || 'invalid')
-          else
-            if pkey_read
-              return OpenSSL::PKey.read(data, passphrase || 'invalid')
+        prompter = nil
+        result = 
+          begin
+            if openssh_key
+              ED25519::PrivKey.read(data, passphrase || 'invalid')
+            elsif pkey_read
+              OpenSSL::PKey.read(data, passphrase || 'invalid')
             else
-              return key_type.new(data, passphrase || 'invalid')
+              key_type.new(data, passphrase || 'invalid')
             end
-          end
-        rescue error_class
-          if encrypted_key && ask_passphrase
-            tries += 1
-            if tries <= 3
-              passphrase = prompt("Enter passphrase for #{filename}:", false)
-              retry
+          rescue error_class
+            if encrypted_key && ask_passphrase
+              tries += 1
+              if tries <= 3
+                prompter ||= prompt.start(type: 'private_key', filename: filename, sha: Digest::SHA256.digest(data))
+                passphrase = prompter.ask("Enter passphrase for #{filename}:", false)
+                retry
+              else
+                raise
+              end
             else
               raise
             end
-          else
-            raise
           end
-        end
+        prompter.success if prompter
+        result
       end
 
       # Loads a public key from a file. It will correctly determine whether

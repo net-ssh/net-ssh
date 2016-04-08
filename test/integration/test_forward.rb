@@ -14,7 +14,7 @@
 #
 # http://net-ssh.lighthouseapp.com/projects/36253/tickets/7
 
-require_relative './common'
+require_relative 'common'
 require 'net/ssh/buffer'
 require 'net/ssh'
 require 'net/ssh/proxy/command'

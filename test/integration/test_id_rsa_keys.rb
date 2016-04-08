@@ -1,4 +1,4 @@
-require 'common'
+require_relative 'common'
 require 'fileutils'
 require 'tmpdir'
 
@@ -86,9 +86,10 @@ class TestIDRSAPKeys < NetSSHTest
       options = {keys: [], key_data: [private_key]}
 
       #key_manager = Net::SSH::Authentication::KeyManager.new(nil, options)
-
-      Net::SSH::KeyFactory.expects(:prompt).with('Enter passphrase for :', false).returns('pwd12')
-      Net::SSH.start("localhost", "net_ssh_1", options) do |ssh|
+      prompt = MockPrompt.new
+      sha = Digest::SHA256.digest(private_key)
+      prompt.expects(:_ask).with('Enter passphrase for <key in memory>:', {type: 'private_key', filename: '<key in memory>', sha: sha}, false).returns('pwd12')
+      Net::SSH.start("localhost", "net_ssh_1", options.merge(password_prompt: prompt)) do |ssh|
         ssh.exec! 'whoami'
       end
     end
