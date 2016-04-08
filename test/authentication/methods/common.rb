@@ -10,7 +10,7 @@ module Authentication; module Methods
       end
 
       def transport(options={})
-        @transport ||= MockTransport.new(options.merge(:socket => socket))
+        @transport ||= MockTransport.new(options.merge(socket: socket))
       end
 
       def session(options={})
@@ -21,6 +21,12 @@ module Authentication; module Methods
           end
           sess
         end
+      end
+
+      def reset_session(options = {})
+        @transport = nil
+        @session = nil
+        session(options)
       end
 
   end

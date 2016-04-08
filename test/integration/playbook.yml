@@ -2,6 +2,7 @@
 - hosts: all
   sudo: yes
   vars:
+    no_rvm: no
     myuser: vagrant
     mygroup: vagrant
     homedir: /home/vagrant
@@ -42,6 +43,9 @@
       notify: restart sshd
     - name: sshd debug
       lineinfile: dest='/etc/ssh/sshd_config' line='LogLevel DEBUG' regexp=LogLevel
+      notify: restart sshd
+    - name: sshd allow interactive
+      lineinfile: dest='/etc/ssh/sshd_config' line='ChallengeResponseAuthentication yes' regexp='^ChallengeResponseAuthentication.+'
       notify: restart sshd
     - name: sshd allow forward
       lineinfile: dest='/etc/ssh/sshd_config' line='AllowTcpForwarding all' regexp=LogLevel

@@ -1,4 +1,4 @@
-require_relative './common'
+require_relative 'common'
 require 'net/ssh/buffer'
 require 'net/ssh'
 require 'timeout'

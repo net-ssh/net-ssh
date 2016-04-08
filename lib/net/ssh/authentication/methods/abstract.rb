@@ -22,6 +22,7 @@ module Net; module SSH; module Authentication; module Methods
       @session = session
       @key_manager = options[:key_manager]
       @options = options
+      @prompt = options[:password_prompt]
       self.logger = session.logger
     end
 
@@ -55,6 +56,9 @@ module Net; module SSH; module Authentication; module Methods
       buffer
     end
 
+    private
+
+    attr_reader :prompt
   end
 
 end; end; end; end

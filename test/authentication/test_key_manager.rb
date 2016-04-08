@@ -1,4 +1,4 @@
-require 'common'
+require_relative '../common'
 require 'net/ssh/authentication/key_manager'
 
 module Authentication
@@ -172,13 +172,13 @@ module Authentication
 
         case options.fetch(:passphrase, :indifferently)
         when :should_be_asked
-          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, false).raises(OpenSSL::PKey::RSAError).at_least_once
-          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, true).returns(key).at_least_once
+          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, false, prompt).raises(OpenSSL::PKey::RSAError).at_least_once
+          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, true, prompt).returns(key).at_least_once
         when :should_not_be_asked
-          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, false).raises(OpenSSL::PKey::RSAError).at_least_once
-          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, true).never
+          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, false, prompt).raises(OpenSSL::PKey::RSAError).at_least_once
+          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, true, prompt).never
         else # :indifferently
-          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, any_of(true, false)).returns(key).at_least_once
+          Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, any_of(true, false), prompt).returns(key).at_least_once
         end
 
         # do not override OpenSSL::PKey::EC#public_key
@@ -231,8 +231,12 @@ module Authentication
                                                  ecdsa_sha2_nistp521])
       end
 
+      def prompt
+        @promp ||= MockPrompt.new
+      end
+
       def manager(options = {})
-        @manager ||= Net::SSH::Authentication::KeyManager.new(nil, options)
+        @manager ||= Net::SSH::Authentication::KeyManager.new(nil, {password_prompt: prompt}.merge(options))
       end
 
   end

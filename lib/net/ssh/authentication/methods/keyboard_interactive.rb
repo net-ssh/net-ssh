@@ -8,8 +8,6 @@ module Net
 
         # Implements the "keyboard-interactive" SSH authentication method.
         class KeyboardInteractive < Abstract
-          include Prompt
-
           USERAUTH_INFO_REQUEST  = 60
           USERAUTH_INFO_RESPONSE = 61
 
@@ -18,12 +16,14 @@ module Net
             debug { "trying keyboard-interactive" }
             send_message(userauth_request(username, next_service, "keyboard-interactive", "", ""))
 
+            prompter = nil
             loop do
               message = session.next_message
 
               case message.type
               when USERAUTH_SUCCESS
                 debug { "keyboard-interactive succeeded" }
+                prompter.success if prompter
                 return true
               when USERAUTH_FAILURE
                 debug { "keyboard-interactive failed" }
@@ -31,26 +31,26 @@ module Net
                 raise Net::SSH::Authentication::DisallowedMethod unless
                   message[:authentications].split(/,/).include? 'keyboard-interactive'
 
-                return false
+                return false unless interactive?
+                password = nil
+                debug { "retrying keyboard-interactive" }
+                send_message(userauth_request(username, next_service, "keyboard-interactive", "", ""))
               when USERAUTH_INFO_REQUEST
                 name = message.read_string
                 instruction = message.read_string
                 debug { "keyboard-interactive info request" }
 
-                unless password
-                  if interactive?
-                    puts(name) unless name.empty?
-                    puts(instruction) unless instruction.empty?
-                  end
+                if password.nil? && interactive? && prompter.nil?
+                  prompter = prompt.start(type: 'keyboard-interactive', name: name, instruction: instruction)
                 end
 
                 _ = message.read_string # lang_tag
                 responses =[]
-  
+
                 message.read_long.times do
                   text = message.read_string
                   echo = message.read_bool
-                  password_to_send = password || (interactive? ? prompt(text, echo) : nil)
+                  password_to_send = password || (prompter && prompter.ask(text, echo))
                   responses << password_to_send
                 end
 

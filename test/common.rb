@@ -40,6 +40,20 @@ class NetSSHTest < Minitest::Test
   end
 end
 
+class MockPrompt
+  def start(info)
+    @info = info
+    self
+  end
+
+  def ask(message, echo)
+    _ask(message, @info, echo)
+  end
+
+  def success
+  end
+end
+
 class MockTransport < Net::SSH::Transport::Session
   class BlockVerifier
     def initialize(block)
