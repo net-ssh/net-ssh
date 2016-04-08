@@ -79,8 +79,6 @@ The only requirement you might be missing is the OpenSSL bindings for Ruby. Thes
 
 If that spits out something like "OpenSSL 0.9.8g 19 Oct 2007", then you're set. If you get an error, then you'll need to see about rebuilding ruby with OpenSSL support, or (if your platform supports it) installing the OpenSSL bindings separately.
 
-Additionally: if you are going to be having Net::SSH prompt you for things like passwords or certificate passphrases, you'll want to have either the Highline (recommended) or Termios (unix systems only) gem installed, so that the passwords don't echo in clear text.
-
 Lastly, if you want to run the tests or use any of the Rake tasks, you'll need Mocha and other dependencies listed in Gemfile
 
 
