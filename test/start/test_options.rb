@@ -52,6 +52,20 @@ module NetSSH
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
+
+    def test_constructor_should_reject_options_set_to_nil
+      assert_raises(ArgumentError) do
+        options = { :remote_user => nil}
+        Net::SSH.start('localhost', 'testuser', options)
+      end
+    end
+
+    def test_constructor_should_reject_invalid_options
+      assert_raises(ArgumentError) do
+        options = { :some_invalid_option => "some setting"}
+        Net::SSH.start('localhost', 'testuser', options)
+      end
+    end
   end
 end
 
