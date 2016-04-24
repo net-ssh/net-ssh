@@ -84,6 +84,7 @@ module Net; module SSH; module Transport
       @server_version = ServerVersion.new(socket, logger, options[:timeout])
 
       @algorithms = Algorithms.new(self, options)
+      @algorithms.start
       wait { algorithms.initialized? }
     rescue Errno::ETIMEDOUT
       raise Net::SSH::ConnectionTimeout
