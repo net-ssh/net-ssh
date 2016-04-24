@@ -25,8 +25,8 @@ module Net; module SSH; module Test
 
       @script = Script.new
 
-      script.gets(:kexinit, 1, 2, 3, 4, "test", "ssh-rsa", "none", "none", "none", "none", "none", "none", "", "", false)
       script.sends(:kexinit)
+      script.gets(:kexinit, 1, 2, 3, 4, "test", "ssh-rsa", "none", "none", "none", "none", "none", "none", "", "", false)
       script.sends(:newkeys)
       script.gets(:newkeys)
     end
