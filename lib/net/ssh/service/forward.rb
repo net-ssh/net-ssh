@@ -357,7 +357,7 @@ module Net; module SSH; module Service
         channel[:invisible] = true
 
         begin
-          agent = Authentication::Agent.connect(logger)
+          agent = Authentication::Agent.connect(logger, session.options[:agent_socket_factory])
           if (agent.socket.is_a? ::IO)
             prepare_client(agent.socket, channel, :agent)
           else
