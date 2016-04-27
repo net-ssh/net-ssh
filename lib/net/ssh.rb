@@ -68,7 +68,7 @@ module Net
       :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
-      :max_win_size, :send_env, :use_agent, :number_of_password_prompts
+      :max_win_size, :send_env, :use_agent, :number_of_password_prompts, :agent_socket_factory
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -177,6 +177,10 @@ module Net
     #   is very verbose, Logger::FATAL is all but silent). Logger::FATAL is the
     #   default. The symbols :debug, :info, :warn, :error, and :fatal are also
     #   supported and are translated to the corresponding Logger constant.
+    # * :agent_socket_factory => enables the user to pass a lambda/block that will serve as the socket factory
+    #    Net::SSH::start(user,host,agent_socket_factory: ->{ UNIXSocket.open('/foo/bar') })
+    #    example: ->{ UNIXSocket.open('/foo/bar')}
+
     def self.start(host, user, options={}, &block)
       invalid_options = options.keys - VALID_OPTIONS
       if invalid_options.any?
