@@ -32,6 +32,11 @@ module Authentication
       agent(false).connect!
     end
 
+    def test_connect_should_use_agent_socket_factory_instead_of_factory
+      assert_equal agent.connect!, socket
+      assert_equal agent.connect!(agent_socket_factory), "/foo/bar.sock"
+    end
+
     def test_connect_should_raise_error_if_connection_could_not_be_established
       factory.expects(:open).raises(SocketError)
       assert_raises(Net::SSH::Authentication::AgentNotAvailable) { agent(false).connect! }
@@ -213,12 +218,15 @@ module Authentication
       def agent(auto=:connect)
         @agent ||= begin
           agent = Net::SSH::Authentication::Agent.new
-          agent.stubs(:agent_socket_factory).returns(factory)
+          agent.stubs(:socket_class).returns(factory)
           agent.connect! if auto == :connect
           agent
         end
       end
 
+      def agent_socket_factory
+        @agent_socket_factory ||= ->{"/foo/bar.sock"}
+      end
   end
 
 end
