@@ -36,8 +36,8 @@ install:
   - ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true' -e 'myuser=travis' -e 'mygroup=travis' -e 'homedir=/home/travis'
 
 script:
-  - bundle exec rake test
-  - bundle exec rake test_test
-  - bundle exec rubocop
+  - bundle _1.11.2_ exec rake test
+  - bundle _1.11.2_ exec rake test_test
+  - bundle _1.11.2_ exec rubocop
 
 

@@ -116,6 +116,12 @@ module Net; module SSH; module Transport
       prepare_preferred_algorithms!
     end
 
+    # Start the algorithm negotation
+    def start
+      raise ArgumentError, "Cannot call start if it's negoitation started or done" if @pending || @initialized
+      send_kexinit
+    end
+
     # Request a rekey operation. This will return immediately, and does not
     # actually perform the rekey operation. It does cause the session to change
     # state, however--until the key exchange finishes, no new packets will be
