@@ -1,0 +1,5 @@
+source 'https://rubygems.org'
+
+ENV['NET_SSH_NO_RBNACL'] = 'true'
+# Specify your gem's dependencies in mygem.gemspec
+gemspec

@@ -37,7 +37,6 @@ install:
 
 script:
   - bundle _1.11.2_ exec rake test
+  - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.11.2_ exec rake test
   - bundle _1.11.2_ exec rake test_test
   - bundle _1.11.2_ exec rubocop
-
-

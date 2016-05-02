@@ -1,4 +1,4 @@
-require 'common'
+require_relative '../common'
 require 'net/ssh/transport/algorithms'
 
 module Transport
