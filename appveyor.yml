@@ -9,10 +9,10 @@ environment:
 
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
-  - gem install bundler --no-document -v 1.10.5
-  - bundle install --retry=3
+  - gem install bundler --no-document -v 1.11.2
+  - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.11.2_ install --retry=3
 
 test_script:
-  - bundle exec rake
+  - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.11.2_ exec rake test
 
 build: off
