@@ -1,5 +1,6 @@
-gem 'rbnacl-libsodium'
-gem 'rbnacl'
+gem 'rbnacl-libsodium', '~> 1.0.10'
+gem 'rbnacl', '~> 3.3.0'
+gem 'bcrypt_pbkdf', '~> 1.0.0.alpha1' unless RUBY_PLATFORM == "java"
 
 require 'rbnacl/libsodium'
 require 'rbnacl'
@@ -13,20 +14,14 @@ require 'base64'
 require 'net/ssh/transport/cipher_factory'
 require 'bcrypt_pbkdf' unless RUBY_PLATFORM == "java"
 
-module RbNaCl
-  module Signatures
-    module Ed25519
-      class SigningKeyFromFile < SigningKey
-        def initialize(pk,sk)
-          @signing_key = sk
-          @verify_key = VerifyKey.new(pk)
-        end
-      end
+module ED25519
+  class SigningKeyFromFile < RbNaCl::Signatures::Ed25519::SigningKey
+    def initialize(pk,sk)
+      @signing_key = sk
+      @verify_key = RbNaCl::Signatures::Ed25519::VerifyKey.new(pk)
     end
   end
-end
 
-module ED25519
   class PubKey
     def initialize(data)
       @verify_key = RbNaCl::Signatures::Ed25519::VerifyKey.new(data)
@@ -118,7 +113,7 @@ module ED25519
       _comment = decoded.read_string
 
       @pk = pk
-      @sign_key = RbNaCl::Signatures::Ed25519::SigningKeyFromFile.new(pk,sk)
+      @sign_key = SigningKeyFromFile.new(pk,sk)
     end
 
     def public_key

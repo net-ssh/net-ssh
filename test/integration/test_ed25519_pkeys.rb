@@ -4,6 +4,7 @@ require 'tmpdir'
 
 require 'net/ssh'
 
+unless ENV['NET_SSH_NO_RBNACL']
 # see Vagrantfile,playbook for env.
 # we're running as net_ssh_1 user password foo
 # and usually connecting to net_ssh_2 user password foo2pwd
@@ -67,4 +68,6 @@ class TestED25519PKeys < NetSSHTest
       assert_equal "hello from:net_ssh_1\n", ret
     end
   end
+end
+
 end

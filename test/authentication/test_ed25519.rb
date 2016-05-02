@@ -1,3 +1,5 @@
+unless ENV['NET_SSH_NO_RBNACL']
+
 require 'common'
 require 'net/ssh/authentication/ed25519'
 require 'base64'
@@ -73,5 +75,7 @@ IDBAU=
       'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDB2NBh4GJPPUN1kXPMu8b633Xcv55WoKC3OkBjFAbzJ vagrant@vagrant-ubuntu-trusty-64'
     end
   end
+
+end
 
 end
