@@ -3,7 +3,7 @@ require 'net/ssh/errors'
 require 'net/ssh/loggable'
 
 module Net; module SSH; module Authentication
-  PLATFORM = File::ALT_SEPARATOR \
+  PLATFORM ||= File::ALT_SEPARATOR \
     ? RUBY_PLATFORM =~ /java/ ? :java_win32 : :win32 \
     : RUBY_PLATFORM =~ /java/ ? :java : :unix
 
