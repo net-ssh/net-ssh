@@ -1,3 +1,12 @@
+=== 4.0.0.alpha4
+
+* Experimental event loop abstraction [Miklos Fazekas]
+* RbNacl dependency is optional [Miklos Fazekas]
+* agent_socket_factory option [Alon Goldboim]
+* client sends KEXINIT, it doesn't have to wait for server [Miklos Fazekas]
+* better error message when option is nil [Kane Morgan]
+* prompting can be customized [Miklos Fazekas]
+
 === 4.0.0.alpha3
 
 * added max_select_wait_time [Eugene Kenny]
