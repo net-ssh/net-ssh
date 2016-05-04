@@ -235,6 +235,7 @@ module Transport
             :server_algorithm_packet => kexinit.to_s,
             :client_algorithm_packet => buffer.to_s,
             :need_bytes => 20,
+            :minimum_dh_bits => nil,
             :logger => nil).
           returns(stub("kex", :exchange_keys => { :shared_secret => shared_secret, :session_id => session_id, :hashing_algorithm => hashing_algorithm }))
       end

@@ -23,8 +23,10 @@ module Net::SSH::Transport::Kex
         # for Compatibility: OpenSSH requires (need_bits * 2 + 1) length of parameter
         need_bits = data[:need_bytes] * 8 * 2 + 1
 
-        if need_bits < MINIMUM_BITS
-          need_bits = MINIMUM_BITS
+        data[:minimum_dh_bits] ||= MINIMUM_BITS
+
+        if need_bits < data[:minimum_dh_bits]
+          need_bits = data[:minimum_dh_bits]
         elsif need_bits > MAXIMUM_BITS
           need_bits = MAXIMUM_BITS
         end
@@ -38,7 +40,7 @@ module Net::SSH::Transport::Kex
         compute_need_bits
 
         # request the DH key parameters for the given number of bits.
-        buffer = Net::SSH::Buffer.from(:byte, KEXDH_GEX_REQUEST, :long, MINIMUM_BITS,
+        buffer = Net::SSH::Buffer.from(:byte, KEXDH_GEX_REQUEST, :long, data[:minimum_dh_bits],
           :long, data[:need_bits], :long, MAXIMUM_BITS)
         connection.send_message(buffer)
 
