@@ -47,11 +47,8 @@ module Transport; module Kex
       end
 
       def need_minimum(bits=1024)
-        if @dh_options && @dh_options[:minimum_dh_bits]
-          return @dh_options[:minimum_dh_bits]
-        else
-          return bits
-        end
+        return @dh_options[:minimum_dh_bits] if @dh_options && @dh_options[:minimum_dh_bits]
+        bits
       end
 
       def default_p
