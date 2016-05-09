@@ -16,6 +16,12 @@ module Transport; module Kex
       assert_nothing_raised { exchange! }
     end
 
+    def test_exchange_with_optional_minimum_bits_declared
+      dh_options :minimum_dh_bits => 4096
+      assert_equal 4096, need_bits
+      assert_nothing_raised { exchange! }
+    end
+
     def test_exchange_with_fewer_than_maximum_bits_uses_need_bits
       dh_options :need_bytes => 500
       need_bits(8001)
@@ -37,7 +43,12 @@ module Transport; module Kex
     private
 
       def need_bits(bits=1024)
-        @need_bits ||= bits
+        @need_bits ||= need_minimum(bits)
+      end
+
+      def need_minimum(bits=1024)
+        return @dh_options[:minimum_dh_bits] if @dh_options && @dh_options[:minimum_dh_bits]
+        bits
       end
 
       def default_p
@@ -47,7 +58,7 @@ module Transport; module Kex
       def exchange!(options={})
         connection.expect do |t, buffer|
           assert_equal KEXDH_GEX_REQUEST, buffer.type
-          assert_equal 1024, buffer.read_long
+          assert_equal need_minimum, buffer.read_long
           assert_equal need_bits, buffer.read_long
           assert_equal 8192, buffer.read_long
           t.return(KEXDH_GEX_GROUP, :bignum, bn(options[:p] || default_p), :bignum, bn(options[:g] || 2))

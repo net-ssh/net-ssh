@@ -357,6 +357,7 @@ module Net; module SSH; module Transport
           :server_algorithm_packet => @server_packet,
           :client_algorithm_packet => @client_packet,
           :need_bytes => kex_byte_requirement,
+          :minimum_dh_bits => options[:minimum_dh_bits],
           :logger => logger)
         result = algorithm.exchange_keys
 
