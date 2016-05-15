@@ -207,6 +207,8 @@ module Net
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
       end
 
+      assign_defaults(options)
+
       if options.values.include? nil
         nil_options = options.keys.select { |k| options[k].nil? }
         raise ArgumentError, "Value(s) have been set to nil: #{nil_options.join(', ')}"
@@ -216,16 +218,9 @@ module Net
       options = configuration_for(host, options.fetch(:config, true)).merge(options)
       host = options.fetch(:host_name, host)
 
-      if !options.key?(:logger)
-        options[:logger] = Logger.new(STDERR)
-        options[:logger].level = Logger::FATAL
-      end
-
       if options[:non_interactive]
         options[:number_of_password_prompts] = 0
       end
-
-      options[:password_prompt] ||= Prompt.default(options)
 
       if options[:verbose]
         options[:logger].level = case options[:verbose]
@@ -277,6 +272,15 @@ module Net
         end
 
       Net::SSH::Config.for(host, files)
+    end
+
+    def self.assign_defaults(options)
+      if !options[:logger]
+        options[:logger] = Logger.new(STDERR)
+        options[:logger].level = Logger::FATAL
+      end
+
+      options[:password_prompt] ||= Prompt.default(options)
     end
   end
 end

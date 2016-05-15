@@ -55,16 +55,23 @@ module NetSSH
 
     def test_constructor_should_reject_options_set_to_nil
       assert_raises(ArgumentError) do
-        options = { :remote_user => nil}
+        options = { :remote_user => nil }
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
 
     def test_constructor_should_reject_invalid_options
       assert_raises(ArgumentError) do
-        options = { :some_invalid_option => "some setting"}
+        options = { :some_invalid_option => "some setting" }
         Net::SSH.start('localhost', 'testuser', options)
       end
+    end
+
+    def test_constructor_should_set_default_options
+      options = { :logger => nil, :password_prompt => nil }
+      Net::SSH.start('localhost', 'testuser', options)
+      assert !options[:logger].nil?
+      assert !options[:password_prompt].nil?
     end
   end
 end
