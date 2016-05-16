@@ -3,7 +3,7 @@ require 'net/ssh/prompt'
 
 begin
   require 'net/ssh/authentication/ed25519'
-rescue Gem::LoadError => e # rubocop:disable Lint/HandleExceptions
+rescue LoadError => e # rubocop:disable Lint/HandleExceptions
 end
 
 module Net; module SSH
