@@ -19,7 +19,7 @@ module Net; module SSH; module Authentication
 
     # Instantiates a new agent object, connects to a running SSH agent,
     # negotiates the agent protocol version, and returns the agent object.
-    def self.connect(logger=nil)
+    def self.connect(logger=nil, agent_socket_factory)
       agent = new(logger)
       agent.connect!
       agent
