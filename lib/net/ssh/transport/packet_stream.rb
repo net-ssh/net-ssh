@@ -96,7 +96,7 @@ module Net; module SSH; module Transport
           return packet if packet
 
           loop do
-            break if self.wait_readable
+            break if wait_readable
           end
 
           if fill <= 0
