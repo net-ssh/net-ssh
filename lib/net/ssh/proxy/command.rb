@@ -56,7 +56,7 @@ module Net; module SSH; module Proxy
       }
       begin
         io = IO.popen(command_line, "r+")
-        if result = self.wait_readable(60)
+        if result = io.wait_readable(60)
           if result == false
             raise "command failed"
           end
