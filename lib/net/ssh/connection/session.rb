@@ -268,18 +268,6 @@ module Net; module SSH; module Connection
       end
     end
 
-    # processes the reader IO which can read from the buffer
-    def process_reader(reader)
-      if listeners[reader]
-        listeners[reader].call(reader)
-      else
-        if reader.fill.zero?
-          reader.close
-          stop_listening_to(reader)
-        end
-      end
-    end
-
     # calls Net::SSH::Transport::Session#rekey_as_needed to allow the
     # transport layer to rekey
     def ev_do_postprocess(was_events)
