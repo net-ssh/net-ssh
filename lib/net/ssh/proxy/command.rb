@@ -82,7 +82,11 @@ module Net; module SSH; module Proxy
           begin
             result = write_nonblock(data)
           rescue IO::WaitWritable, Errno::EINTR
-            wait_writable
+            # TODO: there is a bug in ruby for #wait_writable in 
+            # fds returning from popen calls. The only way to handle it
+            # without falling flat is using IO.select (for now)
+            # monitor: https://bugs.ruby-lang.org/issues/12257
+            IO.select(nil, [self])
             retry
           end
           result
