@@ -110,9 +110,7 @@ module Net; module SSH
     def wait_for_pending_sends
       send_pending
       while output.length > 0
-        result = self.wait_writable or next
-        next unless result
-        send_pending
+        self.wait_writable && send_pending
       end
     end
 
