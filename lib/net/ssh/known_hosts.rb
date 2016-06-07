@@ -3,7 +3,7 @@ require 'openssl'
 require 'base64'
 require 'net/ssh/buffer'
 
-module Net 
+module Net
   module SSH
 
     # Represents the result of a search in known hosts
@@ -11,23 +11,23 @@ module Net
     class HostKeys
       include Enumerable
       attr_reader :host
-  
+
       def initialize(host_keys, host, known_hosts, options = {})
         @host_keys = host_keys
         @host = host
         @known_hosts = known_hosts
         @options = options
       end
-  
+
       def add_host_key(key)
         @known_hosts.add(@host, key, @options)
         @host_keys.push(key)
       end
-  
+
       def each(&block)
         @host_keys.each(&block)
       end
-  
+
       def empty?
         @host_keys.empty?
       end
@@ -48,20 +48,20 @@ module Net
       else
         SUPPORTED_TYPE = %w[ssh-rsa ssh-dss]
       end
-  
+
       class <<self
         # Searches all known host files (see KnownHosts.hostfiles) for all keys
         # of the given host. Returns an enumerable of keys found.
         def search_for(host, options={})
           HostKeys.new(search_in(hostfiles(options), host), host, self, options)
         end
-  
+
         # Search for all known keys for the given host, in every file given in
         # the +files+ array. Returns the list of keys.
         def search_in(files, host)
-          files.map { |file| KnownHosts.new(file).keys_for(host) }.flatten
+          files.flat_map { |file| KnownHosts.new(file).keys_for(host) }
         end
-  
+
         # Looks in the given +options+ hash for the :user_known_hosts_file and
         # :global_known_hosts_file keys, and returns an array of all known
         # hosts files. If the :user_known_hosts_file key is not set, the
@@ -73,14 +73,14 @@ module Net
         # the second option.
         def hostfiles(options, which=:all)
           files = []
-  
+
           files += Array(options[:user_known_hosts_file] || %w[~/.ssh/known_hosts ~/.ssh/known_hosts2]) if which == :all || which == :user
-  
+
           files += Array(options[:global_known_hosts_file] || %w[/etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2]) if which == :all || which == :global
-  
+
           return files
         end
-  
+
         # Looks in all user known host files (see KnownHosts.hostfiles) and tries to
         # add an entry for the given host and key to the first file it is able
         # to.
@@ -95,17 +95,17 @@ module Net
           end
         end
       end
-  
+
       # The host-key file name that this KnownHosts instance will use to search
       # for keys.
       attr_reader :source
-  
+
       # Instantiate a new KnownHosts instance that will search the given known-hosts
       # file. The path is expanded file File.expand_path.
       def initialize(source)
         @source = File.expand_path(source)
       end
-  
+
       # Returns an array of all keys that are known to be associatd with the
       # given host. The +host+ parameter is either the domain name or ip address
       # of the host, or both (comma-separated). Additionally, if a non-standard
@@ -122,39 +122,39 @@ module Net
       def keys_for(host)
         keys = []
         return keys unless File.readable?(source)
-  
+
         entries = host.split(/,/)
-  
+
         File.open(source) do |file|
           scanner = StringScanner.new("")
           file.each_line do |line|
             scanner.string = line
-  
+
             scanner.skip(/\s*/)
             next if scanner.match?(/$|#/)
-  
+
             hostlist = scanner.scan(/\S+/).split(/,/)
             found = entries.all? { |entry| hostlist.include?(entry) } ||
-              known_host_hash?(hostlist, entries, scanner)
+              known_host_hash?(hostlist, entries)
             next unless found
-  
+
             scanner.skip(/\s*/)
             type = scanner.scan(/\S+/)
-  
+
             next unless SUPPORTED_TYPE.include?(type)
-  
+
             scanner.skip(/\s*/)
             blob = scanner.rest.unpack("m*").first
             keys << Net::SSH::Buffer.new(blob).read_key
           end
         end
-  
+
         keys
       end
-  
+
       # Indicates whether one of the entries matches an hostname that has been
       # stored as a HMAC-SHA1 hash in the known hosts.
-      def known_host_hash?(hostlist, entries, scanner)
+      def known_host_hash?(hostlist, entries)
         if hostlist.size == 1 && hostlist.first =~ /\A\|1(\|.+){2}\z/
           chunks = hostlist.first.split(/\|/)
           salt = Base64.decode64(chunks[2])
@@ -166,7 +166,7 @@ module Net
         end
         false
       end
-  
+
       # Tries to append an entry to the current source file for the given host
       # and key. If it is unable to (because the file is not writable, for
       # instance), an exception will be raised.
