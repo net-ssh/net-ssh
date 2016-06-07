@@ -61,7 +61,7 @@ module Net; module SSH
       # Search for all known keys for the given host, in every file given in
       # the +files+ array. Returns the list of keys.
       def search_in(files, host)
-        files.map { |file| KnownHosts.new(file).keys_for(host) }.flatten
+        files.flat_map { |file| KnownHosts.new(file).keys_for(host) }
       end
 
       # Looks in the given +options+ hash for the :user_known_hosts_file and
@@ -141,7 +141,7 @@ module Net; module SSH
 
           hostlist = scanner.scan(/\S+/).split(/,/)
           found = entries.all? { |entry| hostlist.include?(entry) } ||
-            known_host_hash?(hostlist, entries, scanner)
+            known_host_hash?(hostlist, entries)
           next unless found
 
           scanner.skip(/\s*/)
@@ -160,7 +160,7 @@ module Net; module SSH
 
     # Indicates whether one of the entries matches an hostname that has been
     # stored as a HMAC-SHA1 hash in the known hosts.
-    def known_host_hash?(hostlist, entries, scanner)
+    def known_host_hash?(hostlist, entries)
       if hostlist.size == 1 && hostlist.first =~ /\A\|1(\|.+){2}\z/
         chunks = hostlist.first.split(/\|/)
         salt = Base64.decode64(chunks[2])
