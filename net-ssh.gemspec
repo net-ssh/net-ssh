@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.name = "net-ssh"
   s.version = "3.2.0"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Jamis Buck", "Delano Mandelbaum", "Mikl\u{f3}s Fazekas"]
   s.cert_chain = ["net-ssh-public_cert.pem"]
@@ -191,7 +191,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.required_ruby_version = Gem::Requirement.new(">= 2.0")
   s.rubyforge_project = "net-ssh"
-  s.rubygems_version = "2.4.3"
+  s.rubygems_version = "2.4.6"
   s.signing_key = "/mnt/gem/net-ssh-private_key.pem"
   s.summary = "Net::SSH: a pure-Ruby implementation of the SSH2 client protocol."
 
