@@ -12,12 +12,10 @@ module Net::SSH::Transport
         @counter_len = orig.block_size
         orig.encrypt
         orig.padding = 0
-      }
-
-      class <<orig
-        alias :_update :update
-        private :_update
-        undef :update
+        
+        singleton_class.send(:alias_method, :_update, :update)
+        singleton_class.send(:private, :_update)
+        singleton_class.send(:undef_method, :update)
 
         def iv
           @counter
@@ -73,13 +71,12 @@ module Net::SSH::Transport
           s
         end
 
-        private
-
         def xor!(s1, s2)
           s = []
           s1.unpack('Q*').zip(s2.unpack('Q*')) {|a,b| s.push(a^b) }
           s.pack('Q*')
         end
+        singleton_class.send(:private, :xor!)
 
         def increment_counter!
           c = @counter_len
@@ -89,7 +86,8 @@ module Net::SSH::Transport
             end
           end
         end
-      end
+        singleton_class.send(:private, :increment_counter!)
+      }
     end
   end
 end
