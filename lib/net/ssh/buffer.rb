@@ -182,7 +182,7 @@ module Net; module SSH
       consume!
       data
     end
-      
+
     # Return the next 8 bytes as a 64-bit integer (in network byte order).
     # Returns nil if there are less than 8 bytes remaining to be read in the
     # buffer.
@@ -281,9 +281,10 @@ module Net; module SSH
     # Writes the given data literally into the string. Does not alter the
     # read position. Returns the buffer object.
     def write(*data)
-      data.each { |datum| @content << datum }
+      data.each { |datum| @content << datum.force_encoding('BINARY') }
       self
     end
+
 
     # Writes each argument to the buffer as a network-byte-order-encoded
     # 64-bit integer (8 bytes). Does not alter the read position. Returns the
