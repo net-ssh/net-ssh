@@ -13,8 +13,8 @@ module Authentication
       pub_data = pub.read_string
       priv = private_key_no_pwd
 
-      pub_key = ED25519::PubKey.new(pub_data)
-      priv_key = ED25519::PrivKey.new(priv,nil)
+      pub_key = Net::SSH::Authentication::ED25519::PubKey.new(pub_data)
+      priv_key = Net::SSH::Authentication::ED25519::PrivKey.new(priv,nil)
 
       shared_secret = "Hello"
       signed = priv_key.ssh_do_sign(shared_secret)
@@ -32,8 +32,8 @@ module Authentication
       pub_data = pub.read_string
       priv = private_key_pwd
 
-      pub_key = ED25519::PubKey.new(pub_data)
-      priv_key = ED25519::PrivKey.new(priv,'pwd')
+      pub_key = Net::SSH::Authentication::ED25519::PubKey.new(pub_data)
+      priv_key = Net::SSH::Authentication::ED25519::PrivKey.new(priv,'pwd')
 
       shared_secret = "Hello"
       signed = priv_key.ssh_do_sign(shared_secret)

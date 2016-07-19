@@ -1,10 +1,7 @@
 require 'net/ssh/transport/openssl'
 require 'net/ssh/prompt'
 
-begin
-  require 'net/ssh/authentication/ed25519'
-rescue LoadError => e # rubocop:disable Lint/HandleExceptions
-end
+require 'net/ssh/authentication/ed25519_loader'
 
 module Net; module SSH
 
@@ -26,7 +23,7 @@ module Net; module SSH
     }
     if defined?(OpenSSL::PKey::EC)
       MAP["ecdsa"] = OpenSSL::PKey::EC
-      MAP["ed25519"] = ED25519::PrivKey if defined? ED25519
+      MAP["ed25519"] = Net::SSH::Authentication::ED25519::PrivKey if defined? Net::SSH::Authentication::ED25519
     end
 
     class <<self
@@ -112,7 +109,11 @@ module Net; module SSH
       # appropriately.
       def classify_key(data, filename)
         if data.match(/-----BEGIN OPENSSH PRIVATE KEY-----/)
-          return ->(key_data, passphrase) { ED25519::PrivKey.read(key_data, passphrase) }, ArgumentError
+          if defined?(Net::SSH::Authentication::ED25519)
+            return ->(key_data, passphrase) { Net::SSH::Authentication::ED25519::PrivKey.read(key_data, passphrase) }, ArgumentError
+          else
+            raise OpenSSL::PKey::PKeyError, "OpenSSH keys only supported if ED25519 is available - #{ED25519_LOAD_ERROR}"
+          end
         elsif OpenSSL::PKey.respond_to?(:read)
           return ->(key_data, passphrase) { OpenSSL::PKey.read(key_data, passphrase) }, ArgumentError
         elsif data.match(/-----BEGIN DSA PRIVATE KEY-----/)

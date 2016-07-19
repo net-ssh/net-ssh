@@ -1,6 +1,8 @@
 require 'net/ssh/ruby_compat'
 require 'net/ssh/transport/openssl'
 
+require 'net/ssh/authentication/ed25519_loader'
+
 module Net; module SSH
 
   # Net::SSH::Buffer is a flexible class for building and parsing binary
@@ -256,8 +258,8 @@ module Net; module SSH
           key.n = read_bignum
 
         when /^ssh-ed25519$/
-          key = ED25519::PubKey.read_keyblob(self)
-
+          Net::SSH::Authentication::ED25519Loader.raiseUnlessLoaded("unsupported key type `#{type}'")
+          key = Net::SSH::Authentication::ED25519::PubKey.read_keyblob(self)
         when /^ecdsa\-sha2\-(\w*)$/
           unless defined?(OpenSSL::PKey::EC)
             raise NotImplementedError, "unsupported key type `#{type}'"

@@ -1,5 +1,5 @@
-gem 'rbnacl-libsodium', '~> 1.0.10'
-gem 'rbnacl', '~> 3.4.0'
+gem 'rbnacl-libsodium', '>= 1.0.10'
+gem 'rbnacl', '>= 3.2.0', '< 4.0'
 gem 'bcrypt_pbkdf', '~> 1.0.0.alpha1' unless RUBY_PLATFORM == "java"
 
 require 'rbnacl/libsodium'
@@ -14,6 +14,7 @@ require 'base64'
 require 'net/ssh/transport/cipher_factory'
 require 'bcrypt_pbkdf' unless RUBY_PLATFORM == "java"
 
+module Net; module SSH; module Authentication
 module ED25519
   class SigningKeyFromFile < RbNaCl::Signatures::Ed25519::SigningKey
     def initialize(pk,sk)
@@ -133,3 +134,4 @@ module ED25519
     end
   end
 end
+end; end; end
