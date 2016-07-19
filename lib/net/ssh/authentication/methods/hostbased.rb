@@ -40,7 +40,7 @@ module Net
 
               sig = key_manager.sign(identity, sig_data.to_s)
 
-              message = Buffer.from(:raw, req, :string, sig)
+              message = Buffer.from(:raw, req, :astring, sig)
 
               send_message(message)
               message = session.next_message

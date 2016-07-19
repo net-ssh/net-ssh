@@ -33,7 +33,7 @@ module ED25519
     end
 
     def to_blob
-      Net::SSH::Buffer.from(:string,"ssh-ed25519",:string,@verify_key.to_bytes).to_s
+      Net::SSH::Buffer.from(:astring,"ssh-ed25519",:string,@verify_key.to_bytes).to_s
     end
 
     def ssh_type

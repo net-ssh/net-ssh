@@ -506,7 +506,7 @@ module Net; module SSH; module Connection
           length = remote_maximum_packet_size if length > remote_maximum_packet_size
 
           if length > 0
-            connection.send_message(Buffer.from(:byte, CHANNEL_DATA, :long, remote_id, :string, output.read(length)))
+            connection.send_message(Buffer.from(:byte, CHANNEL_DATA, :long, remote_id, :astring, output.read(length)))
             output.consume!
             @remote_window_size -= length
           else
