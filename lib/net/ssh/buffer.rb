@@ -36,6 +36,7 @@ module Net; module SSH
     # * :long => write a 4-byte integer (#write_long)
     # * :byte => write a single byte (#write_byte)
     # * :string => write a 4-byte length followed by character data (#write_string)
+    # * :astring => same as string, but might mutate the data (#write_adopted_string)
     # * :bool => write a single byte, interpreted as a boolean (#write_bool)
     # * :bignum => write an SSH-encoded bignum (#write_bignum)
     # * :key => write an SSH-encoded key value (#write_key)
@@ -286,7 +287,13 @@ module Net; module SSH
     # Writes the given data literally into the string. Does not alter the
     # read position. Returns the buffer object.
     def write(*data)
-      data.each { |datum| @content << datum }
+      data.each { |datum| @content << datum.dup.force_encoding("BINARY") }
+      self
+    end
+
+    # Write a string but might mutate the data passed
+    def write_adopted_binary_argument(data)
+      @content << data.force_encoding("BINARY")
       self
     end
 
@@ -328,6 +335,16 @@ module Net; module SSH
       end
       self
     end
+
+    def write_adopted_string(*text)
+      text.each do |string|
+        s = string.to_s
+        write_long(s.bytesize)
+        write_adopted_binary_argument(s)
+      end
+      self
+    end
+    alias write_astring write_adopted_string
 
     # Writes each argument to the buffer as a (C-style) boolean, with 1
     # meaning true, and 0 meaning false. Does not alter the read position.

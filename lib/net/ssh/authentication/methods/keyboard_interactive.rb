@@ -58,7 +58,7 @@ module Net
                 # and use it on subsequent requests.
                 password = nil
 
-                msg = Buffer.from(:byte, USERAUTH_INFO_RESPONSE, :long, responses.length, :string, responses)
+                msg = Buffer.from(:byte, USERAUTH_INFO_RESPONSE, :long, responses.length, :astring, responses)
                 send_message(msg)
               else
                 raise Net::SSH::Exception, "unexpected reply in keyboard interactive: #{message.type} (#{message.inspect})"
