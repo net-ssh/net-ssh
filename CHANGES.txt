@@ -1,4 +1,8 @@
-* Fix UTF-8 encoding issues [Ethan J. Brown]
+=== 4.0.0.beta
+
+* Fix pageant [elconas, #235]
+* Relaxed rbnacl,rbnacl-selenium contstraints ang give better errors about them [Miklos Fazekas, #398]
+* Fix UTF-8 encoding issues [Ethan J. Brown, #407]
 
 === 4.0.0.alpha4
 
