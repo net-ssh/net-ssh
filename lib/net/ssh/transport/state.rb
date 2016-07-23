@@ -192,7 +192,7 @@ module Net; module SSH; module Transport
 
       def update_next_iv(data, reset=false)
         @next_iv << data
-        @next_iv = @next_iv[-cipher.iv_len..-1]
+        @next_iv = @next_iv[@next_iv.size-cipher.iv_len..-1]
 
         if reset
           cipher.reset
