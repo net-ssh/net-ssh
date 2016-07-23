@@ -390,6 +390,7 @@ module Net; module SSH; module Connection
       channel.wait
 
       channel[:result] ||= "" unless block
+      channel[:result] &&= channel[:result].force_encoding("UTF-8") unless block
 
       return channel[:result]
     end

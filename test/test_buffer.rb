@@ -26,6 +26,34 @@ class TestBuffer < NetSSHTest
     assert_equal "\1\0\0\0\2\0\0\0\0\0\0\0\3\0\0\0\0014\1\0\000\000\000\004I\226\002\322something", buffer.to_s
   end
 
+  def test_from_should_build_new_buffer_that_includes_utf8_string_128_characters
+    length = 128
+    # letter A has a 1 byte UTF8 representation
+    buffer = Net::SSH::Buffer.from(:long, 2, :string, 'A' * length)
+    # long of 2 + length 128 as network endian + 128 A's
+    expected = "\x00\x00\x00\x02" + [length].pack('N*') + ("\x41" * length)
+    assert_equal expected, buffer.to_s
+  end
+
+  def test_from_should_build_new_buffer_with_frozen_strings
+    foo = 'foo'.freeze
+    buffer = Net::SSH::Buffer.from(:string, foo)
+    assert_equal "\0\0\0\3foo", buffer.to_s
+  end
+
+  def test_from_should_build_new_buffer_with_utf8_frozen_strings
+    foo = "\u2603".freeze
+    buffer = Net::SSH::Buffer.from(:string, foo)
+    assert_equal "\0\0\0\3\u2603".force_encoding('BINARY'), buffer.to_s
+  end
+
+  def test_from_should_not_change_regular_paramaters
+    foo = "\u2603"
+    buffer = Net::SSH::Buffer.from(:string, foo)
+    assert_equal "\0\0\0\3\u2603".force_encoding('BINARY'), buffer.to_s
+    assert_equal foo.encoding.to_s, "UTF-8"
+  end
+
   def test_from_with_array_argument_should_write_multiple_of_the_given_type
     buffer = Net::SSH::Buffer.from(:byte, [1,2,3,4,5])
     assert_equal "\1\2\3\4\5", buffer.to_s
@@ -33,7 +61,7 @@ class TestBuffer < NetSSHTest
 
   def test_from_should_measure_bytesize_of_utf_8_string_correctly
     buffer = Net::SSH::Buffer.from(:string, "\u2603") # Snowman is 3 bytes
-    assert_equal "\0\0\0\3\u2603", buffer.to_s
+    assert_equal "\0\0\0\3\u2603".force_encoding('BINARY'), buffer.to_s
   end
 
   def test_read_without_argument_should_read_to_end

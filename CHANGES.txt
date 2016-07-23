@@ -1,3 +1,5 @@
+* Fix UTF-8 encoding issues [Ethan J. Brown]
+
 === 4.0.0.alpha4
 
 * Experimental event loop abstraction [Miklos Fazekas]

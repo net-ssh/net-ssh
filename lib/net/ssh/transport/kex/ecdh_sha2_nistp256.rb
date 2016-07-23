@@ -57,7 +57,7 @@ module Net; module SSH; module Transport; module Kex
       # send the KEXECDH_INIT message
       ## byte     SSH_MSG_KEX_ECDH_INIT
       ## string   Q_C, client's ephemeral public key octet string
-      buffer = Net::SSH::Buffer.from(:byte, init, :string, ecdh.public_key.to_bn.to_s(2))
+      buffer = Net::SSH::Buffer.from(:byte, init, :mstring, ecdh.public_key.to_bn.to_s(2))
       connection.send_message(buffer)
 
       # expect the following KEXECDH_REPLY message

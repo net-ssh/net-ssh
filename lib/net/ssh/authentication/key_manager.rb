@@ -147,7 +147,7 @@ module Net
 
           if info[:key]
             return Net::SSH::Buffer.from(:string, identity.ssh_type,
-              :string, info[:key].ssh_do_sign(data.to_s)).to_s
+              :mstring, info[:key].ssh_do_sign(data.to_s)).to_s
           end
 
           if info[:from] == :agent

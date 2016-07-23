@@ -287,8 +287,8 @@ module Net; module SSH; module Transport
 
         Net::SSH::Buffer.from(:byte, KEXINIT,
           :long, [rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF)],
-          :string, [kex, host_key, encryption, encryption, hmac, hmac],
-          :string, [compression, compression, language, language],
+          :mstring, [kex, host_key, encryption, encryption, hmac, hmac],
+          :mstring, [compression, compression, language, language],
           :bool, false, :long, 0)
       end
 
