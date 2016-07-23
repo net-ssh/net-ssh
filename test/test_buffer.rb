@@ -41,6 +41,19 @@ class TestBuffer < NetSSHTest
     assert_equal "\0\0\0\3foo", buffer.to_s
   end
 
+  def test_from_should_build_new_buffer_with_utf8_frozen_strings
+    foo = "\u2603".freeze
+    buffer = Net::SSH::Buffer.from(:string, foo)
+    assert_equal "\0\0\0\3\u2603".force_encoding('BINARY'), buffer.to_s
+  end
+
+  def test_from_should_not_change_regular_paramaters
+    foo = "\u2603"
+    buffer = Net::SSH::Buffer.from(:string, foo)
+    assert_equal "\0\0\0\3\u2603".force_encoding('BINARY'), buffer.to_s
+    assert_equal foo.encoding.to_s, "UTF-8"
+  end
+
   def test_from_with_array_argument_should_write_multiple_of_the_given_type
     buffer = Net::SSH::Buffer.from(:byte, [1,2,3,4,5])
     assert_equal "\1\2\3\4\5", buffer.to_s
