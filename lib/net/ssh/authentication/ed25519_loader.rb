@@ -14,7 +14,7 @@ rescue LoadError => e
 end
 
 def self.raiseUnlessLoaded(message)
-  raise NotImplementedError, "#{message} -- see #{ED25519_LOAD_ERROR}" unless LOADED
+  raise NotImplementedError, "#{message} -- see #{ERROR}" unless LOADED
 end
 
 end
