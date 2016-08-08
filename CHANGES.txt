@@ -1,4 +1,8 @@
-=== 4.0.0.beta
+=== 4.0.0.beta2
+
+ * Fix raiseUnlessLoaded undefined ERROR issue [Miklos Fazekas, #418]
+
+=== 4.0.0.beta1
 
 * Fix pageant [elconas, #235]
 * Relaxed rbnacl,rbnacl-selenium contstraints ang give better errors about them [Miklos Fazekas, #398]
