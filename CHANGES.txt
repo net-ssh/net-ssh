@@ -1,3 +1,7 @@
+=== 3.2.1 beta 1
+
+* Fix pageant/windows [Elconas, #385]
+
 === 3.2.0
 
 * Added agent_socket_factory option [Alon Goldboim]
