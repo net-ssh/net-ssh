@@ -254,7 +254,7 @@ module Net; module SSH; module Authentication
         Win.GetTokenInformation(token_handle,
                                 token_information_class,
                                 Win::NULL, 0, preturn_length)
-        ptoken_information = malloc_ptr(preturn_length.ptr.to_i)
+        ptoken_information = malloc_ptr(preturn_length.to_s(Win::SIZEOF_DWORD).unpack('L')[0])
 
         # This call is going to write the requested information to
         # the memory location referenced by token_information.
