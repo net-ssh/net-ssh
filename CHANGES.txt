@@ -1,3 +1,7 @@
+=== 4.0.0.beta3
+
+ * Fix Net::SSH::Disconnect exceptions when channels are closed cleanly [Miklos Fazekas, #421, #422]
+
 === 4.0.0.beta2
 
  * Fix raiseUnlessLoaded undefined ERROR issue [Miklos Fazekas, #418]
