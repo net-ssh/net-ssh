@@ -6,7 +6,7 @@ require 'net/ssh/transport/packet_stream'
 
 module Transport
 
-  class TestPacketStream < NetSSHTest
+  class TestPacketStream < NetSSHTest # rubocop:disable Metrics/ClassLength
     include Net::SSH::Transport::Constants
 
     def test_client_name_when_getnameinfo_works
@@ -140,6 +140,22 @@ module Transport
       packet = stream.next_packet(:nonblock)
       assert_not_nil packet
       assert_equal DEBUG, packet.type
+    end
+
+    def test_nonblocking_next_packet_should_raise
+      IO.stubs(:select).returns([[stream]])
+      stream.stubs(:recv).returns("")
+      assert_raises(Net::SSH::Disconnect) { stream.next_packet(:nonblock) }
+    end
+
+    def test_nonblocking_next_packet_should_return_packet_before_raise
+      IO.stubs(:select).returns([[stream]])
+      stream.send(:input).append(packet)
+      stream.stubs(:recv).returns("")
+      packet = stream.next_packet(:nonblock)
+      assert_not_nil packet
+      assert_equal DEBUG, packet.type
+      assert_raises(Net::SSH::Disconnect) { stream.next_packet(:nonblock) }
     end
 
     def test_next_packet_should_block_when_requested_until_entire_packet_is_available
