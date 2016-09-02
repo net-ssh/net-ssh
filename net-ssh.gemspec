@@ -16,7 +16,12 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Net::SSH: a pure-Ruby implementation of the SSH2 client protocol. It allows you to write programs that invoke and interact with processes on remote servers, via SSH2.}
   spec.homepage      = "https://github.com/net-ssh/net-ssh"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.0")
+  case RUBY_ENGINE
+  when 'ruby'
+    spec.required_ruby_version = Gem::Requirement.new(">= 2.0")
+  when 'jruby'
+    
+  end
 
   spec.extra_rdoc_files = [
     "LICENSE.txt",
@@ -41,5 +46,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "mocha", ">= 1.1.0"
   spec.add_development_dependency("byebug") if RUBY_ENGINE == "ruby"
 
-  spec.add_dependency('jruby-pageant', '>= 1.1.1') if RUBY_PLATFORM == 'jruby'
+  spec.add_dependency('jruby-pageant', '>= 1.1.1') if RUBY_ENGINE == 'jruby'
 end
