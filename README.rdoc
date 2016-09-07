@@ -105,7 +105,7 @@ If you don't add the public key, you'll see an error like "Couldn't verify data 
 
 * Ruby 1.8.x is supported up until the net-ssh 2.5.1 release.
 * Ruby 1.9.x is supported up until the net-ssh 2.9.x release.
-* Current net-ssh releases require Ruby 2.0 or later.
+* Current net-ssh releases require Ruby 2.0 or later. JRuby 1.7+ (with `compat.version=2.0` set) or JRuby 9k+
 
 == RUNNING TESTS
 
