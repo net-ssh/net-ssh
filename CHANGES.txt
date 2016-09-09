@@ -1,3 +1,8 @@
+=== 4.0.0.beta4
+
+ * HTTPS proxy support [Marcus Ilgner, #432]
+ * Supports ruby 2.4.0.dev new exception type from OpenSSL::PKey.read
+
 === 4.0.0.beta3
 
  * Fix Net::SSH::Disconnect exceptions when channels are closed cleanly [Miklos Fazekas, #421, #422]

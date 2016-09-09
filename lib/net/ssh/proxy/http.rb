@@ -49,8 +49,7 @@ module Net; module SSH; module Proxy
     # Return a new socket connected to the given host and port via the
     # proxy that was requested when the socket factory was instantiated.
     def open(host, port, connection_options)
-      socket = Socket.tcp(proxy_host, proxy_port, nil, nil,
-                          connect_timeout: connection_options[:timeout])
+      socket = establish_connection(connection_options[:timeout])
       socket.write "CONNECT #{host}:#{port} HTTP/1.0\r\n"
 
       if options[:user]
@@ -68,7 +67,12 @@ module Net; module SSH; module Proxy
       raise ConnectError, resp.inspect
     end
 
-    private
+    protected
+
+      def establish_connection(connect_timeout)
+        Socket.tcp(proxy_host, proxy_port, nil, nil,
+                   connect_timeout: connect_timeout)
+      end
 
       def parse_response(socket)
         version, code, reason = socket.gets.chomp.split(/ /, 3)
@@ -89,7 +93,6 @@ module Net; module SSH; module Proxy
                  :headers => headers,
                  :body => body }
       end
-
   end
 
 end; end; end
