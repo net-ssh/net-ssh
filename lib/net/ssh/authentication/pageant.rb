@@ -288,10 +288,8 @@ module Net; module SSH; module Authentication
 
       private_class_method :new
 
-      # The factory method for creating a new Socket instance. The location
-      # parameter is ignored, and is only needed for compatibility with
-      # the general Socket interface.
-      def self.open(location=nil)
+      # The factory method for creating a new Socket instance.
+      def self.open
         new
       end
 

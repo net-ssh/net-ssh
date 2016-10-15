@@ -218,7 +218,7 @@ module Authentication
       def agent(auto=:connect)
         @agent ||= begin
           agent = Net::SSH::Authentication::Agent.new
-          agent.stubs(:socket_class).returns(factory)
+          agent.stubs(:unix_socket_class).returns(factory)
           agent.connect! if auto == :connect
           agent
         end
