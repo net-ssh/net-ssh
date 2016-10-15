@@ -41,5 +41,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "mocha", ">= 1.1.0"
   spec.add_development_dependency("byebug") if RUBY_ENGINE == "ruby"
 
-  spec.add_dependency('jruby-pageant', '>= 1.1.1') if RUBY_PLATFORM == 'jruby'
+  spec.add_dependency('jruby-pageant', '>= 1.1.1') if RUBY_ENGINE == 'jruby'
 end
