@@ -47,11 +47,11 @@ class TestKeyFactory < NetSSHTest
     File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
     prompt.expects(:_ask).times(3).with("Enter passphrase for #{@key_file}:", has_entries(type: 'private_key', filename: '/key-file'), false).returns("passwod","passphrase","passwd")
     if OpenSSL::PKey.respond_to?(:read)
-      error_class = ArgumentError
+      error_class = [ArgumentError, OpenSSL::PKey::PKeyError]
     else
-      error_class = OpenSSL::PKey::RSAError
+      error_class = [OpenSSL::PKey::RSAError]
     end
-    assert_raises(error_class) { Net::SSH::KeyFactory.load_private_key(@key_file, nil, true, prompt) }
+    assert_raises(*error_class) { Net::SSH::KeyFactory.load_private_key(@key_file, nil, true, prompt) }
   end
 
   def test_load_encrypted_private_key_should_raise_exception_without_asking_passphrase
