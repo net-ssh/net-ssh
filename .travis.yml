@@ -26,6 +26,7 @@ matrix:
   allow_failures:
     - rvm: rbx-3.25
     - rvm: jruby-9.1.2.0
+    - rvm: ruby-head
 
 install:
   - export JRUBY_OPTS='--client -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -Xcext.enabled=false -J-Xss2m -Xcompile.invokedynamic=false'
