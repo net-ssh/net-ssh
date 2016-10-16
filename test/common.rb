@@ -9,6 +9,16 @@ require 'net/ssh/packet'
 require 'net/ssh/transport/session'
 require 'ostruct'
 
+if ENV["CI"]
+  unless Gem.win_platform?
+    require 'simplecov'
+    SimpleCov.start
+
+    require 'codecov'
+    SimpleCov.formatter = SimpleCov::Formatter::Codecov
+  end
+end
+
 # clear the default files out so that tests don't get confused by existing
 # SSH config files.
 $_original_config_default_files = Net::SSH::Config.default_files.dup # rubocop:disable Style/GlobalVars

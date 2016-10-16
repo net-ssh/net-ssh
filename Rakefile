@@ -73,8 +73,12 @@ require 'rake/testtask'
 Rake::TestTask.new do |t|
   t.libs = ["lib", "test"]
   t.libs << "test/integration" if ENV['NET_SSH_RUN_INTEGRATION_TESTS']
+  t.libs << "test/win_integration" if ENV['NET_SSH_RUN_WIN_INTEGRATION_TESTS']
   test_files = FileList['test/**/test_*.rb']
   test_files -= FileList['test/integration/**/test_*.rb'] unless ENV['NET_SSH_RUN_INTEGRATION_TESTS']
+  test_files -= FileList['test/win_integration/**/test_*.rb'] unless ENV['NET_SSH_RUN_WIN_INTEGRATION_TESTS']
+  test_files -= FileList['test/manual/test_*.rb']
+  test_files -= FileList['test/test_pageant.rb']
   test_files -= FileList['test/test/**/test_*.rb']
   t.test_files =  test_files
 end
