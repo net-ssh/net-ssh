@@ -113,6 +113,22 @@ module Net; module SSH; module Test
         base.extend(ClassMethods)
       end
 
+      @extension_enabled = false
+
+      def self.with_test_extension(&block)
+        orig_value = @extension_enabled
+        @extension_enabled = true
+        begin
+          yield
+        ensure
+          @extension_enabled = orig_value
+        end
+      end
+
+      def self.extension_enabled?
+        @extension_enabled
+      end
+
       module ClassMethods
         def self.extended(obj) #:nodoc:
           class <<obj
@@ -125,6 +141,7 @@ module Net; module SSH; module Test
         # writers, and errors arrays are either nil, or contain only objects
         # that mix in Net::SSH::Test::Extensions::BufferedIo.
         def select_for_test(readers=nil, writers=nil, errors=nil, wait=nil)
+          return select_for_real(readers, writers, errors, wait) unless Net::SSH::Test::Extensions::IO.extension_enabled?
           ready_readers = Array(readers).select { |r| r.select_for_read? }
           ready_writers = Array(writers).select { |r| r.select_for_write? }
           ready_errors  = Array(errors).select  { |r| r.select_for_error? }
