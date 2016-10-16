@@ -1,12 +1,16 @@
 unless ENV['NET_SSH_NO_RBNACL']
 
 require 'common'
-require 'net/ssh/authentication/ed25519'
+require 'net/ssh/authentication/ed25519_loader'
 require 'base64'
 
 module Authentication
 
   class TestED25519 < NetSSHTest
+    def setup
+      raise "No ED25519 set NET_SSH_NO_RBNACL to ignore this test" unless Net::SSH::Authentication::ED25519Loader::LOADED
+    end
+
     def test_no_pwd_key
       pub = Net::SSH::Buffer.new(Base64.decode64(public_key_no_pwd.split(' ')[1]))
       _type = pub.read_string
