@@ -58,11 +58,11 @@ class TestKeyFactory < NetSSHTest
     File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
     Net::SSH::KeyFactory.expects(:prompt).never
     if OpenSSL::PKey.respond_to?(:read)
-      error_class = ArgumentError
+      error_class = [ArgumentError, OpenSSL::PKey::PKeyError]
     else
-      error_class = OpenSSL::PKey::RSAError
+      error_class = [OpenSSL::PKey::RSAError]
     end
-    assert_raises(error_class) { Net::SSH::KeyFactory.load_private_key(@key_file, nil, false) }
+    assert_raises(*error_class) { Net::SSH::KeyFactory.load_private_key(@key_file, nil, false) }
   end
 
   def test_load_public_rsa_key_should_return_key

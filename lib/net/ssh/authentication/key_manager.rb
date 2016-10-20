@@ -232,7 +232,7 @@ module Net
                 identity
               end
 
-            rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError, ArgumentError => e
+            rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError, OpenSSL::PKey::PKeyError, ArgumentError => e
               if ignore_decryption_errors
                 identity
               else
