@@ -4,17 +4,31 @@ skip_tags: true
 
 environment:
   matrix:
+    - ruby_version: "jruby-9.1.2.0"
     - ruby_version: "23"
     - ruby_version: "23-x64"
+
+
+matrix:
+  allow_failures:
+    - ruby_version: "jruby-9.1.2.0"
 
 #init:
 #  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-  
+
+
+platform:
+  - x86
+
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
+  - if "%ruby_version%" == "jruby-9.1.2.0" ( cinst javaruntime -i )
+  - if "%ruby_version%" == "jruby-9.1.2.0" ( cinst jruby --version 9.1.2.0 -i )
+  - if "%ruby_version%" == "jruby-9.1.2.0" ( SET "PATH=C:\jruby-9.1.2.0\bin\;%PATH%" )
+  - ruby --version
   - gem install bundler --no-document -v 1.13.5
   - SET BUNDLE_GEMFILE=Gemfile.norbnacl
   - bundle _1.13.5_ install --retry=3
