@@ -300,7 +300,7 @@ module Net; module SSH; module Authentication
       def initialize
         @win = Win.FindWindow("Pageant", "Pageant")
 
-        if @win == 0
+        if @win.to_i == 0
           raise Net::SSH::Exception,
             "pageant process not running"
         end

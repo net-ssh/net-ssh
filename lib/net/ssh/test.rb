@@ -50,7 +50,7 @@ module Net; module SSH
     # If a block is given, yields the script for the test socket (#socket).
     # Otherwise, simply returns the socket's script. See Net::SSH::Test::Script.
     def story
-      yield socket.script if block_given?
+      Net::SSH::Test::Extensions::IO.with_test_extension { yield socket.script if block_given? }
       return socket.script
     end
 
@@ -81,7 +81,7 @@ module Net; module SSH
     # the block passed to this assertion.
     def assert_scripted
       raise "there is no script to be processed" if socket.script.events.empty?
-      yield
+      Net::SSH::Test::Extensions::IO.with_test_extension { yield }
       assert socket.script.events.empty?, "there should not be any remaining scripted events, but there are still #{socket.script.events.length} pending"
     end
   end

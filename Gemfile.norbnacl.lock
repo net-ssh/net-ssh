@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    net-ssh (4.0.0.alpha3)
+    net-ssh (4.0.0.beta3)
 
 GEM
   remote: https://rubygems.org/
@@ -27,9 +27,10 @@ GEM
 
 PLATFORMS
   ruby
+  x86-mingw32
 
 DEPENDENCIES
-  bundler (~> 1.11.2)
+  bundler (~> 1.11)
   minitest (~> 5.0)
   mocha (>= 1.1.0)
   net-ssh!
@@ -37,4 +38,4 @@ DEPENDENCIES
   rubocop (~> 0.39.0)
 
 BUNDLED WITH
-   1.11.2
+   1.13.5
