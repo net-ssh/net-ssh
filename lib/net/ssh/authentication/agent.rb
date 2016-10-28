@@ -3,9 +3,11 @@ require 'net/ssh/errors'
 require 'net/ssh/loggable'
 
 module Net; module SSH; module Authentication
-  PLATFORM = File::ALT_SEPARATOR \
+  PLATFORM = RUBY_PLATFORM =~ /cygwin/ ? :win32 : # :win32 includes cygwin
+    (File::ALT_SEPARATOR \
     ? RUBY_PLATFORM =~ /java/ ? :java_win32 : :win32 \
-    : RUBY_PLATFORM =~ /java/ ? :java : :unix
+    : RUBY_PLATFORM =~ /java/ ? :java : :unix)
+  PLATFORM = :cygwin if RUBY_PLATFORM =~ /cygwin/
 
   # A trivial exception class for representing agent-specific errors.
   class AgentError < Net::SSH::Exception; end

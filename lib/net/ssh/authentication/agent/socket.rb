@@ -1,6 +1,6 @@
 require 'net/ssh/transport/server_version'
 
-# Only load pageant on Windows
+# Only load pageant on Windows or Cygwin
 if Net::SSH::Authentication::PLATFORM == :win32
   require 'net/ssh/authentication/pageant'
 end
@@ -133,7 +133,7 @@ module Net; module SSH; module Authentication
 
     # Returns the agent socket factory to use.
     def socket_class
-      if Net::SSH::Authentication::PLATFORM == :win32
+      if Net::SSH::Authentication::PLATFORM == :win32 and ENV[SSH_AUTH_SOCK].nil?
         Pageant::Socket
       else
         UNIXSocket
