@@ -3,6 +3,8 @@ require 'net/ssh/authentication/agent'
 
 module Authentication
 
+  unless RUBY_PLATFORM == "java"
+
   class TestPageapnt < NetSSHTest
     def with_pagent
       pageant_path = 'C:\ProgramData\chocolatey\lib\putty.portable\tools\pageant.exe'
@@ -35,6 +37,8 @@ module Authentication
         agent
       end
     end
+  end
+
   end
 
 end

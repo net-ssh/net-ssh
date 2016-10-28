@@ -6,7 +6,7 @@ require 'net/ssh/transport/server_version'
 require 'socket'
 require 'rubygems'
 
-require 'net/ssh/authentication/pageant' if Gem.win_platform?
+require 'net/ssh/authentication/pageant' if Gem.win_platform? && RUBY_ENGINE != "jruby"
 
 module Net; module SSH; module Authentication
   # Class for representing agent-specific errors.
@@ -73,7 +73,7 @@ module Net; module SSH; module Authentication
           agent_socket_factory.call
         elsif ENV['SSH_AUTH_SOCK'] && defined?(unix_socket_class)
           unix_socket_class.open(ENV['SSH_AUTH_SOCK'])
-        elsif Gem.win_platform?
+        elsif Gem.win_platform? && RUBY_ENGINE != "jruby"
           Pageant::Socket.open
         else
           raise AgentNotAvailable, "Agent not configured"
