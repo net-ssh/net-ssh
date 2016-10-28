@@ -52,6 +52,9 @@ module Net; module SSH; module Authentication
     SSH_AGENT_CONSTRAIN_LIFETIME = 1
     SSH_AGENT_CONSTRAIN_CONFIRM  = 2
 
+    SSH_AGENT_RSA_SHA2_256 = 0x02
+    SSH_AGENT_RSA_SHA2_512 = 0x04
+
     # The underlying socket being used to communicate with the SSH agent.
     attr_reader :socket
 
@@ -138,8 +141,8 @@ module Net; module SSH; module Authentication
 
     # Using the agent and the given public key, sign the given data. The
     # signature is returned in SSH2 format.
-    def sign(key, data)
-      type, reply = send_and_wait(SSH2_AGENT_SIGN_REQUEST, :string, Buffer.from(:key, key), :string, data, :long, 0)
+    def sign(key, data, flags = 0)
+      type, reply = send_and_wait(SSH2_AGENT_SIGN_REQUEST, :string, Buffer.from(:key, key), :string, data, :long, flags)
 
       raise AgentError, "agent could not sign data with requested identity" if agent_failed(type)
       raise AgentError, "bad authentication response #{type}" if type != SSH2_AGENT_SIGN_RESPONSE
