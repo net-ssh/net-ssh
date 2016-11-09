@@ -7,7 +7,6 @@ rvm:
   - 2.3.0
   - jruby-head
   - jruby-19mode
-  - rbx-2
 
 install: gem install test-unit mocha
 
