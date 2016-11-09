@@ -185,7 +185,7 @@ module OpenSSL
         def to_blob
           @blob ||= Net::SSH::Buffer.from(:string, ssh_type,
                                           :string, CurveNameAliasInv[self.group.curve_name],
-                                          :string, self.public_key.to_bn.to_s(2)).to_s
+                                          :mstring, self.public_key.to_bn.to_s(2)).to_s
           @blob
         end
 
