@@ -13,7 +13,7 @@ else
   # For now map DL to Fiddler versus updating all the code below
   module DL
     CPtr ||= Fiddle::Pointer
-    if RUBY_ENGINE != "jruby"
+    if RUBY_PLATFORM != "java"
       RUBY_FREE ||= Fiddle::RUBY_FREE
     end
   end

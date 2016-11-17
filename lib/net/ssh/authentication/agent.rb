@@ -6,7 +6,7 @@ require 'net/ssh/transport/server_version'
 require 'socket'
 require 'rubygems'
 
-require 'net/ssh/authentication/pageant' if Gem.win_platform? && RUBY_ENGINE != "jruby"
+require 'net/ssh/authentication/pageant' if Gem.win_platform? && RUBY_PLATFORM != "java"
 
 module Net; module SSH; module Authentication
   # Class for representing agent-specific errors.
