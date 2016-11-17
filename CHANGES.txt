@@ -1,5 +1,7 @@
 === 4.0.0.beta4
 
+ * Removed java_pageant, as jruby should be using regular pagent impl [Miklós Fazekas, ]
+ * Use SSH_AUTH_SOCK if possible on windows (cygwin) [Miklós Fazekas, Martin Dürst, #365]
  * HTTPS proxy support [Marcus Ilgner, #432]
  * Supports ruby 2.4.0.dev new exception type from OpenSSL::PKey.read
 

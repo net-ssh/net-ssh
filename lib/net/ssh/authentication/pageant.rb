@@ -13,7 +13,9 @@ else
   # For now map DL to Fiddler versus updating all the code below
   module DL
     CPtr ||= Fiddle::Pointer
-    RUBY_FREE ||= Fiddle::RUBY_FREE
+    if RUBY_PLATFORM != "java"
+      RUBY_FREE ||= Fiddle::RUBY_FREE
+    end
   end
 end
 
@@ -36,7 +38,7 @@ module Net; module SSH; module Authentication
 
     # The definition of the Windows methods and data structures used in
     # communicating with the pageant process.
-    module Win
+    module Win # rubocop:disable Metrics/ModuleLength
       # Compatibility on initialization
       if RUBY_VERSION < "1.9"
         extend DL::Importable
@@ -59,6 +61,11 @@ module Net; module SSH; module Authentication
         SIZEOF_DWORD = Fiddle::SIZEOF_LONG
       end
 
+      if RUBY_ENGINE=="jruby"
+        typealias("HANDLE", "void *")         # From winnt.h
+        typealias("PHANDLE", "void *")         # From winnt.h
+        typealias("ULONG_PTR", "unsigned long*")
+      end
       typealias("LPCTSTR", "char *")         # From winnt.h
       typealias("LPVOID", "void *")          # From winnt.h
       typealias("LPCVOID", "const void *")   # From windef.h
@@ -77,16 +84,22 @@ module Net; module SSH; module Authentication
 
       SMTO_NORMAL = 0   # From winuser.h
 
+      SUFFIX = if RUBY_ENGINE == "jruby"
+                 "A"
+               else
+                 ""
+               end
+
       # args: lpClassName, lpWindowName
-      extern 'HWND FindWindow(LPCTSTR, LPCTSTR)'
+      extern "HWND FindWindow#{SUFFIX}(LPCTSTR, LPCTSTR)"
 
       # args: none
       extern 'DWORD GetCurrentThreadId()'
 
       # args: hFile, (ignored), flProtect, dwMaximumSizeHigh,
       #           dwMaximumSizeLow, lpName
-      extern 'HANDLE CreateFileMapping(HANDLE, void *, DWORD, ' +
-        'DWORD, DWORD, LPCTSTR)'
+      extern "HANDLE CreateFileMapping#{SUFFIX}(HANDLE, void *, DWORD, ' +
+        'DWORD, DWORD, LPCTSTR)"
 
       # args: hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh,
       #           dwfileOffsetLow, dwNumberOfBytesToMap
@@ -99,8 +112,8 @@ module Net; module SSH; module Authentication
       extern 'BOOL CloseHandle(HANDLE)'
 
       # args: hWnd, Msg, wParam, lParam, fuFlags, uTimeout, lpdwResult
-      extern 'LRESULT SendMessageTimeout(HWND, UINT, WPARAM, LPARAM, ' +
-        'UINT, UINT, PDWORD_PTR)'
+      extern "LRESULT SendMessageTimeout#{SUFFIX}(HWND, UINT, WPARAM, LPARAM, ' +
+        'UINT, UINT, PDWORD_PTR)"
 
       # args: none
       extern 'DWORD GetLastError()'
@@ -154,7 +167,11 @@ module Net; module SSH; module Authentication
                                     'LPVOID Dacl']
 
       # The COPYDATASTRUCT is used to send WM_COPYDATA messages
-      COPYDATASTRUCT = struct ['uintptr_t dwData', 'DWORD cbData', 'LPVOID lpData']
+      COPYDATASTRUCT = if RUBY_ENGINE == "jruby"
+                         struct ['ULONG_PTR dwData', 'DWORD cbData', 'LPVOID lpData']
+                       else
+                         struct ['uintptr_t dwData', 'DWORD cbData', 'LPVOID lpData']
+                       end
 
       # Compatibility for security attribute retrieval.
       if RUBY_VERSION < "1.9"
@@ -189,6 +206,30 @@ module Net; module SSH; module Authentication
         def self.set_ptr_data(ptr, data)
           ptr[0] = data
         end
+      elsif RUBY_ENGINE == "jruby"
+        %w(FindWindow CreateFileMapping SendMessageTimeout).each do |name|
+          alias_method name, name+"A"
+          module_function name
+        end
+        # :nodoc:
+        module LibC
+          extend FFI::Library
+          ffi_lib FFI::Library::LIBC
+          attach_function :malloc, [:size_t], :pointer
+          attach_function :free, [:pointer], :void
+        end
+
+        def self.malloc_ptr(size)
+          Fiddle::Pointer.new(LibC.malloc(size), size, LibC.method(:free))
+        end
+
+        def self.get_ptr(ptr)
+          return data.address
+        end
+
+        def self.set_ptr_data(ptr, data)
+          ptr.write_string_length(data, data.size)
+        end
       else
         def self.malloc_ptr(size)
           return DL::CPtr.malloc(size, DL::RUBY_FREE)
@@ -211,17 +252,76 @@ module Net; module SSH; module Authentication
           Win.InitializeSecurityDescriptor(psd_information,
                                            Win::REVISION))
         raise_error_if_zero(
-          Win.SetSecurityDescriptorOwner(psd_information, user.SID,
+          Win.SetSecurityDescriptorOwner(psd_information, get_sid_ptr(user),
                                          0))
         raise_error_if_zero(
           Win.IsValidSecurityDescriptor(psd_information))
 
-        sa = Win::SECURITY_ATTRIBUTES.new(malloc_ptr(Win::SECURITY_ATTRIBUTES.size))
+        sa = Win::SECURITY_ATTRIBUTES.new(to_struct_ptr(malloc_ptr(Win::SECURITY_ATTRIBUTES.size)))
         sa.nLength = Win::SECURITY_ATTRIBUTES.size
         sa.lpSecurityDescriptor = psd_information.to_i
         sa.bInheritHandle = 1
 
         return sa
+      end
+
+      if RUBY_ENGINE == "jruby"
+        def self.ptr_to_s(ptr, size)
+          ret = ptr.to_s(size)
+          ret << "\x00" while ret.size < size
+          ret
+        end
+
+        def self.ptr_to_handle(phandle)
+          phandle.ptr
+        end
+
+        def self.ptr_to_dword(ptr)
+          first = ptr.ptr.to_i
+          second = ptr_to_s(ptr,Win::SIZEOF_DWORD).unpack('L')[0]
+          raise "Error" unless first == second
+          first
+        end
+
+        def self.to_token_user(ptoken_information)
+           TOKEN_USER.new(ptoken_information.to_ptr)
+        end
+
+        def self.to_struct_ptr(ptr)
+          ptr.to_ptr
+        end
+
+        def self.get_sid(user)
+          ptr_to_s(user.to_ptr.ptr,Win::SIZEOF_DWORD).unpack('L')[0]
+        end
+
+        def self.get_sid_ptr(user)
+          user.to_ptr.ptr
+        end
+      else
+        def self.get_sid(user)
+          user.SID
+        end
+
+        def self.ptr_to_handle(phandle)
+          phandle.ptr.to_i
+        end
+
+        def self.to_struct_ptr(ptr)
+          ptr
+        end
+
+        def self.ptr_to_dword(ptr)
+          ptr.to_s(Win::SIZEOF_DWORD).unpack('L')[0]
+        end
+
+        def self.to_token_user(ptoken_information)
+          TOKEN_USER.new(ptoken_information)
+        end
+
+        def self.get_sid_ptr(user)
+          user.SID
+        end
       end
 
       def self.get_current_user
@@ -238,8 +338,7 @@ module Net; module SSH; module Authentication
         raise_error_if_zero(
           Win.OpenProcessToken(process_handle, desired_access,
                                ptoken_handle))
-        token_handle = ptoken_handle.ptr.to_i
-
+        token_handle = ptr_to_handle(ptoken_handle)
         return token_handle
       end
 
@@ -254,7 +353,7 @@ module Net; module SSH; module Authentication
         Win.GetTokenInformation(token_handle,
                                 token_information_class,
                                 Win::NULL, 0, preturn_length)
-        ptoken_information = malloc_ptr(preturn_length.to_s(Win::SIZEOF_DWORD).unpack('L')[0])
+        ptoken_information = malloc_ptr(ptr_to_dword(preturn_length))
 
         # This call is going to write the requested information to
         # the memory location referenced by token_information.
@@ -265,7 +364,7 @@ module Net; module SSH; module Authentication
                                   ptoken_information.size,
                                   preturn_length))
 
-        return TOKEN_USER.new(ptoken_information)
+        return to_token_user(ptoken_information)
       end
 
       def self.raise_error_if_zero(result)
@@ -288,10 +387,8 @@ module Net; module SSH; module Authentication
 
       private_class_method :new
 
-      # The factory method for creating a new Socket instance. The location
-      # parameter is ignored, and is only needed for compatibility with
-      # the general Socket interface.
-      def self.open(location=nil)
+      # The factory method for creating a new Socket instance.
+      def self.open
         new
       end
 
