@@ -7,7 +7,7 @@ Requirements:
 
 Setup:
 
-    ansible-galaxy install rvm_io.rvm1-ruby
+    ansible-galaxy install rvm_io.ruby
     vagrant up ; vagrant ssh
     rvm all do bundle
     rvm all do rake test
