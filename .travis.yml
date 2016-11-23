@@ -34,7 +34,7 @@ install:
   - gem install bundler -v "= 1.11.2"
   - bundle _1.11.2_ install
   - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.11.2_ install
-  - sudo ansible-galaxy install rvm_io.rvm1-ruby
+  - sudo ansible-galaxy install rvm_io.ruby
   - sudo chown -R travis:travis /home/travis/.ansible
   - ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true' -e 'myuser=travis' -e 'mygroup=travis' -e 'homedir=/home/travis'
 

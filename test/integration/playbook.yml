@@ -21,7 +21,7 @@
       register: current_ruby_version
       ignore_errors: True
   roles:
-    - { role: rvm_io.rvm1-ruby,
+    - { role: rvm_io.ruby,
         tags: ruby, sudo: True,
         rvm1_rubies: "{{ ruby_versions }}",
         rvm1_install_path: "{{rvm_install_path}}",
@@ -72,4 +72,3 @@
   handlers:
     - name: restart sshd
       service: name=ssh state=restarted
-
