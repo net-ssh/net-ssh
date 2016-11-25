@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../../lib"
 
-require 'minitest/autorun'
+require_relative '../common'
+require 'minitest'
 require 'mocha/setup'
 require 'pty'
 require 'expect'
-require_relative '../common'
