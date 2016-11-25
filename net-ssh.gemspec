@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   unless ENV['NET_SSH_NO_RBNACL']
     spec.add_development_dependency("rbnacl-libsodium", "~> 1.0.10")
     spec.add_development_dependency("rbnacl", "~> 3.4.0")
-    spec.add_development_dependency("bcrypt_pbkdf", "~> 1.0.0.alpha1") unless RUBY_PLATFORM == "java"
+    spec.add_development_dependency("bcrypt_pbkdf", "~> 1.0.0") unless RUBY_PLATFORM == "java"
   end
 
   spec.add_development_dependency "bundler", "~> 1.11"
