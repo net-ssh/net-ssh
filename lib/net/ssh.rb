@@ -153,6 +153,10 @@ module Net
     #   for better performance if your SSH server supports it (most do).
     # * :max_win_size => maximum size we tell the other side that is supported for
     #   the window.
+    # * :non_interactive => set to true if your app is non interactive and prefers
+    #   authentication failure vs password prompt. Non-interactive applications 
+    #   should set it to true to prefer failing a password/etc auth methods vs. 
+    #   asking for password.
     # * :paranoid => either false, true, :very, or :secure specifying how
     #   strict host-key verification should be (in increasing order here).
     #   You can also provide an own Object which responds to +verify+. The argument
@@ -181,8 +185,6 @@ module Net
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
     # * :use_agent => Set false to disable the use of ssh-agent. Defaults to
     #   true
-    # * :non_interactive => set to true if your app is non interactive and prefers
-    #   authentication failure vs password prompt
     # * :verbose => how verbose to be (Logger verbosity constants, Logger::DEBUG
     #   is very verbose, Logger::FATAL is all but silent). Logger::FATAL is the
     #   default. The symbols :debug, :info, :warn, :error, and :fatal are also
@@ -192,8 +194,6 @@ module Net
     # * :number_of_password_prompts => Number of prompts for the password
     #   authentication method defaults to 3 set to 0 to disable prompt for
     #   password auth method
-    # * :non_interactive => non interactive applications should set it to true
-    #   to prefer failing a password/etc auth methods vs asking for password
     # * :password_prompt => a custom prompt object with ask method. See Net::SSH::Prompt
     #
     # * :agent_socket_factory => enables the user to pass a lambda/block that will serve as the socket factory
