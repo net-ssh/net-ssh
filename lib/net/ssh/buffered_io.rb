@@ -66,6 +66,9 @@ module Net; module SSH
       debug { "read #{data.length} bytes" }
       input.append(data)
       return data.length
+    rescue EOFError => e
+      @input_errors << e
+      return 0
     end
 
     # Read up to +length+ bytes from the input buffer. If +length+ is nil,
@@ -143,21 +146,23 @@ module Net; module SSH
       # Module#include to add this module.
       def initialize_buffered_io
         @input = Net::SSH::Buffer.new
+        @input_errors = []
         @output = Net::SSH::Buffer.new
+        @output_errors = []
       end
   end
 
 
-  
+
   # Fixes for two issues by Miklós Fazekas:
   #
-  #   * if client closes a forwarded connection, but the server is 
+  #   * if client closes a forwarded connection, but the server is
   #     reading, net-ssh terminates with IOError socket closed.
-  #   * if client force closes (RST) a forwarded connection, but 
+  #   * if client force closes (RST) a forwarded connection, but
   #     server is reading, net-ssh terminates with [an exception]
   #
-  # See: 
-  # 
+  # See:
+  #
   #    http://net-ssh.lighthouseapp.com/projects/36253/tickets/7
   #    http://github.com/net-ssh/net-ssh/tree/portfwfix
   #
@@ -168,24 +173,24 @@ module Net; module SSH
       rescue Errno::ECONNRESET => e
         debug { "connection was reset => shallowing exception:#{e}" }
         return 0
-      rescue IOError => e                                 
-        if e.message =~ /closed/ then 
+      rescue IOError => e
+        if e.message =~ /closed/ then
           debug { "connection was reset => shallowing exception:#{e}" }
           return 0
         else
           raise
-        end 
+        end
       end
     end
-    
+
     def send_pending
       begin
-        super                                                          
+        super
       rescue Errno::ECONNRESET => e
         debug { "connection was reset => shallowing exception:#{e}" }
         return 0
       rescue IOError => e
-        if e.message =~ /closed/ then 
+        if e.message =~ /closed/ then
           debug { "connection was reset => shallowing exception:#{e}" }
           return 0
         else
@@ -194,5 +199,5 @@ module Net; module SSH
       end
     end
   end
-  
+
 end; end
