@@ -335,6 +335,15 @@ module Net; module SSH; module Connection
       channels[local_id] = channel
     end
 
+    class StringWithExitstatus < String
+      def initialize(str, exitstatus)
+        super(str)
+        @exitstatus = exitstatus
+      end
+
+      attr_reader :exitstatus
+    end
+
     # A convenience method for executing a command and interacting with it. If
     # no block is given, all output is printed via $stdout and $stderr. Otherwise,
     # the block is called for each data and extended data packet, with three
@@ -355,10 +364,20 @@ module Net; module SSH; module Connection
     #       puts data
     #     end
     #   end
-    def exec(command, &block)
+    def exec(command, status: nil, &block)
       open_channel do |channel|
         channel.exec(command) do |ch, success|
           raise "could not execute command: #{command.inspect}" unless success
+
+          if status
+            channel.on_request("exit-status") do |ch2,data|
+              status[:exit_code] = data.read_long
+            end
+
+            channel.on_request("exit-signal") do |ch2, data|
+              status[:exit_signal] = data.read_long
+            end
+          end
 
           channel.on_data do |ch2, data|
             if block
@@ -384,19 +403,22 @@ module Net; module SSH; module Connection
     # as a single string.
     #
     #   matches = ssh.exec!("grep something /some/files")
-    def exec!(command, &block)
+    #
+    # the returned string has an exitstatus method to query it's exit satus
+    def exec!(command, status: nil, &block)
       block_or_concat = block || Proc.new do |ch, type, data|
         ch[:result] ||= ""
         ch[:result] << data
       end
 
-      channel = exec(command, &block_or_concat)
+      status ||= {}
+      channel = exec(command, status: status, &block_or_concat)
       channel.wait
 
       channel[:result] ||= "" unless block
       channel[:result] &&= channel[:result].force_encoding("UTF-8") unless block
 
-      return channel[:result]
+      StringWithExitstatus.new(channel[:result], status[:exit_code]) if channel[:result]
     end
 
     # Enqueues a message to be sent to the server as soon as the socket is

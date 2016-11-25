@@ -1,5 +1,6 @@
 === 4.0.0.beta4
 
+ * Added exitstatus method to exec's return [Miklós Fazekas, #452]
  * Don't raise from exec if server closes transport just after channel close [Miklós Fazekas, #450]
  * Removed java_pageant, as jruby should be using regular pagent impl [Miklós Fazekas, ]
  * Use SSH_AUTH_SOCK if possible on windows (cygwin) [Miklós Fazekas, Martin Dürst, #365, #361]
