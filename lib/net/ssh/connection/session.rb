@@ -234,7 +234,7 @@ module Net; module SSH; module Connection
     # Called by event loop to process available data before going to
     # event multiplexing
     def ev_preprocess(&block)
-      dispatch_incoming_packets
+      dispatch_incoming_packets(raise_disconnect_errors: false)
       each_channel { |id, channel| channel.process unless channel.local_closed? }
     end
 
@@ -509,7 +509,7 @@ module Net; module SSH; module Connection
 
       # Read all pending packets from the connection and dispatch them as
       # appropriate. Returns as soon as there are no more pending packets.
-      def dispatch_incoming_packets
+      def dispatch_incoming_packets(raise_disconnect_errors: true)
         while packet = transport.poll_message
           unless MAP.key?(packet.type)
             raise Net::SSH::Exception, "unexpected response #{packet.type} (#{packet.inspect})"
@@ -519,7 +519,7 @@ module Net; module SSH; module Connection
         end
       rescue
         force_channel_cleanup_on_close if closed?
-        raise
+        raise if raise_disconnect_errors || !$!.is_a?(Net::SSH::Disconnect)
       end
 
       # Returns the next available channel id to be assigned, and increments
