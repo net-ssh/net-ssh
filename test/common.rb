@@ -1,14 +1,5 @@
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
 
-require 'minitest/autorun'
-require 'mocha/setup'
-require 'net/ssh/buffer'
-require 'net/ssh/config'
-require 'net/ssh/loggable'
-require 'net/ssh/packet'
-require 'net/ssh/transport/session'
-require 'ostruct'
-
 if ENV["CI"]
   unless Gem.win_platform?
     require 'simplecov'
@@ -18,6 +9,17 @@ if ENV["CI"]
     SimpleCov.formatter = SimpleCov::Formatter::Codecov
   end
 end
+
+require 'minitest'
+require 'mocha/setup'
+require 'net/ssh/buffer'
+require 'net/ssh/config'
+require 'net/ssh/loggable'
+require 'net/ssh/packet'
+require 'net/ssh/transport/session'
+require 'ostruct'
+
+require 'minitest/autorun'
 
 # clear the default files out so that tests don't get confused by existing
 # SSH config files.
