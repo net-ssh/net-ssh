@@ -209,6 +209,8 @@ module Net
 
       assign_defaults(options)
 
+      options.delete(:password) if options.has_key?(:password) && options[:password].nil?
+
       if options.values.include? nil
         nil_options = options.keys.select { |k| options[k].nil? }
         raise ArgumentError, "Value(s) have been set to nil: #{nil_options.join(', ')}"
