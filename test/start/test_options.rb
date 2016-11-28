@@ -60,6 +60,13 @@ module NetSSH
       end
     end
 
+    def test_constructor_should_not_reject_nil_password_options_for_cap_v2_compatibility
+      assert_nothing_raised do
+        options = { :password => nil }
+        Net::SSH.start('localhost', 'testuser', options)
+      end
+    end
+
     def test_constructor_should_reject_invalid_options
       assert_raises(ArgumentError) do
         options = { :some_invalid_option => "some setting" }
