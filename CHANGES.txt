@@ -1,3 +1,8 @@
+=== 4.0.0.rc1
+
+ * Allow :password to be nil for capistrano v2 compatibility [Will Bryant, #357]
+ * In next_packet if prefer consuming buffer before filling it again if we have enough data [Miklós Fazekas, #454]
+
 === 4.0.0.beta4
 
  * Added exitstatus method to exec's return [Miklós Fazekas, #452]

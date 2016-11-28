@@ -105,11 +105,13 @@ Then, when install the gem, do so with high security:
 
 If you don't add the public key, you'll see an error like "Couldn't verify data signature". If you're still having trouble let me know and I'll give you a hand.
 
+For ed25519 public key auth support your bundle file should contain ```rbnacl-libsodium```, ```rbnacl```, ```bcrypt_pbkdf``` dependencies.
+
 == RUBY SUPPORT
 
 * Ruby 1.8.x is supported up until the net-ssh 2.5.1 release.
 * Ruby 1.9.x is supported up until the net-ssh 2.9.x release.
-* Current net-ssh releases require Ruby 2.0 or later. JRuby 1.7+ (with `compat.version=2.0` set) or JRuby 9k+
+* Current net-ssh releases require Ruby 2.0 or later.
 
 == RUNNING TESTS
 
