@@ -1,6 +1,6 @@
 gem 'rbnacl-libsodium', '>= 1.0.10'
 gem 'rbnacl', '>= 3.2.0', '< 4.0'
-gem 'bcrypt_pbkdf', '~> 1.0.0.alpha1' unless RUBY_PLATFORM == "java"
+gem 'bcrypt_pbkdf', '~> 1.0.0' unless RUBY_PLATFORM == "java"
 
 require 'rbnacl/libsodium'
 require 'rbnacl'
@@ -84,7 +84,7 @@ module ED25519
       len = buffer.read_long
 
       keylen, blocksize, ivlen = CipherFactory.get_lengths(ciphername, iv_len: true)
-      raise ArgumentError.new("Private key len:#{len} is not a multiple of #{blocksize}") if 
+      raise ArgumentError.new("Private key len:#{len} is not a multiple of #{blocksize}") if
         ((len < blocksize) || ((blocksize > 0) && (len % blocksize) != 0))
 
       if kdfname == 'bcrypt'
