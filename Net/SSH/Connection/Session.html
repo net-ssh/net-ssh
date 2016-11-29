@@ -2,68 +2,72 @@
 
 <html>
 <head>
-<meta charset="UTF-8">
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class Net::SSH::Connection::Session - net-ssh 4.0.0.alpha2</title>
+<title>class Net::SSH::Connection::Session - net-ssh 4.0.0.rc1</title>
+
+<link type="text/css" media="screen" href="../../../rdoc.css" rel="stylesheet">
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
 </script>
 
-<script src="../../../js/jquery.js"></script>
-<script src="../../../js/darkfish.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/darkfish.js"></script>
 
-<link href="../../../css/fonts.css" rel="stylesheet">
-<link href="../../../css/rdoc.css" rel="stylesheet">
 
-
-
-<body id="top" role="document" class="class">
-<nav role="navigation">
-  <div id="project-navigation">
-    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
-  <h2>
-    <a href="../../../index.html" rel="home">Home</a>
-  </h2>
-
-  <div id="table-of-contents-navigation">
-    <a href="../../../table_of_contents.html#pages">Pages</a>
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../../../index.html">Home</a>
     <a href="../../../table_of_contents.html#classes">Classes</a>
     <a href="../../../table_of_contents.html#methods">Methods</a>
-  </div>
-</div>
+  </h3>
+</nav>
 
-    <div id="search-section" role="search" class="project-section initially-hidden">
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
   <form action="#" method="get" accept-charset="utf-8">
-    <div id="search-field-wrapper">
-      <input id="search-field" role="combobox" aria-label="Search"
-             aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
              title="Type to search, Up and Down to navigate, Enter to load">
-    </div>
-
-    <ul id="search-results" aria-label="Search Results"
-        aria-busy="false" aria-expanded="false"
-        aria-atomic="false" class="initially-hidden"></ul>
+    </h3>
   </form>
-</div>
 
-  </div>
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
 
   
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/net/ssh/connection/session.rb
+  </ul>
+</nav>
+
+    
+  </div>
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
-  <h3>Parent</h3>
-
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
   
   <p class="link">Object
   
-</div>
+</nav>
 
-    <div id="includes-section" class="nav-section">
-  <h3>Included Modules</h3>
+    <!-- Included Modules -->
+<nav id="includes-section" class="section">
+  <h3 class="section-header">Included Modules</h3>
 
   <ul class="link-list">
   
@@ -76,14 +80,14 @@
   
   
   </ul>
-</div>
+</nav>
 
     
     <!-- Method Quickref -->
-<div id="method-list-section" class="nav-section">
-  <h3>Methods</h3>
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
 
-  <ul class="link-list" role="directory">
+  <ul class="link-list">
     
     <li ><a href="#method-c-new">::new</a>
     
@@ -99,6 +103,14 @@
     
     <li ><a href="#method-i-closed-3F">#closed?</a>
     
+    <li ><a href="#method-i-ev_do_calculate_rw_wait">#ev_do_calculate_rw_wait</a>
+    
+    <li ><a href="#method-i-ev_do_handle_events">#ev_do_handle_events</a>
+    
+    <li ><a href="#method-i-ev_do_postprocess">#ev_do_postprocess</a>
+    
+    <li ><a href="#method-i-ev_preprocess">#ev_preprocess</a>
+    
     <li ><a href="#method-i-exec">#exec</a>
     
     <li ><a href="#method-i-exec-21">#exec!</a>
@@ -112,6 +124,8 @@
     <li ><a href="#method-i-loop">#loop</a>
     
     <li ><a href="#method-i-loop_forever">#loop_forever</a>
+    
+    <li ><a href="#method-i-max_select_wait_time">#max_select_wait_time</a>
     
     <li ><a href="#method-i-on_global_request">#on_global_request</a>
     
@@ -134,17 +148,350 @@
     <li ><a href="#method-i-stop_listening_to">#stop_listening_to</a>
     
   </ul>
-</div>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../../../CHANGES_txt.html">CHANGES</a>
+  
+    <li class="file"><a href="../../../LICENSE_txt.html">LICENSE</a>
+  
+    <li class="file"><a href="../../../README_rdoc.html">README</a>
+  
+    <li class="file"><a href="../../../THANKS_txt.html">THANKS</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../../../DL.html">DL</a>
+  
+    <li><a href="../../../DL/Fiddle.html">DL::Fiddle</a>
+  
+    <li><a href="../../../Net.html">Net</a>
+  
+    <li><a href="../../../Net/SSH.html">Net::SSH</a>
+  
+    <li><a href="../../../Net/SSH/Authentication.html">Net::SSH::Authentication</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Agent.html">Net::SSH::Authentication::Agent</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Agent/Comment.html">Net::SSH::Authentication::Agent::Comment</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/AgentError.html">Net::SSH::Authentication::AgentError</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/AgentNotAvailable.html">Net::SSH::Authentication::AgentNotAvailable</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Constants.html">Net::SSH::Authentication::Constants</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/DisallowedMethod.html">Net::SSH::Authentication::DisallowedMethod</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/ED25519.html">Net::SSH::Authentication::ED25519</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/ED25519/PrivKey.html">Net::SSH::Authentication::ED25519::PrivKey</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/ED25519/PubKey.html">Net::SSH::Authentication::ED25519::PubKey</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/ED25519/SigningKeyFromFile.html">Net::SSH::Authentication::ED25519::SigningKeyFromFile</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/ED25519Loader.html">Net::SSH::Authentication::ED25519Loader</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/KeyManager.html">Net::SSH::Authentication::KeyManager</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/KeyManagerError.html">Net::SSH::Authentication::KeyManagerError</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Methods.html">Net::SSH::Authentication::Methods</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Methods/Abstract.html">Net::SSH::Authentication::Methods::Abstract</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Methods/Hostbased.html">Net::SSH::Authentication::Methods::Hostbased</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Methods/KeyboardInteractive.html">Net::SSH::Authentication::Methods::KeyboardInteractive</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Methods/None.html">Net::SSH::Authentication::Methods::None</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Methods/Password.html">Net::SSH::Authentication::Methods::Password</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Methods/Publickey.html">Net::SSH::Authentication::Methods::Publickey</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Pageant.html">Net::SSH::Authentication::Pageant</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Pageant/Socket.html">Net::SSH::Authentication::Pageant::Socket</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Pageant/Win.html">Net::SSH::Authentication::Pageant::Win</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Pageant/Win/LibC.html">Net::SSH::Authentication::Pageant::Win::LibC</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Pageant/Win/LibC/FFI.html">Net::SSH::Authentication::Pageant::Win::LibC::FFI</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Pageant/Win/LibC/FFI/Library.html">Net::SSH::Authentication::Pageant::Win::LibC::FFI::Library</a>
+  
+    <li><a href="../../../Net/SSH/Authentication/Session.html">Net::SSH::Authentication::Session</a>
+  
+    <li><a href="../../../Net/SSH/AuthenticationFailed.html">Net::SSH::AuthenticationFailed</a>
+  
+    <li><a href="../../../Net/SSH/Buffer.html">Net::SSH::Buffer</a>
+  
+    <li><a href="../../../Net/SSH/BufferedIo.html">Net::SSH::BufferedIo</a>
+  
+    <li><a href="../../../Net/SSH/ChannelOpenFailed.html">Net::SSH::ChannelOpenFailed</a>
+  
+    <li><a href="../../../Net/SSH/ChannelRequestFailed.html">Net::SSH::ChannelRequestFailed</a>
+  
+    <li><a href="../../../Net/SSH/Compat.html">Net::SSH::Compat</a>
+  
+    <li><a href="../../../Net/SSH/Config.html">Net::SSH::Config</a>
+  
+    <li><a href="../../../Net/SSH/Connection.html">Net::SSH::Connection</a>
+  
+    <li><a href="../../../Net/SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a>
+  
+    <li><a href="../../../Net/SSH/Connection/Constants.html">Net::SSH::Connection::Constants</a>
+  
+    <li><a href="../../../Net/SSH/Connection/EventLoop.html">Net::SSH::Connection::EventLoop</a>
+  
+    <li><a href="../../../Net/SSH/Connection/Keepalive.html">Net::SSH::Connection::Keepalive</a>
+  
+    <li><a href="../../../Net/SSH/Connection/Session.html">Net::SSH::Connection::Session</a>
+  
+    <li><a href="../../../Net/SSH/Connection/Session/NilChannel.html">Net::SSH::Connection::Session::NilChannel</a>
+  
+    <li><a href="../../../Net/SSH/Connection/Session/StringWithExitstatus.html">Net::SSH::Connection::Session::StringWithExitstatus</a>
+  
+    <li><a href="../../../Net/SSH/Connection/SingleSessionEventLoop.html">Net::SSH::Connection::SingleSessionEventLoop</a>
+  
+    <li><a href="../../../Net/SSH/Connection/Term.html">Net::SSH::Connection::Term</a>
+  
+    <li><a href="../../../Net/SSH/ConnectionTimeout.html">Net::SSH::ConnectionTimeout</a>
+  
+    <li><a href="../../../Net/SSH/Disconnect.html">Net::SSH::Disconnect</a>
+  
+    <li><a href="../../../Net/SSH/Exception.html">Net::SSH::Exception</a>
+  
+    <li><a href="../../../Net/SSH/ForwardedBufferedIo.html">Net::SSH::ForwardedBufferedIo</a>
+  
+    <li><a href="../../../Net/SSH/HostKeyError.html">Net::SSH::HostKeyError</a>
+  
+    <li><a href="../../../Net/SSH/HostKeyMismatch.html">Net::SSH::HostKeyMismatch</a>
+  
+    <li><a href="../../../Net/SSH/HostKeyUnknown.html">Net::SSH::HostKeyUnknown</a>
+  
+    <li><a href="../../../Net/SSH/HostKeys.html">Net::SSH::HostKeys</a>
+  
+    <li><a href="../../../Net/SSH/KeyFactory.html">Net::SSH::KeyFactory</a>
+  
+    <li><a href="../../../Net/SSH/KeyFactory/OpenSSL.html">Net::SSH::KeyFactory::OpenSSL</a>
+  
+    <li><a href="../../../Net/SSH/KeyFactory/OpenSSL/PKey.html">Net::SSH::KeyFactory::OpenSSL::PKey</a>
+  
+    <li><a href="../../../Net/SSH/KnownHosts.html">Net::SSH::KnownHosts</a>
+  
+    <li><a href="../../../Net/SSH/KnownHosts/OpenSSL.html">Net::SSH::KnownHosts::OpenSSL</a>
+  
+    <li><a href="../../../Net/SSH/KnownHosts/OpenSSL/PKey.html">Net::SSH::KnownHosts::OpenSSL::PKey</a>
+  
+    <li><a href="../../../Net/SSH/Loggable.html">Net::SSH::Loggable</a>
+  
+    <li><a href="../../../Net/SSH/Packet.html">Net::SSH::Packet</a>
+  
+    <li><a href="../../../Net/SSH/Prompt.html">Net::SSH::Prompt</a>
+  
+    <li><a href="../../../Net/SSH/Prompt/Prompter.html">Net::SSH::Prompt::Prompter</a>
+  
+    <li><a href="../../../Net/SSH/Proxy.html">Net::SSH::Proxy</a>
+  
+    <li><a href="../../../Net/SSH/Proxy/Command.html">Net::SSH::Proxy::Command</a>
+  
+    <li><a href="../../../Net/SSH/Proxy/ConnectError.html">Net::SSH::Proxy::ConnectError</a>
+  
+    <li><a href="../../../Net/SSH/Proxy/Error.html">Net::SSH::Proxy::Error</a>
+  
+    <li><a href="../../../Net/SSH/Proxy/HTTP.html">Net::SSH::Proxy::HTTP</a>
+  
+    <li><a href="../../../Net/SSH/Proxy/HTTPS.html">Net::SSH::Proxy::HTTPS</a>
+  
+    <li><a href="../../../Net/SSH/Proxy/HTTPS/SSLSocketCompatibility.html">Net::SSH::Proxy::HTTPS::SSLSocketCompatibility</a>
+  
+    <li><a href="../../../Net/SSH/Proxy/SOCKS4.html">Net::SSH::Proxy::SOCKS4</a>
+  
+    <li><a href="../../../Net/SSH/Proxy/SOCKS5.html">Net::SSH::Proxy::SOCKS5</a>
+  
+    <li><a href="../../../Net/SSH/Proxy/UnauthorizedError.html">Net::SSH::Proxy::UnauthorizedError</a>
+  
+    <li><a href="../../../Net/SSH/Service.html">Net::SSH::Service</a>
+  
+    <li><a href="../../../Net/SSH/Service/Forward.html">Net::SSH::Service::Forward</a>
+  
+    <li><a href="../../../Net/SSH/Test.html">Net::SSH::Test</a>
+  
+    <li><a href="../../../Net/SSH/Test/Channel.html">Net::SSH::Test::Channel</a>
+  
+    <li><a href="../../../Net/SSH/Test/Extensions.html">Net::SSH::Test::Extensions</a>
+  
+    <li><a href="../../../Net/SSH/Test/Extensions/BufferedIo.html">Net::SSH::Test::Extensions::BufferedIo</a>
+  
+    <li><a href="../../../Net/SSH/Test/Extensions/Channel.html">Net::SSH::Test::Extensions::Channel</a>
+  
+    <li><a href="../../../Net/SSH/Test/Extensions/IO.html">Net::SSH::Test::Extensions::IO</a>
+  
+    <li><a href="../../../Net/SSH/Test/Extensions/IO/ClassMethods.html">Net::SSH::Test::Extensions::IO::ClassMethods</a>
+  
+    <li><a href="../../../Net/SSH/Test/Extensions/PacketStream.html">Net::SSH::Test::Extensions::PacketStream</a>
+  
+    <li><a href="../../../Net/SSH/Test/Kex.html">Net::SSH::Test::Kex</a>
+  
+    <li><a href="../../../Net/SSH/Test/LocalPacket.html">Net::SSH::Test::LocalPacket</a>
+  
+    <li><a href="../../../Net/SSH/Test/Packet.html">Net::SSH::Test::Packet</a>
+  
+    <li><a href="../../../Net/SSH/Test/RemotePacket.html">Net::SSH::Test::RemotePacket</a>
+  
+    <li><a href="../../../Net/SSH/Test/Script.html">Net::SSH::Test::Script</a>
+  
+    <li><a href="../../../Net/SSH/Test/Socket.html">Net::SSH::Test::Socket</a>
+  
+    <li><a href="../../../Net/SSH/Timeout.html">Net::SSH::Timeout</a>
+  
+    <li><a href="../../../Net/SSH/Transport.html">Net::SSH::Transport</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Algorithms.html">Net::SSH::Transport::Algorithms</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Algorithms/OpenSSL.html">Net::SSH::Transport::Algorithms::OpenSSL</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Algorithms/OpenSSL/PKey.html">Net::SSH::Transport::Algorithms::OpenSSL::PKey</a>
+  
+    <li><a href="../../../Net/SSH/Transport/CTR.html">Net::SSH::Transport::CTR</a>
+  
+    <li><a href="../../../Net/SSH/Transport/CipherFactory.html">Net::SSH::Transport::CipherFactory</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Constants.html">Net::SSH::Transport::Constants</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC.html">Net::SSH::Transport::HMAC</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/Abstract.html">Net::SSH::Transport::HMAC::Abstract</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/MD5.html">Net::SSH::Transport::HMAC::MD5</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/MD5/OpenSSL.html">Net::SSH::Transport::HMAC::MD5::OpenSSL</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/MD5/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::MD5::OpenSSL::Digest</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/MD5_96.html">Net::SSH::Transport::HMAC::MD5_96</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/None.html">Net::SSH::Transport::HMAC::None</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/RIPEMD160.html">Net::SSH::Transport::HMAC::RIPEMD160</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/RIPEMD160/OpenSSL.html">Net::SSH::Transport::HMAC::RIPEMD160::OpenSSL</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/RIPEMD160/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::RIPEMD160::OpenSSL::Digest</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/SHA1.html">Net::SSH::Transport::HMAC::SHA1</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/SHA1/OpenSSL.html">Net::SSH::Transport::HMAC::SHA1::OpenSSL</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/SHA1/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::SHA1::OpenSSL::Digest</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/SHA1_96.html">Net::SSH::Transport::HMAC::SHA1_96</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/SHA2_256.html">Net::SSH::Transport::HMAC::SHA2_256</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/SHA2_256_96.html">Net::SSH::Transport::HMAC::SHA2_256_96</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/SHA2_512.html">Net::SSH::Transport::HMAC::SHA2_512</a>
+  
+    <li><a href="../../../Net/SSH/Transport/HMAC/SHA2_512_96.html">Net::SSH::Transport::HMAC::SHA2_512_96</a>
+  
+    <li><a href="../../../Net/SSH/Transport/IdentityCipher.html">Net::SSH::Transport::IdentityCipher</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Kex.html">Net::SSH::Transport::Kex</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Kex/DiffieHellmanGroup14SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup14SHA1</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Kex/DiffieHellmanGroup1SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA1</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA256.html">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Kex/EcdhSHA2NistP256.html">Net::SSH::Transport::Kex::EcdhSHA2NistP256</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Kex/EcdhSHA2NistP384.html">Net::SSH::Transport::Kex::EcdhSHA2NistP384</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Kex/EcdhSHA2NistP521.html">Net::SSH::Transport::Kex::EcdhSHA2NistP521</a>
+  
+    <li><a href="../../../Net/SSH/Transport/KeyExpander.html">Net::SSH::Transport::KeyExpander</a>
+  
+    <li><a href="../../../Net/SSH/Transport/PacketStream.html">Net::SSH::Transport::PacketStream</a>
+  
+    <li><a href="../../../Net/SSH/Transport/ServerVersion.html">Net::SSH::Transport::ServerVersion</a>
+  
+    <li><a href="../../../Net/SSH/Transport/Session.html">Net::SSH::Transport::Session</a>
+  
+    <li><a href="../../../Net/SSH/Transport/State.html">Net::SSH::Transport::State</a>
+  
+    <li><a href="../../../Net/SSH/Verifiers.html">Net::SSH::Verifiers</a>
+  
+    <li><a href="../../../Net/SSH/Verifiers/Lenient.html">Net::SSH::Verifiers::Lenient</a>
+  
+    <li><a href="../../../Net/SSH/Verifiers/Null.html">Net::SSH::Verifiers::Null</a>
+  
+    <li><a href="../../../Net/SSH/Verifiers/Secure.html">Net::SSH::Verifiers::Secure</a>
+  
+    <li><a href="../../../Net/SSH/Verifiers/Strict.html">Net::SSH::Verifiers::Strict</a>
+  
+    <li><a href="../../../Net/SSH/Version.html">Net::SSH::Version</a>
+  
+    <li><a href="../../../OpenSSL.html">OpenSSL</a>
+  
+    <li><a href="../../../OpenSSL/BN.html">OpenSSL::BN</a>
+  
+    <li><a href="../../../OpenSSL/Digest.html">OpenSSL::Digest</a>
+  
+    <li><a href="../../../OpenSSL/PKey.html">OpenSSL::PKey</a>
+  
+    <li><a href="../../../OpenSSL/PKey/DH.html">OpenSSL::PKey::DH</a>
+  
+    <li><a href="../../../OpenSSL/PKey/DSA.html">OpenSSL::PKey::DSA</a>
+  
+    <li><a href="../../../OpenSSL/PKey/EC.html">OpenSSL::PKey::EC</a>
+  
+    <li><a href="../../../OpenSSL/PKey/OpenSSL.html">OpenSSL::PKey::OpenSSL</a>
+  
+    <li><a href="../../../OpenSSL/PKey/OpenSSL/PKey.html">OpenSSL::PKey::OpenSSL::PKey</a>
+  
+    <li><a href="../../../OpenSSL/PKey/OpenSSL/PKey/OpenSSL.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL</a>
+  
+    <li><a href="../../../OpenSSL/PKey/OpenSSL/PKey/OpenSSL/PKey.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL::PKey</a>
+  
+    <li><a href="../../../OpenSSL/PKey/OpenSSL/PKey/OpenSSL/PKey/ECError.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL::PKey::ECError</a>
+  
+    <li><a href="../../../OpenSSL/PKey/PKey.html">OpenSSL::PKey::PKey</a>
+  
+    <li><a href="../../../OpenSSL/PKey/RSA.html">OpenSSL::PKey::RSA</a>
+  
+    <li><a href="../../../String.html">String</a>
+  
+  </ul>
+</nav>
 
   </div>
 </nav>
 
-<main role="main" aria-labelledby="class-Net::SSH::Connection::Session">
-  <h1 id="class-Net::SSH::Connection::Session" class="class">
-    class Net::SSH::Connection::Session
-  </h1>
+<div id="documentation">
+  <h1 class="class">class Net::SSH::Connection::Session</h1>
 
-  <section class="description">
+  <div id="description" class="description">
     
 <p>A session class representing the connection service running on top of the
 <a href="../../SSH.html">SSH</a> transport layer. It manages the creation
@@ -169,7 +516,7 @@ session, all in one call.</p>
 <span class="ruby-keyword">end</span>
 </pre>
 
-  </section>
+  </div><!-- description -->
 
   
   
@@ -180,20 +527,19 @@ session, all in one call.</p>
     
 
     
-    <section class="constants-list">
-      <header>
-        <h3>Constants</h3>
-      </header>
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
       <dl>
       
         <dt id="DEFAULT_IO_SELECT_TIMEOUT">DEFAULT_IO_SELECT_TIMEOUT
         
-        <dd><p>Default IO.select timeout threshold</p>
+        <dd class="description"><p>Default IO.select timeout threshold</p>
         
       
         <dt id="MAP">MAP
         
-        <dd>
+        <dd class="description">
         
       
       </dl>
@@ -201,10 +547,9 @@ session, all in one call.</p>
     
 
     
-    <section class="attribute-method-details" class="method-section">
-      <header>
-        <h3>Attributes</h3>
-      </header>
+    <!-- Attributes -->
+    <section id="attribute-method-details" class="method-section section">
+      <h3 class="section-header">Attributes</h3>
 
       
       <div id="attribute-i-options" class="method-detail">
@@ -228,9 +573,7 @@ session, all in one call.</p>
 
         <div class="method-description">
         
-        <p>The collection of custom properties for this instance. (See <a
-href="Session.html#method-i-5B-5D">[]</a> and <a
-href="Session.html#method-i-5B-5D-3D">[]=</a>).</p>
+        <p>The collection of custom properties for this instance. (See #[] and #[]=).</p>
         
         </div>
       </div>
@@ -249,14 +592,13 @@ href="../Transport/Session.html">Net::SSH::Transport::Session</a>).</p>
         </div>
       </div>
       
-    </section>
+    </section><!-- attribute-method-details -->
     
 
+    <!-- Methods -->
     
-     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
-       <header>
-         <h3>Public Class Methods</h3>
-       </header>
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
 
     
       <div id="method-c-new" class="method-detail ">
@@ -279,7 +621,7 @@ Initializes the listeners to be only the underlying socket object.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 66</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 67</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">logger</span>
 
@@ -298,23 +640,24 @@ Initializes the listeners to be only the underlying socket object.</p>
   <span class="ruby-ivar">@max_win_size</span> = (<span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:max_win_size</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:max_win_size</span>] <span class="ruby-operator">:</span> <span class="ruby-value">0x20000</span>)
 
   <span class="ruby-ivar">@keepalive</span> = <span class="ruby-constant">Keepalive</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
+
+  <span class="ruby-ivar">@event_loop</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:event_loop</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">SingleSessionEventLoop</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@event_loop</span>.<span class="ruby-identifier">register</span>(<span class="ruby-keyword">self</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- new-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- new-method -->
 
     
-    </section>
+    </section><!-- public-class-method-details -->
   
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
-       <header>
-         <h3>Public Instance Methods</h3>
-       </header>
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
 
     
       <div id="method-i-5B-5D" class="method-detail ">
@@ -338,18 +681,18 @@ href="../../SSH.html">SSH</a> connections.</p>
 
           
           <div class="method-source-code" id="5B-5D-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 89</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 93</span>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)
   <span class="ruby-ivar">@properties</span>[<span class="ruby-identifier">key</span>]
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- 5B-5D-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- 5B-5D-method -->
 
     
       <div id="method-i-5B-5D-3D" class="method-detail ">
@@ -371,18 +714,18 @@ href="../../SSH.html">SSH</a> connections.</p>
 
           
           <div class="method-source-code" id="5B-5D-3D-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 94</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 98</span>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">[]=</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)
   <span class="ruby-ivar">@properties</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- 5B-5D-3D-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- 5B-5D-3D-method -->
 
     
       <div id="method-i-busy-3F" class="method-detail ">
@@ -407,14 +750,13 @@ be counted.</p>
 <p>This can be useful for determining whether the event loop should continue
 to be run.</p>
 
-<pre class="ruby"><span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">loop</span> { <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">busy?</span> }
-</pre>
+<pre>ssh.loop { ssh.busy? }</pre>
           
           
 
           
           <div class="method-source-code" id="busy-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 143</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 151</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">busy?</span>(<span class="ruby-identifier">include_invisible</span>=<span class="ruby-keyword">false</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">include_invisible</span>
     <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">any?</span>
@@ -422,14 +764,14 @@ to be run.</p>
     <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">id</span>, <span class="ruby-identifier">ch</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ch</span>[<span class="ruby-value">:invisible</span>] }
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- busy-3F-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- busy-3F-method -->
 
     
       <div id="method-i-cleanup_channel" class="method-detail ">
@@ -451,21 +793,21 @@ to be run.</p>
 
           
           <div class="method-source-code" id="cleanup_channel-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 458</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 510</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">cleanup_channel</span>(<span class="ruby-identifier">channel</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_closed?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">remote_closed?</span>
     <span class="ruby-identifier">info</span> { <span class="ruby-node">&quot;#{host} delete channel #{channel.local_id} which closed locally and remotely&quot;</span> }
     <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_id</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- cleanup_channel-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- cleanup_channel-method -->
 
     
       <div id="method-i-close" class="method-detail ">
@@ -489,21 +831,25 @@ connection.</p>
 
           
           <div class="method-source-code" id="close-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 116</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 120</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">close</span>
   <span class="ruby-identifier">info</span> { <span class="ruby-node">&quot;closing remaining channels (#{channels.length} open)&quot;</span> }
   <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">id</span>, <span class="ruby-identifier">channel</span><span class="ruby-operator">|</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">close</span> }
-  <span class="ruby-identifier">loop</span>(<span class="ruby-value">0.1</span>) { <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">any?</span> }
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">loop</span>(<span class="ruby-value">0.1</span>) { <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">any?</span> }
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Disconnect</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">close</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- close-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- close-method -->
 
     
       <div id="method-i-closed-3F" class="method-detail ">
@@ -529,25 +875,182 @@ just want to know if <em>you</em> have closed the connection.</p>
 
           
           <div class="method-source-code" id="closed-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 109</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 113</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">closed?</span>
   <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">closed?</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- closed-3F-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- closed-3F-method -->
+
+    
+      <div id="method-i-ev_do_calculate_rw_wait" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ev_do_calculate_rw_wait</span><span
+            class="method-args">(wait)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the file descriptors the event loop should wait for read/write
+events, we also return the max wait</p>
+          
+          
+
+          
+          <div class="method-source-code" id="ev_do_calculate_rw_wait-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 243</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_do_calculate_rw_wait</span>(<span class="ruby-identifier">wait</span>)
+  <span class="ruby-identifier">r</span> = <span class="ruby-identifier">listeners</span>.<span class="ruby-identifier">keys</span>
+  <span class="ruby-identifier">w</span> = <span class="ruby-identifier">r</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">w2</span><span class="ruby-operator">|</span> <span class="ruby-identifier">w2</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:pending_write?</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">w2</span>.<span class="ruby-identifier">pending_write?</span> }
+  [<span class="ruby-identifier">r</span>,<span class="ruby-identifier">w</span>,<span class="ruby-identifier">io_select_wait</span>(<span class="ruby-identifier">wait</span>)]
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- ev_do_calculate_rw_wait-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- ev_do_calculate_rw_wait-method -->
+
+    
+      <div id="method-i-ev_do_handle_events" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ev_do_handle_events</span><span
+            class="method-args">(readers, writers)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>It loops over the given arrays of reader IO&#39;s and writer IO&#39;s,
+processing them as needed, and then calls <a
+href="../Transport/Session.html#method-i-rekey_as_needed">Net::SSH::Transport::Session#rekey_as_needed</a>
+to allow the transport layer to rekey. Then returns true.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="ev_do_handle_events-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 258</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_do_handle_events</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>)
+  <span class="ruby-constant">Array</span>(<span class="ruby-identifier">readers</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reader</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">listeners</span>[<span class="ruby-identifier">reader</span>]
+      <span class="ruby-identifier">listeners</span>[<span class="ruby-identifier">reader</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">reader</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">reader</span>.<span class="ruby-identifier">fill</span>.<span class="ruby-identifier">zero?</span>
+        <span class="ruby-identifier">reader</span>.<span class="ruby-identifier">close</span>
+        <span class="ruby-identifier">stop_listening_to</span>(<span class="ruby-identifier">reader</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-constant">Array</span>(<span class="ruby-identifier">writers</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">send_pending</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- ev_do_handle_events-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- ev_do_handle_events-method -->
+
+    
+      <div id="method-i-ev_do_postprocess" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ev_do_postprocess</span><span
+            class="method-args">(was_events)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>calls <a
+href="../Transport/Session.html#method-i-rekey_as_needed">Net::SSH::Transport::Session#rekey_as_needed</a>
+to allow the transport layer to rekey</p>
+          
+          
+
+          
+          <div class="method-source-code" id="ev_do_postprocess-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 277</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_do_postprocess</span>(<span class="ruby-identifier">was_events</span>)
+  <span class="ruby-ivar">@keepalive</span>.<span class="ruby-identifier">send_as_needed</span>(<span class="ruby-identifier">was_events</span>)
+  <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">rekey_as_needed</span>
+  <span class="ruby-keyword">true</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- ev_do_postprocess-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- ev_do_postprocess-method -->
+
+    
+      <div id="method-i-ev_preprocess" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ev_preprocess</span><span
+            class="method-args">(&block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Called by event loop to process available data before going to event
+multiplexing</p>
+          
+          
+
+          
+          <div class="method-source-code" id="ev_preprocess-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 236</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">dispatch_incoming_packets</span>(<span class="ruby-identifier">raise_disconnect_errors</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>)
+  <span class="ruby-identifier">each_channel</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">id</span>, <span class="ruby-identifier">channel</span><span class="ruby-operator">|</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">process</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_closed?</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- ev_preprocess-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- ev_preprocess-method -->
 
     
       <div id="method-i-exec" class="method-detail ">
         
         <div class="method-heading">
           <span class="method-name">exec</span><span
-            class="method-args">(command, &block)</span>
+            class="method-args">(command, status: nil, &block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -585,12 +1088,22 @@ will be sufficient.</p>
 
           
           <div class="method-source-code" id="exec-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 329</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 367</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">channel</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;could not execute command: #{command.inspect}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">success</span>
-      
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">status</span>
+        <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_request</span>(<span class="ruby-string">&quot;exit-status&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch2</span>,<span class="ruby-identifier">data</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">status</span>[<span class="ruby-value">:exit_code</span>] = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">read_long</span>
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_request</span>(<span class="ruby-string">&quot;exit-signal&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch2</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">status</span>[<span class="ruby-value">:exit_signal</span>] = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">read_long</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+
       <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch2</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>
         <span class="ruby-keyword">if</span> <span class="ruby-identifier">block</span>
           <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">ch2</span>, <span class="ruby-value">:stdout</span>, <span class="ruby-identifier">data</span>)
@@ -609,21 +1122,21 @@ will be sufficient.</p>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- exec-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- exec-method -->
 
     
       <div id="method-i-exec-21" class="method-detail ">
         
         <div class="method-heading">
           <span class="method-name">exec!</span><span
-            class="method-args">(command, &block)</span>
+            class="method-args">(command, status: nil, &block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -636,35 +1149,38 @@ will be sufficient.</p>
 block until the command finishes. Also, if no block is given, this will
 return all output (stdout and stderr) as a single string.</p>
 
-<pre class="ruby"><span class="ruby-identifier">matches</span> = <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec!</span>(<span class="ruby-string">&quot;grep something /some/files&quot;</span>)
-</pre>
+<pre>matches = ssh.exec!(&quot;grep something /some/files&quot;)</pre>
+
+<p>the returned string has an exitstatus method to query it&#39;s exit satus</p>
           
           
 
           
           <div class="method-source-code" id="exec-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 358</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">exec!</span>(<span class="ruby-identifier">command</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 408</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">exec!</span>(<span class="ruby-identifier">command</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">block_or_concat</span> = <span class="ruby-identifier">block</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">ch</span>[<span class="ruby-value">:result</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&quot;&quot;</span>
     <span class="ruby-identifier">ch</span>[<span class="ruby-value">:result</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">data</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block_or_concat</span>)
+  <span class="ruby-identifier">status</span> <span class="ruby-operator">||=</span> {}
+  <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-identifier">status</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block_or_concat</span>)
   <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">wait</span>
 
   <span class="ruby-identifier">channel</span>[<span class="ruby-value">:result</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&quot;&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block</span>
+  <span class="ruby-identifier">channel</span>[<span class="ruby-value">:result</span>] <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">channel</span>[<span class="ruby-value">:result</span>].<span class="ruby-identifier">force_encoding</span>(<span class="ruby-string">&quot;UTF-8&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block</span>
 
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">channel</span>[<span class="ruby-value">:result</span>]
+  <span class="ruby-constant">StringWithExitstatus</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">channel</span>[<span class="ruby-value">:result</span>], <span class="ruby-identifier">status</span>[<span class="ruby-value">:exit_code</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">channel</span>[<span class="ruby-value">:result</span>]
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- exec-21-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- exec-21-method -->
 
     
       <div id="method-i-forward" class="method-detail ">
@@ -689,18 +1205,18 @@ href="../../SSH.html">SSH</a>.</p>
 
           
           <div class="method-source-code" id="forward-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 429</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 481</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">forward</span>
   <span class="ruby-ivar">@forward</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Service</span><span class="ruby-operator">::</span><span class="ruby-constant">Forward</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- forward-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- forward-method -->
 
     
       <div id="method-i-host" class="method-detail ">
@@ -723,18 +1239,18 @@ connect to.</p>
 
           
           <div class="method-source-code" id="host-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 100</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 104</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">host</span>
   <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">host</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- host-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- host-method -->
 
     
       <div id="method-i-listen_to" class="method-detail ">
@@ -790,18 +1306,18 @@ process&#39; stdin stream:</p>
 
           
           <div class="method-source-code" id="listen_to-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 417</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 469</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">listen_to</span>(<span class="ruby-identifier">io</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)
   <span class="ruby-identifier">listeners</span>[<span class="ruby-identifier">io</span>] = <span class="ruby-identifier">callback</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- listen_to-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- listen_to-method -->
 
     
       <div id="method-i-loop" class="method-detail ">
@@ -828,29 +1344,28 @@ parameter is also passed through to <a
 href="Session.html#method-i-process">process</a> (where it is interpreted
 as the maximum number of seconds to wait for IO.select to return).</p>
 
-<pre class="ruby"><span class="ruby-comment"># loop for as long as there are any channels active</span>
-<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">loop</span>
+<pre># loop for as long as there are any channels active
+ssh.loop
 
-<span class="ruby-comment"># loop for as long as there are any channels active, but make sure</span>
-<span class="ruby-comment"># the event loop runs at least once per 0.1 second</span>
-<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">loop</span>(<span class="ruby-value">0.1</span>)
+# loop for as long as there are any channels active, but make sure
+# the event loop runs at least once per 0.1 second
+ssh.loop(0.1)
 
-<span class="ruby-comment"># loop until ctrl-C is pressed</span>
-<span class="ruby-identifier">int_pressed</span> = <span class="ruby-keyword">false</span>
-<span class="ruby-identifier">trap</span>(<span class="ruby-string">&quot;INT&quot;</span>) { <span class="ruby-identifier">int_pressed</span> = <span class="ruby-keyword">true</span> }
-<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">loop</span>(<span class="ruby-value">0.1</span>) { <span class="ruby-keyword">not</span> <span class="ruby-identifier">int_pressed</span> }
-</pre>
+# loop until ctrl-C is pressed
+int_pressed = false
+trap(&quot;INT&quot;) { int_pressed = true }
+ssh.loop(0.1) { not int_pressed }</pre>
           
           
 
           
           <div class="method-source-code" id="loop-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 168</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 176</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">loop</span>(<span class="ruby-identifier">wait</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">running</span> = <span class="ruby-identifier">block</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-identifier">busy?</span> }
   <span class="ruby-identifier">loop_forever</span> { <span class="ruby-keyword">break</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">wait</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">running</span>) }
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- loop-source -->
           
         </div>
 
@@ -861,7 +1376,7 @@ as the maximum number of seconds to wait for IO.select to return).</p>
         
 
         
-      </div>
+      </div><!-- loop-method -->
 
     
       <div id="method-i-loop_forever" class="method-detail method-alias">
@@ -889,7 +1404,43 @@ as the maximum number of seconds to wait for IO.select to return).</p>
           Alias for: <a href="Session.html#method-i-loop">loop</a>
         </div>
         
-      </div>
+      </div><!-- loop_forever-method -->
+
+    
+      <div id="method-i-max_select_wait_time" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">max_select_wait_time</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>If the <a href="Session.html#method-i-preprocess">preprocess</a> and <a
+href="Session.html#method-i-postprocess">postprocess</a> callbacks for this
+session need to run periodically, this method returns the maximum number of
+seconds which may pass between callbacks.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="max_select_wait_time-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 520</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">max_select_wait_time</span>
+  <span class="ruby-ivar">@keepalive</span>.<span class="ruby-identifier">interval</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@keepalive</span>.<span class="ruby-identifier">enabled?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- max_select_wait_time-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- max_select_wait_time-method -->
 
     
       <div id="method-i-on_global_request" class="method-detail ">
@@ -916,19 +1467,19 @@ returns false, REQUEST_FAILURE will be sent.</p>
 
           
           <div class="method-source-code" id="on_global_request-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 453</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 505</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">on_global_request</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_global_request</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-ivar">@on_global_request</span>[<span class="ruby-identifier">type</span>], <span class="ruby-identifier">block</span>
   <span class="ruby-identifier">old</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- on_global_request-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- on_global_request-method -->
 
     
       <div id="method-i-on_open_channel" class="method-detail ">
@@ -960,18 +1511,18 @@ you are welcome to register handlers for other channel types, as needed.</p>
 
           
           <div class="method-source-code" id="on_open_channel-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 443</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 495</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">on_open_channel</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">channel_open_handlers</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-identifier">block</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- on_open_channel-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- on_open_channel-method -->
 
     
       <div id="method-i-open_channel" class="method-detail ">
@@ -1003,19 +1554,20 @@ arguments; the only time you&#39;d want to set the channel type or pass
 additional initialization data is if you were implementing an <a
 href="../../SSH.html">SSH</a> extension.</p>
 
-<pre>channel = ssh.open_channel do |ch|
-  ch.exec &quot;grep something /some/files&quot; do |ch, success|
-    ...
-  end
-end
+<pre class="ruby"><span class="ruby-identifier">channel</span> = <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;grep something /some/files&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>
+    <span class="ruby-operator">...</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
 
-channel.wait</pre>
+<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">wait</span>
+</pre>
           
           
 
           
           <div class="method-source-code" id="open_channel-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 297</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 326</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">open_channel</span>(<span class="ruby-identifier">type</span>=<span class="ruby-string">&quot;session&quot;</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">on_confirm</span>)
   <span class="ruby-identifier">local_id</span> = <span class="ruby-identifier">get_next_channel_id</span>
 
@@ -1027,14 +1579,14 @@ channel.wait</pre>
 
   <span class="ruby-identifier">channels</span>[<span class="ruby-identifier">local_id</span>] = <span class="ruby-identifier">channel</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- open_channel-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- open_channel-method -->
 
     
       <div id="method-i-postprocess" class="method-detail ">
@@ -1051,46 +1603,24 @@ channel.wait</pre>
         <div class="method-description">
           
           <p>This is called internally as part of <a
-href="Session.html#method-i-process">process</a>. It loops over the given
-arrays of reader IO&#39;s and writer IO&#39;s, processing them as needed,
-and then calls <a
-href="../Transport/Session.html#method-i-rekey_as_needed">Net::SSH::Transport::Session#rekey_as_needed</a>
-to allow the transport layer to rekey. Then returns true.</p>
+href="Session.html#method-i-process">process</a>.</p>
           
           
 
           
           <div class="method-source-code" id="postprocess-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 232</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 250</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">postprocess</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>)
-  <span class="ruby-constant">Array</span>(<span class="ruby-identifier">readers</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reader</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">listeners</span>[<span class="ruby-identifier">reader</span>]
-      <span class="ruby-identifier">listeners</span>[<span class="ruby-identifier">reader</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">reader</span>)
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">reader</span>.<span class="ruby-identifier">fill</span>.<span class="ruby-identifier">zero?</span>
-        <span class="ruby-identifier">reader</span>.<span class="ruby-identifier">close</span>
-        <span class="ruby-identifier">stop_listening_to</span>(<span class="ruby-identifier">reader</span>)
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-constant">Array</span>(<span class="ruby-identifier">writers</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">send_pending</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-ivar">@keepalive</span>.<span class="ruby-identifier">send_as_needed</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>)
-  <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">rekey_as_needed</span>
-
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">ev_do_handle_events</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- postprocess-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- postprocess-method -->
 
     
       <div id="method-i-preprocess" class="method-detail ">
@@ -1118,22 +1648,21 @@ method returns false. Otherwise, it returns true.</p>
 
           
           <div class="method-source-code" id="preprocess-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 220</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">preprocess</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 227</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword">yield</span>(<span class="ruby-keyword">self</span>)
-  <span class="ruby-identifier">dispatch_incoming_packets</span>
-  <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">id</span>, <span class="ruby-identifier">channel</span><span class="ruby-operator">|</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">process</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_closed?</span> }
+  <span class="ruby-identifier">ev_preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword">yield</span>(<span class="ruby-keyword">self</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- preprocess-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- preprocess-method -->
 
     
       <div id="method-i-process" class="method-detail ">
@@ -1166,45 +1695,45 @@ frequently it can make your CPU quite busy!</p>
 <p>This will also cause all active channels to be processed once each (see <a
 href="Channel.html#method-i-on_process">Net::SSH::Connection::Channel#on_process</a>).</p>
 
-<pre># process multiple Net::SSH connections in parallel
-connections = [
-  Net::SSH.start(&quot;host1&quot;, ...),
-  Net::SSH.start(&quot;host2&quot;, ...)
+<p>TODO revise example</p>
+
+<pre class="ruby"><span class="ruby-comment"># process multiple Net::SSH connections in parallel</span>
+<span class="ruby-identifier">connections</span> = [
+  <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span>.<span class="ruby-identifier">start</span>(<span class="ruby-string">&quot;host1&quot;</span>, <span class="ruby-operator">...</span>),
+  <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span>.<span class="ruby-identifier">start</span>(<span class="ruby-string">&quot;host2&quot;</span>, <span class="ruby-operator">...</span>)
 ]
 
-connections.each do |ssh|
-  ssh.exec &quot;grep something /in/some/files&quot;
-end
+<span class="ruby-identifier">connections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ssh</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;grep something /in/some/files&quot;</span>
+<span class="ruby-keyword">end</span>
 
-condition = Proc.new { |s| s.busy? }
+<span class="ruby-identifier">condition</span> = <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">busy?</span> }
 
-loop do
-  connections.delete_if { |ssh| !ssh.process(0.1, &amp;condition) }
-  break if connections.empty?
-end</pre>
+<span class="ruby-identifier">loop</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">connections</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ssh</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">process</span>(<span class="ruby-value">0.1</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">condition</span>) }
+  <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">connections</span>.<span class="ruby-identifier">empty?</span>
+<span class="ruby-keyword">end</span>
+</pre>
           
           
 
           
           <div class="method-source-code" id="process-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 205</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 215</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">wait</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-
-  <span class="ruby-identifier">r</span> = <span class="ruby-identifier">listeners</span>.<span class="ruby-identifier">keys</span>
-  <span class="ruby-identifier">w</span> = <span class="ruby-identifier">r</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">w2</span><span class="ruby-operator">|</span> <span class="ruby-identifier">w2</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:pending_write?</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">w2</span>.<span class="ruby-identifier">pending_write?</span> }
-  <span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>, = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Compat</span>.<span class="ruby-identifier">io_select</span>(<span class="ruby-identifier">r</span>, <span class="ruby-identifier">w</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">io_select_wait</span>(<span class="ruby-identifier">wait</span>))
-
-  <span class="ruby-identifier">postprocess</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>)
+  <span class="ruby-ivar">@event_loop</span>.<span class="ruby-identifier">process</span>(<span class="ruby-identifier">wait</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="ruby-keyword">rescue</span>
+  <span class="ruby-identifier">force_channel_cleanup_on_close</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">closed?</span>
+  <span class="ruby-identifier">raise</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- process-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- process-method -->
 
     
       <div id="method-i-send_global_request" class="method-detail ">
@@ -1237,14 +1766,13 @@ instance). However, there may be times when you need to send a global
 request that isn&#39;t explicitly handled by <a
 href="../../SSH.html">Net::SSH</a>, and so this method is available to you.</p>
 
-<pre class="ruby"><span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">send_global_request</span>(<span class="ruby-string">&quot;keep-alive@openssh.com&quot;</span>)
-</pre>
+<pre>ssh.send_global_request(&quot;keep-alive@openssh.com&quot;)</pre>
           
           
 
           
           <div class="method-source-code" id="send_global_request-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 270</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 299</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">send_global_request</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)
   <span class="ruby-identifier">info</span> { <span class="ruby-node">&quot;sending global request #{type}&quot;</span> }
   <span class="ruby-identifier">msg</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:byte</span>, <span class="ruby-constant">GLOBAL_REQUEST</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">type</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-value">:bool</span>, <span class="ruby-operator">!</span><span class="ruby-identifier">callback</span>.<span class="ruby-identifier">nil?</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra</span>)
@@ -1252,14 +1780,14 @@ href="../../SSH.html">Net::SSH</a>, and so this method is available to you.</p>
   <span class="ruby-identifier">pending_requests</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">callback</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">callback</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- send_global_request-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- send_global_request-method -->
 
     
       <div id="method-i-send_message" class="method-detail ">
@@ -1282,25 +1810,24 @@ protocol, or if you need to send a packet that <a
 href="../../SSH.html">Net::SSH</a> does not directly support, you can use
 this to send it.</p>
 
-<pre class="ruby"><span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(:<span class="ruby-identifier">byte</span>, <span class="ruby-constant">REQUEST_SUCCESS</span>).<span class="ruby-identifier">to_s</span>)
-</pre>
+<pre>ssh.send_message(Buffer.from(:byte, REQUEST_SUCCESS).to_s)</pre>
           
           
 
           
           <div class="method-source-code" id="send_message-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 379</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 431</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">message</span>)
   <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">enqueue_message</span>(<span class="ruby-identifier">message</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- send_message-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- send_message-method -->
 
     
       <div id="method-i-shutdown-21" class="method-detail ">
@@ -1325,18 +1852,18 @@ underlying protocol&#39;s state).</p>
 
           
           <div class="method-source-code" id="shutdown-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 127</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 135</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">shutdown!</span>
   <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">shutdown!</span>
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- shutdown-21-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- shutdown-21-method -->
 
     
       <div id="method-i-stop_listening_to" class="method-detail ">
@@ -1359,29 +1886,30 @@ event loop will no longer monitor it.</p>
 
           
           <div class="method-source-code" id="stop_listening_to-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 423</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 475</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">stop_listening_to</span>(<span class="ruby-identifier">io</span>)
   <span class="ruby-identifier">listeners</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">io</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div>
+          </div><!-- stop_listening_to-source -->
           
         </div>
 
         
 
         
-      </div>
+      </div><!-- stop_listening_to-method -->
 
     
-    </section>
+    </section><!-- public-instance-method-details -->
   
-  </section>
-</main>
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
 
 
-<footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.0.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
 </footer>
 

@@ -2,177 +2,547 @@
 
 <html>
 <head>
-<meta charset="UTF-8">
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>CHANGES - net-ssh 4.0.0.alpha2</title>
+<title>CHANGES - net-ssh 4.0.0.rc1</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
 
-<link href="./css/fonts.css" rel="stylesheet">
-<link href="./css/rdoc.css" rel="stylesheet">
 
-
-
-<body id="top" role="document" class="file">
-<nav role="navigation">
-  <div id="project-navigation">
-    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
-  <h2>
-    <a href="./index.html" rel="home">Home</a>
-  </h2>
-
-  <div id="table-of-contents-navigation">
-    <a href="./table_of_contents.html#pages">Pages</a>
+<body class="file">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
     <a href="./table_of_contents.html#classes">Classes</a>
     <a href="./table_of_contents.html#methods">Methods</a>
-  </div>
-</div>
+  </h3>
+</nav>
 
-    <div id="search-section" role="search" class="project-section initially-hidden">
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
   <form action="#" method="get" accept-charset="utf-8">
-    <div id="search-field-wrapper">
-      <input id="search-field" role="combobox" aria-label="Search"
-             aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
              title="Type to search, Up and Down to navigate, Enter to load">
-    </div>
-
-    <ul id="search-results" aria-label="Search Results"
-        aria-busy="false" aria-expanded="false"
-        aria-atomic="false" class="initially-hidden"></ul>
+    </h3>
   </form>
-</div>
 
-  </div>
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
 
   
-<div class="nav-section">
-  <h3>Table of Contents</h3>
-
-  <ul class="link-list" role="directory">
-    <li><a href="#label-4.0.0.alpha2">4.0.0.alpha2</a>
-    <li><a href="#label-4.0.0.alpha1">4.0.0.alpha1</a>
-    <li><a href="#label-3.1.0">3.1.0</a>
-    <li><a href="#label-3.1.0.rc1">3.1.0.rc1</a>
-    <li><a href="#label-3.1.0.beta3">3.1.0.beta3</a>
-    <li><a href="#label-3.1.0.beta2">3.1.0.beta2</a>
-    <li><a href="#label-3.0.2">3.0.2</a>
-    <li><a href="#label-3.0.2.rc1">3.0.2.rc1</a>
-    <li><a href="#label-3.0.1">3.0.1</a>
-    <li><a href="#label-3.0.1.rc1">3.0.1.rc1</a>
-    <li><a href="#label-3.0.0.rc1">3.0.0.rc1</a>
-    <li><a href="#label-2.10.1.rc2">2.10.1.rc2</a>
-    <li><a href="#label-2.10.1.rc1">2.10.1.rc1</a>
-    <li><a href="#label-2.10.0">2.10.0</a>
-    <li><a href="#label-2.10.0-beta2">2.10.0-beta2</a>
-    <li><a href="#label-2.10.0-beta1">2.10.0-beta1</a>
-    <li><a href="#label-2.9.4-beta1">2.9.4-beta1</a>
-    <li><a href="#label-2.9.3">2.9.3</a>
-    <li><a href="#label-2.9.2-rc3">2.9.2-rc3</a>
-    <li><a href="#label-2.9.2-rc2">2.9.2-rc2</a>
-    <li><a href="#label-2.9.2-rc1">2.9.2-rc1</a>
-    <li><a href="#label-2.9.2-beta">2.9.2-beta</a>
-    <li><a href="#label-2.9.1+-2F+13+May+2014">2.9.1 / 13 May 2014</a>
-    <li><a href="#label-2.9.0+-2F+30+Apr+2014">2.9.0 / 30 Apr 2014</a>
-    <li><a href="#label-2.8.1+-2F+19+Feb+2014">2.8.1 / 19 Feb 2014</a>
-    <li><a href="#label-2.8.0+-2F+01+Feb+2014">2.8.0 / 01 Feb 2014</a>
-    <li><a href="#label-2.7.0+-2F+11+Sep+2013">2.7.0 / 11 Sep 2013</a>
-    <li><a href="#label-2.6.8+-2F+6+Jul+2013">2.6.8 / 6 Jul 2013</a>
-    <li><a href="#label-2.6.7+-2F+11+Apr+2013">2.6.7 / 11 Apr 2013</a>
-    <li><a href="#label-2.6.6+-2F+03+Mar+2013">2.6.6 / 03 Mar 2013</a>
-    <li><a href="#label-2.6.5+-2F+06+Feb+2013">2.6.5 / 06 Feb 2013</a>
-    <li><a href="#label-2.6.4+-2F+06+Feb+2013">2.6.4 / 06 Feb 2013</a>
-    <li><a href="#label-2.6.3+-2F+10+Jan+2013">2.6.3 / 10 Jan 2013</a>
-    <li><a href="#label-2.6.2+-2F+22+Nov+2012">2.6.2 / 22 Nov 2012</a>
-    <li><a href="#label-2.6.1+-2F+18+Oct+2012">2.6.1 / 18 Oct 2012</a>
-    <li><a href="#label-2.6.0+-2F+19+Sep+2012">2.6.0 / 19 Sep 2012</a>
-    <li><a href="#label-2.5.2+-2F+25+May+2012">2.5.2 / 25 May 2012</a>
-    <li><a href="#label-2.5.1+-2F+24+May+2012">2.5.1 / 24 May 2012</a>
-    <li><a href="#label-2.5.0+-2F+24+May+2012">2.5.0 / 24 May 2012</a>
-    <li><a href="#label-2.4.0+-2F+17+May+2012">2.4.0 / 17 May 2012</a>
-    <li><a href="#label-2.3.0+-2F+11+Jan+2012">2.3.0 / 11 Jan 2012</a>
-    <li><a href="#label-2.2.2+-2F+04+Jan+2012">2.2.2 / 04 Jan 2012</a>
-    <li><a href="#label-2.2.1+-2F+24+Aug+2011">2.2.1 / 24 Aug 2011</a>
-    <li><a href="#label-2.2.0+-2F+16+Aug+2011">2.2.0 / 16 Aug 2011</a>
-    <li><a href="#label-2.1.4+-2F+3+Apr+2011">2.1.4 / 3 Apr 2011</a>
-    <li><a href="#label-2.1.3+-2F+2+Mar+2011">2.1.3 / 2 Mar 2011</a>
-    <li><a href="#label-2.1.2+-2F+1+Mar+2011">2.1.2 / 1 Mar 2011</a>
-    <li><a href="#label-2.1+-2F+19+Jan+2011">2.1 / 19 Jan 2011</a>
-    <li><a href="#label-2.0.24+-2F+14+Jan+2011">2.0.24 / 14 Jan 2011</a>
-    <li><a href="#label-2.0.23+-2F+03+Jun+2010">2.0.23 / 03 Jun 2010</a>
-    <li><a href="#label-2.0.22+-2F+20+Apr+2010">2.0.22 / 20 Apr 2010</a>
-    <li><a href="#label-2.0.21+-2F+20+Mar+2010">2.0.21 / 20 Mar 2010</a>
-    <li><a href="#label-2.0.20+-2F+10+Feb+2010">2.0.20 / 10 Feb 2010</a>
-    <li><a href="#label-2.0.19+-2F+16+Jan+2010">2.0.19 / 16 Jan 2010</a>
-    <li><a href="#label-2.0.18+-2F+15+Jan+2010">2.0.18 / 15 Jan 2010</a>
-    <li><a href="#label-2.0.17+-2F+14+Dec+2009">2.0.17 / 14 Dec 2009</a>
-    <li><a href="#label-2.0.16+-2F+28+Nov+2009">2.0.16 / 28 Nov 2009</a>
-    <li><a href="#label-2.0.15+-2F+03+Sep+2009">2.0.15 / 03 Sep 2009</a>
-    <li><a href="#label-2.0.14+-2F+28+Aug+2009">2.0.14 / 28 Aug 2009</a>
-    <li><a href="#label-2.0.13+-2F+17+Aug+2009">2.0.13 / 17 Aug 2009</a>
-    <li><a href="#label-2.0.12+-2F+08+Jun+2009">2.0.12 / 08 Jun 2009</a>
-    <li><a href="#label-2.0.11+-2F+24+Feb+2009">2.0.11 / 24 Feb 2009</a>
-    <li><a href="#label-2.0.10+-2F+4+Feb+2009">2.0.10 / 4 Feb 2009</a>
-    <li><a href="#label-2.0.9+-2F+1+Feb+2009">2.0.9 / 1 Feb 2009</a>
-    <li><a href="#label-2.0.8+-2F+29+December+2008">2.0.8 / 29 December 2008</a>
-    <li><a href="#label-2.0.7+-2F+29+December+2008">2.0.7 / 29 December 2008</a>
-    <li><a href="#label-2.0.6+-2F+6+December+2008">2.0.6 / 6 December 2008</a>
-    <li><a href="#label-2.0.5+-2F+6+December+2008">2.0.5 / 6 December 2008</a>
-    <li><a href="#label-2.0.4+-2F+27+Aug+2008">2.0.4 / 27 Aug 2008</a>
-    <li><a href="#label-2.0.3+-2F+27+Jun+2008">2.0.3 / 27 Jun 2008</a>
-    <li><a href="#label-2.0.2+-2F+29+May+2008">2.0.2 / 29 May 2008</a>
-    <li><a href="#label-2.0.1+-2F+5+May+2008">2.0.1 / 5 May 2008</a>
-    <li><a href="#label-2.0.0+-2F+1+May+2008">2.0.0 / 1 May 2008</a>
-    <li><a href="#label-2.0+Preview+Release+4+-281.99.3-29+-2F+19+Apr+2008">2.0 Preview Release 4 (1.99.3) / 19 Apr 2008</a>
-    <li><a href="#label-2.0+Preview+Release+3+-281.99.2-29+-2F+10+Apr+2008">2.0 Preview Release 3 (1.99.2) / 10 Apr 2008</a>
-    <li><a href="#label-2.0+Preview+Release+2+-281.99.1-29+-2F+22+Mar+2008">2.0 Preview Release 2 (1.99.1) / 22 Mar 2008</a>
-    <li><a href="#label-2.0+Preview+Release+1+-281.99.0-29+-2F+21+Aug+2007">2.0 Preview Release 1 (1.99.0) / 21 Aug 2007</a>
-  </ul>
+<div id="table-of-contents">
+  <nav class="section">
+    <h3 class="section-header">Table of Contents</h3>
+    <ul>
+      <li><a href="#label-4.0.0.rc1">4.0.0.rc1</a>
+      <li><a href="#label-4.0.0.beta4">4.0.0.beta4</a>
+      <li><a href="#label-4.0.0.beta3">4.0.0.beta3</a>
+      <li><a href="#label-4.0.0.beta2">4.0.0.beta2</a>
+      <li><a href="#label-4.0.0.beta1">4.0.0.beta1</a>
+      <li><a href="#label-4.0.0.alpha4">4.0.0.alpha4</a>
+      <li><a href="#label-4.0.0.alpha3">4.0.0.alpha3</a>
+      <li><a href="#label-4.0.0.alpha2">4.0.0.alpha2</a>
+      <li><a href="#label-4.0.0.alpha1">4.0.0.alpha1</a>
+      <li><a href="#label-3.1.0">3.1.0</a>
+      <li><a href="#label-3.1.0.rc1">3.1.0.rc1</a>
+      <li><a href="#label-3.1.0.beta3">3.1.0.beta3</a>
+      <li><a href="#label-3.1.0.beta2">3.1.0.beta2</a>
+      <li><a href="#label-3.0.2">3.0.2</a>
+      <li><a href="#label-3.0.2.rc1">3.0.2.rc1</a>
+      <li><a href="#label-3.0.1">3.0.1</a>
+      <li><a href="#label-3.0.1.rc1">3.0.1.rc1</a>
+      <li><a href="#label-3.0.0.rc1">3.0.0.rc1</a>
+      <li><a href="#label-2.10.1.rc2">2.10.1.rc2</a>
+      <li><a href="#label-2.10.1.rc1">2.10.1.rc1</a>
+      <li><a href="#label-2.10.0">2.10.0</a>
+      <li><a href="#label-2.10.0-beta2">2.10.0-beta2</a>
+      <li><a href="#label-2.10.0-beta1">2.10.0-beta1</a>
+      <li><a href="#label-2.9.4-beta1">2.9.4-beta1</a>
+      <li><a href="#label-2.9.3">2.9.3</a>
+      <li><a href="#label-2.9.2-rc3">2.9.2-rc3</a>
+      <li><a href="#label-2.9.2-rc2">2.9.2-rc2</a>
+      <li><a href="#label-2.9.2-rc1">2.9.2-rc1</a>
+      <li><a href="#label-2.9.2-beta">2.9.2-beta</a>
+      <li><a href="#label-2.9.1+%2F+13+May+2014">2.9.1 / 13 May 2014</a>
+      <li><a href="#label-2.9.0+%2F+30+Apr+2014">2.9.0 / 30 Apr 2014</a>
+      <li><a href="#label-2.8.1+%2F+19+Feb+2014">2.8.1 / 19 Feb 2014</a>
+      <li><a href="#label-2.8.0+%2F+01+Feb+2014">2.8.0 / 01 Feb 2014</a>
+      <li><a href="#label-2.7.0+%2F+11+Sep+2013">2.7.0 / 11 Sep 2013</a>
+      <li><a href="#label-2.6.8+%2F+6+Jul+2013">2.6.8 / 6 Jul 2013</a>
+      <li><a href="#label-2.6.7+%2F+11+Apr+2013">2.6.7 / 11 Apr 2013</a>
+      <li><a href="#label-2.6.6+%2F+03+Mar+2013">2.6.6 / 03 Mar 2013</a>
+      <li><a href="#label-2.6.5+%2F+06+Feb+2013">2.6.5 / 06 Feb 2013</a>
+      <li><a href="#label-2.6.4+%2F+06+Feb+2013">2.6.4 / 06 Feb 2013</a>
+      <li><a href="#label-2.6.3+%2F+10+Jan+2013">2.6.3 / 10 Jan 2013</a>
+      <li><a href="#label-2.6.2+%2F+22+Nov+2012">2.6.2 / 22 Nov 2012</a>
+      <li><a href="#label-2.6.1+%2F+18+Oct+2012">2.6.1 / 18 Oct 2012</a>
+      <li><a href="#label-2.6.0+%2F+19+Sep+2012">2.6.0 / 19 Sep 2012</a>
+      <li><a href="#label-2.5.2+%2F+25+May+2012">2.5.2 / 25 May 2012</a>
+      <li><a href="#label-2.5.1+%2F+24+May+2012">2.5.1 / 24 May 2012</a>
+      <li><a href="#label-2.5.0+%2F+24+May+2012">2.5.0 / 24 May 2012</a>
+      <li><a href="#label-2.4.0+%2F+17+May+2012">2.4.0 / 17 May 2012</a>
+      <li><a href="#label-2.3.0+%2F+11+Jan+2012">2.3.0 / 11 Jan 2012</a>
+      <li><a href="#label-2.2.2+%2F+04+Jan+2012">2.2.2 / 04 Jan 2012</a>
+      <li><a href="#label-2.2.1+%2F+24+Aug+2011">2.2.1 / 24 Aug 2011</a>
+      <li><a href="#label-2.2.0+%2F+16+Aug+2011">2.2.0 / 16 Aug 2011</a>
+      <li><a href="#label-2.1.4+%2F+3+Apr+2011">2.1.4 / 3 Apr 2011</a>
+      <li><a href="#label-2.1.3+%2F+2+Mar+2011">2.1.3 / 2 Mar 2011</a>
+      <li><a href="#label-2.1.2+%2F+1+Mar+2011">2.1.2 / 1 Mar 2011</a>
+      <li><a href="#label-2.1+%2F+19+Jan+2011">2.1 / 19 Jan 2011</a>
+      <li><a href="#label-2.0.24+%2F+14+Jan+2011">2.0.24 / 14 Jan 2011</a>
+      <li><a href="#label-2.0.23+%2F+03+Jun+2010">2.0.23 / 03 Jun 2010</a>
+      <li><a href="#label-2.0.22+%2F+20+Apr+2010">2.0.22 / 20 Apr 2010</a>
+      <li><a href="#label-2.0.21+%2F+20+Mar+2010">2.0.21 / 20 Mar 2010</a>
+      <li><a href="#label-2.0.20+%2F+10+Feb+2010">2.0.20 / 10 Feb 2010</a>
+      <li><a href="#label-2.0.19+%2F+16+Jan+2010">2.0.19 / 16 Jan 2010</a>
+      <li><a href="#label-2.0.18+%2F+15+Jan+2010">2.0.18 / 15 Jan 2010</a>
+      <li><a href="#label-2.0.17+%2F+14+Dec+2009">2.0.17 / 14 Dec 2009</a>
+      <li><a href="#label-2.0.16+%2F+28+Nov+2009">2.0.16 / 28 Nov 2009</a>
+      <li><a href="#label-2.0.15+%2F+03+Sep+2009">2.0.15 / 03 Sep 2009</a>
+      <li><a href="#label-2.0.14+%2F+28+Aug+2009">2.0.14 / 28 Aug 2009</a>
+      <li><a href="#label-2.0.13+%2F+17+Aug+2009">2.0.13 / 17 Aug 2009</a>
+      <li><a href="#label-2.0.12+%2F+08+Jun+2009">2.0.12 / 08 Jun 2009</a>
+      <li><a href="#label-2.0.11+%2F+24+Feb+2009">2.0.11 / 24 Feb 2009</a>
+      <li><a href="#label-2.0.10+%2F+4+Feb+2009">2.0.10 / 4 Feb 2009</a>
+      <li><a href="#label-2.0.9+%2F+1+Feb+2009">2.0.9 / 1 Feb 2009</a>
+      <li><a href="#label-2.0.8+%2F+29+December+2008">2.0.8 / 29 December 2008</a>
+      <li><a href="#label-2.0.7+%2F+29+December+2008">2.0.7 / 29 December 2008</a>
+      <li><a href="#label-2.0.6+%2F+6+December+2008">2.0.6 / 6 December 2008</a>
+      <li><a href="#label-2.0.5+%2F+6+December+2008">2.0.5 / 6 December 2008</a>
+      <li><a href="#label-2.0.4+%2F+27+Aug+2008">2.0.4 / 27 Aug 2008</a>
+      <li><a href="#label-2.0.3+%2F+27+Jun+2008">2.0.3 / 27 Jun 2008</a>
+      <li><a href="#label-2.0.2+%2F+29+May+2008">2.0.2 / 29 May 2008</a>
+      <li><a href="#label-2.0.1+%2F+5+May+2008">2.0.1 / 5 May 2008</a>
+      <li><a href="#label-2.0.0+%2F+1+May+2008">2.0.0 / 1 May 2008</a>
+      <li><a href="#label-2.0+Preview+Release+4+%281.99.3%29+%2F+19+Apr+2008">2.0 Preview Release 4 (1.99.3) / 19 Apr 2008</a>
+      <li><a href="#label-2.0+Preview+Release+3+%281.99.2%29+%2F+10+Apr+2008">2.0 Preview Release 3 (1.99.2) / 10 Apr 2008</a>
+      <li><a href="#label-2.0+Preview+Release+2+%281.99.1%29+%2F+22+Mar+2008">2.0 Preview Release 2 (1.99.1) / 22 Mar 2008</a>
+      <li><a href="#label-2.0+Preview+Release+1+%281.99.0%29+%2F+21+Aug+2007">2.0 Preview Release 1 (1.99.0) / 21 Aug 2007</a>
+    </ul>
+  </nav>
 </div>
 
 
   <div id="project-metadata">
-    <div id="fileindex-section" class="nav-section">
-  <h3>Pages</h3>
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./CHANGES_txt.html">CHANGES</a>
+  
+    <li class="file"><a href="./LICENSE_txt.html">LICENSE</a>
+  
+    <li class="file"><a href="./README_rdoc.html">README</a>
+  
+    <li class="file"><a href="./THANKS_txt.html">THANKS</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
 
   <ul class="link-list">
   
-    <li><a href="./CHANGES_txt.html">CHANGES</a>
+    <li><a href="./DL.html">DL</a>
   
-    <li><a href="./LICENSE_txt.html">LICENSE</a>
+    <li><a href="./DL/Fiddle.html">DL::Fiddle</a>
   
-    <li><a href="./README_rdoc.html">README</a>
+    <li><a href="./Net.html">Net</a>
   
-    <li><a href="./THANKS_txt.html">THANKS</a>
+    <li><a href="./Net/SSH.html">Net::SSH</a>
+  
+    <li><a href="./Net/SSH/Authentication.html">Net::SSH::Authentication</a>
+  
+    <li><a href="./Net/SSH/Authentication/Agent.html">Net::SSH::Authentication::Agent</a>
+  
+    <li><a href="./Net/SSH/Authentication/Agent/Comment.html">Net::SSH::Authentication::Agent::Comment</a>
+  
+    <li><a href="./Net/SSH/Authentication/AgentError.html">Net::SSH::Authentication::AgentError</a>
+  
+    <li><a href="./Net/SSH/Authentication/AgentNotAvailable.html">Net::SSH::Authentication::AgentNotAvailable</a>
+  
+    <li><a href="./Net/SSH/Authentication/Constants.html">Net::SSH::Authentication::Constants</a>
+  
+    <li><a href="./Net/SSH/Authentication/DisallowedMethod.html">Net::SSH::Authentication::DisallowedMethod</a>
+  
+    <li><a href="./Net/SSH/Authentication/ED25519.html">Net::SSH::Authentication::ED25519</a>
+  
+    <li><a href="./Net/SSH/Authentication/ED25519/PrivKey.html">Net::SSH::Authentication::ED25519::PrivKey</a>
+  
+    <li><a href="./Net/SSH/Authentication/ED25519/PubKey.html">Net::SSH::Authentication::ED25519::PubKey</a>
+  
+    <li><a href="./Net/SSH/Authentication/ED25519/SigningKeyFromFile.html">Net::SSH::Authentication::ED25519::SigningKeyFromFile</a>
+  
+    <li><a href="./Net/SSH/Authentication/ED25519Loader.html">Net::SSH::Authentication::ED25519Loader</a>
+  
+    <li><a href="./Net/SSH/Authentication/KeyManager.html">Net::SSH::Authentication::KeyManager</a>
+  
+    <li><a href="./Net/SSH/Authentication/KeyManagerError.html">Net::SSH::Authentication::KeyManagerError</a>
+  
+    <li><a href="./Net/SSH/Authentication/Methods.html">Net::SSH::Authentication::Methods</a>
+  
+    <li><a href="./Net/SSH/Authentication/Methods/Abstract.html">Net::SSH::Authentication::Methods::Abstract</a>
+  
+    <li><a href="./Net/SSH/Authentication/Methods/Hostbased.html">Net::SSH::Authentication::Methods::Hostbased</a>
+  
+    <li><a href="./Net/SSH/Authentication/Methods/KeyboardInteractive.html">Net::SSH::Authentication::Methods::KeyboardInteractive</a>
+  
+    <li><a href="./Net/SSH/Authentication/Methods/None.html">Net::SSH::Authentication::Methods::None</a>
+  
+    <li><a href="./Net/SSH/Authentication/Methods/Password.html">Net::SSH::Authentication::Methods::Password</a>
+  
+    <li><a href="./Net/SSH/Authentication/Methods/Publickey.html">Net::SSH::Authentication::Methods::Publickey</a>
+  
+    <li><a href="./Net/SSH/Authentication/Pageant.html">Net::SSH::Authentication::Pageant</a>
+  
+    <li><a href="./Net/SSH/Authentication/Pageant/Socket.html">Net::SSH::Authentication::Pageant::Socket</a>
+  
+    <li><a href="./Net/SSH/Authentication/Pageant/Win.html">Net::SSH::Authentication::Pageant::Win</a>
+  
+    <li><a href="./Net/SSH/Authentication/Pageant/Win/LibC.html">Net::SSH::Authentication::Pageant::Win::LibC</a>
+  
+    <li><a href="./Net/SSH/Authentication/Pageant/Win/LibC/FFI.html">Net::SSH::Authentication::Pageant::Win::LibC::FFI</a>
+  
+    <li><a href="./Net/SSH/Authentication/Pageant/Win/LibC/FFI/Library.html">Net::SSH::Authentication::Pageant::Win::LibC::FFI::Library</a>
+  
+    <li><a href="./Net/SSH/Authentication/Session.html">Net::SSH::Authentication::Session</a>
+  
+    <li><a href="./Net/SSH/AuthenticationFailed.html">Net::SSH::AuthenticationFailed</a>
+  
+    <li><a href="./Net/SSH/Buffer.html">Net::SSH::Buffer</a>
+  
+    <li><a href="./Net/SSH/BufferedIo.html">Net::SSH::BufferedIo</a>
+  
+    <li><a href="./Net/SSH/ChannelOpenFailed.html">Net::SSH::ChannelOpenFailed</a>
+  
+    <li><a href="./Net/SSH/ChannelRequestFailed.html">Net::SSH::ChannelRequestFailed</a>
+  
+    <li><a href="./Net/SSH/Compat.html">Net::SSH::Compat</a>
+  
+    <li><a href="./Net/SSH/Config.html">Net::SSH::Config</a>
+  
+    <li><a href="./Net/SSH/Connection.html">Net::SSH::Connection</a>
+  
+    <li><a href="./Net/SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a>
+  
+    <li><a href="./Net/SSH/Connection/Constants.html">Net::SSH::Connection::Constants</a>
+  
+    <li><a href="./Net/SSH/Connection/EventLoop.html">Net::SSH::Connection::EventLoop</a>
+  
+    <li><a href="./Net/SSH/Connection/Keepalive.html">Net::SSH::Connection::Keepalive</a>
+  
+    <li><a href="./Net/SSH/Connection/Session.html">Net::SSH::Connection::Session</a>
+  
+    <li><a href="./Net/SSH/Connection/Session/NilChannel.html">Net::SSH::Connection::Session::NilChannel</a>
+  
+    <li><a href="./Net/SSH/Connection/Session/StringWithExitstatus.html">Net::SSH::Connection::Session::StringWithExitstatus</a>
+  
+    <li><a href="./Net/SSH/Connection/SingleSessionEventLoop.html">Net::SSH::Connection::SingleSessionEventLoop</a>
+  
+    <li><a href="./Net/SSH/Connection/Term.html">Net::SSH::Connection::Term</a>
+  
+    <li><a href="./Net/SSH/ConnectionTimeout.html">Net::SSH::ConnectionTimeout</a>
+  
+    <li><a href="./Net/SSH/Disconnect.html">Net::SSH::Disconnect</a>
+  
+    <li><a href="./Net/SSH/Exception.html">Net::SSH::Exception</a>
+  
+    <li><a href="./Net/SSH/ForwardedBufferedIo.html">Net::SSH::ForwardedBufferedIo</a>
+  
+    <li><a href="./Net/SSH/HostKeyError.html">Net::SSH::HostKeyError</a>
+  
+    <li><a href="./Net/SSH/HostKeyMismatch.html">Net::SSH::HostKeyMismatch</a>
+  
+    <li><a href="./Net/SSH/HostKeyUnknown.html">Net::SSH::HostKeyUnknown</a>
+  
+    <li><a href="./Net/SSH/HostKeys.html">Net::SSH::HostKeys</a>
+  
+    <li><a href="./Net/SSH/KeyFactory.html">Net::SSH::KeyFactory</a>
+  
+    <li><a href="./Net/SSH/KeyFactory/OpenSSL.html">Net::SSH::KeyFactory::OpenSSL</a>
+  
+    <li><a href="./Net/SSH/KeyFactory/OpenSSL/PKey.html">Net::SSH::KeyFactory::OpenSSL::PKey</a>
+  
+    <li><a href="./Net/SSH/KnownHosts.html">Net::SSH::KnownHosts</a>
+  
+    <li><a href="./Net/SSH/KnownHosts/OpenSSL.html">Net::SSH::KnownHosts::OpenSSL</a>
+  
+    <li><a href="./Net/SSH/KnownHosts/OpenSSL/PKey.html">Net::SSH::KnownHosts::OpenSSL::PKey</a>
+  
+    <li><a href="./Net/SSH/Loggable.html">Net::SSH::Loggable</a>
+  
+    <li><a href="./Net/SSH/Packet.html">Net::SSH::Packet</a>
+  
+    <li><a href="./Net/SSH/Prompt.html">Net::SSH::Prompt</a>
+  
+    <li><a href="./Net/SSH/Prompt/Prompter.html">Net::SSH::Prompt::Prompter</a>
+  
+    <li><a href="./Net/SSH/Proxy.html">Net::SSH::Proxy</a>
+  
+    <li><a href="./Net/SSH/Proxy/Command.html">Net::SSH::Proxy::Command</a>
+  
+    <li><a href="./Net/SSH/Proxy/ConnectError.html">Net::SSH::Proxy::ConnectError</a>
+  
+    <li><a href="./Net/SSH/Proxy/Error.html">Net::SSH::Proxy::Error</a>
+  
+    <li><a href="./Net/SSH/Proxy/HTTP.html">Net::SSH::Proxy::HTTP</a>
+  
+    <li><a href="./Net/SSH/Proxy/HTTPS.html">Net::SSH::Proxy::HTTPS</a>
+  
+    <li><a href="./Net/SSH/Proxy/HTTPS/SSLSocketCompatibility.html">Net::SSH::Proxy::HTTPS::SSLSocketCompatibility</a>
+  
+    <li><a href="./Net/SSH/Proxy/SOCKS4.html">Net::SSH::Proxy::SOCKS4</a>
+  
+    <li><a href="./Net/SSH/Proxy/SOCKS5.html">Net::SSH::Proxy::SOCKS5</a>
+  
+    <li><a href="./Net/SSH/Proxy/UnauthorizedError.html">Net::SSH::Proxy::UnauthorizedError</a>
+  
+    <li><a href="./Net/SSH/Service.html">Net::SSH::Service</a>
+  
+    <li><a href="./Net/SSH/Service/Forward.html">Net::SSH::Service::Forward</a>
+  
+    <li><a href="./Net/SSH/Test.html">Net::SSH::Test</a>
+  
+    <li><a href="./Net/SSH/Test/Channel.html">Net::SSH::Test::Channel</a>
+  
+    <li><a href="./Net/SSH/Test/Extensions.html">Net::SSH::Test::Extensions</a>
+  
+    <li><a href="./Net/SSH/Test/Extensions/BufferedIo.html">Net::SSH::Test::Extensions::BufferedIo</a>
+  
+    <li><a href="./Net/SSH/Test/Extensions/Channel.html">Net::SSH::Test::Extensions::Channel</a>
+  
+    <li><a href="./Net/SSH/Test/Extensions/IO.html">Net::SSH::Test::Extensions::IO</a>
+  
+    <li><a href="./Net/SSH/Test/Extensions/IO/ClassMethods.html">Net::SSH::Test::Extensions::IO::ClassMethods</a>
+  
+    <li><a href="./Net/SSH/Test/Extensions/PacketStream.html">Net::SSH::Test::Extensions::PacketStream</a>
+  
+    <li><a href="./Net/SSH/Test/Kex.html">Net::SSH::Test::Kex</a>
+  
+    <li><a href="./Net/SSH/Test/LocalPacket.html">Net::SSH::Test::LocalPacket</a>
+  
+    <li><a href="./Net/SSH/Test/Packet.html">Net::SSH::Test::Packet</a>
+  
+    <li><a href="./Net/SSH/Test/RemotePacket.html">Net::SSH::Test::RemotePacket</a>
+  
+    <li><a href="./Net/SSH/Test/Script.html">Net::SSH::Test::Script</a>
+  
+    <li><a href="./Net/SSH/Test/Socket.html">Net::SSH::Test::Socket</a>
+  
+    <li><a href="./Net/SSH/Timeout.html">Net::SSH::Timeout</a>
+  
+    <li><a href="./Net/SSH/Transport.html">Net::SSH::Transport</a>
+  
+    <li><a href="./Net/SSH/Transport/Algorithms.html">Net::SSH::Transport::Algorithms</a>
+  
+    <li><a href="./Net/SSH/Transport/Algorithms/OpenSSL.html">Net::SSH::Transport::Algorithms::OpenSSL</a>
+  
+    <li><a href="./Net/SSH/Transport/Algorithms/OpenSSL/PKey.html">Net::SSH::Transport::Algorithms::OpenSSL::PKey</a>
+  
+    <li><a href="./Net/SSH/Transport/CTR.html">Net::SSH::Transport::CTR</a>
+  
+    <li><a href="./Net/SSH/Transport/CipherFactory.html">Net::SSH::Transport::CipherFactory</a>
+  
+    <li><a href="./Net/SSH/Transport/Constants.html">Net::SSH::Transport::Constants</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC.html">Net::SSH::Transport::HMAC</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/Abstract.html">Net::SSH::Transport::HMAC::Abstract</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/MD5.html">Net::SSH::Transport::HMAC::MD5</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/MD5/OpenSSL.html">Net::SSH::Transport::HMAC::MD5::OpenSSL</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/MD5/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::MD5::OpenSSL::Digest</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/MD5_96.html">Net::SSH::Transport::HMAC::MD5_96</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/None.html">Net::SSH::Transport::HMAC::None</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/RIPEMD160.html">Net::SSH::Transport::HMAC::RIPEMD160</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/RIPEMD160/OpenSSL.html">Net::SSH::Transport::HMAC::RIPEMD160::OpenSSL</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/RIPEMD160/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::RIPEMD160::OpenSSL::Digest</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/SHA1.html">Net::SSH::Transport::HMAC::SHA1</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/SHA1/OpenSSL.html">Net::SSH::Transport::HMAC::SHA1::OpenSSL</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/SHA1/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::SHA1::OpenSSL::Digest</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/SHA1_96.html">Net::SSH::Transport::HMAC::SHA1_96</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/SHA2_256.html">Net::SSH::Transport::HMAC::SHA2_256</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/SHA2_256_96.html">Net::SSH::Transport::HMAC::SHA2_256_96</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/SHA2_512.html">Net::SSH::Transport::HMAC::SHA2_512</a>
+  
+    <li><a href="./Net/SSH/Transport/HMAC/SHA2_512_96.html">Net::SSH::Transport::HMAC::SHA2_512_96</a>
+  
+    <li><a href="./Net/SSH/Transport/IdentityCipher.html">Net::SSH::Transport::IdentityCipher</a>
+  
+    <li><a href="./Net/SSH/Transport/Kex.html">Net::SSH::Transport::Kex</a>
+  
+    <li><a href="./Net/SSH/Transport/Kex/DiffieHellmanGroup14SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup14SHA1</a>
+  
+    <li><a href="./Net/SSH/Transport/Kex/DiffieHellmanGroup1SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1</a>
+  
+    <li><a href="./Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA1</a>
+  
+    <li><a href="./Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA256.html">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256</a>
+  
+    <li><a href="./Net/SSH/Transport/Kex/EcdhSHA2NistP256.html">Net::SSH::Transport::Kex::EcdhSHA2NistP256</a>
+  
+    <li><a href="./Net/SSH/Transport/Kex/EcdhSHA2NistP384.html">Net::SSH::Transport::Kex::EcdhSHA2NistP384</a>
+  
+    <li><a href="./Net/SSH/Transport/Kex/EcdhSHA2NistP521.html">Net::SSH::Transport::Kex::EcdhSHA2NistP521</a>
+  
+    <li><a href="./Net/SSH/Transport/KeyExpander.html">Net::SSH::Transport::KeyExpander</a>
+  
+    <li><a href="./Net/SSH/Transport/PacketStream.html">Net::SSH::Transport::PacketStream</a>
+  
+    <li><a href="./Net/SSH/Transport/ServerVersion.html">Net::SSH::Transport::ServerVersion</a>
+  
+    <li><a href="./Net/SSH/Transport/Session.html">Net::SSH::Transport::Session</a>
+  
+    <li><a href="./Net/SSH/Transport/State.html">Net::SSH::Transport::State</a>
+  
+    <li><a href="./Net/SSH/Verifiers.html">Net::SSH::Verifiers</a>
+  
+    <li><a href="./Net/SSH/Verifiers/Lenient.html">Net::SSH::Verifiers::Lenient</a>
+  
+    <li><a href="./Net/SSH/Verifiers/Null.html">Net::SSH::Verifiers::Null</a>
+  
+    <li><a href="./Net/SSH/Verifiers/Secure.html">Net::SSH::Verifiers::Secure</a>
+  
+    <li><a href="./Net/SSH/Verifiers/Strict.html">Net::SSH::Verifiers::Strict</a>
+  
+    <li><a href="./Net/SSH/Version.html">Net::SSH::Version</a>
+  
+    <li><a href="./OpenSSL.html">OpenSSL</a>
+  
+    <li><a href="./OpenSSL/BN.html">OpenSSL::BN</a>
+  
+    <li><a href="./OpenSSL/Digest.html">OpenSSL::Digest</a>
+  
+    <li><a href="./OpenSSL/PKey.html">OpenSSL::PKey</a>
+  
+    <li><a href="./OpenSSL/PKey/DH.html">OpenSSL::PKey::DH</a>
+  
+    <li><a href="./OpenSSL/PKey/DSA.html">OpenSSL::PKey::DSA</a>
+  
+    <li><a href="./OpenSSL/PKey/EC.html">OpenSSL::PKey::EC</a>
+  
+    <li><a href="./OpenSSL/PKey/OpenSSL.html">OpenSSL::PKey::OpenSSL</a>
+  
+    <li><a href="./OpenSSL/PKey/OpenSSL/PKey.html">OpenSSL::PKey::OpenSSL::PKey</a>
+  
+    <li><a href="./OpenSSL/PKey/OpenSSL/PKey/OpenSSL.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL</a>
+  
+    <li><a href="./OpenSSL/PKey/OpenSSL/PKey/OpenSSL/PKey.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL::PKey</a>
+  
+    <li><a href="./OpenSSL/PKey/OpenSSL/PKey/OpenSSL/PKey/ECError.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL::PKey::ECError</a>
+  
+    <li><a href="./OpenSSL/PKey/PKey.html">OpenSSL::PKey::PKey</a>
+  
+    <li><a href="./OpenSSL/PKey/RSA.html">OpenSSL::PKey::RSA</a>
+  
+    <li><a href="./String.html">String</a>
   
   </ul>
-</div>
+</nav>
 
   </div>
 </nav>
 
-<main role="main" aria-label="Page CHANGES.txt">
+<div id="documentation" class="description">
+  
+<h3 id="label-4.0.0.rc1">4.0.0.rc1<span><a href="#label-4.0.0.rc1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 
-<h3 id="label-4.0.0.alpha2">4.0.0.alpha2<span><a href="#label-4.0.0.alpha2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<pre>* Allow :password to be nil for capistrano v2 compatibility [Will Bryant, #357]
+* In next_packet if prefer consuming buffer before filling it again if we have enough data [Miklós Fazekas, #454]</pre>
+
+<h3 id="label-4.0.0.beta4">4.0.0.beta4<span><a href="#label-4.0.0.beta4">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+
+<pre>* Added exitstatus method to exec&#39;s return [Miklós Fazekas, #452]
+* Don&#39;t raise from exec if server closes transport just after channel close [Miklós Fazekas, #450]
+* Removed java_pageant, as jruby should be using regular pagent impl [Miklós Fazekas, ]
+* Use SSH_AUTH_SOCK if possible on windows (cygwin) [Miklós Fazekas, Martin Dürst, #365, #361]
+* HTTPS proxy support [Marcus Ilgner, #432]
+* Supports ruby 2.4.0.dev new exception type from OpenSSL::PKey.read</pre>
+
+<h3 id="label-4.0.0.beta3">4.0.0.beta3<span><a href="#label-4.0.0.beta3">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+
+<pre>* Fix Net::SSH::Disconnect exceptions when channels are closed cleanly [Miklos Fazekas, #421, #422]</pre>
+
+<h3 id="label-4.0.0.beta2">4.0.0.beta2<span><a href="#label-4.0.0.beta2">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+
+<pre>* Fix raiseUnlessLoaded undefined ERROR issue [Miklos Fazekas, #418]</pre>
+
+<h3 id="label-4.0.0.beta1">4.0.0.beta1<span><a href="#label-4.0.0.beta1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+<ul><li>
+<p>Fix pageant [elconas, #235]</p>
+</li><li>
+<p>Relaxed rbnacl,rbnacl-selenium contstraints ang give better errors about
+them [Miklos Fazekas, #398]</p>
+</li><li>
+<p>Fix UTF-8 encoding issues [Ethan J. Brown, #407]</p>
+</li></ul>
+
+<h3 id="label-4.0.0.alpha4">4.0.0.alpha4<span><a href="#label-4.0.0.alpha4">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+<ul><li>
+<p>Experimental event loop abstraction [Miklos Fazekas]</p>
+</li><li>
+<p>RbNacl dependency is optional [Miklos Fazekas]</p>
+</li><li>
+<p>agent_socket_factory option [Alon Goldboim]</p>
+</li><li>
+<p>client sends KEXINIT, it doesn&#39;t have to wait for server [Miklos
+Fazekas]</p>
+</li><li>
+<p>better error message when option is nil [Kane Morgan]</p>
+</li><li>
+<p>prompting can be customized [Miklos Fazekas]</p>
+</li></ul>
+
+<h3 id="label-4.0.0.alpha3">4.0.0.alpha3<span><a href="#label-4.0.0.alpha3">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+<ul><li>
+<p>added max_select_wait_time [Eugene Kenny]</p>
+</li></ul>
+
+<h3 id="label-4.0.0.alpha2">4.0.0.alpha2<span><a href="#label-4.0.0.alpha2">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>when transport closes we&#39;re cleaning up channels [Miklos Fazekas]</p>
 </li></ul>
 
-<h3 id="label-4.0.0.alpha1">4.0.0.alpha1<span><a href="#label-4.0.0.alpha1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-4.0.0.alpha1">4.0.0.alpha1<span><a href="#label-4.0.0.alpha1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>ed25519 key support [Miklos Fazekas]</p>
 </li><li>
 <p>removed camellia [Miklos Fazekas]</p>
 </li></ul>
 
-<h3 id="label-3.1.0">3.1.0<span><a href="#label-3.1.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-3.1.0">3.1.0<span><a href="#label-3.1.0">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 
-<h3 id="label-3.1.0.rc1">3.1.0.rc1<span><a href="#label-3.1.0.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-3.1.0.rc1">3.1.0.rc1<span><a href="#label-3.1.0.rc1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>fix Secure#verify [Jean Boussier]</p>
 </li><li>
@@ -180,7 +550,7 @@
 configured [Eugene Kenny]</p>
 </li></ul>
 
-<h3 id="label-3.1.0.beta3">3.1.0.beta3<span><a href="#label-3.1.0.beta3">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-3.1.0.beta3">3.1.0.beta3<span><a href="#label-3.1.0.beta3">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>forward/on_open_failed should stop listning closed socket otherwise it
 locks #269 [Miklos Fazekas,Scott McGillivray]</p>
@@ -188,7 +558,7 @@ locks #269 [Miklos Fazekas,Scott McGillivray]</p>
 <p>fix incorrect pattern handling in config files #310 [Miklos Fazekas]</p>
 </li></ul>
 
-<h3 id="label-3.1.0.beta2">3.1.0.beta2<span><a href="#label-3.1.0.beta2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-3.1.0.beta2">3.1.0.beta2<span><a href="#label-3.1.0.beta2">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>trying to execute something on a not yet opend channel throws nicer messag
 [Miklos Fazekas]</p>
@@ -208,9 +578,9 @@ implementations [Jean Boussier]</p>
 Miklos Fazekas]</p>
 </li></ul>
 
-<h3 id="label-3.0.2">3.0.2<span><a href="#label-3.0.2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-3.0.2">3.0.2<span><a href="#label-3.0.2">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 
-<h3 id="label-3.0.2.rc1">3.0.2.rc1<span><a href="#label-3.0.2.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-3.0.2.rc1">3.0.2.rc1<span><a href="#label-3.0.2.rc1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>fixed rare WaitWritable error with proxy commands [Miklos Fazkas, Andre
 Meij]]</p>
@@ -222,9 +592,9 @@ config has no entry we default to Etc.getlogin</p>
 [Christopher F. Auston]</p>
 </li></ul>
 
-<h3 id="label-3.0.1">3.0.1<span><a href="#label-3.0.1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-3.0.1">3.0.1<span><a href="#label-3.0.1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 
-<h3 id="label-3.0.1.rc1">3.0.1.rc1<span><a href="#label-3.0.1.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-3.0.1.rc1">3.0.1.rc1<span><a href="#label-3.0.1.rc1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Breaking change from 2.* series: exec! without block now returns empty
 string instread of nil if command has no output [<a
@@ -237,24 +607,24 @@ href="Net/SSH/ConnectionTimeout.html">Net::SSH::ConnectionTimeout</a> from
 connection timeout [Carl Hoerberg]</p>
 </li></ul>
 
-<h3 id="label-3.0.0.rc1">3.0.0.rc1<span><a href="#label-3.0.0.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-3.0.0.rc1">3.0.0.rc1<span><a href="#label-3.0.0.rc1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>SemVer: Major version change because of dropping of ruby 1.9</p>
 </li></ul>
 
-<h3 id="label-2.10.1.rc2">2.10.1.rc2<span><a href="#label-2.10.1.rc2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.10.1.rc2">2.10.1.rc2<span><a href="#label-2.10.1.rc2">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Win: Use fiddle on ruby 2.1 too [Charlie Savage]</p>
 </li></ul>
 
-<h3 id="label-2.10.1.rc1">2.10.1.rc1<span><a href="#label-2.10.1.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.10.1.rc1">2.10.1.rc1<span><a href="#label-2.10.1.rc1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Added ruby 2.0 requirement to gemspec [Alex Schultz]</p>
 </li></ul>
 
-<h3 id="label-2.10.0">2.10.0<span><a href="#label-2.10.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.10.0">2.10.0<span><a href="#label-2.10.0">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 
-<h3 id="label-2.10.0-beta2">2.10.0-beta2<span><a href="#label-2.10.0-beta2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.10.0-beta2">2.10.0-beta2<span><a href="#label-2.10.0-beta2">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix :passphrase option with :non_interactive [Jeremy Stanley]</p>
 </li><li>
@@ -267,7 +637,7 @@ Hörberg]</p>
 like connect_timeout</p>
 </li></ul>
 
-<h3 id="label-2.10.0-beta1">2.10.0-beta1<span><a href="#label-2.10.0-beta1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.10.0-beta1">2.10.0-beta1<span><a href="#label-2.10.0-beta1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix could not parse PKey error. [Andrey Voronkov]</p>
 </li><li>
@@ -289,7 +659,7 @@ authmethod to fail rather than prompt. [mfazekas]</p>
 <p>2.9.1 behaviour of never asking password please set
 number_of_password_prompts to 0.</p>
 
-<h3 id="label-2.9.4-beta1">2.9.4-beta1<span><a href="#label-2.9.4-beta1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.9.4-beta1">2.9.4-beta1<span><a href="#label-2.9.4-beta1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Use sysread and syswrite on Windows instead of read_nonblock and write
 [marc-etienne]</p>
@@ -299,27 +669,27 @@ number_of_password_prompts to 0.</p>
 <p>Check if ssh key is a file [kiela]</p>
 </li></ul>
 
-<h3 id="label-2.9.3">2.9.3<span><a href="#label-2.9.3">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.9.3">2.9.3<span><a href="#label-2.9.3">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 
-<h3 id="label-2.9.2-rc3">2.9.2-rc3<span><a href="#label-2.9.2-rc3">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.9.2-rc3">2.9.2-rc3<span><a href="#label-2.9.2-rc3">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Remove advertised algorithms that were not working
 (curve25519-sha256@libssh.org) [mfazekas]</p>
 </li></ul>
 
-<h3 id="label-2.9.2-rc2">2.9.2-rc2<span><a href="#label-2.9.2-rc2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.9.2-rc2">2.9.2-rc2<span><a href="#label-2.9.2-rc2">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>number_of_password_prompts is now accepted as ssh option, by setting it 0
 net-ssh will not ask for password for password auth as with previous
 versions [mfazekas]</p>
 </li></ul>
 
-<h3 id="label-2.9.2-rc1">2.9.2-rc1<span><a href="#label-2.9.2-rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.9.2-rc1">2.9.2-rc1<span><a href="#label-2.9.2-rc1">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Documentation fixes and refactoring to keepalive [detiber, mfazekas]</p>
 </li></ul>
 
-<h3 id="label-2.9.2-beta">2.9.2-beta<span><a href="#label-2.9.2-beta">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.9.2-beta">2.9.2-beta<span><a href="#label-2.9.2-beta">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Remove advertised algorithms that were not working (ssh-rsa-cert-* *ed25519
 acm*-gcm@openssh.com) [mfazekas]</p>
@@ -332,7 +702,7 @@ number_of_password_prompts) [mfazekas]</p>
 <p>Removed warnings [amatsuda]</p>
 </li></ul>
 
-<h3 id="label-2.9.1+-2F+13+May+2014">2.9.1 / 13 May 2014<span><a href="#label-2.9.1+-2F+13+May+2014">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.9.1+%2F+13+May+2014">2.9.1 / 13 May 2014<span><a href="#label-2.9.1+%2F+13+May+2014">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix for unknown response from agent on Windows with 64-bit PuTTY [chrahunt]</p>
 </li><li>
@@ -340,7 +710,7 @@ number_of_password_prompts) [mfazekas]</p>
 [nirvdrum]</p>
 </li></ul>
 
-<h3 id="label-2.9.0+-2F+30+Apr+2014">2.9.0 / 30 Apr 2014<span><a href="#label-2.9.0+-2F+30+Apr+2014">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.9.0+%2F+30+Apr+2014">2.9.0 / 30 Apr 2014<span><a href="#label-2.9.0+%2F+30+Apr+2014">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>New ciphers [chr4]</p>
 <ul><li>
@@ -367,14 +737,14 @@ curve25519-sha256@libssh.org</p>
 <p>Added gem signing (again) with new cert [delano]</p>
 </li></ul>
 
-<h3 id="label-2.8.1+-2F+19+Feb+2014">2.8.1 / 19 Feb 2014<span><a href="#label-2.8.1+-2F+19+Feb+2014">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.8.1+%2F+19+Feb+2014">2.8.1 / 19 Feb 2014<span><a href="#label-2.8.1+%2F+19+Feb+2014">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Correct location of global known_hosts files [mfischer-zd]</p>
 </li><li>
 <p>Fix for password authentication [blackpond, zachlipton, delano]</p>
 </li></ul>
 
-<h3 id="label-2.8.0+-2F+01+Feb+2014">2.8.0 / 01 Feb 2014<span><a href="#label-2.8.0+-2F+01+Feb+2014">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.8.0+%2F+01+Feb+2014">2.8.0 / 01 Feb 2014<span><a href="#label-2.8.0+%2F+01+Feb+2014">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Handle ssh-rsa and ssh-dss certificate files [bobveznat]</p>
 </li><li>
@@ -408,7 +778,7 @@ OpenSSH [yugui]</p>
 root namespace” [dave.sieh]</p>
 </li></ul>
 
-<h3 id="label-2.7.0+-2F+11+Sep+2013">2.7.0 / 11 Sep 2013<span><a href="#label-2.7.0+-2F+11+Sep+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.7.0+%2F+11+Sep+2013">2.7.0 / 11 Sep 2013<span><a href="#label-2.7.0+%2F+11+Sep+2013">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix for &#39;Could not parse PKey: no start line&#39; error on private keys
 with passphrases (issue #101) [metametaclass]</p>
@@ -422,7 +792,7 @@ href="Net/SSH/Proxy/HTTP.html">Net::SSH::Proxy::HTTP</a> [krishicks]</p>
 <p>Implemented experimental keepalive feature [noric]</p>
 </li></ul>
 
-<h3 id="label-2.6.8+-2F+6+Jul+2013">2.6.8 / 6 Jul 2013<span><a href="#label-2.6.8+-2F+6+Jul+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.6.8+%2F+6+Jul+2013">2.6.8 / 6 Jul 2013<span><a href="#label-2.6.8+%2F+6+Jul+2013">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Added support for host wildcard substitution [GabKlein]</p>
 </li><li>
@@ -432,7 +802,7 @@ Kalderimis]</p>
 <p>Fixed test file encoding issues with Ruby 2.0 (#87) [voxik]</p>
 </li></ul>
 
-<h3 id="label-2.6.7+-2F+11+Apr+2013">2.6.7 / 11 Apr 2013<span><a href="#label-2.6.7+-2F+11+Apr+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.6.7+%2F+11+Apr+2013">2.6.7 / 11 Apr 2013<span><a href="#label-2.6.7+%2F+11+Apr+2013">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Decreased default packet size to 32768 as described in RFC 4253 [Olipro]</p>
 </li><li>
@@ -440,31 +810,31 @@ Kalderimis]</p>
 href="Net/SSH.html#method-c-start">Net::SSH.start</a> [Olipro]</p>
 </li></ul>
 
-<h3 id="label-2.6.6+-2F+03+Mar+2013">2.6.6 / 03 Mar 2013<span><a href="#label-2.6.6+-2F+03+Mar+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.6.6+%2F+03+Mar+2013">2.6.6 / 03 Mar 2013<span><a href="#label-2.6.6+%2F+03+Mar+2013">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix for ruby 2.0 in windows [jansegre]</p>
 </li></ul>
 
-<h3 id="label-2.6.5+-2F+06+Feb+2013">2.6.5 / 06 Feb 2013<span><a href="#label-2.6.5+-2F+06+Feb+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.6.5+%2F+06+Feb+2013">2.6.5 / 06 Feb 2013<span><a href="#label-2.6.5+%2F+06+Feb+2013">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fixed path in gemspec [thanks priteau]</p>
 </li></ul>
 
-<h3 id="label-2.6.4+-2F+06+Feb+2013">2.6.4 / 06 Feb 2013<span><a href="#label-2.6.4+-2F+06+Feb+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.6.4+%2F+06+Feb+2013">2.6.4 / 06 Feb 2013<span><a href="#label-2.6.4+%2F+06+Feb+2013">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Added license info to gemspec [jordimassaguerpla]</p>
 </li><li>
 <p>Added public cert. All gem releases are now signed.</p>
 </li></ul>
 
-<h3 id="label-2.6.3+-2F+10+Jan+2013">2.6.3 / 10 Jan 2013<span><a href="#label-2.6.3+-2F+10+Jan+2013">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.6.3+%2F+10+Jan+2013">2.6.3 / 10 Jan 2013<span><a href="#label-2.6.3+%2F+10+Jan+2013">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Small doc fix and correct error class for PKey::EC key type [Andreas Wolff]</p>
 </li><li>
 <p>Improve test dependencies [Kenichi Kamiya]</p>
 </li></ul>
 
-<h3 id="label-2.6.2+-2F+22+Nov+2012">2.6.2 / 22 Nov 2012<span><a href="#label-2.6.2+-2F+22+Nov+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.6.2+%2F+22+Nov+2012">2.6.2 / 22 Nov 2012<span><a href="#label-2.6.2+%2F+22+Nov+2012">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p><a href="Net/SSH.html#method-c-start">Net::SSH.start</a> now returns result
 of block [mhuffnagle]</p>
@@ -475,14 +845,14 @@ of block [mhuffnagle]</p>
 <p>Fix Invalid key size in JRuby [ohrite]</p>
 </li></ul>
 
-<h3 id="label-2.6.1+-2F+18+Oct+2012">2.6.1 / 18 Oct 2012<span><a href="#label-2.6.1+-2F+18+Oct+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.6.1+%2F+18+Oct+2012">2.6.1 / 18 Oct 2012<span><a href="#label-2.6.1+%2F+18+Oct+2012">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Remove platform specific jruby dependency from gemspec</p>
 </li><li>
 <p>Changed encoding of file to prevent warnings when generating docs [iltempo]</p>
 </li></ul>
 
-<h3 id="label-2.6.0+-2F+19+Sep+2012">2.6.0 / 19 Sep 2012<span><a href="#label-2.6.0+-2F+19+Sep+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.6.0+%2F+19+Sep+2012">2.6.0 / 19 Sep 2012<span><a href="#label-2.6.0+%2F+19+Sep+2012">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Use OpenSSL::PKey.read to read arbitrary private key. [nagachika]</p>
 </li><li>
@@ -496,17 +866,17 @@ of block [mhuffnagle]</p>
 <p>Add class for stricter host key verification [Andy Brody]</p>
 </li></ul>
 
-<h3 id="label-2.5.2+-2F+25+May+2012">2.5.2 / 25 May 2012<span><a href="#label-2.5.2+-2F+25+May+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.5.2+%2F+25+May+2012">2.5.2 / 25 May 2012<span><a href="#label-2.5.2+%2F+25+May+2012">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix for Net::SSH::KnownHosts::SUPPORTED_TYPE [Marco Sandrini]</p>
 </li></ul>
 
-<h3 id="label-2.5.1+-2F+24+May+2012">2.5.1 / 24 May 2012<span><a href="#label-2.5.1+-2F+24+May+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.5.1+%2F+24+May+2012">2.5.1 / 24 May 2012<span><a href="#label-2.5.1+%2F+24+May+2012">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Added missing file to manifest [Marco Sandrini]</p>
 </li></ul>
 
-<h3 id="label-2.5.0+-2F+24+May+2012">2.5.0 / 24 May 2012<span><a href="#label-2.5.0+-2F+24+May+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.5.0+%2F+24+May+2012">2.5.0 / 24 May 2012<span><a href="#label-2.5.0+%2F+24+May+2012">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Implement many algorithms [Ryosuke Yamazaki]</p>
 <ul><li>
@@ -549,25 +919,25 @@ of block [mhuffnagle]</p>
 </li></ul>
 </li></ul>
 
-<h3 id="label-2.4.0+-2F+17+May+2012">2.4.0 / 17 May 2012<span><a href="#label-2.4.0+-2F+17+May+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.4.0+%2F+17+May+2012">2.4.0 / 17 May 2012<span><a href="#label-2.4.0+%2F+17+May+2012">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Support for JRuby + Pageant + Windows [arturaz]</p>
 </li></ul>
 
-<h3 id="label-2.3.0+-2F+11+Jan+2012">2.3.0 / 11 Jan 2012<span><a href="#label-2.3.0+-2F+11+Jan+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.3.0+%2F+11+Jan+2012">2.3.0 / 11 Jan 2012<span><a href="#label-2.3.0+%2F+11+Jan+2012">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Support for hmac-sha2 and diffie-hellman-group-exchange-sha256 [Ryosuke
 Yamazaki]</p>
 </li></ul>
 
-<h3 id="label-2.2.2+-2F+04+Jan+2012">2.2.2 / 04 Jan 2012<span><a href="#label-2.2.2+-2F+04+Jan+2012">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.2.2+%2F+04+Jan+2012">2.2.2 / 04 Jan 2012<span><a href="#label-2.2.2+%2F+04+Jan+2012">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fixed: Connection hangs on ServerVersion.new(socket, logger) [muffl0n]</p>
 </li><li>
 <p>Avoid dying when unsupported auth mechanisms are defined [pcn]</p>
 </li></ul>
 
-<h3 id="label-2.2.1+-2F+24+Aug+2011">2.2.1 / 24 Aug 2011<span><a href="#label-2.2.1+-2F+24+Aug+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.2.1+%2F+24+Aug+2011">2.2.1 / 24 Aug 2011<span><a href="#label-2.2.1+%2F+24+Aug+2011">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Do not prompt any passphrases before trying all identities from agent.
 [musybite]</p>
@@ -575,25 +945,25 @@ Yamazaki]</p>
 <pre>(see: http://net-ssh.lighthouseapp.com/projects/36253-net-ssh/tickets/30)</pre>
 </li></ul>
 
-<h3 id="label-2.2.0+-2F+16+Aug+2011">2.2.0 / 16 Aug 2011<span><a href="#label-2.2.0+-2F+16+Aug+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.2.0+%2F+16+Aug+2011">2.2.0 / 16 Aug 2011<span><a href="#label-2.2.0+%2F+16+Aug+2011">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Add support for forward a local UNIX domain socket to a remote TCP socket.
 [Mark Imbriaco]</p>
 </li></ul>
 
-<h3 id="label-2.1.4+-2F+3+Apr+2011">2.1.4 / 3 Apr 2011<span><a href="#label-2.1.4+-2F+3+Apr+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.1.4+%2F+3+Apr+2011">2.1.4 / 3 Apr 2011<span><a href="#label-2.1.4+%2F+3+Apr+2011">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Add ConnectionTimeout exception class. [Joel Watson]</p>
 
 <pre>See: https://github.com/net-ssh/net-ssh-multi/pull/1</pre>
 </li></ul>
 
-<h3 id="label-2.1.3+-2F+2+Mar+2011">2.1.3 / 2 Mar 2011<span><a href="#label-2.1.3+-2F+2+Mar+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.1.3+%2F+2+Mar+2011">2.1.3 / 2 Mar 2011<span><a href="#label-2.1.3+%2F+2+Mar+2011">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Call to transport.closed should be transport.close [Woon Jung]</p>
 </li></ul>
 
-<h3 id="label-2.1.2+-2F+1+Mar+2011">2.1.2 / 1 Mar 2011<span><a href="#label-2.1.2+-2F+1+Mar+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.1.2+%2F+1+Mar+2011">2.1.2 / 1 Mar 2011<span><a href="#label-2.1.2+%2F+1+Mar+2011">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix for <a href="Net/SSH.html">Net::SSH</a> Continues to attempt
 authentication when notified it is not allowed [Eric Hodel]</p>
@@ -604,14 +974,14 @@ authentication when notified it is not allowed [Eric Hodel]</p>
 Marchi]</p>
 </li></ul>
 
-<h3 id="label-2.1+-2F+19+Jan+2011">2.1 / 19 Jan 2011<span><a href="#label-2.1+-2F+19+Jan+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.1+%2F+19+Jan+2011">2.1 / 19 Jan 2011<span><a href="#label-2.1+%2F+19+Jan+2011">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Support “IdentitiesOnly” directive (LH-24) [Musy Bite, Edmund Haselwanter]</p>
 </li><li>
 <p>Speeding up the Loggable module (LH-23) [robbebob]</p>
 </li></ul>
 
-<h3 id="label-2.0.24+-2F+14+Jan+2011">2.0.24 / 14 Jan 2011<span><a href="#label-2.0.24+-2F+14+Jan+2011">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.24+%2F+14+Jan+2011">2.0.24 / 14 Jan 2011<span><a href="#label-2.0.24+%2F+14+Jan+2011">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix for process code to correctly wait until remote_id is set before
 sending any output, including eof. [Daniel Pittman, Markus Roberts]</p>
@@ -619,7 +989,7 @@ sending any output, including eof. [Daniel Pittman, Markus Roberts]</p>
 <p>Fix circular require warning in Ruby 1.9.2 [Gavin Brock]</p>
 </li></ul>
 
-<h3 id="label-2.0.23+-2F+03+Jun+2010">2.0.23 / 03 Jun 2010<span><a href="#label-2.0.23+-2F+03+Jun+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.23+%2F+03+Jun+2010">2.0.23 / 03 Jun 2010<span><a href="#label-2.0.23+%2F+03+Jun+2010">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>delay CHANNEL_EOF packet until output buffer is empty [Rich Lane]</p>
 </li></ul>
@@ -628,7 +998,7 @@ sending any output, including eof. [Daniel Pittman, Markus Roberts]</p>
 packet being sent immediately, ahead of the data in the output buffer. Now
 buffer becomes empty.</p>
 
-<h3 id="label-2.0.22+-2F+20+Apr+2010">2.0.22 / 20 Apr 2010<span><a href="#label-2.0.22+-2F+20+Apr+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.22+%2F+20+Apr+2010">2.0.22 / 20 Apr 2010<span><a href="#label-2.0.22+%2F+20+Apr+2010">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix for: “Parsing the config errors out because it coerces the ”1“ into an
 integer and then tries to split it on spaces for multiple host checking.”
@@ -637,7 +1007,7 @@ href="http://net-ssh.lighthouseapp.com/projects/36253/tickets/10">net-ssh.lighth
 [Lee Marlow]</p>
 </li></ul>
 
-<h3 id="label-2.0.21+-2F+20+Mar+2010">2.0.21 / 20 Mar 2010<span><a href="#label-2.0.21+-2F+20+Mar+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.21+%2F+20+Mar+2010">2.0.21 / 20 Mar 2010<span><a href="#label-2.0.21+%2F+20+Mar+2010">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix for “IdentifyFile” in ~/.ssh/config does not work if no “Host”
 statement is given (<a
@@ -658,29 +1028,29 @@ Fazekas]</p>
 <p>Removed Hanna dependency in Rakefile [Delano Mandelbaum]</p>
 </li></ul>
 
-<h3 id="label-2.0.20+-2F+10+Feb+2010">2.0.20 / 10 Feb 2010<span><a href="#label-2.0.20+-2F+10+Feb+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.20+%2F+10+Feb+2010">2.0.20 / 10 Feb 2010<span><a href="#label-2.0.20+%2F+10+Feb+2010">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Support “ProxyCommand none” directive [Andy Lo-A-Foe]</p>
 </li></ul>
 
-<h3 id="label-2.0.19+-2F+16+Jan+2010">2.0.19 / 16 Jan 2010<span><a href="#label-2.0.19+-2F+16+Jan+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.19+%2F+16+Jan+2010">2.0.19 / 16 Jan 2010<span><a href="#label-2.0.19+%2F+16+Jan+2010">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Support plus sign in sshconfig hostname [Jason Weathered]</p>
 </li></ul>
 
-<h3 id="label-2.0.18+-2F+15+Jan+2010">2.0.18 / 15 Jan 2010<span><a href="#label-2.0.18+-2F+15+Jan+2010">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.18+%2F+15+Jan+2010">2.0.18 / 15 Jan 2010<span><a href="#label-2.0.18+%2F+15+Jan+2010">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix related to recv(1) to readpartial change in 2.0.16 [Hans de Graaff,
 Delano Mandelbaum]</p>
 </li></ul>
 
-<h3 id="label-2.0.17+-2F+14+Dec+2009">2.0.17 / 14 Dec 2009<span><a href="#label-2.0.17+-2F+14+Dec+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.17+%2F+14+Dec+2009">2.0.17 / 14 Dec 2009<span><a href="#label-2.0.17+%2F+14+Dec+2009">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Don&#39;t load net/ssh/authentication/pageant on Windows with Ruby 1.9
 [Travis Reeder, Delano Mandelbaum]</p>
 </li></ul>
 
-<h3 id="label-2.0.16+-2F+28+Nov+2009">2.0.16 / 28 Nov 2009<span><a href="#label-2.0.16+-2F+28+Nov+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.16+%2F+28+Nov+2009">2.0.16 / 28 Nov 2009<span><a href="#label-2.0.16+%2F+28+Nov+2009">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix for “multiple hosts are separated by whitespace” [Akinori MUSHA]</p>
 </li><li>
@@ -691,13 +1061,13 @@ lib/net/ssh/transport/server_version.rb, so that closed sockets are
 recognized [Alex Peuchert]</p>
 </li></ul>
 
-<h3 id="label-2.0.15+-2F+03+Sep+2009">2.0.15 / 03 Sep 2009<span><a href="#label-2.0.15+-2F+03+Sep+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.15+%2F+03+Sep+2009">2.0.15 / 03 Sep 2009<span><a href="#label-2.0.15+%2F+03+Sep+2009">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Scale back IO#select patch so it mutexes only zero-timeout calls [Daniel
 Azuma, Will Bryant]</p>
 </li></ul>
 
-<h3 id="label-2.0.14+-2F+28+Aug+2009">2.0.14 / 28 Aug 2009<span><a href="#label-2.0.14+-2F+28+Aug+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.14+%2F+28+Aug+2009">2.0.14 / 28 Aug 2009<span><a href="#label-2.0.14+%2F+28+Aug+2009">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix for IO#select threading bug in Ruby 1.8 (LH-1) [Daniel Azuma]</p>
 </li><li>
@@ -705,7 +1075,7 @@ Azuma, Will Bryant]</p>
 Net::SFTP [DL Redden]</p>
 </li></ul>
 
-<h3 id="label-2.0.13+-2F+17+Aug+2009">2.0.13 / 17 Aug 2009<span><a href="#label-2.0.13+-2F+17+Aug+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.13+%2F+17+Aug+2009">2.0.13 / 17 Aug 2009<span><a href="#label-2.0.13+%2F+17+Aug+2009">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Added fix for hanging in ServerVersion#negotiate! when using SOCKS5 proxy
 (GH-9) [Gerald Talton]</p>
@@ -723,27 +1093,27 @@ always returns 16, even when 32 byte keys are required, e.g. for arcfour256
 and arcfour512 ciphers [Karl Varga]</p>
 </li></ul>
 
-<h3 id="label-2.0.12+-2F+08+Jun+2009">2.0.12 / 08 Jun 2009<span><a href="#label-2.0.12+-2F+08+Jun+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.12+%2F+08+Jun+2009">2.0.12 / 08 Jun 2009<span><a href="#label-2.0.12+%2F+08+Jun+2009">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Applied patch for arcfour128 and arcfour256 support [Denis Bernard]</p>
 </li><li>
 <p>Use unbuffered reads when negotiating the protocol version [Steven Hazel]</p>
 </li></ul>
 
-<h3 id="label-2.0.11+-2F+24+Feb+2009">2.0.11 / 24 Feb 2009<span><a href="#label-2.0.11+-2F+24+Feb+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.11+%2F+24+Feb+2009">2.0.11 / 24 Feb 2009<span><a href="#label-2.0.11+%2F+24+Feb+2009">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Add :key_data option for specifying raw private keys in PEM format [Alex
 Holems, Andrew Babkin]</p>
 </li></ul>
 
-<h3 id="label-2.0.10+-2F+4+Feb+2009">2.0.10 / 4 Feb 2009<span><a href="#label-2.0.10+-2F+4+Feb+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.10+%2F+4+Feb+2009">2.0.10 / 4 Feb 2009<span><a href="#label-2.0.10+%2F+4+Feb+2009">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Added <a
 href="Net/SSH.html#method-c-configuration_for">Net::SSH.configuration_for</a>
 to make it easier to query the SSH configuration file(s) [Jamis Buck]</p>
 </li></ul>
 
-<h3 id="label-2.0.9+-2F+1+Feb+2009">2.0.9 / 1 Feb 2009<span><a href="#label-2.0.9+-2F+1+Feb+2009">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.9+%2F+1+Feb+2009">2.0.9 / 1 Feb 2009<span><a href="#label-2.0.9+%2F+1+Feb+2009">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Specifying non-nil user argument overrides user in .ssh/config [Jamis Buck]</p>
 </li><li>
@@ -758,13 +1128,13 @@ if public-key doesn&#39;t exist [Jamis Buck]</p>
 <p>Make sure :passphrase option gets passed to key manager [Bob Cotton]</p>
 </li></ul>
 
-<h3 id="label-2.0.8+-2F+29+December+2008">2.0.8 / 29 December 2008<span><a href="#label-2.0.8+-2F+29+December+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.8+%2F+29+December+2008">2.0.8 / 29 December 2008<span><a href="#label-2.0.8+%2F+29+December+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Fix private key change from 2.0.7 so that keys are loaded just-in-time,
 avoiding unecessary prompts from encrypted keys. [Jamis Buck]</p>
 </li></ul>
 
-<h3 id="label-2.0.7+-2F+29+December+2008">2.0.7 / 29 December 2008<span><a href="#label-2.0.7+-2F+29+December+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.7+%2F+29+December+2008">2.0.7 / 29 December 2008<span><a href="#label-2.0.7+%2F+29+December+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Make key manager use private keys instead of requiring public key to exist
 [arilerner@mac.com]</p>
@@ -774,13 +1144,13 @@ avoiding unecessary prompts from encrypted keys. [Jamis Buck]</p>
 <p>Don&#39;t include pageant when running under JRuby [Angel N. Sciortino]</p>
 </li></ul>
 
-<h3 id="label-2.0.6+-2F+6+December+2008">2.0.6 / 6 December 2008<span><a href="#label-2.0.6+-2F+6+December+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.6+%2F+6+December+2008">2.0.6 / 6 December 2008<span><a href="#label-2.0.6+%2F+6+December+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Update the Manifest file so that the gem includes all necessary files
 [Jamis Buck]</p>
 </li></ul>
 
-<h3 id="label-2.0.5+-2F+6+December+2008">2.0.5 / 6 December 2008<span><a href="#label-2.0.5+-2F+6+December+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.5+%2F+6+December+2008">2.0.5 / 6 December 2008<span><a href="#label-2.0.5+%2F+6+December+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Make the Pageant interface comply with more of the Socket interface to
 avoid related errors [Jamis Buck]</p>
@@ -793,7 +1163,7 @@ Bryant]</p>
 <p>Fix Cipher#final to correctly flag a need for a cipher reset [Jamis Buck]</p>
 </li></ul>
 
-<h3 id="label-2.0.4+-2F+27+Aug+2008">2.0.4 / 27 Aug 2008<span><a href="#label-2.0.4+-2F+27+Aug+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.4+%2F+27+Aug+2008">2.0.4 / 27 Aug 2008<span><a href="#label-2.0.4+%2F+27+Aug+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Added Connection::Session#closed? and Transport::Session#closed? [Jamis
 Buck]</p>
@@ -807,7 +1177,7 @@ informative than a MethodMissing error [Jamis Buck]</p>
 as the next initialization vector [Jamis Buck]</p>
 </li></ul>
 
-<h3 id="label-2.0.3+-2F+27+Jun+2008">2.0.3 / 27 Jun 2008<span><a href="#label-2.0.3+-2F+27+Jun+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.3+%2F+27+Jun+2008">2.0.3 / 27 Jun 2008<span><a href="#label-2.0.3+%2F+27+Jun+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Make <a href="Net/SSH/Version.html">Net::SSH::Version</a> comparable [Brian
 Candler]</p>
@@ -824,7 +1194,7 @@ with servers like Mocana SSH) [Timo Gatsonides]</p>
 <p>Ignore malformed ssh_config entries [Jamis Buck]</p>
 </li></ul>
 
-<h3 id="label-2.0.2+-2F+29+May+2008">2.0.2 / 29 May 2008<span><a href="#label-2.0.2+-2F+29+May+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.2+%2F+29+May+2008">2.0.2 / 29 May 2008<span><a href="#label-2.0.2+%2F+29+May+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Make sure the agent client understands both RSA “identities answers” [Jamis
 Buck]</p>
@@ -836,19 +1206,19 @@ Buck]</p>
 exist [David Dollar]</p>
 </li></ul>
 
-<h3 id="label-2.0.1+-2F+5+May+2008">2.0.1 / 5 May 2008<span><a href="#label-2.0.1+-2F+5+May+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.1+%2F+5+May+2008">2.0.1 / 5 May 2008<span><a href="#label-2.0.1+%2F+5+May+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Teach <a href="Net/SSH.html">Net::SSH</a> about a handful of default key
 names [Jamis Buck]</p>
 </li></ul>
 
-<h3 id="label-2.0.0+-2F+1+May+2008">2.0.0 / 1 May 2008<span><a href="#label-2.0.0+-2F+1+May+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0.0+%2F+1+May+2008">2.0.0 / 1 May 2008<span><a href="#label-2.0.0+%2F+1+May+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Allow the :verbose argument to accept symbols (:debug, etc.) as well as
 Logger level constants (Logger::DEBUG, etc.) [Jamis Buck]</p>
 </li></ul>
 
-<h3 id="label-2.0+Preview+Release+4+-281.99.3-29+-2F+19+Apr+2008">2.0 Preview Release 4 (1.99.3) / 19 Apr 2008<span><a href="#label-2.0+Preview+Release+4+-281.99.3-29+-2F+19+Apr+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0+Preview+Release+4+%281.99.3%29+%2F+19+Apr+2008">2.0 Preview Release 4 (1.99.3) / 19 Apr 2008<span><a href="#label-2.0+Preview+Release+4+%281.99.3%29+%2F+19+Apr+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Make sure HOME is set to something sane, even on OS&#39;s that don&#39;t
 set it by default [Jamis Buck]</p>
@@ -860,7 +1230,7 @@ set it by default [Jamis Buck]</p>
 [Jamis Buck]</p>
 </li></ul>
 
-<h3 id="label-2.0+Preview+Release+3+-281.99.2-29+-2F+10+Apr+2008">2.0 Preview Release 3 (1.99.2) / 10 Apr 2008<span><a href="#label-2.0+Preview+Release+3+-281.99.2-29+-2F+10+Apr+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0+Preview+Release+3+%281.99.2%29+%2F+10+Apr+2008">2.0 Preview Release 3 (1.99.2) / 10 Apr 2008<span><a href="#label-2.0+Preview+Release+3+%281.99.2%29+%2F+10+Apr+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Session properties [Jamis Buck]</p>
 </li><li>
@@ -868,7 +1238,7 @@ set it by default [Jamis Buck]</p>
 handled similarly to successes [Jamis Buck]</p>
 </li></ul>
 
-<h3 id="label-2.0+Preview+Release+2+-281.99.1-29+-2F+22+Mar+2008">2.0 Preview Release 2 (1.99.1) / 22 Mar 2008<span><a href="#label-2.0+Preview+Release+2+-281.99.1-29+-2F+22+Mar+2008">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0+Preview+Release+2+%281.99.1%29+%2F+22+Mar+2008">2.0 Preview Release 2 (1.99.1) / 22 Mar 2008<span><a href="#label-2.0+Preview+Release+2+%281.99.1%29+%2F+22+Mar+2008">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>Partial support for ~/.ssh/config (and related) SSH configuration files
 [Daniel J. Berger, Jamis Buck]</p>
@@ -876,25 +1246,26 @@ handled similarly to successes [Jamis Buck]</p>
 <p>Added <a href="Net/SSH/Test.html">Net::SSH::Test</a> to facilitate testing
 complex SSH state machines [Jamis Buck]</p>
 </li><li>
-<p>Reworked Net::SSH::Prompt to use conditionally-selected modules [Jamis
-Buck, suggested by James Rosen]</p>
+<p>Reworked <a href="Net/SSH/Prompt.html">Net::SSH::Prompt</a> to use
+conditionally-selected modules [Jamis Buck, suggested by James Rosen]</p>
 </li><li>
 <p>Added Channel#eof? and Channel#eof! [Jamis Buck]</p>
 </li><li>
 <p>Fixed bug in strict host key verifier on cache miss [Mike Timm]</p>
 </li></ul>
 
-<h3 id="label-2.0+Preview+Release+1+-281.99.0-29+-2F+21+Aug+2007">2.0 Preview Release 1 (1.99.0) / 21 Aug 2007<span><a href="#label-2.0+Preview+Release+1+-281.99.0-29+-2F+21+Aug+2007">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-2.0+Preview+Release+1+%281.99.0%29+%2F+21+Aug+2007">2.0 Preview Release 1 (1.99.0) / 21 Aug 2007<span><a href="#label-2.0+Preview+Release+1+%281.99.0%29+%2F+21+Aug+2007">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 <ul><li>
 <p>First preview release of <a href="Net/SSH.html">Net::SSH</a> v2</p>
 </li></ul>
-</main>
+
+</div>
 
 
 
-<footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.0.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
 </footer>
 

@@ -2,86 +2,72 @@
 
 <html>
 <head>
-<meta charset="UTF-8">
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>net-ssh 4.0.0.alpha2</title>
+<title>net-ssh 4.0.0.rc1</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
 
-<link href="./css/fonts.css" rel="stylesheet">
-<link href="./css/rdoc.css" rel="stylesheet">
 
-
-
-<body id="top" role="document" class="file">
-<nav role="navigation">
-  <div id="project-navigation">
-    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
-  <h2>
-    <a href="./index.html" rel="home">Home</a>
-  </h2>
-
-  <div id="table-of-contents-navigation">
-    <a href="./table_of_contents.html#pages">Pages</a>
+<body>
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
     <a href="./table_of_contents.html#classes">Classes</a>
     <a href="./table_of_contents.html#methods">Methods</a>
-  </div>
-</div>
+  </h3>
+</nav>
 
 
-    <div id="search-section" role="search" class="project-section initially-hidden">
+  <nav id="search-section" class="section project-section" class="initially-hidden">
   <form action="#" method="get" accept-charset="utf-8">
-    <div id="search-field-wrapper">
-      <input id="search-field" role="combobox" aria-label="Search"
-             aria-autocomplete="list" aria-controls="search-results"
-             type="text" name="search" placeholder="Search" spellcheck="false"
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
              title="Type to search, Up and Down to navigate, Enter to load">
-    </div>
-
-    <ul id="search-results" aria-label="Search Results"
-        aria-busy="false" aria-expanded="false"
-        aria-atomic="false" class="initially-hidden"></ul>
+    </h3>
   </form>
-</div>
 
-  </div>
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
 
   <div id="project-metadata">
-    <div id="fileindex-section" class="nav-section">
-  <h3>Pages</h3>
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
 
-  <ul class="link-list">
+  <ul>
   
-    <li><a href="./CHANGES_txt.html">CHANGES</a>
+    <li class="file"><a href="./CHANGES_txt.html">CHANGES</a>
   
-    <li><a href="./LICENSE_txt.html">LICENSE</a>
+    <li class="file"><a href="./LICENSE_txt.html">LICENSE</a>
   
-    <li><a href="./README_rdoc.html">README</a>
+    <li class="file"><a href="./README_rdoc.html">README</a>
   
-    <li><a href="./THANKS_txt.html">THANKS</a>
+    <li class="file"><a href="./THANKS_txt.html">THANKS</a>
   
   </ul>
-</div>
+</nav>
 
-    <div id="classindex-section" class="nav-section">
-  <h3>Class and Module Index</h3>
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
 
   <ul class="link-list">
   
     <li><a href="./DL.html">DL</a>
   
     <li><a href="./DL/Fiddle.html">DL::Fiddle</a>
-  
-    <li><a href="./ED25519.html">ED25519</a>
-  
-    <li><a href="./ED25519/PrivKey.html">ED25519::PrivKey</a>
-  
-    <li><a href="./ED25519/PubKey.html">ED25519::PubKey</a>
   
     <li><a href="./Net.html">Net</a>
   
@@ -93,8 +79,6 @@
   
     <li><a href="./Net/SSH/Authentication/Agent/Comment.html">Net::SSH::Authentication::Agent::Comment</a>
   
-    <li><a href="./Net/SSH/Authentication/Agent/Key.html">Net::SSH::Authentication::Agent::Key</a>
-  
     <li><a href="./Net/SSH/Authentication/AgentError.html">Net::SSH::Authentication::AgentError</a>
   
     <li><a href="./Net/SSH/Authentication/AgentNotAvailable.html">Net::SSH::Authentication::AgentNotAvailable</a>
@@ -102,6 +86,16 @@
     <li><a href="./Net/SSH/Authentication/Constants.html">Net::SSH::Authentication::Constants</a>
   
     <li><a href="./Net/SSH/Authentication/DisallowedMethod.html">Net::SSH::Authentication::DisallowedMethod</a>
+  
+    <li><a href="./Net/SSH/Authentication/ED25519.html">Net::SSH::Authentication::ED25519</a>
+  
+    <li><a href="./Net/SSH/Authentication/ED25519/PrivKey.html">Net::SSH::Authentication::ED25519::PrivKey</a>
+  
+    <li><a href="./Net/SSH/Authentication/ED25519/PubKey.html">Net::SSH::Authentication::ED25519::PubKey</a>
+  
+    <li><a href="./Net/SSH/Authentication/ED25519/SigningKeyFromFile.html">Net::SSH::Authentication::ED25519::SigningKeyFromFile</a>
+  
+    <li><a href="./Net/SSH/Authentication/ED25519Loader.html">Net::SSH::Authentication::ED25519Loader</a>
   
     <li><a href="./Net/SSH/Authentication/KeyManager.html">Net::SSH::Authentication::KeyManager</a>
   
@@ -127,6 +121,12 @@
   
     <li><a href="./Net/SSH/Authentication/Pageant/Win.html">Net::SSH::Authentication::Pageant::Win</a>
   
+    <li><a href="./Net/SSH/Authentication/Pageant/Win/LibC.html">Net::SSH::Authentication::Pageant::Win::LibC</a>
+  
+    <li><a href="./Net/SSH/Authentication/Pageant/Win/LibC/FFI.html">Net::SSH::Authentication::Pageant::Win::LibC::FFI</a>
+  
+    <li><a href="./Net/SSH/Authentication/Pageant/Win/LibC/FFI/Library.html">Net::SSH::Authentication::Pageant::Win::LibC::FFI::Library</a>
+  
     <li><a href="./Net/SSH/Authentication/Session.html">Net::SSH::Authentication::Session</a>
   
     <li><a href="./Net/SSH/AuthenticationFailed.html">Net::SSH::AuthenticationFailed</a>
@@ -149,11 +149,17 @@
   
     <li><a href="./Net/SSH/Connection/Constants.html">Net::SSH::Connection::Constants</a>
   
+    <li><a href="./Net/SSH/Connection/EventLoop.html">Net::SSH::Connection::EventLoop</a>
+  
     <li><a href="./Net/SSH/Connection/Keepalive.html">Net::SSH::Connection::Keepalive</a>
   
     <li><a href="./Net/SSH/Connection/Session.html">Net::SSH::Connection::Session</a>
   
     <li><a href="./Net/SSH/Connection/Session/NilChannel.html">Net::SSH::Connection::Session::NilChannel</a>
+  
+    <li><a href="./Net/SSH/Connection/Session/StringWithExitstatus.html">Net::SSH::Connection::Session::StringWithExitstatus</a>
+  
+    <li><a href="./Net/SSH/Connection/SingleSessionEventLoop.html">Net::SSH::Connection::SingleSessionEventLoop</a>
   
     <li><a href="./Net/SSH/Connection/Term.html">Net::SSH::Connection::Term</a>
   
@@ -189,13 +195,9 @@
   
     <li><a href="./Net/SSH/Packet.html">Net::SSH::Packet</a>
   
-    <li><a href="./Net/SSH/PromptMethods.html">Net::SSH::PromptMethods</a>
+    <li><a href="./Net/SSH/Prompt.html">Net::SSH::Prompt</a>
   
-    <li><a href="./Net/SSH/PromptMethods/Clear.html">Net::SSH::PromptMethods::Clear</a>
-  
-    <li><a href="./Net/SSH/PromptMethods/Highline.html">Net::SSH::PromptMethods::Highline</a>
-  
-    <li><a href="./Net/SSH/PromptMethods/Termios.html">Net::SSH::PromptMethods::Termios</a>
+    <li><a href="./Net/SSH/Prompt/Prompter.html">Net::SSH::Prompt::Prompter</a>
   
     <li><a href="./Net/SSH/Proxy.html">Net::SSH::Proxy</a>
   
@@ -206,6 +208,10 @@
     <li><a href="./Net/SSH/Proxy/Error.html">Net::SSH::Proxy::Error</a>
   
     <li><a href="./Net/SSH/Proxy/HTTP.html">Net::SSH::Proxy::HTTP</a>
+  
+    <li><a href="./Net/SSH/Proxy/HTTPS.html">Net::SSH::Proxy::HTTPS</a>
+  
+    <li><a href="./Net/SSH/Proxy/HTTPS/SSLSocketCompatibility.html">Net::SSH::Proxy::HTTPS::SSLSocketCompatibility</a>
   
     <li><a href="./Net/SSH/Proxy/SOCKS4.html">Net::SSH::Proxy::SOCKS4</a>
   
@@ -365,26 +371,26 @@
   
     <li><a href="./OpenSSL/PKey/RSA.html">OpenSSL::PKey::RSA</a>
   
-    <li><a href="./RbNaCl.html">RbNaCl</a>
-  
-    <li><a href="./RbNaCl/Signatures.html">RbNaCl::Signatures</a>
-  
-    <li><a href="./RbNaCl/Signatures/Ed25519.html">RbNaCl::Signatures::Ed25519</a>
-  
-    <li><a href="./RbNaCl/Signatures/Ed25519/SigningKeyFromFile.html">RbNaCl::Signatures::Ed25519::SigningKeyFromFile</a>
-  
     <li><a href="./String.html">String</a>
   
   </ul>
-</div>
+</nav>
 
   </div>
 </nav>
 
-<main role="main">
+<div id="documentation" class="description">
 
+<p><a href="https://badge.fury.io/rb/net-ssh"><img
+src="https://badge.fury.io/rb/net-ssh.svg" alt="Gem Version" /></a> <a
+href="https://gitter.im/net-ssh/net-ssh?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img
+src="https://badges.gitter.im/net-ssh/net-ssh.svg" alt="Join the chat at
+https://gitter.im/net-ssh/net-ssh"></a> <a
+href="https://travis-ci.org/net-ssh/net-ssh"><img
+src="https://travis-ci.org/net-ssh/net-ssh.svg?branch=master" alt="Build
+Status" /></a></p>
 
-<h1 id="label-Net-3A-3ASSH+4.x"><a href="Net/SSH.html">Net::SSH</a> 4.x<span><a href="#label-Net-3A-3ASSH+4.x">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-Net%3A%3ASSH+4.x"><a href="Net/SSH.html">Net::SSH</a> 4.x<span><a href="#label-Net%3A%3ASSH+4.x">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
 <ul><li>
 <p>Docs: <a
 href="http://net-ssh.github.com/net-ssh">net-ssh.github.com/net-ssh</a></p>
@@ -400,13 +406,13 @@ href="https://github.com/net-ssh/net-ssh">github.com/net-ssh/net-ssh</a></p>
 
 <p><em>As of v2.6.4, all gem releases are signed. See INSTALL.</em></p>
 
-<h2 id="label-DESCRIPTION-3A">DESCRIPTION:<span><a href="#label-DESCRIPTION-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-DESCRIPTION%3A">DESCRIPTION:<span><a href="#label-DESCRIPTION%3A">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
 <p><a href="Net/SSH.html">Net::SSH</a> is a pure-Ruby implementation of the
 SSH2 client protocol. It allows you to write programs that invoke and
 interact with processes on remote servers, via SSH2.</p>
 
-<h2 id="label-FEATURES-3A">FEATURES:<span><a href="#label-FEATURES-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-FEATURES%3A">FEATURES:<span><a href="#label-FEATURES%3A">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 <ul><li>
 <p>Execute processes on remote servers and capture their output</p>
 </li><li>
@@ -417,7 +423,7 @@ interact with processes on remote servers, via SSH2.</p>
 <p>Forward local and remote ports via an SSH connection</p>
 </li></ul>
 
-<h2 id="label-SYNOPSIS-3A">SYNOPSIS:<span><a href="#label-SYNOPSIS-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-SYNOPSIS%3A">SYNOPSIS:<span><a href="#label-SYNOPSIS%3A">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
 <p>In a nutshell:</p>
 
@@ -472,7 +478,7 @@ interact with processes on remote servers, via SSH2.</p>
 <p>See <a href="Net/SSH.html">Net::SSH</a> for more documentation, and links
 to further information.</p>
 
-<h2 id="label-REQUIREMENTS-3A">REQUIREMENTS:<span><a href="#label-REQUIREMENTS-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-REQUIREMENTS%3A">REQUIREMENTS:<span><a href="#label-REQUIREMENTS%3A">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
 <p>The only requirement you might be missing is the <a
 href="OpenSSL.html">OpenSSL</a> bindings for Ruby. These are built by
@@ -487,19 +493,17 @@ rebuilding ruby with <a href="OpenSSL.html">OpenSSL</a> support, or (if
 your platform supports it) installing the <a
 href="OpenSSL.html">OpenSSL</a> bindings separately.</p>
 
-<p>Additionally: if you are going to be having <a
-href="Net/SSH.html">Net::SSH</a> prompt you for things like passwords or
-certificate passphrases, you&#39;ll want to have either the Highline
-(recommended) or Termios (unix systems only) gem installed, so that the
-passwords don&#39;t echo in clear text.</p>
-
 <p>Lastly, if you want to run the tests or use any of the Rake tasks,
 you&#39;ll need Mocha and other dependencies listed in Gemfile</p>
 
-<h2 id="label-INSTALL-3A">INSTALL:<span><a href="#label-INSTALL-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-INSTALL%3A">INSTALL:<span><a href="#label-INSTALL%3A">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 <ul><li>
 <p>gem install net-ssh (might need sudo privileges)</p>
 </li></ul>
+
+<p>NOTE: If you are running on jruby on windows you need to install
+jruby-pageant manually (gemspec doesn&#39;t allow for platform specific
+dependencies).</p>
 
 <p>However, in order to be sure the code you&#39;re installing hasn&#39;t been
 tampered with, it&#39;s recommended that you verify the <a
@@ -520,7 +524,10 @@ $ gem cert --add net-ssh-public_cert.pem</pre>
 “Couldn&#39;t verify data signature”. If you&#39;re still having trouble
 let me know and I&#39;ll give you a hand.</p>
 
-<h2 id="label-RUBY+SUPPORT">RUBY SUPPORT<span><a href="#label-RUBY+SUPPORT">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<p>For ed25519 public key auth support your bundle file should contain
+“`rbnacl-libsodium“`, “`rbnacl“`, “`bcrypt_pbkdf“` dependencies.</p>
+
+<h2 id="label-RUBY+SUPPORT">RUBY SUPPORT<span><a href="#label-RUBY+SUPPORT">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 <ul><li>
 <p>Ruby 1.8.x is supported up until the net-ssh 2.5.1 release.</p>
 </li><li>
@@ -529,12 +536,11 @@ let me know and I&#39;ll give you a hand.</p>
 <p>Current net-ssh releases require Ruby 2.0 or later.</p>
 </li></ul>
 
-<h2 id="label-RUNNING+TESTS">RUNNING TESTS<span><a href="#label-RUNNING+TESTS">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-RUNNING+TESTS">RUNNING TESTS<span><a href="#label-RUNNING+TESTS">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
 <p>Run the test suite from the net-ssh directory with the following command:</p>
 
-<pre class="ruby"><span class="ruby-identifier">bundle</span> <span class="ruby-identifier">exec</span> <span class="ruby-identifier">rake</span> <span class="ruby-identifier">test</span>
-</pre>
+<pre>bundle exec rake test</pre>
 
 <p>Run a single test file like this:</p>
 
@@ -542,15 +548,11 @@ let me know and I&#39;ll give you a hand.</p>
 
 <p>To run integration tests see test/integration/README.txt</p>
 
-<h3 id="label-BUILDING+GEM">BUILDING GEM<span><a href="#label-BUILDING+GEM">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<h3 id="label-BUILDING+GEM">BUILDING GEM<span><a href="#label-BUILDING+GEM">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 
-<p>Since building the gem requires the private key if you want to build a .gem
-locally please use the NET_SSH_BUILDGEM_UNSIGNED=1 envirnoment variable:</p>
+<pre>rake build</pre>
 
-<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">build</span> <span class="ruby-constant">NET_SSH_BUILDGEM_UNSIGNED</span>=<span class="ruby-value">1</span>
-</pre>
-
-<h2 id="label-LICENSE-3A">LICENSE:<span><a href="#label-LICENSE-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-LICENSE%3A">LICENSE:<span><a href="#label-LICENSE%3A">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
 <p>(The MIT License)</p>
 
@@ -574,13 +576,12 @@ NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
-</main>
+</div>
 
 
-
-<footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.0.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
 </footer>
 
