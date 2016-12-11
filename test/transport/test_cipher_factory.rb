@@ -294,11 +294,11 @@ module Transport
 
       TEXT = "But soft! What light through yonder window breaks? It is the east, and Juliet is the sun!"
 
-      OPTIONS = { :iv => "ABC",
-        :key => "abc",
-        :digester => OpenSSL::Digest::MD5,
-        :shared => "1234567890123456780",
-        :hash => '!@#$%#$^%$&^&%#$@$'
+      OPTIONS = { iv: "ABC",
+        key: "abc",
+        digester: OpenSSL::Digest::MD5,
+        shared: "1234567890123456780",
+        hash: '!@#$%#$^%$&^&%#$@$'
       }
 
       def factory
@@ -306,7 +306,7 @@ module Transport
       end
 
       def encrypt(type)
-        cipher = factory.get(type, OPTIONS.merge(:encrypt => true))
+        cipher = factory.get(type, OPTIONS.merge(encrypt: true))
         padding = TEXT.length % cipher.block_size
         result = cipher.update(TEXT.dup)
         result << cipher.update(" " * (cipher.block_size - padding)) if padding > 0
@@ -314,7 +314,7 @@ module Transport
       end
 
       def decrypt(type, data)
-        cipher = factory.get(type, OPTIONS.merge(:decrypt => true))
+        cipher = factory.get(type, OPTIONS.merge(decrypt: true))
         result = cipher.update(data.dup)
         result << cipher.final
         result.strip

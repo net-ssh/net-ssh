@@ -6,7 +6,7 @@ module Authentication; module Methods
     private
 
       def socket(options={})
-        @socket ||= stub("socket", :client_name => "me.ssh.test")
+        @socket ||= stub("socket", client_name: "me.ssh.test")
       end
 
       def transport(options={})
@@ -15,7 +15,7 @@ module Authentication; module Methods
 
       def session(options={})
         @session ||= begin
-          sess = stub("auth-session", :logger => nil, :transport => transport(options))
+          sess = stub("auth-session", logger: nil, transport: transport(options))
           def sess.next_message
             transport.next_message
           end

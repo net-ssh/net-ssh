@@ -11,7 +11,7 @@ module NetSSH
       Net::SSH::Authentication::Session.stubs(:new).returns(authentication_session)
       Net::SSH::Transport::Session.stubs(:new).returns(mock('transport_session'))
       @connection_session = mock('connection_session')
-      Net::SSH::Connection::Session.expects(:new => connection_session)
+      Net::SSH::Connection::Session.expects(new: connection_session)
     end
     
     def test_close_connection_on_exception

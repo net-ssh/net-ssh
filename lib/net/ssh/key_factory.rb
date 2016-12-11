@@ -37,7 +37,7 @@ module Net; module SSH
       # whether the file describes an RSA or DSA key, and will load it
       # appropriately. The new key is returned. If the key itself is
       # encrypted (requiring a passphrase to use), the user will be
-      # prompted to enter their password unless passphrase works. 
+      # prompted to enter their password unless passphrase works.
       def load_private_key(filename, passphrase=nil, ask_passphrase=true, prompt=Prompt.default)
         data = File.read(File.expand_path(filename))
         load_data_private_key(data, passphrase, ask_passphrase, filename, prompt)
@@ -47,7 +47,7 @@ module Net; module SSH
       # whether the file describes an RSA or DSA key, and will load it
       # appropriately. The new key is returned. If the key itself is
       # encrypted (requiring a passphrase to use), the user will be
-      # prompted to enter their password unless passphrase works. 
+      # prompted to enter their password unless passphrase works.
       def load_data_private_key(data, passphrase=nil, ask_passphrase=true, filename="", prompt=Prompt.default)
         key_read, error_classes = classify_key(data, filename)
 
@@ -55,7 +55,7 @@ module Net; module SSH
         tries = 0
 
         prompter = nil
-        result = 
+        result =
           begin
             key_read[data, passphrase || 'invalid']
           rescue *error_classes

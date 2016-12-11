@@ -30,12 +30,12 @@ module Transport; module Kex
     end
 
     def test_exchange_keys_with_signature_key_type_mismatch_should_raise_exception
-      assert_raises(Net::SSH::Exception) { exchange! :key_type => "ssh-dss" }
+      assert_raises(Net::SSH::Exception) { exchange! key_type: "ssh-dss" }
     end
 
     def test_exchange_keys_with_host_key_type_mismatch_should_raise_exception
-      algorithms :host_key => "ssh-dss"
-      assert_raises(Net::SSH::Exception) { exchange! :key_type => "ssh-dss" }
+      algorithms host_key: "ssh-dss"
+      assert_raises(Net::SSH::Exception) { exchange! key_type: "ssh-dss" }
     end
 
     def test_exchange_keys_when_server_signature_could_not_be_verified_should_raise_exception
@@ -84,11 +84,11 @@ module Transport; module Kex
       end
 
       def dh
-        @dh ||= subject.new(algorithms, connection, packet_data.merge(:need_bytes => 20).merge(@dh_options || {}))
+        @dh ||= subject.new(algorithms, connection, packet_data.merge(need_bytes: 20).merge(@dh_options || {}))
       end
 
       def algorithms(options={})
-        @algorithms ||= OpenStruct.new(:host_key => options[:host_key] || "ssh-rsa")
+        @algorithms ||= OpenStruct.new(host_key: options[:host_key] || "ssh-rsa")
       end
 
       def connection
@@ -106,10 +106,10 @@ module Transport; module Kex
       end
 
       def packet_data
-        @packet_data ||= { :client_version_string => "client version string",
-          :server_version_string => "server version string",
-          :server_algorithm_packet => "server algorithm packet",
-          :client_algorithm_packet => "client algorithm packet" }
+        @packet_data ||= { client_version_string: "client version string",
+          server_version_string: "server version string",
+          server_algorithm_packet: "server algorithm packet",
+          client_algorithm_packet: "client algorithm packet" }
       end
 
       def server_dh_pubkey

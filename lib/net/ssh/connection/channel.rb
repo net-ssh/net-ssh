@@ -189,12 +189,12 @@ module Net; module SSH; module Connection
     end
 
     # A hash of the valid PTY options (see #request_pty).
-    VALID_PTY_OPTIONS = { :term        => "xterm",
-                          :chars_wide  => 80,
-                          :chars_high  => 24,
-                          :pixels_wide => 640,
-                          :pixels_high => 480,
-                          :modes       => {} }
+    VALID_PTY_OPTIONS = { term: "xterm",
+                          chars_wide: 80,
+                          chars_high: 24,
+                          pixels_wide: 640,
+                          pixels_high: 480,
+                          modes: {} }
 
     # Requests that a pseudo-tty (or "pty") be made available for this channel.
     # This is useful when you want to invoke and interact with some kind of

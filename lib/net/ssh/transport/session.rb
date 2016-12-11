@@ -164,7 +164,7 @@ module Net; module SSH; module Transport
     # Returns a hash of information about the peer (remote) side of the socket,
     # including :ip, :port, :host, and :canonized (see #host_as_string).
     def peer
-      @peer ||= { :ip => socket.peer_ip, :port => @port.to_i, :host => @host, :canonized => host_as_string }
+      @peer ||= { ip: socket.peer_ip, port: @port.to_i, host: @host, canonized: host_as_string }
     end
 
     # Blocks until a new packet is available to be read, and returns that

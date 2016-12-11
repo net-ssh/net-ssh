@@ -59,9 +59,9 @@ module Transport
 
     def test_set_should_set_variables_and_reset_counters
       state.expects(:reset!)
-      state.set :cipher => :a, :hmac => :b, :compression => :c,
-        :compression_level => :d, :max_packets => 500, :max_blocks => 1000,
-        :rekey_limit => 1500
+      state.set cipher: :a, hmac: :b, compression: :c,
+        compression_level: :d, max_packets: 500, max_blocks: 1000,
+        rekey_limit: 1500
       assert_equal :a, state.cipher
       assert_equal :b, state.hmac
       assert_equal :c, state.compression
@@ -72,17 +72,17 @@ module Transport
     end
 
     def test_set_with_max_packets_should_respect_max_packets_setting
-      state.set :max_packets => 500
+      state.set max_packets: 500
       assert_equal 500, state.max_packets
     end
 
     def test_set_with_max_blocks_should_respect_max_blocks_setting
-      state.set :max_blocks => 1000
+      state.set max_blocks: 1000
       assert_equal 1000, state.max_blocks
     end
 
     def test_set_with_rekey_limit_should_include_rekey_limit_in_computation_of_max_blocks
-      state.set :rekey_limit => 4000
+      state.set rekey_limit: 4000
       assert_equal 500, state.max_blocks
     end
 
@@ -92,7 +92,7 @@ module Transport
     end
 
     def test_compressor_uses_compression_level_when_given
-      state.set :compression_level => 1
+      state.set compression_level: 1
       expect = deflater(1).deflate("hello world")
       assert_equal expect, state.compressor.deflate("hello world")
     end
@@ -106,17 +106,17 @@ module Transport
     end
 
     def test_compress_when_compression_is_delayed_and_no_auth_hint_is_set_should_return_text
-      state.set :compression => :delayed
+      state.set compression: :delayed
       assert_equal "hello everybody", state.compress("hello everybody")
     end
 
     def test_decompress_when_compression_is_delayed_and_no_auth_hint_is_set_should_return_text
-      state.set :compression => :delayed
+      state.set compression: :delayed
       assert_equal "hello everybody", state.decompress("hello everybody")
     end
 
     def test_compress_when_compression_is_enabled_should_return_compressed_text
-      state.set :compression => :standard     
+      state.set compression: :standard     
       # JRuby Zlib implementation (1.4 & 1.5) does not have byte-to-byte compatibility with MRI's.
       # skip this test under JRuby.
       return if defined?(JRUBY_VERSION)
@@ -124,7 +124,7 @@ module Transport
     end
 
     def test_decompress_when_compression_is_enabled_should_return_decompressed_text
-      state.set :compression => :standard     
+      state.set compression: :standard     
       # JRuby Zlib implementation (1.4 & 1.5) does not have byte-to-byte compatibility with MRI's.
       # skip this test under JRuby.
       return if defined?(JRUBY_VERSION)
@@ -133,18 +133,18 @@ module Transport
 
     def test_compress_when_compression_is_delayed_and_auth_hint_is_set_should_return_compressed_text
       socket.hints[:authenticated] = true
-      state.set :compression => :delayed
+      state.set compression: :delayed
       assert_equal "x\234\312H\315\311\311WH-K-\252L\312O\251\004\000\000\000\377\377", state.compress("hello everybody")
     end
 
     def test_decompress_when_compression_is_delayed_and_auth_hint_is_set_should_return_decompressed_text
       socket.hints[:authenticated] = true
-      state.set :compression => :delayed
+      state.set compression: :delayed
       assert_equal "hello everybody", state.decompress("x\234\312H\315\311\311WH-K-\252L\312O\251\004\000\000\000\377\377")
     end
 
     def test_needs_rekey_should_be_true_if_packets_exceeds_max_packets
-      state.set :max_packets => 2
+      state.set max_packets: 2
       state.increment(8)
       state.increment(8)
       assert !state.needs_rekey?
@@ -153,7 +153,7 @@ module Transport
     end
 
     def test_needs_rekey_should_be_true_if_blocks_exceeds_max_blocks
-      state.set :max_blocks => 10
+      state.set max_blocks: 10
       assert !state.needs_rekey?
       state.increment(88)
       assert state.needs_rekey?
@@ -170,7 +170,7 @@ module Transport
       end
 
       def socket
-        @socket ||= stub("socket", :hints => {})
+        @socket ||= stub("socket", hints: {})
       end
 
       def state

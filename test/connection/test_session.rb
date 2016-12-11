@@ -33,7 +33,7 @@ module Connection
     end
 
     def test_listen_to_should_add_argument_to_listeners_list_if_block_is_given
-      io = stub("io", :pending_write? => true)
+      io = stub("io", pending_write?: true)
       flag = false
       session.listen_to(io) { flag = true }
       assert !flag, "callback should not be invoked immediately"
@@ -43,7 +43,7 @@ module Connection
     end
 
     def test_stop_listening_to_should_remove_argument_from_listeners
-      io = stub("io", :pending_write? => true)
+      io = stub("io", pending_write?: true)
 
       session.listen_to(io)
       assert session.listeners.key?(io)
@@ -111,14 +111,14 @@ module Connection
     end
 
     def test_process_should_exit_immediately_if_block_is_false
-      session.channels[0] = stub("channel", :closing? => false)
+      session.channels[0] = stub("channel", closing?: false)
       session.channels[0].expects(:process).never
       process_times(0)
     end
 
     def test_can_open_channels_in_process # see #110
       chid = session.send(:get_next_channel_id)
-      session.channels[chid] = stub("channel", :local_closed? => false)
+      session.channels[chid] = stub("channel", local_closed?: false)
       session.channels[chid].expects(:process).with() do
         session.open_channel
         true
@@ -128,14 +128,14 @@ module Connection
     end
 
     def test_process_should_exit_after_processing_if_block_is_true_then_false
-      session.channels[0] = stub("channel", :local_closed? => false)
+      session.channels[0] = stub("channel", local_closed?: false)
       session.channels[0].expects(:process)
       IO.expects(:select).never
       process_times(2)
     end
 
     def test_process_should_not_process_channels_that_are_closing
-      session.channels[0] = stub("channel", :local_closed? => true)
+      session.channels[0] = stub("channel", local_closed?: true)
       session.channels[0].expects(:process).never
       IO.expects(:select).never
       process_times(2)
@@ -362,7 +362,7 @@ module Connection
     end
 
     def test_ready_readers_that_are_registered_with_a_block_should_call_block_instead_of_fill
-      io = stub("io", :pending_write? => false)
+      io = stub("io", pending_write?: false)
       flag = false
       session.stop_listening_to(socket) # so that we only have to test the presence of a single IO object
       session.listen_to(io) { flag = true }
@@ -386,7 +386,7 @@ module Connection
 
     def test_process_should_call_enqueue_message_if_io_select_timed_out
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
-      options = { :keepalive => true }
+      options = { keepalive: true }
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
       IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
       transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
@@ -395,7 +395,7 @@ module Connection
 
     def test_process_should_raise_if_keepalives_not_answered
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
-      options = { :keepalive => true, :keepalive_interval => 300, :keepalive_maxcount => 3 }
+      options = { keepalive: true, keepalive_interval: 300, keepalive_maxcount: 3 }
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
       [1,2,3].each do |i|
         Time.stubs(:now).returns(Time.at(i*300))
@@ -412,7 +412,7 @@ module Connection
 
     def test_process_should_not_call_enqueue_message_unless_io_select_timed_out
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
-      options = { :keepalive => true }
+      options = { keepalive: true }
       IO.stubs(:select).with([socket],[],nil,timeout).returns([[socket],[],[]])
       socket.stubs(:recv).returns("x")
       transport.expects(:enqueue_message).never
@@ -421,7 +421,7 @@ module Connection
 
     def test_process_should_not_call_enqueue_message_unless_keepalive_interval_not_go_on
       timeout = 10
-      options = { :keepalive => true, :keepalive_interval => timeout }
+      options = { keepalive: true, keepalive_interval: timeout }
       Time.stubs(:now).returns(Time.at(0), Time.at(9), Time.at(timeout))
       IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
       transport.expects(:enqueue_message).times(2)
@@ -435,7 +435,7 @@ module Connection
 
     def test_process_should_call_io_select_with_interval_as_last_arg_if_keepalive_interval_passed
       timeout = 10
-      options = { :keepalive => true, :keepalive_interval => timeout }
+      options = { keepalive: true, keepalive_interval: timeout }
       IO.expects(:select).with([socket],[],nil,timeout).returns([[],[],[]])
       session(options).process
     end
@@ -443,7 +443,7 @@ module Connection
     def test_process_should_call_io_select_with_wait_if_provided_and_minimum
       timeout = 10
       wait = 5
-      options = { :keepalive => true, :keepalive_interval => timeout }
+      options = { keepalive: true, keepalive_interval: timeout }
       IO.expects(:select).with([socket],[],nil,wait).returns([[],[],[]])
       session(options).process(wait)
     end
@@ -509,7 +509,7 @@ module Connection
     end
 
     def test_max_select_wait_time_should_return_keepalive_interval_when_keepalive_enabled
-      options = { :keepalive => true, :keepalive_interval => 5 }
+      options = { keepalive: true, keepalive_interval: 5 }
       assert_equal 5, session(options).max_select_wait_time
     end
 
@@ -566,11 +566,11 @@ module Connection
       end
 
       def channel_at(local_id)
-        session.channels[local_id] = stub("channel", :process => true, :local_closed? => false)
+        session.channels[local_id] = stub("channel", process: true, local_closed?: false)
       end
 
       def transport(options={})
-        @transport ||= MockTransport.new(options.merge(:socket => socket))
+        @transport ||= MockTransport.new(options.merge(socket: socket))
       end
 
       def session(options={})
