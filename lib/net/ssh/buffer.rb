@@ -162,7 +162,7 @@ module Net; module SSH
       index = @content.index(pattern, @position) or return nil
       length = case pattern
         when String then pattern.length
-        when Fixnum then 1
+        when Integer then 1
         when Regexp then $&.length
       end
       index && read(index+length)

@@ -250,12 +250,15 @@ module Net; module SSH; module Authentication
         psd_information = malloc_ptr(Win::SECURITY_DESCRIPTOR.size)
         raise_error_if_zero(
           Win.InitializeSecurityDescriptor(psd_information,
-                                           Win::REVISION))
+                                           Win::REVISION)
+        )
         raise_error_if_zero(
           Win.SetSecurityDescriptorOwner(psd_information, get_sid_ptr(user),
-                                         0))
+                                         0)
+        )
         raise_error_if_zero(
-          Win.IsValidSecurityDescriptor(psd_information))
+          Win.IsValidSecurityDescriptor(psd_information)
+        )
 
         sa = Win::SECURITY_ATTRIBUTES.new(to_struct_ptr(malloc_ptr(Win::SECURITY_ATTRIBUTES.size)))
         sa.nLength = Win::SECURITY_ATTRIBUTES.size
@@ -337,7 +340,8 @@ module Net; module SSH; module Authentication
 
         raise_error_if_zero(
           Win.OpenProcessToken(process_handle, desired_access,
-                               ptoken_handle))
+                               ptoken_handle)
+        )
         token_handle = ptr_to_handle(ptoken_handle)
         return token_handle
       end
@@ -362,7 +366,8 @@ module Net; module SSH; module Authentication
                                   token_information_class,
                                   ptoken_information,
                                   ptoken_information.size,
-                                  preturn_length))
+                                  preturn_length)
+        )
 
         return to_token_user(ptoken_information)
       end
@@ -430,8 +435,7 @@ module Net; module SSH; module Authentication
         @output_buffer.read(n)
       end
 
-      def close
-      end
+      def close; end
 
       # Packages the given query string and sends it to the pageant
       # process via the Windows messaging subsystem. The result is

@@ -24,14 +24,13 @@ module Net; module SSH
       @default ||= new(options)
     end
 
-    def initialize(options = {})
-    end
+    def initialize(options = {}); end
 
     # default prompt object implementation. More sophisticated implemenetations
     # might implement caching.
     class Prompter
       def initialize(info)
-        if info[:type] == 'keyboard-interactive' # rubocop:disable Style/GuardClause
+        if info[:type] == 'keyboard-interactive'
           $stdout.puts(info[:name]) unless info[:name].empty?
           $stdout.puts(info[:instruction]) unless info[:instruction].empty?
         end
@@ -49,8 +48,7 @@ module Net; module SSH
 
       # success method will be called when the password was accepted
       # It's a good time to save password asked to a cache.
-      def success
-      end
+      def success; end
     end
 
     # start password session. Multiple questions might be asked multiple times

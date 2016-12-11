@@ -225,44 +225,48 @@ class TestForward < NetSSHTest
     end
   end
 
-  def create_local_socket(&blk)
-    tempfile = Tempfile.new("net_ssh_forward_test")
-    path = tempfile.path
-    tempfile.delete
-    yield UNIXServer.open(path)
-    File.delete(path)
-  end if defined?(UNIXServer)
+  if defined?(UNIXServer)
+    def create_local_socket(&blk)
+      tempfile = Tempfile.new("net_ssh_forward_test")
+      path = tempfile.path
+      tempfile.delete
+      yield UNIXServer.open(path)
+      File.delete(path)
+    end
+  end
 
-  def test_forward_local_unix_socket_to_remote_port
-    setup_ssh_env do
-      session = Net::SSH.start(*ssh_start_params)
-      server_exc = Queue.new
-      server = start_server_sending_lot_of_data(server_exc)
-      remote_port = server.addr[1]
-      client_data = nil
+  if defined?(UNIXSocket)
+    def test_forward_local_unix_socket_to_remote_port
+      setup_ssh_env do
+        session = Net::SSH.start(*ssh_start_params)
+        server_exc = Queue.new
+        server = start_server_sending_lot_of_data(server_exc)
+        remote_port = server.addr[1]
+        client_data = nil
 
-      create_local_socket do |local_socket|
-        session.forward.local(local_socket, localhost, remote_port)
-        client_done = Queue.new
+        create_local_socket do |local_socket|
+          session.forward.local(local_socket, localhost, remote_port)
+          client_done = Queue.new
 
-        Thread.start do
-          begin
-            client = UNIXSocket.new(local_socket.path)
-            client_data = client.recv(1024)
-            client.close
-            sleep(0.2)
-          ensure
-            client_done << true
+          Thread.start do
+            begin
+              client = UNIXSocket.new(local_socket.path)
+              client_data = client.recv(1024)
+              client.close
+              sleep(0.2)
+            ensure
+              client_done << true
+            end
           end
+
+          session.loop(0.1) { client_done.empty? }
         end
 
-        session.loop(0.1) { client_done.empty? }
+        assert_not_nil(client_data, "client should have received data")
+        assert(client_data.match(/item\d/), 'client should have received the string item')
       end
-
-      assert_not_nil(client_data, "client should have received data")
-      assert(client_data.match(/item\d/), 'client should have received the string item')
     end
-  end if defined?(UNIXSocket)
+  end
 
   def test_loop_should_not_abort_when_server_side_of_forward_is_closed
     setup_ssh_env do
@@ -388,7 +392,7 @@ class TestForward < NetSSHTest
       Timeout.timeout(5) do
         begin
           session.loop(0.1) { true }
-        rescue EOFError, IOError, Errno::EBADF
+        rescue IOError, Errno::EBADF
           server_error = $!
           #puts "Error: #{$!} #{$!.backtrace.join("\n")}"
         end

@@ -68,14 +68,18 @@ module Net; module SSH; module Connection
 
       fired_sessions = {}
 
-      readers.each do |reader|
-        session = owners[reader]
-        (fired_sessions[session] ||= {r: [],w: []})[:r] << reader
-      end if readers
-      writers.each do |writer|
-        session = owners[writer]
-        (fired_sessions[session] ||= {r: [],w: []})[:w] << writer
-      end if writers
+      if readers
+        readers.each do |reader|
+          session = owners[reader]
+          (fired_sessions[session] ||= {r: [],w: []})[:r] << reader
+        end
+      end
+      if writers
+        writers.each do |writer|
+          session = owners[writer]
+          (fired_sessions[session] ||= {r: [],w: []})[:w] << writer
+        end
+      end
 
       fired_sessions.each do |s,rw|
         s.ev_do_handle_events(rw[:r],rw[:w])

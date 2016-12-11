@@ -54,14 +54,14 @@ module NetSSH
     end
 
     def test_constructor_should_reject_options_set_to_nil
-      Kernel.expects(:warn).with { |message| message =~ /remote_user/}.once
+      Kernel.expects(:warn).with { |message| message =~ /remote_user/ }.once
 
       options = { remote_user: nil }
       Net::SSH.start('localhost', 'testuser', options)
     end
 
     def test_constructor_should_reject_options_set_to_array_of_nil
-      Kernel.expects(:warn).with { |message| message =~ /keys/}.once
+      Kernel.expects(:warn).with { |message| message =~ /keys/ }.once
 
       ENV.delete('no-such-env-variable')
       Net::SSH.start('localhost', 'testuser', keys: [ENV['no-such-env-variable']])

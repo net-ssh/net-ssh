@@ -8,6 +8,6 @@ if !Gem.win_platform? && RUBY_ENGINE == "mri"
 end
 
 if ENV["CI"]
-  gem 'simplecov', require: false, group: :test
   gem 'codecov', require: false, group: :test
+  gem 'simplecov', require: false, group: :test
 end
