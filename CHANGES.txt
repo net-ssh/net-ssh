@@ -1,3 +1,7 @@
+=== 4.0.0.rc2
+
+ * Added ssh-ed25519 to KnownHosts:SUPPORTED_TYPE [detatka-kuzlatka-otevrete, Miklós Fazekas, #459]
+
 === 4.0.0.rc1
 
  * Allow :password to be nil for capistrano v2 compatibility [Will Bryant, #357]

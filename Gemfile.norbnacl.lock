@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    net-ssh (4.0.0.beta3)
+    net-ssh (4.0.0.rc1)
 
 GEM
   remote: https://rubygems.org/
@@ -38,4 +38,4 @@ DEPENDENCIES
   rubocop (~> 0.39.0)
 
 BUNDLED WITH
-   1.13.5
+   1.13.6
