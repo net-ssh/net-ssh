@@ -1,4 +1,4 @@
-require 'common'
+require_relative '../common'
 require 'net/ssh/transport/session'
 
 # mocha adds #verify to Object, which throws off the host-key-verifier part of

@@ -61,4 +61,21 @@ module IntegrationTestHelpers
     raise "Command: #{command} failed:#{status.exitstatus}" unless status
     status.exitstatus
   end
+
+  def with_sshd_config(sshd_config, &block)
+    raise "Failed to copy config" unless system("sudo cp -f /etc/ssh/sshd_config /etc/ssh/sshd_config.original")
+    begin
+      Tempfile.open('sshd_config') do |f|
+        f.write(sshd_config)
+        f.close
+        system("sudo cp -f #{f.path} /etc/ssh/sshd_config")
+      end
+      system("sudo chmod 0644 /etc/ssh/sshd_config")
+      raise "Failed to restart sshd" unless system("sudo service ssh restart")
+      yield
+    ensure
+      system("sudo cp -f /etc/ssh/sshd_config.original /etc/ssh/sshd_config")
+      system("sudo service ssh restart")
+    end
+  end
 end

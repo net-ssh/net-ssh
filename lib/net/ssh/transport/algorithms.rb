@@ -6,6 +6,7 @@ require 'net/ssh/transport/constants'
 require 'net/ssh/transport/hmac'
 require 'net/ssh/transport/kex'
 require 'net/ssh/transport/server_version'
+require 'net/ssh/authentication/ed25519_loader'
 
 module Net; module SSH; module Transport
 
@@ -42,12 +43,15 @@ module Net; module SSH; module Transport
                          hmac-sha2-512-96 none),
 
       :compression => %w(none zlib@openssh.com zlib),
-      :language    => %w() 
+      :language    => %w()
     }
     if defined?(OpenSSL::PKey::EC)
       ALGORITHMS[:host_key] += %w(ecdsa-sha2-nistp256
                                   ecdsa-sha2-nistp384
                                   ecdsa-sha2-nistp521)
+      if Net::SSH::Authentication::ED25519Loader::LOADED
+        ALGORITHMS[:host_key] += %w(ssh-ed25519)
+      end
       ALGORITHMS[:kex] += %w(ecdh-sha2-nistp256
                              ecdh-sha2-nistp384
                              ecdh-sha2-nistp521)

@@ -4,7 +4,7 @@ ENV['NET_SSH_NO_RBNACL'] = 'true'
 # Specify your gem's dependencies in mygem.gemspec
 gemspec
 
-unless Gem.win_platform?
+if ENV["CI"] && !Gem.win_platform?
   gem 'simplecov', require: false, group: :test
-  gem 'codecov', require: false, group: :test if ENV["CI"]
+  gem 'codecov', require: false, group: :test
 end

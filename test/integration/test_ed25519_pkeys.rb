@@ -68,6 +68,27 @@ class TestED25519PKeys < NetSSHTest
       assert_equal "hello from:net_ssh_1\n", ret
     end
   end
+
+  def test_with_only_ed25519_host_key
+    config_lines = File.read('/etc/ssh/sshd_config').split("\n")
+    config_lines = config_lines.map do |line|
+      if (line =~ /^HostKey /) && !(line =~ /ed25519/)
+        "##{line}"
+      else
+        line
+      end
+    end
+
+    Tempfile.open('empty_kh') do |f|
+      f.close
+      with_sshd_config(config_lines.join("\n")) do
+        ret = Net::SSH.start("localhost", "net_ssh_1", password: 'foopwd', user_known_hosts_file: [f.path]) do |ssh|
+          ssh.exec! "echo 'foo'"
+        end
+        assert_equal "foo\n", ret
+      end
+    end
+  end
 end
 
 end
