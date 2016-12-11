@@ -212,7 +212,7 @@ module Authentication
       end
 
       def factory
-        @factory ||= stub("socket factory", :open => socket)
+        @factory ||= stub("socket factory", open: socket)
       end
 
       def agent(auto=:connect)

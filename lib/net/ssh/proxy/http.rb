@@ -87,11 +87,11 @@ module Net; module SSH; module Proxy
           body = socket.read(headers["Content-Length"].to_i)
         end
 
-        return { :version => version,
-                 :code => code.to_i,
-                 :reason => reason,
-                 :headers => headers,
-                 :body => body }
+        return { version: version,
+                 code: code.to_i,
+                 reason: reason,
+                 headers: headers,
+                 body: body }
       end
   end
 

@@ -19,7 +19,7 @@ class TestED25519PKeys < NetSSHTest
 
       # TODO: fix bug in net ssh which reads public key even if private key is there
       sh "mv #{dir}/id_rsa_ed25519.pub #{dir}/id_rsa_ed25519.pub.hidden"
-      
+
       #sshopts = '-vvvv -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
       #sh "ssh -i #{dir}/id_rsa_ed25519 #{sshopts} net_ssh_1@localhost echo 'hello'"
 

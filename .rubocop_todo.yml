@@ -22,14 +22,6 @@ Lint/BlockAlignment:
   Exclude:
     - 'test/integration/test_proxy.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Lint/Debugger:
-  Exclude:
-    - 'quicktest.rb'
-    - 'test.rb'
-    - 'test_connection_close_shall_close_cannels.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Lint/DeprecatedClassMethods:
@@ -65,7 +57,6 @@ Lint/ImplicitStringConcatenation:
 Lint/LiteralInCondition:
   Exclude:
     - 'lib/net/ssh/authentication/pageant.rb'
-    - 'quicktest.rb'
 
 # Offense count: 2
 Lint/Loop:
@@ -96,13 +87,6 @@ Lint/RescueException:
     - 'lib/net/ssh/service/forward.rb'
     - 'lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb'
 
-# Offense count: 9
-Lint/ShadowingOuterLocalVariable:
-  Exclude:
-    - 'quicktest_1_open_channel_nb.rb'
-    - 'quicktest_337.rb'
-    - 'quicktest_4gb.rb'
-
 # Offense count: 1
 Lint/UnderscorePrefixedVariableName:
   Exclude:
@@ -116,8 +100,6 @@ Lint/UnusedBlockArgument:
     - 'lib/net/ssh/connection/keepalive.rb'
     - 'lib/net/ssh/connection/session.rb'
     - 'lib/net/ssh/service/forward.rb'
-    - 'quicktest_337.rb'
-    - 'quicktest_4gb.rb'
     - 'test/authentication/methods/test_password.rb'
     - 'test/authentication/test_agent.rb'
     - 'test/common.rb'
@@ -145,7 +127,6 @@ Lint/UselessAssignment:
     - 'lib/net/ssh/key_factory.rb'
     - 'lib/net/ssh/proxy/socks4.rb'
     - 'lib/net/ssh/proxy/socks5.rb'
-    - 'quicktest_337.rb'
     - 'test/integration/common.rb'
     - 'test/integration/test_forward.rb'
 
@@ -555,7 +536,6 @@ Style/ExtraSpacing:
     - 'lib/net/ssh/proxy/socks5.rb'
     - 'lib/net/ssh/transport/hmac/sha2_256_96.rb'
     - 'lib/net/ssh/transport/hmac/sha2_512_96.rb'
-    - 'quicktest_337.rb'
     - 'test/authentication/test_key_manager.rb'
     - 'test/integration/test_forward.rb'
     - 'test/test_config.rb'
@@ -604,7 +584,8 @@ Style/GuardClause:
 # Configuration parameters: EnforcedStyle, SupportedStyles, UseHashRocketsWithSymbolValues.
 # SupportedStyles: ruby19, ruby19_no_mixed_keys, hash_rockets
 Style/HashSyntax:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: ruby19
 
 # Offense count: 2
 Style/IfInsideElse:
@@ -666,10 +647,6 @@ Style/InfiniteLoop:
 # Cop supports --auto-correct.
 Style/LeadingCommentSpace:
   Exclude:
-    - 'quicktest.rb'
-    - 'quicktest_1_open_channel_nb.rb'
-    - 'quicktest_337.rb'
-    - 'quicktest_keepalive.rb'
     - 'test/integration/test_ed25519_pkeys.rb'
     - 'test/integration/test_forward.rb'
     - 'test/integration/test_id_rsa_keys.rb'
@@ -689,7 +666,6 @@ Style/LineEndConcatenation:
 # Cop supports --auto-correct.
 Style/MethodCallParentheses:
   Exclude:
-    - 'quicktest_337.rb'
     - 'test/authentication/test_key_manager.rb'
     - 'test/connection/test_session.rb'
     - 'test/integration/test_forward.rb'
@@ -899,7 +875,6 @@ Style/RescueModifier:
 Style/SelfAssignment:
   Exclude:
     - 'lib/net/ssh/config.rb'
-    - 'quicktest_337.rb'
 
 # Offense count: 10
 # Cop supports --auto-correct.
@@ -907,7 +882,6 @@ Style/SelfAssignment:
 Style/Semicolon:
   Exclude:
     - 'lib/net/ssh/buffer.rb'
-    - 'quicktest_337.rb'
     - 'test/connection/test_channel.rb'
     - 'test/connection/test_session.rb'
     - 'test/transport/kex/test_ecdh_sha2_nistp256.rb'
@@ -933,7 +907,6 @@ Style/SingleLineMethods:
 Style/SpaceAfterColon:
   Exclude:
     - 'lib/net/ssh/authentication/ed25519.rb'
-    - 'quicktest_keepalive.rb'
     - 'test/integration/test_ed25519_pkeys.rb'
     - 'test/verifiers/test_secure.rb'
 
@@ -977,12 +950,6 @@ Style/SpaceBeforeFirstArg:
     - 'lib/net/ssh/transport/hmac/sha2_256_96.rb'
     - 'lib/net/ssh/transport/hmac/sha2_512_96.rb'
     - 'test/authentication/test_key_manager.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/SpaceBeforeSemicolon:
-  Exclude:
-    - 'quicktest_337.rb'
 
 # Offense count: 30
 # Cop supports --auto-correct.

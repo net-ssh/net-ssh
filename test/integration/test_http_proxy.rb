@@ -23,7 +23,7 @@ class TestHTTPProxy < NetSSHTest
   end
 
   def ssh_start_params(options)
-    [localhost, user, {:keys => @key_id_rsa}.merge(options)]
+    [localhost, user, {keys: @key_id_rsa}.merge(options)]
   end
 
   def setup_ssh_env(&block)
@@ -50,7 +50,7 @@ class TestHTTPProxy < NetSSHTest
     setup_ssh_env do
       with_http_proxy_server do |http_proxy|
         msg = 'echo123'
-        ret = Net::SSH.start(*ssh_start_params(:proxy => Net::SSH::Proxy::HTTP.new('localhost', http_proxy.config[:Port]))) do |ssh|
+        ret = Net::SSH.start(*ssh_start_params(proxy: Net::SSH::Proxy::HTTP.new('localhost', http_proxy.config[:Port]))) do |ssh|
           ssh.exec! "echo \"$USER:#{msg}\""
         end
         assert_equal "net_ssh_1:#{msg}\n", ret
@@ -73,7 +73,7 @@ class TestHTTPProxy < NetSSHTest
     setup_ssh_env do
       with_http_tls_proxy_server do |http_proxy|
         msg = 'echo123'
-        ret = Net::SSH.start(*ssh_start_params(:proxy => Net::SSH::Proxy::HTTPS.new('localhost', http_proxy.config[:Port]))) do |ssh|
+        ret = Net::SSH.start(*ssh_start_params(proxy: Net::SSH::Proxy::HTTPS.new('localhost', http_proxy.config[:Port]))) do |ssh|
           ssh.exec! "echo \"$USER:#{msg}\""
         end
         assert_equal "net_ssh_1:#{msg}\n", ret

@@ -32,12 +32,12 @@ else
       end
 
       def test_exchange_keys_with_signature_key_type_mismatch_should_raise_exception
-        assert_raises(Net::SSH::Exception) { exchange! :key_type => "ssh-dss" }
+        assert_raises(Net::SSH::Exception) { exchange! key_type: "ssh-dss" }
       end
 
       def test_exchange_keys_with_host_key_type_mismatch_should_raise_exception
-        algorithms :host_key => "ssh-dss"
-        assert_raises(Net::SSH::Exception) { exchange! :key_type => "ssh-dss" }
+        algorithms host_key: "ssh-dss"
+        assert_raises(Net::SSH::Exception) { exchange! key_type: "ssh-dss" }
       end
 
       def test_exchange_keys_when_server_signature_could_not_be_verified_should_raise_exception
@@ -105,7 +105,7 @@ else
       end
 
       def algorithms(options={})
-        @algorithms ||= OpenStruct.new(:host_key => options[:server_host_key] || "ecdsa-sha2-nistp256")
+        @algorithms ||= OpenStruct.new(host_key: options[:server_host_key] || "ecdsa-sha2-nistp256")
       end
 
       def connection
@@ -121,10 +121,10 @@ else
       end
 
       def packet_data
-        @packet_data ||= { :client_version_string => "client version string",
-          :server_version_string => "server version string",
-          :server_algorithm_packet => "server algorithm packet",
-          :client_algorithm_packet => "client algorithm packet" }
+        @packet_data ||= { client_version_string: "client version string",
+          server_version_string: "server version string",
+          server_algorithm_packet: "server algorithm packet",
+          client_algorithm_packet: "client algorithm packet" }
       end
 
       def server_ecdh_pubkey

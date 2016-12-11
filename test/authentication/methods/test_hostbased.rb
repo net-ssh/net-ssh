@@ -8,11 +8,11 @@ module Authentication; module Methods
     include Common
 
     def test_authenticate_should_return_false_when_no_key_manager_has_been_set
-      assert_equal false, subject(:key_manager => nil).authenticate("ssh-connection", "jamis")
+      assert_equal false, subject(key_manager: nil).authenticate("ssh-connection", "jamis")
     end
 
     def test_authenticate_should_return_false_when_key_manager_has_no_keys
-      assert_equal false, subject(:keys => []).authenticate("ssh-connection", "jamis")
+      assert_equal false, subject(keys: []).authenticate("ssh-connection", "jamis")
     end
 
     def test_authenticate_should_return_false_if_no_keys_can_authenticate
@@ -92,16 +92,16 @@ module Authentication; module Methods
       end
 
       def socket(options={})
-        @socket ||= stub("socket", :client_name => "me.ssh.test")
+        @socket ||= stub("socket", client_name: "me.ssh.test")
       end
 
       def transport(options={})
-        @transport ||= MockTransport.new(options.merge(:socket => socket))
+        @transport ||= MockTransport.new(options.merge(socket: socket))
       end
 
       def session(options={})
         @session ||= begin
-          sess = stub("auth-session", :logger => nil, :transport => transport(options))
+          sess = stub("auth-session", logger: nil, transport: transport(options))
           def sess.next_message
             transport.next_message
           end

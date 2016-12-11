@@ -108,7 +108,7 @@ module Net
               user_identities.delete(corresponding_user_identity) if corresponding_user_identity
 
               if !options[:keys_only] || corresponding_user_identity
-                known_identities[key] = { :from => :agent }
+                known_identities[key] = { from: :agent }
                 yield key
               end
             end
@@ -208,7 +208,7 @@ module Net
         # Prepared identities from user key_data, preserving their order and sources.
         def prepare_identities_from_data
           key_data.map do |data|
-            { :load_from => :data, :data => data }
+            { load_from: :data, data: data }
           end
         end
 
@@ -219,15 +219,15 @@ module Net
               case identity[:load_from]
               when :pubkey_file
                 key = KeyFactory.load_public_key(identity[:pubkey_file])
-                { :public_key => key, :from => :file, :file => identity[:privkey_file] }
+                { public_key: key, from: :file, file: identity[:privkey_file] }
               when :privkey_file
                 private_key = KeyFactory.load_private_key(identity[:privkey_file], options[:passphrase], ask_passphrase, options[:password_prompt])
                 key = private_key.send(:public_key)
-                { :public_key => key, :from => :file, :file => identity[:privkey_file], :key => private_key }
+                { public_key: key, from: :file, file: identity[:privkey_file], key: private_key }
               when :data
                 private_key = KeyFactory.load_data_private_key(identity[:data], options[:passphrase], ask_passphrase, "<key in memory>", options[:password_prompt])
                 key = private_key.send(:public_key)
-                { :public_key => key, :from => :key_data, :data => identity[:data], :key => private_key }
+                { public_key: key, from: :key_data, data: identity[:data], key: private_key }
               else
                 identity
               end

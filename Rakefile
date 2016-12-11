@@ -22,7 +22,7 @@ Rake::Task[:release].enhance [:check_NET_SSH_BUILDGEM_SIGNED]
 Rake::Task[:release].prerequisites.unshift(:check_NET_SSH_BUILDGEM_SIGNED)
 
 
-task :default => ["build"]
+task default: ["build"]
 CLEAN.include [ 'pkg', 'rdoc' ]
 name = "net-ssh"
 

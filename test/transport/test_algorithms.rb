@@ -8,7 +8,7 @@ module Transport
 
     def test_allowed_packets
       (0..255).each do |type|
-        packet = stub("packet", :type => type)
+        packet = stub("packet", type: type)
         case type
         when 1..4, 6..19, 21..49 then assert(Net::SSH::Transport::Algorithms.allowed_packet?(packet), "#{type} should be allowed during key exchange")
         else assert(!Net::SSH::Transport::Algorithms.allowed_packet?(packet), "#{type} should not be allowed during key exchange")
@@ -36,11 +36,11 @@ module Transport
     end
 
     def test_constructor_with_preferred_host_key_type_should_put_preferred_host_key_type_first
-      assert_equal %w(ssh-dss ssh-rsa ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com)+ec_ed_host_keys, algorithms(:host_key => "ssh-dss", :append_all_supported_algorithms => true)[:host_key]
+      assert_equal %w(ssh-dss ssh-rsa ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com)+ec_ed_host_keys, algorithms(host_key: "ssh-dss", append_all_supported_algorithms: true)[:host_key]
     end
 
     def test_constructor_with_known_hosts_reporting_known_host_key_should_use_that_host_key_type
-      Net::SSH::KnownHosts.expects(:search_for).with("net.ssh.test,127.0.0.1", {}).returns([stub("key", :ssh_type => "ssh-dss")])
+      Net::SSH::KnownHosts.expects(:search_for).with("net.ssh.test,127.0.0.1", {}).returns([stub("key", ssh_type: "ssh-dss")])
       assert_equal %w(ssh-dss ssh-rsa ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com )+ec_ed_host_keys, algorithms[:host_key]
     end
 
@@ -65,7 +65,7 @@ module Transport
     end
 
     def test_constructor_with_unrecognized_host_key_type_should_return_whats_supported
-      assert_equal %w(ssh-rsa ssh-dss ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com )+ec_ed_host_keys, algorithms(:host_key => "bogus ssh-rsa",:append_all_supported_algorithms => true)[:host_key]
+      assert_equal %w(ssh-rsa ssh-dss ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com )+ec_ed_host_keys, algorithms(host_key: "bogus ssh-rsa",append_all_supported_algorithms: true)[:host_key]
     end
 
     def ec_kex
@@ -77,56 +77,56 @@ module Transport
     end
 
     def test_constructor_with_preferred_kex_should_put_preferred_kex_first
-      assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256)+ec_kex, algorithms(:kex => "diffie-hellman-group1-sha1", :append_all_supported_algorithms => true)[:kex]
+      assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256)+ec_kex, algorithms(kex: "diffie-hellman-group1-sha1", append_all_supported_algorithms: true)[:kex]
     end
 
     def test_constructor_with_unrecognized_kex_should_not_raise_exception
       assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256)+ec_kex, algorithms(
-        :kex => %w(bogus diffie-hellman-group1-sha1),:append_all_supported_algorithms => true)[:kex]
+        kex: %w(bogus diffie-hellman-group1-sha1),append_all_supported_algorithms: true)[:kex]
     end
 
     def test_constructor_with_preferred_encryption_should_put_preferred_encryption_first
-      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => "aes256-cbc",
-      :append_all_supported_algorithms => true)[:encryption]
+      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr cast128-ctr blowfish-ctr 3des-ctr), algorithms(encryption: "aes256-cbc",
+      append_all_supported_algorithms: true)[:encryption]
     end
 
     def test_constructor_with_multiple_preferred_encryption_should_put_all_preferred_encryption_first
-      assert_equal %w(aes256-cbc 3des-cbc idea-cbc aes128-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => %w(aes256-cbc 3des-cbc idea-cbc), :append_all_supported_algorithms => true)[:encryption]
+      assert_equal %w(aes256-cbc 3des-cbc idea-cbc aes128-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr cast128-ctr blowfish-ctr 3des-ctr), algorithms(encryption: %w(aes256-cbc 3des-cbc idea-cbc), append_all_supported_algorithms: true)[:encryption]
     end
 
     def test_constructor_with_unrecognized_encryption_should_keep_whats_supported
-      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr cast128-ctr blowfish-ctr 3des-ctr), algorithms(:encryption => %w(bogus aes256-cbc), :append_all_supported_algorithms => true)[:encryption]
+      assert_equal %w(aes256-cbc aes128-cbc 3des-cbc blowfish-cbc cast128-cbc aes192-cbc rijndael-cbc@lysator.liu.se idea-cbc none arcfour128 arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr cast128-ctr blowfish-ctr 3des-ctr), algorithms(encryption: %w(bogus aes256-cbc), append_all_supported_algorithms: true)[:encryption]
     end
 
     def test_constructor_with_preferred_hmac_should_put_preferred_hmac_first
-      assert_equal %w(hmac-md5-96 hmac-sha1 hmac-md5 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(:hmac => "hmac-md5-96", :append_all_supported_algorithms => true)[:hmac]
+      assert_equal %w(hmac-md5-96 hmac-sha1 hmac-md5 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(hmac: "hmac-md5-96", append_all_supported_algorithms: true)[:hmac]
     end
 
     def test_constructor_with_multiple_preferred_hmac_should_put_all_preferred_hmac_first
-      assert_equal %w(hmac-md5-96 hmac-sha1-96 hmac-sha1 hmac-md5 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(:hmac => %w(hmac-md5-96 hmac-sha1-96), :append_all_supported_algorithms => true)[:hmac]
+      assert_equal %w(hmac-md5-96 hmac-sha1-96 hmac-sha1 hmac-md5 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms(hmac: %w(hmac-md5-96 hmac-sha1-96), append_all_supported_algorithms: true)[:hmac]
     end
 
     def test_constructor_with_unrecognized_hmac_should_ignore_those
       assert_equal %w(hmac-md5-96 hmac-sha1 hmac-md5 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none),
-        algorithms(:hmac => "hmac-md5-96", :append_all_supported_algorithms => true)[:hmac]
+        algorithms(hmac: "hmac-md5-96", append_all_supported_algorithms: true)[:hmac]
     end
 
     def test_constructor_with_preferred_compression_should_put_preferred_compression_first
-      assert_equal %w(zlib none zlib@openssh.com), algorithms(:compression => "zlib", :append_all_supported_algorithms => true)[:compression]
+      assert_equal %w(zlib none zlib@openssh.com), algorithms(compression: "zlib", append_all_supported_algorithms: true)[:compression]
     end
 
     def test_constructor_with_multiple_preferred_compression_should_put_all_preferred_compression_first
-      assert_equal %w(zlib@openssh.com zlib none), algorithms(:compression => %w(zlib@openssh.com zlib),
-         :append_all_supported_algorithms => true)[:compression]
+      assert_equal %w(zlib@openssh.com zlib none), algorithms(compression: %w(zlib@openssh.com zlib),
+         append_all_supported_algorithms: true)[:compression]
     end
 
     def test_constructor_with_general_preferred_compression_should_put_none_last
       assert_equal %w(zlib@openssh.com zlib none), algorithms(
-        :compression => true, :append_all_supported_algorithms => true)[:compression]
+        compression: true, append_all_supported_algorithms: true)[:compression]
     end
 
     def test_constructor_with_unrecognized_compression_should_return_whats_supported
-      assert_equal %w(none zlib zlib@openssh.com), algorithms(:compression => %w(bogus none zlib), :append_all_supported_algorithms => true)[:compression]
+      assert_equal %w(none zlib zlib@openssh.com), algorithms(compression: %w(bogus none zlib), append_all_supported_algorithms: true)[:compression]
     end
 
     def test_initial_state_should_be_neither_pending_nor_initialized
@@ -165,23 +165,23 @@ module Transport
     end
 
     def test_key_exchange_when_server_does_not_support_preferred_kex_should_fallback_to_secondary
-      kexinit :kex => "diffie-hellman-group1-sha1"
+      kexinit kex: "diffie-hellman-group1-sha1"
       transport.expect do |t,buffer|
         assert_kexinit(buffer)
-        install_mock_key_exchange(buffer, :kex => Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1)
+        install_mock_key_exchange(buffer, kex: Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1)
       end
       algorithms.accept_kexinit(kexinit)
     end
 
     def test_key_exchange_when_server_does_not_support_any_preferred_kex_should_raise_error
-      kexinit :kex => "something-obscure"
+      kexinit kex: "something-obscure"
       transport.expect { |t,buffer| assert_kexinit(buffer) }
       assert_raises(Net::SSH::Exception) { algorithms.accept_kexinit(kexinit) }
     end
 
     def test_allow_when_not_pending_should_be_true_for_all_packets
       (0..255).each do |type|
-        packet = stub("packet", :type => type)
+        packet = stub("packet", type: type)
         assert algorithms.allow?(packet), type.to_s
       end
     end
@@ -192,7 +192,7 @@ module Transport
       assert algorithms.pending?
 
       (0..255).each do |type|
-        packet = stub("packet", :type => type)
+        packet = stub("packet", type: type)
         case type
         when 1..4, 6..19, 21..49 then assert(algorithms.allow?(packet), "#{type} should be allowed during key exchange")
         else assert(!algorithms.allow?(packet), "#{type} should not be allowed during key exchange")
@@ -201,10 +201,10 @@ module Transport
     end
 
     def test_exchange_with_zlib_compression_enabled_sets_compression_to_standard
-      algorithms :compression => "zlib", :append_all_supported_algorithms => true
+      algorithms compression: "zlib", append_all_supported_algorithms: true
 
       transport.expect do |t, buffer|
-        assert_kexinit(buffer, :compression_client => "zlib,none,zlib@openssh.com", :compression_server => "zlib,none,zlib@openssh.com")
+        assert_kexinit(buffer, compression_client: "zlib,none,zlib@openssh.com", compression_server: "zlib,none,zlib@openssh.com")
         install_mock_key_exchange(buffer)
       end
 
@@ -216,10 +216,10 @@ module Transport
     end
 
     def test_exchange_with_zlib_at_openssh_dot_com_compression_enabled_sets_compression_to_delayed
-      algorithms :compression => "zlib@openssh.com", :append_all_supported_algorithms => true
+      algorithms compression: "zlib@openssh.com", append_all_supported_algorithms: true
 
       transport.expect do |t, buffer|
-        assert_kexinit(buffer, :compression_client => "zlib@openssh.com,none,zlib", :compression_server => "zlib@openssh.com,none,zlib")
+        assert_kexinit(buffer, compression_client: "zlib@openssh.com,none,zlib", compression_server: "zlib@openssh.com,none,zlib")
         install_mock_key_exchange(buffer)
       end
 
@@ -242,24 +242,24 @@ module Transport
 
         kex.expects(:new).
           with(algorithms, transport,
-            :client_version_string => Net::SSH::Transport::ServerVersion::PROTO_VERSION,
-            :server_version_string => transport.server_version.version,
-            :server_algorithm_packet => kexinit.to_s,
-            :client_algorithm_packet => buffer.to_s,
-            :need_bytes => 20,
-            :minimum_dh_bits => nil,
-            :logger => nil).
-          returns(stub("kex", :exchange_keys => { :shared_secret => shared_secret, :session_id => session_id, :hashing_algorithm => hashing_algorithm }))
+            client_version_string: Net::SSH::Transport::ServerVersion::PROTO_VERSION,
+            server_version_string: transport.server_version.version,
+            server_algorithm_packet: kexinit.to_s,
+            client_algorithm_packet: buffer.to_s,
+            need_bytes: 20,
+            minimum_dh_bits: nil,
+            logger: nil).
+          returns(stub("kex", exchange_keys: { shared_secret: shared_secret, session_id: session_id, hashing_algorithm: hashing_algorithm }))
       end
 
       def install_mock_algorithm_lookups(options={})
-        params = { :shared => shared_secret.to_ssh, :hash => session_id, :digester => hashing_algorithm }
+        params = { shared: shared_secret.to_ssh, hash: session_id, digester: hashing_algorithm }
         Net::SSH::Transport::CipherFactory.expects(:get).
-          with(options[:client_cipher] || "aes128-cbc", params.merge(:iv => key("A"), :key => key("C"), :encrypt => true)).
+          with(options[:client_cipher] || "aes128-cbc", params.merge(iv: key("A"), key: key("C"), encrypt: true)).
           returns(:client_cipher)
 
         Net::SSH::Transport::CipherFactory.expects(:get).
-          with(options[:server_cipher] || "aes128-cbc", params.merge(:iv => key("B"), :key => key("D"), :decrypt => true)).
+          with(options[:server_cipher] || "aes128-cbc", params.merge(iv: key("B"), key: key("D"), decrypt: true)).
           returns(:server_cipher)
 
         Net::SSH::Transport::HMAC.expects(:get).with(options[:client_hmac] || "hmac-sha1", key("E"), params).returns(:client_hmac)

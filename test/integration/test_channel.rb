@@ -17,7 +17,7 @@ class TestChannel < NetSSHTest
   end
 
   def ssh_start_params(options = {})
-    [localhost, user, {:keys => @key_id_rsa}.merge(options)]
+    [localhost, user, {keys: @key_id_rsa}.merge(options)]
   end
 
   def setup_ssh_env(&block)
