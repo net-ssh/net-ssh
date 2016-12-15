@@ -1,4 +1,4 @@
-require 'common'
+require_relative '../common'
 require 'net/ssh'
 
 module NetSSH
@@ -54,15 +54,29 @@ module NetSSH
     end
 
     def test_constructor_should_reject_options_set_to_nil
-      assert_raises(ArgumentError) do
-        options = { remote_user: nil }
-        Net::SSH.start('localhost', 'testuser', options)
-      end
+      Kernel.expects(:warn).with { |message| message =~ /remote_user/}.once
+
+      options = { remote_user: nil }
+      Net::SSH.start('localhost', 'testuser', options)
+    end
+
+    def test_constructor_should_reject_options_set_to_array_of_nil
+      Kernel.expects(:warn).with { |message| message =~ /keys/}.once
+
+      ENV.delete('no-such-env-variable')
+      Net::SSH.start('localhost', 'testuser', keys: [ENV['no-such-env-variable']])
     end
 
     def test_constructor_should_not_reject_nil_password_options_for_cap_v2_compatibility
       assert_nothing_raised do
         options = { password: nil }
+        Net::SSH.start('localhost', 'testuser', options)
+      end
+    end
+
+    def test_constructor_should_not_reject_nil_passpharse
+      assert_nothing_raised do
+        options = { passphrase: nil }
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
