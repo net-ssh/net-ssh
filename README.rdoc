@@ -130,6 +130,19 @@ To run integration tests see test/integration/README.txt
 
      rake build
 
+=== GEM SIGNING (for maintainers)
+
+If you have the net-ssh private signing key, you will be able to create signed release builds. Make sure the private key path matches the `signing_key` path set in `net-ssh.gemspec` and tell rake to sign the gem by setting the `NET_SSH_BUILDGEM_SIGNED` flag:
+
+     NET_SSH_BUILDGEM_SIGNED=true rake build
+
+For time to time, the public certificate associated to the private key needs to be renewed. You can do this with the following command:
+
+     gem cert --build netssh@solutious.com --private-key path/2/net-ssh-private_key.pem
+     mv gem-public_cert.pem net-ssh-public_cert.pem
+     gem cert --add net-ssh-public_cert.pem
+
+
 == LICENSE:
 
 (The MIT License)
