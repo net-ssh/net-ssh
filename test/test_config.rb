@@ -62,7 +62,7 @@ class TestConfig < NetSSHTest
     }
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "test.host")
-      assert_equal nil, config['port']
+      assert_nil config['port']
       config = Net::SSH::Config.load(f, "|")
       assert_equal 1234, config['port']
     end
@@ -77,20 +77,20 @@ class TestConfig < NetSSHTest
     assert_equal %w(~/.ssh/id_dsa), config[:keys]
     assert !config.key?(:rekey_limit)
   end
-  
+
   def test_load_with_no_host
     config = Net::SSH::Config.load(config(:nohost), "test.host")
     assert_equal %w(~/.ssh/id_dsa ~/.ssh/id_rsa), config['identityfile']
     assert_equal 1985, config['port']
   end
-  
+
   def test_load_with_multiple_hosts
     config = Net::SSH::Config.load(config(:multihost), "test.host")
     assert config['compression']
     assert_equal '2G', config['rekeylimit']
     assert_equal 1980, config['port']
   end
-  
+
   def test_load_with_multiple_hosts_and_config_should_match_for_both
     aconfig = Net::SSH::Config.load(config(:multihost), "test.host")
     bconfig = Net::SSH::Config.load(config(:multihost), "other.host")
@@ -98,7 +98,7 @@ class TestConfig < NetSSHTest
     assert_equal aconfig['compression'], bconfig['compression']
     assert_equal aconfig['rekeylimit'], bconfig['rekeylimit']
   end
-  
+
   def test_load_should_parse_equal_sign_delimiters
     config = Net::SSH::Config.load(config(:eqsign), "test.test")
     assert config['compression']
@@ -189,7 +189,7 @@ class TestConfig < NetSSHTest
     net_ssh = Net::SSH::Config.translate(open_ssh)
     assert_equal %w(keyboard-interactive none password publickey), net_ssh[:auth_methods].sort
   end
-  
+
   def test_should_ddisable_keyboard_interactive_when_challeng_and_keyboardinteractive_is_off
     open_ssh = {
       'challengeresponseauthentication' => false,
@@ -222,7 +222,7 @@ class TestConfig < NetSSHTest
     config = Net::SSH::Config.load(config(:host_plus), "test.host")
     assert config['compression']
   end
-  
+
   def test_load_with_numeric_host
     config = Net::SSH::Config.load(config(:numeric_host), "1234")
     assert config['compression']

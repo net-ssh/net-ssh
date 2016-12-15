@@ -41,21 +41,21 @@ module Net
   #
   # == X == "execute a command and capture the output"
   #
-  #   Net::SSH.start("host", "user", :password => "password") do |ssh|
+  #   Net::SSH.start("host", "user", password: "password") do |ssh|
   #     result = ssh.exec!("ls -l")
   #     puts result
   #   end
   #
   # == X == "forward connections on a local port to a remote host"
   #
-  #   Net::SSH.start("host", "user", :password => "password") do |ssh|
+  #   Net::SSH.start("host", "user", password: "password") do |ssh|
   #     ssh.forward.local(1234, "www.google.com", 80)
   #     ssh.loop { true }
   #   end
   #
   # == X == "forward connections on a remote port to the local host"
   #
-  #   Net::SSH.start("host", "user", :password => "password") do |ssh|
+  #   Net::SSH.start("host", "user", password: "password") do |ssh|
   #     ssh.forward.remote(80, "www.google.com", 1234)
   #     ssh.loop { true }
   #   end
@@ -154,8 +154,8 @@ module Net
     # * :max_win_size => maximum size we tell the other side that is supported for
     #   the window.
     # * :non_interactive => set to true if your app is non interactive and prefers
-    #   authentication failure vs password prompt. Non-interactive applications 
-    #   should set it to true to prefer failing a password/etc auth methods vs. 
+    #   authentication failure vs password prompt. Non-interactive applications
+    #   should set it to true to prefer failing a password/etc auth methods vs.
     #   asking for password.
     # * :paranoid => either false, true, :very, or :secure specifying how
     #   strict host-key verification should be (in increasing order here).
