@@ -1125,7 +1125,7 @@ module Transport
     hmacs = Net::SSH::Transport::HMAC::MAP.keys
 
     ciphers.each do |cipher_name|
-      unless Net::SSH::Transport::CipherFactory.supported?(cipher_name) && PACKETS.has_key?(cipher_name)
+      unless Net::SSH::Transport::CipherFactory.supported?(cipher_name) && PACKETS.key?(cipher_name)
         puts "Skipping packet stream test for #{cipher_name}"
         next
       end

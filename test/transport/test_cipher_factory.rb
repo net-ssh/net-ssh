@@ -298,8 +298,7 @@ module Transport
         key: "abc",
         digester: OpenSSL::Digest::MD5,
         shared: "1234567890123456780",
-        hash: '!@#$%#$^%$&^&%#$@$'
-      }
+        hash: '!@#$%#$^%$&^&%#$@$'}
 
       def factory
         Net::SSH::Transport::CipherFactory

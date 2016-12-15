@@ -41,7 +41,7 @@ module Transport
 
     def test_constructor_with_known_hosts_reporting_known_host_key_should_use_that_host_key_type
       Net::SSH::KnownHosts.expects(:search_for).with("net.ssh.test,127.0.0.1", {}).returns([stub("key", ssh_type: "ssh-dss")])
-      assert_equal %w(ssh-dss ssh-rsa ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com )+ec_ed_host_keys, algorithms[:host_key]
+      assert_equal %w(ssh-dss ssh-rsa ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com)+ec_ed_host_keys, algorithms[:host_key]
     end
 
     def ed_host_keys
@@ -65,7 +65,7 @@ module Transport
     end
 
     def test_constructor_with_unrecognized_host_key_type_should_return_whats_supported
-      assert_equal %w(ssh-rsa ssh-dss ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com )+ec_ed_host_keys, algorithms(host_key: "bogus ssh-rsa",append_all_supported_algorithms: true)[:host_key]
+      assert_equal %w(ssh-rsa ssh-dss ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com)+ec_ed_host_keys, algorithms(host_key: "bogus ssh-rsa",append_all_supported_algorithms: true)[:host_key]
     end
 
     def ec_kex
@@ -82,7 +82,8 @@ module Transport
 
     def test_constructor_with_unrecognized_kex_should_not_raise_exception
       assert_equal %w(diffie-hellman-group1-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha256)+ec_kex, algorithms(
-        kex: %w(bogus diffie-hellman-group1-sha1),append_all_supported_algorithms: true)[:kex]
+        kex: %w(bogus diffie-hellman-group1-sha1),append_all_supported_algorithms: true
+      )[:kex]
     end
 
     def test_constructor_with_preferred_encryption_should_put_preferred_encryption_first
@@ -122,7 +123,8 @@ module Transport
 
     def test_constructor_with_general_preferred_compression_should_put_none_last
       assert_equal %w(zlib@openssh.com zlib none), algorithms(
-        compression: true, append_all_supported_algorithms: true)[:compression]
+        compression: true, append_all_supported_algorithms: true
+      )[:compression]
     end
 
     def test_constructor_with_unrecognized_compression_should_return_whats_supported

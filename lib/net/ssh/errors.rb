@@ -5,14 +5,14 @@ module Net; module SSH
 
   # This exception is raised when authentication fails (whether it be
   # public key authentication, password authentication, or whatever).
-  class AuthenticationFailed < Exception; end
+  class AuthenticationFailed < Net::SSH::Exception; end
 
   # This exception is raised when a connection attempt times out.
-  class ConnectionTimeout < Exception; end
+  class ConnectionTimeout < Net::SSH::Exception; end
 
   # This exception is raised when the remote host has disconnected
   # unexpectedly.
-  class Disconnect < Exception; end
+  class Disconnect < Net::SSH::Exception; end
 
   # This exception is raised when the remote host has disconnected/
   # timeouted unexpectedly.
@@ -23,14 +23,14 @@ module Net; module SSH
   # want to fail in such a way that the server knows it failed, you can
   # raise this exception in the handler and Net::SSH will translate that into
   # a "channel failure" message.
-  class ChannelRequestFailed < Exception; end
+  class ChannelRequestFailed < Net::SSH::Exception; end
 
   # This is exception is primarily used internally, but if you have a channel
   # open handler (see Net::SSH::Connection::Session#on_open_channel) and you
   # want to fail in such a way that the server knows it failed, you can
   # raise this exception in the handler and Net::SSH will translate that into
   # a "channel open failed" message.
-  class ChannelOpenFailed < Exception
+  class ChannelOpenFailed < Net::SSH::Exception
     attr_reader :code, :reason
 
     def initialize(code, reason)
@@ -42,7 +42,7 @@ module Net; module SSH
   # Base class for host key exceptions. When rescuing this exception, you can
   # inspect the key fingerprint and, if you want to proceed anyway, simply call
   # the remember_host! method on the exception, and then retry.
-  class HostKeyError < Exception
+  class HostKeyError < Net::SSH::Exception
     # the callback to use when #remember_host! is called
     attr_writer :callback #:nodoc:
 

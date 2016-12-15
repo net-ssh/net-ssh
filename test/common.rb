@@ -62,8 +62,7 @@ class MockPrompt
     _ask(message, @info, echo)
   end
 
-  def success
-  end
+  def success; end
 end
 
 class MockTransport < Net::SSH::Transport::Session

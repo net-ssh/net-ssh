@@ -78,8 +78,8 @@ module Net; module SSH; module Connection
       @on_global_request = {}
       @properties = (options[:properties] || {}).dup
 
-      @max_pkt_size = (options.has_key?(:max_pkt_size) ? options[:max_pkt_size] : 0x8000)
-      @max_win_size = (options.has_key?(:max_win_size) ? options[:max_win_size] : 0x20000)
+      @max_pkt_size = (options.key?(:max_pkt_size) ? options[:max_pkt_size] : 0x8000)
+      @max_win_size = (options.key?(:max_win_size) ? options[:max_win_size] : 0x20000)
 
       @keepalive = Keepalive.new(self)
 

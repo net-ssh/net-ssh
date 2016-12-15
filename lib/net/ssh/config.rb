@@ -280,7 +280,7 @@ module Net; module SSH
           else size.to_i
           end
         end
-        
+
         def merge_challenge_response_with_keyboard_interactive(hash)
           if hash[:auth_methods].include?('challenge-response')
             hash[:auth_methods].delete('challenge-response')

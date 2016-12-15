@@ -29,7 +29,7 @@ name = "net-ssh"
 require_relative "lib/net/ssh/version"
 version = Net::SSH::Version::CURRENT
 
-extra_files = %w[LICENSE.txt THANKS.txt CHANGES.txt ]
+extra_files = %w[LICENSE.txt THANKS.txt CHANGES.txt]
 RDoc::Task.new do |rdoc|
   rdoc.rdoc_dir = "rdoc"
   rdoc.title = "#{name} #{version}"
