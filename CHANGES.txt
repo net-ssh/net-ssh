@@ -1,6 +1,7 @@
 === 4.0.0.rc2
 
  * Added ssh-ed25519 to KnownHosts:SUPPORTED_TYPE [detatka-kuzlatka-otevrete, Miklós Fazekas, #459]
+ * Allow nil for :passhrase and passing in nil option is now a depreaction warning [Miklós Fazekas, #465]
 
 === 4.0.0.rc1
 

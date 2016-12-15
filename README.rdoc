@@ -1,6 +1,7 @@
 {<img src="https://badge.fury.io/rb/net-ssh.svg" alt="Gem Version" />}[https://badge.fury.io/rb/net-ssh]
 {<img src="https://badges.gitter.im/net-ssh/net-ssh.svg" alt="Join the chat at https://gitter.im/net-ssh/net-ssh">}[https://gitter.im/net-ssh/net-ssh?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge]
 {<img src="https://travis-ci.org/net-ssh/net-ssh.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/net-ssh/net-ssh]
+{<img src="https://codecov.io/gh/net-ssh/net-ssh/branch/master/graph/badge.svg" alt="Coverage status" />}[https://codecov.io/gh/net-ssh/net-ssh]
 
 = Net::SSH 4.x
 
