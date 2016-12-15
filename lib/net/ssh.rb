@@ -154,8 +154,8 @@ module Net
     # * :max_win_size => maximum size we tell the other side that is supported for
     #   the window.
     # * :non_interactive => set to true if your app is non interactive and prefers
-    #   authentication failure vs password prompt. Non-interactive applications 
-    #   should set it to true to prefer failing a password/etc auth methods vs. 
+    #   authentication failure vs password prompt. Non-interactive applications
+    #   should set it to true to prefer failing a password/etc auth methods vs.
     #   asking for password.
     # * :paranoid => either false, true, :very, or :secure specifying how
     #   strict host-key verification should be (in increasing order here).
@@ -208,13 +208,7 @@ module Net
       end
 
       assign_defaults(options)
-
-      options.delete(:password) if options.key?(:password) && options[:password].nil?
-
-      if options.values.include? nil
-        nil_options = options.keys.select { |k| options[k].nil? }
-        raise ArgumentError, "Value(s) have been set to nil: #{nil_options.join(', ')}"
-      end
+      _sanitize_options(options)
 
       options[:user] = user if user
       options = configuration_for(host, options.fetch(:config, true)).merge(options)
@@ -283,6 +277,19 @@ module Net
       end
 
       options[:password_prompt] ||= Prompt.default(options)
+
+      [:password, :passphrase].each do |key|
+        options.delete(key) if options.key?(key) && options[key].nil?
+      end
     end
+
+    def self._sanitize_options(options)
+      invalid_option_values = [nil,[nil]]
+      unless (options.values & invalid_option_values).empty?
+        nil_options = options.select { |_k,v| invalid_option_values.include?(v) }.map(&:first)
+        Kernel.warn "#{caller_locations(2, 1)[0]}: Passing nil, or [nil] to Net::SSH.start is deprecated for keys: #{nil_options.join(', ')}"
+      end
+    end
+    private_class_method :_sanitize_options
   end
 end
