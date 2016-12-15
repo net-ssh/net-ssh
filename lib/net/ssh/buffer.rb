@@ -248,16 +248,29 @@ module Net; module SSH
       case type
         when /^ssh-dss(-cert-v01@openssh\.com)?$/
           key = OpenSSL::PKey::DSA.new
-          key.p = read_bignum
-          key.q = read_bignum
-          key.g = read_bignum
-          key.pub_key = read_bignum
+          if key.respond_to?(:set_pqg)
+            key.set_pqg(read_bignum, read_bignum, read_bignum)
+          else
+            key.p = read_bignum
+            key.q = read_bignum
+            key.g = read_bignum
+          end
+          if key.respond_to?(:set_key)
+            key.set_key(read_bignum, nil)
+          else
+            key.pub_key = read_bignum
+          end
 
         when /^ssh-rsa(-cert-v01@openssh\.com)?$/
           key = OpenSSL::PKey::RSA.new
-          key.e = read_bignum
-          key.n = read_bignum
-
+          if key.respond_to?(:set_key)
+            e = read_bignum
+            n = read_bignum
+            key.set_key(n, e, nil)
+          else
+            key.e = read_bignum
+            key.n = read_bignum
+          end
         when /^ssh-ed25519$/
           Net::SSH::Authentication::ED25519Loader.raiseUnlessLoaded("unsupported key type `#{type}'")
           key = Net::SSH::Authentication::ED25519::PubKey.read_keyblob(self)

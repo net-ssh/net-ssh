@@ -569,7 +569,7 @@ class TestForward < NetSSHTest
       Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
       end
-      assert_equal nil, client_done.pop
+      assert_nil client_done.pop
       assert client_done.empty?
       # Forward to existing port
       remote_port = server.addr[1]
@@ -597,7 +597,7 @@ class TestForward < NetSSHTest
       Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
       end
-      assert_equal nil, client_done.pop
+      assert_nil client_done.pop
       assert client_done.empty?
       # start server
       server = TCPServer.open(remote_port)

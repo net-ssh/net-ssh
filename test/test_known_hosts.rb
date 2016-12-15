@@ -59,8 +59,12 @@ class TestKnownHosts < NetSSHTest
 
   def rsa_key
     key = OpenSSL::PKey::RSA.new
-    key.e = 0xffeeddccbbaa9988
-    key.n = 0x7766554433221100
+    if key.respond_to?(:set_key)
+      key.set_key(0x7766554433221100, 0xffeeddccbbaa9988, nil)
+    else
+      key.e = 0xffeeddccbbaa9988
+      key.n = 0x7766554433221100
+    end
     key
   end
 end
