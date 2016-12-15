@@ -2,76 +2,73 @@
 
 <html>
 <head>
-<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta charset="UTF-8">
 
-<title>class Net::SSH::Buffer - net-ssh 4.0.0.rc1</title>
-
-<link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
+<title>class Net::SSH::Buffer - net-ssh 4.0.0.rc2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
 </script>
 
-<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/navigation.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/search_index.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/search.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/searcher.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/darkfish.js"></script>
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
 
 
-<body id="top" class="class">
-<nav id="metadata">
-  <nav id="home-section" class="section">
-  <h3 class="section-header">
-    <a href="../../index.html">Home</a>
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
     <a href="../../table_of_contents.html#classes">Classes</a>
     <a href="../../table_of_contents.html#methods">Methods</a>
-  </h3>
-</nav>
+  </div>
+</div>
 
-
-  <nav id="search-section" class="section project-section" class="initially-hidden">
+    <div id="search-section" role="search" class="project-section initially-hidden">
   <form action="#" method="get" accept-charset="utf-8">
-    <h3 class="section-header">
-      <input type="text" name="search" placeholder="Search" id="search-field"
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
-    </h3>
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
   </form>
+</div>
 
-  <ul id="search-results" class="initially-hidden"></ul>
-</nav>
-
+  </div>
 
   
-
-  <div id="file-metadata">
-    <nav id="file-list-section" class="section">
-  <h3 class="section-header">Defined In</h3>
-  <ul>
-    <li>lib/net/ssh/buffer.rb
-  </ul>
-</nav>
-
-    
-  </div>
 
   <div id="class-metadata">
     
-    <nav id="parent-class-section" class="section">
-  <h3 class="section-header">Parent</h3>
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
   
   <p class="link">Object
   
-</nav>
+</div>
 
     
     
     <!-- Method Quickref -->
-<nav id="method-list-section" class="section">
-  <h3 class="section-header">Methods</h3>
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
 
-  <ul class="link-list">
+  <ul class="link-list" role="directory">
     
     <li ><a href="#method-c-from">::from</a>
     
@@ -144,350 +141,17 @@
     <li ><a href="#method-i-write_string">#write_string</a>
     
   </ul>
-</nav>
-
-  </div>
-
-  <div id="project-metadata">
-    <nav id="fileindex-section" class="section project-section">
-  <h3 class="section-header">Pages</h3>
-
-  <ul>
-  
-    <li class="file"><a href="../../CHANGES_txt.html">CHANGES</a>
-  
-    <li class="file"><a href="../../LICENSE_txt.html">LICENSE</a>
-  
-    <li class="file"><a href="../../README_rdoc.html">README</a>
-  
-    <li class="file"><a href="../../THANKS_txt.html">THANKS</a>
-  
-  </ul>
-</nav>
-
-    <nav id="classindex-section" class="section project-section">
-  <h3 class="section-header">Class and Module Index</h3>
-
-  <ul class="link-list">
-  
-    <li><a href="../../DL.html">DL</a>
-  
-    <li><a href="../../DL/Fiddle.html">DL::Fiddle</a>
-  
-    <li><a href="../../Net.html">Net</a>
-  
-    <li><a href="../../Net/SSH.html">Net::SSH</a>
-  
-    <li><a href="../../Net/SSH/Authentication.html">Net::SSH::Authentication</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Agent.html">Net::SSH::Authentication::Agent</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Agent/Comment.html">Net::SSH::Authentication::Agent::Comment</a>
-  
-    <li><a href="../../Net/SSH/Authentication/AgentError.html">Net::SSH::Authentication::AgentError</a>
-  
-    <li><a href="../../Net/SSH/Authentication/AgentNotAvailable.html">Net::SSH::Authentication::AgentNotAvailable</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Constants.html">Net::SSH::Authentication::Constants</a>
-  
-    <li><a href="../../Net/SSH/Authentication/DisallowedMethod.html">Net::SSH::Authentication::DisallowedMethod</a>
-  
-    <li><a href="../../Net/SSH/Authentication/ED25519.html">Net::SSH::Authentication::ED25519</a>
-  
-    <li><a href="../../Net/SSH/Authentication/ED25519/PrivKey.html">Net::SSH::Authentication::ED25519::PrivKey</a>
-  
-    <li><a href="../../Net/SSH/Authentication/ED25519/PubKey.html">Net::SSH::Authentication::ED25519::PubKey</a>
-  
-    <li><a href="../../Net/SSH/Authentication/ED25519/SigningKeyFromFile.html">Net::SSH::Authentication::ED25519::SigningKeyFromFile</a>
-  
-    <li><a href="../../Net/SSH/Authentication/ED25519Loader.html">Net::SSH::Authentication::ED25519Loader</a>
-  
-    <li><a href="../../Net/SSH/Authentication/KeyManager.html">Net::SSH::Authentication::KeyManager</a>
-  
-    <li><a href="../../Net/SSH/Authentication/KeyManagerError.html">Net::SSH::Authentication::KeyManagerError</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Methods.html">Net::SSH::Authentication::Methods</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Methods/Abstract.html">Net::SSH::Authentication::Methods::Abstract</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Methods/Hostbased.html">Net::SSH::Authentication::Methods::Hostbased</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Methods/KeyboardInteractive.html">Net::SSH::Authentication::Methods::KeyboardInteractive</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Methods/None.html">Net::SSH::Authentication::Methods::None</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Methods/Password.html">Net::SSH::Authentication::Methods::Password</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Methods/Publickey.html">Net::SSH::Authentication::Methods::Publickey</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Pageant.html">Net::SSH::Authentication::Pageant</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Pageant/Socket.html">Net::SSH::Authentication::Pageant::Socket</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Pageant/Win.html">Net::SSH::Authentication::Pageant::Win</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Pageant/Win/LibC.html">Net::SSH::Authentication::Pageant::Win::LibC</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Pageant/Win/LibC/FFI.html">Net::SSH::Authentication::Pageant::Win::LibC::FFI</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Pageant/Win/LibC/FFI/Library.html">Net::SSH::Authentication::Pageant::Win::LibC::FFI::Library</a>
-  
-    <li><a href="../../Net/SSH/Authentication/Session.html">Net::SSH::Authentication::Session</a>
-  
-    <li><a href="../../Net/SSH/AuthenticationFailed.html">Net::SSH::AuthenticationFailed</a>
-  
-    <li><a href="../../Net/SSH/Buffer.html">Net::SSH::Buffer</a>
-  
-    <li><a href="../../Net/SSH/BufferedIo.html">Net::SSH::BufferedIo</a>
-  
-    <li><a href="../../Net/SSH/ChannelOpenFailed.html">Net::SSH::ChannelOpenFailed</a>
-  
-    <li><a href="../../Net/SSH/ChannelRequestFailed.html">Net::SSH::ChannelRequestFailed</a>
-  
-    <li><a href="../../Net/SSH/Compat.html">Net::SSH::Compat</a>
-  
-    <li><a href="../../Net/SSH/Config.html">Net::SSH::Config</a>
-  
-    <li><a href="../../Net/SSH/Connection.html">Net::SSH::Connection</a>
-  
-    <li><a href="../../Net/SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a>
-  
-    <li><a href="../../Net/SSH/Connection/Constants.html">Net::SSH::Connection::Constants</a>
-  
-    <li><a href="../../Net/SSH/Connection/EventLoop.html">Net::SSH::Connection::EventLoop</a>
-  
-    <li><a href="../../Net/SSH/Connection/Keepalive.html">Net::SSH::Connection::Keepalive</a>
-  
-    <li><a href="../../Net/SSH/Connection/Session.html">Net::SSH::Connection::Session</a>
-  
-    <li><a href="../../Net/SSH/Connection/Session/NilChannel.html">Net::SSH::Connection::Session::NilChannel</a>
-  
-    <li><a href="../../Net/SSH/Connection/Session/StringWithExitstatus.html">Net::SSH::Connection::Session::StringWithExitstatus</a>
-  
-    <li><a href="../../Net/SSH/Connection/SingleSessionEventLoop.html">Net::SSH::Connection::SingleSessionEventLoop</a>
-  
-    <li><a href="../../Net/SSH/Connection/Term.html">Net::SSH::Connection::Term</a>
-  
-    <li><a href="../../Net/SSH/ConnectionTimeout.html">Net::SSH::ConnectionTimeout</a>
-  
-    <li><a href="../../Net/SSH/Disconnect.html">Net::SSH::Disconnect</a>
-  
-    <li><a href="../../Net/SSH/Exception.html">Net::SSH::Exception</a>
-  
-    <li><a href="../../Net/SSH/ForwardedBufferedIo.html">Net::SSH::ForwardedBufferedIo</a>
-  
-    <li><a href="../../Net/SSH/HostKeyError.html">Net::SSH::HostKeyError</a>
-  
-    <li><a href="../../Net/SSH/HostKeyMismatch.html">Net::SSH::HostKeyMismatch</a>
-  
-    <li><a href="../../Net/SSH/HostKeyUnknown.html">Net::SSH::HostKeyUnknown</a>
-  
-    <li><a href="../../Net/SSH/HostKeys.html">Net::SSH::HostKeys</a>
-  
-    <li><a href="../../Net/SSH/KeyFactory.html">Net::SSH::KeyFactory</a>
-  
-    <li><a href="../../Net/SSH/KeyFactory/OpenSSL.html">Net::SSH::KeyFactory::OpenSSL</a>
-  
-    <li><a href="../../Net/SSH/KeyFactory/OpenSSL/PKey.html">Net::SSH::KeyFactory::OpenSSL::PKey</a>
-  
-    <li><a href="../../Net/SSH/KnownHosts.html">Net::SSH::KnownHosts</a>
-  
-    <li><a href="../../Net/SSH/KnownHosts/OpenSSL.html">Net::SSH::KnownHosts::OpenSSL</a>
-  
-    <li><a href="../../Net/SSH/KnownHosts/OpenSSL/PKey.html">Net::SSH::KnownHosts::OpenSSL::PKey</a>
-  
-    <li><a href="../../Net/SSH/Loggable.html">Net::SSH::Loggable</a>
-  
-    <li><a href="../../Net/SSH/Packet.html">Net::SSH::Packet</a>
-  
-    <li><a href="../../Net/SSH/Prompt.html">Net::SSH::Prompt</a>
-  
-    <li><a href="../../Net/SSH/Prompt/Prompter.html">Net::SSH::Prompt::Prompter</a>
-  
-    <li><a href="../../Net/SSH/Proxy.html">Net::SSH::Proxy</a>
-  
-    <li><a href="../../Net/SSH/Proxy/Command.html">Net::SSH::Proxy::Command</a>
-  
-    <li><a href="../../Net/SSH/Proxy/ConnectError.html">Net::SSH::Proxy::ConnectError</a>
-  
-    <li><a href="../../Net/SSH/Proxy/Error.html">Net::SSH::Proxy::Error</a>
-  
-    <li><a href="../../Net/SSH/Proxy/HTTP.html">Net::SSH::Proxy::HTTP</a>
-  
-    <li><a href="../../Net/SSH/Proxy/HTTPS.html">Net::SSH::Proxy::HTTPS</a>
-  
-    <li><a href="../../Net/SSH/Proxy/HTTPS/SSLSocketCompatibility.html">Net::SSH::Proxy::HTTPS::SSLSocketCompatibility</a>
-  
-    <li><a href="../../Net/SSH/Proxy/SOCKS4.html">Net::SSH::Proxy::SOCKS4</a>
-  
-    <li><a href="../../Net/SSH/Proxy/SOCKS5.html">Net::SSH::Proxy::SOCKS5</a>
-  
-    <li><a href="../../Net/SSH/Proxy/UnauthorizedError.html">Net::SSH::Proxy::UnauthorizedError</a>
-  
-    <li><a href="../../Net/SSH/Service.html">Net::SSH::Service</a>
-  
-    <li><a href="../../Net/SSH/Service/Forward.html">Net::SSH::Service::Forward</a>
-  
-    <li><a href="../../Net/SSH/Test.html">Net::SSH::Test</a>
-  
-    <li><a href="../../Net/SSH/Test/Channel.html">Net::SSH::Test::Channel</a>
-  
-    <li><a href="../../Net/SSH/Test/Extensions.html">Net::SSH::Test::Extensions</a>
-  
-    <li><a href="../../Net/SSH/Test/Extensions/BufferedIo.html">Net::SSH::Test::Extensions::BufferedIo</a>
-  
-    <li><a href="../../Net/SSH/Test/Extensions/Channel.html">Net::SSH::Test::Extensions::Channel</a>
-  
-    <li><a href="../../Net/SSH/Test/Extensions/IO.html">Net::SSH::Test::Extensions::IO</a>
-  
-    <li><a href="../../Net/SSH/Test/Extensions/IO/ClassMethods.html">Net::SSH::Test::Extensions::IO::ClassMethods</a>
-  
-    <li><a href="../../Net/SSH/Test/Extensions/PacketStream.html">Net::SSH::Test::Extensions::PacketStream</a>
-  
-    <li><a href="../../Net/SSH/Test/Kex.html">Net::SSH::Test::Kex</a>
-  
-    <li><a href="../../Net/SSH/Test/LocalPacket.html">Net::SSH::Test::LocalPacket</a>
-  
-    <li><a href="../../Net/SSH/Test/Packet.html">Net::SSH::Test::Packet</a>
-  
-    <li><a href="../../Net/SSH/Test/RemotePacket.html">Net::SSH::Test::RemotePacket</a>
-  
-    <li><a href="../../Net/SSH/Test/Script.html">Net::SSH::Test::Script</a>
-  
-    <li><a href="../../Net/SSH/Test/Socket.html">Net::SSH::Test::Socket</a>
-  
-    <li><a href="../../Net/SSH/Timeout.html">Net::SSH::Timeout</a>
-  
-    <li><a href="../../Net/SSH/Transport.html">Net::SSH::Transport</a>
-  
-    <li><a href="../../Net/SSH/Transport/Algorithms.html">Net::SSH::Transport::Algorithms</a>
-  
-    <li><a href="../../Net/SSH/Transport/Algorithms/OpenSSL.html">Net::SSH::Transport::Algorithms::OpenSSL</a>
-  
-    <li><a href="../../Net/SSH/Transport/Algorithms/OpenSSL/PKey.html">Net::SSH::Transport::Algorithms::OpenSSL::PKey</a>
-  
-    <li><a href="../../Net/SSH/Transport/CTR.html">Net::SSH::Transport::CTR</a>
-  
-    <li><a href="../../Net/SSH/Transport/CipherFactory.html">Net::SSH::Transport::CipherFactory</a>
-  
-    <li><a href="../../Net/SSH/Transport/Constants.html">Net::SSH::Transport::Constants</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC.html">Net::SSH::Transport::HMAC</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/Abstract.html">Net::SSH::Transport::HMAC::Abstract</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/MD5.html">Net::SSH::Transport::HMAC::MD5</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/MD5/OpenSSL.html">Net::SSH::Transport::HMAC::MD5::OpenSSL</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/MD5/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::MD5::OpenSSL::Digest</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/MD5_96.html">Net::SSH::Transport::HMAC::MD5_96</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/None.html">Net::SSH::Transport::HMAC::None</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/RIPEMD160.html">Net::SSH::Transport::HMAC::RIPEMD160</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/RIPEMD160/OpenSSL.html">Net::SSH::Transport::HMAC::RIPEMD160::OpenSSL</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/RIPEMD160/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::RIPEMD160::OpenSSL::Digest</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/SHA1.html">Net::SSH::Transport::HMAC::SHA1</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/SHA1/OpenSSL.html">Net::SSH::Transport::HMAC::SHA1::OpenSSL</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/SHA1/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::SHA1::OpenSSL::Digest</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/SHA1_96.html">Net::SSH::Transport::HMAC::SHA1_96</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/SHA2_256.html">Net::SSH::Transport::HMAC::SHA2_256</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/SHA2_256_96.html">Net::SSH::Transport::HMAC::SHA2_256_96</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/SHA2_512.html">Net::SSH::Transport::HMAC::SHA2_512</a>
-  
-    <li><a href="../../Net/SSH/Transport/HMAC/SHA2_512_96.html">Net::SSH::Transport::HMAC::SHA2_512_96</a>
-  
-    <li><a href="../../Net/SSH/Transport/IdentityCipher.html">Net::SSH::Transport::IdentityCipher</a>
-  
-    <li><a href="../../Net/SSH/Transport/Kex.html">Net::SSH::Transport::Kex</a>
-  
-    <li><a href="../../Net/SSH/Transport/Kex/DiffieHellmanGroup14SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup14SHA1</a>
-  
-    <li><a href="../../Net/SSH/Transport/Kex/DiffieHellmanGroup1SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1</a>
-  
-    <li><a href="../../Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA1</a>
-  
-    <li><a href="../../Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA256.html">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256</a>
-  
-    <li><a href="../../Net/SSH/Transport/Kex/EcdhSHA2NistP256.html">Net::SSH::Transport::Kex::EcdhSHA2NistP256</a>
-  
-    <li><a href="../../Net/SSH/Transport/Kex/EcdhSHA2NistP384.html">Net::SSH::Transport::Kex::EcdhSHA2NistP384</a>
-  
-    <li><a href="../../Net/SSH/Transport/Kex/EcdhSHA2NistP521.html">Net::SSH::Transport::Kex::EcdhSHA2NistP521</a>
-  
-    <li><a href="../../Net/SSH/Transport/KeyExpander.html">Net::SSH::Transport::KeyExpander</a>
-  
-    <li><a href="../../Net/SSH/Transport/PacketStream.html">Net::SSH::Transport::PacketStream</a>
-  
-    <li><a href="../../Net/SSH/Transport/ServerVersion.html">Net::SSH::Transport::ServerVersion</a>
-  
-    <li><a href="../../Net/SSH/Transport/Session.html">Net::SSH::Transport::Session</a>
-  
-    <li><a href="../../Net/SSH/Transport/State.html">Net::SSH::Transport::State</a>
-  
-    <li><a href="../../Net/SSH/Verifiers.html">Net::SSH::Verifiers</a>
-  
-    <li><a href="../../Net/SSH/Verifiers/Lenient.html">Net::SSH::Verifiers::Lenient</a>
-  
-    <li><a href="../../Net/SSH/Verifiers/Null.html">Net::SSH::Verifiers::Null</a>
-  
-    <li><a href="../../Net/SSH/Verifiers/Secure.html">Net::SSH::Verifiers::Secure</a>
-  
-    <li><a href="../../Net/SSH/Verifiers/Strict.html">Net::SSH::Verifiers::Strict</a>
-  
-    <li><a href="../../Net/SSH/Version.html">Net::SSH::Version</a>
-  
-    <li><a href="../../OpenSSL.html">OpenSSL</a>
-  
-    <li><a href="../../OpenSSL/BN.html">OpenSSL::BN</a>
-  
-    <li><a href="../../OpenSSL/Digest.html">OpenSSL::Digest</a>
-  
-    <li><a href="../../OpenSSL/PKey.html">OpenSSL::PKey</a>
-  
-    <li><a href="../../OpenSSL/PKey/DH.html">OpenSSL::PKey::DH</a>
-  
-    <li><a href="../../OpenSSL/PKey/DSA.html">OpenSSL::PKey::DSA</a>
-  
-    <li><a href="../../OpenSSL/PKey/EC.html">OpenSSL::PKey::EC</a>
-  
-    <li><a href="../../OpenSSL/PKey/OpenSSL.html">OpenSSL::PKey::OpenSSL</a>
-  
-    <li><a href="../../OpenSSL/PKey/OpenSSL/PKey.html">OpenSSL::PKey::OpenSSL::PKey</a>
-  
-    <li><a href="../../OpenSSL/PKey/OpenSSL/PKey/OpenSSL.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL</a>
-  
-    <li><a href="../../OpenSSL/PKey/OpenSSL/PKey/OpenSSL/PKey.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL::PKey</a>
-  
-    <li><a href="../../OpenSSL/PKey/OpenSSL/PKey/OpenSSL/PKey/ECError.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL::PKey::ECError</a>
-  
-    <li><a href="../../OpenSSL/PKey/PKey.html">OpenSSL::PKey::PKey</a>
-  
-    <li><a href="../../OpenSSL/PKey/RSA.html">OpenSSL::PKey::RSA</a>
-  
-    <li><a href="../../String.html">String</a>
-  
-  </ul>
-</nav>
+</div>
 
   </div>
 </nav>
 
-<div id="documentation">
-  <h1 class="class">class Net::SSH::Buffer</h1>
+<main role="main" aria-labelledby="class-Net::SSH::Buffer">
+  <h1 id="class-Net::SSH::Buffer" class="class">
+    class Net::SSH::Buffer
+  </h1>
 
-  <div id="description" class="description">
+  <section class="description">
     
 <p><a href="Buffer.html">Net::SSH::Buffer</a> is a flexible class for building
 and parsing binary data packets. It provides a stream-like interface for
@@ -505,7 +169,7 @@ happen. Also, if you are ever implementing a protocol on top of <a
 href="../SSH.html">SSH</a> (e.g. SFTP), this buffer class can be quite
 handy.</p>
 
-  </div><!-- description -->
+  </section>
 
   
   
@@ -518,9 +182,10 @@ handy.</p>
     
 
     
-    <!-- Attributes -->
-    <section id="attribute-method-details" class="method-section section">
-      <h3 class="section-header">Attributes</h3>
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
 
       
       <div id="attribute-i-content" class="method-detail">
@@ -549,13 +214,14 @@ handy.</p>
         </div>
       </div>
       
-    </section><!-- attribute-method-details -->
+    </section>
     
 
-    <!-- Methods -->
     
-     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
-      <h3 class="section-header">Public Class Methods</h3>
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
 
     
       <div id="method-c-from" class="method-detail ">
@@ -576,8 +242,9 @@ a single command. The arguments must be even in length, with the first of
 each pair of arguments being a symbol naming the type of the data that
 follows. If the type is :raw, the value is written directly to the hash.</p>
 
-<pre>b = Buffer.from(:byte, 1, :string, &quot;hello&quot;, :raw, &quot;\1\2\3\4&quot;)
-#-&gt; &quot;\1\0\0\0\5hello\1\2\3\4&quot;</pre>
+<pre class="ruby"><span class="ruby-identifier">b</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(:<span class="ruby-identifier">byte</span>, <span class="ruby-value">1</span>, :<span class="ruby-identifier">string</span>, <span class="ruby-string">&quot;hello&quot;</span>, :<span class="ruby-identifier">raw</span>, <span class="ruby-string">&quot;\1\2\3\4&quot;</span>)
+<span class="ruby-comment">#-&gt; &quot;\1\0\0\0\5hello\1\2\3\4&quot;</span>
+</pre>
 
 <p>The supported data types are:</p>
 <ul><li>
@@ -628,14 +295,14 @@ to write multiple values of the same type in a briefer manner.</p>
 
   <span class="ruby-identifier">buffer</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- from-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- from-method -->
+      </div>
 
     
       <div id="method-c-new" class="method-detail ">
@@ -663,20 +330,22 @@ initialized to the beginning of the buffer.</p>
   <span class="ruby-ivar">@content</span> = <span class="ruby-identifier">content</span>.<span class="ruby-identifier">to_s</span>
   <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- new-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- new-method -->
+      </div>
 
     
-    </section><!-- public-class-method-details -->
+    </section>
   
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
-      <h3 class="section-header">Public Instance Methods</h3>
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
 
     
       <div id="method-i-3D-3D" class="method-detail ">
@@ -703,14 +372,14 @@ if they are identical in size and content.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">buffer</span>)
   <span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">to_s</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- 3D-3D-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- 3D-3D-method -->
+      </div>
 
     
       <div id="method-i-append" class="method-detail ">
@@ -738,14 +407,14 @@ position. Returns the buffer object itself.</p>
   <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- append-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- append-method -->
+      </div>
 
     
       <div id="method-i-available" class="method-detail ">
@@ -772,14 +441,14 @@ remain between the current position and the end of the buffer).</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">available</span>
   <span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">position</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- available-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- available-method -->
+      </div>
 
     
       <div id="method-i-clear-21" class="method-detail ">
@@ -806,14 +475,14 @@ remain between the current position and the end of the buffer).</p>
   <span class="ruby-ivar">@content</span> = <span class="ruby-string">&quot;&quot;</span>
   <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- clear-21-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- clear-21-method -->
+      </div>
 
     
       <div id="method-i-consume-21" class="method-detail ">
@@ -853,14 +522,14 @@ grow without bound.</p>
   <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- consume-21-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- consume-21-method -->
+      </div>
 
     
       <div id="method-i-empty-3F" class="method-detail ">
@@ -887,14 +556,14 @@ zero length).</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- empty-3F-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- empty-3F-method -->
+      </div>
 
     
       <div id="method-i-eof-3F" class="method-detail ">
@@ -921,14 +590,14 @@ will return nil, in this case.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eof?</span>
   <span class="ruby-ivar">@position</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">length</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- eof-3F-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- eof-3F-method -->
+      </div>
 
     
       <div id="method-i-length" class="method-detail ">
@@ -954,14 +623,14 @@ will return nil, in this case.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">length</span>
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">length</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- length-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- length-method -->
+      </div>
 
     
       <div id="method-i-read" class="method-detail ">
@@ -993,14 +662,14 @@ increment the pointer.</p>
   <span class="ruby-ivar">@position</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">count</span>
   <span class="ruby-ivar">@content</span>[<span class="ruby-ivar">@position</span><span class="ruby-operator">-</span><span class="ruby-identifier">count</span>, <span class="ruby-identifier">count</span>]
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read-method -->
+      </div>
 
     
       <div id="method-i-read-21" class="method-detail ">
@@ -1031,14 +700,14 @@ read position.</p>
   <span class="ruby-identifier">consume!</span>
   <span class="ruby-identifier">data</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read-21-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read-21-method -->
+      </div>
 
     
       <div id="method-i-read_bignum" class="method-detail ">
@@ -1068,14 +737,14 @@ format.</p>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>
   <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">BN</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">data</span>, <span class="ruby-value">2</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read_bignum-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read_bignum-method -->
+      </div>
 
     
       <div id="method-i-read_bool" class="method-detail ">
@@ -1103,14 +772,14 @@ format.</p>
   <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read_byte</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">b</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read_bool-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read_bool-method -->
+      </div>
 
     
       <div id="method-i-read_buffer" class="method-detail ">
@@ -1133,18 +802,18 @@ href="Buffer.html">Buffer</a> object that wraps it.</p>
 
           
           <div class="method-source-code" id="read_buffer-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 283</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 296</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_buffer</span>
   <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">read_string</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read_buffer-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read_buffer-method -->
+      </div>
 
     
       <div id="method-i-read_byte" class="method-detail ">
@@ -1172,14 +841,14 @@ end of the buffer.</p>
   <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read</span>(<span class="ruby-value">1</span>) <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">b</span>.<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read_byte-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read_byte-method -->
+      </div>
 
     
       <div id="method-i-read_int64" class="method-detail ">
@@ -1209,14 +878,14 @@ buffer.</p>
   <span class="ruby-identifier">lo</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">return</span> (<span class="ruby-identifier">hi</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">32</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">lo</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read_int64-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read_int64-method -->
+      </div>
 
     
       <div id="method-i-read_key" class="method-detail ">
@@ -1244,14 +913,14 @@ type. The remainder of the key is defined by the type that was read.</p>
   <span class="ruby-identifier">type</span> = <span class="ruby-identifier">read_string</span>
   <span class="ruby-keyword">return</span> (<span class="ruby-identifier">type</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">type</span>) <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read_key-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read_key-method -->
+      </div>
 
     
       <div id="method-i-read_keyblob" class="method-detail ">
@@ -1279,16 +948,29 @@ Only RSA, DSA, and ECDSA keys are supported.</p>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
     <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ssh-dss(-cert-v01@openssh\.com)?$/</span>
       <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">DSA</span>.<span class="ruby-identifier">new</span>
-      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">p</span> = <span class="ruby-identifier">read_bignum</span>
-      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">q</span> = <span class="ruby-identifier">read_bignum</span>
-      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">g</span> = <span class="ruby-identifier">read_bignum</span>
-      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">pub_key</span> = <span class="ruby-identifier">read_bignum</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_pqg</span>)
+        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_pqg</span>(<span class="ruby-identifier">read_bignum</span>, <span class="ruby-identifier">read_bignum</span>, <span class="ruby-identifier">read_bignum</span>)
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">p</span> = <span class="ruby-identifier">read_bignum</span>
+        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">q</span> = <span class="ruby-identifier">read_bignum</span>
+        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">g</span> = <span class="ruby-identifier">read_bignum</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_key</span>)
+        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_key</span>(<span class="ruby-identifier">read_bignum</span>, <span class="ruby-keyword">nil</span>)
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">pub_key</span> = <span class="ruby-identifier">read_bignum</span>
+      <span class="ruby-keyword">end</span>
 
     <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ssh-rsa(-cert-v01@openssh\.com)?$/</span>
       <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">RSA</span>.<span class="ruby-identifier">new</span>
-      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">e</span> = <span class="ruby-identifier">read_bignum</span>
-      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">n</span> = <span class="ruby-identifier">read_bignum</span>
-
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_key</span>)
+        <span class="ruby-identifier">e</span> = <span class="ruby-identifier">read_bignum</span>
+        <span class="ruby-identifier">n</span> = <span class="ruby-identifier">read_bignum</span>
+        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_key</span>(<span class="ruby-identifier">n</span>, <span class="ruby-identifier">e</span>, <span class="ruby-keyword">nil</span>)
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">e</span> = <span class="ruby-identifier">read_bignum</span>
+        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">n</span> = <span class="ruby-identifier">read_bignum</span>
+      <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ssh-ed25519$/</span>
       <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">ED25519Loader</span>.<span class="ruby-identifier">raiseUnlessLoaded</span>(<span class="ruby-node">&quot;unsupported key type `#{type}&#39;&quot;</span>)
       <span class="ruby-identifier">key</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">ED25519</span><span class="ruby-operator">::</span><span class="ruby-constant">PubKey</span>.<span class="ruby-identifier">read_keyblob</span>(<span class="ruby-keyword">self</span>)
@@ -1308,14 +990,14 @@ Only RSA, DSA, and ECDSA keys are supported.</p>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">key</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read_keyblob-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read_keyblob-method -->
+      </div>
 
     
       <div id="method-i-read_long" class="method-detail ">
@@ -1344,14 +1026,14 @@ buffer.</p>
   <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read</span>(<span class="ruby-value">4</span>) <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">b</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&quot;N&quot;</span>).<span class="ruby-identifier">first</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read_long-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read_long-method -->
+      </div>
 
     
       <div id="method-i-read_string" class="method-detail ">
@@ -1380,14 +1062,14 @@ nil if there are not enough bytes to satisfy the request.</p>
   <span class="ruby-identifier">length</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">read</span>(<span class="ruby-identifier">length</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read_string-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read_string-method -->
+      </div>
 
     
       <div id="method-i-read_to" class="method-detail ">
@@ -1418,19 +1100,19 @@ Returns all data up to and including the text that matched the pattern.</p>
   <span class="ruby-identifier">index</span> = <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-ivar">@position</span>) <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">length</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">pattern</span>
     <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">pattern</span>.<span class="ruby-identifier">length</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">Fixnum</span> <span class="ruby-keyword">then</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">Integer</span> <span class="ruby-keyword">then</span> <span class="ruby-value">1</span>
     <span class="ruby-keyword">when</span> <span class="ruby-constant">Regexp</span> <span class="ruby-keyword">then</span> <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">index</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">index</span><span class="ruby-operator">+</span><span class="ruby-identifier">length</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- read_to-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- read_to-method -->
+      </div>
 
     
       <div id="method-i-remainder_as_buffer" class="method-detail ">
@@ -1457,14 +1139,14 @@ Returns all data up to and including the text that matched the pattern.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">remainder_as_buffer</span>
   <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@content</span>[<span class="ruby-ivar">@position</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>])
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- remainder_as_buffer-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- remainder_as_buffer-method -->
+      </div>
 
     
       <div id="method-i-reset-21" class="method-detail ">
@@ -1491,14 +1173,14 @@ at position 0.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">reset!</span>
   <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- reset-21-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- reset-21-method -->
+      </div>
 
     
       <div id="method-i-to_s" class="method-detail ">
@@ -1524,14 +1206,14 @@ at position 0.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
   (<span class="ruby-ivar">@content</span> <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>).<span class="ruby-identifier">dup</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- to_s-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- to_s-method -->
+      </div>
 
     
       <div id="method-i-write" class="method-detail ">
@@ -1554,19 +1236,19 @@ position. Returns the buffer object.</p>
 
           
           <div class="method-source-code" id="write-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 289</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 302</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">data</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">datum</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">datum</span>.<span class="ruby-identifier">dup</span>.<span class="ruby-identifier">force_encoding</span>(<span class="ruby-string">&#39;BINARY&#39;</span>) }
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- write-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- write-method -->
+      </div>
 
     
       <div id="method-i-write_bignum" class="method-detail ">
@@ -1590,19 +1272,19 @@ read position. Returns the buffer object.</p>
 
           
           <div class="method-source-code" id="write_bignum-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 364</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 377</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_bignum</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)
   <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">to_ssh</span> }.<span class="ruby-identifier">join</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- write_bignum-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- write_bignum-method -->
+      </div>
 
     
       <div id="method-i-write_bool" class="method-detail ">
@@ -1626,19 +1308,19 @@ buffer object.</p>
 
           
           <div class="method-source-code" id="write_bool-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 356</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 369</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_bool</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">b</span>)
-  <span class="ruby-identifier">b</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">v</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;\11&quot;&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&quot;\00&quot;&quot;</span>) }
+  <span class="ruby-identifier">b</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">v</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;\1&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&quot;\0&quot;</span>) }
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- write_bool-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- write_bool-method -->
+      </div>
 
     
       <div id="method-i-write_byte" class="method-detail ">
@@ -1661,19 +1343,19 @@ position. Returns the buffer object.</p>
 
           
           <div class="method-source-code" id="write_byte-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 323</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 336</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_byte</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)
   <span class="ruby-identifier">n</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">chr</span> }
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- write_byte-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- write_byte-method -->
+      </div>
 
     
       <div id="method-i-write_int64" class="method-detail ">
@@ -1697,7 +1379,7 @@ object.</p>
 
           
           <div class="method-source-code" id="write_int64-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 304</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 317</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_int64</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)
   <span class="ruby-identifier">n</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">hi</span> = (<span class="ruby-identifier">i</span> <span class="ruby-operator">&gt;&gt;</span> <span class="ruby-value">32</span>) <span class="ruby-operator">&amp;</span> <span class="ruby-value">0xFFFFFFFF</span>
@@ -1706,14 +1388,14 @@ object.</p>
   <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- write_int64-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- write_int64-method -->
+      </div>
 
     
       <div id="method-i-write_key" class="method-detail ">
@@ -1736,19 +1418,19 @@ alter the read position. Returns the buffer object.</p>
 
           
           <div class="method-source-code" id="write_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 371</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 384</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_key</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">key</span>)
   <span class="ruby-identifier">key</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-identifier">append</span>(<span class="ruby-identifier">k</span>.<span class="ruby-identifier">to_blob</span>) }
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- write_key-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- write_key-method -->
+      </div>
 
     
       <div id="method-i-write_long" class="method-detail ">
@@ -1772,19 +1454,19 @@ object.</p>
 
           
           <div class="method-source-code" id="write_long-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 316</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 329</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_long</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)
   <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;N*&quot;</span>)
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- write_long-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- write_long-method -->
+      </div>
 
     
       <div id="method-i-write_moved" class="method-detail ">
@@ -1807,19 +1489,19 @@ the method. This way we can mutate the string.</p>
 
           
           <div class="method-source-code" id="write_moved-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 296</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 309</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_moved</span>(<span class="ruby-identifier">string</span>)
   <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">string</span>.<span class="ruby-identifier">force_encoding</span>(<span class="ruby-string">&#39;BINARY&#39;</span>)
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- write_moved-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- write_moved-method -->
+      </div>
 
     
       <div id="method-i-write_mstring" class="method-detail ">
@@ -1844,7 +1526,7 @@ href="Buffer.html#method-i-write_moved">#write_moved</a></p>
 
           
           <div class="method-source-code" id="write_mstring-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 344</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 357</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_mstring</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">text</span>)
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">string</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">s</span> = <span class="ruby-identifier">string</span>.<span class="ruby-identifier">to_s</span>
@@ -1853,14 +1535,14 @@ href="Buffer.html#method-i-write_moved">#write_moved</a></p>
   <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- write_mstring-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- write_mstring-method -->
+      </div>
 
     
       <div id="method-i-write_string" class="method-detail ">
@@ -1884,7 +1566,7 @@ the read position. Returns the buffer object.</p>
 
           
           <div class="method-source-code" id="write_string-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 331</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 344</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_string</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">text</span>)
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">string</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">s</span> = <span class="ruby-identifier">string</span>.<span class="ruby-identifier">to_s</span>
@@ -1893,26 +1575,25 @@ the read position. Returns the buffer object.</p>
   <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- write_string-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- write_string-method -->
+      </div>
 
     
-    </section><!-- public-instance-method-details -->
+    </section>
   
-  </section><!-- 5Buntitled-5D -->
+  </section>
+</main>
 
-</div><!-- documentation -->
 
-
-<footer id="validator-badges">
-  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
-  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.0.
-  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

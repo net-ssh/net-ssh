@@ -2,72 +2,68 @@
 
 <html>
 <head>
-<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta charset="UTF-8">
 
-<title>class Net::SSH::Connection::Keepalive - net-ssh 4.0.0.rc1</title>
-
-<link type="text/css" media="screen" href="../../../rdoc.css" rel="stylesheet">
+<title>class Net::SSH::Connection::Keepalive - net-ssh 4.0.0.rc2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
 </script>
 
-<script type="text/javascript" charset="utf-8" src="../../../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../../js/navigation.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../../js/search_index.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../../js/search.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../../js/searcher.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../../js/darkfish.js"></script>
+<script src="../../../js/jquery.js"></script>
+<script src="../../../js/darkfish.js"></script>
+
+<link href="../../../css/fonts.css" rel="stylesheet">
+<link href="../../../css/rdoc.css" rel="stylesheet">
 
 
-<body id="top" class="class">
-<nav id="metadata">
-  <nav id="home-section" class="section">
-  <h3 class="section-header">
-    <a href="../../../index.html">Home</a>
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../../table_of_contents.html#pages">Pages</a>
     <a href="../../../table_of_contents.html#classes">Classes</a>
     <a href="../../../table_of_contents.html#methods">Methods</a>
-  </h3>
-</nav>
+  </div>
+</div>
 
-
-  <nav id="search-section" class="section project-section" class="initially-hidden">
+    <div id="search-section" role="search" class="project-section initially-hidden">
   <form action="#" method="get" accept-charset="utf-8">
-    <h3 class="section-header">
-      <input type="text" name="search" placeholder="Search" id="search-field"
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
-    </h3>
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
   </form>
+</div>
 
-  <ul id="search-results" class="initially-hidden"></ul>
-</nav>
-
+  </div>
 
   
-
-  <div id="file-metadata">
-    <nav id="file-list-section" class="section">
-  <h3 class="section-header">Defined In</h3>
-  <ul>
-    <li>lib/net/ssh/connection/keepalive.rb
-  </ul>
-</nav>
-
-    
-  </div>
 
   <div id="class-metadata">
     
-    <nav id="parent-class-section" class="section">
-  <h3 class="section-header">Parent</h3>
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
   
   <p class="link">Object
   
-</nav>
+</div>
 
-    <!-- Included Modules -->
-<nav id="includes-section" class="section">
-  <h3 class="section-header">Included Modules</h3>
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
 
   <ul class="link-list">
   
@@ -76,14 +72,14 @@
   
   
   </ul>
-</nav>
+</div>
 
     
     <!-- Method Quickref -->
-<nav id="method-list-section" class="section">
-  <h3 class="section-header">Methods</h3>
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
 
-  <ul class="link-list">
+  <ul class="link-list" role="directory">
     
     <li ><a href="#method-c-new">::new</a>
     
@@ -100,352 +96,19 @@
     <li ><a href="#method-i-should_send-3F">#should_send?</a>
     
   </ul>
-</nav>
-
-  </div>
-
-  <div id="project-metadata">
-    <nav id="fileindex-section" class="section project-section">
-  <h3 class="section-header">Pages</h3>
-
-  <ul>
-  
-    <li class="file"><a href="../../../CHANGES_txt.html">CHANGES</a>
-  
-    <li class="file"><a href="../../../LICENSE_txt.html">LICENSE</a>
-  
-    <li class="file"><a href="../../../README_rdoc.html">README</a>
-  
-    <li class="file"><a href="../../../THANKS_txt.html">THANKS</a>
-  
-  </ul>
-</nav>
-
-    <nav id="classindex-section" class="section project-section">
-  <h3 class="section-header">Class and Module Index</h3>
-
-  <ul class="link-list">
-  
-    <li><a href="../../../DL.html">DL</a>
-  
-    <li><a href="../../../DL/Fiddle.html">DL::Fiddle</a>
-  
-    <li><a href="../../../Net.html">Net</a>
-  
-    <li><a href="../../../Net/SSH.html">Net::SSH</a>
-  
-    <li><a href="../../../Net/SSH/Authentication.html">Net::SSH::Authentication</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Agent.html">Net::SSH::Authentication::Agent</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Agent/Comment.html">Net::SSH::Authentication::Agent::Comment</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/AgentError.html">Net::SSH::Authentication::AgentError</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/AgentNotAvailable.html">Net::SSH::Authentication::AgentNotAvailable</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Constants.html">Net::SSH::Authentication::Constants</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/DisallowedMethod.html">Net::SSH::Authentication::DisallowedMethod</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/ED25519.html">Net::SSH::Authentication::ED25519</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/ED25519/PrivKey.html">Net::SSH::Authentication::ED25519::PrivKey</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/ED25519/PubKey.html">Net::SSH::Authentication::ED25519::PubKey</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/ED25519/SigningKeyFromFile.html">Net::SSH::Authentication::ED25519::SigningKeyFromFile</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/ED25519Loader.html">Net::SSH::Authentication::ED25519Loader</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/KeyManager.html">Net::SSH::Authentication::KeyManager</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/KeyManagerError.html">Net::SSH::Authentication::KeyManagerError</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Methods.html">Net::SSH::Authentication::Methods</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Methods/Abstract.html">Net::SSH::Authentication::Methods::Abstract</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Methods/Hostbased.html">Net::SSH::Authentication::Methods::Hostbased</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Methods/KeyboardInteractive.html">Net::SSH::Authentication::Methods::KeyboardInteractive</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Methods/None.html">Net::SSH::Authentication::Methods::None</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Methods/Password.html">Net::SSH::Authentication::Methods::Password</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Methods/Publickey.html">Net::SSH::Authentication::Methods::Publickey</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Pageant.html">Net::SSH::Authentication::Pageant</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Pageant/Socket.html">Net::SSH::Authentication::Pageant::Socket</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Pageant/Win.html">Net::SSH::Authentication::Pageant::Win</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Pageant/Win/LibC.html">Net::SSH::Authentication::Pageant::Win::LibC</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Pageant/Win/LibC/FFI.html">Net::SSH::Authentication::Pageant::Win::LibC::FFI</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Pageant/Win/LibC/FFI/Library.html">Net::SSH::Authentication::Pageant::Win::LibC::FFI::Library</a>
-  
-    <li><a href="../../../Net/SSH/Authentication/Session.html">Net::SSH::Authentication::Session</a>
-  
-    <li><a href="../../../Net/SSH/AuthenticationFailed.html">Net::SSH::AuthenticationFailed</a>
-  
-    <li><a href="../../../Net/SSH/Buffer.html">Net::SSH::Buffer</a>
-  
-    <li><a href="../../../Net/SSH/BufferedIo.html">Net::SSH::BufferedIo</a>
-  
-    <li><a href="../../../Net/SSH/ChannelOpenFailed.html">Net::SSH::ChannelOpenFailed</a>
-  
-    <li><a href="../../../Net/SSH/ChannelRequestFailed.html">Net::SSH::ChannelRequestFailed</a>
-  
-    <li><a href="../../../Net/SSH/Compat.html">Net::SSH::Compat</a>
-  
-    <li><a href="../../../Net/SSH/Config.html">Net::SSH::Config</a>
-  
-    <li><a href="../../../Net/SSH/Connection.html">Net::SSH::Connection</a>
-  
-    <li><a href="../../../Net/SSH/Connection/Channel.html">Net::SSH::Connection::Channel</a>
-  
-    <li><a href="../../../Net/SSH/Connection/Constants.html">Net::SSH::Connection::Constants</a>
-  
-    <li><a href="../../../Net/SSH/Connection/EventLoop.html">Net::SSH::Connection::EventLoop</a>
-  
-    <li><a href="../../../Net/SSH/Connection/Keepalive.html">Net::SSH::Connection::Keepalive</a>
-  
-    <li><a href="../../../Net/SSH/Connection/Session.html">Net::SSH::Connection::Session</a>
-  
-    <li><a href="../../../Net/SSH/Connection/Session/NilChannel.html">Net::SSH::Connection::Session::NilChannel</a>
-  
-    <li><a href="../../../Net/SSH/Connection/Session/StringWithExitstatus.html">Net::SSH::Connection::Session::StringWithExitstatus</a>
-  
-    <li><a href="../../../Net/SSH/Connection/SingleSessionEventLoop.html">Net::SSH::Connection::SingleSessionEventLoop</a>
-  
-    <li><a href="../../../Net/SSH/Connection/Term.html">Net::SSH::Connection::Term</a>
-  
-    <li><a href="../../../Net/SSH/ConnectionTimeout.html">Net::SSH::ConnectionTimeout</a>
-  
-    <li><a href="../../../Net/SSH/Disconnect.html">Net::SSH::Disconnect</a>
-  
-    <li><a href="../../../Net/SSH/Exception.html">Net::SSH::Exception</a>
-  
-    <li><a href="../../../Net/SSH/ForwardedBufferedIo.html">Net::SSH::ForwardedBufferedIo</a>
-  
-    <li><a href="../../../Net/SSH/HostKeyError.html">Net::SSH::HostKeyError</a>
-  
-    <li><a href="../../../Net/SSH/HostKeyMismatch.html">Net::SSH::HostKeyMismatch</a>
-  
-    <li><a href="../../../Net/SSH/HostKeyUnknown.html">Net::SSH::HostKeyUnknown</a>
-  
-    <li><a href="../../../Net/SSH/HostKeys.html">Net::SSH::HostKeys</a>
-  
-    <li><a href="../../../Net/SSH/KeyFactory.html">Net::SSH::KeyFactory</a>
-  
-    <li><a href="../../../Net/SSH/KeyFactory/OpenSSL.html">Net::SSH::KeyFactory::OpenSSL</a>
-  
-    <li><a href="../../../Net/SSH/KeyFactory/OpenSSL/PKey.html">Net::SSH::KeyFactory::OpenSSL::PKey</a>
-  
-    <li><a href="../../../Net/SSH/KnownHosts.html">Net::SSH::KnownHosts</a>
-  
-    <li><a href="../../../Net/SSH/KnownHosts/OpenSSL.html">Net::SSH::KnownHosts::OpenSSL</a>
-  
-    <li><a href="../../../Net/SSH/KnownHosts/OpenSSL/PKey.html">Net::SSH::KnownHosts::OpenSSL::PKey</a>
-  
-    <li><a href="../../../Net/SSH/Loggable.html">Net::SSH::Loggable</a>
-  
-    <li><a href="../../../Net/SSH/Packet.html">Net::SSH::Packet</a>
-  
-    <li><a href="../../../Net/SSH/Prompt.html">Net::SSH::Prompt</a>
-  
-    <li><a href="../../../Net/SSH/Prompt/Prompter.html">Net::SSH::Prompt::Prompter</a>
-  
-    <li><a href="../../../Net/SSH/Proxy.html">Net::SSH::Proxy</a>
-  
-    <li><a href="../../../Net/SSH/Proxy/Command.html">Net::SSH::Proxy::Command</a>
-  
-    <li><a href="../../../Net/SSH/Proxy/ConnectError.html">Net::SSH::Proxy::ConnectError</a>
-  
-    <li><a href="../../../Net/SSH/Proxy/Error.html">Net::SSH::Proxy::Error</a>
-  
-    <li><a href="../../../Net/SSH/Proxy/HTTP.html">Net::SSH::Proxy::HTTP</a>
-  
-    <li><a href="../../../Net/SSH/Proxy/HTTPS.html">Net::SSH::Proxy::HTTPS</a>
-  
-    <li><a href="../../../Net/SSH/Proxy/HTTPS/SSLSocketCompatibility.html">Net::SSH::Proxy::HTTPS::SSLSocketCompatibility</a>
-  
-    <li><a href="../../../Net/SSH/Proxy/SOCKS4.html">Net::SSH::Proxy::SOCKS4</a>
-  
-    <li><a href="../../../Net/SSH/Proxy/SOCKS5.html">Net::SSH::Proxy::SOCKS5</a>
-  
-    <li><a href="../../../Net/SSH/Proxy/UnauthorizedError.html">Net::SSH::Proxy::UnauthorizedError</a>
-  
-    <li><a href="../../../Net/SSH/Service.html">Net::SSH::Service</a>
-  
-    <li><a href="../../../Net/SSH/Service/Forward.html">Net::SSH::Service::Forward</a>
-  
-    <li><a href="../../../Net/SSH/Test.html">Net::SSH::Test</a>
-  
-    <li><a href="../../../Net/SSH/Test/Channel.html">Net::SSH::Test::Channel</a>
-  
-    <li><a href="../../../Net/SSH/Test/Extensions.html">Net::SSH::Test::Extensions</a>
-  
-    <li><a href="../../../Net/SSH/Test/Extensions/BufferedIo.html">Net::SSH::Test::Extensions::BufferedIo</a>
-  
-    <li><a href="../../../Net/SSH/Test/Extensions/Channel.html">Net::SSH::Test::Extensions::Channel</a>
-  
-    <li><a href="../../../Net/SSH/Test/Extensions/IO.html">Net::SSH::Test::Extensions::IO</a>
-  
-    <li><a href="../../../Net/SSH/Test/Extensions/IO/ClassMethods.html">Net::SSH::Test::Extensions::IO::ClassMethods</a>
-  
-    <li><a href="../../../Net/SSH/Test/Extensions/PacketStream.html">Net::SSH::Test::Extensions::PacketStream</a>
-  
-    <li><a href="../../../Net/SSH/Test/Kex.html">Net::SSH::Test::Kex</a>
-  
-    <li><a href="../../../Net/SSH/Test/LocalPacket.html">Net::SSH::Test::LocalPacket</a>
-  
-    <li><a href="../../../Net/SSH/Test/Packet.html">Net::SSH::Test::Packet</a>
-  
-    <li><a href="../../../Net/SSH/Test/RemotePacket.html">Net::SSH::Test::RemotePacket</a>
-  
-    <li><a href="../../../Net/SSH/Test/Script.html">Net::SSH::Test::Script</a>
-  
-    <li><a href="../../../Net/SSH/Test/Socket.html">Net::SSH::Test::Socket</a>
-  
-    <li><a href="../../../Net/SSH/Timeout.html">Net::SSH::Timeout</a>
-  
-    <li><a href="../../../Net/SSH/Transport.html">Net::SSH::Transport</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Algorithms.html">Net::SSH::Transport::Algorithms</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Algorithms/OpenSSL.html">Net::SSH::Transport::Algorithms::OpenSSL</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Algorithms/OpenSSL/PKey.html">Net::SSH::Transport::Algorithms::OpenSSL::PKey</a>
-  
-    <li><a href="../../../Net/SSH/Transport/CTR.html">Net::SSH::Transport::CTR</a>
-  
-    <li><a href="../../../Net/SSH/Transport/CipherFactory.html">Net::SSH::Transport::CipherFactory</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Constants.html">Net::SSH::Transport::Constants</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC.html">Net::SSH::Transport::HMAC</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/Abstract.html">Net::SSH::Transport::HMAC::Abstract</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/MD5.html">Net::SSH::Transport::HMAC::MD5</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/MD5/OpenSSL.html">Net::SSH::Transport::HMAC::MD5::OpenSSL</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/MD5/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::MD5::OpenSSL::Digest</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/MD5_96.html">Net::SSH::Transport::HMAC::MD5_96</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/None.html">Net::SSH::Transport::HMAC::None</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/RIPEMD160.html">Net::SSH::Transport::HMAC::RIPEMD160</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/RIPEMD160/OpenSSL.html">Net::SSH::Transport::HMAC::RIPEMD160::OpenSSL</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/RIPEMD160/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::RIPEMD160::OpenSSL::Digest</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/SHA1.html">Net::SSH::Transport::HMAC::SHA1</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/SHA1/OpenSSL.html">Net::SSH::Transport::HMAC::SHA1::OpenSSL</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/SHA1/OpenSSL/Digest.html">Net::SSH::Transport::HMAC::SHA1::OpenSSL::Digest</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/SHA1_96.html">Net::SSH::Transport::HMAC::SHA1_96</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/SHA2_256.html">Net::SSH::Transport::HMAC::SHA2_256</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/SHA2_256_96.html">Net::SSH::Transport::HMAC::SHA2_256_96</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/SHA2_512.html">Net::SSH::Transport::HMAC::SHA2_512</a>
-  
-    <li><a href="../../../Net/SSH/Transport/HMAC/SHA2_512_96.html">Net::SSH::Transport::HMAC::SHA2_512_96</a>
-  
-    <li><a href="../../../Net/SSH/Transport/IdentityCipher.html">Net::SSH::Transport::IdentityCipher</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Kex.html">Net::SSH::Transport::Kex</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Kex/DiffieHellmanGroup14SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup14SHA1</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Kex/DiffieHellmanGroup1SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA1</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Kex/DiffieHellmanGroupExchangeSHA256.html">Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Kex/EcdhSHA2NistP256.html">Net::SSH::Transport::Kex::EcdhSHA2NistP256</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Kex/EcdhSHA2NistP384.html">Net::SSH::Transport::Kex::EcdhSHA2NistP384</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Kex/EcdhSHA2NistP521.html">Net::SSH::Transport::Kex::EcdhSHA2NistP521</a>
-  
-    <li><a href="../../../Net/SSH/Transport/KeyExpander.html">Net::SSH::Transport::KeyExpander</a>
-  
-    <li><a href="../../../Net/SSH/Transport/PacketStream.html">Net::SSH::Transport::PacketStream</a>
-  
-    <li><a href="../../../Net/SSH/Transport/ServerVersion.html">Net::SSH::Transport::ServerVersion</a>
-  
-    <li><a href="../../../Net/SSH/Transport/Session.html">Net::SSH::Transport::Session</a>
-  
-    <li><a href="../../../Net/SSH/Transport/State.html">Net::SSH::Transport::State</a>
-  
-    <li><a href="../../../Net/SSH/Verifiers.html">Net::SSH::Verifiers</a>
-  
-    <li><a href="../../../Net/SSH/Verifiers/Lenient.html">Net::SSH::Verifiers::Lenient</a>
-  
-    <li><a href="../../../Net/SSH/Verifiers/Null.html">Net::SSH::Verifiers::Null</a>
-  
-    <li><a href="../../../Net/SSH/Verifiers/Secure.html">Net::SSH::Verifiers::Secure</a>
-  
-    <li><a href="../../../Net/SSH/Verifiers/Strict.html">Net::SSH::Verifiers::Strict</a>
-  
-    <li><a href="../../../Net/SSH/Version.html">Net::SSH::Version</a>
-  
-    <li><a href="../../../OpenSSL.html">OpenSSL</a>
-  
-    <li><a href="../../../OpenSSL/BN.html">OpenSSL::BN</a>
-  
-    <li><a href="../../../OpenSSL/Digest.html">OpenSSL::Digest</a>
-  
-    <li><a href="../../../OpenSSL/PKey.html">OpenSSL::PKey</a>
-  
-    <li><a href="../../../OpenSSL/PKey/DH.html">OpenSSL::PKey::DH</a>
-  
-    <li><a href="../../../OpenSSL/PKey/DSA.html">OpenSSL::PKey::DSA</a>
-  
-    <li><a href="../../../OpenSSL/PKey/EC.html">OpenSSL::PKey::EC</a>
-  
-    <li><a href="../../../OpenSSL/PKey/OpenSSL.html">OpenSSL::PKey::OpenSSL</a>
-  
-    <li><a href="../../../OpenSSL/PKey/OpenSSL/PKey.html">OpenSSL::PKey::OpenSSL::PKey</a>
-  
-    <li><a href="../../../OpenSSL/PKey/OpenSSL/PKey/OpenSSL.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL</a>
-  
-    <li><a href="../../../OpenSSL/PKey/OpenSSL/PKey/OpenSSL/PKey.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL::PKey</a>
-  
-    <li><a href="../../../OpenSSL/PKey/OpenSSL/PKey/OpenSSL/PKey/ECError.html">OpenSSL::PKey::OpenSSL::PKey::OpenSSL::PKey::ECError</a>
-  
-    <li><a href="../../../OpenSSL/PKey/PKey.html">OpenSSL::PKey::PKey</a>
-  
-    <li><a href="../../../OpenSSL/PKey/RSA.html">OpenSSL::PKey::RSA</a>
-  
-    <li><a href="../../../String.html">String</a>
-  
-  </ul>
-</nav>
+</div>
 
   </div>
 </nav>
 
-<div id="documentation">
-  <h1 class="class">class Net::SSH::Connection::Keepalive</h1>
+<main role="main" aria-labelledby="class-Net::SSH::Connection::Keepalive">
+  <h1 id="class-Net::SSH::Connection::Keepalive" class="class">
+    class Net::SSH::Connection::Keepalive
+  </h1>
 
-  <div id="description" class="description">
+  <section class="description">
     
-  </div><!-- description -->
+  </section>
 
   
   
@@ -459,10 +122,11 @@
 
     
 
-    <!-- Methods -->
     
-     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
-      <h3 class="section-header">Public Class Methods</h3>
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
 
     
       <div id="method-c-new" class="method-detail ">
@@ -491,20 +155,22 @@
   <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">logger</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- new-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- new-method -->
+      </div>
 
     
-    </section><!-- public-class-method-details -->
+    </section>
   
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
-      <h3 class="section-header">Public Instance Methods</h3>
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
 
     
       <div id="method-i-enabled-3F" class="method-detail ">
@@ -530,14 +196,14 @@
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">enabled?</span>
   <span class="ruby-identifier">options</span>[<span class="ruby-value">:keepalive</span>]
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- enabled-3F-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- enabled-3F-method -->
+      </div>
 
     
       <div id="method-i-interval" class="method-detail ">
@@ -563,14 +229,14 @@
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">interval</span>
   <span class="ruby-identifier">options</span>[<span class="ruby-value">:keepalive_interval</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Session</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_IO_SELECT_TIMEOUT</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- interval-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- interval-method -->
+      </div>
 
     
       <div id="method-i-keepalive_maxcount" class="method-detail ">
@@ -596,14 +262,14 @@
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">keepalive_maxcount</span>
   (<span class="ruby-identifier">options</span>[<span class="ruby-value">:keepalive_maxcount</span>] <span class="ruby-operator">||</span> <span class="ruby-value">3</span>).<span class="ruby-identifier">to_i</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- keepalive_maxcount-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- keepalive_maxcount-method -->
+      </div>
 
     
       <div id="method-i-options" class="method-detail ">
@@ -629,14 +295,14 @@
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">options</span>
   <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">options</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- options-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- options-method -->
+      </div>
 
     
       <div id="method-i-send_as_needed" class="method-detail ">
@@ -676,14 +342,14 @@
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Timeout</span>, <span class="ruby-node">&quot;Timeout, server #{@session.host} not responding.&quot;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- send_as_needed-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- send_as_needed-method -->
+      </div>
 
     
       <div id="method-i-should_send-3F" class="method-detail ">
@@ -711,26 +377,25 @@
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@last_keepalive_sent_at</span>
   <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@last_keepalive_sent_at</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">interval</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- should_send-3F-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- should_send-3F-method -->
+      </div>
 
     
-    </section><!-- public-instance-method-details -->
+    </section>
   
-  </section><!-- 5Buntitled-5D -->
+  </section>
+</main>
 
-</div><!-- documentation -->
 
-
-<footer id="validator-badges">
-  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
-  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.0.
-  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
