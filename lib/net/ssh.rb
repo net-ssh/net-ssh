@@ -226,7 +226,7 @@ module Net
 
       if options[:verbose]
         options[:logger].level = case options[:verbose]
-          when Fixnum then options[:verbose]
+          when Integer then options[:verbose]
           when :debug then Logger::DEBUG
           when :info  then Logger::INFO
           when :warn  then Logger::WARN

@@ -69,7 +69,7 @@ module Net; module SSH; module Transport; module Kex
       session_id = verify_signature(result)
       confirm_newkeys
 
-      return { session_id: session_id, 
+      return { session_id: session_id,
                server_key: result[:server_key],
                shared_secret: result[:shared_secret],
                hashing_algorithm: digester }
@@ -115,11 +115,22 @@ module Net; module SSH; module Transport; module Kex
       def generate_key #:nodoc:
         dh = OpenSSL::PKey::DH.new
 
-        dh.p, dh.g = get_parameters
-        dh.priv_key = OpenSSL::BN.rand(data[:need_bytes] * 8)
+        if dh.respond_to?(:set_pqg)
+          p, g = get_parameters
+          dh.set_pqg(p, nil, g)
+        else
+          dh.p, dh.g = get_parameters
+        end
 
-        dh.generate_key! until dh.valid?
-
+        dh.generate_key!
+        until dh.valid? && dh.priv_key.num_bytes == data[:need_bytes]
+          if dh.respond_to?(:set_key)
+            dh.set_key(nil, OpenSSL::BN.rand(data[:need_bytes] * 8))
+          else
+            dh.priv_key = OpenSSL::BN.rand(data[:need_bytes] * 8)
+          end
+          dh.generate_key!
+        end
         dh
       end
 

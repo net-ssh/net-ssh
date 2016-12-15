@@ -319,10 +319,15 @@ class TestBuffer < NetSSHTest
     buffer = new("start")
 
     key = OpenSSL::PKey::DSA.new
-    key.p = 0xffeeddccbbaa9988
-    key.q = 0x7766554433221100
-    key.g = 0xffddbb9977553311
-    key.pub_key = 0xeeccaa8866442200
+    if key.respond_to?(:set_pqg)
+      key.set_pqg(0xffeeddccbbaa9988, 0x7766554433221100, 0xffddbb9977553311)
+      key.set_key(0xeeccaa8866442200, nil)
+    else
+      key.p = 0xffeeddccbbaa9988
+      key.q = 0x7766554433221100
+      key.g = 0xffddbb9977553311
+      key.pub_key = 0xeeccaa8866442200
+    end
 
     buffer.write_key(key)
 assert_equal "start\0\0\0\7ssh-dss\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0\0\0\010\x77\x66\x55\x44\x33\x22\x11\x00\0\0\0\011\0\xff\xdd\xbb\x99\x77\x55\x33\x11\0\0\0\011\0\xee\xcc\xaa\x88\x66\x44\x22\x00", buffer.to_s
@@ -332,8 +337,12 @@ assert_equal "start\0\0\0\7ssh-dss\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0
     buffer = new("start")
 
     key = OpenSSL::PKey::RSA.new
-    key.e = 0xffeeddccbbaa9988
-    key.n = 0x7766554433221100
+    if key.respond_to?(:set_key)
+      key.set_key(0x7766554433221100, 0xffeeddccbbaa9988, nil)
+    else
+      key.e = 0xffeeddccbbaa9988
+      key.n = 0x7766554433221100
+    end
 
     buffer.write_key(key)
     assert_equal "start\0\0\0\7ssh-rsa\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0\0\0\010\x77\x66\x55\x44\x33\x22\x11\x00", buffer.to_s
