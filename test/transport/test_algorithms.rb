@@ -129,6 +129,11 @@ module Transport
       assert_equal %w(none zlib zlib@openssh.com), algorithms(compression: %w(bogus none zlib), append_all_supported_algorithms: true)[:compression]
     end
 
+    def test_constructor_with_append_to_default
+      default_host_keys = Net::SSH::Transport::Algorithms::ALGORITHMS[:host_key]
+      assert_equal default_host_keys + ["ecdsa-sha2-nistp256-cert-v01@openssh.com"], algorithms(host_key: '+ecdsa-sha2-nistp256-cert-v01@openssh.com')[:host_key]
+    end
+
     def test_initial_state_should_be_neither_pending_nor_initialized
       assert !algorithms.pending?
       assert !algorithms.initialized?

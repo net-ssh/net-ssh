@@ -213,22 +213,32 @@ module Net; module SSH; module Transport
         options[:compression] = %w(zlib@openssh.com zlib) if options[:compression] == true
 
         ALGORITHMS.each do |algorithm, list|
-          algorithms[algorithm] = list.dup
-
           # apply the preferred algorithm order, if any
           if options[algorithm]
-            algorithms[algorithm] = Array(options[algorithm]).compact.uniq
-            unsupported = []
-            algorithms[algorithm].select! do |name|
-              supported = ALGORITHMS[algorithm].include?(name)
-              unsupported << name unless supported
-              supported
-            end
-            lwarn { "unsupported #{algorithm} algorithm: `#{unsupported}'" } unless unsupported.empty?
+            optionals = Array(options[algorithm]).compact.uniq
 
-            if options[:append_all_supported_algorithms]
-              list.each { |name| algorithms[algorithm] << name unless algorithms[algorithm].include?(name) }
+            if optionals.first.start_with?('+')
+              algorithms[algorithm] = list.dup
+              algorithms[algorithm] << optionals.first[1..-1]
+              algorithms[algorithm].concat(optionals[1..-1])
+              algorithms[algorithm].uniq!
+            else
+              algorithms[algorithm] = optionals
+
+              unsupported = []
+              algorithms[algorithm].select! do |name|
+                supported = ALGORITHMS[algorithm].include?(name)
+                unsupported << name unless supported
+                supported
+              end
+              lwarn { "unsupported #{algorithm} algorithm: `#{unsupported}'" } unless unsupported.empty?
+
+              if options[:append_all_supported_algorithms]
+                list.each { |name| algorithms[algorithm] << name unless algorithms[algorithm].include?(name) }
+              end
             end
+          else
+            algorithms[algorithm] = list.dup
           end
         end
 
