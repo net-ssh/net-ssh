@@ -215,15 +215,15 @@ module Net; module SSH; module Transport
         ALGORITHMS.each do |algorithm, list|
           # apply the preferred algorithm order, if any
           if options[algorithm]
-            optionals = Array(options[algorithm]).compact.uniq
+            option = Array(options[algorithm]).compact.uniq
 
-            if optionals.first.start_with?('+')
+            if option.first.start_with?('+')
               algorithms[algorithm] = list.dup
-              algorithms[algorithm] << optionals.first[1..-1]
-              algorithms[algorithm].concat(optionals[1..-1])
+              algorithms[algorithm] << option.first[1..-1]
+              algorithms[algorithm].concat(option[1..-1])
               algorithms[algorithm].uniq!
             else
-              algorithms[algorithm] = optionals
+              algorithms[algorithm] = option
 
               if options[:append_all_supported_algorithms]
                 list.each { |name| algorithms[algorithm] << name unless algorithms[algorithm].include?(name) }
