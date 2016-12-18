@@ -225,18 +225,19 @@ module Net; module SSH; module Transport
             else
               algorithms[algorithm] = optionals
 
-              unsupported = []
-              algorithms[algorithm].select! do |name|
-                supported = ALGORITHMS[algorithm].include?(name)
-                unsupported << name unless supported
-                supported
-              end
-              lwarn { "unsupported #{algorithm} algorithm: `#{unsupported}'" } unless unsupported.empty?
-
               if options[:append_all_supported_algorithms]
                 list.each { |name| algorithms[algorithm] << name unless algorithms[algorithm].include?(name) }
               end
             end
+
+            unsupported = []
+            algorithms[algorithm].select! do |name|
+              supported = ALGORITHMS[algorithm].include?(name)
+              unsupported << name unless supported
+              supported
+            end
+
+            lwarn { "unsupported #{algorithm} algorithm: `#{unsupported}'" } unless unsupported.empty?
           else
             algorithms[algorithm] = list.dup
           end
