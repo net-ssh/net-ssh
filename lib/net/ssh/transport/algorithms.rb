@@ -212,35 +212,8 @@ module Net; module SSH; module Transport
       def prepare_preferred_algorithms!
         options[:compression] = %w(zlib@openssh.com zlib) if options[:compression] == true
 
-        ALGORITHMS.each do |algorithm, list|
-          # apply the preferred algorithm order, if any
-          if options[algorithm]
-            option = Array(options[algorithm]).compact.uniq
-
-            if option.first && option.first.start_with?('+')
-              algorithms[algorithm] = list.dup
-              algorithms[algorithm] << option.first[1..-1]
-              algorithms[algorithm].concat(option[1..-1])
-              algorithms[algorithm].uniq!
-            else
-              algorithms[algorithm] = option
-
-              if options[:append_all_supported_algorithms]
-                list.each { |name| algorithms[algorithm] << name unless algorithms[algorithm].include?(name) }
-              end
-            end
-
-            unsupported = []
-            algorithms[algorithm].select! do |name|
-              supported = ALGORITHMS[algorithm].include?(name)
-              unsupported << name unless supported
-              supported
-            end
-
-            lwarn { "unsupported #{algorithm} algorithm: `#{unsupported}'" } unless unsupported.empty?
-          else
-            algorithms[algorithm] = list.dup
-          end
+        ALGORITHMS.each do |algorithm, supported|
+          algorithms[algorithm] = compose_algorithm_list(supported, options[algorithm], options[:append_all_supported_algorithms])
         end
 
         # for convention, make sure our list has the same keys as the server
@@ -262,6 +235,38 @@ module Net; module SSH; module Transport
           end
           algorithms[:host_key] = host_keys
         end
+      end
+
+      # Composes the list of algorithms by taking supported algorithms and matching with supplied options.
+      def compose_algorithm_list(supported, option, append_all_supported_algorithms = false)
+        return supported.dup unless option
+
+        list = []
+        option = Array(option).compact.uniq
+
+        if option.first && option.first.start_with?('+')
+          list = supported.dup
+          list << option.first[1..-1]
+          list.concat(option[1..-1])
+          list.uniq!
+        else
+          list = option
+
+          if append_all_supported_algorithms
+            supported.each { |name| list << name unless list.include?(name) }
+          end
+        end
+
+        unsupported = []
+        list.select! do |name|
+          is_supported = supported.include?(name)
+          unsupported << name unless is_supported
+          is_supported
+        end
+
+        lwarn { "unsupported #{algorithm} algorithm: `#{unsupported}'" } unless unsupported.empty?
+
+        list
       end
 
       # Parses a KEXINIT packet from the server.
