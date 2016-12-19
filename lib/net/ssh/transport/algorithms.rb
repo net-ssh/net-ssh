@@ -217,7 +217,7 @@ module Net; module SSH; module Transport
           if options[algorithm]
             option = Array(options[algorithm]).compact.uniq
 
-            if option.first.start_with?('+')
+            if option.first && option.first.start_with?('+')
               algorithms[algorithm] = list.dup
               algorithms[algorithm] << option.first[1..-1]
               algorithms[algorithm].concat(option[1..-1])
