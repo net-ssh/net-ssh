@@ -1,3 +1,7 @@
+=== 4.0.0.rc3
+
+ * parse `+` character in config files [Christoph Lupprich, #470, #314]
+
 === 4.0.0.rc2
 
  * Fixed OpenSSL 2.0/Ruby 2.4.0 warnings [Miklós Fazekas, #468]
