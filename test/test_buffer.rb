@@ -1,6 +1,6 @@
 # encoding: ASCII-8BIT
 
-require 'common'
+require_relative 'common'
 require 'net/ssh/buffer'
 
 class TestBuffer < NetSSHTest
