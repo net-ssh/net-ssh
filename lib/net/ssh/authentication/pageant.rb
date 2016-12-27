@@ -98,8 +98,8 @@ module Net; module SSH; module Authentication
 
       # args: hFile, (ignored), flProtect, dwMaximumSizeHigh,
       #           dwMaximumSizeLow, lpName
-      extern "HANDLE CreateFileMapping#{SUFFIX}(HANDLE, void *, DWORD, ' +
-        'DWORD, DWORD, LPCTSTR)"
+      extern "HANDLE CreateFileMapping#{SUFFIX}(HANDLE, void *, DWORD, " +
+        "DWORD, DWORD, LPCTSTR)"
 
       # args: hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh,
       #           dwfileOffsetLow, dwNumberOfBytesToMap
@@ -112,8 +112,8 @@ module Net; module SSH; module Authentication
       extern 'BOOL CloseHandle(HANDLE)'
 
       # args: hWnd, Msg, wParam, lParam, fuFlags, uTimeout, lpdwResult
-      extern "LRESULT SendMessageTimeout#{SUFFIX}(HWND, UINT, WPARAM, LPARAM, ' +
-        'UINT, UINT, PDWORD_PTR)"
+      extern "LRESULT SendMessageTimeout#{SUFFIX}(HWND, UINT, WPARAM, LPARAM, " +
+        "UINT, UINT, PDWORD_PTR)"
 
       # args: none
       extern 'DWORD GetLastError()'
