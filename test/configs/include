@@ -1,0 +1,4 @@
+Include subset1
+
+Host xyz
+  Include conf.d/*
