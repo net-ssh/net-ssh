@@ -73,6 +73,7 @@ module Net; module SSH
       # options.)
       def load(path, host, settings={})
         file = File.expand_path(path)
+        base_dir = File.dirname(file)
         return settings unless File.readable?(file)
 
         globals = {}
@@ -118,14 +119,24 @@ module Net; module SSH
             seen_host = true
             settings[key] = host
           elsif !seen_host
-            if key == 'identityfile'
+            case key
+            when 'identityfile'
               (globals[key] ||= []) << value
+            when 'include'
+              included_file_paths(base_dir, value).each do |file_path|
+                globals = load(file_path, host, globals)
+              end
             else
               globals[key] = value unless settings.key?(key)
             end
           elsif !matched_host.nil?
-            if key == 'identityfile'
+            case key
+            when 'identityfile'
               (settings[key] ||= []) << value
+            when 'include'
+              included_file_paths(base_dir, value).each do |file_path|
+                settings = load(file_path, host, settings)
+              end
             else
               settings[key] = value unless settings.key?(key)
             end
@@ -214,7 +225,7 @@ module Net; module SSH
               require 'net/ssh/proxy/command'
               hash[:proxy] = Net::SSH::Proxy::Command.new(value)
             end
-	        when 'pubkeyauthentication'
+          when 'pubkeyauthentication'
             if value
               (hash[:auth_methods] << 'publickey').uniq!
             else
@@ -288,6 +299,13 @@ module Net; module SSH
           end
           hash
         end
+
+        def included_file_paths(base_dir, config_path)
+          paths = Dir.glob(File.expand_path(config_path)).select { |f| File.file?(f) }
+          paths += Dir.glob(File.join(base_dir, config_path)).select { |f| File.file?(f) }
+          paths.uniq
+        end
+
     end
   end
 
