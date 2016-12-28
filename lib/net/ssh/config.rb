@@ -77,7 +77,7 @@ module Net; module SSH
         return settings unless File.readable?(file)
 
         globals = {}
-        matched_host = nil
+        host_matched = false
         seen_host = false
         IO.foreach(file) do |line|
           next if line =~ /^\s*(?:#.*)?$/
@@ -108,12 +108,12 @@ module Net; module SSH
 
             # Check for negative patterns first. If the host matches, that overrules any other positive match.
             # The host substring code is used to strip out the starting "!" so the regexp will be correct.
-            negative_match = negative_hosts.select { |h| host =~ pattern2regex(h[1..-1]) }.first
+            negative_matched = negative_hosts.any? { |h| host =~ pattern2regex(h[1..-1]) }
 
-            if negative_match
-              matched_host = nil
+            if negative_matched
+              host_matched = false
             else
-              matched_host = positive_hosts.select { |h| host =~ pattern2regex(h) }.first
+              host_matched = positive_hosts.any? { |h| host =~ pattern2regex(h) }
             end
 
             seen_host = true
@@ -129,7 +129,7 @@ module Net; module SSH
             else
               globals[key] = value unless settings.key?(key)
             end
-          elsif !matched_host.nil?
+          elsif host_matched
             case key
             when 'identityfile'
               (settings[key] ||= []) << value
