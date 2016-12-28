@@ -260,6 +260,16 @@ class TestConfig < NetSSHTest
     assert net_ssh[:proxy]
   end
 
+  def test_load_with_include_keyword
+    config = Net::SSH::Config.load(config(:include), "xyz")
+    net_ssh = Net::SSH::Config.translate(config)
+    assert_equal 'example.com', net_ssh[:host_name]
+    assert_equal 'foo', net_ssh[:user]
+    assert_equal 2345, net_ssh[:port]
+    assert net_ssh[:keys_only]
+    assert_equal %w(~/.ssh/id.pem), net_ssh[:keys]
+  end
+
   private
 
     def with_home_env(value,&block)
