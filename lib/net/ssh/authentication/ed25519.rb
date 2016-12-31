@@ -40,6 +40,10 @@ module ED25519
       "ssh-ed25519"
     end
 
+    def ssh_signature_type
+      ssh_type
+    end
+
     def ssh_do_verify(sig,data)
       @verify_key.verify(sig,data)
     end

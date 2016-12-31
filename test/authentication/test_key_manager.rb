@@ -56,6 +56,19 @@ module Authentication
       assert_equal({from: :file, file: second, key: dsa}, manager.known_identities[dsa])
     end
 
+    def test_each_identity_should_load_form_cert_file
+      manager.stubs(:agent).returns(nil)
+      first = File.expand_path("/first")
+      stub_file_cert first, rsa
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 1, identities.length
+      assert_equal rsa.to_blob, identities.first.to_blob
+      assert_equal({from: :file, file: first}, manager.known_identities[rsa])
+    end
+
     def test_each_identity_should_not_prompt_for_passphrase_in_non_interactive_mode
       manager(non_interactive: true).stubs(:agent).returns(nil)
       first = File.expand_path("/first")
@@ -169,6 +182,7 @@ module Authentication
         File.stubs(:readable?).with(name).returns(true)
         File.stubs(:file?).with(name + ".pub").returns(true)
         File.stubs(:readable?).with(name + ".pub").returns(false)
+        File.stubs(:file?).with(name + "-cert.pub").returns(false)
 
         case options.fetch(:passphrase, :indifferently)
         when :should_be_asked
@@ -194,8 +208,21 @@ module Authentication
         File.stubs(:readable?).with(name).returns(true)
         File.stubs(:file?).with(name + ".pub").returns(true)
         File.stubs(:readable?).with(name + ".pub").returns(true)
+        File.stubs(:file?).with(name + "-cert.pub").returns(false)
 
         Net::SSH::KeyFactory.expects(:load_public_key).with(name + ".pub").returns(key).at_least_once
+      end
+
+      def stub_file_cert(name, key)
+        manager.add(name)
+        File.stubs(:file?).with(name).returns(true)
+        File.stubs(:readable?).with(name).returns(true)
+        File.stubs(:file?).with(name + ".pub").returns(true)
+        File.stubs(:readable?).with(name + ".pub").returns(true)
+        File.stubs(:file?).with(name + "-cert.pub").returns(true)
+        File.stubs(:readable?).with(name + "-cert.pub").returns(true)
+
+        Net::SSH::KeyFactory.expects(:load_public_key).with(name + "-cert.pub").returns(key).at_least_once
       end
 
       def rsa(size=512)

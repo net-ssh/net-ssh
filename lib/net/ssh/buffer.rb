@@ -1,6 +1,7 @@
 require 'net/ssh/ruby_compat'
 require 'net/ssh/transport/openssl'
 
+require 'net/ssh/authentication/certificate'
 require 'net/ssh/authentication/ed25519_loader'
 
 module Net; module SSH
@@ -186,6 +187,11 @@ module Net; module SSH
       data
     end
 
+    # Calls block(self) until the buffer is empty, and returns all results.
+    def read_all(&block)
+      Enumerator.new { |e| e << yield(self) until eof? }.to_a
+    end
+
     # Return the next 8 bytes as a 64-bit integer (in network byte order).
     # Returns nil if there are less than 8 bytes remaining to be read in the
     # buffer.
@@ -246,7 +252,9 @@ module Net; module SSH
     # a key. Only RSA, DSA, and ECDSA keys are supported.
     def read_keyblob(type)
       case type
-        when /^ssh-dss(-cert-v01@openssh\.com)?$/
+        when /^(.*)-cert-v01@openssh\.com$/
+          key = Net::SSH::Authentication::Certificate.read_certblob(self, $1)
+        when /^ssh-dss$/
           key = OpenSSL::PKey::DSA.new
           if key.respond_to?(:set_pqg)
             key.set_pqg(read_bignum, read_bignum, read_bignum)
@@ -260,8 +268,7 @@ module Net; module SSH
           else
             key.pub_key = read_bignum
           end
-
-        when /^ssh-rsa(-cert-v01@openssh\.com)?$/
+        when /^ssh-rsa$/
           key = OpenSSL::PKey::RSA.new
           if key.respond_to?(:set_key)
             e = read_bignum

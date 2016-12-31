@@ -146,7 +146,7 @@ module Net
           end
 
           if info[:key]
-            return Net::SSH::Buffer.from(:string, identity.ssh_type,
+            return Net::SSH::Buffer.from(:string, identity.ssh_signature_type,
               :mstring, info[:key].ssh_do_sign(data.to_s)).to_s
           end
 
@@ -189,8 +189,12 @@ module Net
           key_files.map do |file|
             if readable_file?(file)
               identity = {}
+              cert_file = file + "-cert.pub"
               public_key_file = file + ".pub"
-              if readable_file?(public_key_file)
+              if readable_file?(cert_file)
+                identity[:load_from] = :pubkey_file
+                identity[:pubkey_file] = cert_file
+              elsif readable_file?(public_key_file)
                 identity[:load_from] = :pubkey_file
                 identity[:pubkey_file] = public_key_file
               else
