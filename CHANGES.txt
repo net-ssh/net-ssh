@@ -1,3 +1,10 @@
+=== 4.0.1.rc1
+
+ * support of rbnacl 4.0 and better error message [#479]
+ * support include in config files [Kimura Masayuki, #475]
+ * fixed issue with ruby 2.2 or older on windows [#472]
+
+=== 4.0.0
 === 4.0.0.rc3
 
  * parse `+` character in config files [Christoph Lupprich, #470, #314]

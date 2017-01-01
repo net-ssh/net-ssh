@@ -22,14 +22,14 @@ platform:
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
   - if "%ruby_version%" == "jruby-9.1.2.0" ( cinst javaruntime -i )
-  - if "%ruby_version%" == "jruby-9.1.2.0" ( cinst jruby --version 9.1.2.0 -i )
+  - if "%ruby_version%" == "jruby-9.1.2.0" ( cinst jruby --version 9.1.2.0 -i --allow-empty-checksums )
   - if "%ruby_version%" == "jruby-9.1.2.0" ( SET "PATH=C:\jruby-9.1.2.0\bin\;%PATH%" )
   - ruby --version
   - gem install bundler --no-document -v 1.13.5
   - SET BUNDLE_GEMFILE=Gemfile.norbnacl
   - bundle _1.13.5_ install --retry=3
   - cinst freesshd
-  - cinst putty
+  - cinst putty --allow-empty-checksums
   - ps: |
           if ($env:Processor_Architecture -eq "x86")
           {
