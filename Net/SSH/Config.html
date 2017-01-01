@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Config - net-ssh 4.0.0.rc2</title>
+<title>class Net::SSH::Config - net-ssh 4.0.1.rc1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -311,10 +311,11 @@ href="../SSH.html">Net::SSH</a> options.)</p>
             <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load</span>(<span class="ruby-identifier">path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>={})
   <span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">path</span>)
+  <span class="ruby-identifier">base_dir</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">file</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">settings</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">file</span>)
 
   <span class="ruby-identifier">globals</span> = {}
-  <span class="ruby-identifier">matched_host</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">host_matched</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-identifier">seen_host</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-constant">IO</span>.<span class="ruby-identifier">foreach</span>(<span class="ruby-identifier">file</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">line</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/^\s*(?:#.*)?$/</span>
@@ -345,25 +346,35 @@ href="../SSH.html">Net::SSH</a> options.)</p>
 
       <span class="ruby-comment"># Check for negative patterns first. If the host matches, that overrules any other positive match.</span>
       <span class="ruby-comment"># The host substring code is used to strip out the starting &quot;!&quot; so the regexp will be correct.</span>
-      <span class="ruby-identifier">negative_match</span> = <span class="ruby-identifier">negative_hosts</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> <span class="ruby-identifier">host</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">pattern2regex</span>(<span class="ruby-identifier">h</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>]) }.<span class="ruby-identifier">first</span>
+      <span class="ruby-identifier">negative_matched</span> = <span class="ruby-identifier">negative_hosts</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> <span class="ruby-identifier">host</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">pattern2regex</span>(<span class="ruby-identifier">h</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>]) }
 
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">negative_match</span>
-        <span class="ruby-identifier">matched_host</span> = <span class="ruby-keyword">nil</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">negative_matched</span>
+        <span class="ruby-identifier">host_matched</span> = <span class="ruby-keyword">false</span>
       <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">matched_host</span> = <span class="ruby-identifier">positive_hosts</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> <span class="ruby-identifier">host</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">pattern2regex</span>(<span class="ruby-identifier">h</span>) }.<span class="ruby-identifier">first</span>
+        <span class="ruby-identifier">host_matched</span> = <span class="ruby-identifier">positive_hosts</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> <span class="ruby-identifier">host</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">pattern2regex</span>(<span class="ruby-identifier">h</span>) }
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-identifier">seen_host</span> = <span class="ruby-keyword">true</span>
       <span class="ruby-identifier">settings</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">host</span>
     <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">seen_host</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;identityfile&#39;</span>
+      <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;identityfile&#39;</span>
         (<span class="ruby-identifier">globals</span>[<span class="ruby-identifier">key</span>] <span class="ruby-operator">||=</span> []) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">value</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;include&#39;</span>
+        <span class="ruby-identifier">included_file_paths</span>(<span class="ruby-identifier">base_dir</span>, <span class="ruby-identifier">value</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">globals</span> = <span class="ruby-identifier">load</span>(<span class="ruby-identifier">file_path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">globals</span>)
+        <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">else</span>
         <span class="ruby-identifier">globals</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>)
       <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">matched_host</span>.<span class="ruby-identifier">nil?</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;identityfile&#39;</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">host_matched</span>
+      <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;identityfile&#39;</span>
         (<span class="ruby-identifier">settings</span>[<span class="ruby-identifier">key</span>] <span class="ruby-operator">||=</span> []) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">value</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;include&#39;</span>
+        <span class="ruby-identifier">included_file_paths</span>(<span class="ruby-identifier">base_dir</span>, <span class="ruby-identifier">value</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">settings</span> = <span class="ruby-identifier">load</span>(<span class="ruby-identifier">file_path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>)
+        <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">else</span>
         <span class="ruby-identifier">settings</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>)
       <span class="ruby-keyword">end</span>
@@ -406,7 +417,7 @@ downcased, and the returned hash will have Symbols for keys.</p>
 
           
           <div class="method-source-code" id="translate-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 144</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 155</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">translate</span>(<span class="ruby-identifier">settings</span>)
   <span class="ruby-identifier">auth_methods</span> = <span class="ruby-identifier">default_auth_methods</span>.<span class="ruby-identifier">clone</span>
   (<span class="ruby-identifier">auth_methods</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;challenge-response&#39;</span>).<span class="ruby-identifier">uniq!</span>
@@ -480,7 +491,7 @@ downcased, and the returned hash will have Symbols for keys.</p>
         <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;net/ssh/proxy/command&#39;</span>
         <span class="ruby-identifier">hash</span>[<span class="ruby-value">:proxy</span>] = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Proxy</span><span class="ruby-operator">::</span><span class="ruby-constant">Command</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">value</span>)
       <span class="ruby-keyword">end</span>
-          <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;pubkeyauthentication&#39;</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;pubkeyauthentication&#39;</span>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span>
         (<span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;publickey&#39;</span>).<span class="ruby-identifier">uniq!</span>
       <span class="ruby-keyword">else</span>
@@ -520,7 +531,7 @@ downcased, and the returned hash will have Symbols for keys.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
