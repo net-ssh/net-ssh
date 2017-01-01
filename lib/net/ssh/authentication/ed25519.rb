@@ -1,6 +1,5 @@
-gem 'rbnacl-libsodium', '>= 1.0.10'
-gem 'rbnacl', '>= 3.2.0', '< 4.0'
-gem 'bcrypt_pbkdf', '~> 1.0.0' unless RUBY_PLATFORM == "java"
+gem 'rbnacl', '>= 3.2.0', '< 5.0'
+gem 'bcrypt_pbkdf', '~> 1.0' unless RUBY_PLATFORM == "java"
 
 require 'rbnacl/libsodium'
 require 'rbnacl'

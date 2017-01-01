@@ -32,15 +32,15 @@ matrix:
 install:
   - export JRUBY_OPTS='--client -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -Xcext.enabled=false -J-Xss2m -Xcompile.invokedynamic=false'
   - sudo pip install ansible
-  - gem install bundler -v "= 1.11.2"
-  - bundle _1.11.2_ install
-  - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.11.2_ install
+  - gem install bundler -v "= 1.13.7"
+  - bundle _1.13.7_ install
+  - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.13.7_ install
   - sudo ansible-galaxy install rvm_io.ruby
   - sudo chown -R travis:travis /home/travis/.ansible
   - ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true' -e 'myuser=travis' -e 'mygroup=travis' -e 'homedir=/home/travis'
 
 script:
-  - bundle _1.11.2_ exec rake test
-  - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.11.2_ exec rake test
-  - bundle _1.11.2_ exec rake test_test
-  - bundle _1.11.2_ exec rubocop
+  - bundle _1.13.7_ exec rake test
+  - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.13.7_ exec rake test
+  - bundle _1.13.7_ exec rake test_test
+  - bundle _1.13.7_ exec rubocop
