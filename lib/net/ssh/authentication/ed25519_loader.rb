@@ -1,7 +1,7 @@
 module Net; module SSH; module Authentication
 
 # Loads ED25519 support which requires optinal dependecies like
-# rbnacl-libsodium, rbnacl, bcrypt_pbkdf
+# rbnacl, bcrypt_pbkdf
 module ED25519Loader
 
 begin
@@ -14,7 +14,17 @@ rescue LoadError => e
 end
 
 def self.raiseUnlessLoaded(message)
-  raise NotImplementedError, "#{message} -- see #{ERROR}" unless LOADED
+  description = dependenciesRequiredForED25519 if ERROR.is_a?(Gem::LoadError)
+  description << "#{ERROR.class} : \"#{ERROR.message}\"\n" if ERROR
+  raise NotImplementedError, "#{message}\n#{description}" unless LOADED
+end
+
+def self.dependenciesRequiredForED25519
+  result = "net-ssh requires the following gems for ed25519 support:\n"
+  result << " * rbnacl (>= 3.2, < 5.0)\n"
+  result << " * rbnacl-libsodium, if your system doesn't have libsodium installed.\n"
+  result << " * bcrypt_pbkdf (>= 1.0, < 2.0)\n" unless RUBY_PLATFORM == "java"
+  result << "See https://github.com/net-ssh/net-ssh/issues/478 for more information\n"
 end
 
 end
