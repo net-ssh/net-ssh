@@ -210,6 +210,14 @@ class TestConfig < NetSSHTest
     assert_equal %w(hostbased keyboard-interactive none password publickey), config[:auth_methods].sort
   end
 
+  def test_configuration_for_when_HOME_is_null_should_not_raise
+    with_home_env(nil) do
+      with_restored_default_files do
+        Net::SSH.configuration_for("test.host", true)
+      end
+    end
+  end
+
   def test_config_for_when_HOME_is_null_should_not_raise
     with_home_env(nil) do
       with_restored_default_files do

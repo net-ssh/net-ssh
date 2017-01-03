@@ -248,18 +248,19 @@ module Net; module SSH
         merge_challenge_response_with_keyboard_interactive(ret)
       end
 
-      private
-
-        def expandable_default_files
-          default_files.keep_if do |path|
-            begin
-              File.expand_path(path)
-              true
-            rescue ArgumentError
-              false
-            end
+      # Filters default_files down to the files that are expandable.
+      def expandable_default_files
+        default_files.keep_if do |path|
+          begin
+            File.expand_path(path)
+            true
+          rescue ArgumentError
+            false
           end
         end
+      end
+
+      private
 
         # Converts an ssh_config pattern into a regex for matching against
         # host names.
