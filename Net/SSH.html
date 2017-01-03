@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH - net-ssh 4.0.1.rc1</title>
+<title>module Net::SSH - net-ssh 4.0.1.rc2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -261,7 +261,7 @@ of all supported options.</p>
             <pre><span class="ruby-comment"># File lib/net/ssh.rb, line 263</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configuration_for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">use_ssh_config</span>)
   <span class="ruby-identifier">files</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">use_ssh_config</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">then</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">default_files</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">then</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>.<span class="ruby-identifier">expandable_default_files</span>
     <span class="ruby-keyword">when</span> <span class="ruby-keyword">false</span>, <span class="ruby-keyword">nil</span> <span class="ruby-keyword">then</span> <span class="ruby-keyword">return</span> {}
     <span class="ruby-keyword">else</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">use_ssh_config</span>)
     <span class="ruby-keyword">end</span>

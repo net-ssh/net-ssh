@@ -1,6 +1,6 @@
-Sun, 01 Jan 2017 17:40:16 +0100
+Tue, 03 Jan 2017 23:35:38 +0100
 README.rdoc	Thu, 15 Dec 2016 23:17:02 +0100
-lib/net/ssh.rb	Thu, 15 Dec 2016 18:17:42 +0100
+lib/net/ssh.rb	Tue, 03 Jan 2017 23:32:31 +0100
 lib/net/ssh/authentication/agent.rb	Fri, 25 Nov 2016 20:20:09 +0100
 lib/net/ssh/authentication/constants.rb	Sun, 06 Mar 2016 06:26:02 +0100
 lib/net/ssh/authentication/ed25519.rb	Sun, 01 Jan 2017 17:35:46 +0100
@@ -16,7 +16,7 @@ lib/net/ssh/authentication/pageant.rb	Sun, 01 Jan 2017 17:35:46 +0100
 lib/net/ssh/authentication/session.rb	Fri, 25 Nov 2016 20:18:52 +0100
 lib/net/ssh/buffer.rb	Thu, 15 Dec 2016 18:17:42 +0100
 lib/net/ssh/buffered_io.rb	Fri, 25 Nov 2016 20:20:09 +0100
-lib/net/ssh/config.rb	Sun, 01 Jan 2017 17:35:46 +0100
+lib/net/ssh/config.rb	Tue, 03 Jan 2017 23:32:31 +0100
 lib/net/ssh/connection/channel.rb	Thu, 15 Dec 2016 18:17:42 +0100
 lib/net/ssh/connection/constants.rb	Sun, 06 Mar 2016 06:26:02 +0100
 lib/net/ssh/connection/event_loop.rb	Thu, 15 Dec 2016 18:17:42 +0100
@@ -81,7 +81,7 @@ lib/net/ssh/verifiers/lenient.rb	Sun, 06 Mar 2016 06:26:02 +0100
 lib/net/ssh/verifiers/null.rb	Sun, 06 Mar 2016 06:26:02 +0100
 lib/net/ssh/verifiers/secure.rb	Wed, 23 Mar 2016 13:11:15 +0100
 lib/net/ssh/verifiers/strict.rb	Sun, 06 Mar 2016 06:26:02 +0100
-lib/net/ssh/version.rb	Sun, 01 Jan 2017 17:35:46 +0100
+lib/net/ssh/version.rb	Tue, 03 Jan 2017 23:32:31 +0100
 LICENSE.txt	Sun, 06 Mar 2016 06:26:02 +0100
 THANKS.txt	Sun, 06 Mar 2016 06:26:02 +0100
-CHANGES.txt	Sun, 01 Jan 2017 17:35:46 +0100
+CHANGES.txt	Tue, 03 Jan 2017 23:32:31 +0100

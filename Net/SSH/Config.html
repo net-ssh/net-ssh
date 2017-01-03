@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Config - net-ssh 4.0.1.rc1</title>
+<title>class Net::SSH::Config - net-ssh 4.0.1.rc2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -73,6 +73,8 @@
     <li ><a href="#method-c-default_auth_methods">::default_auth_methods</a>
     
     <li ><a href="#method-c-default_files">::default_files</a>
+    
+    <li ><a href="#method-c-expandable_default_files">::expandable_default_files</a>
     
     <li ><a href="#method-c-for">::for</a>
     
@@ -235,6 +237,47 @@ default.</p>
             <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">default_files</span>
   <span class="ruby-identifier">@@default_files</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-expandable_default_files" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">expandable_default_files</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Filters <a href="Config.html#method-c-default_files">::default_files</a>
+down to the files that are expandable.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="expandable_default_files-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 252</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">expandable_default_files</span>
+  <span class="ruby-identifier">default_files</span>.<span class="ruby-identifier">keep_if</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">path</span>)
+      <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span>
+      <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
