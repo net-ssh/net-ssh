@@ -1,5 +1,6 @@
-require 'common'
+require_relative './common'
 require 'net/ssh/config'
+require 'net/ssh'
 require 'pathname'
 require 'tempfile'
 
