@@ -237,6 +237,36 @@ module Transport
       assert_equal :delayed, transport.server_options[:compression]
     end
 
+    # Verification for https://github.com/net-ssh/net-ssh/issues/483
+    def test_that_algorithm_undefined_doesnt_throw_exception
+      # Create a logger explicitly with DEBUG logging
+      string_io = StringIO.new("")
+      debug_logger = Logger.new(string_io)
+      debug_logger.level = Logger::DEBUG
+
+      # Create our algorithm instance, with our logger sent to the underlying transport instance
+      alg = algorithms(
+        {},
+        logger: debug_logger
+      )
+
+      # Here are our two lists - "ours" and "theirs"
+      #
+      # [a,b] overlap
+      # [d]   "unsupported" values
+      ours = %w(a b c)
+      theirs = %w(a b d)
+
+      ## Hit the method directly
+      alg.send(
+        :compose_algorithm_list,
+        ours,
+        theirs
+      )
+
+      assert string_io.string.include?(%(unsupported algorithm: `["d"]'))
+    end
+
     private
 
       def install_mock_key_exchange(buffer, options={})
@@ -336,12 +366,15 @@ module Transport
         assert_equal :server_hmac, transport.server_options[:hmac]
       end
 
-      def algorithms(options={})
-        @algorithms ||= Net::SSH::Transport::Algorithms.new(transport, options)
+      def algorithms(algrothms_options={}, transport_options={})
+        @algorithms ||= Net::SSH::Transport::Algorithms.new(
+          transport(transport_options),
+          algrothms_options
+        )
       end
 
-      def transport
-        @transport ||= MockTransport.new
+      def transport(transport_options={})
+        @transport ||= MockTransport.new(transport_options)
       end
   end
 
