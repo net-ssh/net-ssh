@@ -263,7 +263,7 @@ module Net; module SSH; module Transport
           is_supported
         end
 
-        lwarn { "unsupported #{algorithm} algorithm: `#{unsupported}'" } unless unsupported.empty?
+        lwarn { %(unsupported algorithm: `#{unsupported}') } unless unsupported.empty?
 
         list
       end
