@@ -17,9 +17,6 @@ class TestED25519PKeys < NetSSHTest
       sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N ''"
       set_authorized_key('net_ssh_1',"#{dir}/id_rsa_ed25519.pub")
 
-      # TODO: fix bug in net ssh which reads public key even if private key is there
-      sh "mv #{dir}/id_rsa_ed25519.pub #{dir}/id_rsa_ed25519.pub.hidden"
-
       #sshopts = '-vvvv -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
       #sh "ssh -i #{dir}/id_rsa_ed25519 #{sshopts} net_ssh_1@localhost echo 'hello'"
 

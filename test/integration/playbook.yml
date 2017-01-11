@@ -47,6 +47,13 @@
     - name: sshd allow interactive
       lineinfile: dest='/etc/ssh/sshd_config' line='ChallengeResponseAuthentication yes' regexp='^ChallengeResponseAuthentication.+'
       notify: restart sshd
+    - command: ssh-keygen -f /etc/ssh/users_ca -N ''
+      args:
+        creates: /etc/ssh/users_ca.pub
+      notify: restart sshd
+    - name: sshd cert auth
+      lineinfile: dest='/etc/ssh/sshd_config' line='TrustedUserCAKeys /etc/ssh/users_ca.pub'
+      notify: restart sshd
     - name: sshd allow forward
       lineinfile: dest='/etc/ssh/sshd_config' line='AllowTcpForwarding all' regexp=LogLevel
       notify: restart sshd
