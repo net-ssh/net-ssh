@@ -27,6 +27,11 @@ module IntegrationTestHelpers
     sh "sudo chmod 0744 #{authorized_key}"
   end
 
+  def sign_user_key(user,pubkey)
+    cert = "/etc/ssh/users_ca"
+    sh "sudo ssh-keygen -s #{cert} -I user_#{user} -n #{user} -V +52w #{pubkey}"
+  end
+
   def with_agent(&block)
     puts "/usr/bin/ssh-agent -c" if VERBOSE
     agent_out = `/usr/bin/ssh-agent -c`

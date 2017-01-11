@@ -1,4 +1,3 @@
-require 'net/ssh/buffer'
 require 'securerandom'
 
 module Net; module SSH; module Authentication

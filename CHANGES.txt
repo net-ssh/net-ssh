@@ -1,3 +1,7 @@
+=== 4.1.0.beta1
+
+ * SSH certificate support for client auth [David Bartley, #485]
+
 === 4.0.1
 === 4.0.1.rc2
 
