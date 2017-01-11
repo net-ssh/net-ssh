@@ -60,6 +60,10 @@ module OpenSSL
         "ssh-rsa"
       end
 
+      def ssh_signature_type
+        ssh_type
+      end
+
       # Converts the key to a blob, according to the SSH2 protocol.
       def to_blob
         @blob ||= Net::SSH::Buffer.from(:string, ssh_type, :bignum, e, :bignum, n).to_s
@@ -85,6 +89,10 @@ module OpenSSL
       # SSH2 protocol.
       def ssh_type
         "ssh-dss"
+      end
+
+      def ssh_signature_type
+        ssh_type
       end
 
       # Converts the key to a blob, according to the SSH2 protocol.
@@ -163,6 +171,10 @@ module OpenSSL
         # SSH2 protocol, like "ecdsa-sha2-nistp256"
         def ssh_type
           "ecdsa-sha2-#{CurveNameAliasInv[self.group.curve_name]}"
+        end
+
+        def ssh_signature_type
+          ssh_type
         end
 
         def digester

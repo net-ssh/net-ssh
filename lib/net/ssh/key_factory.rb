@@ -93,7 +93,7 @@ module Net; module SSH
         blob = nil
         begin
           blob = fields.shift
-        end while !blob.nil? && !/^(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp\d+)$/.match(blob)
+        end while !blob.nil? && !/^(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp\d+)(-cert-v01@openssh\.com)?$/.match(blob)
         blob = fields.shift
 
         raise Net::SSH::Exception, "public key at #{filename} is not valid" if blob.nil?
