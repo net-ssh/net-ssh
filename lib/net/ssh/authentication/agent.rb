@@ -148,17 +148,17 @@ module Net; module SSH; module Authentication
     end
 
     # Adds the private key with comment to the agent.
-    # If opts[:lifetime] is given, the key will automatically be removed after
-    # opts[:lifetime] seconds.
-    # If opts[:confirm] is true, confirmation will be required for each agent
-    # signing operation.
-    def add_identity(priv_key, comment, opts={})
+    # If lifetime is given, the key will automatically be removed after lifetime
+    # seconds.
+    # If confirm is true, confirmation will be required for each agent signing
+    # operation.
+    def add_identity(priv_key, comment, lifetime: nil, confirm: false)
       constraints = Buffer.new
-      if opts[:lifetime]
+      if lifetime
         constraints.write_byte(SSH_AGENT_CONSTRAIN_LIFETIME)
-        constraints.write_long(opts[:lifetime])
+        constraints.write_long(lifetime)
       end
-      constraints.write_byte(SSH_AGENT_CONSTRAIN_CONFIRM) if opts[:confirm]
+      constraints.write_byte(SSH_AGENT_CONSTRAIN_CONFIRM) if confirm
 
       req_type = constraints.empty? ? SSH2_AGENT_ADD_IDENTITY : SSH2_AGENT_ADD_ID_CONSTRAINED
       type, = send_and_wait(req_type, :string, priv_key.ssh_type, :raw, blob_for_add(priv_key),
