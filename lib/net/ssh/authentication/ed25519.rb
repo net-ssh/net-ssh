@@ -23,6 +23,8 @@ module ED25519
   end
 
   class PubKey
+    attr_reader :verify_key
+
     def initialize(data)
       @verify_key = RbNaCl::Signatures::Ed25519::VerifyKey.new(data)
     end
@@ -63,6 +65,8 @@ module ED25519
     MBEGIN = "-----BEGIN OPENSSH PRIVATE KEY-----\n"
     MEND = "-----END OPENSSH PRIVATE KEY-----\n"
     MAGIC = "openssh-key-v1"
+
+    attr_reader :sign_key
 
     def initialize(datafull,password)
       raise ArgumentError.new("Expected #{MBEGIN} at start of private key") unless datafull.start_with?(MBEGIN)
@@ -118,6 +122,18 @@ module ED25519
 
       @pk = pk
       @sign_key = SigningKeyFromFile.new(pk,sk)
+    end
+
+    def to_blob
+      public_key.to_blob
+    end
+
+    def ssh_type
+      "ssh-ed25519"
+    end
+
+    def ssh_signature_type
+      ssh_type
     end
 
     def public_key

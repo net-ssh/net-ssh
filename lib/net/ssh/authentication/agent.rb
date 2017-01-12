@@ -29,20 +29,28 @@ module Net; module SSH; module Authentication
       attr_accessor :comment
     end
 
-    SSH2_AGENT_REQUEST_VERSION    = 1
-    SSH2_AGENT_REQUEST_IDENTITIES = 11
-    SSH2_AGENT_IDENTITIES_ANSWER  = 12
-    SSH2_AGENT_SIGN_REQUEST       = 13
-    SSH2_AGENT_SIGN_RESPONSE      = 14
-    SSH2_AGENT_FAILURE            = 30
-    SSH2_AGENT_VERSION_RESPONSE   = 103
+    SSH2_AGENT_REQUEST_VERSION       = 1
+    SSH2_AGENT_REQUEST_IDENTITIES    = 11
+    SSH2_AGENT_IDENTITIES_ANSWER     = 12
+    SSH2_AGENT_SIGN_REQUEST          = 13
+    SSH2_AGENT_SIGN_RESPONSE         = 14
+    SSH2_AGENT_ADD_IDENTITY          = 17
+    SSH2_AGENT_REMOVE_IDENTITY       = 18
+    SSH2_AGENT_REMOVE_ALL_IDENTITIES = 19
+    SSH2_AGENT_ADD_ID_CONSTRAINED    = 25
+    SSH2_AGENT_FAILURE               = 30
+    SSH2_AGENT_VERSION_RESPONSE      = 103
 
-    SSH_COM_AGENT2_FAILURE        = 102
+    SSH_COM_AGENT2_FAILURE = 102
 
     SSH_AGENT_REQUEST_RSA_IDENTITIES = 1
     SSH_AGENT_RSA_IDENTITIES_ANSWER1 = 2
     SSH_AGENT_RSA_IDENTITIES_ANSWER2 = 5
     SSH_AGENT_FAILURE                = 5
+    SSH_AGENT_SUCCESS                = 6
+
+    SSH_AGENT_CONSTRAIN_LIFETIME = 1
+    SSH_AGENT_CONSTRAIN_CONFIRM  = 2
 
     # The underlying socket being used to communicate with the SSH agent.
     attr_reader :socket
@@ -139,6 +147,37 @@ module Net; module SSH; module Authentication
       return reply.read_string
     end
 
+    # Adds the private key with comment to the agent.
+    # If lifetime is given, the key will automatically be removed after lifetime
+    # seconds.
+    # If confirm is true, confirmation will be required for each agent signing
+    # operation.
+    def add_identity(priv_key, comment, lifetime: nil, confirm: false)
+      constraints = Buffer.new
+      if lifetime
+        constraints.write_byte(SSH_AGENT_CONSTRAIN_LIFETIME)
+        constraints.write_long(lifetime)
+      end
+      constraints.write_byte(SSH_AGENT_CONSTRAIN_CONFIRM) if confirm
+
+      req_type = constraints.empty? ? SSH2_AGENT_ADD_IDENTITY : SSH2_AGENT_ADD_ID_CONSTRAINED
+      type, = send_and_wait(req_type, :string, priv_key.ssh_type, :raw, blob_for_add(priv_key),
+                            :string, comment, :raw, constraints)
+      raise AgentError, "could not add identity to agent" if type != SSH_AGENT_SUCCESS
+    end
+
+    # Removes key from the agent.
+    def remove_identity(key)
+      type, = send_and_wait(SSH2_AGENT_REMOVE_IDENTITY, :string, key.to_blob)
+      raise AgentError, "could not remove identity from agent" if type != SSH_AGENT_SUCCESS
+    end
+
+    # Removes all identities from the agent.
+    def remove_all_identities
+      type, = send_and_wait(SSH2_AGENT_REMOVE_ALL_IDENTITIES)
+      raise AgentError, "could not remove all identity from agent" if type != SSH_AGENT_SUCCESS
+    end
+
     private
 
     def unix_socket_class
@@ -177,6 +216,40 @@ module Net; module SSH; module Authentication
       type == SSH_AGENT_FAILURE ||
         type == SSH2_AGENT_FAILURE ||
         type == SSH_COM_AGENT2_FAILURE
+    end
+
+    def blob_for_add(priv_key)
+      # Ideally we'd have something like `to_private_blob` on the various key types, but the
+      # nuances with encoding (e.g. `n` and `e` are reversed for RSA keys) make this impractical.
+      case priv_key.ssh_type
+      when /^ssh-dss$/
+        Net::SSH::Buffer.from(:bignum, priv_key.p, :bignum, priv_key.q, :bignum, priv_key.g,
+                              :bignum, priv_key.pub_key, :bignum, priv_key.priv_key).to_s
+      when /^ssh-dss-cert-v01@openssh\.com$/
+        Net::SSH::Buffer.from(:string, priv_key.to_blob, :bignum, priv_key.key.priv_key).to_s
+      when /^ecdsa\-sha2\-(\w*)$/
+        curve_name = OpenSSL::PKey::EC::CurveNameAliasInv[priv_key.group.curve_name]
+        Net::SSH::Buffer.from(:string, curve_name, :mstring, priv_key.public_key.to_bn.to_s(2),
+                              :bignum, priv_key.private_key).to_s
+      when /^ecdsa\-sha2\-(\w*)-cert-v01@openssh\.com$/
+        Net::SSH::Buffer.from(:string, priv_key.to_blob, :bignum, priv_key.key.private_key).to_s
+      when /^ssh-ed25519$/
+        Net::SSH::Buffer.from(:string, priv_key.public_key.verify_key.to_bytes,
+                              :string, priv_key.sign_key.keypair_bytes).to_s
+      when /^ssh-ed25519-cert-v01@openssh\.com$/
+        # Unlike the other certificate types, the public key is included after the certifiate.
+        Net::SSH::Buffer.from(:string, priv_key.to_blob,
+                              :string, priv_key.key.public_key.verify_key.to_bytes,
+                              :string, priv_key.key.sign_key.keypair_bytes).to_s
+      when /^ssh-rsa$/
+        # `n` and `e` are reversed compared to the ordering in `OpenSSL::PKey::RSA#to_blob`.
+        Net::SSH::Buffer.from(:bignum, priv_key.n, :bignum, priv_key.e, :bignum, priv_key.d,
+                              :bignum, priv_key.iqmp, :bignum, priv_key.p, :bignum, priv_key.q).to_s
+      when /^ssh-rsa-cert-v01@openssh\.com$/
+        Net::SSH::Buffer.from(:string, priv_key.to_blob, :bignum, priv_key.key.d,
+                              :bignum, priv_key.key.iqmp, :bignum, priv_key.key.p,
+                              :bignum, priv_key.key.q).to_s
+      end
     end
   end
 

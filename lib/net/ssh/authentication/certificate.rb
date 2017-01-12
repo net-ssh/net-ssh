@@ -6,7 +6,7 @@ module Net; module SSH; module Authentication
   # http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOCOL.certkeys?rev=1.10&content-type=text/plain
   class Certificate
     attr_accessor :nonce
-    attr_accessor :pubkey
+    attr_accessor :key
     attr_accessor :serial
     attr_accessor :type
     attr_accessor :key_id
@@ -19,11 +19,11 @@ module Net; module SSH; module Authentication
     attr_accessor :signature_key
     attr_accessor :signature
 
-    # Read a certificate blob associated with a pubkey of the given type.
+    # Read a certificate blob associated with a key of the given type.
     def self.read_certblob(buffer, type)
       cert = Certificate.new
       cert.nonce = buffer.read_string
-      cert.pubkey = buffer.read_keyblob(type)
+      cert.key = buffer.read_keyblob(type)
       cert.serial = buffer.read_int64
       cert.type = type_symbol(buffer.read_long)
       cert.key_id = buffer.read_string
@@ -39,14 +39,14 @@ module Net; module SSH; module Authentication
     end
 
     def ssh_type
-      pubkey.ssh_type + "-cert-v01@openssh.com"
+      key.ssh_type + "-cert-v01@openssh.com"
     end
 
     def ssh_signature_type
-      pubkey.ssh_type
+      key.ssh_type
     end
 
-    # Serializes the certificate (and pubkey).
+    # Serializes the certificate (and key).
     def to_blob
       Buffer.from(
         :raw, to_blob_without_signature,
@@ -55,19 +55,19 @@ module Net; module SSH; module Authentication
     end
 
     def ssh_do_sign(data)
-      pubkey.ssh_do_sign(data)
+      key.ssh_do_sign(data)
     end
 
     def ssh_do_verify(sig, data)
-      pubkey.ssh_do_verify(sig, data)
+      key.ssh_do_verify(sig, data)
     end
 
     def to_pem
-      pubkey.to_pem
+      key.to_pem
     end
 
     def fingerprint
-      pubkey.fingerprint
+      key.fingerprint
     end
 
     # Signs the certificate with key.
@@ -151,9 +151,9 @@ module Net; module SSH; module Authentication
     end
 
     def key_without_type
-      # pubkey.to_blob gives us e.g. "ssh-rsa,<key>" but we just want "<key>".
-      tmp = Buffer.new(pubkey.to_blob)
-      tmp.read_string # skip the underlying pubkey type
+      # key.to_blob gives us e.g. "ssh-rsa,<key>" but we just want "<key>".
+      tmp = Buffer.new(key.to_blob)
+      tmp.read_string # skip the underlying key type
       tmp.read
     end
 
