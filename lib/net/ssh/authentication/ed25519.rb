@@ -1,7 +1,6 @@
 gem 'rbnacl', '>= 3.2.0', '< 5.0'
 gem 'bcrypt_pbkdf', '~> 1.0' unless RUBY_PLATFORM == "java"
 
-require 'rbnacl/libsodium'
 require 'rbnacl'
 require 'rbnacl/signatures/ed25519/verify_key'
 require 'rbnacl/signatures/ed25519/signing_key'
