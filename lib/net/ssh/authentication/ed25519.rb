@@ -1,7 +1,12 @@
 gem 'rbnacl', '>= 3.2.0', '< 5.0'
 gem 'bcrypt_pbkdf', '~> 1.0' unless RUBY_PLATFORM == "java"
 
-require 'rbnacl/libsodium'
+begin
+  require 'rbnacl/libsodium'
+rescue LoadError => e
+  raise LoadError.new(e.message + ', your system does not provide libsodium, install the rbnacl-libsodium gem')
+end
+
 require 'rbnacl'
 require 'rbnacl/signatures/ed25519/verify_key'
 require 'rbnacl/signatures/ed25519/signing_key'
