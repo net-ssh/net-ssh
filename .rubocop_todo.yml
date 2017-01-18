@@ -74,12 +74,7 @@ Style/FormatStringToken:
 # Configuration parameters: Blacklist.
 # Blacklist: END, (?-mix:EO[A-Z]{1})
 Naming/HeredocDelimiterNaming:
-  Exclude:
-    - 'test/authentication/test_agent.rb'
-    - 'test/authentication/test_certificate.rb'
-    - 'test/authentication/test_ed25519.rb'
-    - 'test/integration/test_agent.rb'
-    - 'test/test_key_factory.rb'
+  Enabled: false
 
 # Offense count: 3
 # Configuration parameters: MaximumRangeSize.
@@ -95,12 +90,7 @@ Lint/MissingCopEnableDirective:
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: auto_detection, squiggly, active_support, powerpack, unindent
 Layout/IndentHeredoc:
-  Exclude:
-    - 'test/authentication/test_agent.rb'
-    - 'test/authentication/test_certificate.rb'
-    - 'test/authentication/test_ed25519.rb'
-    - 'test/integration/test_agent.rb'
-    - 'test/test_key_factory.rb'
+  Enabled: false
 
 # Offense count: 2
 # Cop supports --auto-correct.
