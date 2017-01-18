@@ -142,6 +142,30 @@ module Authentication
       session(keys: "custom_rsa_id").authenticate("next service", "username")
     end
 
+    def test_does_not_use_default_keys_if_key_data_are_present_in_options
+      File.stubs(:file?).returns(false)
+
+      file_on_filesystem("~/.ssh/id_rsa", default_private_key)
+
+      transport.expect do |t, packet|
+        assert_equal SERVICE_REQUEST, packet.type
+        assert_equal "ssh-userauth", packet.read_string
+        t.return(SERVICE_ACCEPT)
+      end
+
+      transport.expect do |t, packet|
+        assert_none_request packet
+        t.return(USERAUTH_FAILURE, :string, "publickey")
+      end
+
+      transport.expect do |t, packet|
+        assert_public_key_request custom_public_key, packet
+        t.return(USERAUTH_FAILURE, :string, "publickey")
+      end
+
+      session(key_data: custom_private_key).authenticate("next service", "username")
+    end
+
     private
 
       def session(options={})
