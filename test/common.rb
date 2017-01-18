@@ -91,7 +91,7 @@ class MockTransport < Net::SSH::Transport::Session
     self.logger = options[:logger]
     self.host_as_string = "net.ssh.test,127.0.0.1"
     self.server_version = OpenStruct.new(version: "SSH-2.0-Ruby/Net::SSH::Test")
-    @expectation = nil
+    @expectations = []
     @queue = []
     @hints = {}
     @socket = options[:socket]
@@ -101,10 +101,10 @@ class MockTransport < Net::SSH::Transport::Session
 
   def send_message(message)
     buffer = Net::SSH::Buffer.new(message.to_s)
-    if @expectation.nil?
+    if @expectations.empty?
       raise "got #{message.to_s.inspect} but was not expecting anything"
     else
-      block, @expectation = @expectation, nil
+      block = @expectations.shift
       block.call(self, Net::SSH::Packet.new(buffer))
     end
   end
@@ -134,7 +134,7 @@ class MockTransport < Net::SSH::Transport::Session
   end
 
   def expect(&block)
-    @expectation = block
+    @expectations << block
   end
 
   def expect!
