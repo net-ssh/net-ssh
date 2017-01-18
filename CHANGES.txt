@@ -1,5 +1,6 @@
 === 4.1.0.beta1
 
+ * Fix nil error when libsodium is not there [chapmajs ,#488]
  * SSH certificate support for client auth [David Bartley, #485]
 
 === 4.0.1

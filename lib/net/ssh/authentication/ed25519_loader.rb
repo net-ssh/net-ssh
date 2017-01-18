@@ -14,7 +14,7 @@ rescue LoadError => e
 end
 
 def self.raiseUnlessLoaded(message)
-  description = dependenciesRequiredForED25519 if ERROR.is_a?(Gem::LoadError)
+  description = ERROR.is_a?(LoadError) ? dependenciesRequiredForED25519 : ''
   description << "#{ERROR.class} : \"#{ERROR.message}\"\n" if ERROR
   raise NotImplementedError, "#{message}\n#{description}" unless LOADED
 end
