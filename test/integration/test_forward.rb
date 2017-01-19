@@ -21,7 +21,7 @@ require 'net/ssh/proxy/command'
 require 'timeout'
 require 'tempfile'
 
-class TestForward < NetSSHTest
+class ForwardTestBase < NetSSHTest
   include IntegrationTestHelpers
 
   def localhost
@@ -65,7 +65,9 @@ class TestForward < NetSSHTest
     end
     return server
   end
+end
 
+class TestForward < ForwardTestBase
   def start_server_closing_soon(exceptions=nil)
     server = TCPServer.open(0)
     Thread.start do
@@ -88,7 +90,6 @@ class TestForward < NetSSHTest
   def test_in_file_no_password
     setup_ssh_env do
       ret = Net::SSH.start(*ssh_start_params) do |ssh|
-      #ret = Net::SSH.start("localhost", "net_ssh_1", {keys: @key_id_rsa}) do |ssh|
         ssh.exec! 'echo "hello from:$USER"'
       end
       assert_equal "hello from:net_ssh_1\n", ret
@@ -222,49 +223,6 @@ class TestForward < NetSSHTest
       end
       session.loop(0.1) { client_done.empty? }
       assert_equal "Broken pipe", "#{server_exc.pop}" unless server_exc.empty?
-    end
-  end
-
-  if defined?(UNIXServer)
-    def create_local_socket(&blk)
-      tempfile = Tempfile.new("net_ssh_forward_test")
-      path = tempfile.path
-      tempfile.delete
-      yield UNIXServer.open(path)
-      File.delete(path)
-    end
-  end
-
-  if defined?(UNIXSocket)
-    def test_forward_local_unix_socket_to_remote_port
-      setup_ssh_env do
-        session = Net::SSH.start(*ssh_start_params)
-        server_exc = Queue.new
-        server = start_server_sending_lot_of_data(server_exc)
-        remote_port = server.addr[1]
-        client_data = nil
-
-        create_local_socket do |local_socket|
-          session.forward.local(local_socket, localhost, remote_port)
-          client_done = Queue.new
-
-          Thread.start do
-            begin
-              client = UNIXSocket.new(local_socket.path)
-              client_data = client.recv(1024)
-              client.close
-              sleep(0.2)
-            ensure
-              client_done << true
-            end
-          end
-
-          session.loop(0.1) { client_done.empty? }
-        end
-
-        assert_not_nil(client_data, "client should have received data")
-        assert(client_data.match(/item\d/), 'client should have received the string item')
-      end
     end
   end
 
@@ -638,6 +596,52 @@ class TestForward < NetSSHTest
       session.forward.cancel_local(local_port)
       session.loop(0.1)
       assert_equal({}, session.channels)
+    end
+  end
+end
+
+class TestForwardOnUnixSockets < ForwardTestBase
+  if defined?(UNIXServer) && defined?(UNIXSocket)
+    def create_local_socket(&blk)
+      tempfile = Tempfile.new("net_ssh_forward_test")
+      path = tempfile.path
+      tempfile.delete
+      yield UNIXServer.open(path)
+      File.delete(path)
+    end
+
+    def test_forward_local_unix_socket_to_remote_port
+      setup_ssh_env do
+        session = Net::SSH.start(*ssh_start_params)
+        server_exc = Queue.new
+        server = start_server_sending_lot_of_data(server_exc)
+        remote_port = server.addr[1]
+        client_data = nil
+
+        create_local_socket do |local_socket|
+          session.forward.local(local_socket, localhost, remote_port)
+          client_done = Queue.new
+
+          Thread.start do
+            begin
+              client = UNIXSocket.new(local_socket.path)
+              client_data = client.recv(1024)
+              client.close
+              sleep(0.2)
+            ensure
+              client_done << true
+            end
+          end
+
+          begin
+            session.loop(0.1) { client_done.empty? }
+          rescue Errno::EPIPE
+          end
+        end
+
+        assert_not_nil(client_data, "client should have received data")
+        assert(client_data.match(/item\d/), 'client should have received the string item')
+      end
     end
   end
 end
