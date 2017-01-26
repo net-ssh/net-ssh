@@ -79,7 +79,7 @@ module Net; module SSH; module Authentication
       @socket =
         if agent_socket_factory
           agent_socket_factory.call
-        elsif ENV['SSH_AUTH_SOCK'] && defined?(unix_socket_class)
+        elsif ENV['SSH_AUTH_SOCK'] && unix_socket_class
           unix_socket_class.open(ENV['SSH_AUTH_SOCK'])
         elsif Gem.win_platform? && RUBY_ENGINE != "jruby"
           Pageant::Socket.open
@@ -181,7 +181,7 @@ module Net; module SSH; module Authentication
     private
 
     def unix_socket_class
-      UNIXSocket
+      defined?(UNIXSocket) && UNIXSocket
     end
 
     # Send a new packet of the given type, with the associated data.
