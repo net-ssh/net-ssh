@@ -27,6 +27,7 @@ module Net; module SSH
   # * Port => :port
   # * PreferredAuthentications => maps to the :auth_methods option
   # * ProxyCommand => maps to the :proxy option
+  # * ProxyJump => maps to the :proxy option
   # * PubKeyAuthentication => maps to the :auth_methods option
   # * RekeyLimit => :rekey_limit
   # * User => :user
@@ -224,6 +225,11 @@ module Net; module SSH
             if value and !(value =~ /^none$/)
               require 'net/ssh/proxy/command'
               hash[:proxy] = Net::SSH::Proxy::Command.new(value)
+            end
+          when 'proxyjump'
+            if value
+              require 'net/ssh/proxy/jump'
+              hash[:proxy] = Net::SSH::Proxy::Jump.new(value)
             end
           when 'pubkeyauthentication'
             if value
