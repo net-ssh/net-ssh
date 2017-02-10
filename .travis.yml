@@ -2,6 +2,10 @@ language: ruby
 sudo: true
 dist: trusty
 
+addon:
+  hosts:
+    gateway.netssh
+
 rvm:
   - 2.0
   - 2.1
@@ -40,6 +44,7 @@ install:
   - ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true' -e 'myuser=travis' -e 'mygroup=travis' -e 'homedir=/home/travis'
 
 script:
+  - ssh -V
   - bundle _1.13.7_ exec rake test
   - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.13.7_ exec rake test
   - bundle _1.13.7_ exec rake test_test
