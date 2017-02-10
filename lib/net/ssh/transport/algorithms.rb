@@ -121,7 +121,7 @@ module Net; module SSH; module Transport
 
     # Start the algorithm negotation
     def start
-      raise ArgumentError, "Cannot call start if it's negoitation started or done" if @pending || @initialized
+      raise ArgumentError, "Cannot call start if it's negotiation started or done" if @pending || @initialized
       send_kexinit
     end
 
