@@ -335,7 +335,7 @@ module Transport
           :string, options[:compression_client] || "none,zlib@openssh.com,zlib",
           :string, options[:compression_server] || "none,zlib@openssh.com,zlib",
           :string, options[:language_client] || "",
-          :string, options[:langauge_server] || "",
+          :string, options[:language_server] || "",
           :bool, options[:first_kex_follows])
       end
 
