@@ -613,7 +613,7 @@ module Net; module SSH; module Connection
         if callback = pending_requests.shift
           callback.call(self, false)
         else
-          error { "channel failure recieved with no pending request to handle it (bug?)" }
+          error { "channel failure received with no pending request to handle it (bug?)" }
         end
       end
 
@@ -623,7 +623,7 @@ module Net; module SSH; module Connection
         if callback = pending_requests.shift
           callback.call(self, true)
         else
-          error { "channel success recieved with no pending request to handle it (bug?)" }
+          error { "channel success received with no pending request to handle it (bug?)" }
         end
       end
 

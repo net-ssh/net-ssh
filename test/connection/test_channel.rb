@@ -456,7 +456,7 @@ module Connection
         end
 
         def send_message(msg)
-          raise "#{msg.to_s.inspect} recieved but no message was expected" unless @expectation
+          raise "#{msg.to_s.inspect} received but no message was expected" unless @expectation
           packet = Net::SSH::Packet.new(msg.to_s)
           callback, @expectation = @expectation, nil
           callback.call(self, packet)

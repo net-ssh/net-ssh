@@ -121,7 +121,7 @@ module Net; module SSH; module Transport
 
     # Start the algorithm negotation
     def start
-      raise ArgumentError, "Cannot call start if it's negoitation started or done" if @pending || @initialized
+      raise ArgumentError, "Cannot call start if it's negotiation started or done" if @pending || @initialized
       send_kexinit
     end
 
@@ -135,7 +135,7 @@ module Net; module SSH; module Transport
       send_kexinit
     end
 
-    # Called by the transport layer when a KEXINIT packet is recieved, indicating
+    # Called by the transport layer when a KEXINIT packet is received, indicating
     # that the server wants to exchange keys. This can be spontaneous, or it
     # can be in response to a client-initiated rekey request (see #rekey!). Either
     # way, this will block until the key exchange completes.
