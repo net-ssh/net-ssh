@@ -198,7 +198,7 @@ module Net; module SSH; module Transport
           raise Net::SSH::Disconnect, "disconnected: #{packet[:description]} (#{packet[:reason_code]})"
 
         when IGNORE
-          debug { "IGNORE packet recieved: #{packet[:data].inspect}" }
+          debug { "IGNORE packet received: #{packet[:data].inspect}" }
 
         when UNIMPLEMENTED
           lwarn { "UNIMPLEMENTED: #{packet[:number]}" }
