@@ -4,6 +4,7 @@ require 'net/ssh'
 require 'timeout'
 require 'tempfile'
 require 'net/ssh/proxy/command'
+require 'net/ssh/proxy/jump'
 
 class TestProxy < NetSSHTest
   include IntegrationTestHelpers
@@ -87,6 +88,16 @@ class TestProxy < NetSSHTest
       end
     ensure
       system("sudo sh -c 'echo 1048576 > /proc/sys/fs/pipe-max-size'")
+    end
+  end
+
+  def test_proxy_jump_through_localhost
+    setup_ssh_env do
+      proxy = Net::SSH::Proxy::Jump.new("#{user}@localhost")
+      output = Net::SSH.start(*ssh_start_params(proxy: proxy)) do |ssh|
+        ssh.exec! "echo \"$USER:echo123\""
+      end
+      assert_equal "net_ssh_1:echo123\n", output
     end
   end
 

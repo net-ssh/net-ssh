@@ -1,0 +1,5 @@
+Host behind-proxy
+  ProxyJump user@proxy
+
+Host behind-three-proxies
+  ProxyJump user1@proxy1,user2@proxy2,user3@proxy3
