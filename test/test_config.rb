@@ -269,6 +269,12 @@ class TestConfig < NetSSHTest
     assert net_ssh[:proxy]
   end
 
+  def test_load_with_proxy_jump
+    config = Net::SSH::Config.load(config(:proxy_jump), "behind-proxy")
+    net_ssh = Net::SSH::Config.translate(config)
+    assert net_ssh[:proxy]
+  end
+
   def test_load_with_include_keyword
     config = Net::SSH::Config.load(config(:include), "xyz")
     net_ssh = Net::SSH::Config.translate(config)

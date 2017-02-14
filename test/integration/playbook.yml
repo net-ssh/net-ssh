@@ -65,6 +65,9 @@
     - name: change dir in bashrc
       lineinfile: dest="{{homedir}}/.bashrc" owner="{{myuser}}" mode=0644
         regexp='^cd ' line='cd /net-ssh'
+    - name: add host aliases
+      lineinfile: dest='/etc/hosts' owner='root' group='root' mode=0644
+        regexp='^127\.0\.0\.1\s+gateway.netssh' line='127.0.0.1  gateway.netssh'
     - apt: name="{{item}}" state=present
       with_items:
         - pv

@@ -27,6 +27,7 @@ module Net; module SSH
   # * Port => :port
   # * PreferredAuthentications => maps to the :auth_methods option
   # * ProxyCommand => maps to the :proxy option
+  # * ProxyJump => maps to the :proxy option
   # * PubKeyAuthentication => maps to the :auth_methods option
   # * RekeyLimit => :rekey_limit
   # * User => :user
@@ -156,93 +157,7 @@ module Net; module SSH
         auth_methods = default_auth_methods.clone
         (auth_methods << 'challenge-response').uniq!
         ret = settings.inject({auth_methods: auth_methods}) do |hash, (key, value)|
-          case key
-          when 'bindaddress' then
-            hash[:bind_address] = value
-          when 'ciphers' then
-            hash[:encryption] = value.split(/,/)
-          when 'compression' then
-            hash[:compression] = value
-          when 'compressionlevel' then
-            hash[:compression_level] = value
-          when 'connecttimeout' then
-            hash[:timeout] = value
-          when 'forwardagent' then
-            hash[:forward_agent] = value
-          when 'identitiesonly' then
-            hash[:keys_only] = value
-          when 'globalknownhostsfile'
-            hash[:global_known_hosts_file] = value
-          when 'hostbasedauthentication' then
-            if value
-              (hash[:auth_methods] << "hostbased").uniq!
-            else
-              hash[:auth_methods].delete("hostbased")
-            end
-          when 'hostkeyalgorithms' then
-            hash[:host_key] = value.split(/,/)
-          when 'hostkeyalias' then
-            hash[:host_key_alias] = value
-          when 'hostname' then
-            hash[:host_name] = value.gsub(/%h/, settings['host'])
-          when 'identityfile' then
-            hash[:keys] = value
-          when 'macs' then
-            hash[:hmac] = value.split(/,/)
-          when 'serveralivecountmax'
-            hash[:keepalive_maxcount] = value.to_i if value
-          when 'serveraliveinterval'
-            if value && value.to_i > 0
-              hash[:keepalive] = true
-              hash[:keepalive_interval] = value.to_i
-            else
-              hash[:keepalive] = false
-            end
-          when 'passwordauthentication'
-            if value
-              (hash[:auth_methods] << 'password').uniq!
-            else
-              hash[:auth_methods].delete('password')
-            end
-          when 'challengeresponseauthentication'
-            if value
-              (hash[:auth_methods] << 'challenge-response').uniq!
-            else
-              hash[:auth_methods].delete('challenge-response')
-            end
-          when 'kbdinteractiveauthentication'
-            if value
-              (hash[:auth_methods] << 'keyboard-interactive').uniq!
-            else
-              hash[:auth_methods].delete('keyboard-interactive')
-            end
-          when 'port'
-            hash[:port] = value
-          when 'preferredauthentications'
-            hash[:auth_methods] = value.split(/,/) # TODO we should place to preferred_auth_methods rather than auth_methods
-          when 'proxycommand'
-            if value and !(value =~ /^none$/)
-              require 'net/ssh/proxy/command'
-              hash[:proxy] = Net::SSH::Proxy::Command.new(value)
-            end
-          when 'pubkeyauthentication'
-            if value
-              (hash[:auth_methods] << 'publickey').uniq!
-            else
-              hash[:auth_methods].delete('publickey')
-            end
-          when 'rekeylimit'
-            hash[:rekey_limit] = interpret_size(value)
-          when 'user'
-            hash[:user] = value
-          when 'userknownhostsfile'
-            hash[:user_known_hosts_file] = value
-          when 'sendenv'
-            multi_send_env = value.to_s.split(/\s+/)
-            hash[:send_env] = multi_send_env.map { |e| Regexp.new pattern2regex(e).source, false }
-          when 'numberofpasswordprompts'
-            hash[:number_of_password_prompts] = value.to_i
-          end
+          translate_config_key(hash, key.to_sym, value, settings)
           hash
         end
         merge_challenge_response_with_keyboard_interactive(ret)
@@ -261,6 +176,93 @@ module Net; module SSH
       end
 
       private
+
+        def translate_config_key(hash, key, value, settings)
+          rename = {
+            bindaddress: :bind_address,
+            compression: :compression,
+            compressionlevel: :compression_level,
+            connecttimeout: :timeout,
+            forwardagent: :forward_agent,
+            identitiesonly: :keys_only,
+            globalknownhostsfile: :global_known_hosts_file,
+            hostkeyalias: :host_key_alias,
+            identityfile: :keys,
+            port: :port,
+            user: :user,
+            userknownhostsfile: :user_known_hosts_file
+          }
+          case key
+            when :ciphers
+              hash[:encryption] = value.split(/,/)
+            when :hostbasedauthentication
+              if value
+                (hash[:auth_methods] << "hostbased").uniq!
+              else
+                hash[:auth_methods].delete("hostbased")
+              end
+            when :hostkeyalgorithms
+              hash[:host_key] = value.split(/,/)
+            when :hostname
+              hash[:host_name] = value.gsub(/%h/, settings['host'])
+            when :macs
+              hash[:hmac] = value.split(/,/)
+            when :serveralivecountmax
+              hash[:keepalive_maxcount] = value.to_i if value
+            when :serveraliveinterval
+              if value && value.to_i > 0
+                hash[:keepalive] = true
+                hash[:keepalive_interval] = value.to_i
+              else
+                hash[:keepalive] = false
+              end
+            when :passwordauthentication
+              if value
+                (hash[:auth_methods] << 'password').uniq!
+              else
+                hash[:auth_methods].delete('password')
+              end
+            when :challengeresponseauthentication
+              if value
+                (hash[:auth_methods] << 'challenge-response').uniq!
+              else
+                hash[:auth_methods].delete('challenge-response')
+              end
+            when :kbdinteractiveauthentication
+              if value
+                (hash[:auth_methods] << 'keyboard-interactive').uniq!
+              else
+                hash[:auth_methods].delete('keyboard-interactive')
+              end
+            when :preferredauthentications
+              hash[:auth_methods] = value.split(/,/) # TODO we should place to preferred_auth_methods rather than auth_methods
+            when :proxycommand
+              if value and !(value =~ /^none$/)
+                require 'net/ssh/proxy/command'
+                hash[:proxy] = Net::SSH::Proxy::Command.new(value)
+              end
+            when :proxyjump
+              if value
+                require 'net/ssh/proxy/jump'
+                hash[:proxy] = Net::SSH::Proxy::Jump.new(value)
+              end
+            when :pubkeyauthentication
+              if value
+                (hash[:auth_methods] << 'publickey').uniq!
+              else
+                hash[:auth_methods].delete('publickey')
+              end
+            when :rekeylimit
+              hash[:rekey_limit] = interpret_size(value)
+            when :sendenv
+              multi_send_env = value.to_s.split(/\s+/)
+              hash[:send_env] = multi_send_env.map { |e| Regexp.new pattern2regex(e).source, false }
+            when :numberofpasswordprompts
+              hash[:number_of_password_prompts] = value.to_i
+            when *rename.keys
+              hash[rename[key]] = value
+          end
+        end
 
         # Converts an ssh_config pattern into a regex for matching against
         # host names.
