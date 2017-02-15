@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Authentication::Agent - net-ssh 4.0.1.rc2</title>
+<title>class Net::SSH::Authentication::Agent - net-ssh 4.1.0.rc1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -96,6 +96,8 @@
     
     <li ><a href="#method-c-new">::new</a>
     
+    <li ><a href="#method-i-add_identity">#add_identity</a>
+    
     <li ><a href="#method-i-close">#close</a>
     
     <li ><a href="#method-i-connect-21">#connect!</a>
@@ -103,6 +105,10 @@
     <li ><a href="#method-i-identities">#identities</a>
     
     <li ><a href="#method-i-negotiate-21">#negotiate!</a>
+    
+    <li ><a href="#method-i-remove_all_identities">#remove_all_identities</a>
+    
+    <li ><a href="#method-i-remove_identity">#remove_identity</a>
     
     <li ><a href="#method-i-sign">#sign</a>
     
@@ -143,12 +149,32 @@ SSH2 functionality (like signing data).</p>
       </header>
       <dl>
       
+        <dt id="SSH2_AGENT_ADD_IDENTITY">SSH2_AGENT_ADD_IDENTITY
+        
+        <dd>
+        
+      
+        <dt id="SSH2_AGENT_ADD_ID_CONSTRAINED">SSH2_AGENT_ADD_ID_CONSTRAINED
+        
+        <dd>
+        
+      
         <dt id="SSH2_AGENT_FAILURE">SSH2_AGENT_FAILURE
         
         <dd>
         
       
         <dt id="SSH2_AGENT_IDENTITIES_ANSWER">SSH2_AGENT_IDENTITIES_ANSWER
+        
+        <dd>
+        
+      
+        <dt id="SSH2_AGENT_REMOVE_ALL_IDENTITIES">SSH2_AGENT_REMOVE_ALL_IDENTITIES
+        
+        <dd>
+        
+      
+        <dt id="SSH2_AGENT_REMOVE_IDENTITY">SSH2_AGENT_REMOVE_IDENTITY
         
         <dd>
         
@@ -178,6 +204,16 @@ SSH2 functionality (like signing data).</p>
         <dd>
         
       
+        <dt id="SSH_AGENT_CONSTRAIN_CONFIRM">SSH_AGENT_CONSTRAIN_CONFIRM
+        
+        <dd>
+        
+      
+        <dt id="SSH_AGENT_CONSTRAIN_LIFETIME">SSH_AGENT_CONSTRAIN_LIFETIME
+        
+        <dd>
+        
+      
         <dt id="SSH_AGENT_FAILURE">SSH_AGENT_FAILURE
         
         <dd>
@@ -194,6 +230,11 @@ SSH2 functionality (like signing data).</p>
         
       
         <dt id="SSH_AGENT_RSA_IDENTITIES_ANSWER2">SSH_AGENT_RSA_IDENTITIES_ANSWER2
+        
+        <dd>
+        
+      
+        <dt id="SSH_AGENT_SUCCESS">SSH_AGENT_SUCCESS
         
         <dd>
         
@@ -259,7 +300,7 @@ and returns the agent object.</p>
 
           
           <div class="method-source-code" id="connect-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 52</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 60</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">logger</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">agent_socket_factory</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">agent</span> = <span class="ruby-identifier">new</span>(<span class="ruby-identifier">logger</span>)
   <span class="ruby-identifier">agent</span>.<span class="ruby-identifier">connect!</span>(<span class="ruby-identifier">agent_socket_factory</span>)
@@ -296,7 +337,7 @@ logger instance to report status.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 61</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 69</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">logger</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">logger</span>
 <span class="ruby-keyword">end</span></pre>
@@ -316,6 +357,51 @@ logger instance to report status.</p>
        <header>
          <h3>Public Instance Methods</h3>
        </header>
+
+    
+      <div id="method-i-add_identity" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_identity</span><span
+            class="method-args">(priv_key, comment, lifetime: nil, confirm: false)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Adds the private key with comment to the agent. If lifetime is given, the
+key will automatically be removed after lifetime seconds. If confirm is
+true, confirmation will be required for each agent signing operation.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="add_identity-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 155</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_identity</span>(<span class="ruby-identifier">priv_key</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">lifetime</span><span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">confirm</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>)
+  <span class="ruby-identifier">constraints</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">lifetime</span>
+    <span class="ruby-identifier">constraints</span>.<span class="ruby-identifier">write_byte</span>(<span class="ruby-constant">SSH_AGENT_CONSTRAIN_LIFETIME</span>)
+    <span class="ruby-identifier">constraints</span>.<span class="ruby-identifier">write_long</span>(<span class="ruby-identifier">lifetime</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">constraints</span>.<span class="ruby-identifier">write_byte</span>(<span class="ruby-constant">SSH_AGENT_CONSTRAIN_CONFIRM</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">confirm</span>
+
+  <span class="ruby-identifier">req_type</span> = <span class="ruby-identifier">constraints</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">?</span> <span class="ruby-constant">SSH2_AGENT_ADD_IDENTITY</span> <span class="ruby-operator">:</span> <span class="ruby-constant">SSH2_AGENT_ADD_ID_CONSTRAINED</span>
+  <span class="ruby-identifier">type</span>, = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-identifier">req_type</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">priv_key</span>.<span class="ruby-identifier">ssh_type</span>, <span class="ruby-value">:raw</span>, <span class="ruby-identifier">blob_for_add</span>(<span class="ruby-identifier">priv_key</span>),
+                        <span class="ruby-value">:string</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-value">:raw</span>, <span class="ruby-identifier">constraints</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-string">&quot;could not add identity to agent&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_SUCCESS</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
 
     
       <div id="method-i-close" class="method-detail ">
@@ -338,7 +424,7 @@ agent.</p>
 
           
           <div class="method-source-code" id="close-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 127</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 135</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">close</span>
   <span class="ruby-ivar">@socket</span>.<span class="ruby-identifier">close</span>
 <span class="ruby-keyword">end</span></pre>
@@ -374,13 +460,13 @@ supports the ssh-agent distributed by OpenSSH).</p>
 
           
           <div class="method-source-code" id="connect-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 69</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 77</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">connect!</span>(<span class="ruby-identifier">agent_socket_factory</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">debug</span> { <span class="ruby-string">&quot;connecting to ssh-agent&quot;</span> }
   <span class="ruby-ivar">@socket</span> =
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">agent_socket_factory</span>
       <span class="ruby-identifier">agent_socket_factory</span>.<span class="ruby-identifier">call</span>
-    <span class="ruby-keyword">elsif</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SSH_AUTH_SOCK&#39;</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-identifier">unix_socket_class</span>)
+    <span class="ruby-keyword">elsif</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SSH_AUTH_SOCK&#39;</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">unix_socket_class</span>
       <span class="ruby-identifier">unix_socket_class</span>.<span class="ruby-identifier">open</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SSH_AUTH_SOCK&#39;</span>])
     <span class="ruby-keyword">elsif</span> <span class="ruby-constant">Gem</span>.<span class="ruby-identifier">win_platform?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">RUBY_ENGINE</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;jruby&quot;</span>
       <span class="ruby-constant">Pageant</span><span class="ruby-operator">::</span><span class="ruby-constant">Socket</span>.<span class="ruby-identifier">open</span>
@@ -422,7 +508,7 @@ to the comment returned by the agent for that key.</p>
 
           
           <div class="method-source-code" id="identities-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 103</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 111</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">identities</span>
   <span class="ruby-identifier">type</span>, <span class="ruby-identifier">body</span> = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-constant">SSH2_AGENT_REQUEST_IDENTITIES</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-string">&quot;could not get identity count&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">agent_failed</span>(<span class="ruby-identifier">type</span>)
@@ -475,7 +561,7 @@ successfully.</p>
 
           
           <div class="method-source-code" id="negotiate-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 88</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 96</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">negotiate!</span>
   <span class="ruby-comment"># determine what type of agent we&#39;re communicating with</span>
   <span class="ruby-identifier">type</span>, <span class="ruby-identifier">body</span> = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-constant">SSH2_AGENT_REQUEST_VERSION</span>, <span class="ruby-value">:string</span>, <span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">ServerVersion</span><span class="ruby-operator">::</span><span class="ruby-constant">PROTO_VERSION</span>)
@@ -486,6 +572,74 @@ successfully.</p>
   <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_RSA_IDENTITIES_ANSWER1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_RSA_IDENTITIES_ANSWER2</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentNotAvailable</span>, <span class="ruby-node">&quot;unknown response from agent: #{type}, #{body.to_s.inspect}&quot;</span>
   <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-remove_all_identities" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remove_all_identities</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Removes all identities from the agent.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="remove_all_identities-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 176</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_all_identities</span>
+  <span class="ruby-identifier">type</span>, = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-constant">SSH2_AGENT_REMOVE_ALL_IDENTITIES</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-string">&quot;could not remove all identity from agent&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_SUCCESS</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-remove_identity" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remove_identity</span><span
+            class="method-args">(key)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Removes key from the agent.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="remove_identity-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 170</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_identity</span>(<span class="ruby-identifier">key</span>)
+  <span class="ruby-identifier">type</span>, = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-constant">SSH2_AGENT_REMOVE_IDENTITY</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_blob</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">AgentError</span>, <span class="ruby-string">&quot;could not remove identity from agent&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">SSH_AGENT_SUCCESS</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -517,7 +671,7 @@ signature is returned in SSH2 format.</p>
 
           
           <div class="method-source-code" id="sign-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 133</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/agent.rb, line 141</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sign</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">type</span>, <span class="ruby-identifier">reply</span> = <span class="ruby-identifier">send_and_wait</span>(<span class="ruby-constant">SSH2_AGENT_SIGN_REQUEST</span>, <span class="ruby-value">:string</span>, <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:key</span>, <span class="ruby-identifier">key</span>), <span class="ruby-value">:string</span>, <span class="ruby-identifier">data</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">0</span>)
 

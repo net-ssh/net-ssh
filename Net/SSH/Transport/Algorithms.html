@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Transport::Algorithms - net-ssh 4.0.1.rc2</title>
+<title>class Net::SSH::Transport::Algorithms - net-ssh 4.1.0.rc1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -278,7 +278,7 @@ href="Algorithms.html#attribute-i-algorithms">algorithms</a>).</p>
 
         <div class="method-description">
           
-          <p>Called by the transport layer when a KEXINIT packet is recieved, indicating
+          <p>Called by the transport layer when a KEXINIT packet is received, indicating
 that the server wants to exchange keys. This can be spontaneous, or it can
 be in response to a client-initiated rekey request (see <a
 href="Algorithms.html#method-i-rekey-21">rekey!</a>). Either way, this will
@@ -473,7 +473,7 @@ processed.</p>
           <div class="method-source-code" id="start-source">
             <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 123</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">start</span>
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;Cannot call start if it&#39;s negoitation started or done&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@pending</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@initialized</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;Cannot call start if it&#39;s negotiation started or done&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@pending</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@initialized</span>
   <span class="ruby-identifier">send_kexinit</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Authentication::ED25519::PubKey - net-ssh 4.0.1.rc2</title>
+<title>class Net::SSH::Authentication::ED25519::PubKey - net-ssh 4.1.0.rc1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -78,6 +78,8 @@
     
     <li ><a href="#method-i-ssh_do_verify">#ssh_do_verify</a>
     
+    <li ><a href="#method-i-ssh_signature_type">#ssh_signature_type</a>
+    
     <li ><a href="#method-i-ssh_type">#ssh_type</a>
     
     <li ><a href="#method-i-to_blob">#to_blob</a>
@@ -110,6 +112,27 @@
     
 
     
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-verify_key" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">verify_key</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+    </section>
+    
 
     
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
@@ -137,7 +160,7 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 26</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 32</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-ivar">@verify_key</span> = <span class="ruby-constant">RbNaCl</span><span class="ruby-operator">::</span><span class="ruby-constant">Signatures</span><span class="ruby-operator">::</span><span class="ruby-constant">Ed25519</span><span class="ruby-operator">::</span><span class="ruby-constant">VerifyKey</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">data</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -170,7 +193,7 @@
 
           
           <div class="method-source-code" id="read_keyblob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 30</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 36</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">buffer</span>)
   <span class="ruby-constant">PubKey</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -211,7 +234,7 @@
 
           
           <div class="method-source-code" id="fingerprint-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 51</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">fingerprint</span>
   <span class="ruby-ivar">@fingerprint</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">MD5</span>.<span class="ruby-identifier">hexdigest</span>(<span class="ruby-identifier">to_blob</span>).<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/../</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;:&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -244,9 +267,42 @@
 
           
           <div class="method-source-code" id="ssh_do_verify-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 42</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_do_verify</span>(<span class="ruby-identifier">sig</span>,<span class="ruby-identifier">data</span>)
   <span class="ruby-ivar">@verify_key</span>.<span class="ruby-identifier">verify</span>(<span class="ruby-identifier">sig</span>,<span class="ruby-identifier">data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-ssh_signature_type" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ssh_signature_type</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="ssh_signature_type-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 48</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_signature_type</span>
+  <span class="ruby-identifier">ssh_type</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -277,7 +333,7 @@
 
           
           <div class="method-source-code" id="ssh_type-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 38</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 44</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_type</span>
   <span class="ruby-string">&quot;ssh-ed25519&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -310,7 +366,7 @@
 
           
           <div class="method-source-code" id="to_blob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 34</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 40</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_blob</span>
   <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:mstring</span>,<span class="ruby-string">&quot;ssh-ed25519&quot;</span>,<span class="ruby-value">:string</span>,<span class="ruby-ivar">@verify_key</span>.<span class="ruby-identifier">to_bytes</span>).<span class="ruby-identifier">to_s</span>
 <span class="ruby-keyword">end</span></pre>
@@ -343,7 +399,7 @@
 
           
           <div class="method-source-code" id="to_pem-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 46</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 56</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_pem</span>
   <span class="ruby-comment"># TODO this is not pem</span>
   <span class="ruby-identifier">ssh_type</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Base64</span>.<span class="ruby-identifier">encode64</span>(<span class="ruby-ivar">@verify_key</span>.<span class="ruby-identifier">to_bytes</span>)

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Table of Contents - net-ssh 4.0.1.rc2</title>
+<title>Table of Contents - net-ssh 4.1.0.rc1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
@@ -20,7 +20,7 @@
 
 <body id="top" class="table-of-contents">
 <main role="main">
-<h1 class="class">Table of Contents - net-ssh 4.0.1.rc2</h1>
+<h1 class="class">Table of Contents - net-ssh 4.1.0.rc1</h1>
 
 <h2 id="pages">Pages</h2>
 <ul>
@@ -28,6 +28,9 @@
     <a href="CHANGES_txt.html">CHANGES</a>
 
     <ul>
+      <li><a href="CHANGES_txt.html#label-4.1.0.rc1">4.1.0.rc1</a>
+      <li><a href="CHANGES_txt.html#label-4.1.0.beta1">4.1.0.beta1</a>
+      <li><a href="CHANGES_txt.html#label-4.0.1">4.0.1</a>
       <li><a href="CHANGES_txt.html#label-4.0.1.rc2">4.0.1.rc2</a>
       <li><a href="CHANGES_txt.html#label-4.0.1.rc1">4.0.1.rc1</a>
       <li><a href="CHANGES_txt.html#label-4.0.0">4.0.0</a>
@@ -180,6 +183,9 @@
   </li>
   <li class="class">
     <a href="Net/SSH/Authentication/AgentNotAvailable.html">Net::SSH::Authentication::AgentNotAvailable</a>
+  </li>
+  <li class="class">
+    <a href="Net/SSH/Authentication/Certificate.html">Net::SSH::Authentication::Certificate</a>
   </li>
   <li class="module">
     <a href="Net/SSH/Authentication/Constants.html">Net::SSH::Authentication::Constants</a>
@@ -375,6 +381,9 @@
   </li>
   <li class="module">
     <a href="Net/SSH/Proxy/HTTPS/SSLSocketCompatibility.html">Net::SSH::Proxy::HTTPS::SSLSocketCompatibility</a>
+  </li>
+  <li class="class">
+    <a href="Net/SSH/Proxy/Jump.html">Net::SSH::Proxy::Jump</a>
   </li>
   <li class="class">
     <a href="Net/SSH/Proxy/SOCKS4.html">Net::SSH::Proxy::SOCKS4</a>
@@ -947,6 +956,11 @@
     <span class="container">Net::SSH::Proxy::HTTPS</span>
 
   <li class="method">
+    <a href="Net/SSH/Proxy/Jump.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Net::SSH::Proxy::Jump</span>
+
+  <li class="method">
     <a href="Net/SSH/Proxy/SOCKS4.html#method-c-new">::new</a>
     &mdash;
     <span class="container">Net::SSH::Proxy::SOCKS4</span>
@@ -1050,6 +1064,11 @@
     <a href="Net/SSH/Authentication/ED25519/PrivKey.html#method-c-read">::read</a>
     &mdash;
     <span class="container">Net::SSH::Authentication::ED25519::PrivKey</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-c-read_certblob">::read_certblob</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
 
   <li class="method">
     <a href="Net/SSH/Authentication/ED25519/PubKey.html#method-c-read_keyblob">::read_keyblob</a>
@@ -1212,6 +1231,11 @@
     <span class="container">Net::SSH::HostKeys</span>
 
   <li class="method">
+    <a href="Net/SSH/Authentication/Agent.html#method-i-add_identity">#add_identity</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Agent</span>
+
+  <li class="method">
     <a href="Net/SSH/Authentication/KeyManager.html#method-i-add_key_data">#add_key_data</a>
     &mdash;
     <span class="container">Net::SSH::Authentication::KeyManager</span>
@@ -1290,6 +1314,11 @@
     <a href="Net/SSH/Transport/PacketStream.html#method-i-available_for_read-3F">#available_for_read?</a>
     &mdash;
     <span class="container">Net::SSH::Transport::PacketStream</span>
+
+  <li class="method">
+    <a href="Net/SSH/Proxy/Jump.html#method-i-build_proxy_command_equivalent">#build_proxy_command_equivalent</a>
+    &mdash;
+    <span class="container">Net::SSH::Proxy::Jump</span>
 
   <li class="method">
     <a href="Net/SSH/Connection/Session.html#method-i-busy-3F">#busy?</a>
@@ -1687,6 +1716,11 @@
     <span class="container">Net::SSH::Transport::State</span>
 
   <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-i-fingerprint">#fingerprint</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
+
+  <li class="method">
     <a href="Net/SSH/Authentication/ED25519/PubKey.html#method-i-fingerprint">#fingerprint</a>
     &mdash;
     <span class="container">Net::SSH::Authentication::ED25519::PubKey</span>
@@ -2062,6 +2096,11 @@
     <span class="container">Net::SSH::Proxy::HTTP</span>
 
   <li class="method">
+    <a href="Net/SSH/Proxy/Jump.html#method-i-open">#open</a>
+    &mdash;
+    <span class="container">Net::SSH::Proxy::Jump</span>
+
+  <li class="method">
     <a href="Net/SSH/Proxy/SOCKS4.html#method-i-open">#open</a>
     &mdash;
     <span class="container">Net::SSH::Proxy::SOCKS4</span>
@@ -2207,6 +2246,11 @@
     <span class="container">Net::SSH::Buffer</span>
 
   <li class="method">
+    <a href="Net/SSH/Buffer.html#method-i-read_all">#read_all</a>
+    &mdash;
+    <span class="container">Net::SSH::Buffer</span>
+
+  <li class="method">
     <a href="Net/SSH/BufferedIo.html#method-i-read_available">#read_available</a>
     &mdash;
     <span class="container">Net::SSH::BufferedIo</span>
@@ -2335,6 +2379,16 @@
     <a href="Net/SSH/Service/Forward.html#method-i-remote_to">#remote_to</a>
     &mdash;
     <span class="container">Net::SSH::Service::Forward</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Agent.html#method-i-remove_all_identities">#remove_all_identities</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Agent</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Agent.html#method-i-remove_identity">#remove_identity</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Agent</span>
 
   <li class="method">
     <a href="Net/SSH/Connection/Channel.html#method-i-request_pty">#request_pty</a>
@@ -2537,14 +2591,34 @@
     <span class="container">Net::SSH::Authentication::Agent</span>
 
   <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-i-sign">#sign</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
+
+  <li class="method">
     <a href="Net/SSH/Authentication/KeyManager.html#method-i-sign">#sign</a>
     &mdash;
     <span class="container">Net::SSH::Authentication::KeyManager</span>
 
   <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-i-sign-21">#sign!</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-i-signature_valid-3F">#signature_valid?</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
+
+  <li class="method">
     <a href="Net/SSH/Test.html#method-i-socket">#socket</a>
     &mdash;
     <span class="container">Net::SSH::Test</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-i-ssh_do_sign">#ssh_do_sign</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
 
   <li class="method">
     <a href="Net/SSH/Authentication/ED25519/PrivKey.html#method-i-ssh_do_sign">#ssh_do_sign</a>
@@ -2567,6 +2641,11 @@
     <span class="container">OpenSSL::PKey::EC</span>
 
   <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-i-ssh_do_verify">#ssh_do_verify</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
+
+  <li class="method">
     <a href="Net/SSH/Authentication/ED25519/PubKey.html#method-i-ssh_do_verify">#ssh_do_verify</a>
     &mdash;
     <span class="container">Net::SSH::Authentication::ED25519::PubKey</span>
@@ -2587,9 +2666,49 @@
     <span class="container">OpenSSL::PKey::EC</span>
 
   <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-i-ssh_signature_type">#ssh_signature_type</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/ED25519/PubKey.html#method-i-ssh_signature_type">#ssh_signature_type</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::ED25519::PubKey</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/ED25519/PrivKey.html#method-i-ssh_signature_type">#ssh_signature_type</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::ED25519::PrivKey</span>
+
+  <li class="method">
+    <a href="OpenSSL/PKey/RSA.html#method-i-ssh_signature_type">#ssh_signature_type</a>
+    &mdash;
+    <span class="container">OpenSSL::PKey::RSA</span>
+
+  <li class="method">
+    <a href="OpenSSL/PKey/DSA.html#method-i-ssh_signature_type">#ssh_signature_type</a>
+    &mdash;
+    <span class="container">OpenSSL::PKey::DSA</span>
+
+  <li class="method">
+    <a href="OpenSSL/PKey/EC.html#method-i-ssh_signature_type">#ssh_signature_type</a>
+    &mdash;
+    <span class="container">OpenSSL::PKey::EC</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-i-ssh_type">#ssh_type</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
+
+  <li class="method">
     <a href="Net/SSH/Authentication/ED25519/PubKey.html#method-i-ssh_type">#ssh_type</a>
     &mdash;
     <span class="container">Net::SSH::Authentication::ED25519::PubKey</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/ED25519/PrivKey.html#method-i-ssh_type">#ssh_type</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::ED25519::PrivKey</span>
 
   <li class="method">
     <a href="OpenSSL/PKey/RSA.html#method-i-ssh_type">#ssh_type</a>
@@ -2652,9 +2771,19 @@
     <span class="container">Net::SSH::Test::Extensions::PacketStream</span>
 
   <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-i-to_blob">#to_blob</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
+
+  <li class="method">
     <a href="Net/SSH/Authentication/ED25519/PubKey.html#method-i-to_blob">#to_blob</a>
     &mdash;
     <span class="container">Net::SSH::Authentication::ED25519::PubKey</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/ED25519/PrivKey.html#method-i-to_blob">#to_blob</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::ED25519::PrivKey</span>
 
   <li class="method">
     <a href="OpenSSL/PKey/RSA.html#method-i-to_blob">#to_blob</a>
@@ -2675,6 +2804,11 @@
     <a href="Net/SSH/Version.html#method-i-to_i">#to_i</a>
     &mdash;
     <span class="container">Net::SSH::Version</span>
+
+  <li class="method">
+    <a href="Net/SSH/Authentication/Certificate.html#method-i-to_pem">#to_pem</a>
+    &mdash;
+    <span class="container">Net::SSH::Authentication::Certificate</span>
 
   <li class="method">
     <a href="Net/SSH/Authentication/ED25519/PubKey.html#method-i-to_pem">#to_pem</a>

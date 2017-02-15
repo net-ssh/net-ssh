@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class OpenSSL::PKey::EC - net-ssh 4.0.1.rc2</title>
+<title>class OpenSSL::PKey::EC - net-ssh 4.1.0.rc1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -75,6 +75,8 @@
     <li ><a href="#method-i-ssh_do_sign">#ssh_do_sign</a>
     
     <li ><a href="#method-i-ssh_do_verify">#ssh_do_verify</a>
+    
+    <li ><a href="#method-i-ssh_signature_type">#ssh_signature_type</a>
     
     <li ><a href="#method-i-ssh_type">#ssh_type</a>
     
@@ -157,7 +159,7 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="read_keyblob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 142</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 150</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">curve_name_in_type</span>, <span class="ruby-identifier">buffer</span>)
   <span class="ruby-identifier">curve_name_in_key</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">curve_name_in_type</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">curve_name_in_key</span>
@@ -213,7 +215,7 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="ssh_do_sign-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 218</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 230</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_do_sign</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">digest</span> = <span class="ruby-identifier">digester</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">sig</span> = <span class="ruby-identifier">dsa_sign_asn1</span>(<span class="ruby-identifier">digest</span>)
@@ -253,7 +255,7 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="ssh_do_verify-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 192</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 204</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_do_verify</span>(<span class="ruby-identifier">sig</span>, <span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">digest</span> = <span class="ruby-identifier">digester</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">a1sig</span> = <span class="ruby-keyword">nil</span>
@@ -288,6 +290,39 @@ with SSH functionality.</p>
       </div>
 
     
+      <div id="method-i-ssh_signature_type" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ssh_signature_type</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="ssh_signature_type-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 175</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_signature_type</span>
+  <span class="ruby-identifier">ssh_type</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
       <div id="method-i-ssh_type" class="method-detail ">
         
         <div class="method-heading">
@@ -308,7 +343,7 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="ssh_type-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 163</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 171</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_type</span>
   <span class="ruby-node">&quot;ecdsa-sha2-#{CurveNameAliasInv[self.group.curve_name]}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -341,7 +376,7 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="to_blob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 184</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 196</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_blob</span>
   <span class="ruby-ivar">@blob</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:string</span>, <span class="ruby-identifier">ssh_type</span>,
                                   <span class="ruby-value">:string</span>, <span class="ruby-constant">CurveNameAliasInv</span>[<span class="ruby-keyword">self</span>.<span class="ruby-identifier">group</span>.<span class="ruby-identifier">curve_name</span>],

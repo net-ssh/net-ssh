@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Config - net-ssh 4.0.1.rc2</title>
+<title>class Net::SSH::Config - net-ssh 4.1.0.rc1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -144,6 +144,8 @@ keyboard-interactive</p>
 </li><li>
 <p>ProxyCommand =&gt; maps to the :proxy option</p>
 </li><li>
+<p>ProxyJump =&gt; maps to the :proxy option</p>
+</li><li>
 <p>PubKeyAuthentication =&gt; maps to the :auth_methods option</p>
 </li><li>
 <p>RekeyLimit =&gt; :rekey_limit</p>
@@ -200,7 +202,7 @@ are, by default.)</p>
 
           
           <div class="method-source-code" id="default_auth_methods-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 54</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 55</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">default_auth_methods</span>
   <span class="ruby-identifier">@@default_auth_methods</span>
 <span class="ruby-keyword">end</span></pre>
@@ -234,7 +236,7 @@ default.</p>
 
           
           <div class="method-source-code" id="default_files-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 50</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 51</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">default_files</span>
   <span class="ruby-identifier">@@default_files</span>
 <span class="ruby-keyword">end</span></pre>
@@ -268,7 +270,7 @@ down to the files that are expandable.</p>
 
           
           <div class="method-source-code" id="expandable_default_files-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 252</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 167</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">expandable_default_files</span>
   <span class="ruby-identifier">default_files</span>.<span class="ruby-identifier">keep_if</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">begin</span>
@@ -311,7 +313,7 @@ by <a href="../SSH.html">Net::SSH</a>, and returns them.</p>
 
           
           <div class="method-source-code" id="for-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 62</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 63</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">files</span>=<span class="ruby-identifier">expandable_default_files</span>)
   <span class="ruby-identifier">translate</span>(<span class="ruby-identifier">files</span>.<span class="ruby-identifier">inject</span>({}) { <span class="ruby-operator">|</span><span class="ruby-identifier">settings</span>, <span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">load</span>(<span class="ruby-identifier">file</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>)
@@ -351,7 +353,7 @@ href="../SSH.html">Net::SSH</a> options.)</p>
 
           
           <div class="method-source-code" id="load-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 74</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 75</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load</span>(<span class="ruby-identifier">path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>={})
   <span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">path</span>)
   <span class="ruby-identifier">base_dir</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">file</span>)
@@ -460,98 +462,12 @@ downcased, and the returned hash will have Symbols for keys.</p>
 
           
           <div class="method-source-code" id="translate-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 155</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 156</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">translate</span>(<span class="ruby-identifier">settings</span>)
   <span class="ruby-identifier">auth_methods</span> = <span class="ruby-identifier">default_auth_methods</span>.<span class="ruby-identifier">clone</span>
   (<span class="ruby-identifier">auth_methods</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;challenge-response&#39;</span>).<span class="ruby-identifier">uniq!</span>
   <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">inject</span>({<span class="ruby-identifier">auth_methods</span><span class="ruby-operator">:</span> <span class="ruby-identifier">auth_methods</span>}) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hash</span>, (<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)<span class="ruby-operator">|</span>
-    <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;bindaddress&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:bind_address</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;ciphers&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:encryption</span>] = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/,/</span>)
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;compression&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:compression</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;compressionlevel&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:compression_level</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;connecttimeout&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:timeout</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;forwardagent&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:forward_agent</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;identitiesonly&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:keys_only</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;globalknownhostsfile&#39;</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:global_known_hosts_file</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;hostbasedauthentication&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span>
-        (<span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;hostbased&quot;</span>).<span class="ruby-identifier">uniq!</span>
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>].<span class="ruby-identifier">delete</span>(<span class="ruby-string">&quot;hostbased&quot;</span>)
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;hostkeyalgorithms&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:host_key</span>] = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/,/</span>)
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;hostkeyalias&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:host_key_alias</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;hostname&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:host_name</span>] = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/%h/</span>, <span class="ruby-identifier">settings</span>[<span class="ruby-string">&#39;host&#39;</span>])
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;identityfile&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:keys</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;macs&#39;</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:hmac</span>] = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/,/</span>)
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;serveralivecountmax&#39;</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:keepalive_maxcount</span>] = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;serveraliveinterval&#39;</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
-        <span class="ruby-identifier">hash</span>[<span class="ruby-value">:keepalive</span>] = <span class="ruby-keyword">true</span>
-        <span class="ruby-identifier">hash</span>[<span class="ruby-value">:keepalive_interval</span>] = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span>
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">hash</span>[<span class="ruby-value">:keepalive</span>] = <span class="ruby-keyword">false</span>
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;passwordauthentication&#39;</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span>
-        (<span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;password&#39;</span>).<span class="ruby-identifier">uniq!</span>
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>].<span class="ruby-identifier">delete</span>(<span class="ruby-string">&#39;password&#39;</span>)
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;challengeresponseauthentication&#39;</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span>
-        (<span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;challenge-response&#39;</span>).<span class="ruby-identifier">uniq!</span>
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>].<span class="ruby-identifier">delete</span>(<span class="ruby-string">&#39;challenge-response&#39;</span>)
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;kbdinteractiveauthentication&#39;</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span>
-        (<span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;keyboard-interactive&#39;</span>).<span class="ruby-identifier">uniq!</span>
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>].<span class="ruby-identifier">delete</span>(<span class="ruby-string">&#39;keyboard-interactive&#39;</span>)
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;port&#39;</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:port</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;preferredauthentications&#39;</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>] = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/,/</span>) <span class="ruby-comment"># TODO we should place to preferred_auth_methods rather than auth_methods</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;proxycommand&#39;</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-keyword">and</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^none$/</span>)
-        <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;net/ssh/proxy/command&#39;</span>
-        <span class="ruby-identifier">hash</span>[<span class="ruby-value">:proxy</span>] = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Proxy</span><span class="ruby-operator">::</span><span class="ruby-constant">Command</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">value</span>)
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;pubkeyauthentication&#39;</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span>
-        (<span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;publickey&#39;</span>).<span class="ruby-identifier">uniq!</span>
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">hash</span>[<span class="ruby-value">:auth_methods</span>].<span class="ruby-identifier">delete</span>(<span class="ruby-string">&#39;publickey&#39;</span>)
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;rekeylimit&#39;</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:rekey_limit</span>] = <span class="ruby-identifier">interpret_size</span>(<span class="ruby-identifier">value</span>)
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;user&#39;</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:user</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;userknownhostsfile&#39;</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:user_known_hosts_file</span>] = <span class="ruby-identifier">value</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;sendenv&#39;</span>
-      <span class="ruby-identifier">multi_send_env</span> = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\s+/</span>)
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:send_env</span>] = <span class="ruby-identifier">multi_send_env</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">pattern2regex</span>(<span class="ruby-identifier">e</span>).<span class="ruby-identifier">source</span>, <span class="ruby-keyword">false</span> }
-    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;numberofpasswordprompts&#39;</span>
-      <span class="ruby-identifier">hash</span>[<span class="ruby-value">:number_of_password_prompts</span>] = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span>
-    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">translate_config_key</span>(<span class="ruby-identifier">hash</span>, <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_sym</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">settings</span>)
     <span class="ruby-identifier">hash</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">merge_challenge_response_with_keyboard_interactive</span>(<span class="ruby-identifier">ret</span>)

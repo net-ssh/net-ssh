@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Transport::Session - net-ssh 4.0.1.rc2</title>
+<title>class Net::SSH::Transport::Session - net-ssh 4.1.0.rc1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -775,7 +775,7 @@ queue before the socket is queried.</p>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Disconnect</span>, <span class="ruby-node">&quot;disconnected: #{packet[:description]} (#{packet[:reason_code]})&quot;</span>
 
     <span class="ruby-keyword">when</span> <span class="ruby-constant">IGNORE</span>
-      <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;IGNORE packet recieved: #{packet[:data].inspect}&quot;</span> }
+      <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;IGNORE packet received: #{packet[:data].inspect}&quot;</span> }
 
     <span class="ruby-keyword">when</span> <span class="ruby-constant">UNIMPLEMENTED</span>
       <span class="ruby-identifier">lwarn</span> { <span class="ruby-node">&quot;UNIMPLEMENTED: #{packet[:number]}&quot;</span> }
