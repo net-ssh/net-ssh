@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  sudo: yes
+  become: true
   vars:
     no_rvm: no
     myuser: vagrant
@@ -22,7 +22,9 @@
       ignore_errors: True
   roles:
     - { role: rvm_io.ruby,
-        tags: ruby, sudo: True,
+        tags: ruby,
+        become: yes,
+        rvm1_user: 'root',
         rvm1_rubies: "{{ ruby_versions }}",
         rvm1_install_path: "{{rvm_install_path}}",
         rvm1_gpg_key_server: pool.sks-keyservers.net,
