@@ -9,6 +9,10 @@ environment:
     - ruby_version: "23-x64"
     - ruby_version: "22-x64"
 
+matrix:
+  allow_failures:
+    - ruby_version: "jruby-9.1.2.0"
+
 #init:
 #  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
