@@ -15,7 +15,7 @@ Setup:
 
 # Debugging on travis
 
-Logging the ssh logs might be usefull:
+Logging the ssh logs might be useful:
 
 ```yml
 script:
