@@ -82,6 +82,7 @@
         name: "{{myuser}}"
         groups: rvm
         append: yes
+      when: "not no_rvm"
   handlers:
     - name: restart sshd
       service: name=ssh state=restarted
