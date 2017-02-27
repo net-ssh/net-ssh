@@ -639,7 +639,7 @@ Style/LineEndConcatenation:
 
 # Offense count: 12
 # Cop supports --auto-correct.
-Style/MethodCallParentheses:
+Style/MethodCallWithoutArgsParentheses:
   Exclude:
     - 'test/authentication/test_key_manager.rb'
     - 'test/connection/test_session.rb'
