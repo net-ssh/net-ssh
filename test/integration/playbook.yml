@@ -75,11 +75,6 @@
         - pv
         - libgmp3-dev
         - git
-    - gem: name="{{ item[1] }}" state=present user_install=no executable=/usr/local/rvm/wrappers/ruby-{{ item[0] }}/gem
-      with_nested:
-        - "{{ruby_versions}}"
-        - [ 'byebug', 'rake', 'jeweler', 'mocha', 'rbnacl', 'rbnacl-libsodium', 'minitest' ]
-      when: "not no_rvm"
     - copy: content='echo "cd /net-ssh ; rake integration-test"' dest=/etc/update-motd.d/99-net-ssh-tests mode=0755
     - name: add user to rvm group so they can change gem wrappers
       user:
