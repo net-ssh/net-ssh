@@ -27,6 +27,7 @@
         rvm1_user: 'root',
         rvm1_rubies: "{{ ruby_versions }}",
         rvm1_install_path: "{{rvm_install_path}}",
+        rvm1_install_flags: '--auto-dotfiles', # Make sure RVM sets itself up so the user has access to it
         rvm1_gpg_key_server: pool.sks-keyservers.net,
         when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}' and not no_rvm" }
   tasks:
