@@ -27,6 +27,7 @@
         rvm1_user: 'root',
         rvm1_rubies: "{{ ruby_versions }}",
         rvm1_install_path: "{{rvm_install_path}}",
+        rvm1_install_flags: '--auto-dotfiles', # Make sure RVM sets itself up so the user has access to it
         rvm1_gpg_key_server: pool.sks-keyservers.net,
         when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}' and not no_rvm" }
   tasks:
@@ -75,12 +76,13 @@
         - pv
         - libgmp3-dev
         - git
-    - gem: name="{{ item[1] }}" state=present user_install=no executable=/usr/local/rvm/wrappers/ruby-{{ item[0] }}/gem
-      with_nested:
-        - "{{ruby_versions}}"
-        - [ 'byebug', 'rake', 'jeweler', 'mocha', 'rbnacl', 'rbnacl-libsodium', 'minitest' ]
-      when: "not no_rvm"
     - copy: content='echo "cd /net-ssh ; rake integration-test"' dest=/etc/update-motd.d/99-net-ssh-tests mode=0755
+    - name: add user to rvm group so they can change gem wrappers
+      user:
+        name: "{{myuser}}"
+        groups: rvm
+        append: yes
+      when: "not no_rvm"
   handlers:
     - name: restart sshd
       service: name=ssh state=restarted

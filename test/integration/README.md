@@ -9,12 +9,13 @@ Setup:
 
     ansible-galaxy install rvm_io.ruby
     vagrant up ; vagrant ssh
-    rvm all do bundle
+    rvmsudo_secure_path=1 rvmsudo rvm all do gem install bundler
+    rvm all do sh -c 'rm Gemfile.lock; bundle'
     rvm all do rake test
 
 # Debugging on travis
 
-Logging the ssh logs might be usefull:
+Logging the ssh logs might be useful:
 
 ```yml
 script:
