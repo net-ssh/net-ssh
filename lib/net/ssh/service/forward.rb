@@ -28,6 +28,7 @@ module Net; module SSH; module Service
       @remote_forwarded_ports = {}
       @local_forwarded_ports = {}
       @agent_forwarded = false
+      @local_forwarded_sockets = {}
 
       session.on_open_channel('forwarded-tcpip', &method(:forwarded_tcpip))
       session.on_open_channel('auth-agent', &method(:auth_agent_channel))
@@ -99,9 +100,7 @@ module Net; module SSH; module Service
       local_port
     end
 
-    # Terminates an active local forwarded port. If no such forwarded port
-    # exists, this will raise an exception. Otherwise, the forwarded connection
-    # is terminated.
+    # Terminates an active local forwarded port.
     #
     #   ssh.forward.cancel_local(1234)
     #   ssh.forward.cancel_local(1234, "0.0.0.0")
@@ -118,6 +117,57 @@ module Net; module SSH; module Service
     # forwarding port.
     def active_locals
       @local_forwarded_ports.keys
+    end
+
+    # Starts listening for connections on the local host, and forwards them
+    # to the specified remote socket via the SSH connection. This will
+    # (re)create the local socket file. The remote server needs to have the
+    # socket file already available.
+    #
+    #   ssh.forward.local_socket('/tmp/local.sock', '/tmp/remote.sock')
+    def local_socket(local_socket_path, remote_socket_path)
+      File.delete(local_socket_path) if File.exist?(local_socket_path)
+      socket = Socket.unix_server_socket(local_socket_path)
+
+      @local_forwarded_sockets[local_socket_path] = socket
+
+      session.listen_to(socket) do |server|
+        client = server.accept[0]
+        debug { "received connection on #{socket}" }
+
+        channel = session.open_channel("direct-streamlocal@openssh.com",
+                                       :string, remote_socket_path,
+                                       :string, nil,
+                                       :long, 0) do |achannel|
+          achannel.info { "direct channel established" }
+        end
+
+        prepare_client(client, channel, :local)
+
+        channel.on_open_failed do |ch, code, description|
+          channel.error { "could not establish direct channel: #{description} (#{code})" }
+          session.stop_listening_to(channel[:socket])
+          channel[:socket].close
+        end
+      end
+
+      local_socket_path
+    end
+
+    # Terminates an active local forwarded socket.
+    #
+    #   ssh.forward.cancel_local_socket('/tmp/foo.sock')
+    def cancel_local_socket(local_socket_path)
+      socket = @local_forwarded_sockets.delete(local_socket_path)
+      socket.shutdown rescue nil
+      socket.close rescue nil
+      session.stop_listening_to(socket)
+    end
+
+    # Returns a list of all active locally forwarded sockets. The returned value
+    # is an array of Unix domain socket file paths.
+    def active_local_sockets
+      @local_forwarded_sockets.keys
     end
 
     # Requests that all connections on the given remote-port be forwarded via

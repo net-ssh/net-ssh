@@ -40,6 +40,23 @@
         line='net_ssh_1 ALL=(ALL) NOPASSWD:ALL' regexp=net_ssh_1
     - lineinfile: dest=/etc/sudoers.d/net_ssh_1 mode=0440 state=present create=yes
         line='net_ssh_2 ALL=(ALL) NOPASSWD:ALL' regexp=net_ssh_2
+    - unarchive:
+        src: https://ftp.spline.de/pub/OpenBSD/OpenSSH/portable/openssh-7.4p1.tar.gz
+        dest: /tmp
+        remote_src: True
+    - name: building and installing openssh 7.4 (used in forward test)
+      command: sh -c "./configure --prefix=/opt/net-ssh-openssh && make && sudo make install"
+      args:
+        chdir: /tmp/openssh-7.4p1/
+    - name: drop installed openssh etc/ in favor of symlink
+      file:
+        state: absent
+        path: /opt/net-ssh-openssh/etc
+    - name: creating symlink between system etc/ssh/ and our etc/
+      file:
+        src: /etc/ssh
+        dest: /opt/net-ssh-openssh/etc
+        state: link
     - command: ssh-keygen -A
       args:
         creates: /etc/ssh/ssh_host_ed25519_key

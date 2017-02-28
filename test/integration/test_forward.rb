@@ -24,6 +24,18 @@ require 'tempfile'
 class ForwardTestBase < NetSSHTest
   include IntegrationTestHelpers
 
+  # @yield [pid, port]
+  def start_sshd_7_or_later(port = '2200')
+    pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-p', port)
+    yield pid, port
+  ensure
+    # Our pid is sudo, -9 (KILL) on sudo will not clean up its children
+    # properly, so we just have to hope that -15 (TERM) will manage to bring
+    # down sshd.
+    system('sudo', 'kill', '-15', pid.to_s)
+    Process.wait(pid)
+  end
+
   def localhost
     'localhost'
   end
@@ -641,6 +653,71 @@ class TestForwardOnUnixSockets < ForwardTestBase
 
         assert_not_nil(client_data, "client should have received data")
         assert(client_data.match(/item\d/), 'client should have received the string item')
+      end
+    end
+  end
+
+  def test_forward_local_unix_socket_to_remote_socket
+    setup_ssh_env do
+      start_sshd_7_or_later do |_pid, port|
+        session = Timeout.timeout(4) do
+          begin
+            # We have our own sshd, give it a chance to come up before
+            # listening.
+            Net::SSH.start(*ssh_start_params(port: port))
+          rescue SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+            sleep 0.25
+            retry
+          end
+        end
+
+        create_local_socket do |remote_socket|
+          # Make sure sshd can 'rw'.
+          FileUtils.chmod(0o666, remote_socket.path)
+
+          local_socket_path_file = Tempfile.new("net_ssh_forward_test_local")
+          local_socket_path = local_socket_path_file.path
+          session.forward.local_socket(local_socket_path, remote_socket.path)
+          assert_equal([local_socket_path], session.forward.active_local_sockets)
+
+          client_done = Queue.new
+          Thread.start do
+            begin # Ruby >= 2.4
+              Thread.current.report_on_exception = true
+            rescue NoMethodError # Ruby <= 2.3
+              Thread.current.abort_on_exception = true
+            end
+            begin
+              client = UNIXSocket.new(local_socket_path)
+              client.puts "hi"
+              assert_equal("hi", client.gets.strip)
+              client.puts "bye"
+              client_done << true
+            ensure
+              client.close
+            end
+          end
+
+          Thread.start do
+            begin # Ruby >= 2.4
+              Thread.current.report_on_exception = true
+            rescue NoMethodError # Ruby <= 2.3
+              Thread.current.abort_on_exception = true
+            end
+            begin
+              sock = remote_socket.accept
+              assert_equal("hi", sock.gets.strip)
+              sock.puts "hi"
+              assert_equal("bye", sock.gets.strip)
+            ensure
+              sock.close
+            end
+          end
+
+          session.loop(0.1) { client_done.empty? }
+          session.forward.cancel_local_socket(local_socket_path)
+          assert_equal([], session.forward.active_local_sockets)
+        end
       end
     end
   end
