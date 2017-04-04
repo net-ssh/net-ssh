@@ -1,2 +1,1 @@
-User foo
-IdentitiesOnly yes
+Include conf.d/subdir/*

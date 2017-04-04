@@ -72,9 +72,9 @@ module Net; module SSH
       # ones. Returns a hash containing the OpenSSH options. (See
       # #translate for how to convert the OpenSSH options into Net::SSH
       # options.)
-      def load(path, host, settings={})
+      def load(path, host, settings={}, base_dir = nil)
         file = File.expand_path(path)
-        base_dir = File.dirname(file)
+        base_dir ||= File.dirname(file)
         return settings unless File.readable?(file)
 
         globals = {}
@@ -125,7 +125,7 @@ module Net; module SSH
               (globals[key] ||= []) << value
             when 'include'
               included_file_paths(base_dir, value).each do |file_path|
-                globals = load(file_path, host, globals)
+                globals = load(file_path, host, globals, base_dir)
               end
             else
               globals[key] = value unless settings.key?(key)
@@ -136,7 +136,7 @@ module Net; module SSH
               (settings[key] ||= []) << value
             when 'include'
               included_file_paths(base_dir, value).each do |file_path|
-                settings = load(file_path, host, settings)
+                settings = load(file_path, host, settings, base_dir)
               end
             else
               settings[key] = value unless settings.key?(key)
@@ -304,9 +304,7 @@ module Net; module SSH
         end
 
         def included_file_paths(base_dir, config_path)
-          paths = Dir.glob(File.expand_path(config_path)).select { |f| File.file?(f) }
-          paths += Dir.glob(File.join(base_dir, config_path)).select { |f| File.file?(f) }
-          paths.uniq
+          Dir.glob(File.expand_path(config_path, base_dir)).select { |f| File.file?(f) }
         end
 
     end
