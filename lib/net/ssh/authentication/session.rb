@@ -58,8 +58,9 @@ module Net; module SSH; module Authentication
       expect_message(SERVICE_ACCEPT)
 
       key_manager = KeyManager.new(logger, options)
-      keys.each { |key| key_manager.add(key) } unless keys.empty?
-      key_data.each { |key2| key_manager.add_key_data(key2) } unless key_data.empty?
+      keys.each { |key| key_manager.add(key) }
+      key_data.each { |key2| key_manager.add_key_data(key2) }
+      default_keys.each { |key| key_manager.add(key) } unless options[:keys_only]
 
       attempted = []
 
@@ -144,7 +145,7 @@ module Net; module SSH; module Authentication
       # Returns an array of paths to the key files that should be used when
       # attempting any key-based authentication mechanism.
       def keys
-        Array(options[:keys] || default_keys)
+        Array(options[:keys])
       end
 
       # Returns an array of the key data that should be used when
