@@ -4,7 +4,6 @@ require 'net/ssh/test/kex'
 require 'net/ssh/test/socket'
 
 module Net; module SSH
-
   # This module may be used in unit tests, for when you want to test that your
   # SSH state machines are really doing what you expect they are doing. You will
   # typically include this module in your unit test class, and then build a
@@ -85,5 +84,4 @@ module Net; module SSH
       assert socket.script.events.empty?, "there should not be any remaining scripted events, but there are still #{socket.script.events.length} pending"
     end
   end
-
 end; end

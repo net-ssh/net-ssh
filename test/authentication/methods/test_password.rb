@@ -3,9 +3,7 @@ require 'net/ssh/authentication/methods/password'
 require 'net/ssh/authentication/session'
 require 'authentication/methods/common'
 
-
 module Authentication; module Methods
-
   class TestPassword < NetSSHTest
     include Common
 
@@ -93,5 +91,4 @@ module Authentication; module Methods
         @subject ||= Net::SSH::Authentication::Methods::Password.new(session(options), options)
       end
   end
-
 end; end

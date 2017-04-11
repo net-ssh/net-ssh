@@ -22,7 +22,6 @@ end
 require 'net/ssh/errors'
 
 module Net; module SSH; module Authentication
-
   # This module encapsulates the implementation of a socket factory that
   # uses the PuTTY "pageant" utility to obtain information about SSH
   # identities.
@@ -31,7 +30,6 @@ module Net; module SSH; module Authentication
   # by Guillaume Marçais (guillaume.marcais@free.fr). It is used and
   # relicensed by permission.
   module Pageant
-
     # From Putty pageant.c
     AGENT_MAX_MSGLEN = 8192
     AGENT_COPYDATA_ID = 0x804e50ba
@@ -389,7 +387,6 @@ module Net; module SSH; module Authentication
     # the pageant daemon. This allows pageant support to be implemented
     # simply by replacing the socket factory used by the Agent class.
     class Socket
-
       private_class_method :new
 
       # The factory method for creating a new Socket instance.
@@ -490,5 +487,4 @@ module Net; module SSH; module Authentication
       end
     end
   end
-
 end; end; end

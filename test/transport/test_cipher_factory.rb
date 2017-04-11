@@ -4,7 +4,6 @@ require 'common'
 require 'net/ssh/transport/cipher_factory'
 
 module Transport
-
   class TestCipherFactory < NetSSHTest
     def self.if_supported?(name)
       yield if Net::SSH::Transport::CipherFactory.supported?(name)
@@ -281,7 +280,6 @@ module Transport
       assert_equal TEXT, decrypt("aes256-ctr", AES256_CTR)
     end
 
-
     def test_none_for_encryption
       assert_equal TEXT, encrypt("none").strip
     end
@@ -319,5 +317,4 @@ module Transport
         result.strip
       end
   end
-
 end

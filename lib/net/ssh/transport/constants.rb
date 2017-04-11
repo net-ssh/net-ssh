@@ -1,6 +1,5 @@
 module Net; module SSH; module Transport
   module Constants
-
     #--
     # Transport layer generic messages
     #++

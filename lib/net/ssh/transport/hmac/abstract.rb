@@ -2,10 +2,8 @@ require 'openssl'
 require 'openssl/digest'
 
 module Net; module SSH; module Transport; module HMAC
-
   # The base class of all OpenSSL-based HMAC algorithm wrappers.
   class Abstract
-
     class <<self
       def key_length(*v)
         @key_length = nil if !defined?(@key_length)
@@ -73,7 +71,5 @@ module Net; module SSH; module Transport; module HMAC
     def digest(data)
       OpenSSL::HMAC.digest(digest_class.new, key, data)[0, mac_length]
     end
-
   end
-
 end; end; end; end

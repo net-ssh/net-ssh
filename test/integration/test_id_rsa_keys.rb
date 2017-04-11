@@ -26,7 +26,6 @@ class TestIDRSAPKeys < NetSSHTest
     end
   end
 
-
   def test_ssh_agent
     tmpdir do |dir|
       with_agent do

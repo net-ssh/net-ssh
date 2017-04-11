@@ -1,5 +1,4 @@
 module Net; module SSH; module Transport
-
   # A cipher that does nothing but pass the data through, unchanged. This
   # keeps things in the code nice and clean when a cipher has not yet been
   # determined (i.e., during key exchange).
@@ -51,5 +50,4 @@ module Net; module SSH; module Transport
       end
     end
   end
-
 end; end; end

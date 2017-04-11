@@ -4,7 +4,6 @@ require 'common'
 require 'net/ssh/transport/hmac/sha2_256'
 
 module Transport; module HMAC
-
   class TestSHA2_256 < NetSSHTest
     def test_expected_digest_class
       assert_equal OpenSSL::Digest::SHA256, subject.digest_class
@@ -24,7 +23,6 @@ module Transport; module HMAC
     def test_expected_digest
       hmac = subject.new("1234567890123456")
       assert_equal "\x16^>\x9FhO}\xB1>(\xBAF\xFBW\xB8\xF2\xFA\x824+\xC0\x94\x95\xC2\r\xE6\x88/\xEF\t\xF5%", hmac.digest("hello world")
-
     end
 
     private
@@ -33,5 +31,4 @@ module Transport; module HMAC
         Net::SSH::Transport::HMAC::SHA2_256
       end
   end
-
 end; end

@@ -5,7 +5,6 @@ require 'net/ssh/authentication/certificate'
 require 'net/ssh/authentication/ed25519_loader'
 
 module Net; module SSH
-
   # Net::SSH::Buffer is a flexible class for building and parsing binary
   # data packets. It provides a stream-like interface for sequentially
   # reading data items from the buffer, as well as a useful helper method

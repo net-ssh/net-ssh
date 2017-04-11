@@ -1,7 +1,6 @@
 require 'net/ssh/verifiers/strict'
 
 module Net; module SSH; module Verifiers
-
   # Basically the same as the Strict verifier, but does not try to actually
   # verify a connection if the server is the localhost and the port is a
   # nonstandard port number. Those two conditions will typically mean the
@@ -26,5 +25,4 @@ module Net; module SSH; module Verifiers
         return ip == "127.0.0.1" || ip == "::1"
       end
   end
-
 end; end; end

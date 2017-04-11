@@ -7,7 +7,6 @@ require 'net/ssh/connection/keepalive'
 require 'net/ssh/connection/event_loop'
 
 module Net; module SSH; module Connection
-
   # A session class representing the connection service running on top of
   # the SSH transport layer. It manages the creation of channels (see
   # #open_channel), and the dispatching of messages to the various channels.
@@ -521,7 +520,6 @@ module Net; module SSH; module Connection
       @keepalive.interval if @keepalive.enabled?
     end
 
-
     private
 
       # iterate channels with the posibility of callbacks opening new channels during the iteration
@@ -696,5 +694,4 @@ module Net; module SSH; module Connection
         memo
       end
   end
-
 end; end; end

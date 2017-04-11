@@ -4,9 +4,7 @@ require 'common'
 require 'net/ssh/transport/state'
 
 module Transport
-
   class TestState < NetSSHTest
-
     def setup
       @socket = @state = @deflater = @inflater = nil
     end
@@ -177,5 +175,4 @@ module Transport
         @state ||= Net::SSH::Transport::State.new(socket, :test)
       end
   end
-
 end

@@ -4,7 +4,6 @@ module Net
   module SSH
     module Authentication
       module Methods
-
         # Implements the host-based SSH authentication method.
         class Hostbased < Abstract
           include Constants
@@ -66,9 +65,7 @@ module Net
               userauth_request(username, next_service, "hostbased", identity.ssh_type,
                 Buffer.from(:key, identity).to_s, hostname, client_username).to_s
             end
-
         end
-
       end
     end
   end

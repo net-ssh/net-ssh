@@ -5,7 +5,6 @@ require 'net/ssh/authentication/ed25519_loader'
 require 'base64'
 
 module Authentication
-
   class TestED25519 < NetSSHTest
     def setup
       raise "No ED25519 set NET_SSH_NO_RBNACL to ignore this test" unless Net::SSH::Authentication::ED25519Loader::LOADED
@@ -79,7 +78,6 @@ IDBAU=
       'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDB2NBh4GJPPUN1kXPMu8b633Xcv55WoKC3OkBjFAbzJ vagrant@vagrant-ubuntu-trusty-64'
     end
   end
-
 end
 
 end

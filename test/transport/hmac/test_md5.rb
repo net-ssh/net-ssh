@@ -4,7 +4,6 @@ require 'common'
 require 'net/ssh/transport/hmac/md5'
 
 module Transport; module HMAC
-
   class TestMD5 < NetSSHTest
     def test_expected_digest_class
       assert_equal OpenSSL::Digest::MD5, subject.digest_class
@@ -37,5 +36,4 @@ module Transport; module HMAC
         Net::SSH::Transport::HMAC::MD5
       end
   end
-
 end; end

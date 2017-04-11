@@ -1,7 +1,6 @@
 require 'common'
 
 class TestKnownHosts < NetSSHTest
-
   def perform_test(source)
     kh = Net::SSH::KnownHosts.new(source)
     keys = kh.keys_for("github.com")
@@ -51,7 +50,6 @@ class TestKnownHosts < NetSSHTest
       assert_equal([rsa_key.to_blob], keys.map(&:to_blob))
     end
   end
-
 
   def path(relative_path)
     File.join(File.dirname(__FILE__), "known_hosts/github")

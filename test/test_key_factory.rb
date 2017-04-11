@@ -89,10 +89,12 @@ class TestKeyFactory < NetSSHTest
       File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp256_key.to_pem)
       assert_equal ecdsa_sha2_nistp256_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
     end
+
     def test_load_unencrypted_private_ecdsa_sha2_nistp384_key_should_return_key
       File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp384_key.to_pem)
       assert_equal ecdsa_sha2_nistp384_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
     end
+
     def test_load_unencrypted_private_ecdsa_sha2_nistp521_key_should_return_key
       File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp521_key.to_pem)
       assert_equal ecdsa_sha2_nistp521_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
@@ -102,10 +104,12 @@ class TestKeyFactory < NetSSHTest
       File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp256_key))
       assert_equal ecdsa_sha2_nistp256_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
     end
+
     def test_load_public_ecdsa_sha2_nistp384_key_should_return_key
       File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp384_key))
       assert_equal ecdsa_sha2_nistp384_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
     end
+
     def test_load_public_ecdsa_sha2_nistp521_key_should_return_key
       File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp521_key))
       assert_equal ecdsa_sha2_nistp521_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob

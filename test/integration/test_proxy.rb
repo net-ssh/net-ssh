@@ -126,5 +126,4 @@ class TestProxy < NetSSHTest
       end
     end
   end
-
 end

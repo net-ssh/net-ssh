@@ -9,7 +9,6 @@ require 'net/ssh/transport/server_version'
 require 'net/ssh/authentication/ed25519_loader'
 
 module Net; module SSH; module Transport
-
   # Implements the higher-level logic behind an SSH key-exchange. It handles
   # both the initial exchange, as well as subsequent re-exchanges (as needed).
   # It also encapsulates the negotiation of the algorithms, and provides a

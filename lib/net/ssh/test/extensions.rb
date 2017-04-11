@@ -7,13 +7,11 @@ require 'net/ssh/transport/constants'
 require 'net/ssh/transport/packet_stream'
 
 module Net; module SSH; module Test
-
   # A collection of modules used to extend/override the default behavior of
   # Net::SSH internals for ease of testing. As a consumer of Net::SSH, you'll
   # never need to use this directly--they're all used under the covers by
   # the Net::SSH::Test system.
   module Extensions
-
     # An extension to Net::SSH::BufferedIo (assumes that the underlying IO
     # is actually a StringIO). Facilitates unit testing.
     module BufferedIo
@@ -160,7 +158,6 @@ module Net; module SSH; module Test
       end
     end
   end
-
 end; end; end
 
 Net::SSH::BufferedIo.send(:include, Net::SSH::Test::Extensions::BufferedIo)

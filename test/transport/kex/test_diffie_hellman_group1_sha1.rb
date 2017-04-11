@@ -3,7 +3,6 @@ require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 require 'ostruct'
 
 module Transport; module Kex
-
   class TestDiffieHellmanGroup1SHA1 < NetSSHTest
     include Net::SSH::Transport::Constants
 
@@ -146,5 +145,4 @@ module Transport; module Kex
         Net::SSH::Buffer.from(*args)
       end
   end
-
 end; end

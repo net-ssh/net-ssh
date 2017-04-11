@@ -2,7 +2,6 @@ require_relative '../common'
 require 'net/ssh/authentication/agent'
 
 module Authentication
-
   unless RUBY_PLATFORM == "java"
 
   class TestPageapnt < NetSSHTest
@@ -40,5 +39,4 @@ module Authentication
   end
 
   end
-
 end

@@ -3,7 +3,6 @@ require 'net/ssh/authentication/methods/hostbased'
 require 'authentication/methods/common'
 
 module Authentication; module Methods
-
   class TestHostbased < NetSSHTest
     include Common
 
@@ -108,7 +107,5 @@ module Authentication; module Methods
           sess
         end
       end
-
   end
-
 end; end

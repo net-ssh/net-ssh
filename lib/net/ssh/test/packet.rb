@@ -2,7 +2,6 @@ require 'net/ssh/connection/constants'
 require 'net/ssh/transport/constants'
 
 module Net; module SSH; module Test
-
   # This is an abstract class, not to be instantiated directly, subclassed by
   # Net::SSH::Test::LocalPacket and Net::SSH::Test::RemotePacket. It implements
   # functionality common to those subclasses.
@@ -94,5 +93,4 @@ module Net; module SSH; module Test
         end
     end
   end
-
 end; end; end

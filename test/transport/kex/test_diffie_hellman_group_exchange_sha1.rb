@@ -3,7 +3,6 @@ require 'transport/kex/test_diffie_hellman_group1_sha1'
 require 'net/ssh/transport/kex/diffie_hellman_group_exchange_sha1'
 
 module Transport; module Kex
-
   class TestDiffieHellmanGroupExchangeSHA1 < TestDiffieHellmanGroup1SHA1
     KEXDH_GEX_GROUP   = 31
     KEXDH_GEX_INIT    = 32
@@ -103,5 +102,4 @@ module Transport; module Kex
         end
       end
   end
-
 end; end

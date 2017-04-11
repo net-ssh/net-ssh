@@ -1,5 +1,4 @@
 module Net; module SSH; module Test
-
   # A mock channel, used for scripting actions in tests. It wraps a
   # Net::SSH::Test::Script instance, and delegates to it for the most part.
   # This class has little real functionality on its own, but rather acts as
@@ -141,5 +140,4 @@ module Net; module SSH; module Test
       script.gets_channel_close(self)
     end
   end
-
 end; end; end

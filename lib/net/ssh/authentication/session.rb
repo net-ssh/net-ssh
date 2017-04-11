@@ -9,7 +9,6 @@ require 'net/ssh/authentication/methods/password'
 require 'net/ssh/authentication/methods/keyboard_interactive'
 
 module Net; module SSH; module Authentication
-
   # Raised if the current authentication method is not allowed
   class DisallowedMethod < Net::SSH::Exception
   end

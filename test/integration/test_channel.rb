@@ -104,5 +104,4 @@ class TestChannel < NetSSHTest
       end
     end
   end
-
 end

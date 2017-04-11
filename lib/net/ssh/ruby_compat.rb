@@ -5,6 +5,7 @@ class String
     def getbyte(index)
       self[index]
     end
+
     def setbyte(index, c)
       self[index] = c
     end
@@ -12,7 +13,6 @@ class String
 end
 
 module Net; module SSH
-
   # This class contains miscellaneous patches and workarounds
   # for different ruby implementations.
   class Compat
@@ -20,5 +20,4 @@ module Net; module SSH
       IO.select(*params)
     end
   end
-
 end; end

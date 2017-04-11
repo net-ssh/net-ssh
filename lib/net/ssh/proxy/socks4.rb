@@ -6,7 +6,6 @@ require 'net/ssh/proxy/errors'
 module Net
   module SSH
     module Proxy
-
       # An implementation of a SOCKS4 proxy. To use it, instantiate it, then
       # pass the instantiated object via the :proxy key to Net::SSH.start:
       #
@@ -17,7 +16,6 @@ module Net
       #     ...
       #   end
       class SOCKS4
-
         # The SOCKS protocol version used by this class
         VERSION = 4
 
@@ -63,9 +61,7 @@ module Net
 
           return socket
         end
-
       end
-
     end
   end
 end

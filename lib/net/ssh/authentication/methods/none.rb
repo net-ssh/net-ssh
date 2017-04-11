@@ -5,7 +5,6 @@ module Net
   module SSH
     module Authentication
       module Methods
-
         # Implements the "none" SSH authentication method.
         class None < Abstract
           # Attempt to authenticate as "none"
@@ -29,7 +28,6 @@ module Net
             end
           end
         end
-
       end
     end
   end

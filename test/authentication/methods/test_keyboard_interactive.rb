@@ -3,7 +3,6 @@ require 'net/ssh/authentication/methods/keyboard_interactive'
 require_relative 'common'
 
 module Authentication; module Methods
-
   class TestKeyboardInteractive < NetSSHTest
     include Common
 
@@ -94,7 +93,6 @@ module Authentication; module Methods
       assert subject.authenticate("ssh-connection", "jamis", nil)
     end
 
-
     def test_authenticate_should_prompt_for_input_when_password_is_not_given
       prompt = MockPrompt.new
       prompt.expects(:_ask).with("Name:", anything, true).returns("name")
@@ -128,5 +126,4 @@ module Authentication; module Methods
         subject(options)
       end
   end
-
 end; end

@@ -2,9 +2,7 @@ require 'common'
 require 'net/ssh/authentication/agent'
 
 module Authentication
-
   class TestAgent < NetSSHTest
-
     SSH2_AGENT_REQUEST_VERSION       = 1
     SSH2_AGENT_REQUEST_IDENTITIES    = 11
     SSH2_AGENT_IDENTITIES_ANSWER     = 12
@@ -455,5 +453,4 @@ EOF
         @agent_socket_factory ||= -> { "/foo/bar.sock" }
       end
   end
-
 end

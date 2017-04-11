@@ -10,7 +10,6 @@ if Object.instance_methods.any? { |v| v.to_sym == :verify }
 end
 
 module Transport
-
   class TestSession < NetSSHTest
     include Net::SSH::Transport::Constants
 
@@ -327,5 +326,4 @@ module Transport
       # version makes it look more like the session is being instantiated
       alias session! session
   end
-
 end

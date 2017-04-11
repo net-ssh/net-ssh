@@ -6,7 +6,6 @@ require 'net/ssh/authentication/agent'
 module Net
   module SSH
     module Authentication
-
       # A trivial exception class used to report errors in the key manager.
       class KeyManagerError < Net::SSH::Exception; end
 
@@ -235,7 +234,6 @@ module Net
               else
                 identity
               end
-
             rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError, OpenSSL::PKey::PKeyError, ArgumentError => e
               if ignore_decryption_errors
                 identity
@@ -260,7 +258,6 @@ module Net
             raise e
           end
         end
-
       end
     end
   end

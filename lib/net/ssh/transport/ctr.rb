@@ -1,7 +1,6 @@
 require 'openssl'
 
 module Net::SSH::Transport
-
   # Pure-Ruby implementation of Stateful Decryption Counter(SDCTR) Mode
   # for Block Ciphers. See RFC4344 for detail.
   module CTR

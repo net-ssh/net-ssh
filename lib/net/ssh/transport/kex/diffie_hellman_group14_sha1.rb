@@ -1,7 +1,6 @@
 require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 
 module Net; module SSH; module Transport; module Kex
-
   # A key-exchange service implementing the "diffie-hellman-group14-sha1"
   # key-exchange algorithm. (defined in RFC 4253)
   class DiffieHellmanGroup14SHA1 < DiffieHellmanGroup1SHA1

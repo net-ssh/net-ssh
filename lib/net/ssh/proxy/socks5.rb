@@ -5,7 +5,6 @@ require 'net/ssh/proxy/errors'
 module Net
   module SSH
     module Proxy
-
       # An implementation of a SOCKS5 proxy. To use it, instantiate it, then
       # pass the instantiated object via the :proxy key to Net::SSH.start:
       #
@@ -137,7 +136,6 @@ module Net
             end
           end
       end
-
     end
   end
 end

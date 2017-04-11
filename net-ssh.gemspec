@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require_relative 'lib/net/ssh/version'
 
 Gem::Specification.new do |spec|

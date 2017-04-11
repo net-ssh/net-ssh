@@ -1,7 +1,6 @@
 require 'net/ssh/transport/hmac/abstract'
 
 module Net::SSH::Transport::HMAC
-
   if defined?(SHA2_256) # need openssl support
     # The SHA256-96 HMAC algorithm. This returns only the first 12 bytes of
     # the digest.
@@ -9,5 +8,4 @@ module Net::SSH::Transport::HMAC
       mac_length 12
     end
   end
-
 end

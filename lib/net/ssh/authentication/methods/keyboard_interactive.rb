@@ -5,7 +5,6 @@ module Net
   module SSH
     module Authentication
       module Methods
-
         # Implements the "keyboard-interactive" SSH authentication method.
         class KeyboardInteractive < Abstract
           USERAUTH_INFO_REQUEST  = 60

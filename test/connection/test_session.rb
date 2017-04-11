@@ -2,7 +2,6 @@ require_relative '../common'
 require 'net/ssh/connection/session'
 
 module Connection
-
   class TestSession < NetSSHTest
     include Net::SSH::Connection::Constants
 
@@ -582,5 +581,4 @@ module Connection
         session.process { (i += 1) < n }
       end
   end
-
 end

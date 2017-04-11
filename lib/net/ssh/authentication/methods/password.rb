@@ -6,7 +6,6 @@ module Net
   module SSH
     module Authentication
       module Methods
-
         # Implements the "password" SSH authentication method.
         class Password < Abstract
           # Attempt to authenticate the given user for the given service. If
@@ -74,7 +73,6 @@ module Net
             options[:non_interactive] ? 0 : result
           end
         end
-
       end
     end
   end

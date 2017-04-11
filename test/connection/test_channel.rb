@@ -2,7 +2,6 @@ require 'common'
 require 'net/ssh/connection/channel'
 
 module Connection
-
   class TestChannel < NetSSHTest
     include Net::SSH::Connection::Constants
 
@@ -483,5 +482,4 @@ module Connection
           &block)
       end
   end
-
 end

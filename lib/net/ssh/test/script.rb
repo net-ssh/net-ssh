@@ -3,7 +3,6 @@ require 'net/ssh/test/local_packet'
 require 'net/ssh/test/remote_packet'
 
 module Net; module SSH; module Test
-
   # Represents a sequence of scripted events that identify the behavior that
   # a test expects. Methods named "sends_*" create events for packets being
   # sent from the local to the remote host, and methods named "gets_*" create
@@ -176,5 +175,4 @@ module Net; module SSH; module Test
       event.process(packet)
     end
   end
-
 end; end; end

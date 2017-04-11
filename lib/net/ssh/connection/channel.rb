@@ -3,7 +3,6 @@ require 'net/ssh/connection/constants'
 require 'net/ssh/connection/term'
 
 module Net; module SSH; module Connection
-
   # The channel abstraction. Multiple "channels" can be multiplexed onto a
   # single SSH channel, each operating independently and seemingly in parallel.
   # This class represents a single such channel. Most operations performed
@@ -668,5 +667,4 @@ module Net; module SSH; module Connection
         end
       end
   end
-
 end; end; end

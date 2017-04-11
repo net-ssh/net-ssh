@@ -255,5 +255,4 @@ module Net; module SSH; module Authentication
       end
     end
   end
-
 end; end; end

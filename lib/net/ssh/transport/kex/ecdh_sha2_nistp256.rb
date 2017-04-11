@@ -2,7 +2,6 @@ require 'net/ssh/transport/constants'
 require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 
 module Net; module SSH; module Transport; module Kex
-
   # A key-exchange service implementing the "ecdh-sha2-nistp256"
   # key-exchange algorithm. (defined in RFC 5656)
   class EcdhSHA2NistP256 < DiffieHellmanGroup1SHA1

@@ -3,7 +3,6 @@ require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'
 
 module Net; module SSH; module Transport
-
   # Encapsulates state information about one end of an SSH connection. Such
   # state includes the packet sequence number, the algorithms in use, how
   # many packets and blocks have been processed since the last reset, and so
@@ -202,5 +201,4 @@ module Net; module SSH; module Transport
         return data
       end
   end
-
 end; end; end

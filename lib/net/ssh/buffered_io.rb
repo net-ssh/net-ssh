@@ -3,7 +3,6 @@ require 'net/ssh/loggable'
 require 'net/ssh/ruby_compat'
 
 module Net; module SSH
-
   # This module is used to extend sockets and other IO objects, to allow
   # them to be buffered for both read and write. This abstraction makes it
   # quite easy to write a select-based event loop
@@ -137,6 +136,7 @@ module Net; module SSH
       #++
 
       def input; @input; end
+
       def output; @output; end
 
       # Initializes the intput and output buffers for this object. This method
@@ -151,8 +151,6 @@ module Net; module SSH
         @output_errors = []
       end
   end
-
-
 
   # Fixes for two issues by Miklós Fazekas:
   #
@@ -199,5 +197,4 @@ module Net; module SSH
       end
     end
   end
-
 end; end

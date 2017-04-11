@@ -1,5 +1,4 @@
 module Net; module SSH
-
   # The Net::SSH::Config class is used to parse OpenSSH configuration files,
   # and translates that syntax into the configuration syntax that Net::SSH
   # understands. This lets Net::SSH scripts read their configuration (to
@@ -306,8 +305,6 @@ module Net; module SSH
         def included_file_paths(base_dir, config_path)
           Dir.glob(File.expand_path(config_path, base_dir)).select { |f| File.file?(f) }
         end
-
     end
   end
-
 end; end

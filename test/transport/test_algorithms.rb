@@ -2,7 +2,6 @@ require_relative '../common'
 require 'net/ssh/transport/algorithms'
 
 module Transport
-
   class TestAlgorithms < NetSSHTest
     include Net::SSH::Transport::Constants
 
@@ -377,5 +376,4 @@ module Transport
         @transport ||= MockTransport.new(transport_options)
       end
   end
-
 end

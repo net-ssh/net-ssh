@@ -3,7 +3,6 @@ require 'net/ssh/authentication/methods/publickey'
 require 'authentication/methods/common'
 
 module Authentication; module Methods
-
   class TestPublickey < NetSSHTest
     include Common
 
@@ -142,7 +141,5 @@ module Authentication; module Methods
         options[:key_manager] = key_manager(options) unless options.key?(:key_manager)
         @subject ||= Net::SSH::Authentication::Methods::Publickey.new(session(options), options)
       end
-
   end
-
 end; end

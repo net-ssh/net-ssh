@@ -1,5 +1,4 @@
 module Authentication; module Methods
-
   module Common
     include Net::SSH::Authentication::Constants
 
@@ -28,7 +27,5 @@ module Authentication; module Methods
         @session = nil
         session(options)
       end
-
   end
-
 end; end

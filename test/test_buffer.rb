@@ -354,11 +354,13 @@ assert_equal "start\0\0\0\7ssh-dss\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0
         buffer.read_keyblob("ecdsa-sha2-nistp256")
       }
     end
+
     def test_read_key_blob_should_read_ecdsa_sha2_nistp384_keys
       random_ecdsa_sha2_nistp384 { |buffer|
         buffer.read_keyblob("ecdsa-sha2-nistp384")
       }
     end
+
     def test_read_key_blob_should_read_ecdsa_sha2_nistp521_keys
       random_ecdsa_sha2_nistp521 { |buffer|
         buffer.read_keyblob("ecdsa-sha2-nistp521")
@@ -371,12 +373,14 @@ assert_equal "start\0\0\0\7ssh-dss\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0
         b2.read_key
       end
     end
+
     def test_read_key_should_read_ecdsa_sha2_nistp384_key_type_and_keyblob
       random_ecdsa_sha2_nistp384 do |buffer|
         b2 = Net::SSH::Buffer.from(:string, "ecdsa-sha2-nistp384", :raw, buffer)
         b2.read_key
       end
     end
+
     def test_read_key_should_read_ecdsa_sha2_nistp521_key_type_and_keyblob
       random_ecdsa_sha2_nistp521 do |buffer|
         b2 = Net::SSH::Buffer.from(:string, "ecdsa-sha2-nistp521", :raw, buffer)

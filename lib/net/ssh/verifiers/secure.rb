@@ -2,7 +2,6 @@ require 'net/ssh/errors'
 require 'net/ssh/known_hosts'
 
 module Net; module SSH; module Verifiers
-
   # Does a strict host verification, looking the server up in the known
   # host files to see if a key has already been seen for this server. If this
   # server does not appear in any host file, an exception will be raised
@@ -48,5 +47,4 @@ module Net; module SSH; module Verifiers
       raise exception
     end
   end
-
 end; end; end

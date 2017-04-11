@@ -4,7 +4,6 @@ require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/identity_cipher'
 
 module Net; module SSH; module Transport
-
   # Implements a factory of OpenSSL cipher algorithms.
   class CipherFactory
     # Maps the SSH name of a cipher to it's corresponding OpenSSL name
@@ -39,7 +38,6 @@ module Net; module SSH; module Transport
       "arcfour256"                  => 32,
       "arcfour512"                  => 64
     }
-
 
     # Returns true if the underlying OpenSSL library supports the given cipher,
     # and false otherwise.
@@ -95,5 +93,4 @@ module Net; module SSH; module Transport
       result
     end
   end
-
 end; end; end

@@ -9,7 +9,6 @@ else
   require 'ostruct'
 
   module Transport; module Kex
-
     class TestEcdhSHA2NistP256 < NetSSHTest
       include Net::SSH::Transport::Constants
 

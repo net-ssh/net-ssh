@@ -6,7 +6,6 @@ module Net
   module SSH
     module Authentication
       module Methods
-
         # Implements the "publickey" SSH authentication method.
         class Publickey < Abstract
           # Attempts to perform public-key authentication for the given
@@ -87,9 +86,7 @@ module Net
                   raise Net::SSH::Exception, "unexpected reply to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
               end
             end
-
         end
-
       end
     end
   end

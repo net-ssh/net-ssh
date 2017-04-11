@@ -3,7 +3,6 @@ require 'net/ssh/loggable'
 require 'net/ssh/version'
 
 module Net; module SSH; module Transport
-
   # Negotiates the SSH protocol version and trades information about server
   # and client. This is never used directly--it is always called by the
   # transport layer as part of the initialization process of the transport

@@ -13,7 +13,6 @@ require 'net/ssh/verifiers/strict'
 require 'net/ssh/verifiers/lenient'
 
 module Net; module SSH; module Transport
-
   # The transport layer represents the lowest level of the SSH protocol, and
   # implements basic message exchanging and protocol initialization. It will
   # never be instantiated directly (unless you really know what you're about),
@@ -79,7 +78,6 @@ module Net; module SSH; module Transport
       @queue = []
 
       @host_key_verifier = select_host_key_verifier(options[:paranoid])
-
 
       @server_version = ServerVersion.new(socket, logger, options[:timeout])
 

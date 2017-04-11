@@ -1,6 +1,5 @@
 require 'net/ssh/loggable'
 module Net; module SSH; module Connection
-
 class Keepalive
   include Loggable
 
@@ -51,5 +50,4 @@ class Keepalive
     end
   end
 end
-
 end; end; end

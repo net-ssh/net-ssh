@@ -27,7 +27,6 @@ class TestED25519PKeys < NetSSHTest
     end
   end
 
-
   def test_ssh_agent
     Dir.mktmpdir do |dir|
       with_agent do

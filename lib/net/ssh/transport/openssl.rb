@@ -2,12 +2,10 @@
 require 'openssl'
 
 module OpenSSL
-
   # This class is originally defined in the OpenSSL module. As needed, methods
   # have been added to it by the Net::SSH module for convenience in dealing with
   # SSH functionality.
   class BN
-
     # Converts a BN object to a string. The format used is that which is
     # required by the SSH2 protocol.
     def to_ssh
@@ -22,11 +20,9 @@ module OpenSSL
         end
       end
     end
-
   end
 
   module PKey
-
     class PKey
       def fingerprint
         @fingerprint ||= OpenSSL::Digest::MD5.hexdigest(to_blob).scan(/../).join(":")
@@ -37,7 +33,6 @@ module OpenSSL
     # have been added to it by the Net::SSH module for convenience in dealing
     # with SSH functionality.
     class DH
-
       # Determines whether the pub_key for this key is valid. (This algorithm
       # lifted more-or-less directly from OpenSSH, dh.c, dh_pub_is_valid.)
       def valid?
@@ -46,14 +41,12 @@ module OpenSSL
         pub_key.num_bits.times { |i| bits_set += 1 if pub_key.bit_set?(i) }
         return (bits_set > 1 && pub_key < p)
       end
-
     end
 
     # This class is originally defined in the OpenSSL module. As needed, methods
     # have been added to it by the Net::SSH module for convenience in dealing
     # with SSH functionality.
     class RSA
-
       # Returns "ssh-rsa", which is the description of this key type used by the
       # SSH2 protocol.
       def ssh_type
@@ -84,7 +77,6 @@ module OpenSSL
     # have been added to it by the Net::SSH module for convenience in dealing
     # with SSH functionality.
     class DSA
-
       # Returns "ssh-dss", which is the description of this key type used by the
       # SSH2 protocol.
       def ssh_type
@@ -164,7 +156,6 @@ module OpenSSL
           rescue OpenSSL::PKey::ECError
             raise NotImplementedError, "unsupported key type `#{type}'"
           end
-
         end
 
         # Returns the description of this key type used by the

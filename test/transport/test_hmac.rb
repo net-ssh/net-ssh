@@ -2,7 +2,6 @@ require 'common'
 require 'net/ssh/transport/hmac'
 
 module Transport
-
   class TestHMAC < NetSSHTest
     Net::SSH::Transport::HMAC::MAP.each do |name, value|
       method = name.tr("-", "_")
@@ -30,5 +29,4 @@ module Transport
       end
     end
   end
-
 end
