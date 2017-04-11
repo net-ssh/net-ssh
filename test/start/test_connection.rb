@@ -50,4 +50,3 @@ module NetSSH
     end
   end
 end
-

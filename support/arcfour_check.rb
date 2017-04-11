@@ -17,4 +17,3 @@ require 'net/ssh'
   b = Net::SSH::Transport::CipherFactory.get(cipher[0], key: ([].fill('x', 0, cipher[1]).join))
   puts "#{a} #{b.class}"
 end
-
