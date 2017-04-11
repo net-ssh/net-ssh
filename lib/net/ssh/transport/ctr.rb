@@ -12,7 +12,7 @@ module Net::SSH::Transport
         @counter_len = orig.block_size
         orig.encrypt
         orig.padding = 0
-        
+
         singleton_class.send(:alias_method, :_update, :update)
         singleton_class.send(:private, :_update)
         singleton_class.send(:undef_method, :update)

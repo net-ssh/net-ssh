@@ -56,11 +56,11 @@ module Transport
     def test_lengths_for_arcfour128
       assert_equal [16,8], factory.get_lengths("arcfour128")
     end
-    
+
     def test_lengths_for_arcfour256
       assert_equal [32,8], factory.get_lengths("arcfour256")
     end
-    
+
     def test_lengths_for_arcfour512
       assert_equal [64,8], factory.get_lengths("arcfour512")
     end
@@ -180,33 +180,33 @@ module Transport
     def test_arcfour_for_decryption
       assert_equal TEXT, decrypt("arcfour", ARCFOUR)
     end
-    
+
     ARCFOUR128 = "\n\x90\xED*\xD4\xBE\xCBg5\xA5\a\xEC]\x97\xB7L\x06)6\x12FL\x90@\xF4Sqxqh\r\x11\x1Aq \xC8\xE6v\xC6\x12\xD9<A\xDAZ\xFE\x7F\x88\x19f.\x06\xA7\xFE:\xFF\x93\x9B\x8D\xA0\\\x9E\xCA\x03\x15\xE1\xE2\f\xC0\b\xA2C\xE1\xBD\xB6\x13D\xD1\xB4'g\x89\xDC\xEB\f\x19Z)U"
 
     def test_arcfour128_for_encryption
       assert_equal ARCFOUR128, encrypt("arcfour128")
     end
-    
+
     def test_arcfour128_for_decryption
       assert_equal TEXT, decrypt("arcfour128", ARCFOUR128)
     end
-    
+
     ARCFOUR256 = "|g\xCCw\xF5\xC1y\xEB\xF0\v\xF7\x83\x14\x03\xC8\xAB\xE8\xC2\xFCY\xDC,\xB8\xD4dVa\x8B\x18%\xA4S\x00\xE0at\x86\xE8\xA6W\xAB\xD2\x9D\xA8\xDE[g\aZy.\xFB\xFC\x82c\x04h\f\xBFYq\xB7U\x80\x0EG\x91\x88\xDF\xA3\xA2\xFA(\xEC\xDB\xA4\xE7\xFE)\x12u\xAF\x0EZ\xA0\xBA\x97\n\xFC"
 
     def test_arcfour256_for_encryption
       assert_equal ARCFOUR256, encrypt("arcfour256")
     end
-    
+
     def test_arcfour256_for_decryption
       assert_equal TEXT, decrypt("arcfour256", ARCFOUR256)
     end
-    
+
     ARCFOUR512 = "|8\"v\xE7\xE3\b\xA8\x19\x9Aa\xB6Vv\x00\x11\x8A$C\xB6xE\xEF\xF1j\x90\xA8\xFA\x10\xE4\xA1b8\xF6\x04\xF2+\xC0\xD1(8\xEBT]\xB0\xF3/\xD9\xE0@\x83\a\x93\x9D\xCA\x04RXS\xB7A\x0Fj\x94\bE\xEB\x84j\xB4\xDF\nU\xF7\x83o\n\xE8\xF9\x01{jH\xEE\xCDQym\x9E"
 
     def test_arcfour512_for_encryption
       assert_equal ARCFOUR512, encrypt("arcfour512")
     end
-    
+
     def test_arcfour512_for_decryption
       assert_equal TEXT, decrypt("arcfour512", ARCFOUR512)
     end
@@ -289,7 +289,7 @@ module Transport
     def test_none_for_decryption
       assert_equal TEXT, decrypt("none", TEXT)
     end
-    
+
     private
 
       TEXT = "But soft! What light through yonder window breaks? It is the east, and Juliet is the sun!"

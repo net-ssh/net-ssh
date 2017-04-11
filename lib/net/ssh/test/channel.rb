@@ -57,7 +57,7 @@ module Net; module SSH; module Test
       gets_data("")
     end
 
-    # Scripts the sending of an "exec" channel request packet to the mock 
+    # Scripts the sending of an "exec" channel request packet to the mock
     # server. If +reply+ is true, then the server is expected to reply to the
     # request, otherwise no response to this request will be sent. If +success+
     # is +true+, then the request will be successful, otherwise a failure will

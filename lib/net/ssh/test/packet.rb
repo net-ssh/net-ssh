@@ -49,7 +49,7 @@ module Net; module SSH; module Test
     # Instantiates the packets data elements. When the packet was first defined,
     # some elements may not have been fully realized, and were described as
     # Proc objects rather than atomic types. This invokes those Proc objects
-    # and replaces them with their returned values. This allows for values 
+    # and replaces them with their returned values. This allows for values
     # like Net::SSH::Test::Channel#remote_id to be used in scripts before
     # the remote_id is known (since it is only known after a channel has been
     # confirmed open).
@@ -68,7 +68,7 @@ module Net; module SSH; module Test
     # added. Unsupported packet types will otherwise raise an exception.
     def types
       @types ||= case @type
-        when KEXINIT then 
+        when KEXINIT then
           [:long, :long, :long, :long,
            :string, :string, :string, :string, :string, :string, :string, :string, :string, :string,
            :bool]

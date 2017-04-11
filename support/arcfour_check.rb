@@ -1,8 +1,8 @@
 
 require 'net/ssh'
 
-# ARCFOUR CHECK 
-# 
+# ARCFOUR CHECK
+#
 # Usage:
 #     $ ruby support/arcfour_check.rb
 #

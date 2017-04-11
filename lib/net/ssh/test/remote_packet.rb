@@ -22,7 +22,7 @@ module Net; module SSH; module Test
       raise "received packet type #{packet.read_byte} and was not expecting any packet"
     end
 
-    # Returns this remote packet as a string, suitable for parsing by 
+    # Returns this remote packet as a string, suitable for parsing by
     # Net::SSH::Transport::PacketStream and friends. When a remote packet is
     # received, this method is called and the result concatenated onto the
     # input buffer for the packet stream.

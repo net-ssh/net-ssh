@@ -51,7 +51,7 @@ module Net
           socket = Socket.tcp(proxy_host, proxy_port, nil, nil,
                               connect_timeout: connection_options[:timeout])
           ip_addr = IPAddr.new(Resolv.getaddress(host))
-          
+
           packet = [VERSION, CONNECT, port.to_i, ip_addr.to_i, options[:user]].pack("CCnNZ*")
           socket.send packet, 0
 

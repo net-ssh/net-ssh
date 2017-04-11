@@ -14,7 +14,7 @@ else
       include Net::SSH::Transport::Constants
 
       def setup
-        @ecdh = @algorithms = @connection = @server_key = 
+        @ecdh = @algorithms = @connection = @server_key =
           @packet_data = @shared_secret = nil
       end
 

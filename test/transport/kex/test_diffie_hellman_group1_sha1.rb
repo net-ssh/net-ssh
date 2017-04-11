@@ -8,7 +8,7 @@ module Transport; module Kex
     include Net::SSH::Transport::Constants
 
     def setup
-      @dh_options = @dh = @algorithms = @connection = @server_key = 
+      @dh_options = @dh = @algorithms = @connection = @server_key =
         @packet_data = @shared_secret = nil
     end
 

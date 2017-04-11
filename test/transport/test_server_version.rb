@@ -55,7 +55,7 @@ module Transport
         recv_times += 1 if data[-1] != "\n"
 
         unless raise_eot
-          
+
 #        socket.expects(:recv).with(1).times(recv_times).returns(*data).then.returns(nil)
 #        socket.expects(:readchar).times(recv_times).returns(*data).then.returns(nil)
           socket.expects(:readpartial).with(1).times(recv_times).returns(*data).then.returns(nil)

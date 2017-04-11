@@ -1,5 +1,5 @@
 module Net; module SSH; module Connection
-      
+
   # These constants are used when requesting a pseudo-terminal (via
   # Net::SSH::Connection::Channel#request_pty). The descriptions for each are
   # taken directly from RFC 4254 ("The Secure Shell (SSH) Connection Protocol"),

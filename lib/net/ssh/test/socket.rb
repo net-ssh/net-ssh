@@ -58,7 +58,7 @@ module Net; module SSH; module Test
     def readpartial(n)
       recv(n)
     end
-    
+
   end
 
 end; end; end

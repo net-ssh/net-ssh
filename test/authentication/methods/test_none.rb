@@ -13,7 +13,7 @@ module Authentication; module Methods
         assert_equal "jamis", packet.read_string
         assert_equal "ssh-connection", packet.read_string
         assert_equal "none", packet.read_string
-        
+
         t.return(USERAUTH_FAILURE, :string, "publickey")
       end
 
