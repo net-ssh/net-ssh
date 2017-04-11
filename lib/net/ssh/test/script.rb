@@ -71,18 +71,18 @@ module Net; module SSH; module Test
     #
     # This will typically be called via Net::SSH::Test::Channel#sends_exec or
     # Net::SSH::Test::Channel#sends_subsystem.
-    def sends_channel_request(channel, request, reply, data, success=true)
-      if data.is_a? Array
-        events << LocalPacket.new(:channel_request, channel.remote_id, request, reply, *data)
-      else
-        events << LocalPacket.new(:channel_request, channel.remote_id, request, reply, data)
-      end
+    def sends_channel_request(channel, request, reply, data, success = true)
+      events << if data.is_a? Array
+                  LocalPacket.new(:channel_request, channel.remote_id, request, reply, *data)
+                else
+                  LocalPacket.new(:channel_request, channel.remote_id, request, reply, data)
+                end
       if reply
-        if success
-          events << RemotePacket.new(:channel_success, channel.local_id)
-        else
-          events << RemotePacket.new(:channel_failure, channel.local_id)
-        end
+        events << if success
+                    RemotePacket.new(:channel_success, channel.local_id)
+                  else
+                    RemotePacket.new(:channel_failure, channel.local_id)
+                  end
       end
     end
 

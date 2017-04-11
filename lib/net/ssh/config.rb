@@ -111,11 +111,11 @@ module Net; module SSH
             # The host substring code is used to strip out the starting "!" so the regexp will be correct.
             negative_matched = negative_hosts.any? { |h| host =~ pattern2regex(h[1..-1]) }
 
-            if negative_matched
-              host_matched = false
-            else
-              host_matched = positive_hosts.any? { |h| host =~ pattern2regex(h) }
-            end
+            host_matched = if negative_matched
+                             false
+                           else
+                             positive_hosts.any? { |h| host =~ pattern2regex(h) }
+                           end
 
             seen_host = true
             settings[key] = host

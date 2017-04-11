@@ -87,11 +87,11 @@ module Net
 
           packet = [VERSION, CMD_CONNECT, 0].pack("C*")
 
-          if host =~ /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
-            packet << [ATYP_IPV4, $1.to_i, $2.to_i, $3.to_i, $4.to_i].pack("C*")
-          else
-            packet << [ATYP_DOMAIN, host.length, host].pack("CCA*")
-          end
+          packet << if host =~ /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
+                      [ATYP_IPV4, $1.to_i, $2.to_i, $3.to_i, $4.to_i].pack("C*")
+                    else
+                      [ATYP_DOMAIN, host.length, host].pack("CCA*")
+                    end
 
           packet << [port].pack("n")
           socket.send packet, 0
