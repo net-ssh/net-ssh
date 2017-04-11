@@ -140,7 +140,7 @@ module Net; module SSH; module Test
         # The testing version of ::IO.select. Assumes that all readers,
         # writers, and errors arrays are either nil, or contain only objects
         # that mix in Net::SSH::Test::Extensions::BufferedIo.
-        def select_for_test(readers=nil, writers=nil, errors=nil, wait=nil)
+        def select_for_test(readers = nil, writers = nil, errors = nil, wait = nil)
           return select_for_real(readers, writers, errors, wait) unless Net::SSH::Test::Extensions::IO.extension_enabled?
           ready_readers = Array(readers).select { |r| r.select_for_read? }
           ready_writers = Array(writers).select { |r| r.select_for_write? }

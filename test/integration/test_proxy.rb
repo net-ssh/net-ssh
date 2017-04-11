@@ -18,7 +18,7 @@ class TestProxy < NetSSHTest
   end
 
   def ssh_start_params(options)
-    [localhost ,user , {keys: @key_id_rsa}.merge(options)]
+    [localhost, user, { keys: @key_id_rsa }.merge(options)]
   end
 
   def setup_ssh_env(&block)
@@ -26,7 +26,7 @@ class TestProxy < NetSSHTest
       @key_id_rsa = "#{dir}/id_rsa"
       sh "rm -rf #{@key_id_rsa} #{@key_id_rsa}.pub"
       sh "ssh-keygen -q -f #{@key_id_rsa} -t rsa -N ''"
-      set_authorized_key(user,"#{@key_id_rsa}.pub")
+      set_authorized_key(user, "#{@key_id_rsa}.pub")
       yield
     end
   end
@@ -38,7 +38,7 @@ class TestProxy < NetSSHTest
       @gwkey_id_rsa = "#{dir}/id_rsa"
       sh "rm -rf #{@gwkey_id_rsa} #{@gwkey_id_rsa}.pub"
       sh "ssh-keygen -q -f #{@gwkey_id_rsa} -t rsa -N ''"
-      set_authorized_key(gwuser,"#{@gwkey_id_rsa}.pub")
+      set_authorized_key(gwuser, "#{@gwkey_id_rsa}.pub")
       config = "Host #{gwhost}
                   IdentityFile #{@gwkey_id_rsa}
                   StrictHostKeyChecking no
@@ -65,14 +65,14 @@ class TestProxy < NetSSHTest
     end
   end
 
-  def with_spurious_write_wakeup_emulate(rate=99,&block)
+  def with_spurious_write_wakeup_emulate(rate = 99, &block)
     orig_io_select = Net::SSH::Compat.method(:io_select)
     count = 0
-    Net::SSH::Compat.singleton_class.send(:define_method,:io_select) do |*params|
+    Net::SSH::Compat.singleton_class.send(:define_method, :io_select) do |*params|
       count += 1
       if (count % rate != 0)
         if params && params[1] && !params[1].empty?
-          return [[],params[1],[]]
+          return [[], params[1], []]
         end
         #if params && params[0] && !params[0].empty?
         #return [params[0],[],[]]
@@ -83,7 +83,7 @@ class TestProxy < NetSSHTest
     begin
       yield
     ensure
-      Net::SSH::Compat.singleton_class.send(:define_method,:io_select,&orig_io_select)
+      Net::SSH::Compat.singleton_class.send(:define_method, :io_select, &orig_io_select)
     end
   end
 
@@ -94,7 +94,7 @@ class TestProxy < NetSSHTest
         proxy = Net::SSH::Proxy::Command.new("/usr/bin/pv --rate-limit 100k | /bin/nc localhost 22")
         #proxy = Net::SSH::Proxy::Command.new("/bin/nc localhost 22")
         begin
-          large_msg = 'echo123'*30000
+          large_msg = 'echo123' * 30000
           ok = Net::SSH.start(*ssh_start_params(proxy: proxy)) do |ssh|
               with_spurious_write_wakeup_emulate do
                 ret = ssh.exec! "echo \"$USER:#{large_msg}\""
@@ -102,7 +102,7 @@ class TestProxy < NetSSHTest
                 assert_equal "/bin/sh: Argument list too long\n", ret
                 hello_count = 1000
                 ret = ssh.exec! "ruby -e 'puts \"Hello\"*#{hello_count}'"
-                assert_equal "Hello"*hello_count+"\n", ret
+                assert_equal "Hello" * hello_count + "\n", ret
               end
               :ok
             end

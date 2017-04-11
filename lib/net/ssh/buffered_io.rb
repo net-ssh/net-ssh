@@ -60,7 +60,7 @@ module Net; module SSH
     # Tries to read up to +n+ bytes of data from the remote end, and appends
     # the data to the input buffer. It returns the number of bytes read, or 0
     # if no data was available to be read.
-    def fill(n=8192)
+    def fill(n = 8192)
       input.consume!
       data = recv(n)
       debug { "read #{data.length} bytes" }
@@ -73,7 +73,7 @@ module Net; module SSH
 
     # Read up to +length+ bytes from the input buffer. If +length+ is nil,
     # all available data is read from the buffer. (See #available.)
-    def read_available(length=nil)
+    def read_available(length = nil)
       input.read(length || available)
     end
 
@@ -167,7 +167,7 @@ module Net; module SSH
   #    http://github.com/net-ssh/net-ssh/tree/portfwfix
   #
   module ForwardedBufferedIo
-    def fill(n=8192)
+    def fill(n = 8192)
       begin
         super(n)
       rescue Errno::ECONNRESET => e

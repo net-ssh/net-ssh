@@ -55,7 +55,7 @@ class TestBuffer < NetSSHTest
   end
 
   def test_from_with_array_argument_should_write_multiple_of_the_given_type
-    buffer = Net::SSH::Buffer.from(:byte, [1,2,3,4,5])
+    buffer = Net::SSH::Buffer.from(:byte, [1, 2, 3, 4, 5])
     assert_equal "\1\2\3\4\5", buffer.to_s
   end
 

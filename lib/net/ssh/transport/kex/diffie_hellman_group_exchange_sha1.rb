@@ -31,7 +31,7 @@ module Net::SSH::Transport::Kex
           need_bits = MAXIMUM_BITS
         end
 
-        data[:need_bits ] = need_bits
+        data[:need_bits] = need_bits
         data[:need_bytes] = need_bits / 8
       end
 

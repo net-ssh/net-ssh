@@ -17,7 +17,7 @@ class TestChannel < NetSSHTest
   end
 
   def ssh_start_params(options = {})
-    [localhost, user, {keys: @key_id_rsa}.merge(options)]
+    [localhost, user, { keys: @key_id_rsa }.merge(options)]
   end
 
   def setup_ssh_env(&block)
@@ -25,7 +25,7 @@ class TestChannel < NetSSHTest
       @key_id_rsa = "#{dir}/id_rsa"
       sh "rm -rf #{@key_id_rsa} #{@key_id_rsa}.pub"
       sh "ssh-keygen -q -f #{@key_id_rsa} -t rsa -N ''"
-      set_authorized_key(user,"#{@key_id_rsa}.pub")
+      set_authorized_key(user, "#{@key_id_rsa}.pub")
       yield
     end
   end

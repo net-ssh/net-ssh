@@ -5,15 +5,15 @@ module Authentication; module Methods
 
     private
 
-      def socket(options={})
+      def socket(options = {})
         @socket ||= stub("socket", client_name: "me.ssh.test")
       end
 
-      def transport(options={})
+      def transport(options = {})
         @transport ||= MockTransport.new(options.merge(socket: socket))
       end
 
-      def session(options={})
+      def session(options = {})
         @session ||= begin
           sess = stub("auth-session", logger: nil, transport: transport(options))
           def sess.next_message

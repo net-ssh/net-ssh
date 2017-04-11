@@ -39,7 +39,7 @@ module Net
         # Create a new proxy connection to the given proxy host and port.
         # Optionally, a :user key may be given to identify the username
         # with which to authenticate.
-        def initialize(proxy_host, proxy_port=1080, options={})
+        def initialize(proxy_host, proxy_port = 1080, options = {})
           @proxy_host = proxy_host
           @proxy_port = proxy_port
           @options = options

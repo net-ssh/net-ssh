@@ -39,7 +39,7 @@ puts "Configure your browser proxy to localhost:#{LOCAL_PORT}"
 begin
   session = Net::SSH.start(host, user, password: pass)
   session.forward.local(LOCAL_PORT, host, PROXY_PORT)
-  session.loop{true}
+  session.loop { true }
 rescue => e
   puts e.message
   puts e.backtrace

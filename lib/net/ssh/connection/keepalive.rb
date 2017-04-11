@@ -40,12 +40,12 @@ class Keepalive
 
     @unresponded_keepalive_count += 1
     @session.send_global_request("keepalive@openssh.com") { |success, response|
-      debug { "keepalive response successful. Missed #{@unresponded_keepalive_count-1} keepalives" }
+      debug { "keepalive response successful. Missed #{@unresponded_keepalive_count - 1} keepalives" }
       @unresponded_keepalive_count = 0
     }
     @last_keepalive_sent_at = Time.now
     if keepalive_maxcount > 0 && @unresponded_keepalive_count > keepalive_maxcount
-      error { "Timeout, server #{@session.host} not responding. Missed #{@unresponded_keepalive_count-1} timeouts." }
+      error { "Timeout, server #{@session.host} not responding. Missed #{@unresponded_keepalive_count - 1} timeouts." }
       @unresponded_keepalive_count = 0
       raise Net::SSH::Timeout, "Timeout, server #{@session.host} not responding."
     end

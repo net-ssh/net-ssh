@@ -161,7 +161,7 @@ module Transport
 
     private
 
-      def deflater(level=Zlib::DEFAULT_COMPRESSION)
+      def deflater(level = Zlib::DEFAULT_COMPRESSION)
         @deflater ||= Zlib::Deflate.new(level)
       end
 

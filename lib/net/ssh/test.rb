@@ -56,21 +56,21 @@ module Net; module SSH
 
     # Returns the test socket instance to use for these tests (see
     # Net::SSH::Test::Socket).
-    def socket(options={})
+    def socket(options = {})
       @socket ||= Net::SSH::Test::Socket.new
     end
 
     # Returns the connection session (Net::SSH::Connection::Session) for use
     # in these tests. It is a fully functional SSH session, operating over
     # a mock socket (#socket).
-    def connection(options={})
+    def connection(options = {})
       @connection ||= Net::SSH::Connection::Session.new(transport(options), options)
     end
 
     # Returns the transport session (Net::SSH::Transport::Session) for use
     # in these tests. It is a fully functional SSH transport session, operating
     # over a mock socket (#socket).
-    def transport(options={})
+    def transport(options = {})
       @transport ||= Net::SSH::Transport::Session.new(options[:host] || "localhost", options.merge(kex: "test", host_key: "ssh-rsa", paranoid: false, proxy: socket(options)))
     end
 

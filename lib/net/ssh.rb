@@ -67,7 +67,7 @@ module Net
       :encryption, :forward_agent, :hmac, :host_key, :remote_user,
       :keepalive, :keepalive_interval, :keepalive_maxcount, :kex, :keys, :key_data,
       :languages, :logger, :paranoid, :password, :port, :proxy,
-      :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
+      :rekey_blocks_limit, :rekey_limit, :rekey_packet_limit, :timeout, :verbose,
       :known_hosts, :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
       :max_win_size, :send_env, :use_agent, :number_of_password_prompts,
@@ -201,7 +201,7 @@ module Net
     #    example: ->{ UNIXSocket.open('/foo/bar')}
     # If +user+ parameter is nil it defaults to USER from ssh_config, or
     # local username
-    def self.start(host, user=nil, options={}, &block)
+    def self.start(host, user = nil, options = {}, &block)
       invalid_options = options.keys - VALID_OPTIONS
       if invalid_options.any?
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
@@ -284,9 +284,9 @@ module Net
     end
 
     def self._sanitize_options(options)
-      invalid_option_values = [nil,[nil]]
+      invalid_option_values = [nil, [nil]]
       unless (options.values & invalid_option_values).empty?
-        nil_options = options.select { |_k,v| invalid_option_values.include?(v) }.map(&:first)
+        nil_options = options.select { |_k, v| invalid_option_values.include?(v) }.map(&:first)
         Kernel.warn "#{caller_locations(2, 1)[0]}: Passing nil, or [nil] to Net::SSH.start is deprecated for keys: #{nil_options.join(', ')}"
       end
     end

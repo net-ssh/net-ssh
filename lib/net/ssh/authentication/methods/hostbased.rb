@@ -11,7 +11,7 @@ module Net
 
           # Attempts to perform host-based authorization of the user by trying
           # all known keys.
-          def authenticate(next_service, username, password=nil)
+          def authenticate(next_service, username, password = nil)
             return false unless key_manager
 
             key_manager.each_identity do |identity|

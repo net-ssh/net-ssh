@@ -102,14 +102,14 @@ module Net; module SSH; module Transport
 
     # Returns true if the given packet can be processed during a key-exchange.
     def self.allowed_packet?(packet)
-      ( 1.. 4).include?(packet.type) ||
-      ( 6..19).include?(packet.type) ||
+      (1..4).include?(packet.type) ||
+      (6..19).include?(packet.type) ||
       (21..49).include?(packet.type)
     end
 
     # Instantiates a new Algorithms object, and prepares the hash of preferred
     # algorithms based on the options parameter and the ALGORITHMS constant.
-    def initialize(session, options={})
+    def initialize(session, options = {})
       @session = session
       @logger = session.logger
       @options = options

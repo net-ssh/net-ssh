@@ -53,7 +53,7 @@ module Net; module SSH; module Transport
     # Instantiates a new transport layer abstraction. This will block until
     # the initial key exchange completes, leaving you with a ready-to-use
     # transport session.
-    def initialize(host, options={})
+    def initialize(host, options = {})
       self.logger = options[:logger]
 
       @host = host
@@ -184,7 +184,7 @@ module Net; module SSH; module Transport
     # received, it will be enqueued and otherwise ignored. When a key-exchange
     # is not in process, and consume_queue is true, packets will be first
     # read from the queue before the socket is queried.
-    def poll_message(mode=:nonblock, consume_queue=true)
+    def poll_message(mode = :nonblock, consume_queue = true)
       loop do
         if consume_queue && @queue.any? && algorithms.allow?(@queue.first)
           return @queue.shift
@@ -250,20 +250,20 @@ module Net; module SSH; module Transport
     # Configure's the packet stream's client state with the given set of
     # options. This is typically used to define the cipher, compression, and
     # hmac algorithms to use when sending packets to the server.
-    def configure_client(options={})
+    def configure_client(options = {})
       socket.client.set(options)
     end
 
     # Configure's the packet stream's server state with the given set of
     # options. This is typically used to define the cipher, compression, and
     # hmac algorithms to use when reading packets from the server.
-    def configure_server(options={})
+    def configure_server(options = {})
       socket.server.set(options)
     end
 
     # Sets a new hint for the packet stream, which the packet stream may use
     # to change its behavior. (See PacketStream#hints).
-    def hint(which, value=true)
+    def hint(which, value = true)
       socket.hints[which] = value
     end
 

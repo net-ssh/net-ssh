@@ -215,7 +215,7 @@ module Net; module SSH; module Connection
     #       puts "could not obtain pty"
     #     end
     #   end
-    def request_pty(opts={}, &block)
+    def request_pty(opts = {}, &block)
       extra = opts.keys - VALID_PTY_OPTIONS.keys
       raise ArgumentError, "invalid option(s) to request_pty: #{extra.inspect}" if extra.any?
 
@@ -641,7 +641,7 @@ module Net; module SSH; module Connection
       # server telling it that the window size has grown.
       def update_local_window_size(size)
         @local_window_size -= size
-        if local_window_size < local_maximum_window_size/2
+        if local_window_size < local_maximum_window_size / 2
           connection.send_message(Buffer.from(:byte, CHANNEL_WINDOW_ADJUST,
             :long, remote_id, :long, 0x20000))
           @local_window_size += 0x20000

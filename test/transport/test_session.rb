@@ -132,7 +132,7 @@ module Transport
     def test_peer_should_return_hash_of_info_about_peer
       session!
       socket.stubs(peer_ip: "1.2.3.4")
-      assert_equal({ip: "1.2.3.4", port: 22, host: "net.ssh.test", canonized: "net.ssh.test,1.2.3.4"}, session.peer)
+      assert_equal({ ip: "1.2.3.4", port: 22, host: "net.ssh.test", canonized: "net.ssh.test,1.2.3.4" }, session.peer)
     end
 
     def test_next_message_should_block_until_next_message_is_available
@@ -312,7 +312,7 @@ module Transport
         @algorithms ||= stub("algorithms", initialized?: true, allow?: true, start: true)
       end
 
-      def session(options={})
+      def session(options = {})
         @session ||= begin
           host = options.delete(:host) || "net.ssh.test"
           Socket.stubs(:tcp).with(host, options[:port] || 22, nil, nil, { connect_timeout: options[:timeout] }).returns(socket)

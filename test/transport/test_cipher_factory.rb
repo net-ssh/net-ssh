@@ -11,82 +11,82 @@ module Transport
     end
 
     def test_lengths_for_none
-      assert_equal [0,0], factory.get_lengths("none")
-      assert_equal [0,0], factory.get_lengths("bogus")
+      assert_equal [0, 0], factory.get_lengths("none")
+      assert_equal [0, 0], factory.get_lengths("bogus")
     end
 
     def test_lengths_for_blowfish_cbc
-      assert_equal [16,8], factory.get_lengths("blowfish-cbc")
+      assert_equal [16, 8], factory.get_lengths("blowfish-cbc")
     end
 
     if_supported?("idea-cbc") do
       def test_lengths_for_idea_cbc
-        assert_equal [16,8], factory.get_lengths("idea-cbc")
+        assert_equal [16, 8], factory.get_lengths("idea-cbc")
       end
     end
 
     def test_lengths_for_rijndael_cbc
-      assert_equal [32,16], factory.get_lengths("rijndael-cbc@lysator.liu.se")
+      assert_equal [32, 16], factory.get_lengths("rijndael-cbc@lysator.liu.se")
     end
 
     def test_lengths_for_cast128_cbc
-      assert_equal [16,8], factory.get_lengths("cast128-cbc")
+      assert_equal [16, 8], factory.get_lengths("cast128-cbc")
     end
 
     def test_lengths_for_3des_cbc
-      assert_equal [24,8], factory.get_lengths("3des-cbc")
+      assert_equal [24, 8], factory.get_lengths("3des-cbc")
     end
 
     def test_lengths_for_aes128_cbc
-      assert_equal [16,16], factory.get_lengths("aes128-cbc")
+      assert_equal [16, 16], factory.get_lengths("aes128-cbc")
     end
 
     def test_lengths_for_aes192_cbc
-      assert_equal [24,16], factory.get_lengths("aes192-cbc")
+      assert_equal [24, 16], factory.get_lengths("aes192-cbc")
     end
 
     def test_lengths_for_aes256_cbc
-      assert_equal [32,16], factory.get_lengths("aes256-cbc")
+      assert_equal [32, 16], factory.get_lengths("aes256-cbc")
     end
 
     def test_lengths_for_arcfour
-      assert_equal [16,8], factory.get_lengths("arcfour")
+      assert_equal [16, 8], factory.get_lengths("arcfour")
     end
 
     def test_lengths_for_arcfour128
-      assert_equal [16,8], factory.get_lengths("arcfour128")
+      assert_equal [16, 8], factory.get_lengths("arcfour128")
     end
 
     def test_lengths_for_arcfour256
-      assert_equal [32,8], factory.get_lengths("arcfour256")
+      assert_equal [32, 8], factory.get_lengths("arcfour256")
     end
 
     def test_lengths_for_arcfour512
-      assert_equal [64,8], factory.get_lengths("arcfour512")
+      assert_equal [64, 8], factory.get_lengths("arcfour512")
     end
 
     def test_lengths_for_3des_ctr
-      assert_equal [24,8], factory.get_lengths("3des-ctr")
+      assert_equal [24, 8], factory.get_lengths("3des-ctr")
     end
 
     def test_lengths_for_aes128_ctr
-      assert_equal [16,16], factory.get_lengths("aes128-ctr")
+      assert_equal [16, 16], factory.get_lengths("aes128-ctr")
     end
 
     def test_lengths_for_aes192_ctr
-      assert_equal [24,16], factory.get_lengths("aes192-ctr")
+      assert_equal [24, 16], factory.get_lengths("aes192-ctr")
     end
 
     def test_lengths_for_aes256_ctr
-      assert_equal [32,16], factory.get_lengths("aes256-ctr")
+      assert_equal [32, 16], factory.get_lengths("aes256-ctr")
     end
 
     def test_lengths_for_blowfish_ctr
-      assert_equal [16,8], factory.get_lengths("blowfish-ctr")
+      assert_equal [16, 8], factory.get_lengths("blowfish-ctr")
     end
 
     def test_lengths_for_cast128_ctr
-      assert_equal [16,8], factory.get_lengths("cast128-ctr")
+      assert_equal [16, 8], factory.get_lengths("cast128-ctr")
     end
 
     BLOWFISH_CBC = "\210\021\200\315\240_\026$\352\204g\233\244\242x\332e\370\001\327\224Nv@9_\323\037\252kb\037\036\237\375]\343/y\037\237\312Q\f7]\347Y\005\275%\377\0010$G\272\250B\265Nd\375\342\372\025r6}+Y\213y\n\237\267\\\374^\346BdJ$\353\220Ik\023<\236&H\277=\225"
@@ -298,7 +298,7 @@ module Transport
         key: "abc",
         digester: OpenSSL::Digest::MD5,
         shared: "1234567890123456780",
-        hash: '!@#$%#$^%$&^&%#$@$'}
+        hash: '!@#$%#$^%$&^&%#$@$' }
 
       def factory
         Net::SSH::Transport::CipherFactory

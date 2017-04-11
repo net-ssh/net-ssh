@@ -16,7 +16,7 @@ module Net; module SSH; module Proxy
     # taken by Net::SSH::Proxy::HTTP it supports:
     #
     # * :ssl_context => the SSL configuration to use for the connection
-    def initialize(proxy_host, proxy_port=80, options={})
+    def initialize(proxy_host, proxy_port = 80, options = {})
       @ssl_context = options.delete(:ssl_context) ||
                        OpenSSL::SSL::SSLContext.new
       super(proxy_host, proxy_port, options)

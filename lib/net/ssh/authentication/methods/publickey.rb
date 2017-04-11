@@ -13,7 +13,7 @@ module Net
           # username, trying each identity known to the key manager. If any of
           # them succeed, returns +true+, otherwise returns +false+. This
           # requires the presence of a key manager.
-          def authenticate(next_service, username, password=nil)
+          def authenticate(next_service, username, password = nil)
             return false unless key_manager
 
             key_manager.each_identity do |identity|
@@ -37,7 +37,7 @@ module Net
 
             # Builds and sends a request formatted for a public-key
             # authentication request.
-            def send_request(pub_key, username, next_service, signature=nil)
+            def send_request(pub_key, username, next_service, signature = nil)
               msg = build_request(pub_key, username, next_service, !signature.nil?)
               msg.write_string(signature) if signature
               send_message(msg)

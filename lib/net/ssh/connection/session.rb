@@ -64,7 +64,7 @@ module Net; module SSH; module Connection
 
     # Create a new connection service instance atop the given transport
     # layer. Initializes the listeners to be only the underlying socket object.
-    def initialize(transport, options={})
+    def initialize(transport, options = {})
       self.logger = transport.logger
 
       @transport = transport
@@ -148,7 +148,7 @@ module Net; module SSH; module Connection
     # to be run.
     #
     #   ssh.loop { ssh.busy? }
-    def busy?(include_invisible=false)
+    def busy?(include_invisible = false)
       if include_invisible
         channels.any?
       else
@@ -173,7 +173,7 @@ module Net; module SSH; module Connection
     #   int_pressed = false
     #   trap("INT") { int_pressed = true }
     #   ssh.loop(0.1) { not int_pressed }
-    def loop(wait=nil, &block)
+    def loop(wait = nil, &block)
       running = block || Proc.new { busy? }
       loop_forever { break unless process(wait, &running) }
     end
@@ -212,7 +212,7 @@ module Net; module SSH; module Connection
     #     connections.delete_if { |ssh| !ssh.process(0.1, &condition) }
     #     break if connections.empty?
     #   end
-    def process(wait=nil, &block)
+    def process(wait = nil, &block)
       @event_loop.process(wait, &block)
     rescue
       force_channel_cleanup_on_close if closed?
@@ -243,7 +243,7 @@ module Net; module SSH; module Connection
     def ev_do_calculate_rw_wait(wait)
       r = listeners.keys
       w = r.select { |w2| w2.respond_to?(:pending_write?) && w2.pending_write? }
-      [r,w,io_select_wait(wait)]
+      [r, w, io_select_wait(wait)]
     end
 
     # This is called internally as part of #process.
@@ -323,7 +323,7 @@ module Net; module SSH; module Connection
     #   end
     #
     #   channel.wait
-    def open_channel(type="session", *extra, &on_confirm)
+    def open_channel(type = "session", *extra, &on_confirm)
       local_id = get_next_channel_id
 
       channel = Channel.new(self, type, local_id, @max_pkt_size, @max_win_size, &on_confirm)
@@ -370,7 +370,7 @@ module Net; module SSH; module Connection
           raise "could not execute command: #{command.inspect}" unless success
 
           if status
-            channel.on_request("exit-status") do |ch2,data|
+            channel.on_request("exit-status") do |ch2, data|
               status[:exit_code] = data.read_long
             end
 

@@ -124,7 +124,7 @@ module Net; module SSH; module Connection
     NOFLSH = 57
 
     # Stop background jobs from output.
-    TOSTOP= 58
+    TOSTOP = 58
 
     # Enable extensions.
     IEXTEN = 59

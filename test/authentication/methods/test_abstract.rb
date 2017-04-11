@@ -42,7 +42,7 @@ module Authentication; module Methods
 
     private
 
-      def subject(options={})
+      def subject(options = {})
         @subject ||= Net::SSH::Authentication::Methods::Abstract.new(session(options), options)
       end
 

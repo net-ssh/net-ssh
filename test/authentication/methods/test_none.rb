@@ -8,7 +8,7 @@ module Authentication; module Methods
     include Common
 
     def test_authenticate_should_raise_if_none_disallowed
-      transport.expect do |t,packet|
+      transport.expect do |t, packet|
         assert_equal USERAUTH_REQUEST, packet.type
         assert_equal "jamis", packet.read_string
         assert_equal "ssh-connection", packet.read_string
@@ -23,7 +23,7 @@ module Authentication; module Methods
     end
 
     def test_authenticate_should_return_true
-      transport.expect do |t,packet|
+      transport.expect do |t, packet|
         assert_equal USERAUTH_REQUEST, packet.type
         t.return(USERAUTH_SUCCESS)
       end
@@ -33,7 +33,7 @@ module Authentication; module Methods
 
     private
 
-      def subject(options={})
+      def subject(options = {})
         @subject ||= Net::SSH::Authentication::Methods::None.new(session(options), options)
       end
   end

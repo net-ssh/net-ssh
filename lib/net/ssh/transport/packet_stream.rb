@@ -81,7 +81,7 @@ module Net; module SSH; module Transport
     # available or not, and will return nil if there is no packet ready to be
     # returned. If the mode parameter is :block, then this method will block
     # until a packet is available.
-    def next_packet(mode=:nonblock)
+    def next_packet(mode = :nonblock)
       case mode
       when :nonblock then
         packet = poll_next_packet

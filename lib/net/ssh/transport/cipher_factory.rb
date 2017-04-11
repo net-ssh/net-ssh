@@ -54,7 +54,7 @@ module Net; module SSH; module Transport
     # iv, key, shared, hash and digester values. Additionally, the
     # cipher will be put into encryption or decryption mode, based on the
     # value of the +encrypt+ parameter.
-    def self.get(name, options={})
+    def self.get(name, options = {})
       ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
       return IdentityCipher if ossl_name == "none"
       cipher = OpenSSL::Cipher.new(ossl_name)
@@ -89,7 +89,7 @@ module Net; module SSH; module Transport
         key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
         cipher.key_len = key_len
 
-        result = [key_len, ossl_name=="rc4" ? 8 : cipher.block_size]
+        result = [key_len, ossl_name == "rc4" ? 8 : cipher.block_size]
         result << cipher.iv_len if options[:iv_len]
       end
       result

@@ -19,7 +19,7 @@ module Authentication
       manager.add "/third"
       manager.add "/second"
       assert_equal 3, manager.key_files.length
-      final_files = manager.key_files.map {|item| item.split('/').last}
+      final_files = manager.key_files.map { |item| item.split('/').last }
       assert_equal %w(first second third), final_files
     end
 
@@ -52,8 +52,8 @@ module Authentication
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
 
-      assert_equal({from: :file, file: first, key: rsa}, manager.known_identities[rsa])
-      assert_equal({from: :file, file: second, key: dsa}, manager.known_identities[dsa])
+      assert_equal({ from: :file, file: first, key: rsa }, manager.known_identities[rsa])
+      assert_equal({ from: :file, file: second, key: dsa }, manager.known_identities[dsa])
     end
 
     def test_each_identity_should_load_form_cert_file
@@ -66,7 +66,7 @@ module Authentication
 
       assert_equal 1, identities.length
       assert_equal rsa.to_blob, identities.first.to_blob
-      assert_equal({from: :file, file: first}, manager.known_identities[rsa])
+      assert_equal({ from: :file, file: first }, manager.known_identities[rsa])
     end
 
     def test_each_identity_should_not_prompt_for_passphrase_in_non_interactive_mode
@@ -88,8 +88,8 @@ module Authentication
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
 
-      assert_equal({from: :agent}, manager.known_identities[rsa])
-      assert_equal({from: :agent}, manager.known_identities[dsa])
+      assert_equal({ from: :agent }, manager.known_identities[rsa])
+      assert_equal({ from: :agent }, manager.known_identities[dsa])
     end
 
     if defined?(OpenSSL::PKey::EC)
@@ -106,11 +106,11 @@ module Authentication
         assert_equal ecdsa_sha2_nistp384.to_blob, identities[3].to_blob
         assert_equal ecdsa_sha2_nistp521.to_blob, identities[4].to_blob
 
-        assert_equal({from: :agent}, manager.known_identities[rsa])
-        assert_equal({from: :agent}, manager.known_identities[dsa])
-        assert_equal({from: :agent}, manager.known_identities[ecdsa_sha2_nistp256])
-        assert_equal({from: :agent}, manager.known_identities[ecdsa_sha2_nistp384])
-        assert_equal({from: :agent}, manager.known_identities[ecdsa_sha2_nistp521])
+        assert_equal({ from: :agent }, manager.known_identities[rsa])
+        assert_equal({ from: :agent }, manager.known_identities[dsa])
+        assert_equal({ from: :agent }, manager.known_identities[ecdsa_sha2_nistp256])
+        assert_equal({ from: :agent }, manager.known_identities[ecdsa_sha2_nistp384])
+        assert_equal({ from: :agent }, manager.known_identities[ecdsa_sha2_nistp521])
       end
     end
 
@@ -126,7 +126,7 @@ module Authentication
       assert_equal 1, identities.length
       assert_equal rsa.to_blob, identities.first.to_blob
 
-      assert_equal({from: :agent}, manager.known_identities[rsa])
+      assert_equal({ from: :agent }, manager.known_identities[rsa])
       assert manager.use_agent?
     end
 
@@ -134,7 +134,7 @@ module Authentication
       manager.stubs(:agent).returns(agent)
 
       first = File.expand_path("/first")
-      stub_file_public_key  first, rsa
+      stub_file_public_key first, rsa
       second = File.expand_path("/second")
       stub_file_private_key second, dsa, passphrase: :should_not_be_asked
 
@@ -225,7 +225,7 @@ module Authentication
         Net::SSH::KeyFactory.expects(:load_public_key).with(name + "-cert.pub").returns(key).at_least_once
       end
 
-      def rsa(size=512)
+      def rsa(size = 512)
         @rsa ||= OpenSSL::PKey::RSA.new(size)
       end
 
@@ -263,7 +263,7 @@ module Authentication
       end
 
       def manager(options = {})
-        @manager ||= Net::SSH::Authentication::KeyManager.new(nil, {password_prompt: prompt}.merge(options))
+        @manager ||= Net::SSH::Authentication::KeyManager.new(nil, { password_prompt: prompt }.merge(options))
       end
 
   end

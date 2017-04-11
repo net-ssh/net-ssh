@@ -3,7 +3,7 @@ module Net; module SSH; module Transport
 
   # Generate a key value in accordance with the SSH2 specification.
   # (RFC4253 7.2. "Output from Key Exchange")
-  def self.expand_key(bytes, start, options={})
+  def self.expand_key(bytes, start, options = {})
     if bytes == 0
       return ""
     end

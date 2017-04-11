@@ -16,7 +16,7 @@ module OpenSSL
       else
         buf = to_s(2)
         if buf.getbyte(0)[7] == 1
-          return [buf.length+1, 0, buf].pack("NCA*")
+          return [buf.length + 1, 0, buf].pack("NCA*")
         else
           return [buf.length, buf].pack("NA*")
         end
@@ -44,7 +44,7 @@ module OpenSSL
         return false if pub_key.nil? || pub_key < 0
         bits_set = 0
         pub_key.num_bits.times { |i| bits_set += 1 if pub_key.bit_set?(i) }
-        return ( bits_set > 1 && pub_key < p )
+        return (bits_set > 1 && pub_key < p)
       end
 
     end
@@ -103,8 +103,8 @@ module OpenSSL
 
       # Verifies the given signature matches the given data.
       def ssh_do_verify(sig, data)
-        sig_r = sig[0,20].unpack("H*")[0].to_i(16)
-        sig_s = sig[20,20].unpack("H*")[0].to_i(16)
+        sig_r = sig[0, 20].unpack("H*")[0].to_i(16)
+        sig_s = sig[20, 20].unpack("H*")[0].to_i(16)
         a1sig = OpenSSL::ASN1::Sequence([
            OpenSSL::ASN1::Integer(sig_r),
            OpenSSL::ASN1::Integer(sig_s)
@@ -114,8 +114,8 @@ module OpenSSL
 
       # Signs the given data.
       def ssh_do_sign(data)
-        sig = sign( OpenSSL::Digest::DSS1.new, data)
-        a1sig = OpenSSL::ASN1.decode( sig )
+        sig = sign(OpenSSL::Digest::DSS1.new, data)
+        a1sig = OpenSSL::ASN1.decode(sig)
 
         sig_r = a1sig.value[0].value.to_s(2)
         sig_s = a1sig.value[1].value.to_s(2)
@@ -124,8 +124,8 @@ module OpenSSL
           raise OpenSSL::PKey::DSAError, "bad sig size"
         end
 
-        sig_r = "\0" * ( 20 - sig_r.length ) + sig_r if sig_r.length < 20
-        sig_s = "\0" * ( 20 - sig_s.length ) + sig_s if sig_s.length < 20
+        sig_r = "\0" * (20 - sig_r.length) + sig_r if sig_r.length < 20
+        sig_s = "\0" * (20 - sig_s.length) + sig_s if sig_s.length < 20
 
         return sig_r + sig_s
       end
@@ -139,13 +139,13 @@ module OpenSSL
         CurveNameAlias = {
           "nistp256" => "prime256v1",
           "nistp384" => "secp384r1",
-          "nistp521" => "secp521r1",
+          "nistp521" => "secp521r1"
         }
 
         CurveNameAliasInv = {
           "prime256v1" => "nistp256",
           "secp384r1" => "nistp384",
-          "secp521r1" => "nistp521",
+          "secp521r1" => "nistp521"
         }
 
         def self.read_keyblob(curve_name_in_type, buffer)
@@ -207,15 +207,15 @@ module OpenSSL
           a1sig = nil
 
           begin
-            sig_r_len = sig[0,4].unpack("H*")[0].to_i(16)
-            sig_l_len = sig[4+sig_r_len,4].unpack("H*")[0].to_i(16)
+            sig_r_len = sig[0, 4].unpack("H*")[0].to_i(16)
+            sig_l_len = sig[4 + sig_r_len, 4].unpack("H*")[0].to_i(16)
 
-            sig_r = sig[4,sig_r_len].unpack("H*")[0]
-            sig_s = sig[4+sig_r_len+4,sig_l_len].unpack("H*")[0]
+            sig_r = sig[4, sig_r_len].unpack("H*")[0]
+            sig_s = sig[4 + sig_r_len + 4, sig_l_len].unpack("H*")[0]
 
             a1sig = OpenSSL::ASN1::Sequence([
               OpenSSL::ASN1::Integer(sig_r.to_i(16)),
-              OpenSSL::ASN1::Integer(sig_s.to_i(16)),
+              OpenSSL::ASN1::Integer(sig_s.to_i(16))
             ])
           rescue
           end
@@ -231,7 +231,7 @@ module OpenSSL
         def ssh_do_sign(data)
           digest = digester.digest(data)
           sig = dsa_sign_asn1(digest)
-          a1sig = OpenSSL::ASN1.decode( sig )
+          a1sig = OpenSSL::ASN1.decode(sig)
 
           sig_r = a1sig.value[0].value
           sig_s = a1sig.value[1].value

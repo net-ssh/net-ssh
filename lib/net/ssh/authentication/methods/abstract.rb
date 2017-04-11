@@ -18,7 +18,7 @@ module Net; module SSH; module Authentication; module Methods
     attr_reader :key_manager
 
     # Instantiates a new authentication method.
-    def initialize(session, options={})
+    def initialize(session, options = {})
       @session = session
       @key_manager = options[:key_manager]
       @options = options

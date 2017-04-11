@@ -20,7 +20,7 @@ require 'bcrypt_pbkdf' unless RUBY_PLATFORM == "java"
 module Net; module SSH; module Authentication
 module ED25519
   class SigningKeyFromFile < RbNaCl::Signatures::Ed25519::SigningKey
-    def initialize(pk,sk)
+    def initialize(pk, sk)
       @signing_key = sk
       @verify_key = RbNaCl::Signatures::Ed25519::VerifyKey.new(pk)
     end
@@ -38,7 +38,7 @@ module ED25519
     end
 
     def to_blob
-      Net::SSH::Buffer.from(:mstring,"ssh-ed25519",:string,@verify_key.to_bytes).to_s
+      Net::SSH::Buffer.from(:mstring, "ssh-ed25519", :string, @verify_key.to_bytes).to_s
     end
 
     def ssh_type
@@ -49,8 +49,8 @@ module ED25519
       ssh_type
     end
 
-    def ssh_do_verify(sig,data)
-      @verify_key.verify(sig,data)
+    def ssh_do_verify(sig, data)
+      @verify_key.verify(sig, data)
     end
 
     def to_pem
@@ -72,13 +72,13 @@ module ED25519
 
     attr_reader :sign_key
 
-    def initialize(datafull,password)
+    def initialize(datafull, password)
       raise ArgumentError.new("Expected #{MBEGIN} at start of private key") unless datafull.start_with?(MBEGIN)
       raise ArgumentError.new("Expected #{MEND} at end of private key") unless datafull.end_with?(MEND)
-      datab64 = datafull[MBEGIN.size ... -MEND.size]
+      datab64 = datafull[MBEGIN.size...-MEND.size]
       data = Base64.decode64(datab64)
       raise ArgumentError.new("Expected #{MAGIC} at start of decoded private key") unless data.start_with?(MAGIC)
-      buffer = Net::SSH::Buffer.new(data[MAGIC.size+1 .. -1])
+      buffer = Net::SSH::Buffer.new(data[MAGIC.size + 1..-1])
 
       ciphername = buffer.read_string
       raise ArgumentError.new("#{ciphername} in private key is not supported") unless
@@ -108,7 +108,7 @@ module ED25519
         key = '\x00' * (keylen + ivlen)
       end
 
-      cipher = CipherFactory.get(ciphername, key: key[0...keylen], iv:key[keylen...keylen+ivlen], decrypt: true)
+      cipher = CipherFactory.get(ciphername, key: key[0...keylen], iv: key[keylen...keylen + ivlen], decrypt: true)
 
       decoded = cipher.update(buffer.remainder_as_buffer.to_s)
       decoded << cipher.final
@@ -125,7 +125,7 @@ module ED25519
       _comment = decoded.read_string
 
       @pk = pk
-      @sign_key = SigningKeyFromFile.new(pk,sk)
+      @sign_key = SigningKeyFromFile.new(pk, sk)
     end
 
     def to_blob
@@ -148,8 +148,8 @@ module ED25519
       @sign_key.sign(data)
     end
 
-    def self.read(data,password)
-      self.new(data,password)
+    def self.read(data, password)
+      self.new(data, password)
     end
 
     def self.read_keyblob(buffer)

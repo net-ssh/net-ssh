@@ -39,7 +39,7 @@ module Net
         # Create a new KeyManager. By default, the manager will
         # use the ssh-agent if it is running and the `:use_agent` option
         # is not false.
-        def initialize(logger, options={})
+        def initialize(logger, options = {})
           self.logger = logger
           @key_files = []
           @key_data = []

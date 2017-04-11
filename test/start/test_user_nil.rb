@@ -18,7 +18,7 @@ module NetSSH
     end
 
     def test_start_should_use_default_user_when_nil
-      @authentication_session.stubs(:authenticate).with() {|_next_service, user, _password| user == Etc.getlogin }.returns(true)
+      @authentication_session.stubs(:authenticate).with() { |_next_service, user, _password| user == Etc.getlogin }.returns(true)
       assert_nothing_raised do
         Net::SSH.start('localhost')
       end

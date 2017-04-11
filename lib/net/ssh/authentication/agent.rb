@@ -60,7 +60,7 @@ module Net; module SSH; module Authentication
 
     # Instantiates a new agent object, connects to a running SSH agent,
     # negotiates the agent protocol version, and returns the agent object.
-    def self.connect(logger=nil, agent_socket_factory = nil)
+    def self.connect(logger = nil, agent_socket_factory = nil)
       agent = new(logger)
       agent.connect!(agent_socket_factory)
       agent.negotiate!
@@ -69,7 +69,7 @@ module Net; module SSH; module Authentication
 
     # Creates a new Agent object, using the optional logger instance to
     # report status.
-    def initialize(logger=nil)
+    def initialize(logger = nil)
       self.logger = logger
     end
 
@@ -202,7 +202,7 @@ module Net; module SSH; module Authentication
       buffer = Net::SSH::Buffer.new(@socket.read(4))
       buffer.append(@socket.read(buffer.read_long))
       type = buffer.read_byte
-      debug { "received agent packet #{type} len #{buffer.length-4}" }
+      debug { "received agent packet #{type} len #{buffer.length - 4}" }
       return type, buffer
     end
 
