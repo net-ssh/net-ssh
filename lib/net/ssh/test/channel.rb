@@ -1,5 +1,4 @@
 module Net; module SSH; module Test
-
   # A mock channel, used for scripting actions in tests. It wraps a
   # Net::SSH::Test::Script instance, and delegates to it for the most part.
   # This class has little real functionality on its own, but rather acts as
@@ -57,14 +56,14 @@ module Net; module SSH; module Test
       gets_data("")
     end
 
-    # Scripts the sending of an "exec" channel request packet to the mock 
+    # Scripts the sending of an "exec" channel request packet to the mock
     # server. If +reply+ is true, then the server is expected to reply to the
     # request, otherwise no response to this request will be sent. If +success+
     # is +true+, then the request will be successful, otherwise a failure will
     # be scripted.
     #
     #   channel.sends_exec "ls -l"
-    def sends_exec(command, reply=true, success=true)
+    def sends_exec(command, reply = true, success = true)
       script.sends_channel_request(self, "exec", reply, command, success)
     end
 
@@ -73,7 +72,7 @@ module Net; module SSH; module Test
     # and +success+ arguments.
     #
     #   channel.sends_subsystem "sftp"
-    def sends_subsystem(subsystem, reply=true, success=true)
+    def sends_subsystem(subsystem, reply = true, success = true)
       script.sends_channel_request(self, "subsystem", reply, subsystem, success)
     end
 
@@ -123,7 +122,7 @@ module Net; module SSH; module Test
     # Scripts the reception of an "exit-status" channel request packet.
     #
     #   channel.gets_exit_status(127)
-    def gets_exit_status(status=0)
+    def gets_exit_status(status = 0)
       script.gets_channel_request(self, "exit-status", false, status)
     end
 
@@ -141,5 +140,4 @@ module Net; module SSH; module Test
       script.gets_channel_close(self)
     end
   end
-
 end; end; end

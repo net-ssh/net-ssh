@@ -2,7 +2,6 @@
 require 'net/ssh/loggable'
 
 module Net; module SSH; module Service
-
   # This class implements various port forwarding services for use by
   # Net::SSH clients. The Forward class should never need to be instantiated
   # directly; instead, it should be accessed via the singleton instance
@@ -104,7 +103,7 @@ module Net; module SSH; module Service
     #
     #   ssh.forward.cancel_local(1234)
     #   ssh.forward.cancel_local(1234, "0.0.0.0")
-    def cancel_local(port, bind_address="127.0.0.1")
+    def cancel_local(port, bind_address = "127.0.0.1")
       socket = @local_forwarded_ports.delete([port, bind_address])
       socket.shutdown rescue nil
       socket.close rescue nil
@@ -213,7 +212,7 @@ module Net; module SSH; module Service
     #     raise Net::SSH::Exception, "remote forwarding request failed"
     #   end
     #
-    def remote(port, host, remote_port, remote_host="127.0.0.1")
+    def remote(port, host, remote_port, remote_host = "127.0.0.1")
       session.send_global_request("tcpip-forward", :string, remote_host, :long, remote_port) do |success, response|
         if success
           remote_port = response.read_long if remote_port == 0
@@ -247,7 +246,7 @@ module Net; module SSH; module Service
     #
     #   ssh.forward.cancel_remote(1234, "0.0.0.0")
     #   ssh.loop { ssh.forward.active_remotes.include?([1234, "0.0.0.0"]) }
-    def cancel_remote(port, host="127.0.0.1")
+    def cancel_remote(port, host = "127.0.0.1")
       session.send_global_request("cancel-tcpip-forward", :string, host, :long, port) do |success, response|
         if success
           @remote_forwarded_ports.delete([port, host])
@@ -419,5 +418,4 @@ module Net; module SSH; module Service
         end
       end
   end
-
 end; end; end

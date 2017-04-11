@@ -5,14 +5,13 @@ module Net
   module SSH
     module Authentication
       module Methods
-
         # Implements the "keyboard-interactive" SSH authentication method.
         class KeyboardInteractive < Abstract
           USERAUTH_INFO_REQUEST  = 60
           USERAUTH_INFO_RESPONSE = 61
 
           # Attempt to authenticate the given user for the given service.
-          def authenticate(next_service, username, password=nil)
+          def authenticate(next_service, username, password = nil)
             debug { "trying keyboard-interactive" }
             send_message(userauth_request(username, next_service, "keyboard-interactive", "", ""))
 
@@ -45,7 +44,7 @@ module Net
                 end
 
                 _ = message.read_string # lang_tag
-                responses =[]
+                responses = []
 
                 message.read_long.times do
                   text = message.read_string

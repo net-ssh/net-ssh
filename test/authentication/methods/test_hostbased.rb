@@ -3,7 +3,6 @@ require 'net/ssh/authentication/methods/hostbased'
 require 'authentication/methods/common'
 
 module Authentication; module Methods
-
   class TestHostbased < NetSSHTest
     include Common
 
@@ -69,8 +68,8 @@ module Authentication; module Methods
         packet.read_string == "hostbased"      && # auth-method
         packet.read_string == key.ssh_type     && # key type
         packet.read_buffer.read_key.to_blob == key.to_blob && # key
-        packet.read_string == "me.ssh.test."   && # client hostname
-        packet.read_string == "jamis"             # client username
+        packet.read_string == "me.ssh.test." && # client hostname
+        packet.read_string == "jamis" # client username
       end
 
       @@keys = nil
@@ -78,7 +77,7 @@ module Authentication; module Methods
         @@keys ||= [OpenSSL::PKey::RSA.new(512), OpenSSL::PKey::DSA.new(512)]
       end
 
-      def key_manager(options={})
+      def key_manager(options = {})
         @key_manager ||= begin
           manager = stub("key_manager")
           manager.stubs(:each_identity).multiple_yields(*(options[:keys] || keys))
@@ -86,20 +85,20 @@ module Authentication; module Methods
         end
       end
 
-      def subject(options={})
+      def subject(options = {})
         options[:key_manager] = key_manager(options) unless options.key?(:key_manager)
         @subject ||= Net::SSH::Authentication::Methods::Hostbased.new(session(options), options)
       end
 
-      def socket(options={})
+      def socket(options = {})
         @socket ||= stub("socket", client_name: "me.ssh.test")
       end
 
-      def transport(options={})
+      def transport(options = {})
         @transport ||= MockTransport.new(options.merge(socket: socket))
       end
 
-      def session(options={})
+      def session(options = {})
         @session ||= begin
           sess = stub("auth-session", logger: nil, transport: transport(options))
           def sess.next_message
@@ -108,7 +107,5 @@ module Authentication; module Methods
           sess
         end
       end
-
   end
-
 end; end

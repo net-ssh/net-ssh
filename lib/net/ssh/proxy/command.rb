@@ -4,7 +4,6 @@ require 'net/ssh/proxy/errors'
 require 'net/ssh/ruby_compat'
 
 module Net; module SSH; module Proxy
-
   # An implementation of a command proxy. To use it, instantiate it,
   # then pass the instantiated object via the :proxy key to
   # Net::SSH.start:
@@ -16,7 +15,6 @@ module Net; module SSH; module Proxy
   #     ...
   #   end
   class Command
-
     # The command line template
     attr_reader :command_line_template
 
@@ -104,5 +102,4 @@ module Net; module SSH; module Proxy
       io
     end
   end
-
 end; end; end

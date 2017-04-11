@@ -2,9 +2,7 @@ require 'common'
 require 'net/ssh/authentication/agent'
 
 module Authentication
-
   class TestAgent < NetSSHTest
-
     SSH2_AGENT_REQUEST_VERSION       = 1
     SSH2_AGENT_REQUEST_IDENTITIES    = 11
     SSH2_AGENT_IDENTITIES_ANSWER     = 12
@@ -139,7 +137,7 @@ EOF
     def test_identities_should_ignore_unimplemented_ones
       key1 = key
       key2 = OpenSSL::PKey::DSA.new(512)
-      key2.to_blob[0..5]='badkey'
+      key2.to_blob[0..5] = 'badkey'
       key3 = OpenSSL::PKey::DSA.new(512)
 
       socket.expect do |s, type, buffer|
@@ -148,7 +146,7 @@ EOF
       end
 
       result = agent.identities
-      assert_equal 2,result.size
+      assert_equal 2, result.size
       assert_equal key1.to_blob, result.first.to_blob
       assert_equal key3.to_blob, result.last.to_blob
       assert_equal "My favorite key", result.first.comment
@@ -181,7 +179,7 @@ EOF
     end
 
     def test_sign_should_return_signed_data_from_agent
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_SIGN_REQUEST, type
         assert_equal key.to_blob, Net::SSH::Buffer.new(buffer.read_string).read_key.to_blob
         assert_equal "hello world", buffer.read_string
@@ -195,7 +193,7 @@ EOF
 
     def test_add_rsa_identity_with_constraints
       rsa = OpenSSL::PKey::RSA.new(512)
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_ID_CONSTRAINED, type
         assert_equal buffer.read_string, "ssh-rsa"
         assert_equal buffer.read_bignum.to_s, rsa.n.to_s
@@ -218,7 +216,7 @@ EOF
 
     def test_add_rsa_cert_identity
       cert = make_cert(OpenSSL::PKey::RSA.new(512))
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-rsa-cert-v01@openssh.com"
         assert_equal buffer.read_string, cert.to_blob
@@ -237,7 +235,7 @@ EOF
 
     def test_add_dsa_identity
       dsa = OpenSSL::PKey::DSA.new(512)
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-dss"
         assert_equal buffer.read_bignum.to_s, dsa.p.to_s
@@ -256,7 +254,7 @@ EOF
 
     def test_add_dsa_cert_identity
       cert = make_cert(OpenSSL::PKey::DSA.new(512))
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-dss-cert-v01@openssh.com"
         assert_equal buffer.read_string, cert.to_blob
@@ -273,7 +271,7 @@ EOF
     def test_add_ecdsa_identity
       return unless defined?(OpenSSL::PKey::EC)
       ecdsa = OpenSSL::PKey::EC.new("prime256v1").generate_key
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ecdsa-sha2-nistp256"
         assert_equal buffer.read_string, "nistp256"
@@ -291,7 +289,7 @@ EOF
     def test_add_ecdsa_cert_identity
       return unless defined?(OpenSSL::PKey::EC)
       cert = make_cert(OpenSSL::PKey::EC.new("prime256v1").generate_key)
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ecdsa-sha2-nistp256-cert-v01@openssh.com"
         assert_equal buffer.read_string, cert.to_blob
@@ -308,7 +306,7 @@ EOF
     def test_add_ed25519_identity
       return unless Net::SSH::Authentication::ED25519Loader::LOADED
       ed25519 = Net::SSH::Authentication::ED25519::PrivKey.new(ED25519, nil)
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-ed25519"
         assert_equal buffer.read_string, ed25519.public_key.verify_key.to_bytes
@@ -325,7 +323,7 @@ EOF
     def test_add_ed25519_cert_identity
       return unless Net::SSH::Authentication::ED25519Loader::LOADED
       cert = make_cert(Net::SSH::Authentication::ED25519::PrivKey.new(ED25519, nil))
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-ed25519-cert-v01@openssh.com"
         assert_equal buffer.read_string, cert.to_blob
@@ -341,7 +339,7 @@ EOF
     end
 
     def test_add_identity_should_raise_error_on_failure
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         s.return(SSH_AGENT_FAILURE)
       end
 
@@ -351,7 +349,7 @@ EOF
     end
 
     def test_remove_identity
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_REMOVE_IDENTITY, type
         assert_equal buffer.read_string, key.to_blob
         assert buffer.eof?
@@ -363,7 +361,7 @@ EOF
     end
 
     def test_remove_identity_should_raise_error_on_failure
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         s.return(SSH_AGENT_FAILURE)
       end
 
@@ -373,7 +371,7 @@ EOF
     end
 
     def test_remove_all_identities
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_REMOVE_ALL_IDENTITIES, type
         assert buffer.eof?
 
@@ -384,7 +382,7 @@ EOF
     end
 
     def test_remove_all_identities_should_raise_error_on_failure
-      socket.expect do |s,type,buffer|
+      socket.expect do |s, type, buffer|
         s.return(SSH_AGENT_FAILURE)
       end
 
@@ -413,7 +411,7 @@ EOF
 
         def return(type, *args)
           data = Net::SSH::Buffer.from(*args)
-          @buffer.append([data.length+1, type, data.to_s].pack("NCA*"))
+          @buffer.append([data.length + 1, type, data.to_s].pack("NCA*"))
         end
 
         def send(data, flags)
@@ -442,7 +440,7 @@ EOF
         @factory ||= stub("socket factory", open: socket)
       end
 
-      def agent(auto=:connect)
+      def agent(auto = :connect)
         @agent ||= begin
           agent = Net::SSH::Authentication::Agent.new
           agent.stubs(:unix_socket_class).returns(factory)
@@ -452,8 +450,7 @@ EOF
       end
 
       def agent_socket_factory
-        @agent_socket_factory ||= ->{"/foo/bar.sock"}
+        @agent_socket_factory ||= -> { "/foo/bar.sock" }
       end
   end
-
 end

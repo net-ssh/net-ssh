@@ -2,7 +2,6 @@ require 'net/ssh/connection/constants'
 require 'net/ssh/transport/constants'
 
 module Net; module SSH; module Test
-
   # This is an abstract class, not to be instantiated directly, subclassed by
   # Net::SSH::Test::LocalPacket and Net::SSH::Test::RemotePacket. It implements
   # functionality common to those subclasses.
@@ -21,7 +20,7 @@ module Net; module SSH; module Test
     # of extra parameters
     def self.register_channel_request(request, extra_parts)
       @registered_requests ||= {}
-      @registered_requests[request] = {extra_parts: extra_parts}
+      @registered_requests[request] = { extra_parts: extra_parts }
     end
 
     def self.registered_channel_requests(request)
@@ -49,7 +48,7 @@ module Net; module SSH; module Test
     # Instantiates the packets data elements. When the packet was first defined,
     # some elements may not have been fully realized, and were described as
     # Proc objects rather than atomic types. This invokes those Proc objects
-    # and replaces them with their returned values. This allows for values 
+    # and replaces them with their returned values. This allows for values
     # like Net::SSH::Test::Channel#remote_id to be used in scripts before
     # the remote_id is known (since it is only known after a channel has been
     # confirmed open).
@@ -68,7 +67,7 @@ module Net; module SSH; module Test
     # added. Unsupported packet types will otherwise raise an exception.
     def types
       @types ||= case @type
-        when KEXINIT then 
+        when KEXINIT then
           [:long, :long, :long, :long,
            :string, :string, :string, :string, :string, :string, :string, :string, :string, :string,
            :bool]
@@ -81,10 +80,10 @@ module Net; module SSH; module Test
         when CHANNEL_REQUEST
           parts = [:long, :string, :bool]
           case @data[1]
-          when "exec", "subsystem","shell" then parts << :string
+          when "exec", "subsystem", "shell" then parts << :string
           when "exit-status" then parts << :long
           when "pty-req" then parts.concat([:string, :long, :long, :long, :long, :string])
-          when "env" then parts.contact([:string,:string])
+          when "env" then parts.contact([:string, :string])
           else
             request = Packet.registered_channel_requests(@data[1])
             raise "don't know what to do about #{@data[1]} channel request" unless request
@@ -94,5 +93,4 @@ module Net; module SSH; module Test
         end
     end
   end
-
 end; end; end

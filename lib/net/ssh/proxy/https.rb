@@ -4,19 +4,17 @@ require 'net/ssh/proxy/errors'
 require 'net/ssh/proxy/http'
 
 module Net; module SSH; module Proxy
-
   # A specialization of the HTTP proxy which encrypts the whole connection
   # using OpenSSL. This has the advantage that proxy authentication
   # information is not sent in plaintext.
   class HTTPS < HTTP
-
     # Create a new socket factory that tunnels via the given host and
     # port. The +options+ parameter is a hash of additional settings that
     # can be used to tweak this proxy connection. In addition to the options
     # taken by Net::SSH::Proxy::HTTP it supports:
     #
     # * :ssl_context => the SSL configuration to use for the connection
-    def initialize(proxy_host, proxy_port=80, options={})
+    def initialize(proxy_host, proxy_port = 80, options = {})
       @ssl_context = options.delete(:ssl_context) ||
                        OpenSSL::SSL::SSLContext.new
       super(proxy_host, proxy_port, options)
@@ -45,5 +43,4 @@ module Net; module SSH; module Proxy
         end
       end
   end
-
 end; end; end

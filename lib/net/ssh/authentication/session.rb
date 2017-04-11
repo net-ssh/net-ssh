@@ -9,7 +9,6 @@ require 'net/ssh/authentication/methods/password'
 require 'net/ssh/authentication/methods/keyboard_interactive'
 
 module Net; module SSH; module Authentication
-
   # Raised if the current authentication method is not allowed
   class DisallowedMethod < Net::SSH::Exception
   end
@@ -38,7 +37,7 @@ module Net; module SSH; module Authentication
 
     # Instantiates a new Authentication::Session object over the given
     # transport layer abstraction.
-    def initialize(transport, options={})
+    def initialize(transport, options = {})
       self.logger = transport.logger
       @transport = transport
 
@@ -51,7 +50,7 @@ module Net; module SSH; module Authentication
     # Attempts to authenticate the given user, in preparation for the next
     # service request. Returns true if an authentication method succeeds in
     # authenticating the user, and false otherwise.
-    def authenticate(next_service, username, password=nil)
+    def authenticate(next_service, username, password = nil)
       debug { "beginning authentication of `#{username}'" }
 
       transport.send_message(transport.service_request("ssh-userauth"))
@@ -73,7 +72,7 @@ module Net; module SSH; module Authentication
             auth_class = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join)
             method = auth_class.new(self, key_manager: key_manager, password_prompt: options[:password_prompt])
           rescue NameError
-            debug{"Mechanism #{name} was requested, but isn't a known type.  Ignoring it."}
+            debug { "Mechanism #{name} was requested, but isn't a known type.  Ignoring it." }
             next
           end
 

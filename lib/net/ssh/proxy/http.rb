@@ -2,7 +2,6 @@ require 'socket'
 require 'net/ssh/proxy/errors'
 
 module Net; module SSH; module Proxy
-
   # An implementation of an HTTP proxy. To use it, instantiate it, then
   # pass the instantiated object via the :proxy key to Net::SSH.start:
   #
@@ -22,7 +21,6 @@ module Net; module SSH; module Proxy
   # Note that HTTP digest authentication is not supported; Basic only at
   # this point.
   class HTTP
-
     # The hostname or IP address of the HTTP proxy.
     attr_reader :proxy_host
 
@@ -40,7 +38,7 @@ module Net; module SSH; module Proxy
     #
     # * :user => the user name to use when authenticating to the proxy
     # * :password => the password to use when authenticating
-    def initialize(proxy_host, proxy_port=80, options={})
+    def initialize(proxy_host, proxy_port = 80, options = {})
       @proxy_host = proxy_host
       @proxy_port = proxy_port
       @options = options
@@ -94,5 +92,4 @@ module Net; module SSH; module Proxy
                  body: body }
       end
   end
-
 end; end; end

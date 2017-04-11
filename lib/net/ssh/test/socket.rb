@@ -4,7 +4,6 @@ require 'net/ssh/test/extensions'
 require 'net/ssh/test/script'
 
 module Net; module SSH; module Test
-
   # A mock socket implementation for use in testing. It implements the minimum
   # necessary interface for interacting with the rest of the Net::SSH::Test
   # system.
@@ -39,7 +38,7 @@ module Net; module SSH; module Test
 
     # Allows the socket to also mimic a socket factory, simply returning
     # +self+.
-    def open(host, port, options={})
+    def open(host, port, options = {})
       @host, @port = host, port
       self
     end
@@ -58,7 +57,5 @@ module Net; module SSH; module Test
     def readpartial(n)
       recv(n)
     end
-    
   end
-
 end; end; end

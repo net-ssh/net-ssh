@@ -6,9 +6,7 @@ require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'
 require 'net/ssh/transport/state'
 
-
 module Net; module SSH; module Transport
-
   # A module that builds additional functionality onto the Net::SSH::BufferedIo
   # module. It adds SSH encryption, compression, and packet validation, as
   # per the SSH2 protocol. It also adds an abstraction for polling packets,
@@ -81,7 +79,7 @@ module Net; module SSH; module Transport
     # available or not, and will return nil if there is no packet ready to be
     # returned. If the mode parameter is :block, then this method will block
     # until a packet is available.
-    def next_packet(mode=:nonblock)
+    def next_packet(mode = :nonblock)
       case mode
       when :nonblock then
         packet = poll_next_packet
@@ -244,5 +242,4 @@ module Net; module SSH; module Transport
         return Packet.new(payload)
       end
   end
-
 end; end; end

@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require_relative 'lib/net/ssh/version'
 
 Gem::Specification.new do |spec|
@@ -30,7 +31,7 @@ Gem::Specification.new do |spec|
 
   unless ENV['NET_SSH_NO_RBNACL']
     spec.add_development_dependency("rbnacl-libsodium", "~> 1.0.11")
-    spec.add_development_dependency("rbnacl", ['>= 3.2.0','< 5.0'])
+    spec.add_development_dependency("rbnacl", ['>= 3.2.0', '< 5.0'])
     spec.add_development_dependency("bcrypt_pbkdf", "~> 1.0") unless RUBY_PLATFORM == "java"
   end
 
@@ -38,6 +39,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "minitest", "~> 5.10"
-  spec.add_development_dependency "rubocop", "~> 0.47.0"
+  spec.add_development_dependency "rubocop", "~> 0.48.0"
   spec.add_development_dependency "mocha", ">= 1.2.1"
 end

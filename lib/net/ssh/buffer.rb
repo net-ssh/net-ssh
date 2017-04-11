@@ -5,7 +5,6 @@ require 'net/ssh/authentication/certificate'
 require 'net/ssh/authentication/ed25519_loader'
 
 module Net; module SSH
-
   # Net::SSH::Buffer is a flexible class for building and parsing binary
   # data packets. It provides a stream-like interface for sequentially
   # reading data items from the buffer, as well as a useful helper method
@@ -48,9 +47,9 @@ module Net; module SSH
       raise ArgumentError, "odd number of arguments given" unless args.length % 2 == 0
 
       buffer = new
-      0.step(args.length-1, 2) do |index|
+      0.step(args.length - 1, 2) do |index|
         type = args[index]
-        value = args[index+1]
+        value = args[index + 1]
         if type == :raw
           buffer.append(value.to_s)
         elsif Array === value
@@ -71,7 +70,7 @@ module Net; module SSH
 
     # Creates a new buffer, initialized to the given content. The position
     # is initialized to the beginning of the buffer.
-    def initialize(content="")
+    def initialize(content = "")
       @content = content.to_s
       @position = 0
     end
@@ -129,7 +128,7 @@ module Net; module SSH
     # would otherwise tend to grow without bound.
     #
     # Returns the buffer object itself.
-    def consume!(n=position)
+    def consume!(n = position)
       if n >= length
         # optimize for a fairly common case
         clear!
@@ -166,22 +165,22 @@ module Net; module SSH
         when Integer then 1
         when Regexp then $&.length
       end
-      index && read(index+length)
+      index && read(index + length)
     end
 
     # Reads and returns the next +count+ bytes from the buffer, starting from
     # the read position. If +count+ is +nil+, this will return all remaining
     # text in the buffer. This method will increment the pointer.
-    def read(count=nil)
+    def read(count = nil)
       count ||= length
       count = length - @position if @position + count > length
       @position += count
-      @content[@position-count, count]
+      @content[@position - count, count]
     end
 
     # Reads (as #read) and returns the given number of bytes from the buffer,
     # and then consumes (as #consume!) all data up to the new read position.
-    def read!(count=nil)
+    def read!(count = nil)
       data = read(count)
       consume!
       data

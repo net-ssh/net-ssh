@@ -3,7 +3,6 @@ require 'net/ssh/test/local_packet'
 require 'net/ssh/test/remote_packet'
 
 module Net; module SSH; module Test
-
   # Represents a sequence of scripted events that identify the behavior that
   # a test expects. Methods named "sends_*" create events for packets being
   # sent from the local to the remote host, and methods named "gets_*" create
@@ -32,7 +31,7 @@ module Net; module SSH; module Test
     #
     # A new Net::SSH::Test::Channel instance is returned, which can be used
     # to script additional channel operations.
-    def opens_channel(confirm=true)
+    def opens_channel(confirm = true)
       channel = Channel.new(self)
       channel.remote_id = 5555
 
@@ -71,18 +70,18 @@ module Net; module SSH; module Test
     #
     # This will typically be called via Net::SSH::Test::Channel#sends_exec or
     # Net::SSH::Test::Channel#sends_subsystem.
-    def sends_channel_request(channel, request, reply, data, success=true)
-      if data.is_a? Array
-        events << LocalPacket.new(:channel_request, channel.remote_id, request, reply, *data)
-      else
-        events << LocalPacket.new(:channel_request, channel.remote_id, request, reply, data)
-      end
+    def sends_channel_request(channel, request, reply, data, success = true)
+      events << if data.is_a? Array
+                  LocalPacket.new(:channel_request, channel.remote_id, request, reply, *data)
+                else
+                  LocalPacket.new(:channel_request, channel.remote_id, request, reply, data)
+                end
       if reply
-        if success
-          events << RemotePacket.new(:channel_success, channel.local_id)
-        else
-          events << RemotePacket.new(:channel_failure, channel.local_id)
-        end
+        events << if success
+                    RemotePacket.new(:channel_success, channel.local_id)
+                  else
+                    RemotePacket.new(:channel_failure, channel.local_id)
+                  end
       end
     end
 
@@ -164,7 +163,7 @@ module Net; module SSH; module Test
     #
     #   # peek at the next event
     #   event = script.next(:first)
-    def next(mode=:shift)
+    def next(mode = :shift)
       events.send(mode)
     end
 
@@ -176,5 +175,4 @@ module Net; module SSH; module Test
       event.process(packet)
     end
   end
-
 end; end; end

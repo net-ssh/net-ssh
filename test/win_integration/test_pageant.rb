@@ -2,7 +2,6 @@ require_relative '../common'
 require 'net/ssh/authentication/agent'
 
 module Authentication
-
   unless RUBY_PLATFORM == "java"
 
   class TestPageapnt < NetSSHTest
@@ -30,7 +29,7 @@ module Authentication
 
     private
 
-    def agent(auto=:connect)
+    def agent(auto = :connect)
       @agent ||= begin
         agent = Net::SSH::Authentication::Agent.new
         agent.connect! if auto == :connect
@@ -40,5 +39,4 @@ module Authentication
   end
 
   end
-
 end

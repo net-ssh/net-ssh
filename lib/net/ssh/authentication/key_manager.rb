@@ -6,7 +6,6 @@ require 'net/ssh/authentication/agent'
 module Net
   module SSH
     module Authentication
-
       # A trivial exception class used to report errors in the key manager.
       class KeyManagerError < Net::SSH::Exception; end
 
@@ -39,7 +38,7 @@ module Net
         # Create a new KeyManager. By default, the manager will
         # use the ssh-agent if it is running and the `:use_agent` option
         # is not false.
-        def initialize(logger, options={})
+        def initialize(logger, options = {})
           self.logger = logger
           @key_files = []
           @key_data = []
@@ -235,7 +234,6 @@ module Net
               else
                 identity
               end
-
             rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError, OpenSSL::PKey::PKeyError, ArgumentError => e
               if ignore_decryption_errors
                 identity
@@ -260,7 +258,6 @@ module Net
             raise e
           end
         end
-
       end
     end
   end

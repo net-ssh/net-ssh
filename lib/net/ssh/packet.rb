@@ -4,7 +4,6 @@ require 'net/ssh/authentication/constants'
 require 'net/ssh/connection/constants'
 
 module Net; module SSH
-
   # A specialization of Buffer that knows the format of certain common
   # packet types. It auto-parses those packet types, and allows them to
   # be accessed via the #[] accessor.

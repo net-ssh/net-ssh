@@ -1,7 +1,6 @@
 require 'io/console'
 
 module Net; module SSH
-
   # Default prompt implementation, called for asking password from user.
   # It will never be instantiated directly, but will instead be created for
   # you automatically.
@@ -38,7 +37,7 @@ module Net; module SSH
 
       # ask input from user, a prompter might ask for multiple inputs
       # (like user and password) in a single session.
-      def ask(prompt, echo=true)
+      def ask(prompt, echo = true)
         $stdout.print(prompt)
         $stdout.flush
         ret = $stdin.noecho(&:gets).chomp
@@ -58,5 +57,4 @@ module Net; module SSH
       Prompter.new(info)
     end
   end
-
 end; end

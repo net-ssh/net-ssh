@@ -69,7 +69,6 @@ class TestConfig < NetSSHTest
     end
   end
 
-
   def test_for_should_load_all_files_and_translate_to_net_ssh_options
     config = Net::SSH::Config.for("test.host", [config(:exact_match), config(:wild_cards)])
     assert_equal 1234, config[:port]
@@ -287,7 +286,7 @@ class TestConfig < NetSSHTest
 
   private
 
-    def with_home_env(value,&block)
+    def with_home_env(value, &block)
       env_home_before = ENV['HOME']
       begin
         ENV['HOME'] = value

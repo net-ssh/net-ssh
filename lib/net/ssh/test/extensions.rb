@@ -7,13 +7,11 @@ require 'net/ssh/transport/constants'
 require 'net/ssh/transport/packet_stream'
 
 module Net; module SSH; module Test
-
   # A collection of modules used to extend/override the default behavior of
   # Net::SSH internals for ease of testing. As a consumer of Net::SSH, you'll
   # never need to use this directly--they're all used under the covers by
   # the Net::SSH::Test system.
   module Extensions
-
     # An extension to Net::SSH::BufferedIo (assumes that the underlying IO
     # is actually a StringIO). Facilitates unit testing.
     module BufferedIo
@@ -140,7 +138,7 @@ module Net; module SSH; module Test
         # The testing version of ::IO.select. Assumes that all readers,
         # writers, and errors arrays are either nil, or contain only objects
         # that mix in Net::SSH::Test::Extensions::BufferedIo.
-        def select_for_test(readers=nil, writers=nil, errors=nil, wait=nil)
+        def select_for_test(readers = nil, writers = nil, errors = nil, wait = nil)
           return select_for_real(readers, writers, errors, wait) unless Net::SSH::Test::Extensions::IO.extension_enabled?
           ready_readers = Array(readers).select { |r| r.select_for_read? }
           ready_writers = Array(writers).select { |r| r.select_for_write? }
@@ -160,7 +158,6 @@ module Net; module SSH; module Test
       end
     end
   end
-
 end; end; end
 
 Net::SSH::BufferedIo.send(:include, Net::SSH::Test::Extensions::BufferedIo)

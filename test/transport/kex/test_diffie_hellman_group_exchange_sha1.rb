@@ -3,7 +3,6 @@ require 'transport/kex/test_diffie_hellman_group1_sha1'
 require 'net/ssh/transport/kex/diffie_hellman_group_exchange_sha1'
 
 module Transport; module Kex
-
   class TestDiffieHellmanGroupExchangeSHA1 < TestDiffieHellmanGroup1SHA1
     KEXDH_GEX_GROUP   = 31
     KEXDH_GEX_INIT    = 32
@@ -35,18 +34,18 @@ module Transport; module Kex
     end
 
     def test_that_p_and_g_are_provided_by_the_server
-      assert_nothing_raised { exchange! p: default_p+2, g: 3 }
-      assert_equal default_p+2, dh.dh.p
+      assert_nothing_raised { exchange! p: default_p + 2, g: 3 }
+      assert_equal default_p + 2, dh.dh.p
       assert_equal 3, dh.dh.g
     end
 
     private
 
-      def need_bits(bits=1024)
+      def need_bits(bits = 1024)
         @need_bits ||= need_minimum(bits)
       end
 
-      def need_minimum(bits=1024)
+      def need_minimum(bits = 1024)
         return @dh_options[:minimum_dh_bits] if @dh_options && @dh_options[:minimum_dh_bits]
         bits
       end
@@ -55,7 +54,7 @@ module Transport; module Kex
         142326151570335518660743995281621698377057354949884468943021767573608899048361360422513557553514790045512299468953431585300812548859419857171094366358158903433167915517332113861059747425408670144201099811846875730766487278261498262568348338476437200556998366087779709990807518291581860338635288400119315130179
       end
 
-      def exchange!(options={})
+      def exchange!(options = {})
         connection.expect do |t, buffer|
           assert_equal KEXDH_GEX_REQUEST, buffer.type
           assert_equal need_minimum, buffer.read_long
@@ -103,5 +102,4 @@ module Transport; module Kex
         end
       end
   end
-
 end; end

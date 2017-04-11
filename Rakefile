@@ -1,4 +1,5 @@
 # coding: UTF-8
+
 #
 # Also in your terminal environment run:
 #   $ export LANG=en_US.UTF-8
@@ -12,7 +13,6 @@ require "bundler/gem_tasks"
 
 require "rdoc/task"
 
-
 desc "When releasing make sure NET_SSH_BUILDGEM_SIGNED is set"
 task :check_NET_SSH_BUILDGEM_SIGNED do
   raise "NET_SSH_BUILDGEM_SIGNED should be set to release" unless ENV['NET_SSH_BUILDGEM_SIGNED']
@@ -21,9 +21,8 @@ end
 Rake::Task[:release].enhance [:check_NET_SSH_BUILDGEM_SIGNED]
 Rake::Task[:release].prerequisites.unshift(:check_NET_SSH_BUILDGEM_SIGNED)
 
-
 task default: ["build"]
-CLEAN.include [ 'pkg', 'rdoc' ]
+CLEAN.include ['pkg', 'rdoc']
 name = "net-ssh"
 
 require_relative "lib/net/ssh/version"
@@ -80,7 +79,7 @@ Rake::TestTask.new do |t|
   test_files -= FileList['test/manual/test_*.rb']
   test_files -= FileList['test/test_pageant.rb']
   test_files -= FileList['test/test/**/test_*.rb']
-  t.test_files =  test_files
+  t.test_files = test_files
 end
 
 desc "Run tests of Net::SSH:Test"
@@ -89,5 +88,5 @@ Rake::TestTask.new do |t|
   # we need to run test/test separatedly as it hacks io + other modules
   t.libs = ["lib", "test"]
   test_files = FileList['test/test/**/test_*.rb']
-  t.test_files =  test_files
+  t.test_files = test_files
 end

@@ -5,7 +5,6 @@ require 'net/ssh/transport/openssl'
 require 'net/ssh/transport/constants'
 
 module Net; module SSH; module Transport; module Kex
-
   # A key-exchange service implementing the "diffie-hellman-group1-sha1"
   # key-exchange algorithm.
   class DiffieHellmanGroup1SHA1
@@ -223,5 +222,4 @@ module Net; module SSH; module Transport; module Kex
         raise Net::SSH::Exception, "expected NEWKEYS" unless buffer.type == NEWKEYS
       end
   end
-
 end; end; end; end

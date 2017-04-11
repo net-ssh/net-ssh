@@ -1,5 +1,4 @@
 module Net; module SSH; module Connection
-      
   # These constants are used when requesting a pseudo-terminal (via
   # Net::SSH::Connection::Channel#request_pty). The descriptions for each are
   # taken directly from RFC 4254 ("The Secure Shell (SSH) Connection Protocol"),
@@ -124,7 +123,7 @@ module Net; module SSH; module Connection
     NOFLSH = 57
 
     # Stop background jobs from output.
-    TOSTOP= 58
+    TOSTOP = 58
 
     # Enable extensions.
     IEXTEN = 59
@@ -174,5 +173,4 @@ module Net; module SSH; module Connection
     # Specifies the output baud rate in bits per second.
     TTY_OP_OSPEED = 129
   end
-
 end; end; end

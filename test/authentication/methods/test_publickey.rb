@@ -3,7 +3,6 @@ require 'net/ssh/authentication/methods/publickey'
 require 'authentication/methods/common'
 
 module Authentication; module Methods
-
   class TestPublickey < NetSSHTest
     include Common
 
@@ -39,7 +38,7 @@ module Authentication; module Methods
         assert verify_userauth_request_packet(packet, keys.first, false)
         t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
 
-        t.expect do |t2,packet2|
+        t.expect do |t2, packet2|
           assert_equal USERAUTH_REQUEST, packet2.type
           assert verify_userauth_request_packet(packet2, keys.first, true)
           assert_equal "sig-one", packet2.read_string
@@ -61,7 +60,7 @@ module Authentication; module Methods
         assert verify_userauth_request_packet(packet, keys.first, false)
         t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
 
-        t.expect do |t2,packet2|
+        t.expect do |t2, packet2|
           assert_equal USERAUTH_REQUEST, packet2.type
           assert verify_userauth_request_packet(packet2, keys.first, true)
           assert_equal "sig-one", packet2.read_string
@@ -72,7 +71,7 @@ module Authentication; module Methods
             assert verify_userauth_request_packet(packet3, keys.last, false)
             t3.return(USERAUTH_PK_OK, :string, keys.last.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.last))
 
-            t3.expect do |t4,packet4|
+            t3.expect do |t4, packet4|
               assert_equal USERAUTH_REQUEST, packet4.type
               assert verify_userauth_request_packet(packet4, keys.last, true)
               assert_equal "sig-two", packet4.read_string
@@ -93,7 +92,7 @@ module Authentication; module Methods
         assert verify_userauth_request_packet(packet, keys.first, false)
         t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
 
-        t.expect do |t2,packet2|
+        t.expect do |t2, packet2|
           assert_equal USERAUTH_REQUEST, packet2.type
           assert verify_userauth_request_packet(packet2, keys.first, true)
           assert_equal "sig-one", packet2.read_string
@@ -130,7 +129,7 @@ module Authentication; module Methods
         @@keys ||= [OpenSSL::PKey::RSA.new(512), OpenSSL::PKey::DSA.new(512)]
       end
 
-      def key_manager(options={})
+      def key_manager(options = {})
         @key_manager ||= begin
           manager = stub("key_manager")
           manager.stubs(:each_identity).multiple_yields(*(options[:keys] || keys))
@@ -138,11 +137,9 @@ module Authentication; module Methods
         end
       end
 
-      def subject(options={})
+      def subject(options = {})
         options[:key_manager] = key_manager(options) unless options.key?(:key_manager)
         @subject ||= Net::SSH::Authentication::Methods::Publickey.new(session(options), options)
       end
-
   end
-
 end; end

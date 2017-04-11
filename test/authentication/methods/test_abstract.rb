@@ -3,7 +3,6 @@ require 'authentication/methods/common'
 require 'net/ssh/authentication/methods/abstract'
 
 module Authentication; module Methods
-
   class TestAbstract < NetSSHTest
     include Common
 
@@ -42,10 +41,8 @@ module Authentication; module Methods
 
     private
 
-      def subject(options={})
+      def subject(options = {})
         @subject ||= Net::SSH::Authentication::Methods::Abstract.new(session(options), options)
       end
-
   end
-
 end; end

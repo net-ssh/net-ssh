@@ -3,12 +3,11 @@ require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 require 'ostruct'
 
 module Transport; module Kex
-
   class TestDiffieHellmanGroup1SHA1 < NetSSHTest
     include Net::SSH::Transport::Constants
 
     def setup
-      @dh_options = @dh = @algorithms = @connection = @server_key = 
+      @dh_options = @dh = @algorithms = @connection = @server_key =
         @packet_data = @shared_secret = nil
     end
 
@@ -65,7 +64,7 @@ module Transport; module Kex
 
     private
 
-      def exchange!(options={})
+      def exchange!(options = {})
         connection.expect do |t, buffer|
           assert_equal KEXDH_INIT, buffer.type
           assert_equal dh.dh.pub_key, buffer.read_bignum
@@ -79,7 +78,7 @@ module Transport; module Kex
         dh.exchange_keys
       end
 
-      def dh_options(options={})
+      def dh_options(options = {})
         @dh_options = options
       end
 
@@ -87,7 +86,7 @@ module Transport; module Kex
         @dh ||= subject.new(algorithms, connection, packet_data.merge(need_bytes: 20).merge(@dh_options || {}))
       end
 
-      def algorithms(options={})
+      def algorithms(options = {})
         @algorithms ||= OpenStruct.new(host_key: options[:host_key] || "ssh-rsa")
       end
 
@@ -101,7 +100,7 @@ module Transport; module Kex
 
       # 512 bits is the smallest possible key that will work with this, so
       # we use it for speed reasons
-      def server_key(bits=512)
+      def server_key(bits = 512)
         @server_key ||= OpenSSL::PKey::RSA.new(bits)
       end
 
@@ -138,7 +137,7 @@ module Transport; module Kex
         @signature ||= server_key.ssh_do_sign(session_id)
       end
 
-      def bn(number, base=10)
+      def bn(number, base = 10)
         OpenSSL::BN.new(number.to_s, base)
       end
 
@@ -146,5 +145,4 @@ module Transport; module Kex
         Net::SSH::Buffer.from(*args)
       end
   end
-
 end; end

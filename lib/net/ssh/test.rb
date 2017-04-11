@@ -4,7 +4,6 @@ require 'net/ssh/test/kex'
 require 'net/ssh/test/socket'
 
 module Net; module SSH
-
   # This module may be used in unit tests, for when you want to test that your
   # SSH state machines are really doing what you expect they are doing. You will
   # typically include this module in your unit test class, and then build a
@@ -56,21 +55,21 @@ module Net; module SSH
 
     # Returns the test socket instance to use for these tests (see
     # Net::SSH::Test::Socket).
-    def socket(options={})
+    def socket(options = {})
       @socket ||= Net::SSH::Test::Socket.new
     end
 
     # Returns the connection session (Net::SSH::Connection::Session) for use
     # in these tests. It is a fully functional SSH session, operating over
     # a mock socket (#socket).
-    def connection(options={})
+    def connection(options = {})
       @connection ||= Net::SSH::Connection::Session.new(transport(options), options)
     end
 
     # Returns the transport session (Net::SSH::Transport::Session) for use
     # in these tests. It is a fully functional SSH transport session, operating
     # over a mock socket (#socket).
-    def transport(options={})
+    def transport(options = {})
       @transport ||= Net::SSH::Transport::Session.new(options[:host] || "localhost", options.merge(kex: "test", host_key: "ssh-rsa", paranoid: false, proxy: socket(options)))
     end
 
@@ -85,5 +84,4 @@ module Net; module SSH
       assert socket.script.events.empty?, "there should not be any remaining scripted events, but there are still #{socket.script.events.length} pending"
     end
   end
-
 end; end

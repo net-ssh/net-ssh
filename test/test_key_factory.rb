@@ -33,7 +33,7 @@ class TestKeyFactory < NetSSHTest
     data = encrypted(dsa_key, "password")
     File.expects(:read).with(@key_file).returns(data)
     sha = Digest::SHA256.digest(data)
-    prompt.expects(:_ask).with("Enter passphrase for #{@key_file}:", {type: 'private_key', filename: @key_file, sha: sha}, false).returns("password")
+    prompt.expects(:_ask).with("Enter passphrase for #{@key_file}:", { type: 'private_key', filename: @key_file, sha: sha }, false).returns("password")
     assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file, nil, true, prompt).to_der
   end
 
@@ -45,7 +45,7 @@ class TestKeyFactory < NetSSHTest
   def test_load_encrypted_private_key_should_give_three_tries_for_the_password_and_then_raise_exception
     prompt = MockPrompt.new
     File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
-    prompt.expects(:_ask).times(3).with("Enter passphrase for #{@key_file}:", has_entries(type: 'private_key', filename: @key_file), false).returns("passwod","passphrase","passwd")
+    prompt.expects(:_ask).times(3).with("Enter passphrase for #{@key_file}:", has_entries(type: 'private_key', filename: @key_file), false).returns("passwod", "passphrase", "passwd")
     if OpenSSL::PKey.respond_to?(:read)
       error_class = [ArgumentError, OpenSSL::PKey::PKeyError]
     else
@@ -81,7 +81,7 @@ class TestKeyFactory < NetSSHTest
   end
 
   def test_load_public_rsa_key_with_options_and_comment_should_return_key
-    File.expects(:read).with(@key_file).returns(public(rsa_key, 'environment="FOO=bar"')  + " key_comment")
+    File.expects(:read).with(@key_file).returns(public(rsa_key, 'environment="FOO=bar"') + " key_comment")
     assert_equal rsa_key.to_blob, Net::SSH::KeyFactory.load_public_key(@key_file).to_blob
   end
   if defined?(OpenSSL::PKey::EC)
@@ -89,10 +89,12 @@ class TestKeyFactory < NetSSHTest
       File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp256_key.to_pem)
       assert_equal ecdsa_sha2_nistp256_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
     end
+
     def test_load_unencrypted_private_ecdsa_sha2_nistp384_key_should_return_key
       File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp384_key.to_pem)
       assert_equal ecdsa_sha2_nistp384_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
     end
+
     def test_load_unencrypted_private_ecdsa_sha2_nistp521_key_should_return_key
       File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp521_key.to_pem)
       assert_equal ecdsa_sha2_nistp521_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
@@ -102,10 +104,12 @@ class TestKeyFactory < NetSSHTest
       File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp256_key))
       assert_equal ecdsa_sha2_nistp256_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
     end
+
     def test_load_public_ecdsa_sha2_nistp384_key_should_return_key
       File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp384_key))
       assert_equal ecdsa_sha2_nistp384_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
     end
+
     def test_load_public_ecdsa_sha2_nistp521_key_should_return_key
       File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp521_key))
       assert_equal ecdsa_sha2_nistp521_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob

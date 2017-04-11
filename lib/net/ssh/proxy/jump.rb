@@ -2,7 +2,6 @@ require 'uri'
 require 'net/ssh/proxy/command'
 
 module Net; module SSH; module Proxy
-
   # An implementation of a jump proxy. To use it, instantiate it,
   # then pass the instantiated object via the :proxy key to
   # Net::SSH.start:
@@ -14,7 +13,6 @@ module Net; module SSH; module Proxy
   #     ...
   #   end
   class Jump < Command
-
     # The jump proxies
     attr_reader :jump_proxies
 
@@ -49,5 +47,4 @@ module Net; module SSH; module Proxy
       @command_line_template = template
     end
   end
-
 end; end; end

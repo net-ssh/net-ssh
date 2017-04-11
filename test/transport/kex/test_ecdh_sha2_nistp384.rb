@@ -6,9 +6,8 @@ else
   require 'transport/kex/test_ecdh_sha2_nistp256'
   module Transport; module Kex
     class TestEcdhSHA2NistP384 < TestEcdhSHA2NistP256
-
       def setup
-        @ecdh = @algorithms = @connection = @server_key = 
+        @ecdh = @algorithms = @connection = @server_key =
           @packet_data = @shared_secret = nil
       end
 

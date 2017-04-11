@@ -1,5 +1,4 @@
 module Net; module SSH
-
   # The Net::SSH::Config class is used to parse OpenSSH configuration files,
   # and translates that syntax into the configuration syntax that Net::SSH
   # understands. This lets Net::SSH scripts read their configuration (to
@@ -60,7 +59,7 @@ module Net; module SSH
       # given +files+ (defaulting to the list of files returned by
       # #default_files), translates the resulting hash into the options
       # recognized by Net::SSH, and returns them.
-      def for(host, files=expandable_default_files)
+      def for(host, files = expandable_default_files)
         translate(files.inject({}) { |settings, file|
           load(file, host, settings)
         })
@@ -72,7 +71,7 @@ module Net; module SSH
       # ones. Returns a hash containing the OpenSSH options. (See
       # #translate for how to convert the OpenSSH options into Net::SSH
       # options.)
-      def load(path, host, settings={}, base_dir = nil)
+      def load(path, host, settings = {}, base_dir = nil)
         file = File.expand_path(path)
         base_dir ||= File.dirname(file)
         return settings unless File.readable?(file)
@@ -111,11 +110,11 @@ module Net; module SSH
             # The host substring code is used to strip out the starting "!" so the regexp will be correct.
             negative_matched = negative_hosts.any? { |h| host =~ pattern2regex(h[1..-1]) }
 
-            if negative_matched
-              host_matched = false
-            else
-              host_matched = positive_hosts.any? { |h| host =~ pattern2regex(h) }
-            end
+            host_matched = if negative_matched
+                             false
+                           else
+                             positive_hosts.any? { |h| host =~ pattern2regex(h) }
+                           end
 
             seen_host = true
             settings[key] = host
@@ -156,7 +155,7 @@ module Net; module SSH
       def translate(settings)
         auth_methods = default_auth_methods.clone
         (auth_methods << 'challenge-response').uniq!
-        ret = settings.inject({auth_methods: auth_methods}) do |hash, (key, value)|
+        ret = settings.inject({ auth_methods: auth_methods }) do |hash, (key, value)|
           translate_config_key(hash, key.to_sym, value, settings)
           hash
         end
@@ -270,7 +269,7 @@ module Net; module SSH
           tail = pattern
           prefix = ""
           while !tail.empty? do
-            head,sep,tail = tail.partition(/[\*\?]/)
+            head, sep, tail = tail.partition(/[\*\?]/)
             prefix = prefix + Regexp.quote(head)
             case sep
             when '*'
@@ -306,8 +305,6 @@ module Net; module SSH
         def included_file_paths(base_dir, config_path)
           Dir.glob(File.expand_path(config_path, base_dir)).select { |f| File.file?(f) }
         end
-
     end
   end
-
 end; end

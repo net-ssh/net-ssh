@@ -3,7 +3,6 @@ require 'net/ssh/transport/constants'
 require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 
 module Net::SSH::Transport::Kex
-
   # A key-exchange service implementing the
   # "diffie-hellman-group-exchange-sha1" key-exchange algorithm.
   class DiffieHellmanGroupExchangeSHA1 < DiffieHellmanGroup1SHA1
@@ -19,7 +18,6 @@ module Net::SSH::Transport::Kex
 
       # Compute the number of bits needed for the given number of bytes.
       def compute_need_bits
-
         # for Compatibility: OpenSSH requires (need_bits * 2 + 1) length of parameter
         need_bits = data[:need_bytes] * 8 * 2 + 1
 
@@ -31,7 +29,7 @@ module Net::SSH::Transport::Kex
           need_bits = MAXIMUM_BITS
         end
 
-        data[:need_bits ] = need_bits
+        data[:need_bits] = need_bits
         data[:need_bytes] = need_bits / 8
       end
 
@@ -78,5 +76,4 @@ module Net::SSH::Transport::Kex
         response
       end
   end
-
 end

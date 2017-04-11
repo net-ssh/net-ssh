@@ -9,12 +9,11 @@ else
   require 'ostruct'
 
   module Transport; module Kex
-
     class TestEcdhSHA2NistP256 < NetSSHTest
       include Net::SSH::Transport::Constants
 
       def setup
-        @ecdh = @algorithms = @connection = @server_key = 
+        @ecdh = @algorithms = @connection = @server_key =
           @packet_data = @shared_secret = nil
       end
 
@@ -83,7 +82,7 @@ else
         "ecdsa-sha2-nistp256"
       end
 
-      def exchange!(options={})
+      def exchange!(options = {})
         connection.expect do |t, buffer|
           assert_equal KEXECDH_INIT, buffer.type
           assert_equal ecdh.ecdh.public_key.to_bn.to_s(2), buffer.read_string
@@ -104,7 +103,7 @@ else
         @ecdh ||= subject.new(algorithms, connection, packet_data)
       end
 
-      def algorithms(options={})
+      def algorithms(options = {})
         @algorithms ||= OpenStruct.new(host_key: options[:server_host_key] || "ecdsa-sha2-nistp256")
       end
 

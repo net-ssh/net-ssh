@@ -6,15 +6,14 @@ module Net
   module SSH
     module Authentication
       module Methods
-
         # Implements the "password" SSH authentication method.
         class Password < Abstract
           # Attempt to authenticate the given user for the given service. If
           # the password parameter is nil, this will ask for password
-          def authenticate(next_service, username, password=nil)
+          def authenticate(next_service, username, password = nil)
             clear_prompter!
             retries = 0
-            max_retries =  get_max_retries
+            max_retries = get_max_retries
             return false if !password && max_retries == 0
 
             begin
@@ -59,7 +58,7 @@ module Net
 
           def ask_password(username)
             host = session.transport.host
-            prompt_info = {type: 'password', user: username, host: host}
+            prompt_info = { type: 'password', user: username, host: host }
             if @prompt_info != prompt_info
               @prompt_info = prompt_info
               @prompter = prompt.start(prompt_info)
@@ -74,7 +73,6 @@ module Net
             options[:non_interactive] ? 0 : result
           end
         end
-
       end
     end
   end

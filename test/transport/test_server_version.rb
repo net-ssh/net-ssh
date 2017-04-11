@@ -2,9 +2,7 @@ require 'common'
 require 'net/ssh/transport/server_version'
 
 module Transport
-
   class TestServerVersion < NetSSHTest
-
     def test_1_99_server_version_should_be_acceptible
       s = subject(socket(true, "SSH-1.99-Testing_1.0\r\n"))
       assert s.header.empty?
@@ -44,7 +42,7 @@ module Transport
 
     private
 
-      def socket(good, version_header, raise_eot=false)
+      def socket(good, version_header, raise_eot = false)
         socket = mock("socket")
 
         socket.expects(:write).with("#{Net::SSH::Transport::ServerVersion::PROTO_VERSION}\r\n")
@@ -55,12 +53,12 @@ module Transport
         recv_times += 1 if data[-1] != "\n"
 
         unless raise_eot
-          
+
 #        socket.expects(:recv).with(1).times(recv_times).returns(*data).then.returns(nil)
 #        socket.expects(:readchar).times(recv_times).returns(*data).then.returns(nil)
           socket.expects(:readpartial).with(1).times(recv_times).returns(*data).then.returns(nil)
         else
-          socket.expects(:readpartial).with(1).times(recv_times+1).returns(*data).then.raises(EOFError, "end of file reached")
+          socket.expects(:readpartial).with(1).times(recv_times + 1).returns(*data).then.raises(EOFError, "end of file reached")
         end
 
         socket
@@ -70,5 +68,4 @@ module Transport
         Net::SSH::Transport::ServerVersion.new(socket, nil)
       end
   end
-
 end

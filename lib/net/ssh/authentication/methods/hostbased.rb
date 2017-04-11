@@ -4,14 +4,13 @@ module Net
   module SSH
     module Authentication
       module Methods
-
         # Implements the host-based SSH authentication method.
         class Hostbased < Abstract
           include Constants
 
           # Attempts to perform host-based authorization of the user by trying
           # all known keys.
-          def authenticate(next_service, username, password=nil)
+          def authenticate(next_service, username, password = nil)
             return false unless key_manager
 
             key_manager.each_identity do |identity|
@@ -66,9 +65,7 @@ module Net
               userauth_request(username, next_service, "hostbased", identity.ssh_type,
                 Buffer.from(:key, identity).to_s, hostname, client_username).to_s
             end
-
         end
-
       end
     end
   end

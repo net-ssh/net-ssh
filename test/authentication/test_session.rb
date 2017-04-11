@@ -2,7 +2,6 @@ require 'common'
 require 'net/ssh/authentication/session'
 
 module Authentication
-
   class TestSession < NetSSHTest
     include Net::SSH::Transport::Constants
     include Net::SSH::Authentication::Constants
@@ -47,7 +46,7 @@ module Authentication
       Net::SSH::Authentication::Methods::Password.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
       Net::SSH::Authentication::Methods::KeyboardInteractive.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
       Net::SSH::Authentication::Methods::None.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
-      
+
       assert_equal false, session.authenticate("next service", "username", "password")
     end
 
@@ -95,13 +94,12 @@ module Authentication
 
     private
 
-      def session(options={})
+      def session(options = {})
         @session ||= Net::SSH::Authentication::Session.new(transport(options), options)
       end
 
-      def transport(options={})
+      def transport(options = {})
         @transport ||= MockTransport.new(options)
       end
   end
-
 end

@@ -1,5 +1,4 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  Exclude:
-    - 'tryout/**/*'
+  TargetRubyVersion: 2.0

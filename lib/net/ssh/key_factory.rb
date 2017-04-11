@@ -4,7 +4,6 @@ require 'net/ssh/prompt'
 require 'net/ssh/authentication/ed25519_loader'
 
 module Net; module SSH
-
   # A factory class for returning new Key classes. It is used for obtaining
   # OpenSSL key instances via their SSH names, and for loading both public and
   # private keys. It used used primarily by Net::SSH itself, internally, and
@@ -38,7 +37,7 @@ module Net; module SSH
       # appropriately. The new key is returned. If the key itself is
       # encrypted (requiring a passphrase to use), the user will be
       # prompted to enter their password unless passphrase works.
-      def load_private_key(filename, passphrase=nil, ask_passphrase=true, prompt=Prompt.default)
+      def load_private_key(filename, passphrase = nil, ask_passphrase = true, prompt = Prompt.default)
         data = File.read(File.expand_path(filename))
         load_data_private_key(data, passphrase, ask_passphrase, filename, prompt)
       end
@@ -48,7 +47,7 @@ module Net; module SSH
       # appropriately. The new key is returned. If the key itself is
       # encrypted (requiring a passphrase to use), the user will be
       # prompted to enter their password unless passphrase works.
-      def load_data_private_key(data, passphrase=nil, ask_passphrase=true, filename="", prompt=Prompt.default)
+      def load_data_private_key(data, passphrase = nil, ask_passphrase = true, filename = "", prompt = Prompt.default)
         key_read, error_classes = classify_key(data, filename)
 
         encrypted_key = data.match(/ENCRYPTED/)
@@ -87,7 +86,7 @@ module Net; module SSH
       # Loads a public key. It will correctly determine whether
       # the file describes an RSA or DSA key, and will load it
       # appropriately. The new public key is returned.
-      def load_data_public_key(data, filename="")
+      def load_data_public_key(data, filename = "")
         fields = data.split(/ /)
 
         blob = nil
@@ -126,7 +125,5 @@ module Net; module SSH
         end
       end
     end
-
   end
-
 end; end

@@ -4,7 +4,6 @@ require 'common'
 require 'net/ssh/transport/hmac/sha1'
 
 module Transport; module HMAC
-
   class TestSHA1 < NetSSHTest
     def test_expected_digest_class
       assert_equal OpenSSL::Digest::SHA1, subject.digest_class
@@ -32,5 +31,4 @@ module Transport; module HMAC
         Net::SSH::Transport::HMAC::SHA1
       end
   end
-
 end; end

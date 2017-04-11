@@ -4,7 +4,6 @@ require 'net/ssh/loggable'
 require 'net/ssh/authentication/constants'
 
 module Net; module SSH; module Authentication; module Methods
-
   # The base class of all user authentication methods. It provides a few
   # bits of common functionality.
   class Abstract
@@ -18,7 +17,7 @@ module Net; module SSH; module Authentication; module Methods
     attr_reader :key_manager
 
     # Instantiates a new authentication method.
-    def initialize(session, options={})
+    def initialize(session, options = {})
       @session = session
       @key_manager = options[:key_manager]
       @options = options
@@ -60,5 +59,4 @@ module Net; module SSH; module Authentication; module Methods
 
     attr_reader :prompt
   end
-
 end; end; end; end

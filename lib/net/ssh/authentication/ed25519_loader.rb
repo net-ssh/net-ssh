@@ -1,9 +1,7 @@
 module Net; module SSH; module Authentication
-
 # Loads ED25519 support which requires optinal dependecies like
 # rbnacl, bcrypt_pbkdf
 module ED25519Loader
-
 begin
   require 'net/ssh/authentication/ed25519'
   LOADED = true
@@ -26,6 +24,5 @@ def self.dependenciesRequiredForED25519
   result << " * bcrypt_pbkdf (>= 1.0, < 2.0)\n" unless RUBY_PLATFORM == "java"
   result << "See https://github.com/net-ssh/net-ssh/issues/478 for more information\n"
 end
-
 end
 end; end; end

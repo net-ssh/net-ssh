@@ -4,7 +4,6 @@ require 'base64'
 require 'net/ssh/buffer'
 
 module Net; module SSH
-
   # Represents the result of a search in known hosts
   # see search_for
   class HostKeys
@@ -39,7 +38,6 @@ module Net; module SSH
   # This is used internally by Net::SSH, and will never need to be used directly
   # by consumers of the library.
   class KnownHosts
-
     if defined?(OpenSSL::PKey::EC)
       SUPPORTED_TYPE = %w(ssh-rsa ssh-dss
                           ecdsa-sha2-nistp256
@@ -49,12 +47,10 @@ module Net; module SSH
       SUPPORTED_TYPE = %w(ssh-rsa ssh-dss)
     end
 
-
     class <<self
-
       # Searches all known host files (see KnownHosts.hostfiles) for all keys
       # of the given host. Returns an enumerable of keys found.
-      def search_for(host, options={})
+      def search_for(host, options = {})
         HostKeys.new(search_in(hostfiles(options), host), host, self, options)
       end
 
@@ -73,7 +69,7 @@ module Net; module SSH
       #
       # If you only want the user known host files, you can pass :user as
       # the second option.
-      def hostfiles(options, which=:all)
+      def hostfiles(options, which = :all)
         files = []
 
         if which == :all || which == :user
@@ -90,7 +86,7 @@ module Net; module SSH
       # Looks in all user known host files (see KnownHosts.hostfiles) and tries to
       # add an entry for the given host and key to the first file it is able
       # to.
-      def add(host, key, options={})
+      def add(host, key, options = {})
         hostfiles(options, :user).each do |file|
           begin
             KnownHosts.new(file).add(host, key)
@@ -182,6 +178,5 @@ module Net; module SSH
         file.puts "#{host} #{key.ssh_type} #{blob}"
       end
     end
-
   end
 end; end

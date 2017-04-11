@@ -3,7 +3,6 @@ require 'net/ssh/loggable'
 require 'net/ssh/ruby_compat'
 
 module Net; module SSH
-
   # This module is used to extend sockets and other IO objects, to allow
   # them to be buffered for both read and write. This abstraction makes it
   # quite easy to write a select-based event loop
@@ -60,7 +59,7 @@ module Net; module SSH
     # Tries to read up to +n+ bytes of data from the remote end, and appends
     # the data to the input buffer. It returns the number of bytes read, or 0
     # if no data was available to be read.
-    def fill(n=8192)
+    def fill(n = 8192)
       input.consume!
       data = recv(n)
       debug { "read #{data.length} bytes" }
@@ -73,7 +72,7 @@ module Net; module SSH
 
     # Read up to +length+ bytes from the input buffer. If +length+ is nil,
     # all available data is read from the buffer. (See #available.)
-    def read_available(length=nil)
+    def read_available(length = nil)
       input.read(length || available)
     end
 
@@ -137,6 +136,7 @@ module Net; module SSH
       #++
 
       def input; @input; end
+
       def output; @output; end
 
       # Initializes the intput and output buffers for this object. This method
@@ -152,8 +152,6 @@ module Net; module SSH
       end
   end
 
-
-
   # Fixes for two issues by Miklós Fazekas:
   #
   #   * if client closes a forwarded connection, but the server is
@@ -167,7 +165,7 @@ module Net; module SSH
   #    http://github.com/net-ssh/net-ssh/tree/portfwfix
   #
   module ForwardedBufferedIo
-    def fill(n=8192)
+    def fill(n = 8192)
       begin
         super(n)
       rescue Errno::ECONNRESET => e
@@ -199,5 +197,4 @@ module Net; module SSH
       end
     end
   end
-
 end; end

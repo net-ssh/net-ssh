@@ -22,7 +22,6 @@ end
 require 'net/ssh/errors'
 
 module Net; module SSH; module Authentication
-
   # This module encapsulates the implementation of a socket factory that
   # uses the PuTTY "pageant" utility to obtain information about SSH
   # identities.
@@ -31,7 +30,6 @@ module Net; module SSH; module Authentication
   # by Guillaume Marçais (guillaume.marcais@free.fr). It is used and
   # relicensed by permission.
   module Pageant
-
     # From Putty pageant.c
     AGENT_MAX_MSGLEN = 8192
     AGENT_COPYDATA_ID = 0x804e50ba
@@ -50,20 +48,20 @@ module Net; module SSH; module Authentication
         SIZEOF_DWORD = DL.sizeof('L')
       elsif RUBY_VERSION < "2.1"
         extend DL::Importer
-        dlload 'user32','kernel32', 'advapi32'
+        dlload 'user32', 'kernel32', 'advapi32'
         include DL::Win32Types
 
         SIZEOF_DWORD = DL::SIZEOF_LONG
       else
         extend Fiddle::Importer
-        dlload 'user32','kernel32', 'advapi32'
+        dlload 'user32', 'kernel32', 'advapi32'
         include Fiddle::Win32Types
         SIZEOF_DWORD = Fiddle::SIZEOF_LONG
       end
 
-      if RUBY_ENGINE=="jruby"
-        typealias("HANDLE", "void *")         # From winnt.h
-        typealias("PHANDLE", "void *")         # From winnt.h
+      if RUBY_ENGINE == "jruby"
+        typealias("HANDLE", "void *") # From winnt.h
+        typealias("PHANDLE", "void *") # From winnt.h
         typealias("ULONG_PTR", "unsigned long*")
       end
       typealias("LPCTSTR", "char *")         # From winnt.h
@@ -82,7 +80,7 @@ module Net; module SSH; module Authentication
       FILE_MAP_WRITE = 2
       WM_COPYDATA = 74
 
-      SMTO_NORMAL = 0   # From winuser.h
+      SMTO_NORMAL = 0 # From winuser.h
 
       SUFFIX = if RUBY_ENGINE == "jruby"
                  "A"
@@ -208,7 +206,7 @@ module Net; module SSH; module Authentication
         end
       elsif RUBY_ENGINE == "jruby"
         %w(FindWindow CreateFileMapping SendMessageTimeout).each do |name|
-          alias_method name, name+"A"
+          alias_method name, name + "A"
           module_function name
         end
         # :nodoc:
@@ -240,7 +238,7 @@ module Net; module SSH; module Authentication
         end
 
         def self.set_ptr_data(ptr, data)
-          DL::CPtr.new(ptr)[0,data.size] = data
+          DL::CPtr.new(ptr)[0, data.size] = data
         end
       end
 
@@ -281,7 +279,7 @@ module Net; module SSH; module Authentication
 
         def self.ptr_to_dword(ptr)
           first = ptr.ptr.to_i
-          second = ptr_to_s(ptr,Win::SIZEOF_DWORD).unpack('L')[0]
+          second = ptr_to_s(ptr, Win::SIZEOF_DWORD).unpack('L')[0]
           raise "Error" unless first == second
           first
         end
@@ -295,7 +293,7 @@ module Net; module SSH; module Authentication
         end
 
         def self.get_sid(user)
-          ptr_to_s(user.to_ptr.ptr,Win::SIZEOF_DWORD).unpack('L')[0]
+          ptr_to_s(user.to_ptr.ptr, Win::SIZEOF_DWORD).unpack('L')[0]
         end
 
         def self.get_sid_ptr(user)
@@ -330,7 +328,7 @@ module Net; module SSH; module Authentication
       def self.get_current_user
         token_handle = open_process_token(Win.GetCurrentProcess,
                                           Win::TOKEN_QUERY)
-        token_user =  get_token_information(token_handle,
+        token_user = get_token_information(token_handle,
                         Win::TOKEN_USER_INFORMATION_CLASS)
         return token_user
       end
@@ -389,7 +387,6 @@ module Net; module SSH; module Authentication
     # the pageant daemon. This allows pageant support to be implemented
     # simply by replacing the socket factory used by the Agent class.
     class Socket
-
       private_class_method :new
 
       # The factory method for creating a new Socket instance.
@@ -490,5 +487,4 @@ module Net; module SSH; module Authentication
       end
     end
   end
-
 end; end; end

@@ -2,7 +2,6 @@ require 'common'
 require 'net/ssh/connection/channel'
 
 module Connection
-
   class TestChannel < NetSSHTest
     include Net::SSH::Connection::Constants
 
@@ -73,7 +72,7 @@ module Connection
       channel.do_open_confirmation(0, 100, 100)
       assert !channel.closing?
 
-      connection.expect { |t,packet| assert_equal CHANNEL_CLOSE, packet.type }
+      connection.expect { |t, packet| assert_equal CHANNEL_CLOSE, packet.type }
       connection.expects(:cleanup_channel).with(channel)
       channel.close
 
@@ -112,7 +111,7 @@ module Connection
       channel.do_open_confirmation(0, 100, 100)
       channel.send_data("hello world")
 
-      connection.expect do |t,packet|
+      connection.expect do |t, packet|
         assert_equal CHANNEL_DATA, packet.type
         assert_equal 0, packet[:local_id]
         assert_equal 11, packet[:data].length
@@ -125,12 +124,12 @@ module Connection
       channel.do_open_confirmation(0, 100, 8)
       channel.send_data("hello world")
 
-      connection.expect do |t,packet|
+      connection.expect do |t, packet|
         assert_equal CHANNEL_DATA, packet.type
         assert_equal 0, packet[:local_id]
         assert_equal "hello wo", packet[:data]
 
-        t.expect do |t2,packet2|
+        t.expect do |t2, packet2|
           assert_equal CHANNEL_DATA, packet2.type
           assert_equal 0, packet2[:local_id]
           assert_equal "rld", packet2[:data]
@@ -144,7 +143,7 @@ module Connection
       channel.do_open_confirmation(0, 8, 100)
       channel.send_data("hello world")
 
-      connection.expect do |t,packet|
+      connection.expect do |t, packet|
         assert_equal CHANNEL_DATA, packet.type
         assert_equal 0, packet[:local_id]
         assert_equal "hello wo", packet[:data]
@@ -210,7 +209,7 @@ module Connection
 
     def test_do_request_for_unhandled_request_should_send_CHANNEL_FAILURE_if_wants_reply
       channel.do_open_confirmation(0, 100, 100)
-      connection.expect { |t,packet| assert_equal CHANNEL_FAILURE, packet.type }
+      connection.expect { |t, packet| assert_equal CHANNEL_FAILURE, packet.type }
       channel.do_request "keepalive@openssh.com", true, nil
     end
 
@@ -234,7 +233,7 @@ module Connection
       channel.do_open_confirmation(0, 100, 100)
       flag = false
       channel.on_request("exit-status") { flag = true; true }
-      connection.expect { |t,p| assert_equal CHANNEL_SUCCESS, p.type }
+      connection.expect { |t, p| assert_equal CHANNEL_SUCCESS, p.type }
       assert_nothing_raised { channel.do_request "exit-status", true, nil }
       assert flag, "callback should have been invoked"
     end
@@ -243,14 +242,14 @@ module Connection
       channel.do_open_confirmation(0, 100, 100)
       flag = false
       channel.on_request("exit-status") { flag = true; raise Net::SSH::ChannelRequestFailed }
-      connection.expect { |t,p| assert_equal CHANNEL_FAILURE, p.type }
+      connection.expect { |t, p| assert_equal CHANNEL_FAILURE, p.type }
       assert_nothing_raised { channel.do_request "exit-status", true, nil }
       assert flag, "callback should have been invoked"
     end
 
     def test_send_channel_request_without_callback_should_not_want_reply
       channel.do_open_confirmation(0, 100, 100)
-      connection.expect do |t,p|
+      connection.expect do |t, p|
         assert_equal CHANNEL_REQUEST, p.type
         assert_equal 0, p[:local_id]
         assert_equal "exec", p[:request]
@@ -275,7 +274,7 @@ module Connection
 
     def test_send_channel_request_with_callback_should_want_reply
       channel.do_open_confirmation(0, 100, 100)
-      connection.expect do |t,p|
+      connection.expect do |t, p|
         assert_equal CHANNEL_REQUEST, p.type
         assert_equal 0, p[:local_id]
         assert_equal "exec", p[:request]
@@ -299,7 +298,7 @@ module Connection
       flag = false
       channel { flag = true }
       assert !flag, "callback should not have been invoked yet"
-      channel.do_open_confirmation(1,2,3)
+      channel.do_open_confirmation(1, 2, 3)
       assert flag, "callback should have been invoked"
     end
 
@@ -308,14 +307,14 @@ module Connection
       forward = mock("forward")
       forward.expects(:agent).with(channel)
       connection.expects(:forward).returns(forward)
-      channel.do_open_confirmation(1,2,3)
+      channel.do_open_confirmation(1, 2, 3)
     end
 
     def test_do_open_confirmation_with_non_session_channel_should_not_invoke_agent_forwarding_even_if_agent_forwarding_requested
       connection forward_agent: true
       channel type: "direct-tcpip"
       connection.expects(:forward).never
-      channel.do_open_confirmation(1,2,3)
+      channel.do_open_confirmation(1, 2, 3)
     end
 
     def test_do_window_adjust_should_adjust_remote_window_size_by_the_given_amount
@@ -348,7 +347,7 @@ module Connection
       assert_equal 0x20000, channel.local_maximum_window_size
       assert_equal 0x20000, channel.local_window_size
 
-      connection.expect do |t,p|
+      connection.expect do |t, p|
         assert_equal CHANNEL_WINDOW_ADJUST, p.type
         assert_equal 0, p[:local_id]
         assert_equal 0x20000, p[:extra_bytes]
@@ -385,25 +384,25 @@ module Connection
     end
 
     def test_wait_should_block_while_channel_is_active?
-      channel.expects(:active?).times(3).returns(true,true,false)
+      channel.expects(:active?).times(3).returns(true, true, false)
       channel.wait
     end
 
     def test_wait_until_open_confirmed_should_block_while_remote_id_nil
-      channel.expects(:remote_id).times(3).returns(nil,nil,3)
+      channel.expects(:remote_id).times(3).returns(nil, nil, 3)
       channel.send(:wait_until_open_confirmed)
     end
 
     def test_eof_bang_should_send_eof_to_server
       channel.do_open_confirmation(0, 1000, 1000)
-      connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
+      connection.expect { |t, p| assert_equal CHANNEL_EOF, p.type }
       channel.eof!
       channel.process
     end
 
     def test_eof_bang_should_not_send_eof_if_eof_was_already_declared
       channel.do_open_confirmation(0, 1000, 1000)
-      connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
+      connection.expect { |t, p| assert_equal CHANNEL_EOF, p.type }
       channel.eof!
       assert_nothing_raised { channel.eof! }
       channel.process
@@ -411,7 +410,7 @@ module Connection
 
     def test_eof_q_should_return_true_if_eof_declared
       channel.do_open_confirmation(0, 1000, 1000)
-      connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
+      connection.expect { |t, p| assert_equal CHANNEL_EOF, p.type }
 
       assert !channel.eof?
       channel.eof!
@@ -421,7 +420,7 @@ module Connection
 
     def test_send_data_should_raise_exception_if_eof_declared
       channel.do_open_confirmation(0, 1000, 1000)
-      connection.expect { |t,p| assert_equal CHANNEL_EOF, p.type }
+      connection.expect { |t, p| assert_equal CHANNEL_EOF, p.type }
       channel.eof!
       channel.process
       assert_raises(EOFError) { channel.send_data("die! die! die!") }
@@ -429,9 +428,9 @@ module Connection
 
     def test_data_should_precede_eof
       channel.do_open_confirmation(0, 1000, 1000)
-      connection.expect do |_t,p|
+      connection.expect do |_t, p|
         assert_equal CHANNEL_DATA, p.type
-        connection.expect { |_t,p2| assert_equal CHANNEL_EOF, p2.type }
+        connection.expect { |_t, p2| assert_equal CHANNEL_EOF, p2.type }
       end
       channel.send_data "foo"
       channel.eof!
@@ -445,7 +444,7 @@ module Connection
         attr_reader :options
         attr_reader :channels
 
-        def initialize(options={})
+        def initialize(options = {})
           @expectation = nil
           @options = options
           @channels = {}
@@ -472,16 +471,15 @@ module Connection
         end
       end
 
-      def connection(options={})
+      def connection(options = {})
         @connection ||= MockConnection.new(options)
       end
 
-      def channel(options={}, &block)
+      def channel(options = {}, &block)
         @channel ||= Net::SSH::Connection::Channel.new(connection(options),
           options[:type] || "session",
           options[:local_id] || 0,
           &block)
       end
   end
-
 end

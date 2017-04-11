@@ -2,7 +2,6 @@ require_relative '../common'
 require 'net/ssh/connection/session'
 
 module Connection
-
   class TestSession < NetSSHTest
     include Net::SSH::Connection::Constants
 
@@ -62,7 +61,7 @@ module Connection
       flag = false
       channel = session.open_channel { flag = true }
       assert !flag, "callback should not be invoked immediately"
-      channel.do_open_confirmation(1,2,3)
+      channel.do_open_confirmation(1, 2, 3)
       assert flag, "callback should have been invoked"
       assert_equal "session", channel.type
       assert_equal 0, channel.local_id
@@ -336,19 +335,19 @@ module Connection
     end
 
     def test_writers_without_pending_writes_should_not_be_considered_for_select
-      IO.expects(:select).with([socket],[],nil,nil).returns([[],[],[]])
+      IO.expects(:select).with([socket], [], nil, nil).returns([[], [], []])
       session.process
     end
 
     def test_writers_with_pending_writes_should_be_considered_for_select
       socket.enqueue("laksdjflasdkf")
-      IO.expects(:select).with([socket],[socket],nil,nil).returns([[],[],[]])
+      IO.expects(:select).with([socket], [socket], nil, nil).returns([[], [], []])
       session.process
     end
 
     def test_ready_readers_should_be_filled
       socket.expects(:recv).returns("this is some data")
-      IO.expects(:select).with([socket],[],nil,nil).returns([[socket],[],[]])
+      IO.expects(:select).with([socket], [], nil, nil).returns([[socket], [], []])
       session.process
       assert_equal [socket], session.listeners.keys
     end
@@ -356,7 +355,7 @@ module Connection
     def test_ready_readers_that_cant_be_filled_should_be_removed
       socket.expects(:recv).returns("")
       socket.expects(:close)
-      IO.expects(:select).with([socket],[],nil,nil).returns([[socket],[],[]])
+      IO.expects(:select).with([socket], [], nil, nil).returns([[socket], [], []])
       session.process
       assert session.listeners.empty?
     end
@@ -366,7 +365,7 @@ module Connection
       flag = false
       session.stop_listening_to(socket) # so that we only have to test the presence of a single IO object
       session.listen_to(io) { flag = true }
-      IO.expects(:select).with([io],[],nil,nil).returns([[io],[],[]])
+      IO.expects(:select).with([io], [], nil, nil).returns([[io], [], []])
       session.process
       assert flag, "callback should have been invoked"
     end
@@ -374,13 +373,13 @@ module Connection
     def test_ready_writers_should_call_send_pending
       socket.enqueue("laksdjflasdkf")
       socket.expects(:send).with("laksdjflasdkf", 0).returns(13)
-      IO.expects(:select).with([socket],[socket],nil,nil).returns([[],[socket],[]])
+      IO.expects(:select).with([socket], [socket], nil, nil).returns([[], [socket], []])
       session.process
     end
 
     def test_process_should_call_rekey_as_needed
       transport.expects(:rekey_as_needed)
-      IO.expects(:select).with([socket],[],nil,nil).returns([[],[],[]])
+      IO.expects(:select).with([socket], [], nil, nil).returns([[], [], []])
       session.process
     end
 
@@ -388,8 +387,8 @@ module Connection
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
       options = { keepalive: true }
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
-      IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
-      transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
+      IO.stubs(:select).with([socket], [], nil, timeout).returns(nil)
+      transport.expects(:enqueue_message).with { |msg| msg.content == expected_packet.content }
       session(options).process
     end
 
@@ -397,23 +396,23 @@ module Connection
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
       options = { keepalive: true, keepalive_interval: 300, keepalive_maxcount: 3 }
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
-      [1,2,3].each do |i|
-        Time.stubs(:now).returns(Time.at(i*300))
-        IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
-        transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
+      [1, 2, 3].each do |i|
+        Time.stubs(:now).returns(Time.at(i * 300))
+        IO.stubs(:select).with([socket], [], nil, timeout).returns(nil)
+        transport.expects(:enqueue_message).with { |msg| msg.content == expected_packet.content }
         session(options).process
       end
 
-      Time.stubs(:now).returns(Time.at(4*300))
-      IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
-      transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
+      Time.stubs(:now).returns(Time.at(4 * 300))
+      IO.stubs(:select).with([socket], [], nil, timeout).returns(nil)
+      transport.expects(:enqueue_message).with { |msg| msg.content == expected_packet.content }
       assert_raises(Net::SSH::Timeout) { session(options).process }
     end
 
     def test_process_should_not_call_enqueue_message_unless_io_select_timed_out
       timeout = Net::SSH::Connection::Session::DEFAULT_IO_SELECT_TIMEOUT
       options = { keepalive: true }
-      IO.stubs(:select).with([socket],[],nil,timeout).returns([[socket],[],[]])
+      IO.stubs(:select).with([socket], [], nil, timeout).returns([[socket], [], []])
       socket.stubs(:recv).returns("x")
       transport.expects(:enqueue_message).never
       session(options).process
@@ -423,20 +422,20 @@ module Connection
       timeout = 10
       options = { keepalive: true, keepalive_interval: timeout }
       Time.stubs(:now).returns(Time.at(0), Time.at(9), Time.at(timeout))
-      IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
+      IO.stubs(:select).with([socket], [], nil, timeout).returns(nil)
       transport.expects(:enqueue_message).times(2)
       3.times { session(options).process }
     end
 
     def test_process_should_call_io_select_with_nil_as_last_arg_if_keepalive_disabled
-      IO.expects(:select).with([socket],[],nil,nil).returns([[],[],[]])
+      IO.expects(:select).with([socket], [], nil, nil).returns([[], [], []])
       session.process
     end
 
     def test_process_should_call_io_select_with_interval_as_last_arg_if_keepalive_interval_passed
       timeout = 10
       options = { keepalive: true, keepalive_interval: timeout }
-      IO.expects(:select).with([socket],[],nil,timeout).returns([[],[],[]])
+      IO.expects(:select).with([socket], [], nil, timeout).returns([[], [], []])
       session(options).process
     end
 
@@ -444,13 +443,13 @@ module Connection
       timeout = 10
       wait = 5
       options = { keepalive: true, keepalive_interval: timeout }
-      IO.expects(:select).with([socket],[],nil,wait).returns([[],[],[]])
+      IO.expects(:select).with([socket], [], nil, wait).returns([[], [], []])
       session(options).process(wait)
     end
 
     def test_loop_should_call_process_until_process_returns_false
-      IO.stubs(:select).with([socket],[],nil,nil).returns([[],[],[]])
-      session.expects(:process).with(nil).times(4).returns(true,true,true,false).yields
+      IO.stubs(:select).with([socket], [], nil, nil).returns([[], [], []])
+      session.expects(:process).with(nil).times(4).returns(true, true, true, false).yields
       n = 0
       session.loop { n += 1 }
       assert_equal 4, n
@@ -543,7 +542,7 @@ module Connection
             end
 
             t2.return(CHANNEL_CLOSE, :long, p[:remote_id])
-            t2.expect { |t3,p3| assert_equal CHANNEL_CLOSE, p3.type }
+            t2.expect { |t3, p3| assert_equal CHANNEL_CLOSE, p3.type }
           end
         end
       end
@@ -569,11 +568,11 @@ module Connection
         session.channels[local_id] = stub("channel", process: true, local_closed?: false)
       end
 
-      def transport(options={})
+      def transport(options = {})
         @transport ||= MockTransport.new(options.merge(socket: socket))
       end
 
-      def session(options={})
+      def session(options = {})
         @session ||= Net::SSH::Connection::Session.new(transport, options)
       end
 
@@ -582,5 +581,4 @@ module Connection
         session.process { (i += 1) < n }
       end
   end
-
 end

@@ -5,7 +5,6 @@ require 'net/ssh/authentication/ed25519_loader'
 require 'base64'
 
 module Authentication
-
   class TestED25519 < NetSSHTest
     def setup
       raise "No ED25519 set NET_SSH_NO_RBNACL to ignore this test" unless Net::SSH::Authentication::ED25519Loader::LOADED
@@ -18,11 +17,11 @@ module Authentication
       priv = private_key_no_pwd
 
       pub_key = Net::SSH::Authentication::ED25519::PubKey.new(pub_data)
-      priv_key = Net::SSH::Authentication::ED25519::PrivKey.new(priv,nil)
+      priv_key = Net::SSH::Authentication::ED25519::PrivKey.new(priv, nil)
 
       shared_secret = "Hello"
       signed = priv_key.ssh_do_sign(shared_secret)
-      self.assert_equal(true,pub_key.ssh_do_verify(signed,shared_secret))
+      self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
       self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
     end
 
@@ -37,11 +36,11 @@ module Authentication
       priv = private_key_pwd
 
       pub_key = Net::SSH::Authentication::ED25519::PubKey.new(pub_data)
-      priv_key = Net::SSH::Authentication::ED25519::PrivKey.new(priv,'pwd')
+      priv_key = Net::SSH::Authentication::ED25519::PrivKey.new(priv, 'pwd')
 
       shared_secret = "Hello"
       signed = priv_key.ssh_do_sign(shared_secret)
-      self.assert_equal(true,pub_key.ssh_do_verify(signed,shared_secret))
+      self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
       self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
     end
 
@@ -79,7 +78,6 @@ IDBAU=
       'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDB2NBh4GJPPUN1kXPMu8b633Xcv55WoKC3OkBjFAbzJ vagrant@vagrant-ubuntu-trusty-64'
     end
   end
-
 end
 
 end
