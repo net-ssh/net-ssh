@@ -28,8 +28,17 @@ module OpenSSL
   module PKey
 
     class PKey
-      def fingerprint
-        @fingerprint ||= OpenSSL::Digest::MD5.hexdigest(to_blob).scan(/../).join(":")
+      def fingerprint(algorithm='MD5')
+        @fingerprint ||= {}
+        @fingerprint[algorithm] ||=
+          case algorithm.upcase
+          when 'MD5'
+            OpenSSL::Digest.hexdigest(algorithm, to_blob).scan(/../).join(":")
+          when 'SHA256'
+            "SHA256:#{Base64.encode64(OpenSSL::Digest.digest(algorithm, to_blob)).chomp.gsub(/=+\z/, '')}"
+          else
+            raise OpenSSL::Digest::DigestError, "unsupported ssh key digest #{algorithm}"
+          end
       end
     end
 

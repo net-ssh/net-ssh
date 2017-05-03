@@ -11,6 +11,16 @@ class TestKeyFactory < NetSSHTest
     assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
   end
 
+  def test_load_unencrypted_private_RSA_key_should_have_fp_md5
+    File.expects(:read).with(@key_file).returns(rsa_key.export)
+    assert_equal rsa_key_fingerprint_md5, Net::SSH::KeyFactory.load_private_key(@key_file).fingerprint
+  end
+
+  def test_load_unencrypted_private_RSA_key_should_have_fp_sha256
+    File.expects(:read).with(@key_file).returns(rsa_key.export)
+    assert_equal rsa_key_fingerprint_sha256, Net::SSH::KeyFactory.load_private_key(@key_file).fingerprint('sha256')
+  end
+
   def test_load_unencrypted_private_DSA_key_should_return_key
     File.expects(:read).with(@key_file).returns(dsa_key.export)
     assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
@@ -122,6 +132,14 @@ class TestKeyFactory < NetSSHTest
   end
 
   private
+
+    def rsa_key_fingerprint_md5
+      '32:00:44:78:bf:91:02:c1:00:25:0f:f9:0a:f9:aa:c7'
+    end
+
+    def rsa_key_fingerprint_sha256
+      'SHA256:1XFnG2UY/fBunFk1vviHPVV5ruqbL6ZBfGVVOf9mRMk'
+    end
 
     def rsa_key
       # 512 bits
