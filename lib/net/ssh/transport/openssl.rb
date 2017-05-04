@@ -28,6 +28,12 @@ module OpenSSL
   module PKey
 
     class PKey
+
+      # Return the key's fingerprint. algorithm may be either +SHA256+ or
+      # +MD5+ (default). SHA256 fingerprints are in the same format
+      # returned by OpenSSH's `ssh-add -l -E SHA256`, i.e.,
+      # trailing base64 padding '=' characters are stripped and the
+      # literal string 'SHA256:' is prepended.
       def fingerprint(algorithm='MD5')
         @fingerprint ||= {}
         @fingerprint[algorithm] ||=
