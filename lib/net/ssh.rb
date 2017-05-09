@@ -71,8 +71,8 @@ module Net
       :known_hosts, :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
       :max_win_size, :send_env, :use_agent, :number_of_password_prompts,
-      :append_supported_algorithms, :non_interactive, :password_prompt, :agent_socket_factory,
-      :minimum_dh_bits
+      :append_all_supported_algorithms, :non_interactive, :password_prompt,
+      :agent_socket_factory, :minimum_dh_bits
     ]
 
     # The standard means of starting a new SSH connection. When used with a
