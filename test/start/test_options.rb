@@ -39,6 +39,13 @@ module NetSSH
       end
     end
 
+    def test_start_should_accept_append_all_supported_algorithms_option
+      assert_nothing_raised do
+        options = { append_all_supported_algorithms: true }
+        Net::SSH.start('localhost', 'testuser', options)
+      end
+    end
+
     def test_start_should_accept_non_interactive_option
       assert_nothing_raised do
         options = { non_interactive: true }
