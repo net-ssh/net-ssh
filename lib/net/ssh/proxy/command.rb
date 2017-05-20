@@ -56,6 +56,7 @@ module Net; module SSH; module Proxy
       }
       begin
         io = IO.popen(command_line, "r+")
+        Process.detach(io.pid)
         if result = Net::SSH::Compat.io_select([io], nil, [io], 60)
           if result.last.any?
             raise "command failed"
