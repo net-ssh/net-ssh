@@ -5,7 +5,7 @@ class TestKeyFactory < Test::Unit::TestCase
   def setup
     @key_file = File.expand_path("/key-file")
   end
-  
+
   def test_load_unencrypted_private_RSA_key_should_return_key
     File.expects(:read).with(@key_file).returns(rsa_key.export)
     assert_equal rsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
@@ -176,7 +176,7 @@ WEKt5v3QsUEgVrzkM4K9UbI=
     end
 
     def encrypted(key, password)
-      key.export(OpenSSL::Cipher::Cipher.new("des-ede3-cbc"), password)
+      key.export(OpenSSL::Cipher.new("des-ede3-cbc"), password)
     end
 
     def public(key, args = nil)

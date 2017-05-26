@@ -264,7 +264,7 @@ class TestBuffer < Test::Unit::TestCase
     assert_equal 6, buffer.position
   end
 
-  def test_read_to_should_grok_fixnum_patterns
+  def test_read_to_should_grok_integer_patterns
     buffer = new("one two three")
     assert_equal "one tw", buffer.read_to(?w)
     assert_equal 6, buffer.position

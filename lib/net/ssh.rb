@@ -177,7 +177,7 @@ module Net
     # * :user_known_hosts_file => the location of the user known hosts file.
     #   Set to an array to specify multiple user known hosts files.
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
-    # * :use_agent => Set false to disable the use of ssh-agent. Defaults to 
+    # * :use_agent => Set false to disable the use of ssh-agent. Defaults to
     #   true
     # * :non_interactive => set to true if your app is non interactive and prefers
     #   authentication failure vs password prompt
@@ -219,7 +219,7 @@ module Net
 
       if options[:verbose]
         options[:logger].level = case options[:verbose]
-          when Fixnum then options[:verbose]
+          when Integer then options[:verbose]
           when :debug then Logger::DEBUG
           when :info  then Logger::INFO
           when :warn  then Logger::WARN

@@ -152,7 +152,7 @@ module Net; module SSH
     end
 
     # Reads all data up to and including the given pattern, which may be a
-    # String, Fixnum, or Regexp and is interpreted exactly as String#index
+    # String, Integer, or Regexp and is interpreted exactly as String#index
     # does. Returns nil if nothing matches. Increments the position to point
     # immediately after the pattern, if it does match. Returns all data up to
     # and including the text that matched the pattern.
@@ -160,7 +160,7 @@ module Net; module SSH
       index = @content.index(pattern, @position) or return nil
       length = case pattern
         when String then pattern.length
-        when Fixnum then 1
+        when Integer then 1
         when Regexp then $&.length
       end
       index && read(index+length)
