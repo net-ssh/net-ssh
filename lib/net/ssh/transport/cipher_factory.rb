@@ -45,8 +45,8 @@ module Net; module SSH; module Transport
     }
 
     # Ruby's OpenSSL bindings always return a key length of 16 for RC4 ciphers
-    # resulting in the error: OpenSSL::CipherError: key length too short. 
-    # The following ciphers will override this key length. 
+    # resulting in the error: OpenSSL::CipherError: key length too short.
+    # The following ciphers will override this key length.
     KEY_LEN_OVERRIDE = {
       "arcfour256"                  => 32,
       "arcfour512"                  => 64
@@ -69,7 +69,7 @@ module Net; module SSH; module Transport
     def self.get(name, options={})
       ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
       return IdentityCipher if ossl_name == "none"
-      cipher = OpenSSL::Cipher::Cipher.new(ossl_name)
+      cipher = OpenSSL::Cipher.new(ossl_name)
 
       cipher.send(options[:encrypt] ? :encrypt : :decrypt)
 
@@ -94,10 +94,10 @@ module Net; module SSH; module Transport
       ossl_name = SSH_TO_OSSL[name]
       return [0, 0] if ossl_name.nil? || ossl_name == "none"
 
-      cipher = OpenSSL::Cipher::Cipher.new(ossl_name)
+      cipher = OpenSSL::Cipher.new(ossl_name)
       key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
       cipher.key_len = key_len
-      
+
       return [key_len, ossl_name=="rc4" ? 8 : cipher.block_size]
     end
   end
