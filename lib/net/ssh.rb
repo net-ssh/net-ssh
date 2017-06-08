@@ -72,7 +72,7 @@ module Net
       :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
       :max_win_size, :send_env, :use_agent, :number_of_password_prompts,
       :append_all_supported_algorithms, :non_interactive, :password_prompt,
-      :agent_socket_factory, :minimum_dh_bits
+      :agent_socket_factory, :minimum_dh_bits, :verify_host_key
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -157,12 +157,7 @@ module Net
     #   authentication failure vs password prompt. Non-interactive applications
     #   should set it to true to prefer failing a password/etc auth methods vs.
     #   asking for password.
-    # * :paranoid => either false, true, :very, or :secure specifying how
-    #   strict host-key verification should be (in increasing order here).
-    #   You can also provide an own Object which responds to +verify+. The argument
-    #   given to +verify+ is a hash consisting of the +:key+, the +:key_blob+,
-    #   the +:fingerprint+ and the +:session+. Returning true accepts the host key,
-    #   returning false declines it and closes the connection.
+    # * :paranoid => deprecated alias for :verify_host_key
     # * :passphrase => the passphrase to use when loading a private key (default
     #   is +nil+, for no passphrase)
     # * :password => the password to use to login
@@ -199,6 +194,13 @@ module Net
     # * :agent_socket_factory => enables the user to pass a lambda/block that will serve as the socket factory
     #    Net::SSH::start(user,host,agent_socket_factory: ->{ UNIXSocket.open('/foo/bar') })
     #    example: ->{ UNIXSocket.open('/foo/bar')}
+    # * :verify_host_key => either false, true, :very, or :secure specifying how
+    #   strict host-key verification should be (in increasing order here).
+    #   You can also provide an own Object which responds to +verify+. The argument
+    #   given to +verify+ is a hash consisting of the +:key+, the +:key_blob+,
+    #   the +:fingerprint+ and the +:session+. Returning true accepts the host key,
+    #   returning false declines it and closes the connection.
+    #
     # If +user+ parameter is nil it defaults to USER from ssh_config, or
     # local username
     def self.start(host, user=nil, options={}, &block)
@@ -217,6 +219,8 @@ module Net
       if options[:non_interactive]
         options[:number_of_password_prompts] = 0
       end
+
+      _support_deprecated_option_paranoid(options)
 
       if options[:verbose]
         options[:logger].level = case options[:verbose]
@@ -291,5 +295,23 @@ module Net
       end
     end
     private_class_method :_sanitize_options
+
+    def self._support_deprecated_option_paranoid(options)
+      if options.key?(:paranoid)
+        Kernel.warn(
+          ":paranoid is deprecated, please use :verify_host_key. Supported " \
+          "values are exactly the same, only the name of the option has changed."
+        )
+        if options.key?(:verify_host_key)
+          Kernel.warn(
+            "Both :paranoid and :verify_host_key were specified. " \
+            ":verify_host_key takes precedence, :paranoid will be ignored."
+          )
+        else
+          options[:verify_host_key] = options.delete(:paranoid)
+        end
+      end
+    end
+    private_class_method :_support_deprecated_option_paranoid
   end
 end

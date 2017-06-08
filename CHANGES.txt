@@ -1,3 +1,7 @@
+=== Unreleased
+
+ * Deprecate `:paranoid` in favor of `:verify_host_key`
+
 === 4.1.0
 === 4.1.0.rc1
 

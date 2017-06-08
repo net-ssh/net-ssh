@@ -20,29 +20,29 @@ module Transport
       assert_instance_of Net::SSH::Verifiers::Lenient, session.host_key_verifier
     end
 
-    def test_paranoid_true_uses_lenient_verifier
-      assert_instance_of Net::SSH::Verifiers::Lenient, session(paranoid: true).host_key_verifier
+    def test_verify_host_key_true_uses_lenient_verifier
+      assert_instance_of Net::SSH::Verifiers::Lenient, session(verify_host_key: true).host_key_verifier
     end
 
-    def test_paranoid_very_uses_strict_verifier
-      assert_instance_of Net::SSH::Verifiers::Strict, session(paranoid: :very).host_key_verifier
+    def test_verify_host_key_very_uses_strict_verifier
+      assert_instance_of Net::SSH::Verifiers::Strict, session(verify_host_key: :very).host_key_verifier
     end
 
-    def test_paranoid_secure_uses_secure_verifier
-      assert_instance_of Net::SSH::Verifiers::Secure, session(paranoid: :secure).host_key_verifier
+    def test_verify_host_key_secure_uses_secure_verifier
+      assert_instance_of Net::SSH::Verifiers::Secure, session(verify_host_key: :secure).host_key_verifier
     end
 
-    def test_paranoid_false_uses_null_verifier
-      assert_instance_of Net::SSH::Verifiers::Null, session(paranoid: false).host_key_verifier
+    def test_verify_host_key_false_uses_null_verifier
+      assert_instance_of Net::SSH::Verifiers::Null, session(verify_host_key: false).host_key_verifier
     end
 
-    def test_unknown_paranoid_value_raises_exception_if_value_does_not_respond_to_verify
-      assert_raises(ArgumentError) { session(paranoid: :bogus).host_key_verifier }
+    def test_unknown_verify_host_key_value_raises_exception_if_value_does_not_respond_to_verify
+      assert_raises(ArgumentError) { session(verify_host_key: :bogus).host_key_verifier }
     end
 
-    def test_paranoid_value_responding_to_verify_should_pass_muster
+    def test_verify_host_key_value_responding_to_verify_should_pass_muster
       object = stub("thingy", verify: true)
-      assert_equal object, session(paranoid: object).host_key_verifier
+      assert_equal object, session(verify_host_key: object).host_key_verifier
     end
 
     def test_host_as_string_should_return_host_and_ip_when_port_is_default
