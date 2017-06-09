@@ -32,9 +32,9 @@ module Net; module SSH; module Transport
               diffie-hellman-group-exchange-sha256),
       encryption: %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc
                      aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se
-                     idea-cbc none arcfour128 arcfour256 arcfour
+                     idea-cbc arcfour128 arcfour256 arcfour
                      aes128-ctr aes192-ctr aes256-ctr
-                     cast128-ctr blowfish-ctr 3des-ctr),
+                     cast128-ctr blowfish-ctr 3des-ctr none),
 
       hmac: %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
                hmac-ripemd160 hmac-ripemd160@openssh.com
