@@ -283,7 +283,7 @@ class TestConfig < NetSSHTest
     assert_equal 2345, net_ssh[:port]
     assert_equal true, net_ssh[:compression]
     assert net_ssh[:keys_only]
-    assert_equal %w(~/.ssh/id.pem), net_ssh[:keys]
+    assert_equal %w(~/.ssh/id.pem ~/.ssh/id2.pem ~/.ssh/id3.pem), net_ssh[:keys]
   end
 
   private

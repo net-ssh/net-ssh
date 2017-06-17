@@ -144,7 +144,16 @@ module Net; module SSH
           end
         end
 
-        settings = globals.merge(settings) if globals
+        if globals
+          settings = globals.merge(settings) do |key, oldval, newval|
+            case key
+            when 'identityfile'
+              oldval + newval
+            else
+              newval
+            end
+          end
+        end
 
         return settings
       end
