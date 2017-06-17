@@ -145,8 +145,14 @@ module Net; module SSH
         end
 
         if globals
-          settings['identityfile'] = [globals['identityfile'], settings['identityfile']].flatten.compact
-          settings = globals.merge(settings)
+          settings = globals.merge(settings) do |key, oldval, newval|
+            case key
+            when 'identityfile'
+              oldval + newval
+            else
+              newval
+            end
+          end
         end
 
         return settings
