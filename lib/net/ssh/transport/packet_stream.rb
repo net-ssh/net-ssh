@@ -72,8 +72,7 @@ module Net; module SSH; module Transport
 
     # Returns true if the IO is available for reading, and false otherwise.
     def available_for_read?
-      result = Net::SSH::Compat.io_select([self], nil, nil, 0)
-      result && result.first.any?
+      self.ready?
     end
 
     # Returns the next full packet. If the mode parameter is :nonblock (the
@@ -105,8 +104,7 @@ module Net; module SSH; module Transport
           return packet if packet
 
           loop do
-            result = Net::SSH::Compat.io_select([self]) or next
-            break if result.first.any?
+            break if wait_readable
           end
 
           if fill <= 0

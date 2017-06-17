@@ -44,7 +44,7 @@ module Net; module SSH; module Transport
         socket.write "#{PROTO_VERSION}\r\n"
         socket.flush
 
-        if timeout && !IO.select([socket], nil, nil, timeout)
+        if timeout && !socket.wait_readable(timeout)
           raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating"
         end
         loop do
@@ -70,7 +70,7 @@ module Net; module SSH; module Transport
           raise Net::SSH::Exception, "incompatible SSH version `#{@version}'"
         end
 
-        if timeout && !IO.select(nil, [socket], nil, timeout)
+        if timeout && !socket.wait_writable(timeout)
           raise Net::SSH::ConnectionTimeout, "timeout during client version negotiating"
         end
       end
