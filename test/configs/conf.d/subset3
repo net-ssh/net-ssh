@@ -1,1 +1,2 @@
 HostName example.com
+IdentityFile ~/.ssh/id3.pem

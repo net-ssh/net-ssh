@@ -144,7 +144,10 @@ module Net; module SSH
           end
         end
 
-        settings = globals.merge(settings) if globals
+        if globals
+          settings['identityfile'] = [globals['identityfile'], settings['identityfile']].flatten.compact
+          settings = globals.merge(settings)
+        end
 
         return settings
       end
