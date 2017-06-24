@@ -155,7 +155,7 @@ module Net; module SSH; module Test
             processed += 1 if reader.idle!
           end
 
-          raise "no readers were ready for reading, and none had any incoming packets" if processed == 0
+          raise "no readers were ready for reading, and none had any incoming packets" if processed == 0 && wait != 0
         end
       end
     end
