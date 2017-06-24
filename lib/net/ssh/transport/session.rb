@@ -78,7 +78,7 @@ module Net; module SSH; module Transport
 
       @queue = []
 
-      @host_key_verifier = select_host_key_verifier(options[:paranoid])
+      @host_key_verifier = select_host_key_verifier(options[:verify_host_key])
 
 
       @server_version = ServerVersion.new(socket, logger, options[:timeout])
@@ -281,8 +281,8 @@ module Net; module SSH; module Transport
       # strict Secure verifier is returned. If the argument happens to respond
       # to :verify, it is returned directly. Otherwise, an exception
       # is raised.
-      def select_host_key_verifier(paranoid)
-        case paranoid
+      def select_host_key_verifier(verify_host_key)
+        case verify_host_key
         when true, nil then
           Net::SSH::Verifiers::Lenient.new
         when false then
@@ -292,10 +292,14 @@ module Net; module SSH; module Transport
         when :secure then
           Net::SSH::Verifiers::Secure.new
         else
-          if paranoid.respond_to?(:verify)
-            paranoid
+          if verify_host_key.respond_to?(:verify)
+            verify_host_key
           else
-            raise ArgumentError, "argument to :paranoid is not valid: #{paranoid.inspect}"
+            raise(
+              ArgumentError,
+              "Invalid argument to :verify_host_key (or deprecated " \
+              ":paranoid): #{verify_host_key.inspect}"
+            )
           end
         end
       end
