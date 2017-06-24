@@ -9,7 +9,8 @@ module NetSSH
       authentication_session = mock('authentication_session')
       authentication_session.stubs(:authenticate).returns(true)
       Net::SSH::Authentication::Session.stubs(:new).returns(authentication_session)
-      Net::SSH::Transport::Session.stubs(:new).returns(mock('transport_session'))
+      @transport_session = mock('transport_session')
+      Net::SSH::Transport::Session.stubs(:new).returns(@transport_session)
       @connection_session = mock('connection_session')
       Net::SSH::Connection::Session.expects(new: connection_session)
     end
@@ -17,6 +18,7 @@ module NetSSH
     def test_close_connection_on_exception
       @connection_session.expects(:closed?).returns(false)
       @connection_session.expects(:close).once
+      @transport_session.expects(:close).once
       
       begin
         Net::SSH.start('localhost', 'testuser') { raise "error" }
@@ -29,6 +31,7 @@ module NetSSH
       conn_open = states('conn').starts_as(true)
       @connection_session.expects(:close).then(conn_open.is(false)).once
       @connection_session.expects(:closed?).when(conn_open.is(false)).returns(true)
+      @transport_session.expects(:close).once
       
       begin
         Net::SSH.start('localhost', 'testuser') do |ssh|

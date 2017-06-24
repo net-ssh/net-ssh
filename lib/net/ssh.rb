@@ -249,6 +249,9 @@ module Net
         transport.close
         raise AuthenticationFailed, "Authentication failed for user #{user}@#{host}"
       end
+    rescue => e
+      transport.close unless transport.nil?
+      raise e
     end
 
     # Returns a hash of the configuration options for the given host, as read
