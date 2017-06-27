@@ -61,12 +61,12 @@ module Net; module SSH; module Transport
       @bind_address = options[:bind_address] || nil
       @options = options
 
-      debug { "establishing connection to #{@host}:#{@port}" }
-
       @socket =
         if (factory = options[:proxy])
+          debug { "establishing connection to #{@host}:#{@port} through proxy" }
           factory.open(@host, @port, options)
         else
+          debug { "establishing connection to #{@host}:#{@port}" }
           Socket.tcp(@host, @port, @bind_address, nil,
                      connect_timeout: options[:timeout])
         end
