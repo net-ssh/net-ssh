@@ -1,5 +1,6 @@
 require_relative '../common'
 require 'net/ssh/transport/session'
+require 'net/ssh/proxy/http'
 
 # mocha adds #verify to Object, which throws off the host-key-verifier part of
 # these tests.
@@ -14,9 +15,12 @@ module Transport
   class TestSession < NetSSHTest
     include Net::SSH::Transport::Constants
 
+    TEST_HOST = "net.ssh.test"
+    TEST_PORT = 22
+
     def test_constructor_defaults
-      assert_equal "net.ssh.test", session.host
-      assert_equal 22, session.port
+      assert_equal TEST_HOST, session.host
+      assert_equal TEST_PORT, session.port
       assert_instance_of Net::SSH::Verifiers::Lenient, session.host_key_verifier
     end
 
@@ -48,13 +52,13 @@ module Transport
     def test_host_as_string_should_return_host_and_ip_when_port_is_default
       session!
       socket.stubs(:peer_ip).returns("1.2.3.4")
-      assert_equal "net.ssh.test,1.2.3.4", session.host_as_string
+      assert_equal "#{TEST_HOST},1.2.3.4", session.host_as_string
     end
 
     def test_host_as_string_should_return_host_and_ip_with_port_when_port_is_not_default
       session(port: 1234) # force session to be instantiated
       socket.stubs(:peer_ip).returns("1.2.3.4")
-      assert_equal "[net.ssh.test]:1234,[1.2.3.4]:1234", session.host_as_string
+      assert_equal "[#{TEST_HOST}]:1234,[1.2.3.4]:1234", session.host_as_string
     end
 
     def test_host_as_string_should_return_only_host_when_host_is_ip
@@ -132,7 +136,7 @@ module Transport
     def test_peer_should_return_hash_of_info_about_peer
       session!
       socket.stubs(peer_ip: "1.2.3.4")
-      assert_equal({ip: "1.2.3.4", port: 22, host: "net.ssh.test", canonized: "net.ssh.test,1.2.3.4"}, session.peer)
+      assert_equal({ip: "1.2.3.4", port: TEST_PORT, host: TEST_HOST, canonized: "net.ssh.test,1.2.3.4"}, session.peer)
     end
 
     def test_next_message_should_block_until_next_message_is_available
@@ -298,6 +302,32 @@ module Transport
       assert socket.hints[:authenticated]
     end
 
+    class TestLogger < Logger
+      def initialize
+        @strio = StringIO.new
+        super(@strio)
+      end
+
+      def messages
+        @strio.string
+      end
+    end
+
+    def test_log_correct_debug_with_proxy
+      logger = TestLogger.new
+      proxy = Net::SSH::Proxy::HTTP.new("")
+
+      session!(logger: logger, proxy: proxy)
+      assert_match "establishing connection to #{TEST_HOST}:#{TEST_PORT} through proxy", logger.messages
+    end
+
+    def test_log_correct_debug_without_proxy
+      logger = TestLogger.new
+
+      session!(logger: logger)
+      assert_match "establishing connection to #{TEST_HOST}:#{TEST_PORT}", logger.messages
+    end
+
     private
 
       def socket
@@ -314,15 +344,18 @@ module Transport
 
       def session(options={})
         @session ||= begin
-          host = options.delete(:host) || "net.ssh.test"
-          Socket.stubs(:tcp).with(host, options[:port] || 22, nil, nil, { connect_timeout: options[:timeout] }).returns(socket)
+          host = options.delete(:host) || TEST_HOST
+          if (proxy = options[:proxy])
+            proxy.stubs("open").returns(socket)
+          else
+            Socket.stubs(:tcp).with(host, options[:port] || TEST_PORT, nil, nil, { connect_timeout: options[:timeout] }).returns(socket)
+          end
           Net::SSH::Transport::ServerVersion.stubs(:new).returns(server_version)
           Net::SSH::Transport::Algorithms.stubs(:new).returns(algorithms)
 
           Net::SSH::Transport::Session.new(host, options)
         end
       end
-
       # a simple alias to make the tests more self-documenting. the bang
       # version makes it look more like the session is being instantiated
       alias session! session
