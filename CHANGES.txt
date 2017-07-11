@@ -1,6 +1,12 @@
-=== Unreleased
+=== 4.2.0.rc1
 
- * Deprecate `:paranoid` in favor of `:verify_host_key`
+ * Close transport on proxy error [adamruzicka, #526]
+ * Support multiple identity files [Kimura Masayuki, #528]
+ * Move `none` cipher to end of cipher list [Brian Cain, #525]
+ * Deprecate `:paranoid` in favor of `:verify_host_key` [Jared Beck, #524]
+ * Support Multile Include ssh config files [Kasumi Hanazuki, #516]
+ * Support Relative path in ssh confif files [Akinori MUSHA, #510]
+ * add direct-streamlocal@openssh.com support in Forward class [Harald Sitter, #502]
 
 === 4.1.0
 === 4.1.0.rc1
