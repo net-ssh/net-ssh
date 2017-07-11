@@ -64,7 +64,7 @@ module Net; module SSH; module Transport
       debug { "establishing connection to #{@host}:#{@port}" }
 
       @socket =
-        if (factory = options[:proxy])
+        if (factory = options[:proxy] || options[:session_socket_factory])
           factory.open(@host, @port, options)
         else
           Socket.tcp(@host, @port, @bind_address, nil,
