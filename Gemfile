@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in mygem.gemspec
 gemspec
 
-if !Gem.win_platform? && RUBY_ENGINE == "mri"
+if !Gem.win_platform? && RUBY_ENGINE == "ruby"
   gem 'byebug', group: [:development, :test]
 end
 
