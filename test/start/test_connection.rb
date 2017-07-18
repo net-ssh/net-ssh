@@ -14,12 +14,11 @@ module NetSSH
       @connection_session = mock('connection_session')
       Net::SSH::Connection::Session.expects(new: connection_session)
     end
-    
+
     def test_close_connection_on_exception
       @connection_session.expects(:closed?).returns(false)
       @connection_session.expects(:close).once
-      @transport_session.expects(:close).once
-      
+
       begin
         Net::SSH.start('localhost', 'testuser') { raise "error" }
       rescue RuntimeError
@@ -31,8 +30,7 @@ module NetSSH
       conn_open = states('conn').starts_as(true)
       @connection_session.expects(:close).then(conn_open.is(false)).once
       @connection_session.expects(:closed?).when(conn_open.is(false)).returns(true)
-      @transport_session.expects(:close).once
-      
+
       begin
         Net::SSH.start('localhost', 'testuser') do |ssh|
           ssh.close
