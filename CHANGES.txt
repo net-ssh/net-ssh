@@ -1,5 +1,10 @@
+=== 4.2.0.rc2
+
+ * Fix double close bug on auth failure (or ruby 2.2 or earlier) [#538]
+
 === 4.2.0.rc1
 
+ * Improved logging with proxy command [Dmitriy Ivliev, #530]
  * Close transport on proxy error [adamruzicka, #526]
  * Support multiple identity files [Kimura Masayuki, #528]
  * Move `none` cipher to end of cipher list [Brian Cain, #525]
