@@ -53,7 +53,7 @@ module Net; module SSH
       end
 
       def default_auth_methods
-        @@default_auth_methods
+        @@default_auth_methods.clone
       end
 
       # Loads the configuration data for the given +host+ from all of the
