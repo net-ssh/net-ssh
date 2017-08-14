@@ -63,7 +63,7 @@ module Net
     # This is the set of options that Net::SSH.start recognizes. See
     # Net::SSH.start for a description of each option.
     VALID_OPTIONS = [
-      :auth_methods, :bind_address, :compression, :compression_level, :config,
+      :add_keys_to_agent, :auth_methods, :bind_address, :compression, :compression_level, :config,
       :encryption, :forward_agent, :hmac, :host_key, :remote_user,
       :keepalive, :keepalive_interval, :keepalive_maxcount, :kex, :keys, :key_data,
       :languages, :logger, :paranoid, :password, :port, :proxy,
@@ -103,6 +103,7 @@ module Net
     #
     # This method accepts the following options (all are optional):
     #
+    # * :add_keys_to_agent => yes, no, confirm
     # * :auth_methods => an array of authentication methods to try
     # * :bind_address => the IP address on the connecting machine to use in
     #   establishing connection. (:bind_address is discarded if :proxy

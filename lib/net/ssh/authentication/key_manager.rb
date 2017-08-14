@@ -140,6 +140,7 @@ module Net
           if info[:key].nil? && info[:from] == :file
             begin
               info[:key] = KeyFactory.load_private_key(info[:file], options[:passphrase], !options[:non_interactive])
+              agent.add_identity(info[:key], "added automatically as per add_keys_to_agent option") if options[:add_keys_to_agent] == true && agent
             rescue OpenSSL::OpenSSLError, Exception => e
               raise KeyManagerError, "the given identity is known, but the private key could not be loaded: #{e.class} (#{e.message})"
             end
