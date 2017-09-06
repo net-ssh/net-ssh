@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Config - net-ssh 4.1.0</title>
+<title>class Net::SSH::Config - net-ssh 4.2.0</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
+  var index_rel_prefix = "../../";
 </script>
 
 <script src="../../js/jquery.js"></script>
@@ -270,7 +271,7 @@ down to the files that are expandable.</p>
 
           
           <div class="method-source-code" id="expandable_default_files-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 167</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 176</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">expandable_default_files</span>
   <span class="ruby-identifier">default_files</span>.<span class="ruby-identifier">keep_if</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">begin</span>
@@ -333,7 +334,7 @@ by <a href="../SSH.html">Net::SSH</a>, and returns them.</p>
         
         <div class="method-heading">
           <span class="method-name">load</span><span
-            class="method-args">(path, host, settings={})</span>
+            class="method-args">(path, host, settings={}, base_dir = nil)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -354,9 +355,9 @@ href="../SSH.html">Net::SSH</a> options.)</p>
           
           <div class="method-source-code" id="load-source">
             <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 75</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">load</span>(<span class="ruby-identifier">path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>={})
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">load</span>(<span class="ruby-identifier">path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>={}, <span class="ruby-identifier">base_dir</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">path</span>)
-  <span class="ruby-identifier">base_dir</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">file</span>)
+  <span class="ruby-identifier">base_dir</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">file</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">settings</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">file</span>)
 
   <span class="ruby-identifier">globals</span> = {}
@@ -407,7 +408,7 @@ href="../SSH.html">Net::SSH</a> options.)</p>
         (<span class="ruby-identifier">globals</span>[<span class="ruby-identifier">key</span>] <span class="ruby-operator">||=</span> []) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">value</span>
       <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;include&#39;</span>
         <span class="ruby-identifier">included_file_paths</span>(<span class="ruby-identifier">base_dir</span>, <span class="ruby-identifier">value</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span>
-          <span class="ruby-identifier">globals</span> = <span class="ruby-identifier">load</span>(<span class="ruby-identifier">file_path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">globals</span>)
+          <span class="ruby-identifier">globals</span> = <span class="ruby-identifier">load</span>(<span class="ruby-identifier">file_path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">globals</span>, <span class="ruby-identifier">base_dir</span>)
         <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">else</span>
         <span class="ruby-identifier">globals</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>)
@@ -418,7 +419,7 @@ href="../SSH.html">Net::SSH</a> options.)</p>
         (<span class="ruby-identifier">settings</span>[<span class="ruby-identifier">key</span>] <span class="ruby-operator">||=</span> []) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">value</span>
       <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;include&#39;</span>
         <span class="ruby-identifier">included_file_paths</span>(<span class="ruby-identifier">base_dir</span>, <span class="ruby-identifier">value</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span>
-          <span class="ruby-identifier">settings</span> = <span class="ruby-identifier">load</span>(<span class="ruby-identifier">file_path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>)
+          <span class="ruby-identifier">settings</span> = <span class="ruby-identifier">load</span>(<span class="ruby-identifier">file_path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>, <span class="ruby-identifier">base_dir</span>)
         <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">else</span>
         <span class="ruby-identifier">settings</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>)
@@ -426,7 +427,16 @@ href="../SSH.html">Net::SSH</a> options.)</p>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">settings</span> = <span class="ruby-identifier">globals</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">settings</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">globals</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">globals</span>
+    <span class="ruby-identifier">settings</span> = <span class="ruby-identifier">globals</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">settings</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">oldval</span>, <span class="ruby-identifier">newval</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;identityfile&#39;</span>
+        <span class="ruby-identifier">oldval</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">newval</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">newval</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">settings</span>
 <span class="ruby-keyword">end</span></pre>
@@ -462,7 +472,7 @@ downcased, and the returned hash will have Symbols for keys.</p>
 
           
           <div class="method-source-code" id="translate-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 156</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 165</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">translate</span>(<span class="ruby-identifier">settings</span>)
   <span class="ruby-identifier">auth_methods</span> = <span class="ruby-identifier">default_auth_methods</span>.<span class="ruby-identifier">clone</span>
   (<span class="ruby-identifier">auth_methods</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;challenge-response&#39;</span>).<span class="ruby-identifier">uniq!</span>
@@ -490,7 +500,7 @@ downcased, and the returned hash will have Symbols for keys.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

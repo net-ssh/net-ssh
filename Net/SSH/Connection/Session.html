@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Connection::Session - net-ssh 4.1.0</title>
+<title>class Net::SSH::Connection::Session - net-ssh 4.2.0</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
+  var index_rel_prefix = "../../../";
 </script>
 
 <script src="../../../js/jquery.js"></script>
@@ -464,7 +465,7 @@ to be run.</p>
 
           
           <div class="method-source-code" id="cleanup_channel-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 510</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 519</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">cleanup_channel</span>(<span class="ruby-identifier">channel</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_closed?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">remote_closed?</span>
     <span class="ruby-identifier">info</span> { <span class="ruby-node">&quot;#{host} delete channel #{channel.local_id} which closed locally and remotely&quot;</span> }
@@ -580,7 +581,7 @@ events, we also return the max wait</p>
 
           
           <div class="method-source-code" id="ev_do_calculate_rw_wait-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 243</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 252</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_do_calculate_rw_wait</span>(<span class="ruby-identifier">wait</span>)
   <span class="ruby-identifier">r</span> = <span class="ruby-identifier">listeners</span>.<span class="ruby-identifier">keys</span>
   <span class="ruby-identifier">w</span> = <span class="ruby-identifier">r</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">w2</span><span class="ruby-operator">|</span> <span class="ruby-identifier">w2</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:pending_write?</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">w2</span>.<span class="ruby-identifier">pending_write?</span> }
@@ -618,7 +619,7 @@ to allow the transport layer to rekey. Then returns true.</p>
 
           
           <div class="method-source-code" id="ev_do_handle_events-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 258</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 267</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_do_handle_events</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>)
   <span class="ruby-constant">Array</span>(<span class="ruby-identifier">readers</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reader</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">listeners</span>[<span class="ruby-identifier">reader</span>]
@@ -666,7 +667,7 @@ to allow the transport layer to rekey</p>
 
           
           <div class="method-source-code" id="ev_do_postprocess-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 277</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 286</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_do_postprocess</span>(<span class="ruby-identifier">was_events</span>)
   <span class="ruby-ivar">@keepalive</span>.<span class="ruby-identifier">send_as_needed</span>(<span class="ruby-identifier">was_events</span>)
   <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">rekey_as_needed</span>
@@ -702,7 +703,7 @@ multiplexing</p>
 
           
           <div class="method-source-code" id="ev_preprocess-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 236</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 245</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">dispatch_incoming_packets</span>(<span class="ruby-identifier">raise_disconnect_errors</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>)
   <span class="ruby-identifier">each_channel</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">id</span>, <span class="ruby-identifier">channel</span><span class="ruby-operator">|</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">process</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">local_closed?</span> }
@@ -759,7 +760,7 @@ will be sufficient.</p>
 
           
           <div class="method-source-code" id="exec-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 367</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 376</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">channel</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">exec</span>(<span class="ruby-identifier">command</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>
@@ -829,7 +830,7 @@ return all output (stdout and stderr) as a single string.</p>
 
           
           <div class="method-source-code" id="exec-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 408</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 417</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">exec!</span>(<span class="ruby-identifier">command</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">block_or_concat</span> = <span class="ruby-identifier">block</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">ch</span>[<span class="ruby-value">:result</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&quot;&quot;</span>
@@ -877,7 +878,7 @@ href="../../SSH.html">SSH</a>.</p>
 
           
           <div class="method-source-code" id="forward-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 481</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 490</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">forward</span>
   <span class="ruby-ivar">@forward</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Service</span><span class="ruby-operator">::</span><span class="ruby-constant">Forward</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -978,7 +979,7 @@ process&#39; stdin stream:</p>
 
           
           <div class="method-source-code" id="listen_to-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 469</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 478</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">listen_to</span>(<span class="ruby-identifier">io</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)
   <span class="ruby-identifier">listeners</span>[<span class="ruby-identifier">io</span>] = <span class="ruby-identifier">callback</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1037,6 +1038,15 @@ as the maximum number of seconds to wait for IO.select to return).</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">loop</span>(<span class="ruby-identifier">wait</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">running</span> = <span class="ruby-identifier">block</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-identifier">busy?</span> }
   <span class="ruby-identifier">loop_forever</span> { <span class="ruby-keyword">break</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">wait</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">running</span>) }
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">process</span>(<span class="ruby-value">0</span>)
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">IOError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/closed/</span>
+      <span class="ruby-identifier">debug</span> { <span class="ruby-string">&quot;stream was closed after loop =&gt; shallowing exception so it will be re-raised in next loop&quot;</span> }
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">raise</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -1102,7 +1112,7 @@ seconds which may pass between callbacks.</p>
 
           
           <div class="method-source-code" id="max_select_wait_time-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 520</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 529</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">max_select_wait_time</span>
   <span class="ruby-ivar">@keepalive</span>.<span class="ruby-identifier">interval</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@keepalive</span>.<span class="ruby-identifier">enabled?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1140,7 +1150,7 @@ returns false, REQUEST_FAILURE will be sent.</p>
 
           
           <div class="method-source-code" id="on_global_request-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 505</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 514</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">on_global_request</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">old</span>, <span class="ruby-ivar">@on_global_request</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-ivar">@on_global_request</span>[<span class="ruby-identifier">type</span>], <span class="ruby-identifier">block</span>
   <span class="ruby-identifier">old</span>
@@ -1184,7 +1194,7 @@ you are welcome to register handlers for other channel types, as needed.</p>
 
           
           <div class="method-source-code" id="on_open_channel-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 495</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 504</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">on_open_channel</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">channel_open_handlers</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-identifier">block</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1239,7 +1249,7 @@ channel.wait</pre>
 
           
           <div class="method-source-code" id="open_channel-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 326</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 335</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">open_channel</span>(<span class="ruby-identifier">type</span>=<span class="ruby-string">&quot;session&quot;</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">on_confirm</span>)
   <span class="ruby-identifier">local_id</span> = <span class="ruby-identifier">get_next_channel_id</span>
 
@@ -1281,7 +1291,7 @@ href="Session.html#method-i-process">process</a>.</p>
 
           
           <div class="method-source-code" id="postprocess-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 250</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 259</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">postprocess</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>)
   <span class="ruby-identifier">ev_do_handle_events</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -1320,7 +1330,7 @@ method returns false. Otherwise, it returns true.</p>
 
           
           <div class="method-source-code" id="preprocess-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 227</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 236</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword">yield</span>(<span class="ruby-keyword">self</span>)
   <span class="ruby-identifier">ev_preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
@@ -1390,7 +1400,7 @@ end</pre>
 
           
           <div class="method-source-code" id="process-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 215</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 224</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">wait</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-ivar">@event_loop</span>.<span class="ruby-identifier">process</span>(<span class="ruby-identifier">wait</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">rescue</span>
@@ -1444,7 +1454,7 @@ href="../../SSH.html">Net::SSH</a>, and so this method is available to you.</p>
 
           
           <div class="method-source-code" id="send_global_request-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 299</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 308</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">send_global_request</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)
   <span class="ruby-identifier">info</span> { <span class="ruby-node">&quot;sending global request #{type}&quot;</span> }
   <span class="ruby-identifier">msg</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:byte</span>, <span class="ruby-constant">GLOBAL_REQUEST</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">type</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-value">:bool</span>, <span class="ruby-operator">!</span><span class="ruby-identifier">callback</span>.<span class="ruby-identifier">nil?</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra</span>)
@@ -1489,7 +1499,7 @@ this to send it.</p>
 
           
           <div class="method-source-code" id="send_message-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 431</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 440</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">message</span>)
   <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">enqueue_message</span>(<span class="ruby-identifier">message</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -1559,7 +1569,7 @@ event loop will no longer monitor it.</p>
 
           
           <div class="method-source-code" id="stop_listening_to-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 475</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 484</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">stop_listening_to</span>(<span class="ruby-identifier">io</span>)
   <span class="ruby-identifier">listeners</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">io</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -1581,7 +1591,7 @@ event loop will no longer monitor it.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

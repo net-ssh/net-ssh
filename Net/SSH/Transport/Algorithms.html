@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Transport::Algorithms - net-ssh 4.1.0</title>
+<title>class Net::SSH::Transport::Algorithms - net-ssh 4.2.0</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
+  var index_rel_prefix = "../../../";
 </script>
 
 <script src="../../../js/jquery.js"></script>
@@ -136,7 +137,219 @@ internally by the transport layer.</p>
     
 
     
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="ALGORITHMS">ALGORITHMS
+        
+        <dd><p>Define the default algorithms, in order of preference, supported by <a
+href="../../SSH.html">Net::SSH</a>.</p>
+        
+      
+      </dl>
+    </section>
+    
 
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-algorithms" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">algorithms</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The hash of algorithms preferred by the client, which will be told to the
+server during algorithm negotiation.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-compression_client" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">compression_client</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The type of compression to use to compress packets being sent by the
+client.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-compression_server" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">compression_server</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The type of compression to use to decompress packets arriving from the
+server.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-encryption_client" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">encryption_client</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The type of the cipher to use to encrypt packets sent from the client to
+the server.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-encryption_server" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">encryption_server</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The type of the cipher to use to decrypt packets arriving from the server.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-hmac_client" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">hmac_client</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The type of <a href="HMAC.html">HMAC</a> to use to sign packets sent by the
+client.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-hmac_server" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">hmac_server</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The type of <a href="HMAC.html">HMAC</a> to use to validate packets
+arriving from the server.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-host_key" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">host_key</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The type of host key that will be used for this session.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-kex" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">kex</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The kex algorithm to use settled on between the client and server.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-language_client" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">language_client</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The language that will be used in messages sent by the client.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-language_server" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">language_server</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The language that will be used in messages sent from the server.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-options" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">options</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The hash of options used to initialize this object</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-session" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">session</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The underlying transport layer session that supports this object</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-session_id" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">session_id</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The session-id for this session, as decided during the initial key
+exchange.</p>
+        
+        </div>
+      </div>
+      
+    </section>
     
 
     
@@ -494,7 +707,7 @@ processed.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
