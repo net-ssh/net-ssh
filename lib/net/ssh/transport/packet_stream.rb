@@ -72,7 +72,7 @@ module Net; module SSH; module Transport
 
     # Returns true if the IO is available for reading, and false otherwise.
     def available_for_read?
-      result = Net::SSH::Compat.io_select([self], nil, nil, 0)
+      result = IO.select([self], nil, nil, 0)
       result && result.first.any?
     end
 
@@ -105,7 +105,7 @@ module Net; module SSH; module Transport
           return packet if packet
 
           loop do
-            result = Net::SSH::Compat.io_select([self]) or next
+            result = IO.select([self]) or next
             break if result.first.any?
           end
 
