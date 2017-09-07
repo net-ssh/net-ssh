@@ -80,7 +80,20 @@ module Net; module SSH
         globals = {}
         host_matched = false
         seen_host = false
+        ignore = false
+
         IO.foreach(file) do |line|
+          if line =~ /^#\s?Net::SSH::Config\s(\w+)/
+            case $1
+            when "ignore"
+              ignore = true
+            when "end"
+              ignore = false
+            end
+            next
+          end
+
+          next if ignore
           next if line =~ /^\s*(?:#.*)?$/
 
           if line =~ /^\s*(\S+)\s*=(.*)$/
