@@ -7,12 +7,9 @@ addon:
     gateway.netssh
 
 rvm:
-  - 2.0
-  - 2.1
   - 2.2
-  - 2.3.0
-  - 2.4.0
-  - jruby-9.1.6.0
+  - 2.3.5
+  - 2.4.2
   - rbx-3.69
   - ruby-head
 env:
