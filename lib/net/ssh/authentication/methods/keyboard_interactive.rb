@@ -41,7 +41,7 @@ module Net
                 debug { "keyboard-interactive info request" }
 
                 if password.nil? && interactive? && prompter.nil?
-                  prompter = prompt.start(type: 'keyboard-interactive', name: name, instruction: instruction)
+                  prompter = @prompt.start(type: 'keyboard-interactive', name: name, instruction: instruction)
                 end
 
                 _ = message.read_string # lang_tag

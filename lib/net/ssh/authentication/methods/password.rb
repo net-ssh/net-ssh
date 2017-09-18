@@ -62,7 +62,7 @@ module Net
             prompt_info = {type: 'password', user: username, host: host}
             if @prompt_info != prompt_info
               @prompt_info = prompt_info
-              @prompter = prompt.start(prompt_info)
+              @prompter = @prompt.start(prompt_info)
             end
             echo = false
             @prompter.ask("#{username}@#{host}'s password:", echo)
