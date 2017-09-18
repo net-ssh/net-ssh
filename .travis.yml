@@ -7,29 +7,26 @@ addon:
     gateway.netssh
 
 rvm:
-  - 2.0
-  - 2.1
   - 2.2
-  - 2.3.0
-  - 2.4.0
-  - jruby-9.1.6.0
-  - rbx-3.69
+  - 2.3.5
+  - 2.4.2
+  - rbx-3.84
   - ruby-head
 env:
   NET_SSH_RUN_INTEGRATION_TESTS=1
 
 matrix:
   exclude:
-    - rvm: rbx-3.69
+    - rvm: rbx-3.84
     - rvm: jruby-9.1.6.0
   include:
-    - rvm: rbx-3.69
+    - rvm: rbx-3.84
       env: NET_SSH_RUN_INTEGRATION_TESTS=
     - rvm: jruby-9.1.6.0
       env: JRUBY_OPTS='--client -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -Xcext.enabled=false -J-Xss2m -Xcompile.invokedynamic=false' NET_SSH_RUN_INTEGRATION_TESTS=
   fast_finish: true
   allow_failures:
-    - rvm: rbx-3.69
+    - rvm: rbx-3.84
     - rvm: jruby-9.1.6.0
     - rvm: ruby-head
 
