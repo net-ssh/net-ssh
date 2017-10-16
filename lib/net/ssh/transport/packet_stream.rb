@@ -231,7 +231,7 @@ module Net; module SSH; module Transport
         payload = @packet.read(@packet_length - padding_length - 1)
 
         my_computed_hmac = server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
-        raise Net::SSH::Exception, "corrupted mac detected" if real_hmac != my_computed_hmac
+        raise Net::SSH::Exception, "corrupted hmac detected" if real_hmac != my_computed_hmac
 
         # try to decompress the payload, in case compression is active
         payload = server.decompress(payload)
