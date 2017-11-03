@@ -14,7 +14,7 @@ require 'rbnacl/hash'
 
 require 'base64'
 
-require 'net/ssh/pub_key'
+require 'net/ssh/authentication/pub_key_fingerprint'
 require 'net/ssh/transport/cipher_factory'
 require 'bcrypt_pbkdf' unless RUBY_PLATFORM == "java"
 
@@ -28,7 +28,7 @@ module ED25519
   end
 
   class PubKey
-    include Net::SSH::PubKey
+    include Net::SSH::Authentication::PubKeyFingerprint
     attr_reader :verify_key
 
     def initialize(data)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 require 'openssl'
-require 'net/ssh/pub_key'
+require 'net/ssh/authentication/pub_key_fingerprint'
 
 module OpenSSL
 
@@ -29,7 +29,7 @@ module OpenSSL
   module PKey
 
     class PKey
-      include Net::SSH::PubKey
+      include Net::SSH::Authentication::PubKeyFingerprint
     end
 
     # This class is originally defined in the OpenSSL module. As needed, methods
