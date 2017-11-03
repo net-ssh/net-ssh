@@ -47,4 +47,12 @@ class TestPassword < NetSSHTest
     end
     assert_equal ret, "hello from:net_ssh_1\n"
   end
+
+  def test_bad_password_should_throw_auth_invalid
+    assert_raises Net::SSH::AuthenticationFailed do
+      Net::SSH.start("localhost", "net_ssh_1", password: "wrong_password", auth_methods: ['password'], non_interactive: true) do |ssh|
+        ssh.exec! 'echo "hello from:$USER"'
+      end
+    end
+  end
 end

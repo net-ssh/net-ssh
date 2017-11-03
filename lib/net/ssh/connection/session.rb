@@ -176,6 +176,15 @@ module Net; module SSH; module Connection
     def loop(wait=nil, &block)
       running = block || Proc.new { busy? }
       loop_forever { break unless process(wait, &running) }
+      begin
+        process(0)
+      rescue IOError => e
+        if e.message =~ /closed/
+          debug { "stream was closed after loop => shallowing exception so it will be re-raised in next loop" }
+        else
+          raise
+        end
+      end
     end
 
     # The core of the event loop. It processes a single iteration of the event

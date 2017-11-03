@@ -144,7 +144,16 @@ module Net; module SSH
           end
         end
 
-        settings = globals.merge(settings) if globals
+        if globals
+          settings = globals.merge(settings) do |key, oldval, newval|
+            case key
+            when 'identityfile'
+              oldval + newval
+            else
+              newval
+            end
+          end
+        end
 
         return settings
       end
@@ -303,10 +312,17 @@ module Net; module SSH
           hash
         end
 
-        def included_file_paths(base_dir, config_path)
-          Dir.glob(File.expand_path(config_path, base_dir)).select { |f| File.file?(f) }
+        def included_file_paths(base_dir, config_paths)
+          tokenize_config_value(config_paths).flat_map do |path|
+            Dir.glob(File.expand_path(path, base_dir)).select { |f| File.file?(f) }
+          end
         end
 
+        # Tokenize string into tokens.
+        # A token is a word or a quoted sequence of words, separated by whitespaces.
+        def tokenize_config_value(str)
+          str.scan(/([^"\s]+)?(?:"([^"]+)")?\s*/).map(&:join)
+        end
     end
   end
 

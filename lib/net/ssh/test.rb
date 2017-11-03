@@ -71,7 +71,10 @@ module Net; module SSH
     # in these tests. It is a fully functional SSH transport session, operating
     # over a mock socket (#socket).
     def transport(options={})
-      @transport ||= Net::SSH::Transport::Session.new(options[:host] || "localhost", options.merge(kex: "test", host_key: "ssh-rsa", paranoid: false, proxy: socket(options)))
+      @transport ||= Net::SSH::Transport::Session.new(
+        options[:host] || "localhost",
+        options.merge(kex: "test", host_key: "ssh-rsa", verify_host_key: false, proxy: socket(options))
+      )
     end
 
     # First asserts that a story has been described (see #story). Then yields,

@@ -127,4 +127,28 @@ class TestProxy < NetSSHTest
     end
   end
 
+  class DbgProxy
+    attr_reader :io
+
+    def initialize(origin)
+      @origin = origin
+    end
+
+    def open(*args)
+      @io = @origin.open(*args)
+      @io
+    end
+  end
+  def test_does_close_proxy_on_proxy_failure
+    setup_ssh_env do
+      proxy = DbgProxy.new(Net::SSH::Proxy::Command.new('sleep 2 && ssh -W %h:%p -o "PreferredAuthentications none" user@localhost'))
+      msg = 'echo123'
+      assert_raises Errno::EPIPE, Net::SSH::Proxy::ConnectError do
+        Net::SSH.start(*ssh_start_params(proxy: proxy, password: 'bad', non_interactive: true, auth_methods: ['password'], verbose: :debug)) do |ssh|
+          ssh.exec! "echo \"$USER:#{msg}\""
+        end
+      end
+      assert proxy.io.nil? || proxy.io.closed?, "Process #proxy.io.pid not closed"
+    end
+  end
 end

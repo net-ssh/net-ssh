@@ -449,7 +449,7 @@ module Connection
     end
 
     def test_loop_should_call_process_until_process_returns_false
-      IO.stubs(:select).with([socket],[],nil,nil).returns([[],[],[]])
+      session.expects(:process).with(0)
       session.expects(:process).with(nil).times(4).returns(true,true,true,false).yields
       n = 0
       session.loop { n += 1 }
@@ -521,6 +521,7 @@ module Connection
     private
 
       def prep_exec(command, *data)
+        IO.expects(:select).with([socket],[],nil,0).returns([[],[],[]])
         transport.mock_enqueue = true
         transport.expect do |t, p|
           assert_equal CHANNEL_OPEN, p.type
