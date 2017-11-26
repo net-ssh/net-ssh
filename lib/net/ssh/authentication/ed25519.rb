@@ -1,4 +1,4 @@
-gem 'rbnacl', '>= 3.2.0', '< 5.0'
+gem 'rbnacl', '>= 3.2.0'
 gem 'bcrypt_pbkdf', '~> 1.0' unless RUBY_PLATFORM == "java"
 
 begin

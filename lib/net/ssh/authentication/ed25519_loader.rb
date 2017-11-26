@@ -21,7 +21,7 @@ end
 
 def self.dependenciesRequiredForED25519
   result = "net-ssh requires the following gems for ed25519 support:\n"
-  result << " * rbnacl (>= 3.2, < 5.0)\n"
+  result << " * rbnacl (>= 3.2)\n"
   result << " * rbnacl-libsodium, if your system doesn't have libsodium installed.\n"
   result << " * bcrypt_pbkdf (>= 1.0, < 2.0)\n" unless RUBY_PLATFORM == "java"
   result << "See https://github.com/net-ssh/net-ssh/issues/478 for more information\n"
