@@ -1,10 +1,10 @@
-require 'common'
+require_relative '../common'
 require 'net/ssh'
 
 module NetSSH
   class TestConnection < NetSSHTest
     attr_reader :connection_session
-    
+
     def setup
       authentication_session = mock('authentication_session')
       authentication_session.stubs(:authenticate).returns(true)
@@ -40,15 +40,14 @@ module NetSSH
         # We aren't interested in the exception
       end
     end
-    
+
     def test_return_value_is_returned
       @connection_session.expects(:closed?).returns(false)
       @connection_session.expects(:close).once
-      
+
       val = 1
       retval = Net::SSH.start('localhost', 'testuser') { val }
       assert_equal(val, retval)
     end
   end
 end
-

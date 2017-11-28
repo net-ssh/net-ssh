@@ -23,6 +23,9 @@ module Net; module SSH; module Proxy
     # The command line for the session
     attr_reader :command_line
 
+    # Timeout in seconds in open, defaults to 60
+    attr_accessor :timeout
+
     # Create a new socket factory that tunnels via a command executed
     # with the user's shell, which is composed from the given command
     # template.  In the command template, `%h' will be substituted by
@@ -30,6 +33,7 @@ module Net; module SSH; module Proxy
     def initialize(command_line_template)
       @command_line_template = command_line_template
       @command_line = nil
+      @timeout = 60
     end
 
     # Return a new socket connected to the given host and port via the
@@ -56,13 +60,17 @@ module Net; module SSH; module Proxy
       }
       begin
         io = IO.popen(command_line, "r+")
-        if result = IO.select([io], nil, [io], 60)
-          if result.last.any? || io.eof?
-            io.close
-            raise "command failed"
+        begin
+          if result = IO.select([io], nil, [io], @timeout)
+            if result.last.any? || io.eof?
+              raise "command failed"
+            end
+          else
+            raise "command timed out"
           end
-        else
-          raise "command timed out"
+        rescue
+          close_on_error(io)
+          raise
         end
       rescue => e
         raise ConnectError, "#{e}: #{command_line}"
@@ -104,6 +112,12 @@ module Net; module SSH; module Proxy
       end
       io
     end
+
+    def close_on_error(io)
+      Process.kill('TERM', io.pid)
+      Thread.new { io.close }
+    end
+
   end
 
 end; end; end
