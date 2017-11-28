@@ -62,9 +62,11 @@ module Net; module SSH; module Proxy
             raise "command failed"
           end
         else
+          io.close
           raise "command timed out"
         end
       rescue => e
+        io.close unless io.nil? || io.closed?
         raise ConnectError, "#{e}: #{command_line}"
       end
       @command_line = command_line
