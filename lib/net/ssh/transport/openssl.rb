@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 require 'openssl'
+require 'net/ssh/authentication/pub_key_fingerprint'
 
 module OpenSSL
 
@@ -28,9 +29,7 @@ module OpenSSL
   module PKey
 
     class PKey
-      def fingerprint
-        @fingerprint ||= OpenSSL::Digest::MD5.hexdigest(to_blob).scan(/../).join(":")
-      end
+      include Net::SSH::Authentication::PubKeyFingerprint
     end
 
     # This class is originally defined in the OpenSSL module. As needed, methods

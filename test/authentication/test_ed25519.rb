@@ -24,6 +24,8 @@ module Authentication
       signed = priv_key.ssh_do_sign(shared_secret)
       self.assert_equal(true,pub_key.ssh_do_verify(signed,shared_secret))
       self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
+      self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_no_pwd)
+      self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_no_pwd)
     end
 
     def test_pwd_key
@@ -43,6 +45,8 @@ module Authentication
       signed = priv_key.ssh_do_sign(shared_secret)
       self.assert_equal(true,pub_key.ssh_do_verify(signed,shared_secret))
       self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
+      self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_pwd)
+      self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_pwd)
     end
 
     def private_key_pwd
@@ -62,6 +66,14 @@ oPcTikV1iWH5Xc+GxRFRRGTN/6HvBf0AKDB1kMXlDhGnBnHGeNH1pk44xG
       'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICaHkFaGXqYhUVFcaZ10TPUbkIvmaFXwYRoOS5qE8Mci vagrant@vagrant-ubuntu-trusty-64'
     end
 
+    def key_fingerprint_md5_pwd
+      'c8:89:92:60:12:1b:01:5e:ca:58:55:68:7e:5e:1a:f1'
+    end
+
+    def key_fingerprint_sha256_pwd
+      'SHA256:Uz5Qk/fB+f8Bu7FTxNcDh7+atpB29Q3tBBJX/gnUfGw'
+    end
+
     def private_key_no_pwd
       @anonymous_key = <<-EOF
 -----BEGIN OPENSSH PRIVATE KEY-----
@@ -78,6 +90,15 @@ IDBAU=
     def public_key_no_pwd
       'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDB2NBh4GJPPUN1kXPMu8b633Xcv55WoKC3OkBjFAbzJ vagrant@vagrant-ubuntu-trusty-64'
     end
+
+    def key_fingerprint_md5_no_pwd
+      '2f:7f:97:21:76:a4:0f:38:c4:fe:d8:b4:6a:39:72:30'
+    end
+
+    def key_fingerprint_sha256_no_pwd
+      'SHA256:u6mXnY8P1b0FODGp8mckqOB33u8+jvkSCtJbD5Q9klg'
+    end
+
   end
 
 end
