@@ -1,4 +1,4 @@
-unless ENV['NET_SSH_NO_RBNACL']
+unless ENV['NET_SSH_NO_ED25519']
 
 require 'common'
 require 'net/ssh/authentication/ed25519_loader'
@@ -8,7 +8,7 @@ module Authentication
 
   class TestED25519 < NetSSHTest
     def setup
-      raise "No ED25519 set NET_SSH_NO_RBNACL to ignore this test" unless Net::SSH::Authentication::ED25519Loader::LOADED
+      raise "No ED25519 set NET_SSH_NO_ED25519 to ignore this test" unless Net::SSH::Authentication::ED25519Loader::LOADED
     end
 
     def test_no_pwd_key

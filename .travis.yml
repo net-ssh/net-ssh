@@ -40,7 +40,7 @@ install:
   - gem list bundler
   - bundle _1.16_ install
   - bundle _1.16_ -v
-  - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.16_ install
+  - BUNDLE_GEMFILE=./Gemfile bundle _1.16_ install
   - sudo ansible-galaxy install rvm_io.ruby
   - sudo chown -R travis:travis /home/travis/.ansible
   - ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true' -e 'myuser=travis' -e 'mygroup=travis' -e 'homedir=/home/travis'
@@ -48,6 +48,6 @@ install:
 script:
   - ssh -V
   - bundle _1.16_ exec rake test
-  - BUNDLE_GEMFILE=./Gemfile.norbnacl bundle _1.16_ exec rake test
+  - BUNDLE_GEMFILE=./Gemfile bundle _1.16_ exec rake test
   - bundle _1.16_ exec rake test_test
   - bundle _1.16_ exec rubocop
