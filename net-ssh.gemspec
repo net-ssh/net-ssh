@@ -28,9 +28,8 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  unless ENV['NET_SSH_NO_RBNACL']
-    spec.add_development_dependency("rbnacl-libsodium", "~> 1.0.11")
-    spec.add_development_dependency("rbnacl", ['>= 3.2.0','< 5.0'])
+  unless ENV['NET_SSH_NO_ED25519']
+    spec.add_development_dependency("ed25519", "~> 1.2")
     spec.add_development_dependency("bcrypt_pbkdf", "~> 1.0") unless RUBY_PLATFORM == "java"
   end
 

@@ -106,7 +106,7 @@ Then, when install the gem, do so with high security:
 
 If you don't add the public key, you'll see an error like "Couldn't verify data signature". If you're still having trouble let me know and I'll give you a hand.
 
-For ed25519 public key auth support your bundle file should contain ```rbnacl-libsodium```, ```rbnacl```, ```bcrypt_pbkdf``` dependencies.
+For ed25519 public key auth support your bundle file should contain ```ed25519```, ```bcrypt_pbkdf``` dependencies.
 
 == RUBY SUPPORT
 
