@@ -312,7 +312,7 @@ EOF
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-ed25519"
         assert_equal buffer.read_string, ed25519.public_key.verify_key.to_bytes
-        assert_equal buffer.read_string, ed25519.sign_key.keypair_bytes
+        assert_equal buffer.read_string, ed25519.sign_key.keypair
         assert_equal 'foobar', buffer.read_string
         assert buffer.eof?
 
@@ -330,7 +330,7 @@ EOF
         assert_equal buffer.read_string, "ssh-ed25519-cert-v01@openssh.com"
         assert_equal buffer.read_string, cert.to_blob
         assert_equal buffer.read_string, cert.key.public_key.verify_key.to_bytes
-        assert_equal buffer.read_string, cert.key.sign_key.keypair_bytes
+        assert_equal buffer.read_string, cert.key.sign_key.keypair
         assert_equal 'foobar', buffer.read_string
         assert buffer.eof?
 
