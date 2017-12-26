@@ -46,6 +46,9 @@ module Net; module SSH
       # it's used by some clients to query the server for allowed auth methods
       @@default_auth_methods = %w(none publickey password keyboard-interactive)
 
+      # The following options can be repeated
+      @@multi_options = %w(identityfile localforward remoteforward dynamicforward)
+
       # Returns an array of locations of OpenSSH configuration files
       # to parse by default.
       def default_files
@@ -123,24 +126,22 @@ module Net; module SSH
             block_matched = eval_match_condition(value, host, settings)
             block_seen = true
           elsif !block_seen
-            case key
-            when 'identityfile'
-              (globals[key] ||= []) << value
-            when 'include'
+            if key == 'include'
               included_file_paths(base_dir, value).each do |file_path|
                 globals = load(file_path, host, globals, base_dir)
               end
+            elsif @@multi_options.include?(key)
+              (globals[key] ||= []) << value
             else
               globals[key] = value unless settings.key?(key)
             end
           elsif block_matched
-            case key
-            when 'identityfile'
-              (settings[key] ||= []) << value
-            when 'include'
+            if key == 'include'
               included_file_paths(base_dir, value).each do |file_path|
                 settings = load(file_path, host, settings, base_dir)
               end
+            elsif @@multi_options.include?(key)
+              (settings[key] ||= []) << value
             else
               settings[key] = value unless settings.key?(key)
             end
@@ -148,8 +149,7 @@ module Net; module SSH
         end
 
         globals.merge(settings) do |key, oldval, newval|
-          case key
-          when 'identityfile'
+          if @@multi_options.include?(key)
             oldval + newval
           else
             newval
