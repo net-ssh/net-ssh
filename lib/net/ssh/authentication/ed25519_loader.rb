@@ -23,7 +23,7 @@ def self.dependenciesRequiredForED25519
   result = "net-ssh requires the following gems for ed25519 support:\n"
   result << " * ed25519 (>= 1.2, < 2.0)\n"
   result << " * bcrypt_pbkdf (>= 1.0, < 2.0)\n" unless RUBY_PLATFORM == "java"
-  result << "See https://github.com/net-ssh/net-ssh/issues/478 for more information\n"
+  result << "See https://github.com/net-ssh/net-ssh/issues/565 for more information\n"
 end
 
 end

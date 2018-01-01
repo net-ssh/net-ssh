@@ -1,3 +1,8 @@
+=== 5.0.0.beta1
+
+ * Replace RbNaCl dependency with ed25519 gem [Tony Arcieri ,#563]
+ * Add initial Match support [Kasumi Hanazuki,  #553]
+
 === 4.2.0.rc2
 
  * Fix double close bug on auth failure (or ruby 2.2 or earlier) [#538]

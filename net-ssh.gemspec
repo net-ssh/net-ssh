@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Net::SSH: a pure-Ruby implementation of the SSH2 client protocol. It allows you to write programs that invoke and interact with processes on remote servers, via SSH2.}
   spec.homepage      = "https://github.com/net-ssh/net-ssh"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.0")
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.2.6")
 
   spec.extra_rdoc_files = [
     "LICENSE.txt",
