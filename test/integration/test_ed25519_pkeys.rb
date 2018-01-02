@@ -4,7 +4,7 @@ require 'tmpdir'
 
 require 'net/ssh'
 
-unless ENV['NET_SSH_NO_RBNACL']
+unless ENV['NET_SSH_NO_ED25519']
 # see Vagrantfile,playbook for env.
 # we're running as net_ssh_1 user password foo
 # and usually connecting to net_ssh_2 user password foo2pwd
