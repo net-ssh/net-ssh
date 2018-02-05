@@ -1,7 +1,7 @@
 require 'openssl'
-require 'byebug'
 
 module Net::SSH::Transport
+  #:nodoc:
   class OpenSSLAESCTR < SimpleDelegator
     def block_size
       16
@@ -11,6 +11,8 @@ module Net::SSH::Transport
       16
     end
   end
+
+  #:nodoc:
   # Pure-Ruby implementation of Stateful Decryption Counter(SDCTR) Mode
   # for Block Ciphers. See RFC4344 for detail.
   module CTR
