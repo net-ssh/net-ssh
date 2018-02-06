@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Net::SSH: a pure-Ruby implementation of the SSH2 client protocol. It allows you to write programs that invoke and interact with processes on remote servers, via SSH2.}
   spec.homepage      = "https://github.com/net-ssh/net-ssh"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.0")
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.2.6")
 
   spec.extra_rdoc_files = [
     "LICENSE.txt",
@@ -28,9 +28,8 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  unless ENV['NET_SSH_NO_RBNACL']
-    spec.add_development_dependency("rbnacl-libsodium", "~> 1.0.11")
-    spec.add_development_dependency("rbnacl", ['>= 3.2.0','< 5.0'])
+  unless ENV['NET_SSH_NO_ED25519']
+    spec.add_development_dependency("ed25519", "~> 1.2")
     spec.add_development_dependency("bcrypt_pbkdf", "~> 1.0") unless RUBY_PLATFORM == "java"
   end
 

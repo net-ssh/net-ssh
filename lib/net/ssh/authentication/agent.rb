@@ -238,12 +238,12 @@ module Net; module SSH; module Authentication
         Net::SSH::Buffer.from(:string, priv_key.to_blob, :bignum, priv_key.key.private_key).to_s
       when /^ssh-ed25519$/
         Net::SSH::Buffer.from(:string, priv_key.public_key.verify_key.to_bytes,
-                              :string, priv_key.sign_key.keypair_bytes).to_s
+                              :string, priv_key.sign_key.keypair).to_s
       when /^ssh-ed25519-cert-v01@openssh\.com$/
         # Unlike the other certificate types, the public key is included after the certifiate.
         Net::SSH::Buffer.from(:string, priv_key.to_blob,
                               :string, priv_key.key.public_key.verify_key.to_bytes,
-                              :string, priv_key.key.sign_key.keypair_bytes).to_s
+                              :string, priv_key.key.sign_key.keypair).to_s
       when /^ssh-rsa$/
         # `n` and `e` are reversed compared to the ordering in `OpenSSL::PKey::RSA#to_blob`.
         Net::SSH::Buffer.from(:bignum, priv_key.n, :bignum, priv_key.e, :bignum, priv_key.d,

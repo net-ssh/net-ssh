@@ -1,16 +1,7 @@
-gem 'rbnacl', '>= 3.2.0', '< 5.0'
+gem 'ed25519', '~> 1.2'
 gem 'bcrypt_pbkdf', '~> 1.0' unless RUBY_PLATFORM == "java"
 
-begin
-  require 'rbnacl/libsodium'
-rescue LoadError # rubocop:disable Lint/HandleExceptions
-end
-
-require 'rbnacl'
-require 'rbnacl/signatures/ed25519/verify_key'
-require 'rbnacl/signatures/ed25519/signing_key'
-
-require 'rbnacl/hash'
+require 'ed25519'
 
 require 'base64'
 
@@ -19,10 +10,12 @@ require 'bcrypt_pbkdf' unless RUBY_PLATFORM == "java"
 
 module Net; module SSH; module Authentication
 module ED25519
-  class SigningKeyFromFile < RbNaCl::Signatures::Ed25519::SigningKey
+  class SigningKeyFromFile < SimpleDelegator
     def initialize(pk,sk)
-      @signing_key = sk
-      @verify_key = RbNaCl::Signatures::Ed25519::VerifyKey.new(pk)
+      key = ::Ed25519::SigningKey.from_keypair(sk)
+      raise ArgumentError, "pk does not match sk" unless pk == key.verify_key.to_bytes
+
+      super(key)
     end
   end
 
@@ -30,7 +23,7 @@ module ED25519
     attr_reader :verify_key
 
     def initialize(data)
-      @verify_key = RbNaCl::Signatures::Ed25519::VerifyKey.new(data)
+      @verify_key = ::Ed25519::VerifyKey.new(data)
     end
 
     def self.read_keyblob(buffer)
@@ -150,10 +143,6 @@ module ED25519
 
     def self.read(data,password)
       self.new(data,password)
-    end
-
-    def self.read_keyblob(buffer)
-      ED25519::PubKey.read_keyblob(buffer)
     end
   end
 end

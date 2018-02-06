@@ -1,3 +1,10 @@
+=== 5.0.0.beta1
+
+ * Use OpenSSL for aes*-ctr for up to 5x throughput improvement [Miklós Fazekas, Harald Sitter, #570]
+ * Optimize slice! usage in CTR for up to 2x throughput improvement [Harald Sitter, #569]
+ * Replace RbNaCl dependency with ed25519 gem [Tony Arcieri ,#563]
+ * Add initial Match support [Kasumi Hanazuki,  #553]
+
 === 4.2.0.rc2
 
  * Fix double close bug on auth failure (or ruby 2.2 or earlier) [#538]

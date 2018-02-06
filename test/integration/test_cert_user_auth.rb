@@ -5,7 +5,7 @@ require 'net/ssh'
 #  1. cert files: /etc/ssh/users_ca and /etc/ssh/users_ca.pub and
 #  2. /etc/ssh/sshd_config: TrustedUserCAKeys /etc/ssh/users_ca.pub
 
-unless ENV['NET_SSH_NO_RBNACL']
+unless ENV['NET_SSH_NO_ED25519']
 
 class TestCertUserAuth < NetSSHTest
   include IntegrationTestHelpers

@@ -24,9 +24,10 @@ module Net; module SSH; module Transport
 
       "3des-ctr"                    => "des-ede3",
       "blowfish-ctr"                => "bf-ecb",
-      "aes256-ctr"                  => "aes-256-ecb",
-      "aes192-ctr"                  => "aes-192-ecb",
-      "aes128-ctr"                  => "aes-128-ecb",
+
+      "aes256-ctr"                  => "aes-256-ctr",
+      "aes192-ctr"                  => "aes-192-ctr",
+      "aes128-ctr"                  => "aes-128-ctr",
       "cast128-ctr"                 => "cast5-ecb",
 
       "none"                        => "none",
@@ -63,7 +64,13 @@ module Net; module SSH; module Transport
 
       cipher.padding = 0
 
-      cipher.extend(Net::SSH::Transport::CTR) if (name =~ /-ctr(@openssh.org)?$/)
+      if name =~ /-ctr(@openssh.org)?$/
+        if ossl_name !~ /-ctr/
+          cipher.extend(Net::SSH::Transport::CTR)
+        else
+          cipher = Net::SSH::Transport::OpenSSLAESCTR.new(cipher)
+        end
+      end
       cipher.iv = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options) if ossl_name != "rc4"
 
       key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
@@ -89,7 +96,17 @@ module Net; module SSH; module Transport
         key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
         cipher.key_len = key_len
 
-        result = [key_len, ossl_name=="rc4" ? 8 : cipher.block_size]
+        block_size =
+          case ossl_name
+          when "rc4"
+            8
+          when /\-ctr/
+            Net::SSH::Transport::OpenSSLAESCTR.block_size
+          else
+            cipher.block_size
+          end
+
+        result = [key_len, block_size]
         result << cipher.iv_len if options[:iv_len]
       end
       result
