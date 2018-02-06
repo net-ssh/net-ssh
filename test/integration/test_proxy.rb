@@ -66,24 +66,21 @@ class TestProxy < NetSSHTest
   end
 
   def with_spurious_write_wakeup_emulate(rate=99,&block)
-    orig_io_select = Net::SSH::Compat.method(:io_select)
+    orig_io_select = IO.method(:select)
     count = 0
-    Net::SSH::Compat.singleton_class.send(:define_method,:io_select) do |*params|
+    IO.singleton_class.send(:define_method, :select) do |*params|
       count += 1
       if (count % rate != 0)
         if params && params[1] && !params[1].empty?
           return [[],params[1],[]]
         end
-        #if params && params[0] && !params[0].empty?
-        #return [params[0],[],[]]
-        #end
       end
-      IO.select(*params)
+      orig_io_select.call(*params)
     end
     begin
       yield
     ensure
-      Net::SSH::Compat.singleton_class.send(:define_method,:io_select,&orig_io_select)
+      IO.singleton_class.send(:define_method, :select, &orig_io_select)
     end
   end
 
