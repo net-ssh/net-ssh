@@ -12,7 +12,7 @@ module Net::SSH::Transport
         @counter_len = orig.block_size
         orig.encrypt
         orig.padding = 0
-        
+
         singleton_class.send(:alias_method, :_update, :update)
         singleton_class.send(:private, :_update)
         singleton_class.send(:undef_method, :update)
@@ -50,11 +50,14 @@ module Net::SSH::Transport
 
           encrypted = ""
 
-          while @remaining.bytesize >= block_size
-            encrypted += xor!(@remaining.slice!(0, block_size),
+          offset = 0
+          while (@remaining.bytesize - offset) >= block_size
+            encrypted += xor!(@remaining.slice(offset, block_size),
                               _update(@counter))
             increment_counter!
+            offset += block_size
           end
+          @remaining = @remaining.slice(offset..-1)
 
           encrypted
         end
