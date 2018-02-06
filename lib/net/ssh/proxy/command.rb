@@ -56,13 +56,17 @@ module Net; module SSH; module Proxy
       }
       begin
         io = IO.popen(command_line, "r+")
-        if result = Net::SSH::Compat.io_select([io], nil, [io], 60)
-          if result.last.any? || io.eof?
-            io.close
-            raise "command failed"
+        begin
+          if result = Net::SSH::Compat.io_select([io], nil, [io], 60)
+            if result.last.any? || io.eof?
+              raise "command failed"
+            end
+          else
+            raise "command timed out"
           end
-        else
-          raise "command timed out"
+        rescue
+          io.close
+          raise
         end
       rescue => e
         raise ConnectError, "#{e}: #{command_line}"
