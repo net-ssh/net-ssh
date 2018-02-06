@@ -56,11 +56,11 @@ module Transport
     def test_lengths_for_arcfour128
       assert_equal [16,8], factory.get_lengths("arcfour128")
     end
-    
+
     def test_lengths_for_arcfour256
       assert_equal [32,8], factory.get_lengths("arcfour256")
     end
-    
+
     def test_lengths_for_arcfour512
       assert_equal [64,8], factory.get_lengths("arcfour512")
     end
@@ -180,33 +180,33 @@ module Transport
     def test_arcfour_for_decryption
       assert_equal TEXT, decrypt("arcfour", ARCFOUR)
     end
-    
+
     ARCFOUR128 = "\n\x90\xED*\xD4\xBE\xCBg5\xA5\a\xEC]\x97\xB7L\x06)6\x12FL\x90@\xF4Sqxqh\r\x11\x1Aq \xC8\xE6v\xC6\x12\xD9<A\xDAZ\xFE\x7F\x88\x19f.\x06\xA7\xFE:\xFF\x93\x9B\x8D\xA0\\\x9E\xCA\x03\x15\xE1\xE2\f\xC0\b\xA2C\xE1\xBD\xB6\x13D\xD1\xB4'g\x89\xDC\xEB\f\x19Z)U"
 
     def test_arcfour128_for_encryption
       assert_equal ARCFOUR128, encrypt("arcfour128")
     end
-    
+
     def test_arcfour128_for_decryption
       assert_equal TEXT, decrypt("arcfour128", ARCFOUR128)
     end
-    
+
     ARCFOUR256 = "|g\xCCw\xF5\xC1y\xEB\xF0\v\xF7\x83\x14\x03\xC8\xAB\xE8\xC2\xFCY\xDC,\xB8\xD4dVa\x8B\x18%\xA4S\x00\xE0at\x86\xE8\xA6W\xAB\xD2\x9D\xA8\xDE[g\aZy.\xFB\xFC\x82c\x04h\f\xBFYq\xB7U\x80\x0EG\x91\x88\xDF\xA3\xA2\xFA(\xEC\xDB\xA4\xE7\xFE)\x12u\xAF\x0EZ\xA0\xBA\x97\n\xFC"
 
     def test_arcfour256_for_encryption
       assert_equal ARCFOUR256, encrypt("arcfour256")
     end
-    
+
     def test_arcfour256_for_decryption
       assert_equal TEXT, decrypt("arcfour256", ARCFOUR256)
     end
-    
+
     ARCFOUR512 = "|8\"v\xE7\xE3\b\xA8\x19\x9Aa\xB6Vv\x00\x11\x8A$C\xB6xE\xEF\xF1j\x90\xA8\xFA\x10\xE4\xA1b8\xF6\x04\xF2+\xC0\xD1(8\xEBT]\xB0\xF3/\xD9\xE0@\x83\a\x93\x9D\xCA\x04RXS\xB7A\x0Fj\x94\bE\xEB\x84j\xB4\xDF\nU\xF7\x83o\n\xE8\xF9\x01{jH\xEE\xCDQym\x9E"
 
     def test_arcfour512_for_encryption
       assert_equal ARCFOUR512, encrypt("arcfour512")
     end
-    
+
     def test_arcfour512_for_decryption
       assert_equal TEXT, decrypt("arcfour512", ARCFOUR512)
     end
@@ -252,9 +252,18 @@ module Transport
     end
 
     AES128_CTR = "\x9D\xC7]R\x89\x01\xC4\x14\x00\xE7\xCEc`\x80\v\xC7\xF7\xBD\xD5#d\f\xC9\xB0\xDE\xA6\x8Aq\x10p\x8F\xBC\xFF\x8B\xB4\xC5\xB3\xF7,\xF7eO\x06Q]\x0F\x05\x86\xEC\xA6\xC8\x12\xE9\xC4\x9D0\xD3\x9AL\x192\xAA\xDFu\x0E\xECz\x7F~g\xCA\xEA\xBA\x80,\x83V\x10\xF6/\x04\xD2\x8A\x94\x94\xA9T>~\xD2\r\xE6\x0E\xA0q\xEF"
+    AES128_CTR2 = "\xA5\xAA\xE3\xEC\xA7\xCCc\xFA~\x01\r\xD87\xE6\"\n6\x05\xD1\x9B\xC8_o\xD1i\xF6t\xD7[\xE5\x8B%>]\xD6\xC4<\x1DBd\xA9\x02\x9C\xEB\x89#\x955\xD6\x0F\xD0\x03\xF9\xC6\xD7\xB0@\e\\\xAB\xC0\xA9\xFB\x91\#{w\xADL\xF6'(\xCC\x14\xA2A\x16\xC1\x9C'\xD1\xBA'i\x88\x80\xF1\xA7E\x82\xA8\xC7@\xBA\a\xEA"
 
     def test_aes128_ctr_for_encryption
       assert_equal AES128_CTR, encrypt("aes128-ctr")
+    end
+
+    def test_aes128_ctr_for_encryption2
+      assert_equal [AES128_CTR, AES128_CTR2], encrypt2("aes128-ctr")
+    end
+
+    def test_aes128_ctr_for_decryption2
+      assert_equal [TEXT, TEXT2], decrypt2("aes128-ctr", [AES128_CTR, AES128_CTR2])
     end
 
     def test_aes128_ctr_for_decryption
@@ -272,9 +281,14 @@ module Transport
     end
 
     AES256_CTR = "2\xB8\xE6\xC9\x95\xB4\x05\xD2\xC7+\x7F\x88\xEB\xD4\xA0\b\"\xBF\x9E\x85t\x19,\e\x90\x11\x04b\xC7\xEE$\xDE\xE6\xC5@G\xFEm\xE1u\x9B\au\xAF\xB5\xB8\x857\x87\x139u\xAC\x1A\xAB\fh\x8FiW~\xB8:\xA4\xA0#~\xC4\x89\xBA5#:\xFC\xC8\xE3\x9B\xF0A2\x87\x980\xD1\xE3\xBC'\xBE\x1E\n\x1A*B\x06\xF3\xCC"
+    AES256_CTR2 = "\x13\xBF}\x93\xC3\xFCkw[\\\x8A\xDA\x9F\x85e3AH!\x19\xD9S(+x]B\x1A\x85):\x1Ce\xB1\xD1\x9F^\x8D\\\xFA\xFE\xC6\x9FDkm=?>.\x93\xA6O\x80\xB5o\xBE\xB5\\82\xEEWi\xFC<\xA7\xB6g\xBD\xF1\xA6\xAA\xE7\xD3_&N\xC9[K8\xE61L\xD1\xC0\xC8\x02\b\xE7\xF1!\xA5\x04\xCA"
 
     def test_aes256_ctr_for_encryption
       assert_equal AES256_CTR, encrypt("aes256-ctr")
+    end
+
+    def test_aes256_ctr_for_encryption2
+      assert_equal [AES256_CTR,AES256_CTR2], encrypt2("aes256-ctr")
     end
 
     def test_aes256_ctr_for_decryption
@@ -289,10 +303,11 @@ module Transport
     def test_none_for_decryption
       assert_equal TEXT, decrypt("none", TEXT)
     end
-    
+
     private
 
       TEXT = "But soft! What light through yonder window breaks? It is the east, and Juliet is the sun!"
+      TEXT2 = "2But soft! What light through yonder window breaks? It is the east, and Juliet is the sun!"
 
       OPTIONS = { iv: "ABC",
         key: "abc",
@@ -312,11 +327,42 @@ module Transport
         result << cipher.final
       end
 
+      def encrypt2(type)
+        cipher = factory.get(type, OPTIONS.merge(encrypt: true))
+        padding = TEXT.length % cipher.block_size
+        result = cipher.update(TEXT.dup)
+        result << cipher.update(" " * (cipher.block_size - padding)) if padding > 0
+        result << cipher.final
+
+        cipher.reset
+
+        cipher.iv = "0123456789123456"
+        padding = TEXT2.length % cipher.block_size
+        result2 = cipher.update(TEXT2.dup)
+        result2 << cipher.update(" " * (cipher.block_size - padding)) if padding > 0
+        result2 << cipher.final
+        [result, result2]
+      end
+
       def decrypt(type, data)
         cipher = factory.get(type, OPTIONS.merge(decrypt: true))
         result = cipher.update(data.dup)
         result << cipher.final
         result.strip
+      end
+
+      def decrypt2(type, datas)
+        cipher = factory.get(type, OPTIONS.merge(decrypt: true))
+        result = cipher.update(datas[0].dup)
+        result << cipher.final
+        first = result.strip
+
+        cipher.reset
+
+        result = cipher.update(datas[1].dup)
+        result << cipher.final
+        second = result.strip
+        [first, second]
       end
   end
 

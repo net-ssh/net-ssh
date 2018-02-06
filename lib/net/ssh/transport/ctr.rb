@@ -1,7 +1,31 @@
 require 'openssl'
 
 module Net::SSH::Transport
+  #:nodoc:
+  class OpenSSLAESCTR < SimpleDelegator
+    def initialize(original)
+      super
+      @was_reset = false
+    end
 
+    def block_size
+      16
+    end
+
+    def self.block_size
+      16
+    end
+
+    def reset
+      @was_reset = true
+    end
+
+    def iv=(iv_s)
+      super unless @was_reset
+    end
+  end
+
+  #:nodoc:
   # Pure-Ruby implementation of Stateful Decryption Counter(SDCTR) Mode
   # for Block Ciphers. See RFC4344 for detail.
   module CTR
@@ -12,7 +36,7 @@ module Net::SSH::Transport
         @counter_len = orig.block_size
         orig.encrypt
         orig.padding = 0
-        
+
         singleton_class.send(:alias_method, :_update, :update)
         singleton_class.send(:private, :_update)
         singleton_class.send(:undef_method, :update)
@@ -50,11 +74,14 @@ module Net::SSH::Transport
 
           encrypted = ""
 
-          while @remaining.bytesize >= block_size
-            encrypted += xor!(@remaining.slice!(0, block_size),
+          offset = 0
+          while (@remaining.bytesize - offset) >= block_size
+            encrypted += xor!(@remaining.slice(offset, block_size),
                               _update(@counter))
             increment_counter!
+            offset += block_size
           end
+          @remaining = @remaining.slice(offset..-1)
 
           encrypted
         end

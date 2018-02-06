@@ -29,9 +29,9 @@ install:
   - if "%ruby_version%" == "jruby-9.1.2.0" ( cinst jruby --version 9.1.2.0 -i --allow-empty-checksums )
   - if "%ruby_version%" == "jruby-9.1.2.0" ( SET "PATH=C:\jruby-9.1.2.0\bin\;%PATH%" )
   - ruby --version
-  - gem install bundler --no-document -v 1.13.5
-  - SET BUNDLE_GEMFILE=Gemfile.norbnacl
-  - bundle _1.13.5_ install --retry=3
+  - gem install bundler --no-document --user-install -v 1.16
+  - SET BUNDLE_GEMFILE=Gemfile.noed25519
+  - bundle install --retry=3
   - cinst freesshd
   - cinst putty --allow-empty-checksums
   - ps: |
@@ -49,8 +49,8 @@ install:
           }
 
 test_script:
-  - SET BUNDLE_GEMFILE=Gemfile.norbnacl
+  - SET BUNDLE_GEMFILE=Gemfile.noed25519
   - SET NET_SSH_RUN_WIN_INTEGRATION_TESTS=YES
-  - bundle _1.13.5_ exec rake test
+  - bundle exec rake test
 
 build: off

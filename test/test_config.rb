@@ -286,7 +286,6 @@ class TestConfig < NetSSHTest
     assert_equal %w(~/.ssh/id.pem ~/.ssh/id2.pem ~/.ssh/id3.pem), net_ssh[:keys]
   end
 
-
   def test_default_files_not_mutable
     original_default_files = Net::SSH::Config.default_files.clone
 
@@ -303,6 +302,14 @@ class TestConfig < NetSSHTest
     default_auth_methods.push('garbage')
 
     assert_equal(original_default_auth_methods, Net::SSH::Config.default_auth_methods)
+  end
+    
+  def test_load_with_match_block
+    config = Net::SSH::Config.load(config(:match), "test.host")
+    net_ssh = Net::SSH::Config.translate(config)
+    assert_equal true, net_ssh[:forward_agent]
+    assert_equal true, net_ssh[:compression]
+    assert_equal 22, net_ssh[:port]
   end
 
   private

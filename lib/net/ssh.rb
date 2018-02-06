@@ -192,7 +192,7 @@ module Net
     # * :password_prompt => a custom prompt object with ask method. See Net::SSH::Prompt
     #
     # * :agent_socket_factory => enables the user to pass a lambda/block that will serve as the socket factory
-    #    Net::SSH::start(user,host,agent_socket_factory: ->{ UNIXSocket.open('/foo/bar') })
+    #    Net::SSH.start(host,user,agent_socket_factory: ->{ UNIXSocket.open('/foo/bar') })
     #    example: ->{ UNIXSocket.open('/foo/bar')}
     # * :verify_host_key => either false, true, :very, or :secure specifying how
     #   strict host-key verification should be (in increasing order here).

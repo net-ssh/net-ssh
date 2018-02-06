@@ -64,7 +64,7 @@ module Net; module SSH; module Connection
         sw.each { |wi| owners[wi] = session }
       end
 
-      readers, writers, = Net::SSH::Compat.io_select(r, w, nil, minwait)
+      readers, writers, = IO.select(r, w, nil, minwait)
 
       fired_sessions = {}
 
@@ -105,7 +105,7 @@ module Net; module SSH; module Connection
       raise "Only one session expected" unless @sessions.count == 1
       session = @sessions.first
       sr,sw,actwait = session.ev_do_calculate_rw_wait(wait)
-      readers, writers, = Net::SSH::Compat.io_select(sr, sw, nil, actwait)
+      readers, writers, = IO.select(sr, sw, nil, actwait)
 
       session.ev_do_handle_events(readers,writers)
       session.ev_do_postprocess(!((readers.nil? || readers.empty?) && (writers.nil? || writers.empty?)))

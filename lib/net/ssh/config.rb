@@ -78,8 +78,8 @@ module Net; module SSH
         return settings unless File.readable?(file)
 
         globals = {}
-        host_matched = false
-        seen_host = false
+        block_matched = false
+        block_seen = false
         IO.foreach(file) do |line|
           next if line =~ /^\s*(?:#.*)?$/
 
@@ -112,14 +112,17 @@ module Net; module SSH
             negative_matched = negative_hosts.any? { |h| host =~ pattern2regex(h[1..-1]) }
 
             if negative_matched
-              host_matched = false
+              block_matched = false
             else
-              host_matched = positive_hosts.any? { |h| host =~ pattern2regex(h) }
+              block_matched = positive_hosts.any? { |h| host =~ pattern2regex(h) }
             end
 
-            seen_host = true
+            block_seen = true
             settings[key] = host
-          elsif !seen_host
+          elsif key == 'match'
+            block_matched = eval_match_condition(value, host, settings)
+            block_seen = true
+          elsif !block_seen
             case key
             when 'identityfile'
               (globals[key] ||= []) << value
@@ -130,7 +133,7 @@ module Net; module SSH
             else
               globals[key] = value unless settings.key?(key)
             end
-          elsif host_matched
+          elsif block_matched
             case key
             when 'identityfile'
               (settings[key] ||= []) << value
@@ -144,18 +147,14 @@ module Net; module SSH
           end
         end
 
-        if globals
-          settings = globals.merge(settings) do |key, oldval, newval|
-            case key
-            when 'identityfile'
-              oldval + newval
-            else
-              newval
-            end
+        globals.merge(settings) do |key, oldval, newval|
+          case key
+          when 'identityfile'
+            oldval + newval
+          else
+            newval
           end
         end
-
-        return settings
       end
 
       # Given a hash of OpenSSH configuration options, converts them into
@@ -322,6 +321,24 @@ module Net; module SSH
         # A token is a word or a quoted sequence of words, separated by whitespaces.
         def tokenize_config_value(str)
           str.scan(/([^"\s]+)?(?:"([^"]+)")?\s*/).map(&:join)
+        end
+
+        def eval_match_condition(condition, host, settings)
+          if condition.start_with?('!')
+            negated = true
+            condition = condition[1..-1]
+          else
+            negated = false
+          end
+
+          condition_met =
+            case condition
+            when 'all'
+              true
+            end
+
+          # return false for unsupported conditions
+          condition_met.nil? ? false : (negated ^ condition_met)
         end
     end
   end
