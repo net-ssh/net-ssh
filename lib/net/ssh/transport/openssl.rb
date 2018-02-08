@@ -109,12 +109,12 @@ module OpenSSL
            OpenSSL::ASN1::Integer(sig_r),
            OpenSSL::ASN1::Integer(sig_s)
         ])
-        return verify(OpenSSL::Digest::DSS1.new, a1sig.to_der, data)
+        return verify(OpenSSL::Digest::SHA1.new, a1sig.to_der, data)
       end
 
       # Signs the given data.
       def ssh_do_sign(data)
-        sig = sign( OpenSSL::Digest::DSS1.new, data)
+        sig = sign( OpenSSL::Digest::SHA1.new, data)
         a1sig = OpenSSL::ASN1.decode( sig )
 
         sig_r = a1sig.value[0].value.to_s(2)
