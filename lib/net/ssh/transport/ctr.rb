@@ -1,4 +1,5 @@
 require 'openssl'
+require 'delegate'
 
 module Net::SSH::Transport
   #:nodoc:
