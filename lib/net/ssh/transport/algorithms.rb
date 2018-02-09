@@ -1,3 +1,4 @@
+require 'net/ssh/fips'
 require 'net/ssh/buffer'
 require 'net/ssh/known_hosts'
 require 'net/ssh/loggable'
@@ -22,28 +23,46 @@ module Net; module SSH; module Transport
 
     # Define the default algorithms, in order of preference, supported by
     # Net::SSH.
+    if Net::SSH::FIPS
+      kex_algorithms = %w(
+        diffie-hellman-group-exchange-sha1
+        diffie-hellman-group1-sha1
+        diffie-hellman-group14-sha1
+        diffie-hellman-group-exchange-sha256
+      )
+
+      encryption_algorithms = %w(aes256-ctr aes192-ctr aes128-ctr aes256-cbc aes192-cbc aes128-cbc)
+      hmac_algorithms = %w(hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha2-256 hmac-sha1-96 hmac-sha1)
+    else
+      kex_algorithms = %w(
+        diffie-hellman-group-exchange-sha1
+        diffie-hellman-group1-sha1
+        diffie-hellman-group14-sha1
+        diffie-hellman-group-exchange-sha256
+      )
+
+      encryption_algorithms = %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc
+        aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se idea-cbc arcfour128
+        arcfour256 arcfour aes128-ctr aes192-ctr aes256-ctr cast128-ctr
+        blowfish-ctr 3des-ctr none)
+
+      hmac_algorithms = %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
+        hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512
+        hmac-sha2-256-96 hmac-sha2-512-96 none)
+    end
+
     ALGORITHMS = {
       host_key: %w(ssh-rsa ssh-dss
                    ssh-rsa-cert-v01@openssh.com
                    ssh-rsa-cert-v00@openssh.com),
-      kex: %w(diffie-hellman-group-exchange-sha1
-              diffie-hellman-group1-sha1
-              diffie-hellman-group14-sha1
-              diffie-hellman-group-exchange-sha256),
-      encryption: %w(aes128-cbc 3des-cbc blowfish-cbc cast128-cbc
-                     aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se
-                     idea-cbc arcfour128 arcfour256 arcfour
-                     aes128-ctr aes192-ctr aes256-ctr
-                     cast128-ctr blowfish-ctr 3des-ctr none),
-
-      hmac: %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96
-               hmac-ripemd160 hmac-ripemd160@openssh.com
-               hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96
-               hmac-sha2-512-96 none),
+      kex: kex_algorithms,
+      encryption: encryption_algorithms,
+      hmac: hmac_algorithms,
 
       compression: %w(none zlib@openssh.com zlib),
       language: %w()
     }
+
     if defined?(OpenSSL::PKey::EC)
       ALGORITHMS[:host_key] += %w(ecdsa-sha2-nistp256
                                   ecdsa-sha2-nistp384
@@ -342,7 +361,11 @@ module Net; module SSH; module Transport
         match = self[algorithm].find { |item| @server_data[algorithm].include?(item) }
 
         if match.nil?
-          raise Net::SSH::Exception, "could not settle on #{algorithm} algorithm"
+          err_msg = ["could not settle on #{algorithm} algorithm.",
+                     "Client algorithms: #{self[algorithm].join(', ')}",
+                     "Server algorithms: #{@server_data[algorithm].join(', ')}"].join("\n")
+
+          raise Net::SSH::Exception, err_msg
         end
 
         return match

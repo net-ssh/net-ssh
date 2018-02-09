@@ -1,3 +1,4 @@
+require 'net/ssh/fips'
 require 'net/ssh/buffer'
 require 'net/ssh/errors'
 require 'net/ssh/loggable'
@@ -188,7 +189,7 @@ module Net; module SSH; module Transport; module Kex
 
       def generate_key_fingerprint(key)
         blob = Net::SSH::Buffer.from(:key, key).to_s
-        fingerprint = OpenSSL::Digest::MD5.hexdigest(blob).scan(/../).join(":")
+        fingerprint = Net::SSH::OPENSSL_DIGEST.hexdigest(blob).scan(/../).join(":")
 
         [blob, fingerprint]
       rescue ::Exception => e

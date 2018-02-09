@@ -5,6 +5,7 @@ ENV['HOME'] ||= ENV['HOMEPATH'] ? "#{ENV['HOMEDRIVE']}#{ENV['HOMEPATH']}" : Dir.
 require 'logger'
 require 'etc'
 
+require 'net/ssh/fips'
 require 'net/ssh/config'
 require 'net/ssh/errors'
 require 'net/ssh/loggable'

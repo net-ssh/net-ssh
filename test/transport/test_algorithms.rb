@@ -23,7 +23,8 @@ module Transport
       if defined?(OpenSSL::Digest::SHA256)
         assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256 hmac-sha2-512 hmac-sha2-256-96 hmac-sha2-512-96 none), algorithms[:hmac]
       else
-        assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-ripemd160 hmac-ripemd160@openssh.com none umac-128-etm@openssh.com), algorithms[:hmac] end
+        assert_equal %w(hmac-sha1 hmac-md5 hmac-sha1-96 hmac-md5-96 hmac-ripemd160 hmac-ripemd160@openssh.com none umac-128-etm@openssh.com), algorithms[:hmac]
+      end
       assert_equal %w(none zlib@openssh.com zlib), algorithms[:compression]
       assert_equal %w(), algorithms[:language]
     end

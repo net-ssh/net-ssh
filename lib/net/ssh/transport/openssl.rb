@@ -28,8 +28,10 @@ module OpenSSL
   module PKey
 
     class PKey
+      require 'net/ssh/fips'
+
       def fingerprint
-        @fingerprint ||= OpenSSL::Digest::MD5.hexdigest(to_blob).scan(/../).join(":")
+        @fingerprint ||= Net::SSH::OPENSSL_DIGEST.hexdigest(to_blob).scan(/../).join(":")
       end
     end
 

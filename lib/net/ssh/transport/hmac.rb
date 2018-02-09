@@ -1,14 +1,18 @@
+require 'net/ssh/fips'
 require 'net/ssh/transport/key_expander'
-require 'net/ssh/transport/hmac/md5'
-require 'net/ssh/transport/hmac/md5_96'
 require 'net/ssh/transport/hmac/sha1'
 require 'net/ssh/transport/hmac/sha1_96'
 require 'net/ssh/transport/hmac/sha2_256'
 require 'net/ssh/transport/hmac/sha2_256_96'
 require 'net/ssh/transport/hmac/sha2_512'
 require 'net/ssh/transport/hmac/sha2_512_96'
-require 'net/ssh/transport/hmac/ripemd160'
-require 'net/ssh/transport/hmac/none'
+
+unless Net::SSH::FIPS
+  require 'net/ssh/transport/hmac/md5'
+  require 'net/ssh/transport/hmac/md5_96'
+  require 'net/ssh/transport/hmac/ripemd160'
+  require 'net/ssh/transport/hmac/none'
+end
 
 # Implements a simple factory interface for fetching hmac implementations, or
 # for finding the key lengths for hmac implementations.s
