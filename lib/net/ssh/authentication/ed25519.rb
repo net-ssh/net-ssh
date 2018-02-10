@@ -53,7 +53,7 @@ module ED25519
     end
 
     def fingerprint
-      @fingerprint ||= Net::SSH::OPENSSL_DIGEST.hexdigest(to_blob).scan(/../).join(":")
+      @fingerprint ||= Net::SSH.fingerprint(to_blob)
     end
   end
 

@@ -46,6 +46,8 @@ install:
 
 script:
   - ssh -V
+  - sudo chown -R travis:travis /home/travis/.ssh
+  - chmod -R go-rwx /home/travis/.ssh
   - bundle _1.16_ exec rake test
   - BUNDLE_GEMFILE=./Gemfile.noed25519 bundle _1.16_ exec rake test
   - bundle _1.16_ exec rake test_test

@@ -189,7 +189,7 @@ module Net; module SSH; module Transport; module Kex
 
       def generate_key_fingerprint(key)
         blob = Net::SSH::Buffer.from(:key, key).to_s
-        fingerprint = Net::SSH::OPENSSL_DIGEST.hexdigest(blob).scan(/../).join(":")
+        fingerprint = Net::SSH.fingerprint(blob)
 
         [blob, fingerprint]
       rescue ::Exception => e

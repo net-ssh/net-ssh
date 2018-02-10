@@ -76,6 +76,21 @@ module Net
       :agent_socket_factory, :minimum_dh_bits, :verify_host_key
     ]
 
+    # Provides a fingerprint operation on the passed blob
+    #
+    # Adjusts for FIPS and non-FIPS systems as appropriate
+    def self.fingerprint(blob)
+      unless blob.is_a?(String)
+        raise ArgumentError, "item to fingerprint must be a String"
+      end
+
+      if Net::SSH::FIPS
+        OpenSSL::Digest::SHA256.base64digest(blob)
+      else
+        OpenSSL::Digest::MD5.hexdigest(blob).scan(/../).join(':')
+      end
+    end
+
     # The standard means of starting a new SSH connection. When used with a
     # block, the connection will be closed when the block terminates, otherwise
     # the connection will just be returned. The yielded (or returned) value
