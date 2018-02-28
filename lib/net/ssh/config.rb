@@ -49,11 +49,11 @@ module Net; module SSH
       # Returns an array of locations of OpenSSH configuration files
       # to parse by default.
       def default_files
-        @@default_files
+        @@default_files.clone
       end
 
       def default_auth_methods
-        @@default_auth_methods
+        @@default_auth_methods.clone
       end
 
       # Loads the configuration data for the given +host+ from all of the
