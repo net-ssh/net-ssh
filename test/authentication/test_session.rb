@@ -51,6 +51,24 @@ module Authentication
       assert_equal false, session.authenticate("next service", "username", "password")
     end
 
+    def test_authenticate_should_return_false_if_keys_only_true_and_no_key_provide
+      transport(keys_only: true, use_agent: false).expect do |t, packet|
+        assert_equal SERVICE_REQUEST, packet.type
+        assert_equal "ssh-userauth", packet.read_string
+        t.return(SERVICE_ACCEPT)
+      end
+
+      session(keys_only: true)
+
+      Net::SSH::Authentication::Methods::None.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
+      Net::SSH::Authentication::Methods::KeyboardInteractive.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
+      Net::SSH::Authentication::Methods::Password.any_instance.expects(:authenticate).with("next service", "username", "password").returns(false)
+
+      Net::SSH::Authentication::Methods::Publickey.any_instance.stubs(:authenticate_with).returns(true)
+
+      assert_equal false, session.authenticate("next service", "username", "password")
+    end
+
     def test_next_message_should_silently_handle_USERAUTH_BANNER_packets
       transport.return(USERAUTH_BANNER, :string, "Howdy, folks!")
       transport.return(SERVICE_ACCEPT)
