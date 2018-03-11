@@ -5,6 +5,7 @@ ENV['HOME'] ||= ENV['HOMEPATH'] ? "#{ENV['HOMEDRIVE']}#{ENV['HOMEPATH']}" : Dir.
 require 'logger'
 require 'etc'
 
+require 'net/ssh/fips'
 require 'net/ssh/config'
 require 'net/ssh/errors'
 require 'net/ssh/loggable'
@@ -74,6 +75,21 @@ module Net
       :append_all_supported_algorithms, :non_interactive, :password_prompt,
       :agent_socket_factory, :minimum_dh_bits, :verify_host_key
     ]
+
+    # Provides a fingerprint operation on the passed blob
+    #
+    # Adjusts for FIPS and non-FIPS systems as appropriate
+    def self.fingerprint(blob)
+      unless blob.is_a?(String)
+        raise ArgumentError, "item to fingerprint must be a String"
+      end
+
+      if Net::SSH::FIPS
+        OpenSSL::Digest::SHA256.base64digest(blob)
+      else
+        OpenSSL::Digest::MD5.hexdigest(blob).scan(/../).join(':')
+      end
+    end
 
     # The standard means of starting a new SSH connection. When used with a
     # block, the connection will be closed when the block terminates, otherwise

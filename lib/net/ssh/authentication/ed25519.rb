@@ -5,6 +5,7 @@ require 'ed25519'
 
 require 'base64'
 
+require 'new/ssh/fips'
 require 'net/ssh/transport/cipher_factory'
 require 'bcrypt_pbkdf' unless RUBY_PLATFORM == "java"
 
@@ -52,7 +53,7 @@ module ED25519
     end
 
     def fingerprint
-      @fingerprint ||= OpenSSL::Digest::MD5.hexdigest(to_blob).scan(/../).join(":")
+      @fingerprint ||= Net::SSH.fingerprint(to_blob)
     end
   end
 
