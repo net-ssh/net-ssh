@@ -43,6 +43,20 @@ RDoc::Task.new do |rdoc|
   }
 end
 
+namespace :cert do
+desc "Update public cert from private - only run if public is expired"
+task :update_public_when_expired do
+  require 'openssl'
+  require 'time'
+  raw = File.read "net-ssh-public_cert.pem"
+  certificate = OpenSSL::X509::Certificate.new raw
+  raise Exception, "Not yet expired: #{certificate.not_after}" unless certificate.not_after < Time.now
+  sh "gem cert --build netssh@solutious.com --days 365*5 --private-key /mnt/gem/net-ssh-private_key.pem"
+  sh "mv gem-public_cert.pem net-ssh-public_cert.pem"
+  sh "gem cert --add net-ssh-public_cert.pem"
+end
+end
+
 namespace :rdoc do
 desc "Update gh-pages branch"
 task :publish do
