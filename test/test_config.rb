@@ -25,6 +25,7 @@ class TestConfig < NetSSHTest
     config = Net::SSH::Config.load(config(:exact_match), "test.host")
     assert config['compression']
     assert config['forwardagent']
+    assert config['addkeystoagent']
     assert_equal 1234, config['port']
   end
 
@@ -75,6 +76,7 @@ class TestConfig < NetSSHTest
     assert_equal 1234, config[:port]
     assert config[:compression]
     assert config[:forward_agent]
+    assert config[:add_keys_to_agent]
     assert_equal %w(~/.ssh/id_dsa), config[:keys]
     assert !config.key?(:rekey_limit)
   end
@@ -108,6 +110,7 @@ class TestConfig < NetSSHTest
 
   def test_translate_should_correctly_translate_from_openssh_to_net_ssh_names
     open_ssh = {
+      'addkeystoagent'          => true,
       'bindaddress'             => "127.0.0.1",
       'ciphers'                 => "a,b,c",
       'compression'             => true,
@@ -130,6 +133,7 @@ class TestConfig < NetSSHTest
 
     net_ssh = Net::SSH::Config.translate(open_ssh)
 
+    assert_equal true,      net_ssh[:add_keys_to_agent]
     assert_equal %w(a b c), net_ssh[:encryption]
     assert_equal true,      net_ssh[:compression]
     assert_equal 6,         net_ssh[:compression_level]

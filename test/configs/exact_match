@@ -5,4 +5,5 @@ Host other.host
 Host test.host
   Compression yes
   ForwardAgent yes
+  AddKeysToAgent yes
   Port 1234

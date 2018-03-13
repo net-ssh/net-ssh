@@ -114,6 +114,19 @@ module Authentication
       end
     end
 
+    def test_identities_added_to_agent_when_add_keys_to_agent_set
+      manager(keys_only: true, add_keys_to_agent: true).stubs(:agent).returns(agent)
+      first = File.expand_path("/first")
+      stub_file_private_key first, rsa
+
+      agent.expects(:add_identity).with(rsa, 'added automatically as per add_keys_to_agent option')
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 1, identities.length
+      assert_equal rsa.to_blob, agent.identities.first.to_blob
+    end
+
     def test_only_identities_with_key_files_should_load_from_agent_of_keys_only_set
       manager(keys_only: true).stubs(:agent).returns(agent)
 

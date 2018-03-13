@@ -8,6 +8,7 @@ module Net; module SSH
   #
   # Only a subset of OpenSSH configuration options are understood:
   #
+  # * AddKeysToAgent => :add_keys_to_agent
   # * ChallengeResponseAuthentication => maps to the :auth_methods option challenge-response (then coleasced into keyboard-interactive)
   # * KbdInteractiveAuthentication => maps to the :auth_methods keyboard-interactive
   # * Ciphers => maps to the :encryption option
@@ -187,6 +188,7 @@ module Net; module SSH
 
         def translate_config_key(hash, key, value, settings)
           rename = {
+            addkeystoagent: :add_keys_to_agent,
             bindaddress: :bind_address,
             compression: :compression,
             compressionlevel: :compression_level,
