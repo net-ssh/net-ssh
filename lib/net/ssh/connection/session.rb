@@ -277,7 +277,7 @@ module Net; module SSH; module Connection
       end
 
       Array(writers).each do |writer|
-        writer.send_pending
+        writer.send_pending unless writer.closed?
       end
     end
 
