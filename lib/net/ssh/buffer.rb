@@ -166,7 +166,7 @@ module Net
                  when String then pattern.length
                  when Integer then 1
                  when Regexp then $&.length
-        end
+                 end
         index && read(index + length)
       end
 
@@ -394,4 +394,5 @@ module Net
         self
       end
     end
-end; end;
+  end
+end;

@@ -71,4 +71,6 @@ module Net
           raise Net::SSH::ConnectionTimeout, "timeout during client version negotiating" if timeout && !IO.select(nil, [socket], nil, timeout)
         end
       end
-end; end; end
+    end
+  end
+end

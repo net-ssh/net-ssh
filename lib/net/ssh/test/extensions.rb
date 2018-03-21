@@ -161,7 +161,9 @@ module Net
         end
       end
 
-end; end; end
+    end
+  end
+end
 
 Net::SSH::BufferedIo.send(:include, Net::SSH::Test::Extensions::BufferedIo)
 Net::SSH::Transport::PacketStream.send(:include, Net::SSH::Test::Extensions::PacketStream)

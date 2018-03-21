@@ -14,4 +14,7 @@ module Net
             OpenSSL::PKey::EC::CurveNameAlias['nistp521']
           end
         end
-end; end; end; end
+      end
+    end
+  end
+end

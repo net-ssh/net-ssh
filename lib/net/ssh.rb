@@ -231,7 +231,7 @@ module Net
                                  when :error then Logger::ERROR
                                  when :fatal then Logger::FATAL
                                  else raise ArgumentError, "can't convert #{options[:verbose].inspect} to any of the Logger level constants"
-        end
+                                 end
       end
 
       transport = Transport::Session.new(host, options)
@@ -269,7 +269,7 @@ module Net
               when true then Net::SSH::Config.expandable_default_files
               when false, nil then return {}
               else Array(use_ssh_config)
-        end
+              end
 
       Net::SSH::Config.for(host, files)
     end

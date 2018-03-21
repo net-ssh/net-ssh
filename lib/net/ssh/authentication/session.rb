@@ -155,4 +155,6 @@ module Net
           Array(options[:key_data])
         end
       end
-end; end; end
+    end
+  end
+end

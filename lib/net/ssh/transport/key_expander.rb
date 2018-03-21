@@ -26,4 +26,6 @@ module Net
           return k
         end
       end
-end; end; end
+    end
+  end
+end

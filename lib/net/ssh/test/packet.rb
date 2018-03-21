@@ -93,8 +93,9 @@ module Net
                          parts.concat(request[:extra_parts])
                        end
                      else raise "don't know how to parse packet type #{@type}"
-            end
+                     end
         end
       end
-
-end; end; end
+    end
+  end
+end

@@ -59,4 +59,5 @@ module Net
         @facility ||= self.class.name.gsub(/::/, ".").gsub(/([a-z])([A-Z])/, "\\1_\\2").downcase + "[%x]" % object_id
       end
     end
-end; end
+  end
+end

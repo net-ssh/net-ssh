@@ -102,4 +102,5 @@ module Net
     # you want to proceed anyway, simply call the remember_host! method on the
     # exception, and then retry.
     class HostKeyUnknown < HostKeyError; end
-end; end
+  end
+end

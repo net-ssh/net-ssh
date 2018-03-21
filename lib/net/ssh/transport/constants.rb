@@ -31,4 +31,6 @@ module Net
         KEXECDH_INIT              = 30
         KEXECDH_REPLY             = 31
       end
-end; end; end
+    end
+  end
+end

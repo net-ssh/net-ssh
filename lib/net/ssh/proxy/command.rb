@@ -3,8 +3,8 @@ require 'rubygems'
 require 'net/ssh/proxy/errors'
 require 'net/ssh/ruby_compat'
 
-module Net 
-  module SSH 
+module Net
+  module SSH
     module Proxy
 
       # An implementation of a command proxy. To use it, instantiate it,
@@ -20,13 +20,13 @@ module Net
       class Command
         # The command line template
         attr_reader :command_line_template
-    
+
         # The command line for the session
         attr_reader :command_line
-    
+
         # Timeout in seconds in open, defaults to 60
         attr_accessor :timeout
-    
+
         # Create a new socket factory that tunnels via a command executed
         # with the user's shell, which is composed from the given command
         # template.  In the command template, `%h' will be substituted by
@@ -36,7 +36,7 @@ module Net
           @command_line = nil
           @timeout = 60
         end
-    
+
         # Return a new socket connected to the given host and port via the
         # proxy that was requested when the socket factory was instantiated.
         def open(host, port, connection_options = nil)
@@ -83,7 +83,7 @@ module Net
             def io.send(data, flag)
               syswrite(data)
             end
-    
+
             def io.recv(size)
               sysread(size)
             end
@@ -97,7 +97,7 @@ module Net
               end
               result
             end
-    
+
             def io.recv(size)
               begin
                 result = read_nonblock(size)
@@ -113,11 +113,12 @@ module Net
           end
           io
         end
-    
+
         def close_on_error(io)
           Process.kill('TERM', io.pid)
           Thread.new { io.close }
         end
-                              end
-
-end; end; end
+      end
+    end
+  end
+end
