@@ -13,4 +13,6 @@ module Net
       # Used when the server doesn't recognize the user's credentials.
       class UnauthorizedError < Error; end
 
-end; end; end
+    end
+  end
+end

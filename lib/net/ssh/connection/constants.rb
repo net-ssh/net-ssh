@@ -1,23 +1,23 @@
-module Net 
-  module SSH 
+module Net
+  module SSH
     module Connection
 
       # Definitions of constants that are specific to the connection layer of the
       # SSH protocol.
       module Constants
-    
+
         #--
         # Connection protocol generic messages
         #++
-    
+
         GLOBAL_REQUEST            = 80
         REQUEST_SUCCESS           = 81
         REQUEST_FAILURE           = 82
-    
+
         #--
         # Channel related messages
         #++
-    
+
         CHANNEL_OPEN              = 90
         CHANNEL_OPEN_CONFIRMATION = 91
         CHANNEL_OPEN_FAILURE      = 92
@@ -29,7 +29,9 @@ module Net
         CHANNEL_REQUEST           = 98
         CHANNEL_SUCCESS           = 99
         CHANNEL_FAILURE           = 100
-    
+
       end
 
-end; end end
+    end
+  end
+end

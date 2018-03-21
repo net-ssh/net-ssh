@@ -113,4 +113,6 @@ module Net
           session.ev_do_postprocess(!((readers.nil? || readers.empty?) && (writers.nil? || writers.empty?)))
         end
       end
-end; end; end
+    end
+  end
+end

@@ -177,4 +177,6 @@ module Net
         TTY_OP_OSPEED = 129
       end
 
-end; end; end
+    end
+  end
+end

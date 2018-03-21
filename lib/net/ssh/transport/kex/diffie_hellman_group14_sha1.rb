@@ -45,4 +45,7 @@ module Net
             G
           end
         end
-end; end; end; end
+      end
+    end
+  end
+end

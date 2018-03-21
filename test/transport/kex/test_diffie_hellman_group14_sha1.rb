@@ -11,4 +11,5 @@ module Transport
         Net::SSH::Transport::Kex::DiffieHellmanGroup14SHA1
       end
     end
-end; end
+  end
+end

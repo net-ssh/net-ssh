@@ -40,7 +40,9 @@ module Net
         end
       end
 
-end; end; end
+    end
+  end
+end
 
 Net::SSH::Transport::Algorithms::ALGORITHMS[:kex] << "test"
 Net::SSH::Transport::Kex::MAP["test"] = Net::SSH::Test::Kex

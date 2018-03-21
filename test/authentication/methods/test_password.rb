@@ -94,4 +94,5 @@ module Authentication
       end
     end
 
-end; end
+  end
+end

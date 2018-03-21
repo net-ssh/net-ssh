@@ -3,7 +3,7 @@ require 'net/ssh/transport/constants'
 require 'net/ssh/authentication/constants'
 require 'net/ssh/connection/constants'
 
-module Net 
+module Net
   module SSH
 
     # A specialization of Buffer that knows the format of certain common
@@ -22,7 +22,7 @@ module Net
     # never need to use this class directly.
     class Packet < Buffer
       @@types = {}
-  
+
       # Register a new packet type that should be recognized and auto-parsed by
       # Net::SSH::Packet. Note that any packet type that is not preregistered
       # will not be autoparsed.
@@ -35,17 +35,17 @@ module Net
       def self.register(type, *pairs)
         @@types[type] = pairs
       end
-  
+
       include Connection::Constants
       include Authentication::Constants
       include Transport::Constants
-  
+
       #--
       # These are the recognized packet types. All other packet types will be
       # accepted, but not auto-parsed, requiring the client to parse the
       # fields using the methods provided by Net::SSH::Buffer.
       #++
-  
+
       register DISCONNECT,                %i[reason_code long], %i[description string], %i[language string]
       register IGNORE,                    %i[data string]
       register UNIMPLEMENTED,             %i[number long]
@@ -65,10 +65,10 @@ module Net
       register CHANNEL_REQUEST,           %i[local_id long], %i[request string], %i[want_reply bool], %i[request_data buffer]
       register CHANNEL_SUCCESS,           %i[local_id long]
       register CHANNEL_FAILURE,           %i[local_id long]
-  
+
       # The (integer) type of this packet.
       attr_reader :type
-  
+
       # Create a new packet from the given payload. This will automatically
       # parse the packet if it is one that has been previously registered with
       # Packet.register; otherwise, the packet will need to be manually parsed
@@ -79,7 +79,7 @@ module Net
         @type = read_byte
         instantiate!
       end
-  
+
       # Access one of the auto-parsed fields by name. Raises an error if no
       # element by the given name exists.
       def [](name)
@@ -87,9 +87,9 @@ module Net
         raise ArgumentError, "no such element #{name}" unless @named_elements.key?(name)
         @named_elements[name]
       end
-  
+
       private
-  
+
       # Parse the packet's contents and assign the named elements, as described
       # by the registered format for the packet.
       def instantiate!
@@ -98,8 +98,9 @@ module Net
                                            remainder_as_buffer
                                          else
                                            send("read_#{datatype}")
-          end
+                                         end
         end
       end
     end
-end; end
+  end
+end

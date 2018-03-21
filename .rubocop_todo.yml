@@ -19,8 +19,8 @@ Lint/EmptyWhen:
   Exclude:
     - 'lib/net/ssh/config.rb'
 
-Layout/EndAlignment:
-  Enabled: false
+# Layout/EndAlignment:
+#  Enabled: false
 
 # Offense count: 23
 # Configuration parameters: MinNameLength, AllowNamesEndingInNumbers, AllowedNames, ForbiddenNames.

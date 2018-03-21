@@ -1,3 +1,9 @@
+=== 5.0.0
+ * Breaking change: ed25519 now requires ed25519 gem instead of RbNaCl gem [#563]
+
+=== 5.0.0.beta2
+ * Support for sha256 pubkey fingerprint [Tom Maher, #585]
+
 === 5.0.0.beta1
 
  * Don't leave proxy command as zombie on timeout [DimitriosLisenko, #560]

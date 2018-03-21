@@ -1,4 +1,4 @@
-module Net 
+module Net
   module SSH
 
     # The Net::SSH::Config class is used to parse OpenSSH configuration files,
@@ -46,17 +46,17 @@ module Net
         # "hostbased" is off and "none" is not supported but we allow it since
         # it's used by some clients to query the server for allowed auth methods
         @@default_auth_methods = %w[none publickey password keyboard-interactive]
-  
+
         # Returns an array of locations of OpenSSH configuration files
         # to parse by default.
         def default_files
           @@default_files.clone
         end
-  
+
         def default_auth_methods
           @@default_auth_methods.clone
         end
-  
+
         # Loads the configuration data for the given +host+ from all of the
         # given +files+ (defaulting to the list of files returned by
         # #default_files), translates the resulting hash into the options
@@ -66,7 +66,7 @@ module Net
             load(file, host, settings)
           })
         end
-  
+
         # Load the OpenSSH configuration settings in the given +file+ for the
         # given +host+. If +settings+ is given, the options are merged into
         # that hash, with existing values taking precedence over newly parsed
@@ -77,47 +77,47 @@ module Net
           file = File.expand_path(path)
           base_dir ||= File.dirname(file)
           return settings unless File.readable?(file)
-  
+
           globals = {}
           block_matched = false
           block_seen = false
           IO.foreach(file) do |line|
             next if line =~ /^\s*(?:#.*)?$/
-  
+
             if line =~ /^\s*(\S+)\s*=(.*)$/
               key, value = $1, $2
             else
               key, value = line.strip.split(/\s+/, 2)
             end
-  
+
             # silently ignore malformed entries
             next if value.nil?
-  
+
             key.downcase!
             value = $1 if value =~ /^"(.*)"$/
-  
+
             value = case value.strip
                     when /^\d+$/ then value.to_i
                     when /^no$/i then false
                     when /^yes$/i then true
                     else value
-              end
-  
+                    end
+
             if key == 'host'
               # Support "Host host1 host2 hostN".
               # See http://github.com/net-ssh/net-ssh/issues#issue/6
               negative_hosts, positive_hosts = value.to_s.split(/\s+/).partition { |h| h.start_with?('!') }
-  
+
               # Check for negative patterns first. If the host matches, that overrules any other positive match.
               # The host substring code is used to strip out the starting "!" so the regexp will be correct.
               negative_matched = negative_hosts.any? { |h| host =~ pattern2regex(h[1..-1]) }
-  
+
               if negative_matched
                 block_matched = false
               else
                 block_matched = positive_hosts.any? { |h| host =~ pattern2regex(h) }
               end
-  
+
               block_seen = true
               settings[key] = host
             elsif key == 'match'
@@ -147,7 +147,7 @@ module Net
               end
             end
           end
-  
+
           globals.merge(settings) do |key, oldval, newval|
             case key
             when 'identityfile'
@@ -157,7 +157,7 @@ module Net
             end
           end
         end
-  
+
         # Given a hash of OpenSSH configuration options, converts them into
         # a hash of Net::SSH options. Unrecognized options are ignored. The
         # +settings+ hash must have Strings for keys, all downcased, and
@@ -170,7 +170,7 @@ module Net
           end
           merge_challenge_response_with_keyboard_interactive(ret)
         end
-  
+
         # Filters default_files down to the files that are expandable.
         def expandable_default_files
           default_files.keep_if do |path|
@@ -182,9 +182,9 @@ module Net
             end
           end
         end
-  
+
         private
-  
+
         def translate_config_key(hash, key, value, settings)
           rename = {
             bindaddress: :bind_address,
@@ -271,7 +271,7 @@ module Net
             hash[rename[key]] = value
           end
         end
-  
+
         # Converts an ssh_config pattern into a regex for matching against
         # host names.
         def pattern2regex(pattern)
@@ -292,7 +292,7 @@ module Net
           end
           Regexp.new("^" + prefix + "$", true)
         end
-  
+
         # Converts the given size into an integer number of bytes.
         def interpret_size(size)
           case size
@@ -302,7 +302,7 @@ module Net
           else size.to_i
           end
         end
-  
+
         def merge_challenge_response_with_keyboard_interactive(hash)
           if hash[:auth_methods].include?('challenge-response')
             hash[:auth_methods].delete('challenge-response')
@@ -310,19 +310,19 @@ module Net
           end
           hash
         end
-  
+
         def included_file_paths(base_dir, config_paths)
           tokenize_config_value(config_paths).flat_map do |path|
             Dir.glob(File.expand_path(path, base_dir)).select { |f| File.file?(f) }
           end
         end
-  
+
         # Tokenize string into tokens.
         # A token is a word or a quoted sequence of words, separated by whitespaces.
         def tokenize_config_value(str)
           str.scan(/([^"\s]+)?(?:"([^"]+)")?\s*/).map(&:join)
         end
-  
+
         def eval_match_condition(condition, host, settings)
           if condition.start_with?('!')
             negated = true
@@ -330,17 +330,18 @@ module Net
           else
             negated = false
           end
-  
+
           condition_met =
             case condition
             when 'all'
               true
             end
-  
+
           # return false for unsupported conditions
           condition_met.nil? ? false : (negated ^ condition_met)
         end
       end
     end
 
-end; end
+  end
+end
