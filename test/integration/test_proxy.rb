@@ -18,7 +18,7 @@ class TestProxy < NetSSHTest
   end
 
   def ssh_start_params(options)
-    [localhost ,user , {keys: @key_id_rsa}.merge(options)]
+    [localhost,user, { keys: @key_id_rsa }.merge(options)]
   end
 
   def setup_ssh_env(&block)
@@ -91,18 +91,18 @@ class TestProxy < NetSSHTest
         proxy = Net::SSH::Proxy::Command.new("/usr/bin/pv --rate-limit 100k | /bin/nc localhost 22")
         #proxy = Net::SSH::Proxy::Command.new("/bin/nc localhost 22")
         begin
-          large_msg = 'echo123'*30000
+          large_msg = 'echo123' * 30000
           ok = Net::SSH.start(*ssh_start_params(proxy: proxy)) do |ssh|
-              with_spurious_write_wakeup_emulate do
-                ret = ssh.exec! "echo \"$USER:#{large_msg}\""
-                #assert_equal "net_ssh_1:#{large_msg}\n", ret
-                assert_equal "/bin/sh: Argument list too long\n", ret
-                hello_count = 1000
-                ret = ssh.exec! "ruby -e 'puts \"Hello\"*#{hello_count}'"
-                assert_equal "Hello"*hello_count+"\n", ret
-              end
-              :ok
+            with_spurious_write_wakeup_emulate do
+              ret = ssh.exec! "echo \"$USER:#{large_msg}\""
+              #assert_equal "net_ssh_1:#{large_msg}\n", ret
+              assert_equal "/bin/sh: Argument list too long\n", ret
+              hello_count = 1000
+              ret = ssh.exec! "ruby -e 'puts \"Hello\"*#{hello_count}'"
+              assert_equal "Hello" * hello_count + "\n", ret
             end
+            :ok
+          end
         end
         assert_equal :ok, ok
       end

@@ -1,7 +1,6 @@
 require 'common'
 
 class TestKnownHosts < NetSSHTest
-
   def perform_test(source)
     kh = Net::SSH::KnownHosts.new(source)
     keys = kh.keys_for("github.com")
@@ -32,7 +31,7 @@ class TestKnownHosts < NetSSHTest
   end
 
   def test_search_for
-    options = {user_known_hosts_file: path("known_hosts/github")}
+    options = { user_known_hosts_file: path("known_hosts/github") }
     keys = Net::SSH::KnownHosts.search_for('github.com',options)
     assert_equal(["ssh-rsa"], keys.map(&:ssh_type))
   end
@@ -40,7 +39,7 @@ class TestKnownHosts < NetSSHTest
   def test_search_for_then_add
     Tempfile.open('github') do |f|
       f.write(File.read(path("known_hosts/github")))
-      options = {user_known_hosts_file: f.path}
+      options = { user_known_hosts_file: f.path }
       keys = Net::SSH::KnownHosts.search_for('github2.com',options)
       assert_equal(0, keys.count)
 
@@ -51,7 +50,6 @@ class TestKnownHosts < NetSSHTest
       assert_equal([rsa_key.to_blob], keys.map(&:to_blob))
     end
   end
-
 
   def path(relative_path)
     File.join(File.dirname(__FILE__), "known_hosts/github")

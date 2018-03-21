@@ -56,7 +56,7 @@ class TestNetSSHTest < NetSSHTest
   end
 
   def test_custom
-    Packet.register_channel_request("custom", [:string, :string, :long])
+    Packet.register_channel_request("custom", %i[string string long])
     story do |session|
       channel = session.opens_channel
       session.sends_channel_request(channel, "custom", false, ["hello", "hello", 42], true)

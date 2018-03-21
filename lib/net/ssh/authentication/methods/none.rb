@@ -14,18 +14,18 @@ module Net
             message = session.next_message
             
             case message.type
-              when USERAUTH_SUCCESS
-                debug { "none succeeded" }
-                return true
-              when USERAUTH_FAILURE
-                debug { "none failed" }
+            when USERAUTH_SUCCESS
+              debug { "none succeeded" }
+              return true
+            when USERAUTH_FAILURE
+              debug { "none failed" }
               
-                raise Net::SSH::Authentication::DisallowedMethod unless
-                  message[:authentications].split(/,/).include? 'none'
+              raise Net::SSH::Authentication::DisallowedMethod unless
+                message[:authentications].split(/,/).include? 'none'
               
-                return false
-              else
-                raise Net::SSH::Exception, "unexpected reply to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
+              return false
+            else
+              raise Net::SSH::Exception, "unexpected reply to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
             end   
             
           end

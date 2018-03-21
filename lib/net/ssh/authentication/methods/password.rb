@@ -14,7 +14,7 @@ module Net
           def authenticate(next_service, username, password=nil)
             clear_prompter!
             retries = 0
-            max_retries =  get_max_retries
+            max_retries = get_max_retries
             return false if !password && max_retries == 0
 
             begin
@@ -34,17 +34,17 @@ module Net
             end until (message.type != USERAUTH_FAILURE || retries >= max_retries)
 
             case message.type
-              when USERAUTH_SUCCESS
-                debug { "password succeeded" }
-                @prompter.success if @prompter
-                return true
-              when USERAUTH_FAILURE
-                return false
-              when USERAUTH_PASSWD_CHANGEREQ
-                debug { "password change request received, failing" }
-                return false
-              else
-                raise Net::SSH::Exception, "unexpected reply to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
+            when USERAUTH_SUCCESS
+              debug { "password succeeded" }
+              @prompter.success if @prompter
+              return true
+            when USERAUTH_FAILURE
+              return false
+            when USERAUTH_PASSWD_CHANGEREQ
+              debug { "password change request received, failing" }
+              return false
+            else
+              raise Net::SSH::Exception, "unexpected reply to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
             end
           end
 
@@ -59,7 +59,7 @@ module Net
 
           def ask_password(username)
             host = session.transport.host
-            prompt_info = {type: 'password', user: username, host: host}
+            prompt_info = { type: 'password', user: username, host: host }
             if @prompt_info != prompt_info
               @prompt_info = prompt_info
               @prompter = prompt.start(prompt_info)

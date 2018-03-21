@@ -330,7 +330,7 @@ class TestBuffer < NetSSHTest
     end
 
     buffer.write_key(key)
-assert_equal "start\0\0\0\7ssh-dss\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0\0\0\010\x77\x66\x55\x44\x33\x22\x11\x00\0\0\0\011\0\xff\xdd\xbb\x99\x77\x55\x33\x11\0\0\0\011\0\xee\xcc\xaa\x88\x66\x44\x22\x00", buffer.to_s
+    assert_equal "start\0\0\0\7ssh-dss\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0\0\0\010\x77\x66\x55\x44\x33\x22\x11\x00\0\0\0\011\0\xff\xdd\xbb\x99\x77\x55\x33\x11\0\0\0\011\0\xee\xcc\xaa\x88\x66\x44\x22\x00", buffer.to_s
   end
 
   def test_write_rsa_key_should_write_argument_to_end_of_buffer
@@ -354,11 +354,13 @@ assert_equal "start\0\0\0\7ssh-dss\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0
         buffer.read_keyblob("ecdsa-sha2-nistp256")
       }
     end
+
     def test_read_key_blob_should_read_ecdsa_sha2_nistp384_keys
       random_ecdsa_sha2_nistp384 { |buffer|
         buffer.read_keyblob("ecdsa-sha2-nistp384")
       }
     end
+
     def test_read_key_blob_should_read_ecdsa_sha2_nistp521_keys
       random_ecdsa_sha2_nistp521 { |buffer|
         buffer.read_keyblob("ecdsa-sha2-nistp521")
@@ -371,12 +373,14 @@ assert_equal "start\0\0\0\7ssh-dss\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0
         b2.read_key
       end
     end
+
     def test_read_key_should_read_ecdsa_sha2_nistp384_key_type_and_keyblob
       random_ecdsa_sha2_nistp384 do |buffer|
         b2 = Net::SSH::Buffer.from(:string, "ecdsa-sha2-nistp384", :raw, buffer)
         b2.read_key
       end
     end
+
     def test_read_key_should_read_ecdsa_sha2_nistp521_key_type_and_keyblob
       random_ecdsa_sha2_nistp521 do |buffer|
         b2 = Net::SSH::Buffer.from(:string, "ecdsa-sha2-nistp521", :raw, buffer)
@@ -411,60 +415,60 @@ assert_equal "start\0\0\0\7ssh-dss\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0
 
   private
 
-    def random_rsa
-      n1 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
-      n2 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
-      buffer = Net::SSH::Buffer.from(:bignum, [n1, n2])
+  def random_rsa
+    n1 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
+    n2 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
+    buffer = Net::SSH::Buffer.from(:bignum, [n1, n2])
+    key = yield(buffer)
+    assert_equal "ssh-rsa", key.ssh_type
+    assert_equal n1, key.e
+    assert_equal n2, key.n
+  end
+
+  def random_dss
+    n1 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
+    n2 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
+    n3 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
+    n4 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
+    buffer = Net::SSH::Buffer.from(:bignum, [n1, n2, n3, n4])
+    key = yield(buffer)
+    assert_equal "ssh-dss", key.ssh_type
+    assert_equal n1, key.p
+    assert_equal n2, key.q
+    assert_equal n3, key.g
+    assert_equal n4, key.pub_key
+  end
+
+  if defined?(OpenSSL::PKey::EC)
+    def random_ecdsa_sha2_nistp256
+      k = OpenSSL::PKey::EC.new("prime256v1").generate_key
+      buffer = Net::SSH::Buffer.from(:string, "nistp256",
+                                     :string, k.public_key.to_bn.to_s(2))
       key = yield(buffer)
-      assert_equal "ssh-rsa", key.ssh_type
-      assert_equal n1, key.e
-      assert_equal n2, key.n
+      assert_equal "ecdsa-sha2-nistp256", key.ssh_type
+      assert_equal k.public_key, key.public_key
     end
 
-    def random_dss
-      n1 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
-      n2 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
-      n3 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
-      n4 = OpenSSL::BN.new(rand(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).to_s, 10)
-      buffer = Net::SSH::Buffer.from(:bignum, [n1, n2, n3, n4])
+    def random_ecdsa_sha2_nistp384
+      k = OpenSSL::PKey::EC.new("secp384r1").generate_key
+      buffer = Net::SSH::Buffer.from(:string, "nistp384",
+                                     :string, k.public_key.to_bn.to_s(2))
       key = yield(buffer)
-      assert_equal "ssh-dss", key.ssh_type
-      assert_equal n1, key.p
-      assert_equal n2, key.q
-      assert_equal n3, key.g
-      assert_equal n4, key.pub_key
+      assert_equal "ecdsa-sha2-nistp384", key.ssh_type
+      assert_equal k.public_key, key.public_key
     end
 
-    if defined?(OpenSSL::PKey::EC)
-      def random_ecdsa_sha2_nistp256
-        k = OpenSSL::PKey::EC.new("prime256v1").generate_key
-        buffer = Net::SSH::Buffer.from(:string, "nistp256",
-                                       :string, k.public_key.to_bn.to_s(2))
-        key = yield(buffer)
-        assert_equal "ecdsa-sha2-nistp256", key.ssh_type
-        assert_equal k.public_key, key.public_key
-      end
-
-      def random_ecdsa_sha2_nistp384
-        k = OpenSSL::PKey::EC.new("secp384r1").generate_key
-        buffer = Net::SSH::Buffer.from(:string, "nistp384",
-                                       :string, k.public_key.to_bn.to_s(2))
-        key = yield(buffer)
-        assert_equal "ecdsa-sha2-nistp384", key.ssh_type
-        assert_equal k.public_key, key.public_key
-      end
-
-      def random_ecdsa_sha2_nistp521
-        k = OpenSSL::PKey::EC.new("secp521r1").generate_key
-        buffer = Net::SSH::Buffer.from(:string, "nistp521",
-                                       :string, k.public_key.to_bn.to_s(2))
-        key = yield(buffer)
-        assert_equal "ecdsa-sha2-nistp521", key.ssh_type
-        assert_equal k.public_key, key.public_key
-      end
+    def random_ecdsa_sha2_nistp521
+      k = OpenSSL::PKey::EC.new("secp521r1").generate_key
+      buffer = Net::SSH::Buffer.from(:string, "nistp521",
+                                     :string, k.public_key.to_bn.to_s(2))
+      key = yield(buffer)
+      assert_equal "ecdsa-sha2-nistp521", key.ssh_type
+      assert_equal k.public_key, key.public_key
     end
+  end
 
-    def new(*args)
-      Net::SSH::Buffer.new(*args)
-    end
+  def new(*args)
+    Net::SSH::Buffer.new(*args)
+  end
 end

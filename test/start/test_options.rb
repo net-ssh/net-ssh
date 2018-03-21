@@ -27,7 +27,7 @@ module NetSSH
 
     def test_start_should_accept_send_env_option
       assert_nothing_raised do
-        options = { send_env: [ /^LC_.*$/, "LANG" ] }
+        options = { send_env: [/^LC_.*$/, "LANG"] }
         Net::SSH.start('localhost', 'testuser', options)
       end
     end

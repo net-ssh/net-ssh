@@ -43,7 +43,7 @@ module Net
           self.logger = logger
           @key_files = []
           @key_data = []
-          @use_agent = !(options[:use_agent] == false)
+          @use_agent = options[:use_agent] != false
           @known_identities = {}
           @agent = nil
           @options = options
@@ -235,7 +235,6 @@ module Net
               else
                 identity
               end
-
             rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError, OpenSSL::PKey::PKeyError, ArgumentError => e
               if ignore_decryption_errors
                 identity
@@ -260,7 +259,6 @@ module Net
             raise e
           end
         end
-
       end
     end
   end

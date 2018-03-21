@@ -295,7 +295,6 @@ module Transport
       assert_equal TEXT, decrypt("aes256-ctr", AES256_CTR)
     end
 
-
     def test_none_for_encryption
       assert_equal TEXT, encrypt("none").strip
     end
@@ -306,64 +305,64 @@ module Transport
 
     private
 
-      TEXT = "But soft! What light through yonder window breaks? It is the east, and Juliet is the sun!"
-      TEXT2 = "2But soft! What light through yonder window breaks? It is the east, and Juliet is the sun!"
+    TEXT = "But soft! What light through yonder window breaks? It is the east, and Juliet is the sun!"
+    TEXT2 = "2But soft! What light through yonder window breaks? It is the east, and Juliet is the sun!"
 
-      OPTIONS = { iv: "ABC",
-        key: "abc",
-        digester: OpenSSL::Digest::MD5,
-        shared: "1234567890123456780",
-        hash: '!@#$%#$^%$&^&%#$@$'}
+    OPTIONS = { iv: "ABC",
+                key: "abc",
+                digester: OpenSSL::Digest::MD5,
+                shared: "1234567890123456780",
+                hash: '!@#$%#$^%$&^&%#$@$' }
 
-      def factory
-        Net::SSH::Transport::CipherFactory
-      end
+    def factory
+      Net::SSH::Transport::CipherFactory
+    end
 
-      def encrypt(type)
-        cipher = factory.get(type, OPTIONS.merge(encrypt: true))
-        padding = TEXT.length % cipher.block_size
-        result = cipher.update(TEXT.dup)
-        result << cipher.update(" " * (cipher.block_size - padding)) if padding > 0
-        result << cipher.final
-      end
+    def encrypt(type)
+      cipher = factory.get(type, OPTIONS.merge(encrypt: true))
+      padding = TEXT.length % cipher.block_size
+      result = cipher.update(TEXT.dup)
+      result << cipher.update(" " * (cipher.block_size - padding)) if padding > 0
+      result << cipher.final
+    end
 
-      def encrypt2(type)
-        cipher = factory.get(type, OPTIONS.merge(encrypt: true))
-        padding = TEXT.length % cipher.block_size
-        result = cipher.update(TEXT.dup)
-        result << cipher.update(" " * (cipher.block_size - padding)) if padding > 0
-        result << cipher.final
+    def encrypt2(type)
+      cipher = factory.get(type, OPTIONS.merge(encrypt: true))
+      padding = TEXT.length % cipher.block_size
+      result = cipher.update(TEXT.dup)
+      result << cipher.update(" " * (cipher.block_size - padding)) if padding > 0
+      result << cipher.final
 
-        cipher.reset
+      cipher.reset
 
-        cipher.iv = "0123456789123456"
-        padding = TEXT2.length % cipher.block_size
-        result2 = cipher.update(TEXT2.dup)
-        result2 << cipher.update(" " * (cipher.block_size - padding)) if padding > 0
-        result2 << cipher.final
-        [result, result2]
-      end
+      cipher.iv = "0123456789123456"
+      padding = TEXT2.length % cipher.block_size
+      result2 = cipher.update(TEXT2.dup)
+      result2 << cipher.update(" " * (cipher.block_size - padding)) if padding > 0
+      result2 << cipher.final
+      [result, result2]
+    end
 
-      def decrypt(type, data)
-        cipher = factory.get(type, OPTIONS.merge(decrypt: true))
-        result = cipher.update(data.dup)
-        result << cipher.final
-        result.strip
-      end
+    def decrypt(type, data)
+      cipher = factory.get(type, OPTIONS.merge(decrypt: true))
+      result = cipher.update(data.dup)
+      result << cipher.final
+      result.strip
+    end
 
-      def decrypt2(type, datas)
-        cipher = factory.get(type, OPTIONS.merge(decrypt: true))
-        result = cipher.update(datas[0].dup)
-        result << cipher.final
-        first = result.strip
+    def decrypt2(type, datas)
+      cipher = factory.get(type, OPTIONS.merge(decrypt: true))
+      result = cipher.update(datas[0].dup)
+      result << cipher.final
+      first = result.strip
 
-        cipher.reset
+      cipher.reset
 
-        result = cipher.update(datas[1].dup)
-        result << cipher.final
-        second = result.strip
-        [first, second]
-      end
+      result = cipher.update(datas[1].dup)
+      result << cipher.final
+      second = result.strip
+      [first, second]
+    end
   end
 
 end

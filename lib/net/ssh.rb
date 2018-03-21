@@ -62,17 +62,17 @@ module Net
   module SSH
     # This is the set of options that Net::SSH.start recognizes. See
     # Net::SSH.start for a description of each option.
-    VALID_OPTIONS = [
-      :auth_methods, :bind_address, :compression, :compression_level, :config,
-      :encryption, :forward_agent, :hmac, :host_key, :remote_user,
-      :keepalive, :keepalive_interval, :keepalive_maxcount, :kex, :keys, :key_data,
-      :languages, :logger, :paranoid, :password, :port, :proxy,
-      :rekey_blocks_limit,:rekey_limit, :rekey_packet_limit, :timeout, :verbose,
-      :known_hosts, :global_known_hosts_file, :user_known_hosts_file, :host_key_alias,
-      :host_name, :user, :properties, :passphrase, :keys_only, :max_pkt_size,
-      :max_win_size, :send_env, :use_agent, :number_of_password_prompts,
-      :append_all_supported_algorithms, :non_interactive, :password_prompt,
-      :agent_socket_factory, :minimum_dh_bits, :verify_host_key
+    VALID_OPTIONS = %i[
+      auth_methods bind_address compression compression_level config
+      encryption forward_agent hmac host_key remote_user
+      keepalive keepalive_interval keepalive_maxcount kex keys key_data
+      languages logger paranoid password port proxy
+      rekey_blocks_limit rekey_limit rekey_packet_limit timeout verbose
+      known_hosts global_known_hosts_file user_known_hosts_file host_key_alias
+      host_name user properties passphrase keys_only max_pkt_size
+      max_win_size send_env use_agent number_of_password_prompts
+      append_all_supported_algorithms non_interactive password_prompt
+      agent_socket_factory minimum_dh_bits verify_host_key
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -224,13 +224,13 @@ module Net
 
       if options[:verbose]
         options[:logger].level = case options[:verbose]
-          when Integer then options[:verbose]
-          when :debug then Logger::DEBUG
-          when :info  then Logger::INFO
-          when :warn  then Logger::WARN
-          when :error then Logger::ERROR
-          when :fatal then Logger::FATAL
-          else raise ArgumentError, "can't convert #{options[:verbose].inspect} to any of the Logger level constants"
+                                 when Integer then options[:verbose]
+                                 when :debug then Logger::DEBUG
+                                 when :info  then Logger::INFO
+                                 when :warn  then Logger::WARN
+                                 when :error then Logger::ERROR
+                                 when :fatal then Logger::FATAL
+                                 else raise ArgumentError, "can't convert #{options[:verbose].inspect} to any of the Logger level constants"
         end
       end
 
@@ -266,9 +266,9 @@ module Net
     # See Net::SSH::Config for the full description of all supported options.
     def self.configuration_for(host, use_ssh_config)
       files = case use_ssh_config
-        when true then Net::SSH::Config.expandable_default_files
-        when false, nil then return {}
-        else Array(use_ssh_config)
+              when true then Net::SSH::Config.expandable_default_files
+              when false, nil then return {}
+              else Array(use_ssh_config)
         end
 
       Net::SSH::Config.for(host, files)
@@ -282,7 +282,7 @@ module Net
 
       options[:password_prompt] ||= Prompt.default(options)
 
-      [:password, :passphrase].each do |key|
+      %i[password passphrase].each do |key|
         options.delete(key) if options.key?(key) && options[key].nil?
       end
     end

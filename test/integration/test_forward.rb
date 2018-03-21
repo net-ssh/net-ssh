@@ -45,7 +45,7 @@ class ForwardTestBase < NetSSHTest
   end
 
   def ssh_start_params(options = {})
-    [localhost ,user , {keys: @key_id_rsa}.merge(options)]
+    [localhost,user, { keys: @key_id_rsa }.merge(options)]
   end
 
   def setup_ssh_env(&block)
@@ -68,7 +68,7 @@ class ForwardTestBase < NetSSHTest
               client.puts "item#{i}"
             end
             client.close
-          rescue
+          rescue StandardError
             exceptions << $!
             raise
           end
@@ -89,8 +89,8 @@ class TestForward < ForwardTestBase
             client.recv(1024)
             client.setsockopt(Socket::SOL_SOCKET, Socket::SO_LINGER, [1, 0].pack("ii"))
             client.close
-          rescue
-            exceptions <<  $!
+          rescue StandardError
+            exceptions << $!
             raise
           end
         end
@@ -126,7 +126,7 @@ class TestForward < ForwardTestBase
 
       assert_nothing_raised do
         session.forward.remote(22, localhost, 0, localhost)
-        session.loop { !(session.forward.active_remotes.length > 0) }
+        session.loop { session.forward.active_remotes.length <= 0 }
         assigned_port = session.forward.active_remotes.first[0]
         assert_not_nil assigned_port
         assert_operator assigned_port, :>, 0
@@ -143,11 +143,11 @@ class TestForward < ForwardTestBase
         session.forward.remote(22, localhost, 0, localhost) do |port|
           got_port = port
         end
-        session.loop { !(session.forward.active_remotes.length > 0) }
+        session.loop { session.forward.active_remotes.length <= 0 }
         assert_operator session.forward.active_remote_destinations.length, :==, 1
-        assert_operator session.forward.active_remote_destinations.keys.first, :==, [ 22, localhost ]
-        assert_operator session.forward.active_remote_destinations.values.first, :==, [ got_port, localhost ]
-        assert_operator session.forward.active_remotes.first, :==, [ got_port, localhost ]
+        assert_operator session.forward.active_remote_destinations.keys.first, :==, [22, localhost]
+        assert_operator session.forward.active_remote_destinations.values.first, :==, [got_port, localhost]
+        assert_operator session.forward.active_remotes.first, :==, [got_port, localhost]
         assigned_port = session.forward.active_remotes.first[0]
         assert_operator got_port, :==, assigned_port
         assert_not_nil assigned_port
@@ -276,7 +276,7 @@ class TestForward < ForwardTestBase
 
   def test_client_close_should_be_handled_remote
     setup_ssh_env do
-      message = "This is a small message!"*1000
+      message = "This is a small message!" * 1000
       session = Net::SSH.start(*ssh_start_params)
       server_done = Queue.new
       server = start_server do |client|
@@ -284,7 +284,7 @@ class TestForward < ForwardTestBase
           data = client.read message.size
           server_done << data
           client.close
-        rescue
+        rescue StandardError
           server_done << $!
         end
       end
@@ -302,7 +302,7 @@ class TestForward < ForwardTestBase
           client.write(message)
           client.close
           client_done << true
-        rescue
+        rescue StandardError
           client_done << $!
         end
       end
@@ -354,7 +354,7 @@ class TestForward < ForwardTestBase
           client.read(7)
           client.close
           client_done << true
-        rescue
+        rescue StandardError
           client_done << $!
         end
       end
@@ -371,7 +371,7 @@ class TestForward < ForwardTestBase
         Timeout.timeout(5) do
           assert_equal true, client_done.pop
         end
-      rescue
+      rescue StandardError
         puts "Server error: #{server_error.class} #{server_error} bt:#{server_error.backtrace.join("\n")}"
         raise
       end
@@ -400,7 +400,7 @@ class TestForward < ForwardTestBase
           client.read(7)
           client.close
           client_done << true
-        rescue
+        rescue StandardError
           client_done << $!
         end
       end
@@ -410,7 +410,7 @@ class TestForward < ForwardTestBase
         rescue EOFError
           begin
             session.close
-          rescue
+          rescue StandardError
           end
           #puts "Error: #{$!} #{$!.backtrace.join("\n")}"
         end
@@ -421,7 +421,7 @@ class TestForward < ForwardTestBase
 
   def test_client_close_should_be_handled
     setup_ssh_env do
-      message = "This is a small message!"*1000
+      message = "This is a small message!" * 1000
       session = Net::SSH.start(*ssh_start_params)
       server_done = Queue.new
       server = start_server do |client|
@@ -429,7 +429,7 @@ class TestForward < ForwardTestBase
           data = client.read message.size
           server_done << data
           client.close
-        rescue
+        rescue StandardError
           server_done << $!
         end
       end
@@ -442,7 +442,7 @@ class TestForward < ForwardTestBase
           client.write(message)
           client.close
           client_done << true
-        rescue
+        rescue StandardError
           client_done << $!
         end
       end
@@ -475,7 +475,7 @@ class TestForward < ForwardTestBase
           data = client.read(4096)
           client.close
           client_done << data
-        rescue
+        rescue StandardError
           client_done << $!
         end
       end
@@ -503,7 +503,7 @@ class TestForward < ForwardTestBase
           data = client.read(4096)
           client.close
           client_done << data
-        rescue
+        rescue StandardError
           client_done << $!
         end
       end
@@ -521,7 +521,7 @@ class TestForward < ForwardTestBase
         data = client.read(4096)
         client.close
         client_done << data
-      rescue
+      rescue StandardError
         client_done << $!
       end
     end

@@ -21,7 +21,7 @@ module Net::SSH::Transport::HMAC
     'hmac-sha1-96'   => SHA1_96,
     'hmac-ripemd160' => RIPEMD160,
     'hmac-ripemd160@openssh.com' => RIPEMD160,
-    'none'           => None
+    'none' => None
   }
 
   # add mapping to sha2 hmac algorithms if they're available

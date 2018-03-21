@@ -8,7 +8,7 @@ module Authentication
     include Net::SSH::Authentication::Constants
 
     def test_constructor_should_set_defaults
-      assert_equal %w(none publickey password keyboard-interactive), session.auth_methods
+      assert_equal %w[none publickey password keyboard-interactive], session.auth_methods
       assert_equal session.auth_methods, session.allowed_auth_methods
     end
 
@@ -61,7 +61,7 @@ module Authentication
       transport.return(USERAUTH_FAILURE, :string, "a,b,c", :bool, false)
       packet = session.next_message
       assert_equal USERAUTH_FAILURE, packet.type
-      assert_equal %w(a b c), session.allowed_auth_methods
+      assert_equal %w[a b c], session.allowed_auth_methods
     end
 
     (60..79).each do |type|
@@ -95,13 +95,13 @@ module Authentication
 
     private
 
-      def session(options={})
-        @session ||= Net::SSH::Authentication::Session.new(transport(options), options)
-      end
+    def session(options={})
+      @session ||= Net::SSH::Authentication::Session.new(transport(options), options)
+    end
 
-      def transport(options={})
-        @transport ||= MockTransport.new(options)
-      end
+    def transport(options={})
+      @transport ||= MockTransport.new(options)
+    end
   end
 
 end

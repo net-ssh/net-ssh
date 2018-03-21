@@ -53,7 +53,7 @@ module Connection
       channel.expects(:send_channel_request).with("pty-req", :string, "vanilla",
         :long, 60, :long, 15, :long, 400, :long, 200, :string, "\5\0\0\0\1\0")
       channel.request_pty term: "vanilla", chars_wide: 60, chars_high: 15,
-        pixels_wide: 400, pixels_high: 200, modes: { 5 => 1 }
+                          pixels_wide: 400, pixels_high: 200, modes: { 5 => 1 }
     end
 
     def test_send_data_should_append_to_channels_output_buffer
@@ -440,48 +440,48 @@ module Connection
 
     private
 
-      class MockConnection
-        attr_reader :logger
-        attr_reader :options
-        attr_reader :channels
+    class MockConnection
+      attr_reader :logger
+      attr_reader :options
+      attr_reader :channels
 
-        def initialize(options={})
-          @expectation = nil
-          @options = options
-          @channels = {}
-        end
-
-        def expect(&block)
-          @expectation = block
-        end
-
-        def send_message(msg)
-          raise "#{msg.to_s.inspect} received but no message was expected" unless @expectation
-          packet = Net::SSH::Packet.new(msg.to_s)
-          callback, @expectation = @expectation, nil
-          callback.call(self, packet)
-        end
-
-        alias loop_forever loop
-        def loop(&block)
-          loop_forever { break unless block.call }
-        end
-
-        def test!
-          raise "expected a packet but none were sent" if @expectation
-        end
+      def initialize(options={})
+        @expectation = nil
+        @options = options
+        @channels = {}
       end
 
-      def connection(options={})
-        @connection ||= MockConnection.new(options)
+      def expect(&block)
+        @expectation = block
       end
 
-      def channel(options={}, &block)
-        @channel ||= Net::SSH::Connection::Channel.new(connection(options),
-          options[:type] || "session",
-          options[:local_id] || 0,
-          &block)
+      def send_message(msg)
+        raise "#{msg.to_s.inspect} received but no message was expected" unless @expectation
+        packet = Net::SSH::Packet.new(msg.to_s)
+        callback, @expectation = @expectation, nil
+        callback.call(self, packet)
       end
+
+      alias loop_forever loop
+      def loop(&block)
+        loop_forever { break unless block.call }
+      end
+
+      def test!
+        raise "expected a packet but none were sent" if @expectation
+      end
+    end
+
+    def connection(options={})
+      @connection ||= MockConnection.new(options)
+    end
+
+    def channel(options={}, &block)
+      @channel ||= Net::SSH::Connection::Channel.new(connection(options),
+        options[:type] || "session",
+        options[:local_id] || 0,
+        &block)
+    end
   end
 
 end

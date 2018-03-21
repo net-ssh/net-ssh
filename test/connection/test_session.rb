@@ -312,14 +312,14 @@ module Connection
 
     def test_channel_close_packet_should_be_routed_to_corresponding_channel_and_channel_should_be_closed_and_removed
       session.channels[14] = stub("channel") do
-          # this simulates the case where we closed the channel first, sent
-          # CHANNEL_CLOSE to server and are waiting for server's response.
-          expects(:local_closed?).returns(true)
-          expects(:do_close)
-          expects(:close).with()
-          expects(:remote_closed!).with()
-          expects(:remote_closed?).with().returns(true)
-          expects(:local_id).returns(14)
+        # this simulates the case where we closed the channel first, sent
+        # CHANNEL_CLOSE to server and are waiting for server's response.
+        expects(:local_closed?).returns(true)
+        expects(:do_close)
+        expects(:close).with()
+        expects(:remote_closed!).with()
+        expects(:remote_closed?).with().returns(true)
+        expects(:local_id).returns(14)
       end
 
       transport.return(CHANNEL_CLOSE, :long, 14)
@@ -389,7 +389,7 @@ module Connection
       options = { keepalive: true }
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
       IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
-      transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
+      transport.expects(:enqueue_message).with { |msg| msg.content == expected_packet.content }
       session(options).process
     end
 
@@ -398,15 +398,15 @@ module Connection
       options = { keepalive: true, keepalive_interval: 300, keepalive_maxcount: 3 }
       expected_packet = P(:byte, Net::SSH::Packet::GLOBAL_REQUEST, :string, "keepalive@openssh.com", :bool, true)
       [1,2,3].each do |i|
-        Time.stubs(:now).returns(Time.at(i*300))
+        Time.stubs(:now).returns(Time.at(i * 300))
         IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
-        transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
+        transport.expects(:enqueue_message).with { |msg| msg.content == expected_packet.content }
         session(options).process
       end
 
-      Time.stubs(:now).returns(Time.at(4*300))
+      Time.stubs(:now).returns(Time.at(4 * 300))
       IO.stubs(:select).with([socket],[],nil,timeout).returns(nil)
-      transport.expects(:enqueue_message).with{ |msg| msg.content == expected_packet.content }
+      transport.expects(:enqueue_message).with { |msg| msg.content == expected_packet.content }
       assert_raises(Net::SSH::Timeout) { session(options).process }
     end
 
@@ -520,68 +520,68 @@ module Connection
 
     private
 
-      def prep_exec(command, *data)
-        IO.expects(:select).with([socket],[],nil,0).returns([[],[],[]])
-        transport.mock_enqueue = true
-        transport.expect do |t, p|
-          assert_equal CHANNEL_OPEN, p.type
-          t.return(CHANNEL_OPEN_CONFIRMATION, :long, p[:remote_id], :long, 0, :long, 0x20000, :long, 0x10000)
-          t.expect do |t2, p2|
-            assert_equal CHANNEL_REQUEST, p2.type
-            assert_equal "exec", p2[:request]
-            assert_equal true, p2[:want_reply]
-            assert_equal "ls", p2.read_string
+    def prep_exec(command, *data)
+      IO.expects(:select).with([socket],[],nil,0).returns([[],[],[]])
+      transport.mock_enqueue = true
+      transport.expect do |t, p|
+        assert_equal CHANNEL_OPEN, p.type
+        t.return(CHANNEL_OPEN_CONFIRMATION, :long, p[:remote_id], :long, 0, :long, 0x20000, :long, 0x10000)
+        t.expect do |t2, p2|
+          assert_equal CHANNEL_REQUEST, p2.type
+          assert_equal "exec", p2[:request]
+          assert_equal true, p2[:want_reply]
+          assert_equal "ls", p2.read_string
 
-            t2.return(CHANNEL_SUCCESS, :long, p[:remote_id])
+          t2.return(CHANNEL_SUCCESS, :long, p[:remote_id])
 
-            data.each_slice(2) do |type, datum|
-              next if datum.empty?
-              if type == :stdout
-                t2.return(CHANNEL_DATA, :long, p[:remote_id], :string, datum)
-              else
-                t2.return(CHANNEL_EXTENDED_DATA, :long, p[:remote_id], :long, 1, :string, datum)
-              end
+          data.each_slice(2) do |type, datum|
+            next if datum.empty?
+            if type == :stdout
+              t2.return(CHANNEL_DATA, :long, p[:remote_id], :string, datum)
+            else
+              t2.return(CHANNEL_EXTENDED_DATA, :long, p[:remote_id], :long, 1, :string, datum)
             end
-
-            t2.return(CHANNEL_CLOSE, :long, p[:remote_id])
-            t2.expect { |t3,p3| assert_equal CHANNEL_CLOSE, p3.type }
           end
+
+          t2.return(CHANNEL_CLOSE, :long, p[:remote_id])
+          t2.expect { |t3,p3| assert_equal CHANNEL_CLOSE, p3.type }
         end
       end
+    end
 
-      module MockSocket
-        # so that we can easily test the contents that were enqueued, without
-        # worrying about all the packet stream overhead
-        def enqueue_packet(message)
-          enqueue(message.to_s)
-        end
+    module MockSocket
+      # so that we can easily test the contents that were enqueued, without
+      # worrying about all the packet stream overhead
+      def enqueue_packet(message)
+        enqueue(message.to_s)
       end
+    end
 
-      def socket
-        @socket ||= begin
-          socket ||= Object.new
-          socket.extend(Net::SSH::Transport::PacketStream)
-          socket.extend(MockSocket)
-          socket
-        end
+    def socket
+      @socket ||= begin
+        socket ||= Object.new
+        socket.extend(Net::SSH::Transport::PacketStream)
+        socket.extend(MockSocket)
+        socket
       end
+    end
 
-      def channel_at(local_id)
-        session.channels[local_id] = stub("channel", process: true, local_closed?: false)
-      end
+    def channel_at(local_id)
+      session.channels[local_id] = stub("channel", process: true, local_closed?: false)
+    end
 
-      def transport(options={})
-        @transport ||= MockTransport.new(options.merge(socket: socket))
-      end
+    def transport(options={})
+      @transport ||= MockTransport.new(options.merge(socket: socket))
+    end
 
-      def session(options={})
-        @session ||= Net::SSH::Connection::Session.new(transport, options)
-      end
+    def session(options={})
+      @session ||= Net::SSH::Connection::Session.new(transport, options)
+    end
 
-      def process_times(n)
-        i = 0
-        session.process { (i += 1) < n }
-      end
+    def process_times(n)
+      i = 0
+      session.process { (i += 1) < n }
+    end
   end
 
 end
