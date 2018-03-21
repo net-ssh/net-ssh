@@ -1,8 +1,8 @@
 require 'net/ssh/connection/constants'
 require 'net/ssh/transport/constants'
 
-module Net 
-  module SSH 
+module Net
+  module SSH
     module Test
 
       # This is an abstract class, not to be instantiated directly, subclassed by
@@ -18,18 +18,18 @@ module Net
       class Packet
         include Net::SSH::Transport::Constants
         include Net::SSH::Connection::Constants
-    
+
         # Register a custom channel request. extra_parts is an array of types
         # of extra parameters
         def self.register_channel_request(request, extra_parts)
           @registered_requests ||= {}
           @registered_requests[request] = { extra_parts: extra_parts }
         end
-    
+
         def self.registered_channel_requests(request)
           @registered_requests && @registered_requests[request]
         end
-    
+
         # Ceate a new packet of the given +type+, and with +args+ being a list of
         # data elements in the order expected for packets of the given +type+
         # (see #types).
@@ -37,28 +37,28 @@ module Net
           @type = self.class.const_get(type.to_s.upcase)
           @data = args
         end
-    
+
         # The default for +remote?+ is false. Subclasses should override as necessary.
         def remote?
           false
         end
-    
+
         # The default for +local?+ is false. Subclasses should override as necessary.
         def local?
           false
         end
-    
+
         # Instantiates the packets data elements. When the packet was first defined,
         # some elements may not have been fully realized, and were described as
         # Proc objects rather than atomic types. This invokes those Proc objects
-        # and replaces them with their returned values. This allows for values 
+        # and replaces them with their returned values. This allows for values
         # like Net::SSH::Test::Channel#remote_id to be used in scripts before
         # the remote_id is known (since it is only known after a channel has been
         # confirmed open).
         def instantiate!
           @data.map! { |i| i.respond_to?(:call) ? i.call : i }
         end
-    
+
         # Returns an array of symbols describing the data elements for packets of
         # the same type as this packet. These types are used to either validate
         # sent packets (Net::SSH::Test::LocalPacket) or build received packets
@@ -70,8 +70,8 @@ module Net
         # added. Unsupported packet types will otherwise raise an exception.
         def types
           @types ||= case @type
-                     when KEXINIT then 
-                       %i[longlonglonglong
+                     when KEXINIT then
+                       %i[long long long long
                           string string string string string string string string string string
                           bool]
                      when NEWKEYS then []
