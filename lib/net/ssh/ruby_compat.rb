@@ -5,6 +5,7 @@ class String
     def getbyte(index)
       self[index]
     end
+
     def setbyte(index, c)
       self[index] = c
     end

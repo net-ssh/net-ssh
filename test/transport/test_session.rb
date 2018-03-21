@@ -6,9 +6,7 @@ require 'net/ssh/proxy/http'
 # these tests.
 
 # can't use .include? because ruby18 uses strings and ruby19 uses symbols :/
-if Object.instance_methods.any? { |v| v.to_sym == :verify }
-  Object.send(:undef_method, :verify)
-end
+Object.send(:undef_method, :verify) if Object.instance_methods.any? { |v| v.to_sym == :verify }
 
 module Transport
 
@@ -136,7 +134,7 @@ module Transport
     def test_peer_should_return_hash_of_info_about_peer
       session!
       socket.stubs(peer_ip: "1.2.3.4")
-      assert_equal({ip: "1.2.3.4", port: TEST_PORT, host: TEST_HOST, canonized: "net.ssh.test,1.2.3.4"}, session.peer)
+      assert_equal({ ip: "1.2.3.4", port: TEST_PORT, host: TEST_HOST, canonized: "net.ssh.test,1.2.3.4" }, session.peer)
     end
 
     def test_next_message_should_block_until_next_message_is_available
@@ -330,35 +328,35 @@ module Transport
 
     private
 
-      def socket
-        @socket ||= stub("socket", hints: {})
-      end
+    def socket
+      @socket ||= stub("socket", hints: {})
+    end
 
-      def server_version
-        @server_version ||= stub("server_version")
-      end
+    def server_version
+      @server_version ||= stub("server_version")
+    end
 
-      def algorithms
-        @algorithms ||= stub("algorithms", initialized?: true, allow?: true, start: true)
-      end
+    def algorithms
+      @algorithms ||= stub("algorithms", initialized?: true, allow?: true, start: true)
+    end
 
-      def session(options={})
-        @session ||= begin
-          host = options.delete(:host) || TEST_HOST
-          if (proxy = options[:proxy])
-            proxy.stubs("open").returns(socket)
-          else
-            Socket.stubs(:tcp).with(host, options[:port] || TEST_PORT, nil, nil, { connect_timeout: options[:timeout] }).returns(socket)
-          end
-          Net::SSH::Transport::ServerVersion.stubs(:new).returns(server_version)
-          Net::SSH::Transport::Algorithms.stubs(:new).returns(algorithms)
-
-          Net::SSH::Transport::Session.new(host, options)
+    def session(options={})
+      @session ||= begin
+        host = options.delete(:host) || TEST_HOST
+        if (proxy = options[:proxy])
+          proxy.stubs("open").returns(socket)
+        else
+          Socket.stubs(:tcp).with(host, options[:port] || TEST_PORT, nil, nil, { connect_timeout: options[:timeout] }).returns(socket)
         end
+        Net::SSH::Transport::ServerVersion.stubs(:new).returns(server_version)
+        Net::SSH::Transport::Algorithms.stubs(:new).returns(algorithms)
+
+        Net::SSH::Transport::Session.new(host, options)
       end
-      # a simple alias to make the tests more self-documenting. the bang
-      # version makes it look more like the session is being instantiated
-      alias session! session
+    end
+    # a simple alias to make the tests more self-documenting. the bang
+    # version makes it look more like the session is being instantiated
+    alias session! session
   end
 
 end

@@ -4,7 +4,6 @@ require 'net/ssh/transport/identity_cipher'
 module Transport
 
   class TestIdentityCipher < NetSSHTest
-
     def test_block_size_should_be_8
       assert_equal 8, cipher.block_size
     end
@@ -31,10 +30,9 @@ module Transport
 
     private
 
-      def cipher
-        Net::SSH::Transport::IdentityCipher
-      end
-
+    def cipher
+      Net::SSH::Transport::IdentityCipher
+    end
   end
 
 end

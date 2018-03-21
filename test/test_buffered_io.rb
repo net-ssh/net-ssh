@@ -53,11 +53,11 @@ class TestBufferedIo < NetSSHTest
 
   private
 
-    def io
-      @io ||= begin
-        io = mock("io")
-        io.extend(Net::SSH::BufferedIo)
-        io
-      end
+  def io
+    @io ||= begin
+      io = mock("io")
+      io.extend(Net::SSH::BufferedIo)
+      io
     end
+  end
 end

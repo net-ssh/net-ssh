@@ -4,7 +4,6 @@ require 'net/ssh/authentication/agent'
 module Authentication
 
   class TestAgent < NetSSHTest
-
     SSH2_AGENT_REQUEST_VERSION       = 1
     SSH2_AGENT_REQUEST_IDENTITIES    = 11
     SSH2_AGENT_IDENTITIES_ANSWER     = 12
@@ -139,7 +138,7 @@ EOF
     def test_identities_should_ignore_unimplemented_ones
       key1 = key
       key2 = OpenSSL::PKey::DSA.new(512)
-      key2.to_blob[0..5]='badkey'
+      key2.to_blob[0..5] = 'badkey'
       key3 = OpenSSL::PKey::DSA.new(512)
 
       socket.expect do |s, type, buffer|
@@ -401,59 +400,59 @@ EOF
       cert.sign!(key)
     end
 
-      class MockSocket
-        def initialize
-          @expectation = nil
-          @buffer = Net::SSH::Buffer.new
-        end
-
-        def expect(&block)
-          @expectation = block
-        end
-
-        def return(type, *args)
-          data = Net::SSH::Buffer.from(*args)
-          @buffer.append([data.length+1, type, data.to_s].pack("NCA*"))
-        end
-
-        def send(data, flags)
-          raise "got #{data.inspect} but no packet was expected" unless @expectation
-          buffer = Net::SSH::Buffer.new(data)
-          buffer.read_long # skip the length
-          type = buffer.read_byte
-          @expectation.call(self, type, buffer)
-          @expectation = nil
-        end
-
-        def read(length)
-          @buffer.read(length)
-        end
+    class MockSocket
+      def initialize
+        @expectation = nil
+        @buffer = Net::SSH::Buffer.new
       end
 
-      def key
-        @key ||= OpenSSL::PKey::RSA.new(512)
+      def expect(&block)
+        @expectation = block
       end
 
-      def socket
-        @socket ||= MockSocket.new
+      def return(type, *args)
+        data = Net::SSH::Buffer.from(*args)
+        @buffer.append([data.length + 1, type, data.to_s].pack("NCA*"))
       end
 
-      def factory
-        @factory ||= stub("socket factory", open: socket)
+      def send(data, flags)
+        raise "got #{data.inspect} but no packet was expected" unless @expectation
+        buffer = Net::SSH::Buffer.new(data)
+        buffer.read_long # skip the length
+        type = buffer.read_byte
+        @expectation.call(self, type, buffer)
+        @expectation = nil
       end
 
-      def agent(auto=:connect)
-        @agent ||= begin
-          agent = Net::SSH::Authentication::Agent.new
-          agent.stubs(:unix_socket_class).returns(factory)
-          agent.connect! if auto == :connect
-          agent
-        end
+      def read(length)
+        @buffer.read(length)
       end
+    end
 
-      def agent_socket_factory
-        @agent_socket_factory ||= ->{"/foo/bar.sock"}
+    def key
+      @key ||= OpenSSL::PKey::RSA.new(512)
+    end
+
+    def socket
+      @socket ||= MockSocket.new
+    end
+
+    def factory
+      @factory ||= stub("socket factory", open: socket)
+    end
+
+    def agent(auto=:connect)
+      @agent ||= begin
+        agent = Net::SSH::Authentication::Agent.new
+        agent.stubs(:unix_socket_class).returns(factory)
+        agent.connect! if auto == :connect
+        agent
       end
+    end
+
+    def agent_socket_factory
+      @agent_socket_factory ||= -> {"/foo/bar.sock"}
+    end
   end
 
 end

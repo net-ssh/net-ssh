@@ -17,7 +17,6 @@ module Net
       #     ...
       #   end
       class SOCKS4
-
         # The SOCKS protocol version used by this class
         VERSION = 4
 
@@ -63,7 +62,6 @@ module Net
 
           return socket
         end
-
       end
 
     end

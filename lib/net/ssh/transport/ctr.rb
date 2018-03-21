@@ -101,7 +101,7 @@ module Net::SSH::Transport
 
         def xor!(s1, s2)
           s = []
-          s1.unpack('Q*').zip(s2.unpack('Q*')) {|a,b| s.push(a^b) }
+          s1.unpack('Q*').zip(s2.unpack('Q*')) {|a,b| s.push(a ^ b) }
           s.pack('Q*')
         end
         singleton_class.send(:private, :xor!)

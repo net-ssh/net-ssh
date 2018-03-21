@@ -6,7 +6,6 @@ require 'net/ssh/transport/state'
 module Transport
 
   class TestState < NetSSHTest
-
     def setup
       @socket = @state = @deflater = @inflater = nil
     end
@@ -60,8 +59,8 @@ module Transport
     def test_set_should_set_variables_and_reset_counters
       state.expects(:reset!)
       state.set cipher: :a, hmac: :b, compression: :c,
-        compression_level: :d, max_packets: 500, max_blocks: 1000,
-        rekey_limit: 1500
+                compression_level: :d, max_packets: 500, max_blocks: 1000,
+                rekey_limit: 1500
       assert_equal :a, state.cipher
       assert_equal :b, state.hmac
       assert_equal :c, state.compression
@@ -161,21 +160,21 @@ module Transport
 
     private
 
-      def deflater(level=Zlib::DEFAULT_COMPRESSION)
-        @deflater ||= Zlib::Deflate.new(level)
-      end
+    def deflater(level=Zlib::DEFAULT_COMPRESSION)
+      @deflater ||= Zlib::Deflate.new(level)
+    end
 
-      def inflater
-        @inflater ||= Zlib::Inflate.new(nil)
-      end
+    def inflater
+      @inflater ||= Zlib::Inflate.new(nil)
+    end
 
-      def socket
-        @socket ||= stub("socket", hints: {})
-      end
+    def socket
+      @socket ||= stub("socket", hints: {})
+    end
 
-      def state
-        @state ||= Net::SSH::Transport::State.new(socket, :test)
-      end
+    def state
+      @state ||= Net::SSH::Transport::State.new(socket, :test)
+    end
   end
 
 end

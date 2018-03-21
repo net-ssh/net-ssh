@@ -15,30 +15,107 @@ Lint/AssignmentInCondition:
     - 'lib/net/ssh/proxy/command.rb'
 
 # Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AlignWith, SupportedStyles.
-# SupportedStyles: either, start_of_block, start_of_line
-Lint/BlockAlignment:
-  Exclude:
-    - 'test/integration/test_proxy.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Lint/DeprecatedClassMethods:
-  Exclude:
-    - 'Rakefile'
-
-# Offense count: 1
 Lint/EmptyWhen:
   Exclude:
     - 'lib/net/ssh/config.rb'
 
-# Offense count: 223
-# Cop supports --auto-correct.
-# Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
-# SupportedStyles: keyword, variable, start_of_line
-Lint/EndAlignment:
+Layout/EndAlignment:
   Enabled: false
+
+# Offense count: 23
+# Configuration parameters: MinNameLength, AllowNamesEndingInNumbers, AllowedNames, ForbiddenNames.
+# AllowedNames: io, id, to
+Naming/UncommunicativeMethodParamName:
+  Exclude:
+    - 'lib/net/ssh/authentication/certificate.rb'
+    - 'lib/net/ssh/authentication/ed25519.rb'
+    - 'lib/net/ssh/authentication/key_manager.rb'
+    - 'lib/net/ssh/authentication/pageant.rb'
+    - 'lib/net/ssh/buffer.rb'
+    - 'lib/net/ssh/buffered_io.rb'
+    - 'lib/net/ssh/ruby_compat.rb'
+    - 'lib/net/ssh/test/socket.rb'
+    - 'lib/net/ssh/transport/ctr.rb'
+    - 'lib/net/ssh/transport/hmac/abstract.rb'
+    - 'lib/net/ssh/transport/identity_cipher.rb'
+    - 'test/connection/test_session.rb'
+
+# Offense count: 2
+Naming/BinaryOperatorParameterName:
+  Exclude:
+    - 'lib/net/ssh/buffer.rb'
+    - 'lib/net/ssh/version.rb'
+
+# Offense count: 4
+Naming/MemoizedInstanceVariableName:
+  Exclude:
+    - 'lib/net/ssh/transport/openssl.rb'
+    - 'test/authentication/test_key_manager.rb'
+
+# Offense count: 1
+Lint/LiteralAsCondition:
+  Exclude:
+    - 'lib/net/ssh/authentication/pageant.rb'
+
+# Offense count: 3
+Style/MultipleComparison:
+  Exclude:
+    - 'lib/net/ssh/authentication/pageant.rb'
+    - 'lib/net/ssh/known_hosts.rb'
+
+# Offense count: 1
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: annotated, template, unannotated
+Style/FormatStringToken:
+  Exclude:
+    - 'lib/net/ssh/loggable.rb'
+
+# Offense count: 7
+# Configuration parameters: Blacklist.
+# Blacklist: END, (?-mix:EO[A-Z]{1})
+Naming/HeredocDelimiterNaming:
+  Exclude:
+    - 'test/authentication/test_agent.rb'
+    - 'test/authentication/test_certificate.rb'
+    - 'test/authentication/test_ed25519.rb'
+    - 'test/integration/test_agent.rb'
+    - 'test/test_key_factory.rb'
+
+# Offense count: 3
+# Configuration parameters: MaximumRangeSize.
+Lint/MissingCopEnableDirective:
+  Exclude:
+    - 'test/authentication/test_agent.rb'
+    - 'test/authentication/test_certificate.rb'
+    - 'test/integration/test_agent.rb'
+
+
+# Offense count: 7
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: auto_detection, squiggly, active_support, powerpack, unindent
+Layout/IndentHeredoc:
+  Exclude:
+    - 'test/authentication/test_agent.rb'
+    - 'test/authentication/test_certificate.rb'
+    - 'test/authentication/test_ed25519.rb'
+    - 'test/integration/test_agent.rb'
+    - 'test/test_key_factory.rb'
+
+# Offense count: 2
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyleAlignWith, AutoCorrect, Severity.
+# SupportedStylesAlignWith: start_of_line, def
+Layout/DefEndAlignment:
+  Exclude:
+    - 'test/transport/hmac/test_sha2_256.rb'
+    - 'test/transport/hmac/test_sha2_512.rb'
+
+# Offense count: 3
+Style/CommentedKeyword:
+  Exclude:
+    - 'test/connection/test_session.rb'
+    - 'test/integration/test_forward.rb'
 
 # Offense count: 8
 Lint/HandleExceptions:
@@ -56,11 +133,6 @@ Lint/ImplicitStringConcatenation:
   Exclude:
     - 'lib/net/ssh/transport/kex/diffie_hellman_group14_sha1.rb'
     - 'lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb'
-
-# Offense count: 1
-Lint/LiteralInCondition:
-  Exclude:
-    - 'lib/net/ssh/authentication/pageant.rb'
 
 # Offense count: 2
 Lint/Loop:
@@ -201,7 +273,7 @@ Performance/RedundantMatch:
     - 'lib/net/ssh/transport/server_version.rb'
 
 # Offense count: 13
-Style/AccessorMethodName:
+Naming/AccessorMethodName:
   Exclude:
     - 'lib/net/ssh/authentication/methods/password.rb'
     - 'lib/net/ssh/authentication/pageant.rb'
@@ -220,32 +292,11 @@ Style/Alias:
     - 'lib/net/ssh/connection/session.rb'
     - 'lib/net/ssh/service/forward.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/AlignArray:
-  Exclude:
-    - 'lib/net/ssh/proxy/socks5.rb'
-
-# Offense count: 25
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle, SupportedLastArgumentHashStyles.
-# SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
-Style/AlignHash:
-  Exclude:
-    - 'lib/net/ssh/transport/algorithms.rb'
-    - 'test/connection/test_channel.rb'
-    - 'test/integration/test_id_rsa_keys.rb'
-    - 'test/transport/kex/test_diffie_hellman_group1_sha1.rb'
-    - 'test/transport/kex/test_ecdh_sha2_nistp256.rb'
-    - 'test/transport/test_algorithms.rb'
-    - 'test/transport/test_cipher_factory.rb'
-    - 'test/transport/test_state.rb'
-
 # Offense count: 72
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
 # SupportedStyles: with_first_parameter, with_fixed_indentation
-Style/AlignParameters:
+Layout/AlignParameters:
   Enabled: false
 
 # Offense count: 33
@@ -313,22 +364,6 @@ Style/CaseEquality:
     - 'lib/net/ssh/buffer.rb'
     - 'lib/net/ssh/connection/session.rb'
 
-# Offense count: 42
-# Cop supports --auto-correct.
-# Configuration parameters: IndentWhenRelativeTo, SupportedStyles, IndentOneStep, IndentationWidth.
-# SupportedStyles: case, end
-Style/CaseIndentation:
-  Exclude:
-    - 'lib/net/ssh.rb'
-    - 'lib/net/ssh/authentication/methods/hostbased.rb'
-    - 'lib/net/ssh/authentication/methods/none.rb'
-    - 'lib/net/ssh/authentication/methods/password.rb'
-    - 'lib/net/ssh/authentication/methods/publickey.rb'
-    - 'lib/net/ssh/buffer.rb'
-    - 'lib/net/ssh/config.rb'
-    - 'lib/net/ssh/test/local_packet.rb'
-    - 'lib/net/ssh/test/packet.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/CharacterLiteral:
@@ -336,7 +371,7 @@ Style/CharacterLiteral:
     - 'test/test_buffer.rb'
 
 # Offense count: 12
-Style/ClassAndModuleCamelCase:
+Naming/ClassAndModuleCamelCase:
   Exclude:
     - 'lib/net/ssh/transport/hmac/md5_96.rb'
     - 'lib/net/ssh/transport/hmac/sha1_96.rb'
@@ -390,13 +425,6 @@ Style/CommentAnnotation:
     - 'lib/net/ssh/buffer.rb'
     - 'lib/net/ssh/config.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/CommentIndentation:
-  Exclude:
-    - 'test/integration/test_forward.rb'
-    - 'test/transport/test_server_version.rb'
-
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, SingleLineConditionsOnly.
@@ -412,7 +440,7 @@ Style/ConditionalAssignment:
     - 'lib/net/ssh/test/script.rb'
 
 # Offense count: 5
-Style/ConstantName:
+Naming/ConstantName:
   Exclude:
     - 'lib/net/ssh/authentication/pageant.rb'
     - 'lib/net/ssh/transport/kex/diffie_hellman_group14_sha1.rb'
@@ -443,80 +471,11 @@ Style/Documentation:
     - 'lib/net/ssh/transport/key_expander.rb'
     - 'lib/net/ssh/transport/openssl.rb'
 
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: leading, trailing
-Style/DotPosition:
-  Exclude:
-    - 'test/transport/test_algorithms.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/EachWithObject:
-  Exclude:
-    - 'lib/net/ssh/config.rb'
-    - 'lib/net/ssh/connection/session.rb'
-    - 'lib/net/ssh/service/forward.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/ElseAlignment:
-  Exclude:
-    - 'lib/net/ssh/packet.rb'
-
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAdjacentOneLineDefs.
-Style/EmptyLineBetweenDefs:
-  Exclude:
-    - 'lib/net/ssh/buffered_io.rb'
-    - 'lib/net/ssh/ruby_compat.rb'
-    - 'lib/net/ssh/transport/kex/ecdh_sha2_nistp384.rb'
-    - 'lib/net/ssh/transport/kex/ecdh_sha2_nistp521.rb'
-    - 'test/test_buffer.rb'
-    - 'test/test_key_factory.rb'
-
-# Offense count: 16
-# Cop supports --auto-correct.
-Style/EmptyLines:
-  Exclude:
-    - 'Rakefile'
-    - 'lib/net/ssh/buffered_io.rb'
-    - 'lib/net/ssh/connection/session.rb'
-    - 'lib/net/ssh/known_hosts.rb'
-    - 'lib/net/ssh/transport/cipher_factory.rb'
-    - 'lib/net/ssh/transport/packet_stream.rb'
-    - 'lib/net/ssh/transport/session.rb'
-    - 'test/authentication/methods/test_keyboard_interactive.rb'
-    - 'test/authentication/methods/test_password.rb'
-    - 'test/integration/test_ed25519_pkeys.rb'
-    - 'test/integration/test_id_rsa_keys.rb'
-    - 'test/test_config.rb'
-    - 'test/test_known_hosts.rb'
-    - 'test/transport/test_cipher_factory.rb'
-
-# Offense count: 39
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Style/EmptyLinesAroundClassBody:
-  Enabled: false
-
-# Offense count: 4
-# Cop supports --auto-correct.
-Style/EmptyLinesAroundMethodBody:
-  Exclude:
-    - 'lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha1.rb'
-    - 'lib/net/ssh/transport/openssl.rb'
-    - 'test/transport/hmac/test_sha2_256.rb'
-    - 'test/transport/hmac/test_sha2_512.rb'
-
 # Offense count: 209
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Style/EmptyLinesAroundModuleBody:
+Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
 # Offense count: 2
@@ -531,23 +490,6 @@ Style/EmptyLiteral:
 Style/EvenOdd:
   Exclude:
     - 'lib/net/ssh/buffer.rb'
-
-# Offense count: 17
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
-Style/ExtraSpacing:
-  Exclude:
-    - 'Rakefile'
-    - 'lib/net/ssh/authentication/methods/password.rb'
-    - 'lib/net/ssh/authentication/pageant.rb'
-    - 'lib/net/ssh/proxy/socks5.rb'
-    - 'lib/net/ssh/transport/hmac/sha2_256_96.rb'
-    - 'lib/net/ssh/transport/hmac/sha2_512_96.rb'
-    - 'test/authentication/test_key_manager.rb'
-    - 'test/integration/test_forward.rb'
-    - 'test/test_config.rb'
-    - 'test/test_key_factory.rb'
-    - 'test/transport/test_packet_stream.rb'
 
 # Offense count: 2
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -585,32 +527,19 @@ Style/IfUnlessModifier:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
 # SupportedStyles: special_inside_parentheses, consistent, align_brackets
-Style/IndentArray:
+Layout/IndentArray:
   Exclude:
     - 'lib/net/ssh/transport/openssl.rb'
 
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: IndentationWidth.
-Style/IndentAssignment:
+Layout/IndentAssignment:
   Exclude:
     - 'test/transport/kex/test_diffie_hellman_group1_sha1.rb'
     - 'test/transport/kex/test_ecdh_sha2_nistp256.rb'
     - 'test/transport/kex/test_ecdh_sha2_nistp384.rb'
     - 'test/transport/kex/test_ecdh_sha2_nistp521.rb'
-
-# Offense count: 227
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: normal, rails
-Style/IndentationConsistency:
-  Enabled: false
-
-# Offense count: 96
-# Cop supports --auto-correct.
-# Configuration parameters: Width.
-Style/IndentationWidth:
-  Enabled: false
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -620,7 +549,7 @@ Style/InfiniteLoop:
 
 # Offense count: 17
 # Cop supports --auto-correct.
-Style/LeadingCommentSpace:
+Layout/LeadingCommentSpace:
   Exclude:
     - 'test/integration/test_ed25519_pkeys.rb'
     - 'test/integration/test_forward.rb'
@@ -663,7 +592,7 @@ Style/MethodMissing:
 # Offense count: 24
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: snake_case, camelCase
-Style/MethodName:
+Naming/MethodName:
   Exclude:
     - 'lib/net/ssh/authentication/ed25519_loader.rb'
     - 'test/authentication/test_agent.rb'
@@ -684,7 +613,7 @@ Style/MultilineIfThen:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
 # SupportedStyles: aligned, indented
-Style/MultilineOperationIndentation:
+Layout/MultilineOperationIndentation:
   Exclude:
     - 'lib/net/ssh/authentication/pageant.rb'
     - 'lib/net/ssh/known_hosts.rb'
@@ -763,12 +692,6 @@ Style/NumericPredicate:
     - 'lib/net/ssh/transport/key_expander.rb'
     - 'test/transport/test_packet_stream.rb'
     - 'test_connection_close_shall_close_cannels.rb'
-
-# Offense count: 2
-Style/OpMethod:
-  Exclude:
-    - 'lib/net/ssh/buffer.rb'
-    - 'lib/net/ssh/version.rb'
 
 # Offense count: 15
 # Cop supports --auto-correct.
@@ -908,7 +831,7 @@ Style/SingleLineMethods:
 
 # Offense count: 16
 # Cop supports --auto-correct.
-Style/SpaceAfterColon:
+Layout/SpaceAfterColon:
   Exclude:
     - 'lib/net/ssh/authentication/ed25519.rb'
     - 'test/integration/test_ed25519_pkeys.rb'
@@ -916,44 +839,20 @@ Style/SpaceAfterColon:
 
 # Offense count: 254
 # Cop supports --auto-correct.
-Style/SpaceAfterComma:
+Layout/SpaceAfterComma:
   Enabled: false
 
 # Offense count: 132
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: space, no_space
-Style/SpaceAroundEqualsInParameterDefault:
+Layout/SpaceAroundEqualsInParameterDefault:
   Enabled: false
-
-# Offense count: 55
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment.
-Style/SpaceAroundOperators:
-  Enabled: false
-
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: space, no_space
-Style/SpaceBeforeBlockBraces:
-  Exclude:
-    - 'lib/net/ssh/authentication/session.rb'
-    - 'support/ssh_tunnel_bug.rb'
-    - 'test/authentication/test_agent.rb'
-    - 'test/connection/test_session.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-Style/SpaceBeforeComma:
-  Exclude:
-    - 'test/integration/test_forward.rb'
-    - 'test/integration/test_proxy.rb'
 
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment.
-Style/SpaceBeforeFirstArg:
+Layout/SpaceBeforeFirstArg:
   Exclude:
     - 'lib/net/ssh/transport/hmac/sha2_256_96.rb'
     - 'lib/net/ssh/transport/hmac/sha2_512_96.rb'
@@ -963,7 +862,7 @@ Style/SpaceBeforeFirstArg:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
 # SupportedStyles: space, no_space
-Style/SpaceInsideBlockBraces:
+Layout/SpaceInsideBlockBraces:
   Exclude:
     - 'lib/net/ssh/authentication/session.rb'
     - 'lib/net/ssh/transport/ctr.rb'
@@ -971,37 +870,6 @@ Style/SpaceInsideBlockBraces:
     - 'test/authentication/test_agent.rb'
     - 'test/authentication/test_key_manager.rb'
     - 'test/start/test_user_nil.rb'
-
-# Offense count: 22
-# Cop supports --auto-correct.
-Style/SpaceInsideBrackets:
-  Exclude:
-    - 'Rakefile'
-    - 'lib/net/ssh/transport/algorithms.rb'
-    - 'lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha1.rb'
-    - 'test/integration/test_forward.rb'
-    - 'test/start/test_options.rb'
-
-# Offense count: 69
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SupportedStyles.
-# SupportedStyles: space, no_space, compact
-Style/SpaceInsideHashLiteralBraces:
-  Enabled: false
-
-# Offense count: 13
-# Cop supports --auto-correct.
-Style/SpaceInsideParens:
-  Exclude:
-    - 'lib/net/ssh/transport/algorithms.rb'
-    - 'lib/net/ssh/transport/openssl.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/SpaceInsideRangeLiteral:
-  Exclude:
-    - 'lib/net/ssh/authentication/ed25519.rb'
-    - 'lib/net/ssh/transport/algorithms.rb'
 
 # Offense count: 22
 # Cop supports --auto-correct.
@@ -1040,34 +908,16 @@ Style/SymbolProc:
     - 'test/integration/test_forward.rb'
     - 'test/test/test_test.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/Tab:
-  Exclude:
-    - 'lib/net/ssh/config.rb'
-
 # Offense count: 39
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: final_newline, final_blank_line
-Style/TrailingBlankLines:
+Layout/TrailingBlankLines:
   Enabled: false
-
-# Offense count: 255
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
-# SupportedStyles: comma, consistent_comma, no_comma
-Style/TrailingCommaInLiteral:
-  Exclude:
-    - 'lib/net/ssh/key_factory.rb'
-    - 'lib/net/ssh/transport/cipher_factory.rb'
-    - 'lib/net/ssh/transport/kex.rb'
-    - 'lib/net/ssh/transport/openssl.rb'
-    - 'test/transport/test_packet_stream.rb'
 
 # Offense count: 66
 # Cop supports --auto-correct.
-Style/TrailingWhitespace:
+Layout/TrailingWhitespace:
   Enabled: false
 
 # Offense count: 1

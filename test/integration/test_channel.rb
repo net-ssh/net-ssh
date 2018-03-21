@@ -17,7 +17,7 @@ class TestChannel < NetSSHTest
   end
 
   def ssh_start_params(options = {})
-    [localhost, user, {keys: @key_id_rsa}.merge(options)]
+    [localhost, user, { keys: @key_id_rsa }.merge(options)]
   end
 
   def setup_ssh_env(&block)
@@ -91,7 +91,7 @@ class TestChannel < NetSSHTest
   def test_transport_close_should_remote_close_channels
     setup_ssh_env do
       Net::SSH.start(*ssh_start_params) do |ssh|
-        channel = ssh.open_channel do ||
+        channel = ssh.open_channel do
           ssh.transport.socket.close
         end
         remote_closed = nil
@@ -104,5 +104,4 @@ class TestChannel < NetSSHTest
       end
     end
   end
-
 end

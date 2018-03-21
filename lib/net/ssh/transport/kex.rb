@@ -10,11 +10,9 @@ module Net::SSH::Transport
     MAP = {
       'diffie-hellman-group-exchange-sha1' => DiffieHellmanGroupExchangeSHA1,
       'diffie-hellman-group1-sha1'         => DiffieHellmanGroup1SHA1,
-      'diffie-hellman-group14-sha1'        => DiffieHellmanGroup14SHA1,
+      'diffie-hellman-group14-sha1'        => DiffieHellmanGroup14SHA1
     }
-    if defined?(DiffieHellmanGroupExchangeSHA256)
-      MAP['diffie-hellman-group-exchange-sha256'] = DiffieHellmanGroupExchangeSHA256
-    end
+    MAP['diffie-hellman-group-exchange-sha256'] = DiffieHellmanGroupExchangeSHA256 if defined?(DiffieHellmanGroupExchangeSHA256)
     if defined?(OpenSSL::PKey::EC)
       require 'net/ssh/transport/kex/ecdh_sha2_nistp256'
       require 'net/ssh/transport/kex/ecdh_sha2_nistp384'

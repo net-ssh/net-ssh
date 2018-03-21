@@ -69,7 +69,6 @@ class TestConfig < NetSSHTest
     end
   end
 
-
   def test_for_should_load_all_files_and_translate_to_net_ssh_options
     config = Net::SSH::Config.for("test.host", [config(:exact_match), config(:wild_cards)])
     assert_equal 1234, config[:port]
@@ -146,7 +145,7 @@ class TestConfig < NetSSHTest
     assert_equal 123,       net_ssh[:number_of_password_prompts]
     assert_equal 4,         net_ssh[:keepalive_maxcount]
     assert_equal 2,         net_ssh[:keepalive_interval]
-    assert_equal true,         net_ssh[:keepalive]
+    assert_equal true, net_ssh[:keepalive]
   end
 
   def test_translate_should_turn_off_authentication_methods
@@ -314,25 +313,25 @@ class TestConfig < NetSSHTest
 
   private
 
-    def with_home_env(value,&block)
-      env_home_before = ENV['HOME']
-      begin
-        ENV['HOME'] = value
-        yield
-      ensure
-        ENV['HOME'] = env_home_before
-      end
+  def with_home_env(value,&block)
+    env_home_before = ENV['HOME']
+    begin
+      ENV['HOME'] = value
+      yield
+    ensure
+      ENV['HOME'] = env_home_before
     end
+  end
 
-    def config(name)
-      "test/configs/#{name}"
-    end
+  def config(name)
+    "test/configs/#{name}"
+  end
 
-    def with_config_from_data(data, &block)
-      Tempfile.open('config') do |f|
-        f.write(data)
-        f.close
-        yield(f.path)
-      end
+  def with_config_from_data(data, &block)
+    Tempfile.open('config') do |f|
+      f.write(data)
+      f.close
+      yield(f.path)
     end
+  end
 end

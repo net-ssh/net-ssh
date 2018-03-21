@@ -23,7 +23,7 @@ class TestHTTPProxy < NetSSHTest
   end
 
   def ssh_start_params(options)
-    [localhost, user, {keys: @key_id_rsa}.merge(options)]
+    [localhost, user, { keys: @key_id_rsa }.merge(options)]
   end
 
   def setup_ssh_env(&block)
@@ -59,7 +59,7 @@ class TestHTTPProxy < NetSSHTest
   end
 
   def with_http_tls_proxy_server(&block)
-    cert_name = [%w(CN localhost)]
+    cert_name = [%w[CN localhost]]
     proxy = WEBrick::HTTPProxyServer.new Port: 0, SSLEnable: true, SSLCertName: cert_name
     Thread.start { proxy.start }
     begin
