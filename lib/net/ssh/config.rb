@@ -34,6 +34,7 @@ module Net
     # * User => :user
     # * UserKnownHostsFile => :user_known_hosts_file
     # * NumberOfPasswordPrompts => :number_of_password_prompts
+    # * FingerprintHash => :fingerprint_hash
     #
     # Note that you will never need to use this class directly--you can control
     # whether the OpenSSH configuration files are read by passing the :config
@@ -196,6 +197,7 @@ module Net
             globalknownhostsfile: :global_known_hosts_file,
             hostkeyalias: :host_key_alias,
             identityfile: :keys,
+            fingerprinthash: :fingerprint_hash,
             port: :port,
             user: :user,
             userknownhostsfile: :user_known_hosts_file
