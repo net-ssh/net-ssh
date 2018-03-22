@@ -124,7 +124,8 @@ class TestConfig < NetSSHTest
       'sendenv'                 => "LC_*",
       'numberofpasswordprompts' => '123',
       'serveraliveinterval'     => '2',
-      'serveralivecountmax'     => '4'
+      'serveralivecountmax'     => '4',
+      'fingerprinthash'         => 'MD5'
     }
 
     net_ssh = Net::SSH::Config.translate(open_ssh)
@@ -145,6 +146,7 @@ class TestConfig < NetSSHTest
     assert_equal 123,       net_ssh[:number_of_password_prompts]
     assert_equal 4,         net_ssh[:keepalive_maxcount]
     assert_equal 2,         net_ssh[:keepalive_interval]
+    assert_equal 'MD5',     net_ssh[:fingerprint_hash]
     assert_equal true, net_ssh[:keepalive]
   end
 
@@ -302,7 +304,7 @@ class TestConfig < NetSSHTest
 
     assert_equal(original_default_auth_methods, Net::SSH::Config.default_auth_methods)
   end
-    
+
   def test_load_with_match_block
     config = Net::SSH::Config.load(config(:match), "test.host")
     net_ssh = Net::SSH::Config.translate(config)

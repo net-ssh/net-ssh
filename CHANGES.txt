@@ -4,6 +4,7 @@
 === 5.0.0.beta2
  * Support for sha256 pubkey fingerprint [Tom Maher, #585]
  * Don't try to load default_keys if key_data option is used [Josh Larson, #589]
+ * Added fingerprint_hash defaulting to SHA256 as fingerprint format, and MD5 can be used as an option [Miklós Fazekas, #591]
 
 === 5.0.0.beta1
 

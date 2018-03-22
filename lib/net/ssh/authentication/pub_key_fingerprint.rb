@@ -25,15 +25,18 @@ module Net
         # literal string +SHA256:+ is prepended.
         def fingerprint(algorithm='MD5')
           @fingerprint ||= {}
-          @fingerprint[algorithm] ||=
-            case algorithm.to_s.upcase
-            when 'MD5'
-              OpenSSL::Digest.hexdigest(algorithm, to_blob).scan(/../).join(":")
-            when 'SHA256'
-              "SHA256:#{Base64.encode64(OpenSSL::Digest.digest(algorithm, to_blob)).chomp.gsub(/=+\z/, '')}"
-            else
-              raise OpenSSL::Digest::DigestError, "unsupported ssh key digest #{algorithm}"
-            end
+          @fingerprint[algorithm] ||= PubKeyFingerprint.fingerprint(to_blob, algorithm)
+        end
+
+        def self.fingerprint(blob, algorithm='MD5')
+          case algorithm.to_s.upcase
+          when 'MD5'
+            OpenSSL::Digest.hexdigest(algorithm, blob).scan(/../).join(":")
+          when 'SHA256'
+            "SHA256:#{Base64.encode64(OpenSSL::Digest.digest(algorithm, blob)).chomp.gsub(/=+\z/, '')}"
+          else
+            raise OpenSSL::Digest::DigestError, "unsupported ssh key digest #{algorithm}"
+          end
         end
       end
     end

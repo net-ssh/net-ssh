@@ -3,7 +3,7 @@ require 'openssl'
 unless defined?(OpenSSL::PKey::EC)
   puts "Skipping tests for ecdh-sha2-nistp256 key exchange"
 else
-  require 'common'
+  require_relative '../../common'
   require 'transport/kex/test_diffie_hellman_group1_sha1'
   require 'net/ssh/transport/kex/ecdh_sha2_nistp256'
   require 'ostruct'
@@ -53,7 +53,7 @@ else
             assert_equal server_host_key.to_blob, data[:key].to_blob
 
             blob = b(:key, data[:key]).to_s
-            fingerprint = OpenSSL::Digest::MD5.hexdigest(blob).scan(/../).join(":")
+            fingerprint = "SHA256:#{Base64.encode64(OpenSSL::Digest.digest('SHA256', blob)).chomp.gsub(/=+\z/, '')}"
 
             assert_equal blob, data[:key_blob]
             assert_equal fingerprint, data[:fingerprint]
