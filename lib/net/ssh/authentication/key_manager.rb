@@ -182,6 +182,10 @@ module Net
           nil
         end
 
+        def no_keys?
+          key_files.empty? && key_data.empty?
+        end
+
         private
 
         # Prepares identities from user key_files for loading, preserving their order and sources.
