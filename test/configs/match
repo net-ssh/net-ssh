@@ -4,9 +4,6 @@ Host test.host
 Match all
   Compression yes
 
-Match !all
-  Port 1234
-
 Match unsupported
   Port 2345
 

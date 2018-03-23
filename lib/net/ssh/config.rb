@@ -122,7 +122,7 @@ module Net
               block_seen = true
               settings[key] = host
             elsif key == 'match'
-              block_matched = eval_match_condition(value, host, settings)
+              block_matched = eval_match_conditions(value, host, settings)
               block_seen = true
             elsif !block_seen
               case key
@@ -325,22 +325,33 @@ module Net
           str.scan(/([^"\s]+)?(?:"([^"]+)")?\s*/).map(&:join)
         end
 
-        def eval_match_condition(condition, host, settings)
-          if condition.start_with?('!')
-            negated = true
-            condition = condition[1..-1]
-          else
-            negated = false
-          end
+        def eval_match_conditions(condition, host, settings)
+          conditions = condition.split(/\s+/)
+          return true if conditions == ["all"]
 
-          condition_met =
-            case condition
-            when 'all'
-              true
+          conditions = conditions.each_slice(2)
+          matching = true
+          conditions.each do |(kind,exprs)|
+            case kind.downcase
+            when "all"
+              raise "all cannot be mixed with other conditions"
+            when "host"
+              if exprs.start_with?('!')
+                negated = true
+                exprs = exprs[1..-1]
+              else
+                negated = false
+              end
+              condition_met = false
+              exprs.split(",").each do |expr|
+                condition_met = condition_met || host =~ pattern2regex(expr)
+              end
+              matching = matching && negated ^ condition_met
+              # else
+              # warn "net-ssh: Unsupported expr in Match block: #{kind}"
             end
-
-          # return false for unsupported conditions
-          condition_met.nil? ? false : (negated ^ condition_met)
+          end
+          matching
         end
       end
     end

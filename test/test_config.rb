@@ -310,7 +310,55 @@ class TestConfig < NetSSHTest
     net_ssh = Net::SSH::Config.translate(config)
     assert_equal true, net_ssh[:forward_agent]
     assert_equal true, net_ssh[:compression]
-    assert_equal 22, net_ssh[:port]
+    assert_equal 2345, net_ssh[:port]
+  end
+
+  def test_load_with_match_block_with_host
+    data = %q{
+      Match Host foo
+        Port 1234
+        Compression no
+    }
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "bar")
+      assert_nil config['port']
+      config = Net::SSH::Config.load(f, "foo")
+      assert_equal 1234, config['port']
+    end
+  end
+
+  def test_load_with_match_block_with_hosts
+    data = %q{
+      Match Host foo,bar
+        Port 1234
+        Compression no
+    }
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "bar2")
+      assert_nil config['port']
+      config = Net::SSH::Config.load(f, "bar")
+      assert_equal 1234, config['port']
+      config = Net::SSH::Config.load(f, "foo")
+      assert_equal 1234, config['port']
+    end
+  end
+
+  def test_load_with_match_block_with_hosts_wildcard
+    data = %q{
+      Match Host foo,*.baz.com
+        Port 1234
+        Compression no
+    }
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "bar2")
+      assert_nil config['port']
+      config = Net::SSH::Config.load(f, "bbaz.com")
+      assert_nil config['port']
+      config = Net::SSH::Config.load(f, "bar.baz.com")
+      assert_equal 1234, config['port']
+      config = Net::SSH::Config.load(f, "foo")
+      assert_equal 1234, config['port']
+    end
   end
 
   private
