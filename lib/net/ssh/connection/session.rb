@@ -155,7 +155,7 @@ module Net
           if include_invisible
             channels.any?
           else
-            channels.any? { |id, ch| !ch[:invisible] }
+            channels.dup.any? { |id, ch| !ch[:invisible] }
           end
         end
     
