@@ -7,10 +7,10 @@ require 'net/ssh/transport/algorithms'
 require 'net/ssh/transport/constants'
 require 'net/ssh/transport/packet_stream'
 require 'net/ssh/transport/server_version'
-require 'net/ssh/verifiers/null'
-require 'net/ssh/verifiers/secure'
-require 'net/ssh/verifiers/strict'
-require 'net/ssh/verifiers/lenient'
+require 'net/ssh/verifiers/accept_new_or_local_tunnel'
+require 'net/ssh/verifiers/accept_new'
+require 'net/ssh/verifiers/always'
+require 'net/ssh/verifiers/never'
 
 module Net
   module SSH
@@ -275,30 +275,51 @@ module Net
         private
 
         # Instantiates a new host-key verification class, based on the value of
-        # the parameter. When true or nil, the default Lenient verifier is
-        # returned. If it is false, the Null verifier is returned, and if it is
-        # :very, the Strict verifier is returned. If it is :secure, the even more
-        # strict Secure verifier is returned. If the argument happens to respond
-        # to :verify, it is returned directly. Otherwise, an exception
-        # is raised.
-        def select_host_key_verifier(verify_host_key)
-          case verify_host_key
-          when true, nil then
-            Net::SSH::Verifiers::Lenient.new
-          when false then
-            Net::SSH::Verifiers::Null.new
-          when :very then
-            Net::SSH::Verifiers::Strict.new
+        # the parameter.
+        #
+        # Usually, the argument is a symbol like `:never` which corresponds to
+        # a verifier, like `::Net::SSH::Verifiers::Never`.
+        #
+        # - :never (very insecure)
+        # - :accept_new_or_local_tunnel (insecure)
+        # - :accept_new (insecure)
+        # - :always (secure)
+        #
+        # If the argument happens to respond to :verify, it is returned
+        # directly. Otherwise, an exception is raised.
+        #
+        # Values false, true, and :very were deprecated in
+        # [#595](https://github.com/net-ssh/net-ssh/pull/595)
+        def select_host_key_verifier(verifier)
+          case verifier
+          when false
+            Kernel.warn('verify_host_key: false is deprecated, use :never')
+            Net::SSH::Verifiers::Never.new
+          when :never then
+            Net::SSH::Verifiers::Never.new
+          when true
+            Kernel.warn('verify_host_key: true is deprecated, use :accept_new_or_local_tunnel')
+            Net::SSH::Verifiers::AcceptNewOrLocalTunnel.new
+          when :accept_new_or_local_tunnel, nil then
+            Net::SSH::Verifiers::AcceptNewOrLocalTunnel.new
+          when :very
+            Kernel.warn('verify_host_key: :very is deprecated, use :accept_new')
+            Net::SSH::Verifiers::AcceptNew.new
+          when :accept_new then
+            Net::SSH::Verifiers::AcceptNew.new
           when :secure then
-            Net::SSH::Verifiers::Secure.new
+            Kernel.warn('verify_host_key: :secure is deprecated, use :always')
+            Net::SSH::Verifiers::Always.new
+          when :always then
+            Net::SSH::Verifiers::Always.new
           else
-            if verify_host_key.respond_to?(:verify)
-              verify_host_key
+            if verifier.respond_to?(:verify)
+              verifier
             else
               raise(
                 ArgumentError,
                 "Invalid argument to :verify_host_key (or deprecated " \
-                ":paranoid): #{verify_host_key.inspect}"
+                ":paranoid): #{verifier.inspect}"
               )
             end
           end
