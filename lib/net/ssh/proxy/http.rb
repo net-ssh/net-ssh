@@ -51,7 +51,8 @@ module Net
         # proxy that was requested when the socket factory was instantiated.
         def open(host, port, connection_options)
           socket = establish_connection(connection_options[:timeout])
-          socket.write "CONNECT #{host}:#{port} HTTP/1.0\r\n"
+          socket.write "CONNECT #{host}:#{port} HTTP/1.1\r\n"
+          socket.write "Host: #{host}:#{port}\r\n"
     
           if options[:user]
             credentials = ["#{options[:user]}:#{options[:password]}"].pack("m*").gsub(/\s/, "")
