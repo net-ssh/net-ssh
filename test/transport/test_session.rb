@@ -19,23 +19,72 @@ module Transport
     def test_constructor_defaults
       assert_equal TEST_HOST, session.host
       assert_equal TEST_PORT, session.port
-      assert_instance_of Net::SSH::Verifiers::Lenient, session.host_key_verifier
+      assert_instance_of(
+        Net::SSH::Verifiers::AcceptNewOrLocalTunnel,
+        session.host_key_verifier
+      )
     end
 
-    def test_verify_host_key_true_uses_lenient_verifier
-      assert_instance_of Net::SSH::Verifiers::Lenient, session(verify_host_key: true).host_key_verifier
+    def test_verify_host_key_true_uses_accept_new_or_local_tunnel_verifier
+      Kernel.expects(:warn).with(
+        'verify_host_key: true is deprecated, use :accept_new_or_local_tunnel'
+      )
+      assert_instance_of(
+        Net::SSH::Verifiers::AcceptNewOrLocalTunnel,
+        session(verify_host_key: true).host_key_verifier
+      )
     end
 
-    def test_verify_host_key_very_uses_strict_verifier
-      assert_instance_of Net::SSH::Verifiers::Strict, session(verify_host_key: :very).host_key_verifier
+    def test_verify_host_key_accept_new_or_local_tunnel_uses_accept_new_or_local_tunnel_verifier
+      assert_instance_of(
+        Net::SSH::Verifiers::AcceptNewOrLocalTunnel,
+        session(verify_host_key: :accept_new_or_local_tunnel).host_key_verifier
+      )
     end
 
-    def test_verify_host_key_secure_uses_secure_verifier
-      assert_instance_of Net::SSH::Verifiers::Secure, session(verify_host_key: :secure).host_key_verifier
+    def test_verify_host_key_nil_uses_accept_new_or_local_tunnel_verifier
+      assert_instance_of(
+        Net::SSH::Verifiers::AcceptNewOrLocalTunnel,
+        session(verify_host_key: nil).host_key_verifier
+      )
     end
 
-    def test_verify_host_key_false_uses_null_verifier
-      assert_instance_of Net::SSH::Verifiers::Null, session(verify_host_key: false).host_key_verifier
+    def test_verify_host_key_very_uses_accept_new_verifier
+      Kernel.expects(:warn).with('verify_host_key: :very is deprecated, use :accept_new')
+      assert_instance_of(
+        Net::SSH::Verifiers::AcceptNew,
+        session(verify_host_key: :very).host_key_verifier
+      )
+    end
+
+    def test_verify_host_key_accept_new_uses_accept_new_verifier
+      assert_instance_of(
+        Net::SSH::Verifiers::AcceptNew,
+        session(verify_host_key: :accept_new).host_key_verifier
+      )
+    end
+
+    def test_verify_host_key_secure_uses_always_verifier
+      Kernel.expects(:warn).with('verify_host_key: :secure is deprecated, use :always')
+      assert_instance_of(
+        Net::SSH::Verifiers::Always,
+        session(verify_host_key: :secure).host_key_verifier
+      )
+    end
+
+    def test_verify_host_key_false_uses_never_verifier
+      Kernel.expects(:warn).with('verify_host_key: false is deprecated, use :never')
+      assert_instance_of(
+        Net::SSH::Verifiers::Never,
+        session(verify_host_key: false).host_key_verifier
+      )
+    end
+
+    def test_verify_host_key_null_uses_never_verifier
+      assert_instance_of(
+        Net::SSH::Verifiers::Never,
+        session(verify_host_key: :never).host_key_verifier
+      )
     end
 
     def test_unknown_verify_host_key_value_raises_exception_if_value_does_not_respond_to_verify

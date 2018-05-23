@@ -1,9 +1,9 @@
 require 'net/ssh/errors'
 require 'net/ssh/known_hosts'
-require 'net/ssh/verifiers/secure'
+require 'net/ssh/verifiers/always'
 
-module Net 
-  module SSH 
+module Net
+  module SSH
     module Verifiers
 
       # Does a strict host verification, looking the server up in the known
@@ -12,7 +12,7 @@ module Net
       # server. If the server does appear at least once, but the key given does
       # not match any known for the server, an exception will be raised (HostKeyMismatch).
       # Otherwise, this returns true.
-      class Strict < Secure
+      class AcceptNew < Always
         def verify(arguments)
           begin
             super

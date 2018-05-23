@@ -333,7 +333,7 @@ Style/BlockDelimiters:
     - 'lib/net/ssh/proxy/command.rb'
     - 'lib/net/ssh/transport/ctr.rb'
     - 'test/test_buffer.rb'
-    - 'test/verifiers/test_secure.rb'
+    - 'test/verifiers/test_always.rb'
 
 # Offense count: 8
 # Cop supports --auto-correct.
@@ -554,7 +554,7 @@ Style/LineEndConcatenation:
     - 'lib/net/ssh/transport/kex/diffie_hellman_group14_sha1.rb'
     - 'lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb'
     - 'lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb'
-    - 'lib/net/ssh/verifiers/secure.rb'
+    - 'lib/net/ssh/verifiers/always.rb'
 
 # Offense count: 12
 # Cop supports --auto-correct.
@@ -611,7 +611,7 @@ Layout/MultilineOperationIndentation:
     - 'lib/net/ssh/transport/algorithms.rb'
     - 'lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb'
     - 'lib/net/ssh/transport/state.rb'
-    - 'lib/net/ssh/verifiers/secure.rb'
+    - 'lib/net/ssh/verifiers/always.rb'
     - 'test/authentication/methods/test_hostbased.rb'
     - 'test/authentication/methods/test_publickey.rb'
 
@@ -736,7 +736,7 @@ Style/Proc:
     - 'lib/net/ssh/connection/session.rb'
     - 'lib/net/ssh/test/channel.rb'
     - 'lib/net/ssh/transport/algorithms.rb'
-    - 'lib/net/ssh/verifiers/secure.rb'
+    - 'lib/net/ssh/verifiers/always.rb'
     - 'test/authentication/methods/test_hostbased.rb'
     - 'test/authentication/methods/test_publickey.rb'
     - 'test/connection/test_channel.rb'
@@ -755,7 +755,7 @@ Style/RaiseArgs:
 Style/RedundantBegin:
   Exclude:
     - 'lib/net/ssh/buffered_io.rb'
-    - 'lib/net/ssh/verifiers/strict.rb'
+    - 'lib/net/ssh/verifiers/accept_new.rb'
     - 'test/manual/test_pageant.rb'
 
 # Offense count: 1
@@ -825,7 +825,7 @@ Layout/SpaceAfterColon:
   Exclude:
     - 'lib/net/ssh/authentication/ed25519.rb'
     - 'test/integration/test_ed25519_pkeys.rb'
-    - 'test/verifiers/test_secure.rb'
+    - 'test/verifiers/test_always.rb'
 
 # Offense count: 254
 # Cop supports --auto-correct.

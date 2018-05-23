@@ -195,8 +195,12 @@ module Net
     # * :agent_socket_factory => enables the user to pass a lambda/block that will serve as the socket factory
     #    Net::SSH.start(host,user,agent_socket_factory: ->{ UNIXSocket.open('/foo/bar') })
     #    example: ->{ UNIXSocket.open('/foo/bar')}
-    # * :verify_host_key => either false, true, :very, or :secure specifying how
-    #   strict host-key verification should be (in increasing order here).
+    # * :verify_host_key => specify how strict host-key verification should be.
+    #   In order of increasing strictness:
+    #   * :never (very insecure) ::Net::SSH::Verifiers::Never
+    #   * :accept_new_or_local_tunnel (insecure) ::Net::SSH::Verifiers::AcceptNewOrLocalTunnel
+    #   * :accept_new (insecure) ::Net::SSH::Verifiers::AcceptNew
+    #   * :always (secure) ::Net::SSH::Verifiers::Always
     #   You can also provide an own Object which responds to +verify+. The argument
     #   given to +verify+ is a hash consisting of the +:key+, the +:key_blob+,
     #   the +:fingerprint+ and the +:session+. Returning true accepts the host key,
