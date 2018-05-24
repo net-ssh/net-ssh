@@ -1,5 +1,8 @@
-=== 5.0.0
+=== 5.0.0.rc1
  * Breaking change: ed25519 now requires ed25519 gem instead of RbNaCl gem [#563]
+ * Fix larger than 4GB file transfers [#599]
+ * Update HTTP proxy to version 1.1 [Connor Dunn, #597]
+ * Verify_host_key options rename (true, false, :very, :secure depreacted new equivalents are :never, :accept_new_or_local_tunnel :accept_new :always) [Jared Beck, #595]
 
 === 5.0.0.beta2
  * Support for sha256 pubkey fingerprint [Tom Maher, #585]
