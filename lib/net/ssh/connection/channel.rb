@@ -629,15 +629,18 @@ module Net
             error { "channel success received with no pending request to handle it (bug?)" }
           end
         end
-    
+
         private
-    
+
         # Runs the SSH event loop until the remote confirmed channel open
         # experimental api
         def wait_until_open_confirmed
           connection.loop { !remote_id }
         end
-    
+
+        LOCAL_WINDOW_SIZE_INCREMENT = 0x20000
+        GOOD_LOCAL_MAXIUMUM_WINDOW_SIZE = 10 * LOCAL_WINDOW_SIZE_INCREMENT
+
         # Updates the local window size by the given amount. If the window
         # size drops to less than half of the local maximum (an arbitrary
         # threshold), a CHANNEL_WINDOW_ADJUST message will be sent to the
@@ -646,12 +649,12 @@ module Net
           @local_window_size -= size
           if local_window_size < local_maximum_window_size / 2
             connection.send_message(Buffer.from(:byte, CHANNEL_WINDOW_ADJUST,
-              :long, remote_id, :long, 0x20000))
-            @local_window_size += 0x20000
-            @local_maximum_window_size += 0x20000
+              :long, remote_id, :long, LOCAL_WINDOW_SIZE_INCREMENT))
+            @local_window_size += LOCAL_WINDOW_SIZE_INCREMENT
+            @local_maximum_window_size += LOCAL_WINDOW_SIZE_INCREMENT if @local_maximum_window_size < @local_window_size || @local_maximum_window_size < GOOD_LOCAL_MAXIUMUM_WINDOW_SIZE
           end
         end
-    
+
         # Gets an +Array+ of local environment variables in the remote process'
         # environment.
         # A variable name can either be described by a +Regexp+ or +String+.
