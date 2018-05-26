@@ -163,10 +163,10 @@ module Net
 
             sig_buffer = Net::SSH::Buffer.new(buffer.read_string)
             sig_type = sig_buffer.read_string
-            if sig_type != algorithms.host_key
+            if sig_type != algorithms.host_key_format
               raise Net::SSH::Exception,
                 "host key algorithm mismatch for signature " +
-                "'#{sig_type}' != '#{algorithms.host_key}'"
+                "'#{sig_type}' != '#{algorithms.host_key_format}'"
             end
             result[:server_sig] = sig_buffer.read_string
 
