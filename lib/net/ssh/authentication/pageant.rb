@@ -45,20 +45,20 @@ module Net
           if RUBY_VERSION < "1.9"
             extend DL::Importable
     
-            dlload 'user32'
-            dlload 'kernel32'
-            dlload 'advapi32'
+            dlload 'user32.dll'
+            dlload 'kernel32.dll'
+            dlload 'advapi32.dll'
     
             SIZEOF_DWORD = DL.sizeof('L')
           elsif RUBY_VERSION < "2.1"
             extend DL::Importer
-            dlload 'user32','kernel32', 'advapi32'
+            dlload 'user32.dll','kernel32.dll', 'advapi32.dll'
             include DL::Win32Types
     
             SIZEOF_DWORD = DL::SIZEOF_LONG
           else
             extend Fiddle::Importer
-            dlload 'user32','kernel32', 'advapi32'
+            dlload 'user32.dll','kernel32.dll', 'advapi32.dll'
             include Fiddle::Win32Types
             SIZEOF_DWORD = Fiddle::SIZEOF_LONG
           end
