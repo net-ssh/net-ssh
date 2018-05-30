@@ -1,10 +1,20 @@
-=== 5.0.0.rc1
+=== 5.0.0
+
  * Breaking change: ed25519 now requires ed25519 gem instead of RbNaCl gem [#563]
- * Fix larger than 4GB file transfers [#599]
- * Update HTTP proxy to version 1.1 [Connor Dunn, #597]
  * Verify_host_key options rename (true, false, :very, :secure depreacted new equivalents are :never, :accept_new_or_local_tunnel :accept_new :always) [Jared Beck, #595]
 
+=== 5.0.0.rc2 
+
+ * Add .dll extensions to dlopen on cygwin [#603]
+ * Fix host certificate validation [#601]
+
+=== 5.0.0.rc1
+
+ * Fix larger than 4GB file transfers [#599]
+ * Update HTTP proxy to version 1.1 [Connor Dunn, #597]
+
 === 5.0.0.beta2
+
  * Support for sha256 pubkey fingerprint [Tom Maher, #585]
  * Don't try to load default_keys if key_data option is used [Josh Larson, #589]
  * Added fingerprint_hash defaulting to SHA256 as fingerprint format, and MD5 can be used as an option [Miklós Fazekas, #591]
