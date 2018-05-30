@@ -106,7 +106,7 @@ else
         end
 
         def algorithms(options={})
-          @algorithms ||= OpenStruct.new(host_key: options[:server_host_key] || "ecdsa-sha2-nistp256")
+          @algorithms ||= OpenStruct.new(host_key: options[:server_host_key] || "ecdsa-sha2-nistp256", host_key_format: options[:server_host_key] || "ecdsa-sha2-nistp256")
         end
 
         def connection
