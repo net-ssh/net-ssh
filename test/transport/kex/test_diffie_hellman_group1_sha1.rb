@@ -109,7 +109,7 @@ module Transport
       end
 
       def algorithms(options={})
-        @algorithms ||= OpenStruct.new(host_key: options[:host_key] || "ssh-rsa")
+        @algorithms ||= OpenStruct.new(host_key: options[:host_key] || "ssh-rsa", host_key_format: options[:host_key] || "ssh-rsa")
       end
 
       def connection

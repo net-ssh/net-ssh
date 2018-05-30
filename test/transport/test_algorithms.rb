@@ -1,4 +1,5 @@
 require_relative '../common'
+require 'logger'
 require 'net/ssh/transport/algorithms'
 
 module Transport
@@ -266,6 +267,11 @@ module Transport
       )
 
       assert string_io.string.include?(%(unsupported algorithm: `["d"]'))
+    end
+
+    def test_host_key_format
+      algorithms(host_key: 'ssh-rsa-cert-v01@openssh.com').instance_eval { @host_key = 'ssh-rsa-cert-v01@openssh.com' }
+      assert_equal 'ssh-rsa', algorithms.host_key_format
     end
 
     private

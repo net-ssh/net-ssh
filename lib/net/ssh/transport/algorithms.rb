@@ -165,21 +165,30 @@ module Net
         def pending?
           @pending
         end
-    
+
         # Returns true if no exchange is pending, and otherwise returns true or
         # false depending on whether the given packet is of a type that is allowed
         # during a key exchange.
         def allow?(packet)
           !pending? || Algorithms.allowed_packet?(packet)
         end
-    
+
         # Returns true if the algorithms have been negotiated at all.
         def initialized?
           @initialized
         end
-    
+
+        def host_key_format
+          case host_key
+          when "ssh-rsa-cert-v01@openssh.com", "ssh-rsa-cert-v00@openssh.com"
+            "ssh-rsa"
+          else
+            host_key
+          end
+        end
+
         private
-    
+
         # Sends a KEXINIT packet to the server. If a server KEXINIT has already
         # been received, this will then invoke #proceed! to proceed with the key
         # exchange, otherwise it returns immediately (but sets the object to the
