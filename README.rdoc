@@ -3,7 +3,7 @@
 {<img src="https://travis-ci.org/net-ssh/net-ssh.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/net-ssh/net-ssh]
 {<img src="https://codecov.io/gh/net-ssh/net-ssh/branch/master/graph/badge.svg" alt="Coverage status" />}[https://codecov.io/gh/net-ssh/net-ssh]
 
-= Net::SSH 4.x
+= Net::SSH 5.x
 
 * Docs: http://net-ssh.github.com/net-ssh
 * Issues: https://github.com/net-ssh/net-ssh/issues
@@ -29,7 +29,7 @@ In a nutshell:
 
   require 'net/ssh'
 
-  Net::SSH.start('host', 'user', :password => "password") do |ssh|
+  Net::SSH.start('host', 'user', password: "password") do |ssh|
     # capture all stderr and stdout output from a remote process
     output = ssh.exec!("hostname")
     puts output
