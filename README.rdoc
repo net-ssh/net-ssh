@@ -112,7 +112,7 @@ For ed25519 public key auth support your bundle file should contain ```ed25519``
 
 * Ruby 1.8.x is supported up until the net-ssh 2.5.1 release.
 * Ruby 1.9.x is supported up until the net-ssh 2.9.x release.
-* Current net-ssh releases require Ruby 2.0 or later.
+* See {net-ssh.gemspec}[https://github.com/net-ssh/net-ssh/blob/master/net-ssh.gemspec] for current versions ruby requirements
 
 == RUNNING TESTS
 
