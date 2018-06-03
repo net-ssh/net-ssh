@@ -1,4 +1,4 @@
-require 'common'
+require_relative '../common'
 require 'net/ssh/authentication/session'
 
 module Authentication
@@ -281,13 +281,13 @@ Euy/YLiXxrwHUo1KecuH04+/s6OxEzMnrYxXqvcK9SwcNTwAkDaBUw==
     def default_public_key
       <<-EOF
 -----BEGIN PUBLIC KEY-----
-MIIBMDANBgkqhkiG9w0BAQEFAAOCAR0AMIIBGAKCARQHc3NoLXJzYQAAAAMBAAEA
-AAEBAMW89K6fmezJJTLUpH4kX3HjnkzoToJBqqJwi9QdDEc0owN8n6J7xKG0DWL+
-7skPmTBk/US+wJVElMXlhdNAPzupLsH7OCZT0vxTD8vwdldFJqLXk6eNC5nJWR6S
-mbPcipoJH2uY/CY73f1b1da/w25B42XrSHtO6Upz9xDgBu7I8le8qxz75IBuYf1Z
-9lNfb07L2CBDXI+Tgixe3lEiWf+puKnpvsGeP/XGruRNree6EvG03eZNNCZ9BPqk
-VYqJy1S7R1yp69J1pRj4py/lISgTISwOjpZuWPFu+7GHFEr5STMuBpqSL51hSkBO
-b4puMyrd3QRduekD5kQlj00PrMc=
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxbz0rp+Z7MklMtSkfiRf
+ceOeTOhOgkGqonCL1B0MRzSjA3yfonvEobQNYv7uyQ+ZMGT9RL7AlUSUxeWF00A/
+O6kuwfs4JlPS/FMPy/B2V0UmoteTp40LmclZHpKZs9yKmgkfa5j8Jjvd/VvV1r/D
+bkHjZetIe07pSnP3EOAG7sjyV7yrHPvkgG5h/Vn2U19vTsvYIENcj5OCLF7eUSJZ
+/6m4qem+wZ4/9cau5E2t57oS8bTd5k00Jn0E+qRVionLVLtHXKnr0nWlGPinL+Uh
+KBMhLA6Olm5Y8W77sYcUSvlJMy4GmpIvnWFKQE5vim4zKt3dBF256QPmRCWPTQ+s
+xwIDAQAB
 -----END PUBLIC KEY-----
       EOF
     end
