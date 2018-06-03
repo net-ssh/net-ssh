@@ -1,9 +1,13 @@
+=== 5.0.1
+
+  * default_keys were not loaded even if no keys or key_data options specified [#607]
+
 === 5.0.0
 
  * Breaking change: ed25519 now requires ed25519 gem instead of RbNaCl gem [#563]
  * Verify_host_key options rename (true, false, :very, :secure depreacted new equivalents are :never, :accept_new_or_local_tunnel :accept_new :always) [Jared Beck, #595]
 
-=== 5.0.0.rc2 
+=== 5.0.0.rc2
 
  * Add .dll extensions to dlopen on cygwin [#603]
  * Fix host certificate validation [#601]
