@@ -27,9 +27,9 @@ module Net
           "3des-ctr"                    => "des-ede3",
           "blowfish-ctr"                => "bf-ecb",
     
-          "aes256-ctr"                  => "aes-256-ctr",
-          "aes192-ctr"                  => "aes-192-ctr",
-          "aes128-ctr"                  => "aes-128-ctr",
+          "aes256-ctr"                  => ::OpenSSL::Cipher.ciphers.include?("aes-256-ctr") ? "aes-256-ctr" : "aes-256-ecb",
+          "aes192-ctr"                  => ::OpenSSL::Cipher.ciphers.include?("aes-192-ctr") ? "aes-192-ctr" : "aes-192-ecb",
+          "aes128-ctr"                  => ::OpenSSL::Cipher.ciphers.include?("aes-128-ctr") ? "aes-128-ctr" : "aes-128-ecb",
           "cast128-ctr"                 => "cast5-ecb",
     
           "none"                        => "none"
