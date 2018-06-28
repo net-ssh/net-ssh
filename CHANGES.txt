@@ -1,3 +1,7 @@
+=== 5.0.2
+
+  * fix ctr for jruby [#612]
+
 === 5.0.1
 
   * default_keys were not loaded even if no keys or key_data options specified [#607]
