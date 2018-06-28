@@ -1,6 +1,6 @@
 === 5.0.2
 
-  * fix net/ssh 5+ for jruby [#612]
+  * fix ctr for jruby [#612]
 
 === 5.0.1
 
