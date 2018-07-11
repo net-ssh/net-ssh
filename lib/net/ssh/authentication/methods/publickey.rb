@@ -82,6 +82,8 @@ module Net
 
             when USERAUTH_FAILURE
               return false
+            when USERAUTH_SUCCESS
+              return true
 
             else
               raise Net::SSH::Exception, "unexpected reply to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
