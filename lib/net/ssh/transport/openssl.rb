@@ -225,6 +225,22 @@ module OpenSSL
 
           return Net::SSH::Buffer.from(:bignum, sig_r, :bignum, sig_s).to_s
         end
+
+        class Point
+          # Returns the description of this key type used by the
+          # SSH2 protocol, like "ecdsa-sha2-nistp256"
+          def ssh_type
+            "ecdsa-sha2-#{CurveNameAliasInv[self.group.curve_name]}"
+          end
+
+          # Converts the key to a blob, according to the SSH2 protocol.
+          def to_blob
+            @blob ||= Net::SSH::Buffer.from(:string, ssh_type,
+                                            :string, CurveNameAliasInv[self.group.curve_name],
+                                            :mstring, self.to_bn.to_s(2)).to_s
+            @blob
+          end
+        end
       end
     else
       class OpenSSL::PKey::ECError < RuntimeError

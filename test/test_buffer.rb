@@ -411,6 +411,14 @@ class TestBuffer < NetSSHTest
       buffer.write_key(key)
       assert_equal "start\000\000\000\023ecdsa-sha2-nistp521\000\000\000\bnistp521\000\000\000\205\004\001\214\240:\005}T\217\024\310\2647\0049o\372\266\367z\317\256~\262\034\217\357\234\251\307=A\311\221\237m\3736%\221\257\375M+-\200*(\354\021\320\002\265\225\350\304\360\264\307\325l\366'\202\332\204~\000\323\201\271\2671>]\240\2109\301bo2\300\t\246\225{\017\344\034\2003^\344\367\260\263[\223\276g\373\216o\021\224\3178h]3\\\216\252@rHQT\247g\207\241K\376\262\236\225=-\005\210\276", buffer.to_s
     end
+
+    def test_write_ec_point_should_write_argument_to_end_of_buffer
+      buffer = new("start")
+      key = OpenSSL::PKey::EC::Point.new(OpenSSL::PKey::EC.new(OpenSSL::PKey::EC::CurveNameAlias['nistp256']).group)
+
+      buffer.write_key(key)
+      assert_equal "start\x00\x00\x00\x13ecdsa-sha2-nistp256\x00\x00\x00\bnistp256\x00\x00\x00\x00", buffer.to_s
+    end
   end
 
   private
