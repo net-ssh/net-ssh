@@ -172,6 +172,11 @@ module Transport
       assert_raises(Net::SSH::Disconnect) { stream.next_packet(:block) }
     end
 
+    def test_next_packet_when_blocking_times_out
+      IO.expects(:select).with([stream], nil, nil, 7).returns(nil)
+      assert_raises(Net::SSH::ConnectionTimeout) { stream.next_packet(:block, 7) }
+    end
+
     def test_next_packet_fails_with_invalid_argument
       assert_raises(ArgumentError) { stream.next_packet("invalid") }
     end
