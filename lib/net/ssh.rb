@@ -147,7 +147,7 @@ module Net
     # * :keys_only => set to +true+ to use only private keys from +keys+ and
     #   +key_data+ parameters, even if ssh-agent offers more identities. This
     #   option is intended for situations where ssh-agent offers many different
-    #   identites.
+    #   identities.
     # * :logger => the logger instance to use when logging
     # * :max_pkt_size => maximum size we tell the other side that is supported per
     #   packet. Default is 0x8000 (32768 bytes). Increase to 0x10000 (65536 bytes)
