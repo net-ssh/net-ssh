@@ -1,6 +1,7 @@
 require_relative '../common'
 require 'net/ssh/transport/session'
 require 'net/ssh/proxy/http'
+require 'logger'
 
 # mocha adds #verify to Object, which throws off the host-key-verifier part of
 # these tests.
