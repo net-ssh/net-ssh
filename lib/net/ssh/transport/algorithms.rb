@@ -35,7 +35,7 @@ module Net
                   diffie-hellman-group-exchange-sha256],
           encryption: %w[aes128-cbc 3des-cbc blowfish-cbc cast128-cbc
                          aes192-cbc aes256-cbc rijndael-cbc@lysator.liu.se
-                         idea-cbc arcfour128 arcfour256 arcfour
+                         idea-cbc
                          aes128-ctr aes192-ctr aes256-ctr
                          cast128-ctr blowfish-ctr 3des-ctr none],
     
