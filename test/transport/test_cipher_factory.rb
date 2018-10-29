@@ -49,21 +49,21 @@ module Transport
       assert_equal [32,16], factory.get_lengths("aes256-cbc")
     end
 
-    def test_lengths_for_arcfour
-      assert_equal [16,8], factory.get_lengths("arcfour")
-    end
+#    def test_lengths_for_arcfour
+#      assert_equal [16,8], factory.get_lengths("arcfour")
+#    end
 
-    def test_lengths_for_arcfour128
-      assert_equal [16,8], factory.get_lengths("arcfour128")
-    end
+#    def test_lengths_for_arcfour128
+#      assert_equal [16,8], factory.get_lengths("arcfour128")
+#    end
 
-    def test_lengths_for_arcfour256
-      assert_equal [32,8], factory.get_lengths("arcfour256")
-    end
+#    def test_lengths_for_arcfour256
+#      assert_equal [32,8], factory.get_lengths("arcfour256")
+#    end
 
-    def test_lengths_for_arcfour512
-      assert_equal [64,8], factory.get_lengths("arcfour512")
-    end
+#    def test_lengths_for_arcfour512
+#      assert_equal [64,8], factory.get_lengths("arcfour512")
+#    end
 
     def test_lengths_for_3des_ctr
       assert_equal [24,8], factory.get_lengths("3des-ctr")
@@ -171,45 +171,45 @@ module Transport
       assert_equal TEXT, decrypt("aes256-cbc", AES256_CBC)
     end
 
-    ARCFOUR = "\xC1.\x1AdH\xD0+%\xF1CrG\x1C\xCC\xF6\xACho\xB0\x95\\\xBC\x02P\xF9\xAF\n\xBB<\x13\xF3\xCF\xEB\n\b(iO\xFB'\t^?\xA6\xE5a\xE2\x17\f\x97\xCAs\x9E\xFC\xF2\x88\xC93\v\x84\xCA\x82\x0E\x1D\x11\xEA\xE1\x82\x8E\xB3*\xC5\xFB\x8Cmgs\xB0\xFA\xF5\x9C\\\xE2\xB0\x95\x1F>LT"
+#    ARCFOUR = "\xC1.\x1AdH\xD0+%\xF1CrG\x1C\xCC\xF6\xACho\xB0\x95\\\xBC\x02P\xF9\xAF\n\xBB<\x13\xF3\xCF\xEB\n\b(iO\xFB'\t^?\xA6\xE5a\xE2\x17\f\x97\xCAs\x9E\xFC\xF2\x88\xC93\v\x84\xCA\x82\x0E\x1D\x11\xEA\xE1\x82\x8E\xB3*\xC5\xFB\x8Cmgs\xB0\xFA\xF5\x9C\\\xE2\xB0\x95\x1F>LT"
 
-    def test_arcfour_for_encryption
-      assert_equal ARCFOUR, encrypt("arcfour")
-    end
+#    def test_arcfour_for_encryption
+#      assert_equal ARCFOUR, encrypt("arcfour")
+#    end
 
-    def test_arcfour_for_decryption
-      assert_equal TEXT, decrypt("arcfour", ARCFOUR)
-    end
+#    def test_arcfour_for_decryption
+#      assert_equal TEXT, decrypt("arcfour", ARCFOUR)
+#    end
 
-    ARCFOUR128 = "\n\x90\xED*\xD4\xBE\xCBg5\xA5\a\xEC]\x97\xB7L\x06)6\x12FL\x90@\xF4Sqxqh\r\x11\x1Aq \xC8\xE6v\xC6\x12\xD9<A\xDAZ\xFE\x7F\x88\x19f.\x06\xA7\xFE:\xFF\x93\x9B\x8D\xA0\\\x9E\xCA\x03\x15\xE1\xE2\f\xC0\b\xA2C\xE1\xBD\xB6\x13D\xD1\xB4'g\x89\xDC\xEB\f\x19Z)U"
+#    ARCFOUR128 = "\n\x90\xED*\xD4\xBE\xCBg5\xA5\a\xEC]\x97\xB7L\x06)6\x12FL\x90@\xF4Sqxqh\r\x11\x1Aq \xC8\xE6v\xC6\x12\xD9<A\xDAZ\xFE\x7F\x88\x19f.\x06\xA7\xFE:\xFF\x93\x9B\x8D\xA0\\\x9E\xCA\x03\x15\xE1\xE2\f\xC0\b\xA2C\xE1\xBD\xB6\x13D\xD1\xB4'g\x89\xDC\xEB\f\x19Z)U"
 
-    def test_arcfour128_for_encryption
-      assert_equal ARCFOUR128, encrypt("arcfour128")
-    end
+#    def test_arcfour128_for_encryption
+#      assert_equal ARCFOUR128, encrypt("arcfour128")
+#    end
 
-    def test_arcfour128_for_decryption
-      assert_equal TEXT, decrypt("arcfour128", ARCFOUR128)
-    end
+#    def test_arcfour128_for_decryption
+#      assert_equal TEXT, decrypt("arcfour128", ARCFOUR128)
+#    end
 
-    ARCFOUR256 = "|g\xCCw\xF5\xC1y\xEB\xF0\v\xF7\x83\x14\x03\xC8\xAB\xE8\xC2\xFCY\xDC,\xB8\xD4dVa\x8B\x18%\xA4S\x00\xE0at\x86\xE8\xA6W\xAB\xD2\x9D\xA8\xDE[g\aZy.\xFB\xFC\x82c\x04h\f\xBFYq\xB7U\x80\x0EG\x91\x88\xDF\xA3\xA2\xFA(\xEC\xDB\xA4\xE7\xFE)\x12u\xAF\x0EZ\xA0\xBA\x97\n\xFC"
+#    ARCFOUR256 = "|g\xCCw\xF5\xC1y\xEB\xF0\v\xF7\x83\x14\x03\xC8\xAB\xE8\xC2\xFCY\xDC,\xB8\xD4dVa\x8B\x18%\xA4S\x00\xE0at\x86\xE8\xA6W\xAB\xD2\x9D\xA8\xDE[g\aZy.\xFB\xFC\x82c\x04h\f\xBFYq\xB7U\x80\x0EG\x91\x88\xDF\xA3\xA2\xFA(\xEC\xDB\xA4\xE7\xFE)\x12u\xAF\x0EZ\xA0\xBA\x97\n\xFC"
 
-    def test_arcfour256_for_encryption
-      assert_equal ARCFOUR256, encrypt("arcfour256")
-    end
+#    def test_arcfour256_for_encryption
+#      assert_equal ARCFOUR256, encrypt("arcfour256")
+#    end
 
-    def test_arcfour256_for_decryption
-      assert_equal TEXT, decrypt("arcfour256", ARCFOUR256)
-    end
+#    def test_arcfour256_for_decryption
+#      assert_equal TEXT, decrypt("arcfour256", ARCFOUR256)
+#    end
 
-    ARCFOUR512 = "|8\"v\xE7\xE3\b\xA8\x19\x9Aa\xB6Vv\x00\x11\x8A$C\xB6xE\xEF\xF1j\x90\xA8\xFA\x10\xE4\xA1b8\xF6\x04\xF2+\xC0\xD1(8\xEBT]\xB0\xF3/\xD9\xE0@\x83\a\x93\x9D\xCA\x04RXS\xB7A\x0Fj\x94\bE\xEB\x84j\xB4\xDF\nU\xF7\x83o\n\xE8\xF9\x01{jH\xEE\xCDQym\x9E"
+#    ARCFOUR512 = "|8\"v\xE7\xE3\b\xA8\x19\x9Aa\xB6Vv\x00\x11\x8A$C\xB6xE\xEF\xF1j\x90\xA8\xFA\x10\xE4\xA1b8\xF6\x04\xF2+\xC0\xD1(8\xEBT]\xB0\xF3/\xD9\xE0@\x83\a\x93\x9D\xCA\x04RXS\xB7A\x0Fj\x94\bE\xEB\x84j\xB4\xDF\nU\xF7\x83o\n\xE8\xF9\x01{jH\xEE\xCDQym\x9E"
 
-    def test_arcfour512_for_encryption
-      assert_equal ARCFOUR512, encrypt("arcfour512")
-    end
+#    def test_arcfour512_for_encryption
+#      assert_equal ARCFOUR512, encrypt("arcfour512")
+#    end
 
-    def test_arcfour512_for_decryption
-      assert_equal TEXT, decrypt("arcfour512", ARCFOUR512)
-    end
+#    def test_arcfour512_for_decryption
+#      assert_equal TEXT, decrypt("arcfour512", ARCFOUR512)
+#    end
 
     BLOWFISH_CTR = "\xF5\xA6\x1E{\x8F(\x85G\xFAh\xDB\x19\xDC\xDF\xA2\x9A\x99\xDD5\xFF\xEE\x8BE\xE6\xB5\x92\x82\xE80\x91\x11`\xEF\x10\xED\xE9\xD3\vG\x0E\xAF\xB2K\t\xA4\xA6\x05\xD1\x17\x0Fl\r@E\x8DJ\e\xE63\x04\xB5\x05\x99Y\xCC\xFBb\x8FK+\x8C1v\xE4N\b?B\x06Rz\xA6\xB6N/b\xCE}\x83\x8DY\xD7\x92qU\x0F"
 
