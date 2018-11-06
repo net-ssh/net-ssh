@@ -124,6 +124,10 @@ module Net
             comment_str = body.read_string
             begin
               key = Buffer.new(key_str).read_key
+              if key.nil?
+                error { "ignoring invalid key: #{comment_str}" }
+                next
+              end
               key.extend(Comment)
               key.comment = comment_str
               identities.push key
