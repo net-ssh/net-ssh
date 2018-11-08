@@ -21,6 +21,13 @@ module Net
             return true
           end
         end
+
+        def verify_signature(&block)
+          yield
+        rescue HostKeyUnknown => err
+          err.remember_host!
+          return true
+        end
       end
 
     end

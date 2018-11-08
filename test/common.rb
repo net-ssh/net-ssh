@@ -74,6 +74,10 @@ class MockTransport < Net::SSH::Transport::Session
     def verify(data)
       @block.call(data)
     end
+
+    def verify_signature(&block)
+      yield
+    end
   end
 
   attr_reader :host_key_verifier
