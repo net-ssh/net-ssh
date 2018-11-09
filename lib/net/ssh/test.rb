@@ -3,7 +3,7 @@ require 'net/ssh/connection/session'
 require 'net/ssh/test/kex'
 require 'net/ssh/test/socket'
 
-module Net 
+module Net
   module SSH
 
     # This module may be used in unit tests, for when you want to test that your
@@ -54,30 +54,30 @@ module Net
         Net::SSH::Test::Extensions::IO.with_test_extension { yield socket.script if block_given? }
         return socket.script
       end
-  
+
       # Returns the test socket instance to use for these tests (see
       # Net::SSH::Test::Socket).
       def socket(options={})
         @socket ||= Net::SSH::Test::Socket.new
       end
-  
+
       # Returns the connection session (Net::SSH::Connection::Session) for use
       # in these tests. It is a fully functional SSH session, operating over
       # a mock socket (#socket).
       def connection(options={})
         @connection ||= Net::SSH::Connection::Session.new(transport(options), options)
       end
-  
+
       # Returns the transport session (Net::SSH::Transport::Session) for use
       # in these tests. It is a fully functional SSH transport session, operating
       # over a mock socket (#socket).
       def transport(options={})
         @transport ||= Net::SSH::Transport::Session.new(
           options[:host] || "localhost",
-          options.merge(kex: "test", host_key: "ssh-rsa", verify_host_key: false, proxy: socket(options))
+          options.merge(kex: "test", host_key: "ssh-rsa", verify_host_key: :never, proxy: socket(options))
         )
       end
-  
+
       # First asserts that a story has been described (see #story). Then yields,
       # and then asserts that all items described in the script have been
       # processed. Typically, this is called immediately after a story has
