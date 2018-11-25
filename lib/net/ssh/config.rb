@@ -22,6 +22,7 @@ module Net
     # * HostKeyAlias => :host_key_alias
     # * HostName => :host_name
     # * IdentityFile => maps to the :keys option
+    # * IdentityAgent => :identity_agent
     # * IdentitiesOnly => :keys_only
     # * Macs => maps to the :hmac option
     # * PasswordAuthentication => maps to the :auth_methods option password
@@ -194,6 +195,7 @@ module Net
             connecttimeout: :timeout,
             forwardagent: :forward_agent,
             identitiesonly: :keys_only,
+            identityagent: :identity_agent,
             globalknownhostsfile: :global_known_hosts_file,
             hostkeyalias: :host_key_alias,
             identityfile: :keys,
