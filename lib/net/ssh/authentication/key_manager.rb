@@ -176,7 +176,7 @@ module Net
         # or if the agent is otherwise not available.
         def agent
           return unless use_agent?
-          @agent ||= Agent.connect(logger, options[:agent_socket_factory])
+          @agent ||= Agent.connect(logger, options[:agent_socket_factory], options[:identity_agent])
         rescue AgentNotAvailable
           @use_agent = false
           nil
