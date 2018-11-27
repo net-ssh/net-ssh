@@ -22,51 +22,14 @@ module Net
           end
         end
 
-        class PubKey
-          include Net::SSH::Authentication::PubKeyFingerprint
-
-          attr_reader :verify_key
-
-          def initialize(data)
-            @verify_key = ::Ed25519::VerifyKey.new(data)
-          end
-
-          def self.read_keyblob(buffer)
-            PubKey.new(buffer.read_string)
-          end
-
-          def to_blob
-            Net::SSH::Buffer.from(:mstring,"ssh-ed25519",:string,@verify_key.to_bytes).to_s
-          end
-
-          def ssh_type
-            "ssh-ed25519"
-          end
-
-          def ssh_signature_type
-            ssh_type
-          end
-
-          def ssh_do_verify(sig,data)
-            @verify_key.verify(sig,data)
-          end
-
-          def to_pem
-            # TODO this is not pem
-            ssh_type + Base64.encode64(@verify_key.to_bytes)
-          end
-        end
-
-        class PrivKey
+        class OpenSSHPrivateKeyLoader
           CipherFactory = Net::SSH::Transport::CipherFactory
 
           MBEGIN = "-----BEGIN OPENSSH PRIVATE KEY-----\n"
           MEND = "-----END OPENSSH PRIVATE KEY-----\n"
           MAGIC = "openssh-key-v1"
 
-          attr_reader :sign_key
-
-          def initialize(datafull,password)
+          def self.read(datafull, password)
             raise ArgumentError.new("Expected #{MBEGIN} at start of private key") unless datafull.start_with?(MBEGIN)
             raise ArgumentError.new("Expected #{MEND} at end of private key") unless datafull.end_with?(MEND)
             datab64 = datafull[MBEGIN.size...-MEND.size]
@@ -113,10 +76,64 @@ module Net
 
             raise ArgumentError, "Decrypt failed on private key" if (check1 != check2)
 
-            _type_name = decoded.read_string
-            pk = decoded.read_string
-            sk = decoded.read_string
-            _comment = decoded.read_string
+            type_name = decoded.read_string
+            case type_name
+            when "ssh-ed25519"
+              PrivKey.new(decoded)
+            else
+              decoded.read_keyblob(type_name)
+            end
+          end
+        end
+
+        class PubKey
+          include Net::SSH::Authentication::PubKeyFingerprint
+
+          attr_reader :verify_key
+
+          def initialize(data)
+            @verify_key = ::Ed25519::VerifyKey.new(data)
+          end
+
+          def self.read_keyblob(buffer)
+            PubKey.new(buffer.read_string)
+          end
+
+          def to_blob
+            Net::SSH::Buffer.from(:mstring,"ssh-ed25519",:string,@verify_key.to_bytes).to_s
+          end
+
+          def ssh_type
+            "ssh-ed25519"
+          end
+
+          def ssh_signature_type
+            ssh_type
+          end
+
+          def ssh_do_verify(sig,data)
+            @verify_key.verify(sig,data)
+          end
+
+          def to_pem
+            # TODO this is not pem
+            ssh_type + Base64.encode64(@verify_key.to_bytes)
+          end
+        end
+
+        class PrivKey
+          CipherFactory = Net::SSH::Transport::CipherFactory
+
+          MBEGIN = "-----BEGIN OPENSSH PRIVATE KEY-----\n"
+          MEND = "-----END OPENSSH PRIVATE KEY-----\n"
+          MAGIC = "openssh-key-v1"
+
+          attr_reader :sign_key
+
+          def initialize(buffer)
+            pk = buffer.read_string
+            sk = buffer.read_string
+            _comment = buffer.read_string
 
             @pk = pk
             @sign_key = SigningKeyFromFile.new(pk,sk)
@@ -142,8 +159,8 @@ module Net
             @sign_key.sign(data)
           end
 
-          def self.read(data,password)
-            self.new(data,password)
+          def self.read(data, password)
+            OpenSSHPrivateKeyLoader.read(data, password)
           end
         end
       end
