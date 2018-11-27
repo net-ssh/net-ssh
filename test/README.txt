@@ -14,5 +14,5 @@ EXPECTED RESULTS
 
 INTEGRATION TESTS
 
-     brew install ansible ; ansible-galaxy install rvm_io.rvm1-ruby ; vagrant up ; vagrant ssh
+     brew install ansible ; ansible-galaxy install rvm.ruby ; vagrant up ; vagrant ssh
      cd /net-ssh ; rake integration-test

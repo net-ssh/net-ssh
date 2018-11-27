@@ -40,7 +40,7 @@ install:
   - bundle _1.16_ install
   - bundle _1.16_ -v
   - BUNDLE_GEMFILE=./Gemfile.noed25519 bundle _1.16_ install
-  - sudo ansible-galaxy install rvm_io.ruby
+  - sudo ansible-galaxy install rvm.ruby
   - sudo chown -R travis:travis /home/travis/.ansible
   - ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true' -e 'myuser=travis' -e 'mygroup=travis' -e 'homedir=/home/travis'
 

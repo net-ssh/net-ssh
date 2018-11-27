@@ -94,7 +94,6 @@ module Transport
     end
 
     def test_constructor_with_preferred_encryption_should_put_preferred_encryption_first
-
       assert_equal %w[aes256-cbc aes256-ctr aes192-ctr aes128-ctr aes192-cbc aes128-cbc rijndael-cbc@lysator.liu.se blowfish-ctr blowfish-cbc cast128-ctr cast128-cbc 3des-ctr 3des-cbc idea-cbc arcfour256 arcfour128 arcfour none], algorithms(encryption: "aes256-cbc",
                                                                                                                                                                                                                                                  append_all_supported_algorithms: true)[:encryption]
     end

@@ -8,8 +8,8 @@ require 'net/ssh/transport/kex'
 require 'net/ssh/transport/server_version'
 require 'net/ssh/authentication/ed25519_loader'
 
-module Net 
-  module SSH 
+module Net
+  module SSH
     module Transport
 
       # Implements the higher-level logic behind an SSH key-exchange. It handles
@@ -22,7 +22,7 @@ module Net
       class Algorithms
         include Loggable
         include Constants
-    
+
         # Define the default algorithms, in order of preference, supported by
         # Net::SSH.
         ALGORITHMS = {
@@ -53,70 +53,78 @@ module Net
           language: %w[]
         }
         if defined?(OpenSSL::PKey::EC)
-          ALGORITHMS[:host_key].unshift(*%w[ecdsa-sha2-nistp521-cert-v01@openssh.com
-                                            ecdsa-sha2-nistp384-cert-v01@openssh.com
-                                            ecdsa-sha2-nistp256-cert-v01@openssh.com
-                                            ecdsa-sha2-nistp521
-                                            ecdsa-sha2-nistp384
-                                            ecdsa-sha2-nistp256])
-          ALGORITHMS[:host_key].unshift(*%w[ssh-ed25519-cert-v01@openssh.com
-                                            ssh-ed25519]) if Net::SSH::Authentication::ED25519Loader::LOADED
-          ALGORITHMS[:kex].unshift(*%w[ecdh-sha2-nistp521
-                                       ecdh-sha2-nistp384
-                                       ecdh-sha2-nistp256])
+          ALGORITHMS[:host_key].unshift(
+            "ecdsa-sha2-nistp521-cert-v01@openssh.com",
+            "ecdsa-sha2-nistp384-cert-v01@openssh.com",
+            "ecdsa-sha2-nistp256-cert-v01@openssh.com",
+            "ecdsa-sha2-nistp521",
+            "ecdsa-sha2-nistp384",
+            "ecdsa-sha2-nistp256"
+          )
+          if Net::SSH::Authentication::ED25519Loader::LOADED
+            ALGORITHMS[:host_key].unshift(
+              "ssh-ed25519-cert-v01@openssh.com",
+              "ssh-ed25519"
+            )
+          end
+          ALGORITHMS[:kex].unshift(
+            "ecdh-sha2-nistp521",
+            "ecdh-sha2-nistp384",
+            "ecdh-sha2-nistp256"
+          )
         end
-    
+
         # The underlying transport layer session that supports this object
         attr_reader :session
-    
+
         # The hash of options used to initialize this object
         attr_reader :options
-    
+
         # The kex algorithm to use settled on between the client and server.
         attr_reader :kex
-    
+
         # The type of host key that will be used for this session.
         attr_reader :host_key
-    
+
         # The type of the cipher to use to encrypt packets sent from the client to
         # the server.
         attr_reader :encryption_client
-    
+
         # The type of the cipher to use to decrypt packets arriving from the server.
         attr_reader :encryption_server
-    
+
         # The type of HMAC to use to sign packets sent by the client.
         attr_reader :hmac_client
-    
+
         # The type of HMAC to use to validate packets arriving from the server.
         attr_reader :hmac_server
-    
+
         # The type of compression to use to compress packets being sent by the client.
         attr_reader :compression_client
-    
+
         # The type of compression to use to decompress packets arriving from the server.
         attr_reader :compression_server
-    
+
         # The language that will be used in messages sent by the client.
         attr_reader :language_client
-    
+
         # The language that will be used in messages sent from the server.
         attr_reader :language_server
-    
+
         # The hash of algorithms preferred by the client, which will be told to
         # the server during algorithm negotiation.
         attr_reader :algorithms
-    
+
         # The session-id for this session, as decided during the initial key exchange.
         attr_reader :session_id
-    
+
         # Returns true if the given packet can be processed during a key-exchange.
         def self.allowed_packet?(packet)
           (1..4).include?(packet.type) ||
           (6..19).include?(packet.type) ||
           (21..49).include?(packet.type)
         end
-    
+
         # Instantiates a new Algorithms object, and prepares the hash of preferred
         # algorithms based on the options parameter and the ALGORITHMS constant.
         def initialize(session, options={})
@@ -128,13 +136,13 @@ module Net
           @client_packet = @server_packet = nil
           prepare_preferred_algorithms!
         end
-    
+
         # Start the algorithm negotation
         def start
           raise ArgumentError, "Cannot call start if it's negotiation started or done" if @pending || @initialized
           send_kexinit
         end
-    
+
         # Request a rekey operation. This will return immediately, and does not
         # actually perform the rekey operation. It does cause the session to change
         # state, however--until the key exchange finishes, no new packets will be
@@ -144,7 +152,7 @@ module Net
           @initialized = false
           send_kexinit
         end
-    
+
         # Called by the transport layer when a KEXINIT packet is received, indicating
         # that the server wants to exchange keys. This can be spontaneous, or it
         # can be in response to a client-initiated rekey request (see #rekey!). Either
@@ -159,13 +167,13 @@ module Net
             proceed!
           end
         end
-    
+
         # A convenience method for accessing the list of preferred types for a
         # specific algorithm (see #algorithms).
         def [](key)
           algorithms[key]
         end
-    
+
         # Returns +true+ if a key-exchange is pending. This will be true from the
         # moment either the client or server requests the key exchange, until the
         # exchange completes. While an exchange is pending, only a limited number
@@ -210,7 +218,7 @@ module Net
           session.send_message(packet)
           proceed! if @server_packet
         end
-    
+
         # After both client and server have sent their KEXINIT packets, this
         # will do the algorithm negotiation and key exchange. Once both finish,
         # the object leaves the pending state and the method returns.
@@ -220,7 +228,7 @@ module Net
           exchange_keys
           @pending = false
         end
-    
+
         # Prepares the list of preferred algorithms, based on the options hash
         # that was given when the object was constructed, and the ALGORITHMS
         # constant. Also, when determining the host_key type to use, the known
@@ -229,23 +237,23 @@ module Net
         # communicating with this server.
         def prepare_preferred_algorithms!
           options[:compression] = %w[zlib@openssh.com zlib] if options[:compression] == true
-    
+
           ALGORITHMS.each do |algorithm, supported|
             algorithms[algorithm] = compose_algorithm_list(supported, options[algorithm], options[:append_all_supported_algorithms])
           end
-    
+
           # for convention, make sure our list has the same keys as the server
           # list
-    
+
           algorithms[:encryption_client ] = algorithms[:encryption_server ] = algorithms[:encryption]
           algorithms[:hmac_client       ] = algorithms[:hmac_server       ] = algorithms[:hmac]
           algorithms[:compression_client] = algorithms[:compression_server] = algorithms[:compression]
           algorithms[:language_client   ] = algorithms[:language_server   ] = algorithms[:language]
-    
+
           if !options.key?(:host_key)
             # make sure the host keys are specified in preference order, where any
             # existing known key for the host has preference.
-    
+
             existing_keys = session.host_keys
             host_keys = existing_keys.map { |key| key.ssh_type }.uniq
             algorithms[:host_key].each do |name|
@@ -254,14 +262,14 @@ module Net
             algorithms[:host_key] = host_keys
           end
         end
-    
+
         # Composes the list of algorithms by taking supported algorithms and matching with supplied options.
         def compose_algorithm_list(supported, option, append_all_supported_algorithms = false)
           return supported.dup unless option
-    
+
           list = []
           option = Array(option).compact.uniq
-    
+
           if option.first && option.first.start_with?('+')
             list = supported.dup
             list << option.first[1..-1]
@@ -269,30 +277,30 @@ module Net
             list.uniq!
           else
             list = option
-    
+
             if append_all_supported_algorithms
               supported.each { |name| list << name unless list.include?(name) }
             end
           end
-    
+
           unsupported = []
           list.select! do |name|
             is_supported = supported.include?(name)
             unsupported << name unless is_supported
             is_supported
           end
-    
+
           lwarn { %(unsupported algorithm: `#{unsupported}') } unless unsupported.empty?
-    
+
           list
         end
-    
+
         # Parses a KEXINIT packet from the server.
         def parse_server_algorithm_packet(packet)
           data = { raw: packet.content }
-    
+
           packet.read(16) # skip the cookie value
-    
+
           data[:kex]                = packet.read_string.split(/,/)
           data[:host_key]           = packet.read_string.split(/,/)
           data[:encryption_client]  = packet.read_string.split(/,/)
@@ -303,15 +311,15 @@ module Net
           data[:compression_server] = packet.read_string.split(/,/)
           data[:language_client]    = packet.read_string.split(/,/)
           data[:language_server]    = packet.read_string.split(/,/)
-    
+
           # TODO: if first_kex_packet_follows, we need to try to skip the
           # actual kexinit stuff and try to guess what the server is doing...
           # need to read more about this scenario.
           # first_kex_packet_follows = packet.read_bool
-    
+
           return data
         end
-    
+
         # Given the #algorithms map of preferred algorithm types, this constructs
         # a KEXINIT packet to send to the server. It does not actually send it,
         # it simply builds the packet and returns it.
@@ -322,14 +330,14 @@ module Net
           hmac        = algorithms[:hmac].join(",")
           compression = algorithms[:compression].join(",")
           language    = algorithms[:language].join(",")
-    
+
           Net::SSH::Buffer.from(:byte, KEXINIT,
             :long, [rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF)],
             :mstring, [kex, host_key, encryption, encryption, hmac, hmac],
             :mstring, [compression, compression, language, language],
             :bool, false, :long, 0)
         end
-    
+
         # Given the parsed server KEX packet, and the client's preferred algorithm
         # lists in #algorithms, determine which preferred algorithms each has
         # in common and set those as the selected algorithms. If, for any algorithm,
@@ -345,7 +353,7 @@ module Net
           @compression_server = negotiate(:compression_server)
           @language_client    = negotiate(:language_client) rescue ""
           @language_server    = negotiate(:language_server) rescue ""
-    
+
           debug do
             "negotiated:\n" +
               %i[kex host_key encryption_server encryption_client hmac_client hmac_server compression_client compression_server language_client language_server].map do |key|
@@ -353,40 +361,40 @@ module Net
               end.join("\n")
           end
         end
-    
+
         # Negotiates a single algorithm based on the preferences reported by the
         # server and those set by the client. This is called by
         # #negotiate_algorithms.
         def negotiate(algorithm)
           match = self[algorithm].find { |item| @server_data[algorithm].include?(item) }
-    
+
           raise Net::SSH::Exception, "could not settle on #{algorithm} algorithm" if match.nil?
-    
+
           return match
         end
-    
+
         # Considers the sizes of the keys and block-sizes for the selected ciphers,
         # and the lengths of the hmacs, and returns the largest as the byte requirement
         # for the key-exchange algorithm.
         def kex_byte_requirement
           sizes = [8] # require at least 8 bytes
-    
+
           sizes.concat(CipherFactory.get_lengths(encryption_client))
           sizes.concat(CipherFactory.get_lengths(encryption_server))
-    
+
           sizes << HMAC.key_length(hmac_client)
           sizes << HMAC.key_length(hmac_server)
-    
+
           sizes.max
         end
-    
+
         # Instantiates one of the Transport::Kex classes (based on the negotiated
         # kex algorithm), and uses it to exchange keys. Then, the ciphers and
         # HMACs are initialized and fed to the transport layer, to be used in
         # further communication with the server.
         def exchange_keys
           debug { "exchanging keys" }
-    
+
           algorithm = Kex::MAP[kex].new(self, session,
             client_version_string: Net::SSH::Transport::ServerVersion::PROTO_VERSION,
             server_version_string: session.server_version.version,
@@ -396,46 +404,46 @@ module Net
             minimum_dh_bits: options[:minimum_dh_bits],
             logger: logger)
           result = algorithm.exchange_keys
-    
+
           secret   = result[:shared_secret].to_ssh
           hash     = result[:session_id]
           digester = result[:hashing_algorithm]
-    
+
           @session_id ||= hash
-    
+
           key = Proc.new { |salt| digester.digest(secret + hash + salt + @session_id) }
-    
+
           iv_client = key["A"]
           iv_server = key["B"]
           key_client = key["C"]
           key_server = key["D"]
           mac_key_client = key["E"]
           mac_key_server = key["F"]
-    
+
           parameters = { shared: secret, hash: hash, digester: digester }
-    
+
           cipher_client = CipherFactory.get(encryption_client, parameters.merge(iv: iv_client, key: key_client, encrypt: true))
           cipher_server = CipherFactory.get(encryption_server, parameters.merge(iv: iv_server, key: key_server, decrypt: true))
-    
+
           mac_client = HMAC.get(hmac_client, mac_key_client, parameters)
           mac_server = HMAC.get(hmac_server, mac_key_server, parameters)
-    
+
           session.configure_client cipher: cipher_client, hmac: mac_client,
                                    compression: normalize_compression_name(compression_client),
                                    compression_level: options[:compression_level],
                                    rekey_limit: options[:rekey_limit],
                                    max_packets: options[:rekey_packet_limit],
                                    max_blocks: options[:rekey_blocks_limit]
-    
+
           session.configure_server cipher: cipher_server, hmac: mac_server,
                                    compression: normalize_compression_name(compression_server),
                                    rekey_limit: options[:rekey_limit],
                                    max_packets: options[:rekey_packet_limit],
                                    max_blocks: options[:rekey_blocks_limit]
-    
+
           @initialized = true
         end
-    
+
         # Given the SSH name for some compression algorithm, return a normalized
         # name as a symbol.
         def normalize_compression_name(name)
