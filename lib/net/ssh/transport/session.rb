@@ -190,7 +190,7 @@ module Net
           loop do
             return @queue.shift if consume_queue && @queue.any? && algorithms.allow?(@queue.first)
 
-            packet = socket.next_packet(mode)
+            packet = socket.next_packet(mode, options[:timeout])
             return nil if packet.nil?
 
             case packet.type

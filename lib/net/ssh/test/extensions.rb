@@ -156,6 +156,8 @@ module Net
               end
     
               raise "no readers were ready for reading, and none had any incoming packets" if processed == 0 && wait != 0
+
+              [[], [], []]
             end
           end
         end

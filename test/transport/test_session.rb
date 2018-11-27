@@ -194,13 +194,19 @@ module Transport
 
     def test_poll_message_should_query_next_packet_using_the_given_blocking_parameter
       session!
-      socket.expects(:next_packet).with(:blocking_parameter).returns(nil)
+      socket.expects(:next_packet).with(:blocking_parameter, nil).returns(nil)
       session.poll_message(:blocking_parameter)
+    end
+
+    def test_poll_message_should_query_next_packet_using_the_timeout_option
+      session!(timeout: 7)
+      socket.expects(:next_packet).with(:nonblock, 7).returns(nil)
+      session.poll_message
     end
 
     def test_poll_message_should_default_to_non_blocking
       session!
-      socket.expects(:next_packet).with(:nonblock).returns(nil)
+      socket.expects(:next_packet).with(:nonblock, nil).returns(nil)
       session.poll_message
     end
 
