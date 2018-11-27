@@ -154,6 +154,24 @@ EOF
       assert_equal "Okay, but not the best", result.last.comment
     end
 
+    def test_identities_should_ignore_invalid_ones
+      key1 = key
+      key2_bad = Net::SSH::Buffer.new("")
+      key3 = OpenSSL::PKey::DSA.new(512)
+
+      socket.expect do |s, type, buffer|
+        assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
+        s.return(SSH2_AGENT_IDENTITIES_ANSWER, :long, 3, :string, Net::SSH::Buffer.from(:key, key1), :string, "My favorite key", :string, key2_bad, :string, "bad", :string, Net::SSH::Buffer.from(:key, key3), :string, "Okay, but not the best")
+      end
+
+      result = agent.identities
+      assert_equal 2,result.size
+      assert_equal key1.to_blob, result.first.to_blob
+      assert_equal key3.to_blob, result.last.to_blob
+      assert_equal "My favorite key", result.first.comment
+      assert_equal "Okay, but not the best", result.last.comment
+    end
+
     def test_close_should_close_socket
       socket.expects(:close)
       agent.close
