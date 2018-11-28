@@ -18,7 +18,7 @@ unless ENV['NET_SSH_NO_ED25519']
         priv = private_key_no_pwd
 
         pub_key = Net::SSH::Authentication::ED25519::PubKey.new(pub_data)
-        priv_key = Net::SSH::Authentication::ED25519::PrivKey.new(priv,nil)
+        priv_key = Net::SSH::Authentication::ED25519::PrivKey.read(priv, nil)
 
         shared_secret = "Hello"
         signed = priv_key.ssh_do_sign(shared_secret)
@@ -39,7 +39,7 @@ unless ENV['NET_SSH_NO_ED25519']
         priv = private_key_pwd
 
         pub_key = Net::SSH::Authentication::ED25519::PubKey.new(pub_data)
-        priv_key = Net::SSH::Authentication::ED25519::PrivKey.new(priv,'pwd')
+        priv_key = Net::SSH::Authentication::ED25519::PrivKey.read(priv,'pwd')
 
         shared_secret = "Hello"
         signed = priv_key.ssh_do_sign(shared_secret)

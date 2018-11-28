@@ -111,7 +111,7 @@ module Net
         def classify_key(data, filename)
           if data.match(/-----BEGIN OPENSSH PRIVATE KEY-----/)
             Net::SSH::Authentication::ED25519Loader.raiseUnlessLoaded("OpenSSH keys only supported if ED25519 is available")
-            return ->(key_data, passphrase) { Net::SSH::Authentication::ED25519::PrivKey.read(key_data, passphrase) }, [ArgumentError]
+            return ->(key_data, passphrase) { Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader.read(key_data, passphrase) }, [ArgumentError]
           elsif OpenSSL::PKey.respond_to?(:read)
             return ->(key_data, passphrase) { OpenSSL::PKey.read(key_data, passphrase) }, [ArgumentError, OpenSSL::PKey::PKeyError]
           elsif data.match(/-----BEGIN DSA PRIVATE KEY-----/)

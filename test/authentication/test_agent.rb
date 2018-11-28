@@ -1,4 +1,4 @@
-require 'common'
+require_relative '../common'
 require 'net/ssh/authentication/agent'
 
 module Authentication
@@ -324,7 +324,7 @@ EOF
 
     def test_add_ed25519_identity
       return unless Net::SSH::Authentication::ED25519Loader::LOADED
-      ed25519 = Net::SSH::Authentication::ED25519::PrivKey.new(ED25519, nil)
+      ed25519 = Net::SSH::Authentication::ED25519::PrivKey.read(ED25519, nil)
       socket.expect do |s,type,buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-ed25519"
@@ -341,7 +341,7 @@ EOF
 
     def test_add_ed25519_cert_identity
       return unless Net::SSH::Authentication::ED25519Loader::LOADED
-      cert = make_cert(Net::SSH::Authentication::ED25519::PrivKey.new(ED25519, nil))
+      cert = make_cert(Net::SSH::Authentication::ED25519::PrivKey.read(ED25519, nil))
       socket.expect do |s,type,buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-ed25519-cert-v01@openssh.com"
