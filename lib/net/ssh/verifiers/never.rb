@@ -10,6 +10,10 @@ module Net
         def verify(arguments)
           true
         end
+
+        def verify_signature(&block)
+          true
+        end
       end
 
     end

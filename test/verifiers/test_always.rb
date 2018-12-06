@@ -37,4 +37,10 @@ class TestAlways < NetSSHTest
       secure_verifier.verify(session:OpenStruct.new(host_keys:host_keys), key:key_actual)
     }
   end
+
+  def test_verify_signature
+    secure_verifier = Net::SSH::Verifiers::Always.new
+
+    assert(true, secure_verifier.verify_signature { true })
+  end
 end

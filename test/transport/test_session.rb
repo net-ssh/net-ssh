@@ -93,8 +93,15 @@ module Transport
     end
 
     def test_verify_host_key_value_responding_to_verify_should_pass_muster
-      object = stub("thingy", verify: true)
+      object = stub("thingy", verify: true, verify_signature: true)
       assert_equal object, session(verify_host_key: object).host_key_verifier
+    end
+
+    def test_deprecated_host_key_verifier
+      Kernel.expects(:warn).with('Warning: verifier without :verify_signature is deprecated')
+
+      object = stub("thingy", verify: true)
+      assert_not_nil session(verify_host_key: object).host_key_verifier
     end
 
     def test_host_as_string_should_return_host_and_ip_when_port_is_default
