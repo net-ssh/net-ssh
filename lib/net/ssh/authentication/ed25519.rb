@@ -81,7 +81,7 @@ module Net
             when "ssh-ed25519"
               PrivKey.new(decoded)
             else
-              decoded.read_keyblob(type_name)
+              decoded.read_private_keyblob(type_name)
             end
           end
         end

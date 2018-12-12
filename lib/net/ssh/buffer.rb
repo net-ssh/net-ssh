@@ -249,6 +249,46 @@ module Net
         return (type ? read_keyblob(type) : nil)
       end
 
+      def read_private_keyblob(type)
+        case type
+        when /^ssh-rsa$/
+          key = OpenSSL::PKey::RSA.new
+          n = read_bignum
+          e = read_bignum
+          d = read_bignum
+          iqmp = read_bignum
+          p = read_bignum
+          q = read_bignum
+          _unkown1 = read_bignum
+          _unkown2 = read_bignum
+          dmp1 = d % (p - 1)
+          dmq1 = d % (q - 1)
+          if key.respond_to?(:set_key)
+            key.set_key(n, e, d)
+          else
+            key.e = e
+            key.n = n
+            key.d = d
+          end
+          if key.respond_to?(:set_factors)
+            key.set_factors(p, q)
+          else
+            key.p = p
+            key.q = q
+          end
+          if key.respond_to?(:set_crt_params)
+            key.set_crt_params(dmp1, dmq1, iqmp)
+          else
+            key.dmp1 = dmp1
+            key.dmq1 = dmq1
+            key.iqmp = iqmp
+          end
+          key
+        else
+          raise Exception, "Cannot decode private key of type #{type}"
+        end
+      end
+
       # Read a keyblob of the given type from the buffer, and return it as
       # a key. Only RSA, DSA, and ECDSA keys are supported.
       def read_keyblob(type)
