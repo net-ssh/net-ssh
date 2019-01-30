@@ -52,7 +52,7 @@ class TestKnownHosts < NetSSHTest
   end
 
   def path(relative_path)
-    File.join(File.dirname(__FILE__), "known_hosts/github")
+    File.join(File.dirname(__FILE__), relative_path)
   end
 
   def rsa_key
