@@ -2,7 +2,7 @@
 
   * Support new OpenSSH private key format for rsa - bcrypt for rsa (ed25519 already supported) [#646]
   * Support IdentityAgent is ssh config [Frank Groeneveld, #645]
-  * Improve Match processin in ssh config [Aleksandrs Ļedovskis, #642]
+  * Improve Match processing in ssh config [Aleksandrs Ļedovskis, #642]
   * Ignore signature verification when verify_host_key is never [Piotr Kliczewski, #641]
   * Alg preference was changed to prefer stronger encryptions  [Tray, #637]
 
