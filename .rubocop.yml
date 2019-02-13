@@ -3,3 +3,6 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   Exclude:
     - 'tryout/**/*'
+
+Style/DoubleNegation:
+  Enabled: false
