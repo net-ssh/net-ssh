@@ -73,7 +73,7 @@ module Net
       max_win_size send_env use_agent number_of_password_prompts
       append_all_supported_algorithms non_interactive password_prompt
       agent_socket_factory minimum_dh_bits verify_host_key
-      fingerprint_hash
+      fingerprint_hash check_host_ip
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -108,6 +108,8 @@ module Net
     # * :bind_address => the IP address on the connecting machine to use in
     #   establishing connection. (:bind_address is discarded if :proxy
     #   is set.)
+    # * :check_host_ip => Also ckeck IP address when connecting to remote host.
+    #   Defaults to +false+.
     # * :compression => the compression algorithm to use, or +true+ to use
     #   whatever is supported.
     # * :compression_level => the compression level to use when sending data
