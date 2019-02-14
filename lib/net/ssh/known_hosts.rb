@@ -134,7 +134,7 @@ module Net
             next if scanner.match?(/$|#/)
 
             hostlist = scanner.scan(/\S+/).split(/,/)
-            found = hostlist.include?(entries[0]) ||
+            found = hostlist.any? { |pattern| host_match_known_host_entry(entries[0], pattern) } ||
               known_host_hash?(hostlist, entries)
             next unless found
 
@@ -153,6 +153,19 @@ module Net
         end
 
         keys
+      end
+
+      # Indicates whether a host matches a pattern in the known_hosts file
+      def host_match_known_host_entry(host, pattern)
+        # Only '?' and '*' are supported.  Globbing functions consider '[' and
+        # ']' as special chars too, so we have to cook this manually.
+        pattern_regexp = pattern.split('*').map do |x|
+          x.split('?').map do |y|
+            Regexp.escape(y)
+          end.join('.')
+        end.join('[^.]*')
+
+        host =~ Regexp.new("\\A#{pattern_regexp}\\z")
       end
 
       # Indicates whether one of the entries matches an hostname that has been
