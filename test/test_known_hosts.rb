@@ -84,6 +84,30 @@ class TestKnownHosts < NetSSHTest
     assert_equal(1, keys.count)
   end
 
+  def test_search_for_with_hostname_matching_pattern
+    options = { user_known_hosts_file: path("known_hosts/misc") }
+    keys = Net::SSH::KnownHosts.search_for('subdomain.gitfoo.com',options)
+    assert_equal(1, keys.count)
+  end
+
+  def test_search_for_with_hostname_not_matching_pattern_1
+    options = { user_known_hosts_file: path("known_hosts/misc") }
+    keys = Net::SSH::KnownHosts.search_for('gitfoo.com',options)
+    assert_equal(0, keys.count)
+  end
+
+  def test_search_for_with_hostname_not_matching_pattern_2
+    options = { user_known_hosts_file: path("known_hosts/misc") }
+    keys = Net::SSH::KnownHosts.search_for('subdomain.gitmisc.com',options)
+    assert_equal(0, keys.count)
+  end
+
+  def test_search_for_with_hostname_not_matching_pattern_3
+    options = { user_known_hosts_file: path("known_hosts/misc") }
+    keys = Net::SSH::KnownHosts.search_for('subsubdomain.subdomain.gitfoo.com',options)
+    assert_equal(0, keys.count)
+  end
+
   def test_search_for_then_add
     Tempfile.open('github') do |f|
       f.write(File.read(path("known_hosts/github")))
