@@ -1,7 +1,9 @@
-=== 5.1.0.rc2
+=== 5.2.0.rc1
 
   * Interpret * and ? in know_hosts file [Romain Tartière, #660]
   * New :check_host_ip so ip checking can be disabled in known hosts [Romain Tartière, #656]
+
+=== 5.1.0
 
 === 5.1.0.rc1
 
