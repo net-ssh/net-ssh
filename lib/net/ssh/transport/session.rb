@@ -279,7 +279,7 @@ module Net
         # method.
         class CompatibleVerifier
           def initialize(verifier)
-            @verifier
+            @verifier = verifier
           end
 
           def verify(arguments)

@@ -109,7 +109,7 @@ module Net
     #   establishing connection. (:bind_address is discarded if :proxy
     #   is set.)
     # * :check_host_ip => Also ckeck IP address when connecting to remote host.
-    #   Defaults to +false+.
+    #   Defaults to +true+.
     # * :compression => the compression algorithm to use, or +true+ to use
     #   whatever is supported.
     # * :compression_level => the compression level to use when sending data
@@ -292,6 +292,8 @@ module Net
       %i[password passphrase].each do |key|
         options.delete(key) if options.key?(key) && options[key].nil?
       end
+
+      options[:check_host_ip] = true unless options.key?(:check_host_ip)
     end
 
     def self._sanitize_options(options)
