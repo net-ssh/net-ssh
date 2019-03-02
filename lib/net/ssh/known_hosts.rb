@@ -124,6 +124,8 @@ module Net
         return keys unless File.readable?(source)
 
         entries = host.split(/,/)
+        host_name = entries[0]
+        host_ip = entries[1]
 
         File.open(source) do |file|
           scanner = StringScanner.new("")
@@ -134,11 +136,10 @@ module Net
             next if scanner.match?(/$|#/)
 
             hostlist = scanner.scan(/\S+/).split(/,/)
-            found = hostlist.any? { |pattern| host_match_known_host_entry(entries[0], pattern) } ||
-              known_host_hash?(hostlist, entries)
+            found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
             next unless found
 
-            found = hostlist.include?(entries[1]) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
+            found = hostlist.include?(host_ip) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
             next unless found
 
             scanner.skip(/\s*/)
@@ -155,10 +156,8 @@ module Net
         keys
       end
 
-      # Indicates whether a host matches a pattern in the known_hosts file
-      def host_match_known_host_entry(host, pattern)
-        # Only '?' and '*' are supported.  Globbing functions consider '[' and
-        # ']' as special chars too, so we have to cook this manually.
+      def match(host, pattern)
+        # see man 8 sshd for pattern details
         pattern_regexp = pattern.split('*').map do |x|
           x.split('?').map do |y|
             Regexp.escape(y)
