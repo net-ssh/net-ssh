@@ -108,6 +108,12 @@ class TestKnownHosts < NetSSHTest
     assert_equal(0, keys.count)
   end
 
+  def test_search_for_with_multiple_keys_for_a_single_hostname_and_no_ip
+    options = { user_known_hosts_file: path("known_hosts/misc") }
+    keys = Net::SSH::KnownHosts.search_for('nodename.example.com',options)
+    assert_equal(2, keys.count)
+  end
+
   def test_search_for_then_add
     Tempfile.open('github') do |f|
       f.write(File.read(path("known_hosts/github")))
