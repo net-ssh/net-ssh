@@ -1,3 +1,4 @@
+require 'ipaddr'
 require 'strscan'
 require 'openssl'
 require 'base64'
@@ -139,7 +140,8 @@ module Net
             found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
             next unless found
 
-            found = hostlist.include?(host_ip) if options[:check_host_ip] && host_ip && hostlist.size > 1
+            iplist = hostlist.select { |host_or_ip| IPAddr.new(host_or_ip) rescue nil }
+            found = iplist.include?(host_ip) if options[:check_host_ip] && host_ip && iplist.any?
             next unless found
 
             scanner.skip(/\s*/)
