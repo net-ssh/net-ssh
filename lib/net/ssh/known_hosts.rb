@@ -139,7 +139,7 @@ module Net
             found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
             next unless found
 
-            found = hostlist.include?(host_ip) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
+            found = hostlist.include?(host_ip) if options[:check_host_ip] && host_ip && hostlist.size > 1
             next unless found
 
             scanner.skip(/\s*/)
