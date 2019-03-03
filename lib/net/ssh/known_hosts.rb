@@ -140,8 +140,8 @@ module Net
             found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
             next unless found
 
-            iplist = hostlist.select { |host_or_ip| IPAddr.new(host_or_ip) rescue nil }
-            found = iplist.include?(host_ip) if options[:check_host_ip] && host_ip && iplist.any?
+            iplist = hostlist.map { |host_or_ip| IPAddr.new(host_or_ip) rescue nil }.compact
+            found = iplist.include?(IPAddr.new(host_ip)) if options[:check_host_ip] && host_ip && iplist.any?
             next unless found
 
             scanner.skip(/\s*/)
