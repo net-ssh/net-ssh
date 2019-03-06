@@ -1,3 +1,7 @@
+=== 5.2.0.rc2
+
+  * Read check_host_ip from ssh config files
+
 === 5.2.0.rc1
 
   * Interpret * and ? in know_hosts file [Romain Tartière, #660]
