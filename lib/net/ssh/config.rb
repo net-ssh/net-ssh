@@ -209,7 +209,7 @@ module Net
             port: :port,
             user: :user,
             userknownhostsfile: :user_known_hosts_file,
-            checkhostip: :check_host_ip,
+            checkhostip: :check_host_ip
           }
           case key
           when :ciphers
