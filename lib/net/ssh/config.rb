@@ -24,6 +24,7 @@ module Net
     # * IdentityFile => maps to the :keys option
     # * IdentityAgent => :identity_agent
     # * IdentitiesOnly => :keys_only
+    # * CheckHostIP => :check_host_ip
     # * Macs => maps to the :hmac option
     # * PasswordAuthentication => maps to the :auth_methods option password
     # * Port => :port
@@ -76,6 +77,10 @@ module Net
         # #translate for how to convert the OpenSSH options into Net::SSH
         # options.)
         def load(path, host, settings={}, base_dir = nil)
+          translated_globals = {
+            "checkhostip" => "check_host_ip"
+          }
+
           file = File.expand_path(path)
           base_dir ||= File.dirname(file)
           return settings unless File.readable?(file)
@@ -96,6 +101,7 @@ module Net
             next if value.nil?
 
             key.downcase!
+            key = translated_globals[key] || key
             value = unquote(value)
 
             value = case value.strip
@@ -202,7 +208,8 @@ module Net
             fingerprinthash: :fingerprint_hash,
             port: :port,
             user: :user,
-            userknownhostsfile: :user_known_hosts_file
+            userknownhostsfile: :user_known_hosts_file,
+            checkhostip: :check_host_ip
           }
           case key
           when :ciphers
