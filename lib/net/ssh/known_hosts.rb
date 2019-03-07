@@ -2,6 +2,7 @@ require 'strscan'
 require 'openssl'
 require 'base64'
 require 'net/ssh/buffer'
+require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
@@ -47,6 +48,9 @@ module Net
                             ecdsa-sha2-nistp521]
       else
         SUPPORTED_TYPE = %w[ssh-rsa ssh-dss]
+      end
+      if Net::SSH::Authentication::ED25519Loader::LOADED
+        SUPPORTED_TYPE.push('ssh-ed25519')
       end
 
       class <<self
