@@ -57,11 +57,15 @@ class TestConfig < NetSSHTest
 
   def test_check_host_ip
     data = %q{
-      CheckHostIP no
+      Host *
+        CheckHostIP no
     }
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, 'foo')
-      assert_equal false, config['check_host_ip']
+      assert_equal false, config['checkhostip']
+
+      config = Net::SSH::Config.for("foo", [f])
+      assert_equal false, config[:check_host_ip]
     end
   end
 

@@ -1,3 +1,8 @@
+=== 5.2.0.rc3
+
+  * Fix check_host_ip read from config
+  * Support ssh-ed25519 in kown hosts
+
 === 5.2.0.rc2
 
   * Read check_host_ip from ssh config files
