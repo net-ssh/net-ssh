@@ -49,9 +49,7 @@ module Net
       else
         SUPPORTED_TYPE = %w[ssh-rsa ssh-dss]
       end
-      if Net::SSH::Authentication::ED25519Loader::LOADED
-        SUPPORTED_TYPE.push('ssh-ed25519')
-      end
+      SUPPORTED_TYPE.push('ssh-ed25519') if Net::SSH::Authentication::ED25519Loader::LOADED
 
       class <<self
         # Searches all known host files (see KnownHosts.hostfiles) for all keys
