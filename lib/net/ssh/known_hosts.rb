@@ -2,6 +2,7 @@ require 'strscan'
 require 'openssl'
 require 'base64'
 require 'net/ssh/buffer'
+require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
@@ -48,6 +49,7 @@ module Net
       else
         SUPPORTED_TYPE = %w[ssh-rsa ssh-dss]
       end
+      SUPPORTED_TYPE.push('ssh-ed25519') if Net::SSH::Authentication::ED25519Loader::LOADED
 
       class <<self
         # Searches all known host files (see KnownHosts.hostfiles) for all keys

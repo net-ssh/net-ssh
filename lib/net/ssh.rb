@@ -223,6 +223,8 @@ module Net
       options = configuration_for(host, options.fetch(:config, true)).merge(options)
       host = options.fetch(:host_name, host)
 
+      options[:check_host_ip] = true unless options.key?(:check_host_ip)
+
       if options[:non_interactive]
         options[:number_of_password_prompts] = 0
       end
@@ -292,8 +294,6 @@ module Net
       %i[password passphrase].each do |key|
         options.delete(key) if options.key?(key) && options[key].nil?
       end
-
-      options[:check_host_ip] = true unless options.key?(:check_host_ip)
     end
 
     def self._sanitize_options(options)

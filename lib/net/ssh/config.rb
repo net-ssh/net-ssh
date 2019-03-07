@@ -77,10 +77,6 @@ module Net
         # #translate for how to convert the OpenSSH options into Net::SSH
         # options.)
         def load(path, host, settings={}, base_dir = nil)
-          translated_globals = {
-            "checkhostip" => "check_host_ip"
-          }
-
           file = File.expand_path(path)
           base_dir ||= File.dirname(file)
           return settings unless File.readable?(file)
@@ -101,7 +97,6 @@ module Net
             next if value.nil?
 
             key.downcase!
-            key = translated_globals[key] || key
             value = unquote(value)
 
             value = case value.strip
