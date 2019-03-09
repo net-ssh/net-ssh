@@ -21,7 +21,7 @@
       register: current_ruby_version
       ignore_errors: True
   roles:
-    - { role: rvm_io.ruby,
+    - { role: rvm.ruby,
         tags: ruby,
         become: yes,
         rvm1_user: 'root',
@@ -88,11 +88,13 @@
     - name: add host aliases
       lineinfile: dest='/etc/hosts' owner='root' group='root' mode=0644
         regexp='^127\.0\.0\.1\s+gateway.netssh' line='127.0.0.1  gateway.netssh'
-    - apt: name="{{item}}" state=present
-      with_items:
-        - pv
-        - libgmp3-dev
-        - git
+    - apt:
+        pkg:
+          - pv
+          - libgmp3-dev
+          - git
+        state: present
+        update_cache: yes
     - copy: content='echo "cd /net-ssh ; rake integration-test"' dest=/etc/update-motd.d/99-net-ssh-tests mode=0755
     - name: add user to rvm group so they can change gem wrappers
       user:

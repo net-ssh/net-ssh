@@ -2,6 +2,7 @@ require 'strscan'
 require 'openssl'
 require 'base64'
 require 'net/ssh/buffer'
+require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
@@ -48,18 +49,19 @@ module Net
       else
         SUPPORTED_TYPE = %w[ssh-rsa ssh-dss]
       end
+      SUPPORTED_TYPE.push('ssh-ed25519') if Net::SSH::Authentication::ED25519Loader::LOADED
 
       class <<self
         # Searches all known host files (see KnownHosts.hostfiles) for all keys
         # of the given host. Returns an enumerable of keys found.
         def search_for(host, options={})
-          HostKeys.new(search_in(hostfiles(options), host), host, self, options)
+          HostKeys.new(search_in(hostfiles(options), host, options), host, self, options)
         end
 
         # Search for all known keys for the given host, in every file given in
         # the +files+ array. Returns the list of keys.
-        def search_in(files, host)
-          files.flat_map { |file| KnownHosts.new(file).keys_for(host) }
+        def search_in(files, host, options = {})
+          files.flat_map { |file| KnownHosts.new(file).keys_for(host, options) }
         end
 
         # Looks in the given +options+ hash for the :user_known_hosts_file and
@@ -119,11 +121,13 @@ module Net
       #   "[net.ssh.test]:5555"
       #   "[1,2,3,4]:5555"
       #   "[net.ssh.test]:5555,[1.2.3.4]:5555
-      def keys_for(host)
+      def keys_for(host, options = {})
         keys = []
         return keys unless File.readable?(source)
 
         entries = host.split(/,/)
+        host_name = entries[0]
+        host_ip = entries[1]
 
         File.open(source) do |file|
           scanner = StringScanner.new("")
@@ -134,8 +138,10 @@ module Net
             next if scanner.match?(/$|#/)
 
             hostlist = scanner.scan(/\S+/).split(/,/)
-            found = entries.all? { |entry| hostlist.include?(entry) } ||
-              known_host_hash?(hostlist, entries)
+            found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
+            next unless found
+
+            found = hostlist.include?(host_ip) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
             next unless found
 
             scanner.skip(/\s*/)
@@ -150,6 +156,17 @@ module Net
         end
 
         keys
+      end
+
+      def match(host, pattern)
+        # see man 8 sshd for pattern details
+        pattern_regexp = pattern.split('*').map do |x|
+          x.split('?').map do |y|
+            Regexp.escape(y)
+          end.join('.')
+        end.join('[^.]*')
+
+        host =~ Regexp.new("\\A#{pattern_regexp}\\z")
       end
 
       # Indicates whether one of the entries matches an hostname that has been

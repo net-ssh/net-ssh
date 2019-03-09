@@ -22,7 +22,9 @@ module Net
     # * HostKeyAlias => :host_key_alias
     # * HostName => :host_name
     # * IdentityFile => maps to the :keys option
+    # * IdentityAgent => :identity_agent
     # * IdentitiesOnly => :keys_only
+    # * CheckHostIP => :check_host_ip
     # * Macs => maps to the :hmac option
     # * PasswordAuthentication => maps to the :auth_methods option password
     # * Port => :port
@@ -95,7 +97,7 @@ module Net
             next if value.nil?
 
             key.downcase!
-            value = $1 if value =~ /^"(.*)"$/
+            value = unquote(value)
 
             value = case value.strip
                     when /^\d+$/ then value.to_i
@@ -194,13 +196,15 @@ module Net
             connecttimeout: :timeout,
             forwardagent: :forward_agent,
             identitiesonly: :keys_only,
+            identityagent: :identity_agent,
             globalknownhostsfile: :global_known_hosts_file,
             hostkeyalias: :host_key_alias,
             identityfile: :keys,
             fingerprinthash: :fingerprint_hash,
             port: :port,
             user: :user,
-            userknownhostsfile: :user_known_hosts_file
+            userknownhostsfile: :user_known_hosts_file,
+            checkhostip: :check_host_ip
           }
           case key
           when :ciphers
@@ -326,12 +330,17 @@ module Net
         end
 
         def eval_match_conditions(condition, host, settings)
-          conditions = condition.split(/\s+/)
+          # Not using `\s` for whitespace matching as canonical
+          # ssh_config parser implementation (OpenSSH) has specific character set.
+          # Ref: https://github.com/openssh/openssh-portable/blob/2581333d564d8697837729b3d07d45738eaf5a54/misc.c#L237-L239
+          conditions = condition.split(/[ \t\r\n]+|(?<!=)=(?!=)/).reject(&:empty?)
           return true if conditions == ["all"]
 
           conditions = conditions.each_slice(2)
-          matching = true
+          condition_matches = []
           conditions.each do |(kind,exprs)|
+            exprs = unquote(exprs)
+
             case kind.downcase
             when "all"
               raise "all cannot be mixed with other conditions"
@@ -346,12 +355,17 @@ module Net
               exprs.split(",").each do |expr|
                 condition_met = condition_met || host =~ pattern2regex(expr)
               end
-              matching = matching && negated ^ condition_met
+              condition_matches << (true && negated ^ condition_met)
               # else
               # warn "net-ssh: Unsupported expr in Match block: #{kind}"
             end
           end
-          matching
+
+          !condition_matches.empty? && condition_matches.all?
+        end
+
+        def unquote(string)
+          string =~ /^"(.*)"$/ ? Regexp.last_match(1) : string
         end
       end
     end

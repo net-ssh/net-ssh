@@ -34,6 +34,10 @@ module Net
           found
         end
 
+        def verify_signature(&block)
+          yield
+        end
+
         private
 
         def process_cache_miss(host_keys, args, exc_class, message)

@@ -206,7 +206,7 @@ module Net
 
             hash = @digester.digest(response.to_s)
 
-            raise Net::SSH::Exception, "could not verify server signature" unless result[:server_key].ssh_do_verify(result[:server_sig], hash)
+            raise Net::SSH::Exception, "could not verify server signature" unless connection.host_key_verifier.verify_signature { result[:server_key].ssh_do_verify(result[:server_sig], hash) }
 
             return hash
           end

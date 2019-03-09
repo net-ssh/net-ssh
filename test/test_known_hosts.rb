@@ -36,6 +36,78 @@ class TestKnownHosts < NetSSHTest
     assert_equal(["ssh-rsa"], keys.map(&:ssh_type))
   end
 
+  def test_search_for_with_hostname_and_right_ip_with_check_host_ip
+    options = { user_known_hosts_file: path("known_hosts/gitlab"), check_host_ip: true }
+    keys = Net::SSH::KnownHosts.search_for('gitlab.com,35.231.145.151',options)
+    assert_equal(1, keys.count)
+  end
+
+  def test_search_for_with_hostname_and_right_ip_without_check_host_ip
+    options = { user_known_hosts_file: path("known_hosts/gitlab"), check_host_ip: false }
+    keys = Net::SSH::KnownHosts.search_for('gitlab.com,35.231.145.151',options)
+    assert_equal(1, keys.count)
+  end
+
+  def test_search_for_with_hostname_and_wrong_ip_with_check_host_ip
+    options = { user_known_hosts_file: path("known_hosts/gitlab"), check_host_ip: true }
+    keys = Net::SSH::KnownHosts.search_for('gitlab.com,192.0.2.1',options)
+    assert_equal(0, keys.count)
+  end
+
+  def test_search_for_with_hostname_and_wrong_ip_without_check_host_ip
+    options = { user_known_hosts_file: path("known_hosts/gitlab"), check_host_ip: false }
+    keys = Net::SSH::KnownHosts.search_for('gitlab.com,192.0.2.2',options)
+    assert_equal(1, keys.count)
+  end
+
+  def test_search_for_with_hostname_only_with_check_host_ip
+    options = { user_known_hosts_file: path("known_hosts/gitlab"), check_host_ip: true }
+    keys = Net::SSH::KnownHosts.search_for('gitlab.com',options)
+    assert_equal(1, keys.count)
+  end
+
+  def test_search_for_with_hostname_only_without_check_host_ip
+    options = { user_known_hosts_file: path("known_hosts/gitlab"), check_host_ip: false }
+    keys = Net::SSH::KnownHosts.search_for('gitlab.com',options)
+    assert_equal(1, keys.count)
+  end
+
+  def test_search_for_with_ip_only_with_check_host_ip
+    options = { user_known_hosts_file: path("known_hosts/gitlab"), check_host_ip: true }
+    keys = Net::SSH::KnownHosts.search_for('35.231.145.151',options)
+    assert_equal(1, keys.count)
+  end
+
+  def test_search_for_with_ip_only_without_check_host_ip
+    options = { user_known_hosts_file: path("known_hosts/gitlab"), check_host_ip: false }
+    keys = Net::SSH::KnownHosts.search_for('35.231.145.151',options)
+    assert_equal(1, keys.count)
+  end
+
+  def test_search_for_with_hostname_matching_pattern
+    options = { user_known_hosts_file: path("known_hosts/misc") }
+    keys = Net::SSH::KnownHosts.search_for('subdomain.gitfoo.com',options)
+    assert_equal(1, keys.count)
+  end
+
+  def test_search_for_with_hostname_not_matching_pattern_1
+    options = { user_known_hosts_file: path("known_hosts/misc") }
+    keys = Net::SSH::KnownHosts.search_for('gitfoo.com',options)
+    assert_equal(0, keys.count)
+  end
+
+  def test_search_for_with_hostname_not_matching_pattern_2
+    options = { user_known_hosts_file: path("known_hosts/misc") }
+    keys = Net::SSH::KnownHosts.search_for('subdomain.gitmisc.com',options)
+    assert_equal(0, keys.count)
+  end
+
+  def test_search_for_with_hostname_not_matching_pattern_3
+    options = { user_known_hosts_file: path("known_hosts/misc") }
+    keys = Net::SSH::KnownHosts.search_for('subsubdomain.subdomain.gitfoo.com',options)
+    assert_equal(0, keys.count)
+  end
+
   def test_search_for_then_add
     Tempfile.open('github') do |f|
       f.write(File.read(path("known_hosts/github")))
@@ -52,7 +124,7 @@ class TestKnownHosts < NetSSHTest
   end
 
   def path(relative_path)
-    File.join(File.dirname(__FILE__), "known_hosts/github")
+    File.join(File.dirname(__FILE__), relative_path)
   end
 
   def rsa_key

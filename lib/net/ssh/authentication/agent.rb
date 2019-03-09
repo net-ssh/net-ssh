@@ -62,9 +62,9 @@ module Net
 
         # Instantiates a new agent object, connects to a running SSH agent,
         # negotiates the agent protocol version, and returns the agent object.
-        def self.connect(logger=nil, agent_socket_factory = nil)
+        def self.connect(logger=nil, agent_socket_factory = nil, identity_agent = nil)
           agent = new(logger)
-          agent.connect!(agent_socket_factory)
+          agent.connect!(agent_socket_factory, identity_agent)
           agent.negotiate!
           agent
         end
@@ -79,11 +79,13 @@ module Net
         # given by the attribute writers. If the agent on the other end of the
         # socket reports that it is an SSH2-compatible agent, this will fail
         # (it only supports the ssh-agent distributed by OpenSSH).
-        def connect!(agent_socket_factory = nil)
+        def connect!(agent_socket_factory = nil, identity_agent = nil)
           debug { "connecting to ssh-agent" }
           @socket =
             if agent_socket_factory
               agent_socket_factory.call
+            elsif identity_agent
+              unix_socket_class.open(identity_agent)
             elsif ENV['SSH_AUTH_SOCK'] && unix_socket_class
               unix_socket_class.open(ENV['SSH_AUTH_SOCK'])
             elsif Gem.win_platform? && RUBY_ENGINE != "jruby"
@@ -124,6 +126,10 @@ module Net
             comment_str = body.read_string
             begin
               key = Buffer.new(key_str).read_key
+              if key.nil?
+                error { "ignoring invalid key: #{comment_str}" }
+                next
+              end
               key.extend(Comment)
               key.comment = comment_str
               identities.push key

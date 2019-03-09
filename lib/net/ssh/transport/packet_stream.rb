@@ -81,8 +81,8 @@ module Net
         # default), then this will return immediately, whether a packet is
         # available or not, and will return nil if there is no packet ready to be
         # returned. If the mode parameter is :block, then this method will block
-        # until a packet is available.
-        def next_packet(mode=:nonblock)
+        # until a packet is available or timeout seconds have passed.
+        def next_packet(mode=:nonblock, timeout=nil)
           case mode
           when :nonblock then
             packet = poll_next_packet
@@ -105,11 +105,8 @@ module Net
               packet = poll_next_packet
               return packet if packet
 
-              loop do
-                result = IO.select([self]) or next
-                break if result.first.any?
-              end
-
+              result = IO.select([self], nil, nil, timeout)
+              raise Net::SSH::ConnectionTimeout, "timeout waiting for next packet" unless result
               raise Net::SSH::Disconnect, "connection closed by remote host" if fill <= 0
             end
 

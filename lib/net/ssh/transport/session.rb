@@ -190,7 +190,7 @@ module Net
           loop do
             return @queue.shift if consume_queue && @queue.any? && algorithms.allow?(@queue.first)
 
-            packet = socket.next_packet(mode)
+            packet = socket.next_packet(mode, options[:timeout])
             return nil if packet.nil?
 
             case packet.type
@@ -274,6 +274,23 @@ module Net
 
         private
 
+        # Compatibility verifier which allows users to keep using
+        # custom verifier code without adding new :verify_signature
+        # method.
+        class CompatibleVerifier
+          def initialize(verifier)
+            @verifier = verifier
+          end
+
+          def verify(arguments)
+            @verifier.verify(arguments)
+          end
+
+          def verify_signature(&block)
+            yield
+          end
+        end
+
         # Instantiates a new host-key verification class, based on the value of
         # the parameter.
         #
@@ -285,8 +302,8 @@ module Net
         # - :accept_new (insecure)
         # - :always (secure)
         #
-        # If the argument happens to respond to :verify, it is returned
-        # directly. Otherwise, an exception is raised.
+        # If the argument happens to respond to :verify and :verify_signature,
+        # it is returned directly. Otherwise, an exception is raised.
         #
         # Values false, true, and :very were deprecated in
         # [#595](https://github.com/net-ssh/net-ssh/pull/595)
@@ -314,7 +331,12 @@ module Net
             Net::SSH::Verifiers::Always.new
           else
             if verifier.respond_to?(:verify)
-              verifier
+              if verifier.respond_to?(:verify_signature)
+                verifier
+              else
+                Kernel.warn("Warning: verifier without :verify_signature is deprecated")
+                CompatibleVerifier.new(verifier)
+              end
             else
               raise(
                 ArgumentError,

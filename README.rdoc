@@ -2,6 +2,9 @@
 {<img src="https://badges.gitter.im/net-ssh/net-ssh.svg" alt="Join the chat at https://gitter.im/net-ssh/net-ssh">}[https://gitter.im/net-ssh/net-ssh?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge]
 {<img src="https://travis-ci.org/net-ssh/net-ssh.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/net-ssh/net-ssh]
 {<img src="https://codecov.io/gh/net-ssh/net-ssh/branch/master/graph/badge.svg" alt="Coverage status" />}[https://codecov.io/gh/net-ssh/net-ssh]
+{<img src="https://opencollective.com/net-ssh/backers/badge.svg" alt="Backers on Open Collective" />}[#backers]
+{<img src="https://opencollective.com/net-ssh/sponsors/badge.svg" alt="Sponsors on Open Collective" />}[#sponsors]
+ 
 
 = Net::SSH 5.x
 
@@ -141,6 +144,28 @@ For time to time, the public certificate associated to the private key needs to 
      gem cert --build netssh@solutious.com --private-key path/2/net-ssh-private_key.pem
      mv gem-public_cert.pem net-ssh-public_cert.pem
      gem cert --add net-ssh-public_cert.pem
+
+== CREDITS
+
+=== Contributors
+
+This project exists thanks to all the people who contribute. 
+
+{<img src="https://opencollective.com/net-ssh/contributors.svg?width=890&button=false" />}["graphs/contributors"]
+
+
+=== Backers
+
+Thank you to all our backers! 🙏 {Become a backer}[https://opencollective.com/net-ssh#backer)]
+
+{<img src="https://opencollective.com/net-ssh/backers.svg?width=890”>}["https://opencollective.com/net-ssh#backers"]
+
+=== Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. {Become a sponsor}[https://opencollective.com/net-ssh#sponsor]
+{<img src="https://opencollective.com/net-ssh/sponsor/0/avatar.svg" alt="Sponsor" />}[https://opencollective.com/net-ssh/sponsor/0/website]
+
+
 
 
 == LICENSE:

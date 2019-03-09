@@ -26,6 +26,10 @@ require 'minitest/autorun'
 $_original_config_default_files = Net::SSH::Config.default_files.dup # rubocop:disable Style/GlobalVars
 Net::SSH::Config.default_files.clear
 
+# Ensures SSH_AUTH_SOCK set outside of test scenario (e.g. on dev's machine) isn't messing up test assertions
+original_ssh_auth_sock, ENV['SSH_AUTH_SOCK'] = ENV['SSH_AUTH_SOCK'], nil
+Minitest.after_run { ENV['SSH_AUTH_SOCK'] = original_ssh_auth_sock }
+
 def with_restored_default_files(&block)
   act_default_files = Net::SSH::Config.default_files.dup
   begin
@@ -73,6 +77,10 @@ class MockTransport < Net::SSH::Transport::Session
 
     def verify(data)
       @block.call(data)
+    end
+
+    def verify_signature(&block)
+      yield
     end
   end
 

@@ -1,3 +1,27 @@
+=== 5.2.0.rc3
+
+  * Fix check_host_ip read from config
+  * Support ssh-ed25519 in kown hosts
+
+=== 5.2.0.rc2
+
+  * Read check_host_ip from ssh config files
+
+=== 5.2.0.rc1
+
+  * Interpret * and ? in know_hosts file [Romain Tartière, #660]
+  * New :check_host_ip so ip checking can be disabled in known hosts [Romain Tartière, #656]
+
+=== 5.1.0
+
+=== 5.1.0.rc1
+
+  * Support new OpenSSH private key format for rsa - bcrypt for rsa (ed25519 already supported) [#646]
+  * Support IdentityAgent is ssh config [Frank Groeneveld, #645]
+  * Improve Match processing in ssh config [Aleksandrs Ļedovskis, #642]
+  * Ignore signature verification when verify_host_key is never [Piotr Kliczewski, #641]
+  * Alg preference was changed to prefer stronger encryptions  [Tray, #637]
+
 === 5.0.2
 
   * fix ctr for jruby [#612]

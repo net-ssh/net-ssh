@@ -7,7 +7,7 @@ Requirements:
 
 Setup:
 
-    ansible-galaxy install rvm_io.ruby
+    ansible-galaxy install rvm.ruby
     vagrant up ; vagrant ssh
     rvmsudo_secure_path=1 rvmsudo rvm all do gem install bundler
     rvm all do sh -c 'rm Gemfile.lock; bundle'
