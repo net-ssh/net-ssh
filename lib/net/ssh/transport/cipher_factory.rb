@@ -19,11 +19,6 @@ module Net
           "idea-cbc"                    => "idea-cbc",
           "cast128-cbc"                 => "cast-cbc",
           "rijndael-cbc@lysator.liu.se" => "aes-256-cbc",
-          "arcfour128"                  => "rc4",
-          "arcfour256"                  => "rc4",
-          "arcfour512"                  => "rc4",
-          "arcfour"                     => "rc4",
-    
           "3des-ctr"                    => "des-ede3",
           "blowfish-ctr"                => "bf-ecb",
     
@@ -35,13 +30,6 @@ module Net
           "none"                        => "none"
         }
     
-        # Ruby's OpenSSL bindings always return a key length of 16 for RC4 ciphers
-        # resulting in the error: OpenSSL::CipherError: key length too short.
-        # The following ciphers will override this key length.
-        KEY_LEN_OVERRIDE = {
-          "arcfour256"                  => 32,
-          "arcfour512"                  => 64
-        }
     
         # Returns true if the underlying OpenSSL library supports the given cipher,
         # and false otherwise.
@@ -72,12 +60,11 @@ module Net
               cipher = Net::SSH::Transport::OpenSSLAESCTR.new(cipher)
             end
           end
-          cipher.iv = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options) if ossl_name != "rc4"
+          cipher.iv = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options)
     
-          key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
+          key_len = cipher.key_len
           cipher.key_len = key_len
           cipher.key = Net::SSH::Transport::KeyExpander.expand_key(key_len, options[:key], options)
-          cipher.update(" " * 1536) if (ossl_name == "rc4" && name != "arcfour")
     
           return cipher
         end
@@ -99,8 +86,6 @@ module Net
     
             block_size =
               case ossl_name
-              when "rc4"
-                8
               when /\-ctr/
                 Net::SSH::Transport::OpenSSLAESCTR.block_size
               else
