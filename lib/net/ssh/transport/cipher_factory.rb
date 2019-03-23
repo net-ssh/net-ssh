@@ -81,7 +81,7 @@ module Net
             result << 0 if options[:iv_len]
           else
             cipher = OpenSSL::Cipher.new(ossl_name)
-            key_len = KEY_LEN_OVERRIDE[name] || cipher.key_len
+            key_len = cipher.key_len
             cipher.key_len = key_len
     
             block_size =
