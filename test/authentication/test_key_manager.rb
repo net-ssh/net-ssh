@@ -174,6 +174,12 @@ module Authentication
       end
     end
 
+    def test_sign_passes_password_prompt_to_key_factory
+      manager.known_identities[rsa] = { from: :file, file: "/first" }
+      Net::SSH::KeyFactory.expects(:load_private_key).with('/first', nil, true, prompt).returns(rsa)
+      manager.sign(rsa, "hello, world")
+    end
+
     private
 
     def stub_file_private_key(name, key, options = {})
