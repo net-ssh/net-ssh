@@ -368,7 +368,11 @@ module Net
         def negotiate(algorithm)
           match = self[algorithm].find { |item| @server_data[algorithm].include?(item) }
 
-          raise Net::SSH::Exception, "could not settle on #{algorithm} algorithm" if match.nil?
+          if match.nil?
+            raise Net::SSH::Exception, "could not settle on #{algorithm} algorithm\n"\
+              "Server #{algorithm} preferences: #{@server_data[algorithm].join(',')}\n"\
+              "Client #{algorithm} preferences: #{self[algorithm].join(',')}"
+          end
 
           return match
         end
