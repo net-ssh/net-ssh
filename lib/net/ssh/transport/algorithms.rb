@@ -39,7 +39,7 @@ module Net
                          blowfish-ctr blowfish-cbc
                          cast128-ctr cast128-cbc
                          3des-ctr 3des-cbc
-                         idea-cbc arcfour256 arcfour128 arcfour
+                         idea-cbc
                          none],
 
           hmac: %w[hmac-sha2-512 hmac-sha2-256

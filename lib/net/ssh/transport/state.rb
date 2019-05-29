@@ -141,7 +141,7 @@ module Net
     
           @max_packets ||= 1 << 31
     
-          @block_size = cipher.name == "RC4" ? 8 : cipher.block_size
+          @block_size = cipher.block_size
     
           if max_blocks.nil?
             # cargo-culted from openssh. the idea is that "the 2^(blocksize*2)
