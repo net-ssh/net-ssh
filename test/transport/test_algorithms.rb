@@ -274,10 +274,10 @@ module Transport
     end
 
     def test_host_key_format
-      %w[ssh-rsa ssh-dss ecdsa-sha2-nistp256
-        ecdsa-sha2-nistp384 ecdsa-sha2-nistp521].map{|t|
-        [t, [0,1].map{|n|"#{t}-cert-v0#{n}@openssh.com"}.push(t)]}.
-      each do |type, host_keys|
+      %w[
+        ssh-rsa ssh-dss ecdsa-sha2-nistp256 ecdsa-sha2-nistp384 ecdsa-sha2-nistp521
+      ].map { |t| [t, [0,1].map { |n| "#{t}-cert-v0#{n}@openssh.com" }.push(t)] }\
+        .each do |type, host_keys|
         host_keys.each do |hk|
           algorithms(host_key: hk).instance_eval { @host_key = hk }
           assert_equal type, algorithms.host_key_format
