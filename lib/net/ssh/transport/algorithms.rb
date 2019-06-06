@@ -197,8 +197,8 @@ module Net
 
         def host_key_format
           case host_key
-          when "ssh-rsa-cert-v01@openssh.com", "ssh-rsa-cert-v00@openssh.com"
-            "ssh-rsa"
+          when /^([a-z0-9-]+)-cert-v\d{2}@openssh.com$/
+            $1
           else
             host_key
           end
