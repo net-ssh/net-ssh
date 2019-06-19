@@ -139,7 +139,9 @@ class TestConfig < NetSSHTest
       'numberofpasswordprompts' => '123',
       'serveraliveinterval'     => '2',
       'serveralivecountmax'     => '4',
-      'fingerprinthash'         => 'MD5'
+      'fingerprinthash'         => 'MD5',
+      'userknownhostsfile'      => '/dev/null',
+      'stricthostkeychecking'   => false
     }
 
     net_ssh = Net::SSH::Config.translate(open_ssh)
@@ -161,7 +163,9 @@ class TestConfig < NetSSHTest
     assert_equal 4,         net_ssh[:keepalive_maxcount]
     assert_equal 2,         net_ssh[:keepalive_interval]
     assert_equal 'MD5',     net_ssh[:fingerprint_hash]
-    assert_equal true, net_ssh[:keepalive]
+    assert_equal true,      net_ssh[:keepalive]
+    assert_equal '/dev/null', net_ssh[:user_known_hosts_file]
+    assert_equal false, net_ssh[:strict_host_key_checking]
   end
 
   def test_translate_should_turn_off_authentication_methods

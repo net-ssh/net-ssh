@@ -33,6 +33,7 @@ module Net
     # * ProxyJump => maps to the :proxy option
     # * PubKeyAuthentication => maps to the :auth_methods option
     # * RekeyLimit => :rekey_limit
+    # * StrictHostKeyChecking => :strict_host_key_checking
     # * User => :user
     # * UserKnownHostsFile => :user_known_hosts_file
     # * NumberOfPasswordPrompts => :number_of_password_prompts
@@ -202,6 +203,7 @@ module Net
             identityfile: :keys,
             fingerprinthash: :fingerprint_hash,
             port: :port,
+            stricthostkeychecking: :strict_host_key_checking,
             user: :user,
             userknownhostsfile: :user_known_hosts_file,
             checkhostip: :check_host_ip
