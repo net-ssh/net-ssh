@@ -130,27 +130,21 @@ module Net
         host_ip = entries[1]
 
         File.open(source) do |file|
-          scanner = StringScanner.new("")
           file.each_line do |line|
-            scanner.string = line
+            hosts, type, key_content = line.split(' ')
+            next unless hosts || hosts.start_with?('#')
 
-            scanner.skip(/\s*/)
-            next if scanner.match?(/$|#/)
+            hostlist = hosts.split(',')
 
-            hostlist = scanner.scan(/\S+/).split(/,/)
+            next unless SUPPORTED_TYPE.include?(type)
+
             found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
             next unless found
 
             found = hostlist.include?(host_ip) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
             next unless found
 
-            scanner.skip(/\s*/)
-            type = scanner.scan(/\S+/)
-
-            next unless SUPPORTED_TYPE.include?(type)
-
-            scanner.skip(/\s*/)
-            blob = scanner.rest.unpack("m*").first
+            blob = key_content.unpack("m*").first
             keys << Net::SSH::Buffer.new(blob).read_key
           end
         end
@@ -159,14 +153,18 @@ module Net
       end
 
       def match(host, pattern)
-        # see man 8 sshd for pattern details
-        pattern_regexp = pattern.split('*').map do |x|
-          x.split('?').map do |y|
-            Regexp.escape(y)
-          end.join('.')
-        end.join('[^.]*')
+        if pattern.include?('*') || pattern.include?('?')
+          # see man 8 sshd for pattern details
+          pattern_regexp = pattern.split('*').map do |x|
+            x.split('?').map do |y|
+              Regexp.escape(y)
+            end.join('.')
+          end.join('[^.]*')
 
-        host =~ Regexp.new("\\A#{pattern_regexp}\\z")
+          host =~ Regexp.new("\\A#{pattern_regexp}\\z")
+        else
+          host == pattern
+        end
       end
 
       # Indicates whether one of the entries matches an hostname that has been
