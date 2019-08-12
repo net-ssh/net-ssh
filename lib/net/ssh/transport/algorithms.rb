@@ -5,13 +5,13 @@ require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/constants'
 require 'net/ssh/transport/hmac'
 require 'net/ssh/transport/kex'
+require 'net/ssh/transport/kex/curve25519_sha256_loader'
 require 'net/ssh/transport/server_version'
 require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
     module Transport
-
       # Implements the higher-level logic behind an SSH key-exchange. It handles
       # both the initial exchange, as well as subsequent re-exchanges (as needed).
       # It also encapsulates the negotiation of the algorithms, and provides a
@@ -45,7 +45,7 @@ module Net
 
           hmac: %w[hmac-sha2-512 hmac-sha2-256
                    hmac-sha1]
-        }
+        }.freeze
 
         if Net::SSH::Authentication::ED25519Loader::LOADED
           DEFAULT_ALGORITHMS[:host_key].unshift(
@@ -54,33 +54,40 @@ module Net
           )
         end
 
+        if Net::SSH::Transport::Kex::Curve25519Sha256Loader::LOADED
+          DEFAULT_ALGORITHMS[:kex].unshift(
+            'curve25519-sha256',
+            'curve22519-sha256@libssh.org'
+          )
+        end
+
         # Define all algorithms, with the deprecated, supported by Net::SSH.
         ALGORITHMS = {
           host_key: DEFAULT_ALGORITHMS[:host_key] + %w[ssh-dss],
 
           kex: DEFAULT_ALGORITHMS[:kex] +
-              %w[diffie-hellman-group-exchange-sha1
-                 diffie-hellman-group1-sha1],
+               %w[diffie-hellman-group-exchange-sha1
+                  diffie-hellman-group1-sha1],
 
           encryption: DEFAULT_ALGORITHMS[:encryption] +
-              %w[aes256-cbc aes192-cbc aes128-cbc
-                 rijndael-cbc@lysator.liu.se
-                 blowfish-ctr blowfish-cbc
-                 cast128-ctr cast128-cbc
-                 3des-ctr 3des-cbc
-                 idea-cbc
-                 none],
+                      %w[aes256-cbc aes192-cbc aes128-cbc
+                         rijndael-cbc@lysator.liu.se
+                         blowfish-ctr blowfish-cbc
+                         cast128-ctr cast128-cbc
+                         3des-ctr 3des-cbc
+                         idea-cbc
+                         none],
 
           hmac: DEFAULT_ALGORITHMS[:hmac] +
-              %w[hmac-sha2-512-96 hmac-sha2-256-96
-                 hmac-sha1-96
-                 hmac-ripemd160 hmac-ripemd160@openssh.com
-                 hmac-md5 hmac-md5-96
-                 none],
+                %w[hmac-sha2-512-96 hmac-sha2-256-96
+                   hmac-sha1-96
+                   hmac-ripemd160 hmac-ripemd160@openssh.com
+                   hmac-md5 hmac-md5-96
+                   none],
 
           compression: %w[none zlib@openssh.com zlib],
           language: %w[]
-        }
+        }.freeze
 
         # The underlying transport layer session that supports this object
         attr_reader :session
@@ -148,6 +155,7 @@ module Net
         # Start the algorithm negotation
         def start
           raise ArgumentError, "Cannot call start if it's negotiation started or done" if @pending || @initialized
+
           send_kexinit
         end
 
