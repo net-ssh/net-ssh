@@ -3,8 +3,8 @@ require 'net/ssh/transport/ctr.rb'
 require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/identity_cipher'
 
-module Net 
-  module SSH 
+module Net
+  module SSH
     module Transport
 
       # Implements a factory of OpenSSL cipher algorithms.
@@ -21,16 +21,15 @@ module Net
           "rijndael-cbc@lysator.liu.se" => "aes-256-cbc",
           "3des-ctr"                    => "des-ede3",
           "blowfish-ctr"                => "bf-ecb",
-    
+
           "aes256-ctr"                  => ::OpenSSL::Cipher.ciphers.include?("aes-256-ctr") ? "aes-256-ctr" : "aes-256-ecb",
           "aes192-ctr"                  => ::OpenSSL::Cipher.ciphers.include?("aes-192-ctr") ? "aes-192-ctr" : "aes-192-ecb",
           "aes128-ctr"                  => ::OpenSSL::Cipher.ciphers.include?("aes-128-ctr") ? "aes-128-ctr" : "aes-128-ecb",
           "cast128-ctr"                 => "cast5-ecb",
-    
+
           "none"                        => "none"
         }
-    
-    
+
         # Returns true if the underlying OpenSSL library supports the given cipher,
         # and false otherwise.
         def self.supported?(name)
@@ -38,7 +37,7 @@ module Net
           return true if ossl_name == "none"
           return OpenSSL::Cipher.ciphers.include?(ossl_name)
         end
-    
+
         # Retrieves a new instance of the named algorithm. The new instance
         # will be initialized using an iv and key generated from the given
         # iv, key, shared, hash and digester values. Additionally, the
@@ -48,11 +47,11 @@ module Net
           ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
           return IdentityCipher if ossl_name == "none"
           cipher = OpenSSL::Cipher.new(ossl_name)
-    
+
           cipher.send(options[:encrypt] ? :encrypt : :decrypt)
-    
+
           cipher.padding = 0
-    
+
           if name =~ /-ctr(@openssh.org)?$/
             if ossl_name !~ /-ctr/
               cipher.extend(Net::SSH::Transport::CTR)
@@ -61,14 +60,14 @@ module Net
             end
           end
           cipher.iv = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options)
-    
+
           key_len = cipher.key_len
           cipher.key_len = key_len
           cipher.key = Net::SSH::Transport::KeyExpander.expand_key(key_len, options[:key], options)
-    
+
           return cipher
         end
-    
+
         # Returns a two-element array containing the [ key-length,
         # block-size ] for the named cipher algorithm. If the cipher
         # algorithm is unknown, or is "none", 0 is returned for both elements
@@ -83,7 +82,7 @@ module Net
             cipher = OpenSSL::Cipher.new(ossl_name)
             key_len = cipher.key_len
             cipher.key_len = key_len
-    
+
             block_size =
               case ossl_name
               when /\-ctr/
@@ -91,7 +90,7 @@ module Net
               else
                 cipher.block_size
               end
-    
+
             result = [key_len, block_size]
             result << cipher.iv_len if options[:iv_len]
           end

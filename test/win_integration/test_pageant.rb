@@ -15,21 +15,21 @@ module Authentication
       ensure
         Process.kill(9, pageant_pid)
       end
-  
+
       def test_agent_should_be_able_to_negotiate_with_pagent
         with_pagent do
           agent.negotiate!
         end
       end
-  
+
       def test_agent_should_raise_without_pagent
         assert_raises Net::SSH::Authentication::AgentNotAvailable do
           agent.negotiate!
         end
       end
-  
+
       private
-  
+
       def agent(auto=:connect)
         @agent ||= begin
           agent = Net::SSH::Authentication::Agent.new

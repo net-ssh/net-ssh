@@ -1,6 +1,6 @@
-module Net 
-  module SSH 
-    module Transport 
+module Net
+  module SSH
+    module Transport
       module Kex
         # A key-exchange service implementing the "ecdh-sha2-nistp521"
         # key-exchange algorithm. (defined in RFC 5656)
