@@ -5,9 +5,11 @@ skip_tags: true
 environment:
   matrix:
     - ruby_version: "jruby-9.1.2.0"
+    - ruby_version: "26-x64"
+    - ruby_version: "25-x64"
+    - ruby_version: "24-x64"
     - ruby_version: "23"
     - ruby_version: "23-x64"
-    - ruby_version: "22-x64"
 
 matrix:
   allow_failures:
@@ -29,7 +31,7 @@ install:
   - if "%ruby_version%" == "jruby-9.1.2.0" ( cinst jruby --version 9.1.2.0 -i --allow-empty-checksums )
   - if "%ruby_version%" == "jruby-9.1.2.0" ( SET "PATH=C:\jruby-9.1.2.0\bin\;%PATH%" )
   - ruby --version
-  - gem install bundler --no-document --user-install -v 1.16
+  - gem install bundler --no-document --user-install -v 1.17
   - SET BUNDLE_GEMFILE=Gemfile.noed25519
   - bundle install --retry=3
   - cinst freesshd
