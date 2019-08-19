@@ -505,6 +505,17 @@ class TestConfig < NetSSHTest
     end
   end
 
+  def test_mix_of_proxy_command_and_proxy_jump
+    %w(test.mix1 test.mix2).each do  |host|
+      config = Net::SSH::Config.for(host, [config(:proxy_command_proxy_jump_mix)])
+
+      proxy = config[:proxy]
+      proxy.build_proxy_command_equivalent if proxy.is_a? Net::SSH::Proxy::Jump
+
+      assert_equal 'ssh -W %h:%p jump2', config[:proxy].command_line_template
+    end
+  end
+
   private
 
   def with_home_env(value,&block)

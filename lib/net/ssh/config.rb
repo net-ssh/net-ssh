@@ -150,6 +150,13 @@ module Net
                 settings[key] = value unless settings.key?(key)
               end
             end
+
+            # ProxyCommand and ProxyJump override each other so they need to be tracked togeather
+            %w(proxyjump proxycommand).each do |proxy_key|
+              if proxy_value = settings.delete(proxy_key)
+                settings['proxy'] ||= [proxy_key, proxy_value]
+              end
+            end
           end
 
           globals.merge(settings) do |key, oldval, newval|
@@ -252,15 +259,20 @@ module Net
             end
           when :preferredauthentications
             hash[:auth_methods] = value.split(/,/) # TODO we should place to preferred_auth_methods rather than auth_methods
-          when :proxycommand
-            if value and value !~ /^none$/
-              require 'net/ssh/proxy/command'
-              hash[:proxy] = Net::SSH::Proxy::Command.new(value)
-            end
-          when :proxyjump
-            if value
-              require 'net/ssh/proxy/jump'
-              hash[:proxy] = Net::SSH::Proxy::Jump.new(value)
+          when :proxy
+            proxy_type, value = value
+
+            case proxy_type
+            when 'proxycommand'
+              if value and value !~ /^none$/
+                require 'net/ssh/proxy/command'
+                hash[:proxy] = Net::SSH::Proxy::Command.new(value)
+              end
+            when 'proxyjump'
+              if value
+                require 'net/ssh/proxy/jump'
+                hash[:proxy] = Net::SSH::Proxy::Jump.new(value)
+              end
             end
           when :pubkeyauthentication
             if value
@@ -371,6 +383,5 @@ module Net
         end
       end
     end
-
   end
 end
