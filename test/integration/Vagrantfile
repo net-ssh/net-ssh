@@ -6,6 +6,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "./playbook.yml"
     ansible.sudo = true
     ansible.verbose = 'vvvv'
+    ansible.compatibility_mode = "2.0"
   end
 
   config.vm.synced_folder "../..", "/net-ssh"
