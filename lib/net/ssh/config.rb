@@ -260,17 +260,8 @@ module Net
           when :preferredauthentications
             hash[:auth_methods] = value.split(/,/) # TODO we should place to preferred_auth_methods rather than auth_methods
           when :proxy
-            proxy_type, value = value
-
-            case proxy_type
-            when 'proxycommand'
-              if value !~ /^none$/
-                require 'net/ssh/proxy/command'
-                hash[:proxy] = Net::SSH::Proxy::Command.new(value)
-              end
-            when 'proxyjump'
-              require 'net/ssh/proxy/jump'
-              hash[:proxy] = Net::SSH::Proxy::Jump.new(value)
+            if (proxy = setup_proxy(*value))
+              hash[:proxy] = proxy
             end
           when :pubkeyauthentication
             if value
@@ -287,6 +278,19 @@ module Net
             hash[:number_of_password_prompts] = value.to_i
           when *rename.keys
             hash[rename[key]] = value
+          end
+        end
+
+        def setup_proxy(type, value)
+          case type
+          when 'proxycommand'
+            if value !~ /^none$/
+              require 'net/ssh/proxy/command'
+              Net::SSH::Proxy::Command.new(value)
+            end
+          when 'proxyjump'
+            require 'net/ssh/proxy/jump'
+            Net::SSH::Proxy::Jump.new(value)
           end
         end
 
