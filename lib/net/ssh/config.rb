@@ -264,15 +264,13 @@ module Net
 
             case proxy_type
             when 'proxycommand'
-              if value and value !~ /^none$/
+              if value !~ /^none$/
                 require 'net/ssh/proxy/command'
                 hash[:proxy] = Net::SSH::Proxy::Command.new(value)
               end
             when 'proxyjump'
-              if value
-                require 'net/ssh/proxy/jump'
-                hash[:proxy] = Net::SSH::Proxy::Jump.new(value)
-              end
+              require 'net/ssh/proxy/jump'
+              hash[:proxy] = Net::SSH::Proxy::Jump.new(value)
             end
           when :pubkeyauthentication
             if value
