@@ -506,7 +506,7 @@ class TestConfig < NetSSHTest
   end
 
   def test_mix_of_proxy_command_and_proxy_jump
-    %w(test.mix1 test.mix2).each do  |host|
+    %w(test.mix1 test.mix2).each do |host|
       config = Net::SSH::Config.for(host, [config(:proxy_command_proxy_jump_mix)])
 
       proxy = config[:proxy]

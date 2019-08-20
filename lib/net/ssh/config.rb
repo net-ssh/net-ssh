@@ -152,8 +152,8 @@ module Net
             end
 
             # ProxyCommand and ProxyJump override each other so they need to be tracked togeather
-            %w(proxyjump proxycommand).each do |proxy_key|
-              if proxy_value = settings.delete(proxy_key)
+            %w[proxyjump proxycommand].each do |proxy_key|
+              if (proxy_value = settings.delete(proxy_key))
                 settings['proxy'] ||= [proxy_key, proxy_value]
               end
             end
