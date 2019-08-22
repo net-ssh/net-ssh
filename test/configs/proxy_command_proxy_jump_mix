@@ -1,0 +1,11 @@
+Host test.mix1
+  ProxyJump jump2
+
+Host *.mix1
+  ProxyCommand ssh -W %h:%p jump1
+
+Host test.mix2
+  ProxyCommand ssh -W %h:%p jump2
+
+Host *.mix2
+  ProxyJump jump1
