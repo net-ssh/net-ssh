@@ -104,66 +104,65 @@ class TestKeyFactory < NetSSHTest
     File.expects(:read).with(@key_file).returns(public(rsa_key, 'environment="FOO=bar"') + " key_comment")
     assert_equal rsa_key.to_blob, Net::SSH::KeyFactory.load_public_key(@key_file).to_blob
   end
-  if defined?(OpenSSL::PKey::EC)
-    def test_load_unencrypted_private_ecdsa_sha2_nistp256_key_should_return_key
-      File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp256_key.to_pem)
-      assert_equal ecdsa_sha2_nistp256_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
-    end
 
-    def test_load_unencrypted_private_ecdsa_sha2_nistp384_key_should_return_key
-      File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp384_key.to_pem)
-      assert_equal ecdsa_sha2_nistp384_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
-    end
+  def test_load_unencrypted_private_ecdsa_sha2_nistp256_key_should_return_key
+    File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp256_key.to_pem)
+    assert_equal ecdsa_sha2_nistp256_key.to_der, Net::SSH::KeyFactory.load_private_key('/key-file').to_der
+  end
 
-    def test_load_unencrypted_private_ecdsa_sha2_nistp521_key_should_return_key
-      File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp521_key.to_pem)
-      assert_equal ecdsa_sha2_nistp521_key.to_der, Net::SSH::KeyFactory.load_private_key("/key-file").to_der
-    end
+  def test_load_unencrypted_private_ecdsa_sha2_nistp384_key_should_return_key
+    File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp384_key.to_pem)
+    assert_equal ecdsa_sha2_nistp384_key.to_der, Net::SSH::KeyFactory.load_private_key('/key-file').to_der
+  end
 
-    def test_load_unencrypted_private_ecdsa_sha2_nistp256_key_should_have_fp_md5
-      File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp256_key.to_pem)
-      assert_equal ecdsa_sha2_nistp256_key_fingerprint_md5, Net::SSH::KeyFactory.load_private_key("/key-file").fingerprint
-    end
+  def test_load_unencrypted_private_ecdsa_sha2_nistp521_key_should_return_key
+    File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp521_key.to_pem)
+    assert_equal ecdsa_sha2_nistp521_key.to_der, Net::SSH::KeyFactory.load_private_key('/key-file').to_der
+  end
 
-    def test_load_unencrypted_private_ecdsa_sha2_nistp256_key_should_have_fp_sha256
-      File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp256_key.to_pem)
-      assert_equal ecdsa_sha2_nistp256_key_fingerprint_sha256, Net::SSH::KeyFactory.load_private_key("/key-file").fingerprint('sha256')
-    end
+  def test_load_unencrypted_private_ecdsa_sha2_nistp256_key_should_have_fp_md5
+    File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp256_key.to_pem)
+    assert_equal ecdsa_sha2_nistp256_key_fingerprint_md5, Net::SSH::KeyFactory.load_private_key('/key-file').fingerprint
+  end
 
-    def test_load_unencrypted_private_ecdsa_sha2_nistp384_key_should_have_fp_md5
-      File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp384_key.to_pem)
-      assert_equal ecdsa_sha2_nistp384_key_fingerprint_md5, Net::SSH::KeyFactory.load_private_key("/key-file").fingerprint
-    end
+  def test_load_unencrypted_private_ecdsa_sha2_nistp256_key_should_have_fp_sha256
+    File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp256_key.to_pem)
+    assert_equal ecdsa_sha2_nistp256_key_fingerprint_sha256, Net::SSH::KeyFactory.load_private_key('/key-file').fingerprint('sha256')
+  end
 
-    def test_load_unencrypted_private_ecdsa_sha2_nistp384_key_should_have_fp_sha256
-      File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp384_key.to_pem)
-      assert_equal ecdsa_sha2_nistp384_key_fingerprint_sha256, Net::SSH::KeyFactory.load_private_key("/key-file").fingerprint('sha256')
-    end
+  def test_load_unencrypted_private_ecdsa_sha2_nistp384_key_should_have_fp_md5
+    File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp384_key.to_pem)
+    assert_equal ecdsa_sha2_nistp384_key_fingerprint_md5, Net::SSH::KeyFactory.load_private_key('/key-file').fingerprint
+  end
 
-    def test_load_unencrypted_private_ecdsa_sha2_nistp521_key_should_have_fp_md5
-      File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp521_key.to_pem)
-      assert_equal ecdsa_sha2_nistp521_key_fingerprint_md5, Net::SSH::KeyFactory.load_private_key("/key-file").fingerprint
-    end
+  def test_load_unencrypted_private_ecdsa_sha2_nistp384_key_should_have_fp_sha256
+    File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp384_key.to_pem)
+    assert_equal ecdsa_sha2_nistp384_key_fingerprint_sha256, Net::SSH::KeyFactory.load_private_key('/key-file').fingerprint('sha256')
+  end
 
-    def test_load_unencrypted_private_ecdsa_sha2_nistp521_key_should_have_fp_sha256
-      File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp521_key.to_pem)
-      assert_equal ecdsa_sha2_nistp521_key_fingerprint_sha256, Net::SSH::KeyFactory.load_private_key("/key-file").fingerprint('sha256')
-    end
+  def test_load_unencrypted_private_ecdsa_sha2_nistp521_key_should_have_fp_md5
+    File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp521_key.to_pem)
+    assert_equal ecdsa_sha2_nistp521_key_fingerprint_md5, Net::SSH::KeyFactory.load_private_key('/key-file').fingerprint
+  end
 
-    def test_load_public_ecdsa_sha2_nistp256_key_should_return_key
-      File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp256_key))
-      assert_equal ecdsa_sha2_nistp256_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
-    end
+  def test_load_unencrypted_private_ecdsa_sha2_nistp521_key_should_have_fp_sha256
+    File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp521_key.to_pem)
+    assert_equal ecdsa_sha2_nistp521_key_fingerprint_sha256, Net::SSH::KeyFactory.load_private_key('/key-file').fingerprint('sha256')
+  end
 
-    def test_load_public_ecdsa_sha2_nistp384_key_should_return_key
-      File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp384_key))
-      assert_equal ecdsa_sha2_nistp384_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
-    end
+  def test_load_public_ecdsa_sha2_nistp256_key_should_return_key
+    File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp256_key))
+    assert_equal ecdsa_sha2_nistp256_key.to_blob, Net::SSH::KeyFactory.load_public_key('/key-file').to_blob
+  end
 
-    def test_load_public_ecdsa_sha2_nistp521_key_should_return_key
-      File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp521_key))
-      assert_equal ecdsa_sha2_nistp521_key.to_blob, Net::SSH::KeyFactory.load_public_key("/key-file").to_blob
-    end
+  def test_load_public_ecdsa_sha2_nistp384_key_should_return_key
+    File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp384_key))
+    assert_equal ecdsa_sha2_nistp384_key.to_blob, Net::SSH::KeyFactory.load_public_key('/key-file').to_blob
+  end
+
+  def test_load_public_ecdsa_sha2_nistp521_key_should_return_key
+    File.expects(:read).with(@key_file).returns(public(ecdsa_sha2_nistp521_key))
+    assert_equal ecdsa_sha2_nistp521_key.to_blob, Net::SSH::KeyFactory.load_public_key('/key-file').to_blob
   end
 
   def test_load_anonymous_private_key_should_return_key_or_raise_exception
@@ -203,42 +202,40 @@ class TestKeyFactory < NetSSHTest
     'SHA256:9+7rXHxjuAmxm3UjuZ3T1qTF/UZUrmZQMJC8kNMr7J8'
   end
 
-  if defined?(OpenSSL::PKey::EC)
-    def ecdsa_sha2_nistp256_key
-      @ecdsa_sha2_nistp256_key ||= OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEINv6pPVLlkqvT1v5MJlWgaSWGwqupISG4U79bUXQDNCaoAoGCCqGSM49\nAwEHoUQDQgAElqubvi/GkSme+bwtncU1NiE0dWQ0EO07VufUQg8lUJ5+Fi6f96qa\n95T1zwOMQhY1h8PP9rQIZr4S48vN/ZnQLw==\n-----END EC PRIVATE KEY-----\n")
-    end
+  def ecdsa_sha2_nistp256_key
+    @ecdsa_sha2_nistp256_key ||= OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEINv6pPVLlkqvT1v5MJlWgaSWGwqupISG4U79bUXQDNCaoAoGCCqGSM49\nAwEHoUQDQgAElqubvi/GkSme+bwtncU1NiE0dWQ0EO07VufUQg8lUJ5+Fi6f96qa\n95T1zwOMQhY1h8PP9rQIZr4S48vN/ZnQLw==\n-----END EC PRIVATE KEY-----\n")
+  end
 
-    def ecdsa_sha2_nistp256_key_fingerprint_md5
-      'ed:9e:cd:74:41:a4:37:ae:99:9e:9a:c3:de:04:c9:e1'
-    end
+  def ecdsa_sha2_nistp256_key_fingerprint_md5
+    'ed:9e:cd:74:41:a4:37:ae:99:9e:9a:c3:de:04:c9:e1'
+  end
 
-    def ecdsa_sha2_nistp256_key_fingerprint_sha256
-      'SHA256:yGdFZAf5Mbg5+EPA802cn4lo+uoBEj3RBK4DLG9WK1Y'
-    end
+  def ecdsa_sha2_nistp256_key_fingerprint_sha256
+    'SHA256:yGdFZAf5Mbg5+EPA802cn4lo+uoBEj3RBK4DLG9WK1Y'
+  end
 
-    def ecdsa_sha2_nistp384_key
-      @ecdsa_sha2_nistp384_key ||= OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDBxwkmydCn4mP4KMhlMpeBvIroQolWKVNoRPXpG7brFgK+Yiikqw8wd\nIZW5OlL4y3mgBwYFK4EEACKhZANiAARkoIR1oABi+aQJbKcmvzeYSKURQOyXM0HU\nR4T68v4hd/lJE4fFQRczj3wAaECe9u3CWI/oDlow4Vr0vab82ZGjIoblxblKQWYl\nyzENgzl226waGg1bLBo8Auilyf1B5yI=\n-----END EC PRIVATE KEY-----\n")
-    end
+  def ecdsa_sha2_nistp384_key
+    @ecdsa_sha2_nistp384_key ||= OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDBxwkmydCn4mP4KMhlMpeBvIroQolWKVNoRPXpG7brFgK+Yiikqw8wd\nIZW5OlL4y3mgBwYFK4EEACKhZANiAARkoIR1oABi+aQJbKcmvzeYSKURQOyXM0HU\nR4T68v4hd/lJE4fFQRczj3wAaECe9u3CWI/oDlow4Vr0vab82ZGjIoblxblKQWYl\nyzENgzl226waGg1bLBo8Auilyf1B5yI=\n-----END EC PRIVATE KEY-----\n")
+  end
 
-    def ecdsa_sha2_nistp384_key_fingerprint_md5
-      '87:5a:c0:a0:23:55:22:05:ca:16:4d:cc:0c:e5:e7:74'
-    end
+  def ecdsa_sha2_nistp384_key_fingerprint_md5
+    '87:5a:c0:a0:23:55:22:05:ca:16:4d:cc:0c:e5:e7:74'
+  end
 
-    def ecdsa_sha2_nistp384_key_fingerprint_sha256
-      'SHA256:l8ZS7aKnquF8VUXAbHj9wPEEenUjyKIiuUSgOWbWqUw'
-    end
+  def ecdsa_sha2_nistp384_key_fingerprint_sha256
+    'SHA256:l8ZS7aKnquF8VUXAbHj9wPEEenUjyKIiuUSgOWbWqUw'
+  end
 
-    def ecdsa_sha2_nistp521_key
-      @ecdsa_sha2_nistp521_key ||= OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIHbAgEBBEHQ2i7kjEGQHQB4pUQW9a2eCLWR2S5Go8U3CDyfbRCrYEp/pTSgI8uu\nMXyR3bf3SjqFQgZ6MZk5lkyrissJuwmvZKAHBgUrgQQAI6GBiQOBhgAEAN14FACK\nbs/KTqw4rxijeozGTVJTh1hNzBl2XaIhM4Fv8o3fE/pvogymyFu53GCng6gC4dmx\n/hycF41iIM29xVKPAeBnRNl6MdFBjuthOmE8eCRezgk1Bak8aBDUrzNT8OQssscw\npvQK4nc6ga/wTDaQGy5kV8tCOHNs2wKH+p2LpWTJ\n-----END EC PRIVATE KEY-----\n")
-    end
+  def ecdsa_sha2_nistp521_key
+    @ecdsa_sha2_nistp521_key ||= OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIHbAgEBBEHQ2i7kjEGQHQB4pUQW9a2eCLWR2S5Go8U3CDyfbRCrYEp/pTSgI8uu\nMXyR3bf3SjqFQgZ6MZk5lkyrissJuwmvZKAHBgUrgQQAI6GBiQOBhgAEAN14FACK\nbs/KTqw4rxijeozGTVJTh1hNzBl2XaIhM4Fv8o3fE/pvogymyFu53GCng6gC4dmx\n/hycF41iIM29xVKPAeBnRNl6MdFBjuthOmE8eCRezgk1Bak8aBDUrzNT8OQssscw\npvQK4nc6ga/wTDaQGy5kV8tCOHNs2wKH+p2LpWTJ\n-----END EC PRIVATE KEY-----\n")
+  end
 
-    def ecdsa_sha2_nistp521_key_fingerprint_md5
-      '6d:5f:10:80:18:4a:69:f3:e3:70:a3:87:90:81:9a:11'
-    end
+  def ecdsa_sha2_nistp521_key_fingerprint_md5
+    '6d:5f:10:80:18:4a:69:f3:e3:70:a3:87:90:81:9a:11'
+  end
 
-    def ecdsa_sha2_nistp521_key_fingerprint_sha256
-      'SHA256:gxtS/gn7iVn6rGgH3EZCInzxN2/hiONcaRSyBJ/Nr4U'
-    end
+  def ecdsa_sha2_nistp521_key_fingerprint_sha256
+    'SHA256:gxtS/gn7iVn6rGgH3EZCInzxN2/hiONcaRSyBJ/Nr4U'
   end
 
   def anonymous_private_key

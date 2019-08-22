@@ -288,7 +288,6 @@ EOF
     end
 
     def test_add_ecdsa_identity
-      return unless defined?(OpenSSL::PKey::EC)
       ecdsa = OpenSSL::PKey::EC.new("prime256v1").generate_key
       socket.expect do |s,type,buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
@@ -306,7 +305,6 @@ EOF
     end
 
     def test_add_ecdsa_cert_identity
-      return unless defined?(OpenSSL::PKey::EC)
       cert = make_cert(OpenSSL::PKey::EC.new("prime256v1").generate_key)
       socket.expect do |s,type,buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type

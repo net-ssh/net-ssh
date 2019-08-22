@@ -21,11 +21,7 @@ module Transport
       assert_equal ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa ssh-dss], algorithms[:host_key]
       assert_equal ec_kex + %w[diffie-hellman-group-exchange-sha256 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group1-sha1], algorithms[:kex]
       assert_equal %w[aes256-ctr aes192-ctr aes128-ctr aes256-cbc aes192-cbc aes128-cbc rijndael-cbc@lysator.liu.se blowfish-ctr blowfish-cbc cast128-ctr cast128-cbc 3des-ctr 3des-cbc idea-cbc none], algorithms[:encryption]
-      if defined?(OpenSSL::Digest::SHA256)
-        assert_equal %w[hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96 none], algorithms[:hmac]
-      else
-        assert_equal %w[hmac-sha1 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96 none], algorithms[:hmac]
-      end
+      assert_equal %w[hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96 none], algorithms[:hmac]
       assert_equal %w[none zlib@openssh.com zlib], algorithms[:compression]
       assert_equal %w[], algorithms[:language]
     end
@@ -55,16 +51,12 @@ module Transport
     end
 
     def ec_host_keys
-      if defined?(OpenSSL::PKey::EC)
-        %w[ecdsa-sha2-nistp521-cert-v01@openssh.com
-           ecdsa-sha2-nistp384-cert-v01@openssh.com
-           ecdsa-sha2-nistp256-cert-v01@openssh.com
-           ecdsa-sha2-nistp521
-           ecdsa-sha2-nistp384
-           ecdsa-sha2-nistp256]
-      else
-        []
-      end
+      %w[ecdsa-sha2-nistp521-cert-v01@openssh.com
+         ecdsa-sha2-nistp384-cert-v01@openssh.com
+         ecdsa-sha2-nistp256-cert-v01@openssh.com
+         ecdsa-sha2-nistp521
+         ecdsa-sha2-nistp384
+         ecdsa-sha2-nistp256]
     end
 
     def ed_ec_host_keys
@@ -76,11 +68,7 @@ module Transport
     end
 
     def ec_kex
-      if defined?(OpenSSL::PKey::EC)
-        %w[ecdh-sha2-nistp521 ecdh-sha2-nistp384 ecdh-sha2-nistp256]
-      else
-        []
-      end
+      %w[ecdh-sha2-nistp521 ecdh-sha2-nistp384 ecdh-sha2-nistp256]
     end
 
     def test_constructor_with_preferred_kex_should_put_preferred_kex_first
