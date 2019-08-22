@@ -18,14 +18,12 @@ module Net
     class KeyFactory
       # Specifies the mapping of SSH names to OpenSSL key classes.
       MAP = {
-        "dh"  => OpenSSL::PKey::DH,
-        "rsa" => OpenSSL::PKey::RSA,
-        "dsa" => OpenSSL::PKey::DSA
+        'dh'    => OpenSSL::PKey::DH,
+        'rsa'   => OpenSSL::PKey::RSA,
+        'dsa'   => OpenSSL::PKey::DSA,
+        'ecdsa' => OpenSSL::PKey::EC
       }
-      if defined?(OpenSSL::PKey::EC)
-        MAP["ecdsa"] = OpenSSL::PKey::EC
-        MAP["ed25519"] = Net::SSH::Authentication::ED25519::PrivKey if defined? Net::SSH::Authentication::ED25519
-      end
+      MAP["ed25519"] = Net::SSH::Authentication::ED25519::PrivKey if defined? Net::SSH::Authentication::ED25519
 
       class <<self
         # Fetch an OpenSSL key instance by its SSH name. It will be a new,
@@ -207,7 +205,7 @@ module Net
             return OpenSSLDSAKeyType
           elsif data.match(/-----BEGIN RSA PRIVATE KEY-----/)
             return OpenSSLRSAKeyType
-          elsif data.match(/-----BEGIN EC PRIVATE KEY-----/) && defined?(OpenSSL::PKey::EC)
+          elsif data.match(/-----BEGIN EC PRIVATE KEY-----/)
             return OpenSSLECKeyType
           elsif data.match(/-----BEGIN (.+) PRIVATE KEY-----/)
             raise OpenSSL::PKey::PKeyError, "not a supported key type '#{$1}'"

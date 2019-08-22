@@ -136,12 +136,8 @@ module Net
         # Returns an array of paths to the key files usually defined
         # by system default.
         def default_keys
-          if defined?(OpenSSL::PKey::EC)
-            %w[~/.ssh/id_ed25519 ~/.ssh/id_rsa ~/.ssh/id_dsa ~/.ssh/id_ecdsa
-               ~/.ssh2/id_ed25519 ~/.ssh2/id_rsa ~/.ssh2/id_dsa ~/.ssh2/id_ecdsa]
-          else
-            %w[~/.ssh/id_dsa ~/.ssh/id_rsa ~/.ssh2/id_dsa ~/.ssh2/id_rsa]
-          end
+          %w[~/.ssh/id_ed25519 ~/.ssh/id_rsa ~/.ssh/id_dsa ~/.ssh/id_ecdsa
+             ~/.ssh2/id_ed25519 ~/.ssh2/id_rsa ~/.ssh2/id_dsa ~/.ssh2/id_ecdsa]
         end
 
         # Returns an array of paths to the key files that should be used when
