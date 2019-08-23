@@ -268,7 +268,7 @@ dEmkLl07PQYJPGZLaZteuWrvfMrn+AiW5aAdHzhzNaOtNy5B3T7zGUHtgxXegqgd
 /QdCVCJgnZUO/zdAxkr22dDn+WEXkL4wgBVStQvvnQp9C2NJcoOExvex5PLzKWQg
 WEKt5v3QsUEgVrzkM4K9UbI=
 -----END PRIVATE KEY-----
-      EOF
+    EOF
   end
 
   def encrypted(key, password)

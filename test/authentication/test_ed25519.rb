@@ -86,7 +86,7 @@ aZ10TPUbkIvmaFXwYRoOS5qE8MciAAAAsNUAhbNQKwNcOr0eNq3nhtjoyeVyH8hRrpWsiY
 i/coUIVqouB4TPQAmsCVXiIRVTWQtRG0kWfFaV3qRt/bc22ZCvCT6ZZ1UmtulqqfUhSlKM
 oPcTikV1iWH5Xc+GxRFRRGTN/6HvBf0AKDB1kMXlDhGnBnHGeNH1pk44xG
 -----END OPENSSH PRIVATE KEY-----
-      EOF
+        EOF
       end
 
       def public_key_pwd
@@ -111,7 +111,7 @@ AAAEBPrD+n4901Y+NYJ2sry+EWRdltGFhMISvp91TywJ//mTB2NBh4GJPPUN1kXPMu8b63
 3Xcv55WoKC3OkBjFAbzJAAAAIHZhZ3JhbnRAdmFncmFudC11YnVudHUtdHJ1c3R5LTY0AQ
 IDBAU=
 -----END OPENSSH PRIVATE KEY-----
-      EOF
+        EOF
       end
 
       def public_key_no_pwd
