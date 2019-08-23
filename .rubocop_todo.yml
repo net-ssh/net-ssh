@@ -41,16 +41,6 @@ Layout/EmptyLinesAroundModuleBody:
 
 # Offense count: 4
 # Cop supports --auto-correct.
-# Configuration parameters: IndentationWidth.
-Layout/IndentAssignment:
-  Exclude:
-    - 'test/transport/kex/test_diffie_hellman_group1_sha1.rb'
-    - 'test/transport/kex/test_ecdh_sha2_nistp256.rb'
-    - 'test/transport/kex/test_ecdh_sha2_nistp384.rb'
-    - 'test/transport/kex/test_ecdh_sha2_nistp521.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.
 # SupportedStyles: special_inside_parentheses, consistent, align_brackets
 Layout/IndentFirstArrayElement:

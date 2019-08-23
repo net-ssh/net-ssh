@@ -10,7 +10,7 @@ module Transport
 
       def setup
         @dh_options = @dh = @algorithms = @connection = @server_key =
-          @packet_data = @shared_secret = nil
+                                                          @packet_data = @shared_secret = nil
       end
 
       def digest_type
