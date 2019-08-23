@@ -30,8 +30,6 @@ module Net
           # The group constant
           G = 2
 
-          attr_reader :p
-          attr_reader :g
           attr_reader :algorithms
           attr_reader :connection
           attr_reader :data
@@ -42,9 +40,6 @@ module Net
           # required by this algorithm, which was acquired during earlier
           # processing.
           def initialize(algorithms, connection, data)
-            @p = get_p
-            @g = get_g
-
             @algorithms = algorithms
             @connection = connection
 
@@ -82,17 +77,12 @@ module Net
 
           private
 
-          def get_p
-            OpenSSL::BN.new(self.class::P_s, self.class::P_r)
-          end
-
-          def get_g
-            self.class::G
-          end
-
-          # Returns the DH key parameters for the current connection.
+          # Returns the DH key parameters for the current connection. [p, q]
           def get_parameters
-            [p, g]
+            [
+              OpenSSL::BN.new(self.class::P_s, self.class::P_r),
+              self.class::G
+            ]
           end
 
           # Returns the INIT/REPLY constants used by this algorithm.
@@ -225,7 +215,6 @@ module Net
             raise Net::SSH::Exception, "expected NEWKEYS" unless buffer.type == NEWKEYS
           end
         end
-
       end
     end
   end
