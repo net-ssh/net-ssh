@@ -8,7 +8,6 @@ module Net
   module SSH
     module Transport
       module Kex
-
         # A key-exchange service implementing the "diffie-hellman-group1-sha1"
         # key-exchange algorithm.
         class DiffieHellmanGroup1SHA1
@@ -33,7 +32,6 @@ module Net
 
           attr_reader :p
           attr_reader :g
-          attr_reader :digester
           attr_reader :algorithms
           attr_reader :connection
           attr_reader :data
@@ -47,7 +45,6 @@ module Net
             @p = get_p
             @g = get_g
 
-            @digester = OpenSSL::Digest::SHA1
             @algorithms = algorithms
             @connection = connection
 
@@ -77,6 +74,10 @@ module Net
                      server_key: result[:server_key],
                      shared_secret: result[:shared_secret],
                      hashing_algorithm: digester }
+          end
+
+          def digester
+            OpenSSL::Digest::SHA1
           end
 
           private
@@ -204,7 +205,7 @@ module Net
           def verify_signature(result) #:nodoc:
             response = build_signature_buffer(result)
 
-            hash = @digester.digest(response.to_s)
+            hash = digester.digest(response.to_s)
 
             raise Net::SSH::Exception, "could not verify server signature" unless connection.host_key_verifier.verify_signature { result[:server_key].ssh_do_verify(result[:server_sig], hash) }
 

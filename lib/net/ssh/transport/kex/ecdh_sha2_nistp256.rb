@@ -21,8 +21,7 @@ module Net
           def initialize(algorithms, connection, data)
             @algorithms = algorithms
             @connection = connection
-      
-            @digester = digester
+
             @data = data.dup
             @ecdh = generate_key
             @logger = @data.delete(:logger)
