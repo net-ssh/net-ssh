@@ -34,16 +34,6 @@ module Net
       
           # The group constant
           G = 2
-      
-          private
-      
-          def get_p
-            OpenSSL::BN.new(P_s, P_r)
-          end
-      
-          def get_g
-            G
-          end
         end
       end
     end

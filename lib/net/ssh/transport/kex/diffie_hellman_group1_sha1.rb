@@ -82,11 +82,11 @@ module Net
           private
 
           def get_p
-            OpenSSL::BN.new(P_s, P_r)
+            OpenSSL::BN.new(self.class::P_s, self.class::P_r)
           end
 
           def get_g
-            G
+            self.class::G
           end
 
           # Returns the DH key parameters for the current connection.
