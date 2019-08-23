@@ -47,19 +47,6 @@ Layout/IndentFirstArrayElement:
   Exclude:
     - 'lib/net/ssh/transport/openssl.rb'
 
-# Offense count: 11
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: squiggly, active_support, powerpack, unindent
-Layout/IndentHeredoc:
-  Exclude:
-    - 'test/authentication/test_agent.rb'
-    - 'test/authentication/test_certificate.rb'
-    - 'test/authentication/test_ed25519.rb'
-    - 'test/authentication/test_session.rb'
-    - 'test/integration/test_agent.rb'
-    - 'test/test_key_factory.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
