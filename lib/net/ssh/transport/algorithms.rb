@@ -26,10 +26,19 @@ module Net
         # Define the default algorithms, in order of preference, supported by
         # Net::SSH.
         ALGORITHMS = {
-          host_key: %w[ssh-rsa-cert-v01@openssh.com
+          host_key: %w[ecdsa-sha2-nistp521-cert-v01@openssh.com
+                       ecdsa-sha2-nistp384-cert-v01@openssh.com
+                       ecdsa-sha2-nistp256-cert-v01@openssh.com
+                       ecdsa-sha2-nistp521
+                       ecdsa-sha2-nistp384
+                       ecdsa-sha2-nistp256
+                       ssh-rsa-cert-v01@openssh.com
                        ssh-rsa-cert-v00@openssh.com
                        ssh-rsa ssh-dss],
-          kex: %w[diffie-hellman-group-exchange-sha256
+          kex: %w[ecdh-sha2-nistp521
+                  ecdh-sha2-nistp384
+                  ecdh-sha2-nistp256
+                  diffie-hellman-group-exchange-sha256
                   diffie-hellman-group-exchange-sha1
                   diffie-hellman-group14-sha1
                   diffie-hellman-group1-sha1],
@@ -52,25 +61,11 @@ module Net
           compression: %w[none zlib@openssh.com zlib],
           language: %w[]
         }
-        if defined?(OpenSSL::PKey::EC)
+
+        if Net::SSH::Authentication::ED25519Loader::LOADED
           ALGORITHMS[:host_key].unshift(
-            "ecdsa-sha2-nistp521-cert-v01@openssh.com",
-            "ecdsa-sha2-nistp384-cert-v01@openssh.com",
-            "ecdsa-sha2-nistp256-cert-v01@openssh.com",
-            "ecdsa-sha2-nistp521",
-            "ecdsa-sha2-nistp384",
-            "ecdsa-sha2-nistp256"
-          )
-          if Net::SSH::Authentication::ED25519Loader::LOADED
-            ALGORITHMS[:host_key].unshift(
-              "ssh-ed25519-cert-v01@openssh.com",
-              "ssh-ed25519"
-            )
-          end
-          ALGORITHMS[:kex].unshift(
-            "ecdh-sha2-nistp521",
-            "ecdh-sha2-nistp384",
-            "ecdh-sha2-nistp256"
+            'ssh-ed25519-cert-v01@openssh.com',
+            'ssh-ed25519'
           )
         end
 

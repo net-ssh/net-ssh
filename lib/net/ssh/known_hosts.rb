@@ -41,14 +41,11 @@ module Net
     # This is used internally by Net::SSH, and will never need to be used directly
     # by consumers of the library.
     class KnownHosts
-      if defined?(OpenSSL::PKey::EC)
-        SUPPORTED_TYPE = %w[ssh-rsa ssh-dss
-                            ecdsa-sha2-nistp256
-                            ecdsa-sha2-nistp384
-                            ecdsa-sha2-nistp521]
-      else
-        SUPPORTED_TYPE = %w[ssh-rsa ssh-dss]
-      end
+      SUPPORTED_TYPE = %w[ssh-rsa ssh-dss
+                          ecdsa-sha2-nistp256
+                          ecdsa-sha2-nistp384
+                          ecdsa-sha2-nistp521]
+
       SUPPORTED_TYPE.push('ssh-ed25519') if Net::SSH::Authentication::ED25519Loader::LOADED
 
       class <<self
