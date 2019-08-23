@@ -83,19 +83,16 @@ See Net::SSH for more documentation, and links to further information.
 
 ## REQUIREMENTS:
 
-The only requirement you might be missing is the OpenSSL bindings for Ruby.
+The only requirement you might be missing is the OpenSSL bindings for Ruby with a version greather than `1.0.1`.
 These are built by default on most platforms, but you can verify that they're built and installed on your system by running the following command line:
 
 ```sh
 ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION'
 ```
 
-If that spits out something like `OpenSSL 0.9.8g 19 Oct 2007`, then you're set.
+If that spits out something like `OpenSSL 1.0.1 14 Mar 2012`, then you're set.
 If you get an error, then you'll need to see about rebuilding ruby with OpenSSL support,
 or (if your platform supports it) installing the OpenSSL bindings separately.
-
-Lastly, if you want to run the tests or use any of the Rake tasks, you'll need Mocha and
-other dependencies listed in Gemfile
 
 ## INSTALL:
 
@@ -128,11 +125,19 @@ If you're still having trouble let me know and I'll give you a hand.
 
 For ed25519 public key auth support your bundle file should contain `ed25519`, `bcrypt_pbkdf` dependencies.
 
+```sh
+gem install ed25519
+gem install bcrypt_pbkdf
+```
+
 ## RUBY SUPPORT
 
 * See [net-ssh.gemspec](https://github.com/net-ssh/net-ssh/blob/master/net-ssh.gemspec) for current versions ruby requirements
 
 ## RUNNING TESTS
+
+If you want to run the tests or use any of the Rake tasks, you'll need Mocha and
+other dependencies listed in Gemfile
 
 Run the test suite from the net-ssh directory with the following command:
 
