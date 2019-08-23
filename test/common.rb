@@ -51,7 +51,7 @@ class NetSSHTest < Minitest::Test
     yield
   end
 
-  def assert_not_nil obj, msg = nil
+  def assert_not_nil(obj, msg = nil)
     refute_nil obj, msg
   end
 end

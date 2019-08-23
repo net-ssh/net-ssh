@@ -643,25 +643,6 @@ Style/LineEndConcatenation:
     - 'lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb'
     - 'lib/net/ssh/verifiers/always.rb'
 
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: IgnoredMethods.
-Style/MethodCallWithoutArgsParentheses:
-  Exclude:
-    - 'test/authentication/test_key_manager.rb'
-    - 'test/connection/test_session.rb'
-    - 'test/integration/test_forward.rb'
-    - 'test/start/test_user_nil.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: require_parentheses, require_no_parentheses, require_no_parentheses_except_multiline
-Style/MethodDefParentheses:
-  Exclude:
-    - 'test/common.rb'
-    - 'test/integration/common.rb'
-
 # Offense count: 1
 Style/MethodMissingSuper:
   Exclude:

@@ -31,7 +31,7 @@ module Authentication
     end
 
     def test_agent_should_be_used_by_default
-      assert manager().use_agent?
+      assert manager.use_agent?
     end
 
     def test_agent_should_not_be_used_with_no_agent

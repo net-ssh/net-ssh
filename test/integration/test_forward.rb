@@ -339,7 +339,7 @@ class TestForward < ForwardTestBase
         sleep(100)
         client.puts "Hallo"
       end
-      proxy = TCPProxy.new()
+      proxy = TCPProxy.new
       session = Net::SSH.start(*ssh_start_params(proxy: proxy))
       remote_port = server.addr[1]
       local_port = session.forward.local(0, localhost, remote_port)
