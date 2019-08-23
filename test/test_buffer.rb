@@ -348,77 +348,75 @@ class TestBuffer < NetSSHTest
     assert_equal "start\0\0\0\7ssh-rsa\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0\0\0\010\x77\x66\x55\x44\x33\x22\x11\x00", buffer.to_s
   end
 
-  if defined?(OpenSSL::PKey::EC)
-    def test_read_key_blob_should_read_ecdsa_sha2_nistp256_keys
-      random_ecdsa_sha2_nistp256 { |buffer|
-        buffer.read_keyblob("ecdsa-sha2-nistp256")
-      }
+  def test_read_key_blob_should_read_ecdsa_sha2_nistp256_keys
+    random_ecdsa_sha2_nistp256 do |buffer|
+      buffer.read_keyblob('ecdsa-sha2-nistp256')
     end
+  end
 
-    def test_read_key_blob_should_read_ecdsa_sha2_nistp384_keys
-      random_ecdsa_sha2_nistp384 { |buffer|
-        buffer.read_keyblob("ecdsa-sha2-nistp384")
-      }
+  def test_read_key_blob_should_read_ecdsa_sha2_nistp384_keys
+    random_ecdsa_sha2_nistp384 do |buffer|
+      buffer.read_keyblob('ecdsa-sha2-nistp384')
     end
+  end
 
-    def test_read_key_blob_should_read_ecdsa_sha2_nistp521_keys
-      random_ecdsa_sha2_nistp521 { |buffer|
-        buffer.read_keyblob("ecdsa-sha2-nistp521")
-      }
+  def test_read_key_blob_should_read_ecdsa_sha2_nistp521_keys
+    random_ecdsa_sha2_nistp521 do |buffer|
+      buffer.read_keyblob('ecdsa-sha2-nistp521')
     end
+  end
 
-    def test_read_key_should_read_ecdsa_sha2_nistp256_key_type_and_keyblob
-      random_ecdsa_sha2_nistp256 do |buffer|
-        b2 = Net::SSH::Buffer.from(:string, "ecdsa-sha2-nistp256", :raw, buffer)
-        b2.read_key
-      end
+  def test_read_key_should_read_ecdsa_sha2_nistp256_key_type_and_keyblob
+    random_ecdsa_sha2_nistp256 do |buffer|
+      b2 = Net::SSH::Buffer.from(:string, 'ecdsa-sha2-nistp256', :raw, buffer)
+      b2.read_key
     end
+  end
 
-    def test_read_key_should_read_ecdsa_sha2_nistp384_key_type_and_keyblob
-      random_ecdsa_sha2_nistp384 do |buffer|
-        b2 = Net::SSH::Buffer.from(:string, "ecdsa-sha2-nistp384", :raw, buffer)
-        b2.read_key
-      end
+  def test_read_key_should_read_ecdsa_sha2_nistp384_key_type_and_keyblob
+    random_ecdsa_sha2_nistp384 do |buffer|
+      b2 = Net::SSH::Buffer.from(:string, 'ecdsa-sha2-nistp384', :raw, buffer)
+      b2.read_key
     end
+  end
 
-    def test_read_key_should_read_ecdsa_sha2_nistp521_key_type_and_keyblob
-      random_ecdsa_sha2_nistp521 do |buffer|
-        b2 = Net::SSH::Buffer.from(:string, "ecdsa-sha2-nistp521", :raw, buffer)
-        b2.read_key
-      end
+  def test_read_key_should_read_ecdsa_sha2_nistp521_key_type_and_keyblob
+    random_ecdsa_sha2_nistp521 do |buffer|
+      b2 = Net::SSH::Buffer.from(:string, 'ecdsa-sha2-nistp521', :raw, buffer)
+      b2.read_key
     end
+  end
 
-    def test_write_ecdsa_sha2_nistp256_key_should_write_argument_to_end_of_buffer
-      buffer = new("start")
-      key = OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIISGj5vAJCWt2KPI8NwaWVDSNLl2vbRxDIOkY+n6O0VVoAoGCCqGSM49\nAwEHoUQDQgAEnKbs0yEogTKT4QRu8T9nb2svl2mEWXb6g224oCpD2o6TYNXNw54H\nmWkdCv+kFCqSlfSi5fqFhrXdfEY6zSzQYQ==\n-----END EC PRIVATE KEY-----\n")
+  def test_write_ecdsa_sha2_nistp256_key_should_write_argument_to_end_of_buffer
+    buffer = new('start')
+    key = OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIISGj5vAJCWt2KPI8NwaWVDSNLl2vbRxDIOkY+n6O0VVoAoGCCqGSM49\nAwEHoUQDQgAEnKbs0yEogTKT4QRu8T9nb2svl2mEWXb6g224oCpD2o6TYNXNw54H\nmWkdCv+kFCqSlfSi5fqFhrXdfEY6zSzQYQ==\n-----END EC PRIVATE KEY-----\n")
 
-      buffer.write_key(key)
-      assert_equal "start\000\000\000\023ecdsa-sha2-nistp256\000\000\000\bnistp256\000\000\000A\004\234\246\354\323!(\2012\223\341\004n\361?gok/\227i\204Yv\372\203m\270\240*C\332\216\223`\325\315\303\236\a\231i\035\n\377\244\024*\222\225\364\242\345\372\205\206\265\335|F:\315,\320a", buffer.to_s
-    end
+    buffer.write_key(key)
+    assert_equal "start\000\000\000\023ecdsa-sha2-nistp256\000\000\000\bnistp256\000\000\000A\004\234\246\354\323!(\2012\223\341\004n\361?gok/\227i\204Yv\372\203m\270\240*C\332\216\223`\325\315\303\236\a\231i\035\n\377\244\024*\222\225\364\242\345\372\205\206\265\335|F:\315,\320a", buffer.to_s
+  end
 
-    def test_write_ecdsa_sha2_nistp384_key_should_write_argument_to_end_of_buffer
-      buffer = new("start")
-      key = OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDBAfxJpzhsR7O+wMol6BcDgualR8rJBvYegUDYbBUrDnPzDx2/gD1lZ\nnwG1FuD2s9igBwYFK4EEACKhZANiAATsfiU4Kxyvvj1DdvFYsdDnZIT7loRlan9I\n8geCWPPl6x7NFRP+awrnTaarMgieGqxG8IQaIA0SsDOICfbDBkuatRi0S1Et/in4\nZwVEZvO81Ro5YSrjuUDAsytnI6OXS28=\n-----END EC PRIVATE KEY-----\n")
+  def test_write_ecdsa_sha2_nistp384_key_should_write_argument_to_end_of_buffer
+    buffer = new('start')
+    key = OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDBAfxJpzhsR7O+wMol6BcDgualR8rJBvYegUDYbBUrDnPzDx2/gD1lZ\nnwG1FuD2s9igBwYFK4EEACKhZANiAATsfiU4Kxyvvj1DdvFYsdDnZIT7loRlan9I\n8geCWPPl6x7NFRP+awrnTaarMgieGqxG8IQaIA0SsDOICfbDBkuatRi0S1Et/in4\nZwVEZvO81Ro5YSrjuUDAsytnI6OXS28=\n-----END EC PRIVATE KEY-----\n")
 
-      buffer.write_key(key)
-      assert_equal "start\000\000\000\023ecdsa-sha2-nistp384\000\000\000\bnistp384\000\000\000a\004\354~%8+\034\257\276=Cv\361X\261\320\347d\204\373\226\204ej\177H\362\a\202X\363\345\353\036\315\025\023\376k\n\347M\246\2532\b\236\032\254F\360\204\032 \r\022\2603\210\t\366\303\006K\232\265\030\264KQ-\376)\370g\005Df\363\274\325\0329a*\343\271@\300\263+g#\243\227Ko", buffer.to_s
-    end
+    buffer.write_key(key)
+    assert_equal "start\000\000\000\023ecdsa-sha2-nistp384\000\000\000\bnistp384\000\000\000a\004\354~%8+\034\257\276=Cv\361X\261\320\347d\204\373\226\204ej\177H\362\a\202X\363\345\353\036\315\025\023\376k\n\347M\246\2532\b\236\032\254F\360\204\032 \r\022\2603\210\t\366\303\006K\232\265\030\264KQ-\376)\370g\005Df\363\274\325\0329a*\343\271@\300\263+g#\243\227Ko", buffer.to_s
+  end
 
-    def test_write_ecdsa_sha2_nistp521_key_should_write_argument_to_end_of_buffer
-      buffer = new("start")
-      key = OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIHbAgEBBEGhnQF/SFo4Vym88HnCfc6BR8WwYqDh9wNTPeqzR8auxIpp0GKQlCG2\nuHzyteJX5/YalV8empYhEzNmNLNn8x7j0aAHBgUrgQQAI6GBiQOBhgAEAYygOgV9\nVI8UyLQ3BDlv+rb3es+ufrIcj++cqcc9QcmRn237NiWRr/1NKy2AKijsEdACtZXo\nxPC0x9Vs9ieC2oR+ANOBubcxPl2giDnBYm8ywAmmlXsP5ByAM17k97CzW5O+Z/uO\nbxGUzzhoXTNcjqpAckhRVKdnh6FL/rKelT0tBYi+\n-----END EC PRIVATE KEY-----\n")
+  def test_write_ecdsa_sha2_nistp521_key_should_write_argument_to_end_of_buffer
+    buffer = new('start')
+    key = OpenSSL::PKey::EC.new("-----BEGIN EC PRIVATE KEY-----\nMIHbAgEBBEGhnQF/SFo4Vym88HnCfc6BR8WwYqDh9wNTPeqzR8auxIpp0GKQlCG2\nuHzyteJX5/YalV8empYhEzNmNLNn8x7j0aAHBgUrgQQAI6GBiQOBhgAEAYygOgV9\nVI8UyLQ3BDlv+rb3es+ufrIcj++cqcc9QcmRn237NiWRr/1NKy2AKijsEdACtZXo\nxPC0x9Vs9ieC2oR+ANOBubcxPl2giDnBYm8ywAmmlXsP5ByAM17k97CzW5O+Z/uO\nbxGUzzhoXTNcjqpAckhRVKdnh6FL/rKelT0tBYi+\n-----END EC PRIVATE KEY-----\n")
 
-      buffer.write_key(key)
-      assert_equal "start\000\000\000\023ecdsa-sha2-nistp521\000\000\000\bnistp521\000\000\000\205\004\001\214\240:\005}T\217\024\310\2647\0049o\372\266\367z\317\256~\262\034\217\357\234\251\307=A\311\221\237m\3736%\221\257\375M+-\200*(\354\021\320\002\265\225\350\304\360\264\307\325l\366'\202\332\204~\000\323\201\271\2671>]\240\2109\301bo2\300\t\246\225{\017\344\034\2003^\344\367\260\263[\223\276g\373\216o\021\224\3178h]3\\\216\252@rHQT\247g\207\241K\376\262\236\225=-\005\210\276", buffer.to_s
-    end
+    buffer.write_key(key)
+    assert_equal "start\000\000\000\023ecdsa-sha2-nistp521\000\000\000\bnistp521\000\000\000\205\004\001\214\240:\005}T\217\024\310\2647\0049o\372\266\367z\317\256~\262\034\217\357\234\251\307=A\311\221\237m\3736%\221\257\375M+-\200*(\354\021\320\002\265\225\350\304\360\264\307\325l\366'\202\332\204~\000\323\201\271\2671>]\240\2109\301bo2\300\t\246\225{\017\344\034\2003^\344\367\260\263[\223\276g\373\216o\021\224\3178h]3\\\216\252@rHQT\247g\207\241K\376\262\236\225=-\005\210\276", buffer.to_s
+  end
 
-    def test_write_ec_point_should_write_argument_to_end_of_buffer
-      buffer = new("start")
-      key = OpenSSL::PKey::EC::Point.new(OpenSSL::PKey::EC.new(OpenSSL::PKey::EC::CurveNameAlias['nistp256']).group)
+  def test_write_ec_point_should_write_argument_to_end_of_buffer
+    buffer = new('start')
+    key = OpenSSL::PKey::EC::Point.new(OpenSSL::PKey::EC.new(OpenSSL::PKey::EC::CurveNameAlias['nistp256']).group)
 
-      buffer.write_key(key)
-      assert_equal "start\x00\x00\x00\x13ecdsa-sha2-nistp256\x00\x00\x00\bnistp256\x00\x00\x00\x00", buffer.to_s
-    end
+    buffer.write_key(key)
+    assert_equal "start\x00\x00\x00\x13ecdsa-sha2-nistp256\x00\x00\x00\bnistp256\x00\x00\x00\x00", buffer.to_s
   end
 
   private
@@ -447,33 +445,31 @@ class TestBuffer < NetSSHTest
     assert_equal n4, key.pub_key
   end
 
-  if defined?(OpenSSL::PKey::EC)
-    def random_ecdsa_sha2_nistp256
-      k = OpenSSL::PKey::EC.new("prime256v1").generate_key
-      buffer = Net::SSH::Buffer.from(:string, "nistp256",
-                                     :string, k.public_key.to_bn.to_s(2))
-      key = yield(buffer)
-      assert_equal "ecdsa-sha2-nistp256", key.ssh_type
-      assert_equal k.public_key, key.public_key
-    end
+  def random_ecdsa_sha2_nistp256
+    k = OpenSSL::PKey::EC.new('prime256v1').generate_key
+    buffer = Net::SSH::Buffer.from(:string, 'nistp256',
+                                   :string, k.public_key.to_bn.to_s(2))
+    key = yield(buffer)
+    assert_equal 'ecdsa-sha2-nistp256', key.ssh_type
+    assert_equal k.public_key, key.public_key
+  end
 
-    def random_ecdsa_sha2_nistp384
-      k = OpenSSL::PKey::EC.new("secp384r1").generate_key
-      buffer = Net::SSH::Buffer.from(:string, "nistp384",
-                                     :string, k.public_key.to_bn.to_s(2))
-      key = yield(buffer)
-      assert_equal "ecdsa-sha2-nistp384", key.ssh_type
-      assert_equal k.public_key, key.public_key
-    end
+  def random_ecdsa_sha2_nistp384
+    k = OpenSSL::PKey::EC.new('secp384r1').generate_key
+    buffer = Net::SSH::Buffer.from(:string, 'nistp384',
+                                   :string, k.public_key.to_bn.to_s(2))
+    key = yield(buffer)
+    assert_equal 'ecdsa-sha2-nistp384', key.ssh_type
+    assert_equal k.public_key, key.public_key
+  end
 
-    def random_ecdsa_sha2_nistp521
-      k = OpenSSL::PKey::EC.new("secp521r1").generate_key
-      buffer = Net::SSH::Buffer.from(:string, "nistp521",
-                                     :string, k.public_key.to_bn.to_s(2))
-      key = yield(buffer)
-      assert_equal "ecdsa-sha2-nistp521", key.ssh_type
-      assert_equal k.public_key, key.public_key
-    end
+  def random_ecdsa_sha2_nistp521
+    k = OpenSSL::PKey::EC.new('secp521r1').generate_key
+    buffer = Net::SSH::Buffer.from(:string, 'nistp521',
+                                   :string, k.public_key.to_bn.to_s(2))
+    key = yield(buffer)
+    assert_equal 'ecdsa-sha2-nistp521', key.ssh_type
+    assert_equal k.public_key, key.public_key
   end
 
   def new(*args)
