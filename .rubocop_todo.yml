@@ -943,13 +943,6 @@ Style/SymbolProc:
     - 'test/integration/test_forward.rb'
     - 'test/test/test_test.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/UnlessElse:
-  Exclude:
-    - 'lib/net/ssh/transport/ctr.rb'
-    - 'test/transport/test_server_version.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/UnneededCondition:
