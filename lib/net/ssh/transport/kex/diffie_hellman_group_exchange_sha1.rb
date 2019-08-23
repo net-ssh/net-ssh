@@ -10,11 +10,6 @@ module Net::SSH::Transport::Kex
     MINIMUM_BITS      = 1024
     MAXIMUM_BITS      = 8192
 
-    KEXDH_GEX_GROUP   = 31
-    KEXDH_GEX_INIT    = 32
-    KEXDH_GEX_REPLY   = 33
-    KEXDH_GEX_REQUEST = 34
-
     private
 
     # Compute the number of bits needed for the given number of bytes.
