@@ -47,21 +47,6 @@ Layout/IndentFirstArrayElement:
   Exclude:
     - 'lib/net/ssh/transport/openssl.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: normal, indented_internal_methods
-Layout/IndentationConsistency:
-  Exclude:
-    - 'test/transport/kex/test_diffie_hellman_group_exchange_sha256.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: Width, IgnoredPatterns.
-Layout/IndentationWidth:
-  Exclude:
-    - 'test/transport/kex/test_diffie_hellman_group_exchange_sha256.rb'
-
 # Offense count: 4
 # Cop supports --auto-correct.
 Layout/LeadingBlankLines:
