@@ -50,8 +50,6 @@ lib/net/ssh/transport/constants.rb
 lib/net/ssh/transport/ctr.rb
 lib/net/ssh/transport/hmac.rb
 lib/net/ssh/transport/hmac/abstract.rb
-lib/net/ssh/transport/hmac/md5.rb
-lib/net/ssh/transport/hmac/md5_96.rb
 lib/net/ssh/transport/hmac/none.rb
 lib/net/ssh/transport/hmac/ripemd160.rb
 lib/net/ssh/transport/hmac/sha1.rb

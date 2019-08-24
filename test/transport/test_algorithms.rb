@@ -21,7 +21,7 @@ module Transport
       assert_equal ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa ssh-dss], algorithms[:host_key]
       assert_equal ec_kex + %w[diffie-hellman-group-exchange-sha256 diffie-hellman-group-exchange-sha1 diffie-hellman-group14-sha1 diffie-hellman-group1-sha1], algorithms[:kex]
       assert_equal %w[aes256-ctr aes192-ctr aes128-ctr aes256-cbc aes192-cbc aes128-cbc rijndael-cbc@lysator.liu.se blowfish-ctr blowfish-cbc cast128-ctr cast128-cbc 3des-ctr 3des-cbc idea-cbc none], algorithms[:encryption]
-      assert_equal %w[hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96 none], algorithms[:hmac]
+      assert_equal %w[hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com none], algorithms[:hmac]
       assert_equal %w[none zlib@openssh.com zlib], algorithms[:compression]
       assert_equal %w[], algorithms[:language]
     end
@@ -94,16 +94,16 @@ module Transport
     end
 
     def test_constructor_with_preferred_hmac_should_put_preferred_hmac_first
-      assert_equal %w[hmac-md5-96 hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 none], algorithms(hmac: "hmac-md5-96", append_all_supported_algorithms: true)[:hmac]
+      assert_equal %w[hmac-sha1 hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com none], algorithms(hmac: 'hmac-sha1', append_all_supported_algorithms: true)[:hmac]
     end
 
     def test_constructor_with_multiple_preferred_hmac_should_put_all_preferred_hmac_first
-      assert_equal %w[hmac-md5-96 hmac-sha1-96 hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 none], algorithms(hmac: %w[hmac-md5-96 hmac-sha1-96], append_all_supported_algorithms: true)[:hmac]
+      assert_equal %w[hmac-sha1 hmac-sha1-96 hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-ripemd160 hmac-ripemd160@openssh.com none], algorithms(hmac: %w[hmac-sha1 hmac-sha1-96], append_all_supported_algorithms: true)[:hmac]
     end
 
     def test_constructor_with_unrecognized_hmac_should_ignore_those
-      assert_equal %w[hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96 none],
-        algorithms(hmac: "unknown hmac-md5-96", append_all_supported_algorithms: true)[:hmac]
+      assert_equal %w[hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com none],
+        algorithms(hmac: "unknown", append_all_supported_algorithms: true)[:hmac]
     end
 
     def test_constructor_with_preferred_compression_should_put_preferred_compression_first
@@ -329,8 +329,8 @@ module Transport
         :string, options[:host_key] || "ssh-rsa,ssh-dss",
         :string, options[:encryption_client] || "aes256-ctr,aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
         :string, options[:encryption_server] || "aes256-ctr,aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
-        :string, options[:hmac_client] || "hmac-sha2-256,hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96",
-        :string, options[:hmac_server] || "hmac-sha2-256,hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96",
+        :string, options[:hmac_client] || "hmac-sha2-256,hmac-sha1,hmac-sha1-96",
+        :string, options[:hmac_server] || "hmac-sha2-256,hmac-sha1,hmac-sha1-96",
         :string, options[:compression_client] || "none,zlib@openssh.com,zlib",
         :string, options[:compression_server] || "none,zlib@openssh.com,zlib",
         :string, options[:language_client] || "",
@@ -345,8 +345,8 @@ module Transport
       assert_equal options[:host_key] || (ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa ssh-dss]).join(','), buffer.read_string
       assert_equal options[:encryption_client] || "aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,rijndael-cbc@lysator.liu.se,blowfish-ctr,blowfish-cbc,cast128-ctr,cast128-cbc,3des-ctr,3des-cbc,idea-cbc,none", buffer.read_string
       assert_equal options[:encryption_server] || "aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,rijndael-cbc@lysator.liu.se,blowfish-ctr,blowfish-cbc,cast128-ctr,cast128-cbc,3des-ctr,3des-cbc,idea-cbc,none", buffer.read_string
-      assert_equal options[:hmac_client] || "hmac-sha2-512,hmac-sha2-256,hmac-sha2-512-96,hmac-sha2-256-96,hmac-sha1,hmac-sha1-96,hmac-ripemd160,hmac-ripemd160@openssh.com,hmac-md5,hmac-md5-96,none", buffer.read_string
-      assert_equal options[:hmac_server] || "hmac-sha2-512,hmac-sha2-256,hmac-sha2-512-96,hmac-sha2-256-96,hmac-sha1,hmac-sha1-96,hmac-ripemd160,hmac-ripemd160@openssh.com,hmac-md5,hmac-md5-96,none", buffer.read_string
+      assert_equal options[:hmac_client] || "hmac-sha2-512,hmac-sha2-256,hmac-sha2-512-96,hmac-sha2-256-96,hmac-sha1,hmac-sha1-96,hmac-ripemd160,hmac-ripemd160@openssh.com,none", buffer.read_string
+      assert_equal options[:hmac_server] || "hmac-sha2-512,hmac-sha2-256,hmac-sha2-512-96,hmac-sha2-256-96,hmac-sha1,hmac-sha1-96,hmac-ripemd160,hmac-ripemd160@openssh.com,none", buffer.read_string
       assert_equal options[:compression_client] || "none,zlib@openssh.com,zlib", buffer.read_string
       assert_equal options[:compression_server] || "none,zlib@openssh.com,zlib", buffer.read_string
       assert_equal options[:language_client] || "", buffer.read_string

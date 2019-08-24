@@ -55,7 +55,6 @@ module Net
                    hmac-sha2-512-96 hmac-sha2-256-96
                    hmac-sha1 hmac-sha1-96
                    hmac-ripemd160 hmac-ripemd160@openssh.com
-                   hmac-md5 hmac-md5-96
                    none],
 
           compression: %w[none zlib@openssh.com zlib],

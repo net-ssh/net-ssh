@@ -1,6 +1,4 @@
 require 'net/ssh/transport/key_expander'
-require 'net/ssh/transport/hmac/md5'
-require 'net/ssh/transport/hmac/md5_96'
 require 'net/ssh/transport/hmac/sha1'
 require 'net/ssh/transport/hmac/sha1_96'
 require 'net/ssh/transport/hmac/sha2_256'
@@ -15,8 +13,6 @@ require 'net/ssh/transport/hmac/none'
 module Net::SSH::Transport::HMAC
   # The mapping of SSH hmac algorithms to their implementations
   MAP = {
-    'hmac-md5'         => MD5,
-    'hmac-md5-96'      => MD5_96,
     'hmac-sha1'        => SHA1,
     'hmac-sha1-96'     => SHA1_96,
     'hmac-sha2-256'    => SHA2_256,
