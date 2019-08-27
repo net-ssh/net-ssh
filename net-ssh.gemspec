@@ -17,6 +17,9 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/net-ssh/net-ssh"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3")
+  spec.metadata      = {
+    "changelog_uri" => "https://github.com/net-ssh/net-ssh/blob/master/CHANGES.txt"
+  }
 
   spec.extra_rdoc_files = [
     "LICENSE.txt",
