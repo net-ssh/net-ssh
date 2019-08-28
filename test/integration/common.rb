@@ -7,7 +7,7 @@ require 'expect'
 
 module IntegrationTestHelpers
   VERBOSE = false
-  def sh command
+  def sh(command)
     puts "$ #{command}" if VERBOSE
     res = system(command)
     status = $?
