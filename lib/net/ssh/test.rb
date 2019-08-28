@@ -74,7 +74,7 @@ module Net
       def transport(options={})
         @transport ||= Net::SSH::Transport::Session.new(
           options[:host] || "localhost",
-          options.merge(kex: "test", host_key: "ssh-rsa", verify_host_key: :never, proxy: socket(options))
+          options.merge(kex: "test", host_key: "ssh-rsa", append_all_supported_algorithms: true, verify_host_key: :never, proxy: socket(options))
         )
       end
 
