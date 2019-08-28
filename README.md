@@ -26,6 +26,59 @@ It allows you to write programs that invoke and interact with processes on remot
 * Support for SSH subsystems
 * Forward local and remote ports via an SSH connection
 
+## Supported Algorithms
+
+### Host Keys
+
+| Name                 | Support               | Details  |
+|----------------------|-----------------------|----------|
+| ssh-rsa              | OK                    |          |
+| ssh-ed25519          | OK                    | Require the gem `ed25519` |
+| ecdsa-sha2-nistp521  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| ecdsa-sha2-nistp384  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| ecdsa-sha2-nistp256  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| ssh-dss              | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+
+### Key Exchange
+
+| Name                                 | Support               | Details  |
+|--------------------------------------|-----------------------|----------|
+| ecdh-sha2-nistp521                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| ecdh-sha2-nistp384                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| ecdh-sha2-nistp256                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| diffie-hellman-group1-sha1           | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| diffie-hellman-group14-sha1          | OK                    |          |
+| diffie-hellman-group-exchange-sha1   | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| diffie-hellman-group-exchange-sha256 | OK                    |          |
+
+### Encryption algorithms (ciphers)
+
+| Name                                 | Support               | Details  |
+|--------------------------------------|-----------------------|----------|
+| aes256-ctr / aes192-ctr / aes128-ctr | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| aes256-cbc / aes192-cbc / aes128-cbc | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| rijndael-cbc@lysator.liu.se          | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| blowfish-ctr blowfish-cbc            | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| cast128-ctr cast128-cbc              | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| 3des-ctr 3des-cbc                    | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| idea-cbc                             | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| none                                 | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+
+### Message Authentication Code algorithms
+
+| Name                 | Support               | Details  |
+|----------------------|-----------------------|----------|
+| hmac-sha2-512        | OK                    |          |
+| hmac-sha2-256        | OK                    |          |
+| hmac-sha2-512-96     | Deprecated in 5.3     | removed from the specification, will be removed in 6.0 |
+| hmac-sha2-256-96     | Deprecated in 5.3     | removed from the specification, will be removed in 6.0 |
+| hmac-sha1            | OK                    | for backward compatibility      |
+| hmac-sha1-96         | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| hmac-ripemd160       | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| hmac-md5             | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| hmac-md5-96          | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| none                 | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+
 ## SYNOPSIS:
 
 In a nutshell:
