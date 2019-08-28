@@ -1,4 +1,3 @@
-require 'net/ssh/transport/constants'
 require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 
 module Net 
@@ -7,8 +6,8 @@ module Net
       module Kex
         # A key-exchange service implementing the "ecdh-sha2-nistp256"
         # key-exchange algorithm. (defined in RFC 5656)
-        class EcdhSHA2NistP256 < DiffieHellmanGroup1SHA1
-          attr_reader :ecdh
+        class EcdhSHA2NistP256 < Abstract
+          alias ecdh dh
 
           def digester
             OpenSSL::Digest::SHA256
@@ -16,16 +15,6 @@ module Net
 
           def curve_name
             OpenSSL::PKey::EC::CurveNameAlias['nistp256']
-          end
-
-          def initialize(algorithms, connection, data)
-            @algorithms = algorithms
-            @connection = connection
-      
-            @digester = digester
-            @data = data.dup
-            @ecdh = generate_key
-            @logger = @data.delete(:logger)
           end
 
           private

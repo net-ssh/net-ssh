@@ -3,7 +3,6 @@ require 'net/ssh/transport/constants'
 require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 
 module Net::SSH::Transport::Kex
-
   # A key-exchange service implementing the
   # "diffie-hellman-group-exchange-sha1" key-exchange algorithm.
   class DiffieHellmanGroupExchangeSHA1 < DiffieHellmanGroup1SHA1

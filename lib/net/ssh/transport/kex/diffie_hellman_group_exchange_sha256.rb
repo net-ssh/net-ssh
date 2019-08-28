@@ -4,10 +4,8 @@ module Net::SSH::Transport::Kex
   # A key-exchange service implementing the
   # "diffie-hellman-group-exchange-sha256" key-exchange algorithm.
   class DiffieHellmanGroupExchangeSHA256 < DiffieHellmanGroupExchangeSHA1
-    def initialize(*args)
-      super(*args)
-
-      @digester = OpenSSL::Digest::SHA256
+    def digester
+      OpenSSL::Digest::SHA256
     end
   end
 end
