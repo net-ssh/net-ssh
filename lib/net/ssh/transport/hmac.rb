@@ -15,20 +15,18 @@ require 'net/ssh/transport/hmac/none'
 module Net::SSH::Transport::HMAC
   # The mapping of SSH hmac algorithms to their implementations
   MAP = {
-    'hmac-md5'       => MD5,
-    'hmac-md5-96'    => MD5_96,
-    'hmac-sha1'      => SHA1,
-    'hmac-sha1-96'   => SHA1_96,
-    'hmac-ripemd160' => RIPEMD160,
+    'hmac-md5'         => MD5,
+    'hmac-md5-96'      => MD5_96,
+    'hmac-sha1'        => SHA1,
+    'hmac-sha1-96'     => SHA1_96,
+    'hmac-sha2-256'    => SHA2_256,
+    'hmac-sha2-256-96' => SHA2_256_96,
+    'hmac-sha2-512'    => SHA2_512,
+    'hmac-sha2-512-96' => SHA2_512_96,
+    'hmac-ripemd160'   => RIPEMD160,
     'hmac-ripemd160@openssh.com' => RIPEMD160,
     'none' => None
   }
-
-  # add mapping to sha2 hmac algorithms if they're available
-  MAP['hmac-sha2-256']    = SHA2_256    if defined?(::Net::SSH::Transport::HMAC::SHA2_256)
-  MAP['hmac-sha2-256-96'] = SHA2_256_96 if defined?(::Net::SSH::Transport::HMAC::SHA2_256_96)
-  MAP['hmac-sha2-512']    = SHA2_512    if defined?(::Net::SSH::Transport::HMAC::SHA2_512)
-  MAP['hmac-sha2-512-96'] = SHA2_512_96 if defined?(::Net::SSH::Transport::HMAC::SHA2_512_96)
 
   # Retrieves a new hmac instance of the given SSH type (+name+). If +key+ is
   # given, the new instance will be initialized with that key.
