@@ -28,6 +28,13 @@ It allows you to write programs that invoke and interact with processes on remot
 
 ## Supported Algorithms
 
+Net::SSH 6.0 remove by default the usage of weak algorithms.
+We strongly recommend that you install a servers's version that supports the latest algorithms.
+
+It is possible to return to the previous behavior by adding the option : `append_all_supported_algorithms: true`
+
+Unsecure algoritms will be definively remove in Net::SSH 7.*.
+
 ### Host Keys
 
 | Name                 | Support               | Details  |
