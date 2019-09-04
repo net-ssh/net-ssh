@@ -1,6 +1,8 @@
-module Net 
-  module SSH 
-    module Transport 
+require 'net/ssh/transport/kex/ecdh_sha2_nistp256'
+
+module Net
+  module SSH
+    module Transport
       module Kex
         # A key-exchange service implementing the "ecdh-sha2-nistp521"
         # key-exchange algorithm. (defined in RFC 5656)
