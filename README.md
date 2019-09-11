@@ -50,6 +50,7 @@ Unsecure algoritms will be definively remove in Net::SSH 7.*.
 
 | Name                                 | Support               | Details  |
 |--------------------------------------|-----------------------|----------|
+| curve25519-sha256                    | OK                    | Require the gem `x25519` |
 | ecdh-sha2-nistp521                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdh-sha2-nistp384                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdh-sha2-nistp256                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
@@ -189,6 +190,8 @@ For ed25519 public key auth support your bundle file should contain `ed25519`, `
 gem install ed25519
 gem install bcrypt_pbkdf
 ```
+
+For curve25519-sha256 kex exchange support your bundle file should contain `x25519` dependency.
 
 ## RUBY SUPPORT
 
