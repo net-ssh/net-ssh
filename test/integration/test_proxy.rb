@@ -68,6 +68,7 @@ class TestProxy < NetSSHTest
   def with_spurious_write_wakeup_emulate(rate=99,&block)
     orig_io_select = IO.method(:select)
     count = 0
+
     IO.singleton_class.send(:define_method, :select) do |*params|
       count += 1
       if (count % rate != 0)
@@ -77,6 +78,7 @@ class TestProxy < NetSSHTest
       end
       orig_io_select.call(*params)
     end
+
     begin
       yield
     ensure
@@ -89,21 +91,20 @@ class TestProxy < NetSSHTest
     begin
       setup_ssh_env do
         proxy = Net::SSH::Proxy::Command.new("/usr/bin/pv --rate-limit 100k | /bin/nc localhost 22")
-        #proxy = Net::SSH::Proxy::Command.new("/bin/nc localhost 22")
-        begin
-          large_msg = 'echo123' * 30000
-          ok = Net::SSH.start(*ssh_start_params(proxy: proxy)) do |ssh|
-            with_spurious_write_wakeup_emulate do
-              ret = ssh.exec! "echo \"$USER:#{large_msg}\""
-              #assert_equal "net_ssh_1:#{large_msg}\n", ret
-              assert_equal "/bin/sh: Argument list too long\n", ret
-              hello_count = 1000
-              ret = ssh.exec! "ruby -e 'puts \"Hello\"*#{hello_count}'"
-              assert_equal "Hello" * hello_count + "\n", ret
-            end
-            :ok
+
+        large_msg = 'echo123' * 30000
+
+        ok = Net::SSH.start(*ssh_start_params(proxy: proxy)) do |ssh|
+          with_spurious_write_wakeup_emulate do
+            ret = ssh.exec! "echo \"$USER:#{large_msg}\""
+            assert_equal "/bin/sh: Argument list too long\n", ret
+            hello_count = 1000
+            ret = ssh.exec! "ruby -e 'puts \"Hello\"*#{hello_count}'"
+            assert_equal "Hello" * hello_count + "\n", ret
           end
+          :ok
         end
+
         assert_equal :ok, ok
       end
     ensure
@@ -115,7 +116,7 @@ class TestProxy < NetSSHTest
     setup_ssh_env do
       setup_gateway do |gwuser, gwhost|
         proxy = Net::SSH::Proxy::Jump.new("#{gwuser}@#{gwhost}")
-        #puts "ssh #{user}@#{localhost} -i #{@key_id_rsa} -J #{gwuser}@#{gwhost} -vvv"
+
         output = Net::SSH.start(*ssh_start_params(proxy: proxy)) do |ssh|
           ssh.exec! "echo \"$USER:echo123\""
         end
