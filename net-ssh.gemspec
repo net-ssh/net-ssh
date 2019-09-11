@@ -1,4 +1,3 @@
-
 require_relative 'lib/net/ssh/version'
 
 Gem::Specification.new do |spec|
@@ -34,10 +33,10 @@ Gem::Specification.new do |spec|
   unless ENV['NET_SSH_NO_ED25519']
     spec.add_development_dependency("bcrypt_pbkdf", "~> 1.0") unless RUBY_PLATFORM == "java"
     spec.add_development_dependency("ed25519", "~> 1.2")
+    spec.add_development_dependency('x25519') unless RUBY_PLATFORM == 'java'
   end
 
   spec.add_development_dependency "bundler", ">= 1.17"
-
   spec.add_development_dependency "minitest", "~> 5.10"
   spec.add_development_dependency "mocha", ">= 1.2.1"
   spec.add_development_dependency "rake", "~> 12.0"
