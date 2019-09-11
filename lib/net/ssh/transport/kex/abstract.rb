@@ -68,11 +68,15 @@ module Net
           # really is the key for the session's host. Raise Net::SSH::Exception
           # if it is not.
           def verify_server_key(key) #:nodoc:
-            raise Net::SSH::Exception, "host key algorithm mismatch '#{key.ssh_type}' != '#{algorithms.host_key}'" if key.ssh_type != algorithms.host_key
+            if key.ssh_type != algorithms.host_key
+              raise Net::SSH::Exception, "host key algorithm mismatch '#{key.ssh_type}' != '#{algorithms.host_key}'"
+            end
 
             blob, fingerprint = generate_key_fingerprint(key)
 
-            raise Net::SSH::Exception, 'host key verification failed' unless connection.host_key_verifier.verify(key: key, key_blob: blob, fingerprint: fingerprint, session: connection)
+            unless connection.host_key_verifier.verify(key: key, key_blob: blob, fingerprint: fingerprint, session: connection)
+              raise Net::SSH::Exception, 'host key verification failed'
+            end
           end
 
           def generate_key_fingerprint(key)
@@ -93,7 +97,9 @@ module Net
 
             hash = digester.digest(response.to_s)
 
-            raise Net::SSH::Exception, 'could not verify server signature' unless connection.host_key_verifier.verify_signature { result[:server_key].ssh_do_verify(result[:server_sig], hash) }
+            unless connection.host_key_verifier.verify_signature { result[:server_key].ssh_do_verify(result[:server_sig], hash) }
+              raise Net::SSH::Exception, 'could not verify server signature'
+            end
 
             hash
           end

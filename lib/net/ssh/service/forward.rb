@@ -85,7 +85,8 @@ module Net
             client = server.accept
             debug { "received connection on #{socket}" }
 
-            channel = session.open_channel("direct-tcpip", :string, remote_host, :long, remote_port, :string, bind_address, local_port_type, local_port) do |achannel|
+            channel = session.open_channel("direct-tcpip", :string, remote_host, :long,
+                                           remote_port, :string, bind_address, local_port_type, local_port) do |achannel|
               achannel.info { "direct channel established" }
             end
 

@@ -86,7 +86,8 @@ module Net
       def assert_scripted
         raise "there is no script to be processed" if socket.script.events.empty?
         Net::SSH::Test::Extensions::IO.with_test_extension { yield }
-        assert socket.script.events.empty?, "there should not be any remaining scripted events, but there are still #{socket.script.events.length} pending"
+        assert socket.script.events.empty?, "there should not be any remaining scripted events, but there are still" \
+                                            "#{socket.script.events.length} pending"
       end
     end
 

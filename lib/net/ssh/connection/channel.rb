@@ -648,10 +648,14 @@ module Net
         def update_local_window_size(size)
           @local_window_size -= size
           if local_window_size < local_maximum_window_size / 2
-            connection.send_message(Buffer.from(:byte, CHANNEL_WINDOW_ADJUST,
-              :long, remote_id, :long, LOCAL_WINDOW_SIZE_INCREMENT))
+            connection.send_message(
+              Buffer.from(:byte, CHANNEL_WINDOW_ADJUST, :long, remote_id, :long, LOCAL_WINDOW_SIZE_INCREMENT)
+            )
             @local_window_size += LOCAL_WINDOW_SIZE_INCREMENT
-            @local_maximum_window_size += LOCAL_WINDOW_SIZE_INCREMENT if @local_maximum_window_size < @local_window_size || @local_maximum_window_size < GOOD_LOCAL_MAXIUMUM_WINDOW_SIZE
+
+            if @local_maximum_window_size < @local_window_size || @local_maximum_window_size < GOOD_LOCAL_MAXIUMUM_WINDOW_SIZE
+              @local_maximum_window_size += LOCAL_WINDOW_SIZE_INCREMENT
+            end
           end
         end
 

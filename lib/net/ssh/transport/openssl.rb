@@ -98,9 +98,9 @@ module OpenSSL
         sig_r = sig[0,20].unpack("H*")[0].to_i(16)
         sig_s = sig[20,20].unpack("H*")[0].to_i(16)
         a1sig = OpenSSL::ASN1::Sequence([
-           OpenSSL::ASN1::Integer(sig_r),
-           OpenSSL::ASN1::Integer(sig_s)
-        ])
+                                          OpenSSL::ASN1::Integer(sig_r),
+                                          OpenSSL::ASN1::Integer(sig_s)
+                                        ])
         return verify(OpenSSL::Digest::SHA1.new, a1sig.to_der, data)
       end
 
@@ -139,7 +139,10 @@ module OpenSSL
 
       def self.read_keyblob(curve_name_in_type, buffer)
         curve_name_in_key = buffer.read_string
-        raise Net::SSH::Exception, "curve name mismatched (`#{curve_name_in_key}' with `#{curve_name_in_type}')" unless curve_name_in_type == curve_name_in_key
+
+        unless curve_name_in_type == curve_name_in_key
+          raise Net::SSH::Exception, "curve name mismatched (`#{curve_name_in_key}' with `#{curve_name_in_type}')"
+        end
 
         public_key_oct = buffer.read_string
         begin
