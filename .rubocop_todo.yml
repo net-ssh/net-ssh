@@ -253,7 +253,7 @@ Lint/UselessAssignment:
 
 # Offense count: 229
 Metrics/AbcSize:
-  Max: 69
+  Max: 89
 
 # Offense count: 15
 # Configuration parameters: CountComments, ExcludedMethods.
@@ -283,7 +283,7 @@ Metrics/MethodLength:
 # Offense count: 2
 # Configuration parameters: CountComments.
 Metrics/ModuleLength:
-  Max: 138
+  Max: 160
 
 # Offense count: 1
 # Configuration parameters: CountKeywordArgs.
@@ -317,14 +317,18 @@ Naming/ClassAndModuleCamelCase:
     - 'lib/net/ssh/transport/hmac/sha1_96.rb'
     - 'lib/net/ssh/transport/hmac/sha2_256.rb'
     - 'lib/net/ssh/transport/hmac/sha2_256_96.rb'
+    - 'lib/net/ssh/transport/hmac/sha2_256_etm.rb'
     - 'lib/net/ssh/transport/hmac/sha2_512.rb'
     - 'lib/net/ssh/transport/hmac/sha2_512_96.rb'
+    - 'lib/net/ssh/transport/hmac/sha2_512_etm.rb'
     - 'test/transport/hmac/test_md5_96.rb'
     - 'test/transport/hmac/test_sha1_96.rb'
     - 'test/transport/hmac/test_sha2_256.rb'
     - 'test/transport/hmac/test_sha2_256_96.rb'
+    - 'test/transport/hmac/test_sha2_256_etm.rb'
     - 'test/transport/hmac/test_sha2_512.rb'
     - 'test/transport/hmac/test_sha2_512_96.rb'
+    - 'test/transport/hmac/test_sha2_512_etm.rb'
 
 # Offense count: 4
 Naming/ConstantName:
@@ -496,8 +500,10 @@ Style/ClassAndModuleChildren:
     - 'lib/net/ssh/transport/hmac/sha1_96.rb'
     - 'lib/net/ssh/transport/hmac/sha2_256.rb'
     - 'lib/net/ssh/transport/hmac/sha2_256_96.rb'
+    - 'lib/net/ssh/transport/hmac/sha2_256_etm.rb'
     - 'lib/net/ssh/transport/hmac/sha2_512.rb'
     - 'lib/net/ssh/transport/hmac/sha2_512_96.rb'
+    - 'lib/net/ssh/transport/hmac/sha2_512_etm.rb'
     - 'lib/net/ssh/transport/kex.rb'
     - 'lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha1.rb'
     - 'lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha256.rb'

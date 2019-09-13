@@ -130,7 +130,7 @@ module Net
           payload = client.compress(payload)
 
           # the length of the packet, minus the padding
-          actual_length = 4 + payload.bytesize + 1
+          actual_length = (client.hmac.etm ? 0 : 4) + payload.bytesize + 1
 
           # compute the padding length
           padding_length = client.block_size - (actual_length % client.block_size)
@@ -146,11 +146,32 @@ module Net
 
           padding = Array.new(padding_length) { rand(256) }.pack("C*")
 
-          unencrypted_data = [packet_length, padding_length, payload, padding].pack("NCA*A*")
-          mac = client.hmac.digest([client.sequence_number, unencrypted_data].pack("NA*"))
+          if client.hmac.etm
+            debug { "using encrypt-then-mac" }
 
-          encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
-          message = encrypted_data + mac
+            # Encrypt padding_length, payload, and padding. Take MAC
+            # from the unencrypted packet_lenght and the encrypted
+            # data.
+            length_data = [packet_length].pack("N")
+
+            unencrypted_data = [padding_length, payload, padding].pack("CA*A*")
+
+            encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
+
+            mac_data = length_data + encrypted_data
+
+            mac = client.hmac.digest([client.sequence_number, mac_data].pack("NA*"))
+
+            message = mac_data + mac
+          else
+            unencrypted_data = [packet_length, padding_length, payload, padding].pack("NCA*A*")
+
+            mac = client.hmac.digest([client.sequence_number, unencrypted_data].pack("NA*"))
+
+            encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
+
+            message = encrypted_data + mac
+          end
 
           debug { "queueing packet nr #{client.sequence_number} type #{payload.getbyte(0)} len #{packet_length}" }
           enqueue(message)
@@ -196,17 +217,25 @@ module Net
         # algorithms specified in the server state object, and returned as a
         # new Packet object.
         def poll_next_packet
+          aad_length = server.hmac.etm ? 4 : 0
+
           if @packet.nil?
             minimum = server.block_size < 4 ? 4 : server.block_size
             return nil if available < minimum
-            data = read_available(minimum)
+            data = read_available(minimum + aad_length)
 
             # decipher it
-            @packet = Net::SSH::Buffer.new(server.update_cipher(data))
-            @packet_length = @packet.read_long
+            if server.hmac.etm
+              @packet_length = data.unpack("N").first
+              @mac_data = data
+              @packet = Net::SSH::Buffer.new(server.update_cipher(data[aad_length..-1]))
+            else
+              @packet = Net::SSH::Buffer.new(server.update_cipher(data))
+              @packet_length = @packet.read_long
+            end
           end
 
-          need = @packet_length + 4 - server.block_size
+          need = @packet_length + 4 - aad_length - server.block_size
           raise Net::SSH::Exception, "padding error, need #{need} block #{server.block_size}" if need % server.block_size != 0
 
           return nil if available < need + server.hmac.mac_length
@@ -214,6 +243,7 @@ module Net
           if need > 0
             # read the remainder of the packet and decrypt it.
             data = read_available(need)
+            @mac_data += data if server.hmac.etm
             @packet.append(server.update_cipher(data))
           end
 
@@ -226,7 +256,11 @@ module Net
 
           payload = @packet.read(@packet_length - padding_length - 1)
 
-          my_computed_hmac = server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
+          my_computed_hmac = if server.hmac.etm
+                               server.hmac.digest([server.sequence_number, @mac_data].pack("NA*"))
+                             else
+                               server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
+                             end
           raise Net::SSH::Exception, "corrupted hmac detected" if real_hmac != my_computed_hmac
 
           # try to decompress the payload, in case compression is active

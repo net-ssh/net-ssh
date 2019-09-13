@@ -43,7 +43,8 @@ module Net
 
           encryption: %w[aes256-ctr aes192-ctr aes128-ctr],
 
-          hmac: %w[hmac-sha2-512 hmac-sha2-256
+          hmac: %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
+                   hmac-sha2-512 hmac-sha2-256
                    hmac-sha1]
         }.freeze
 

@@ -76,6 +76,8 @@ Unsecure algoritms will be definively remove in Net::SSH 7.*.
 
 | Name                 | Support               | Details  |
 |----------------------|-----------------------|----------|
+| hmac-sha2-512-etm    | OK                    |          |
+| hmac-sha2-256-etm    | OK                    |          |
 | hmac-sha2-512        | OK                    |          |
 | hmac-sha2-256        | OK                    |          |
 | hmac-sha2-512-96     | Deprecated in 5.3     | removed from the specification, will be removed in 6.0 |

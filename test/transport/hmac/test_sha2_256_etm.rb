@@ -1,12 +1,12 @@
 # encoding: ASCII-8BIT
 
 require 'common'
-require 'net/ssh/transport/hmac/sha2_256'
+require 'net/ssh/transport/hmac/sha2_256_etm'
 
 module Transport
   module HMAC
 
-    class TestSHA2_256 < NetSSHTest
+    class TestSHA2_256_Etm < NetSSHTest
       def test_expected_digest_class
         assert_equal OpenSSL::Digest::SHA256, subject.digest_class
         assert_equal OpenSSL::Digest::SHA256, subject.new.digest_class
@@ -23,8 +23,8 @@ module Transport
       end
 
       def test_expected_etm
-        assert_equal false, subject.etm
-        assert_equal false, subject.new.etm
+        assert_equal true, subject.etm
+        assert_equal true, subject.new.etm
       end
 
       def test_expected_digest
@@ -35,7 +35,7 @@ module Transport
       private
 
       def subject
-        Net::SSH::Transport::HMAC::SHA2_256
+        Net::SSH::Transport::HMAC::SHA2_256_Etm
       end
     end
   end
