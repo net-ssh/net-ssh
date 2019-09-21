@@ -44,11 +44,11 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_pattern_does_match
-    data = %q{
+    data = '
       Host test.*
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "test.host")
       assert_equal 1234, config['port']
@@ -56,10 +56,10 @@ class TestConfig < NetSSHTest
   end
 
   def test_check_host_ip
-    data = %q{
+    data = '
       Host *
         CheckHostIP no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, 'foo')
       assert_equal false, config['checkhostip']
@@ -70,11 +70,11 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_regex_chars
-    data = %q{
+    data = '
       Host |
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "test.host")
       assert_nil config['port']
@@ -332,11 +332,11 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_match_block_with_host
-    data = %q{
+    data = '
       Match Host foo
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "bar")
       assert_nil config['port']
@@ -346,11 +346,11 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_match_block_with_hosts
-    data = %q{
+    data = '
       Match Host foo,bar
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "bar2")
       assert_nil config['port']
@@ -362,11 +362,11 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_match_block_with_hosts_wildcard
-    data = %q{
+    data = '
       Match Host foo,*.baz.com
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "bar2")
       assert_nil config['port']
@@ -381,11 +381,11 @@ class TestConfig < NetSSHTest
 
   def test_load_with_match_block_with_multi_space_separated_hosts_condition
     # Extra tabs are thrown in between, for good measure
-    data = %q{
+    data = '
       Match host 		 foo,*.baz.com
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "bar2")
       assert_nil config['port']
@@ -399,11 +399,11 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_match_block_with_quoted_hosts_condition
-    data = %q{
+    data = '
       Match host "foo,*.baz.com"
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "bar2")
       assert_nil config['port']
@@ -417,11 +417,11 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_match_block_with_equal_signed_hosts_condition
-    data = %q{
+    data = '
       Match host=foo,*.baz.com
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "bar2")
       assert_nil config['port']
@@ -435,11 +435,11 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_match_block_with_quoted_equal_signed_hosts_condition
-    data = %q{
+    data = '
       Match host="foo,*.baz.com"
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "bar2")
       assert_nil config['port']
@@ -453,11 +453,11 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_match_block_with_whitespace_separated_equal_signed_hosts_condition
-    data = %q{
+    data = '
       Match host = foo,*.baz.com
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "bar2")
       assert_nil config['port']
@@ -471,11 +471,11 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_match_block_with_multi_equal_signed_hosts_condition
-    data = %q{
+    data = '
       Match host==foo,*.baz.com
         Port 1234
         Compression no
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "bar2")
       assert_nil config['port']
@@ -489,10 +489,10 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_multiple_hosts_criteria
-    data = %q{
+    data = '
       Match host *.baz.com host !bar.baz.com
         Port 1234
-    }
+    '
     with_config_from_data data do |f|
       config = Net::SSH::Config.load(f, "bar2")
       assert_nil config['port']

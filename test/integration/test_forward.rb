@@ -209,7 +209,7 @@ class TestForward < ForwardTestBase
         end
       end
       session.loop(0.1) { client_done.empty? }
-      assert_equal "Broken pipe", "#{server_exc.pop}" unless server_exc.empty?
+      assert_equal "Broken pipe", server_exc.pop.to_s unless server_exc.empty?
     end
   end
 
@@ -234,7 +234,7 @@ class TestForward < ForwardTestBase
         end
       end
       session.loop(0.1) { client_done.empty? }
-      assert_equal "Broken pipe", "#{server_exc.pop}" unless server_exc.empty?
+      assert_equal "Broken pipe", server_exc.pop.to_s unless server_exc.empty?
     end
   end
 
@@ -326,9 +326,7 @@ class TestForward < ForwardTestBase
     end
 
     def close_all
-      sockets.each do |socket|
-        socket.close
-      end
+      sockets.each(&:close)
     end
   end
 
@@ -364,7 +362,7 @@ class TestForward < ForwardTestBase
           session.loop(0.1) { true }
         rescue IOError, Errno::EBADF
           server_error = $!
-          #puts "Error: #{$!} #{$!.backtrace.join("\n")}"
+          # puts "Error: #{$!} #{$!.backtrace.join("\n")}"
         end
       end
       begin
@@ -412,7 +410,7 @@ class TestForward < ForwardTestBase
             session.close
           rescue StandardError
           end
-          #puts "Error: #{$!} #{$!.backtrace.join("\n")}"
+          # puts "Error: #{$!} #{$!.backtrace.join("\n")}"
         end
         assert_equal true, client_done.pop
       end

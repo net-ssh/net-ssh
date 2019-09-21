@@ -19,7 +19,7 @@ class TestNetSSHTest < NetSSHTest
       connection.open_channel do |ch|
         ch.exec("ls") do |_success|
           ch.on_data { |_c, data| result = data }
-          ch.on_close { |c| c.close }
+          ch.on_close(&:close)
         end
       end
 
@@ -46,7 +46,7 @@ class TestNetSSHTest < NetSSHTest
         ch.send_channel_request("shell")
         ch.exec("ls") do |_success|
           ch.on_data { |_c, data| result = data }
-          ch.on_close { |c| c.close }
+          ch.on_close(&:close)
         end
       end
 
@@ -67,7 +67,7 @@ class TestNetSSHTest < NetSSHTest
     assert_scripted do
       connection.open_channel do |ch|
         ch.send_channel_request("custom", :string, "hello", :string, "hello", :long, 42)
-        ch.on_close { |c| c.close }
+        ch.on_close(&:close)
       end
 
       connection.loop
