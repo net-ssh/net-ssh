@@ -229,11 +229,15 @@ module Net
                 key = KeyFactory.load_public_key(identity[:pubkey_file])
                 { public_key: key, from: :file, file: identity[:privkey_file] }
               when :privkey_file
-                private_key = KeyFactory.load_private_key(identity[:privkey_file], options[:passphrase], ask_passphrase, options[:password_prompt])
+                private_key = KeyFactory.load_private_key(
+                  identity[:privkey_file], options[:passphrase], ask_passphrase, options[:password_prompt]
+                )
                 key = private_key.send(:public_key)
                 { public_key: key, from: :file, file: identity[:privkey_file], key: private_key }
               when :data
-                private_key = KeyFactory.load_data_private_key(identity[:data], options[:passphrase], ask_passphrase, "<key in memory>", options[:password_prompt])
+                private_key = KeyFactory.load_data_private_key(
+                  identity[:data], options[:passphrase], ask_passphrase, "<key in memory>", options[:password_prompt]
+                )
                 key = private_key.send(:public_key)
                 { public_key: key, from: :key_data, data: identity[:data], key: private_key }
               else

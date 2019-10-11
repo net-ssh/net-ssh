@@ -376,7 +376,8 @@ module Net
 
           debug do
             "negotiated:\n" +
-              %i[kex host_key encryption_server encryption_client hmac_client hmac_server compression_client compression_server language_client language_server].map do |key|
+              %i[kex host_key encryption_server encryption_client hmac_client hmac_server
+                 compression_client compression_server language_client language_server].map do |key|
                 "* #{key}: #{instance_variable_get("@#{key}")}"
               end.join("\n")
           end
