@@ -65,7 +65,7 @@ module Net
           @hmac = HMAC.get("none")
           @compression = nil
           @compressor = @decompressor = nil
-          @next_iv = ""
+          @next_iv = "".dup
         end
     
         # A convenience method for quickly setting multiple values in a single

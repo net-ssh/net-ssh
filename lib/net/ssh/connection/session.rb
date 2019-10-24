@@ -419,7 +419,7 @@ module Net
         # the returned string has an exitstatus method to query it's exit satus
         def exec!(command, status: nil, &block)
           block_or_concat = block || Proc.new do |ch, type, data|
-            ch[:result] ||= ""
+            ch[:result] ||= "".dup
             ch[:result] << data
           end
     
@@ -427,7 +427,7 @@ module Net
           channel = exec(command, status: status, &block_or_concat)
           channel.wait
     
-          channel[:result] ||= "" unless block
+          channel[:result] ||= "".dup unless block
           channel[:result] &&= channel[:result].force_encoding("UTF-8") unless block
     
           StringWithExitstatus.new(channel[:result], status[:exit_code]) if channel[:result]

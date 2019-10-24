@@ -103,8 +103,8 @@ module Net
         # SSH known-host files.
         def host_as_string
           @host_as_string ||= begin
-            string = "#{host}"
-            string = "[#{string}]:#{port}" if port != DEFAULT_PORT
+            string = "#{host}".dup
+            string = "[#{string}]:#{port}".dup if port != DEFAULT_PORT
 
             peer_ip = socket.peer_ip
 
