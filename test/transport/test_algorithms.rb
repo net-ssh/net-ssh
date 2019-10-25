@@ -280,8 +280,18 @@ module Transport
     end
 
     def test_host_key_format
-      algorithms(host_key: 'ssh-rsa-cert-v01@openssh.com').instance_eval { @host_key = 'ssh-rsa-cert-v01@openssh.com' }
-      assert_equal 'ssh-rsa', algorithms.host_key_format
+      algorithm_types = %w[
+        ssh-rsa ssh-dss ecdsa-sha2-nistp256 ecdsa-sha2-nistp384 ecdsa-sha2-nistp521
+      ]
+
+      algorithm_types
+        .map { |t| [t, [0, 1].map { |n| "#{t}-cert-v0#{n}@openssh.com" }.push(t)] }
+        .each do |type, host_keys|
+          host_keys.each do |hk|
+            algorithms(host_key: hk).instance_eval { @host_key = hk }
+            assert_equal type, algorithms.host_key_format
+          end
+        end
     end
 
     private
@@ -383,10 +393,10 @@ module Transport
       assert_equal :server_hmac, transport.server_options[:hmac]
     end
 
-    def algorithms(algrothms_options={}, transport_options={})
+    def algorithms(algorithms_options={}, transport_options={})
       @algorithms ||= Net::SSH::Transport::Algorithms.new(
         transport(transport_options),
-        algrothms_options
+        algorithms_options
       )
     end
 
