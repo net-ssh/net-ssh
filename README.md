@@ -5,7 +5,7 @@
 [![Backers on Open Collective](https://opencollective.com/net-ssh/backers/badge.svg)](#backers])
 [![Sponsors on Open Collective](https://opencollective.com/net-ssh/sponsors/badge.svg)](#sponsors)
 
-# Net::SSH 5.x
+# Net::SSH 6.x
 
 * Docs: http://net-ssh.github.com/net-ssh
 * Issues: https://github.com/net-ssh/net-ssh/issues
@@ -28,7 +28,7 @@ It allows you to write programs that invoke and interact with processes on remot
 
 ## Supported Algorithms
 
-Net::SSH 6.0 remove by default the usage of weak algorithms.
+Net::SSH 6.0 disables by default the usage of weak algorithms.
 We strongly recommend that you install a servers's version that supports the latest algorithms.
 
 It is possible to return to the previous behavior by adding the option : `append_all_supported_algorithms: true`
@@ -44,7 +44,7 @@ Unsecure algoritms will be definively remove in Net::SSH 7.*.
 | ecdsa-sha2-nistp521  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdsa-sha2-nistp384  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdsa-sha2-nistp256  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
-| ssh-dss              | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| ssh-dss              | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
 
 ### Key Exchange
 
@@ -54,9 +54,9 @@ Unsecure algoritms will be definively remove in Net::SSH 7.*.
 | ecdh-sha2-nistp521                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdh-sha2-nistp384                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdh-sha2-nistp256                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
-| diffie-hellman-group1-sha1           | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| diffie-hellman-group1-sha1           | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
 | diffie-hellman-group14-sha1          | OK                    |          |
-| diffie-hellman-group-exchange-sha1   | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| diffie-hellman-group-exchange-sha1   | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
 | diffie-hellman-group-exchange-sha256 | OK                    |          |
 
 ### Encryption algorithms (ciphers)
@@ -64,13 +64,13 @@ Unsecure algoritms will be definively remove in Net::SSH 7.*.
 | Name                                 | Support               | Details  |
 |--------------------------------------|-----------------------|----------|
 | aes256-ctr / aes192-ctr / aes128-ctr | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
-| aes256-cbc / aes192-cbc / aes128-cbc | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
-| rijndael-cbc@lysator.liu.se          | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
-| blowfish-ctr blowfish-cbc            | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
-| cast128-ctr cast128-cbc              | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
-| 3des-ctr 3des-cbc                    | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
-| idea-cbc                             | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
-| none                                 | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| aes256-cbc / aes192-cbc / aes128-cbc | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
+| rijndael-cbc@lysator.liu.se          | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
+| blowfish-ctr blowfish-cbc            | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
+| cast128-ctr cast128-cbc              | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
+| 3des-ctr 3des-cbc                    | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
+| idea-cbc                             | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
+| none                                 | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
 
 ### Message Authentication Code algorithms
 
@@ -80,14 +80,14 @@ Unsecure algoritms will be definively remove in Net::SSH 7.*.
 | hmac-sha2-256-etm    | OK                    |          |
 | hmac-sha2-512        | OK                    |          |
 | hmac-sha2-256        | OK                    |          |
-| hmac-sha2-512-96     | Deprecated in 5.3     | removed from the specification, will be removed in 6.0 |
-| hmac-sha2-256-96     | Deprecated in 5.3     | removed from the specification, will be removed in 6.0 |
+| hmac-sha2-512-96     | Deprecated in 6.0     | removed from the specification, will be removed in 7.0 |
+| hmac-sha2-256-96     | Deprecated in 6.0     | removed from the specification, will be removed in 7.0 |
 | hmac-sha1            | OK                    | for backward compatibility      |
-| hmac-sha1-96         | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
-| hmac-ripemd160       | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
-| hmac-md5             | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
-| hmac-md5-96          | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
-| none                 | Deprecated in 5.3     | unsecure, will be removed in 6.0 |
+| hmac-sha1-96         | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
+| hmac-ripemd160       | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
+| hmac-md5             | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
+| hmac-md5-96          | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
+| none                 | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
 
 ## SYNOPSIS:
 
