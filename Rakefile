@@ -31,7 +31,7 @@ RDoc::Task.new do |rdoc|
   rdoc.rdoc_dir = "rdoc"
   rdoc.title = "#{name} #{version}"
   rdoc.generator = 'hanna' # gem install hanna-nouveau
-  rdoc.main = 'README.rdoc'
+  rdoc.main = 'README.md'
   rdoc.rdoc_files.include("README*")
   rdoc.rdoc_files.include("bin/*.rb")
   rdoc.rdoc_files.include("lib/**/*.rb")
