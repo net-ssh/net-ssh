@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH::Test::Extensions::IO - net-ssh 4.2.0</title>
+<title>module Net::SSH::Test::Extensions::IO - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -135,7 +135,7 @@ it can be scripted in <a href="../../../SSH.html">Net::SSH</a> unit tests.</p>
 
           
           <div class="method-source-code" id="extension_enabled-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/extensions.rb, line 128</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/extensions.rb, line 130</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">extension_enabled?</span>
   <span class="ruby-ivar">@extension_enabled</span>
 <span class="ruby-keyword">end</span></pre>
@@ -168,7 +168,7 @@ it can be scripted in <a href="../../../SSH.html">Net::SSH</a> unit tests.</p>
 
           
           <div class="method-source-code" id="with_test_extension-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/extensions.rb, line 118</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/extensions.rb, line 120</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">with_test_extension</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">orig_value</span> = <span class="ruby-ivar">@extension_enabled</span>
   <span class="ruby-ivar">@extension_enabled</span> = <span class="ruby-keyword">true</span>

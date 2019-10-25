@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Proxy::SOCKS5 - net-ssh 4.2.0</title>
+<title>class Net::SSH::Proxy::SOCKS5 - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -323,7 +323,7 @@ was requested when the socket factory was instantiated.</p>
   <span class="ruby-identifier">address_type</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">1</span>).<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">address_type</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">1</span>
-    <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">4</span>)  <span class="ruby-comment"># get four bytes for IPv4 address</span>
+    <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">4</span>) <span class="ruby-comment"># get four bytes for IPv4 address</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">3</span>
     <span class="ruby-identifier">len</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">1</span>).<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)
     <span class="ruby-identifier">hostname</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-identifier">len</span>)

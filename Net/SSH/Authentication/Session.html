@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Authentication::Session - net-ssh 4.2.0</title>
+<title>class Net::SSH::Authentication::Session - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -69,7 +69,7 @@
   <ul class="link-list">
   
   
-    <li><a class="include" href="../Transport/Constants.html">Net::SSH::Transport::Constants</a>
+    <li><a class="include" href="../Loggable.html">Net::SSH::Loggable</a>
   
   
   
@@ -77,7 +77,7 @@
   
   
   
-    <li><a class="include" href="../Loggable.html">Net::SSH::Loggable</a>
+    <li><a class="include" href="../Transport/Constants.html">Net::SSH::Transport::Constants</a>
   
   
   </ul>
@@ -222,7 +222,7 @@ object over the given transport layer abstraction.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/session.rb, line 41</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/session.rb, line 45</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">transport</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">logger</span>
   <span class="ruby-ivar">@transport</span> = <span class="ruby-identifier">transport</span>
@@ -271,7 +271,7 @@ authenticating the user, and false otherwise.</p>
 
           
           <div class="method-source-code" id="authenticate-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/session.rb, line 54</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/session.rb, line 58</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">authenticate</span>(<span class="ruby-identifier">next_service</span>, <span class="ruby-identifier">username</span>, <span class="ruby-identifier">password</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;beginning authentication of `#{username}&#39;&quot;</span> }
 
@@ -281,6 +281,7 @@ authenticating the user, and false otherwise.</p>
   <span class="ruby-identifier">key_manager</span> = <span class="ruby-constant">KeyManager</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">logger</span>, <span class="ruby-identifier">options</span>)
   <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span> <span class="ruby-identifier">key_manager</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">key</span>) } <span class="ruby-keyword">unless</span> <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">empty?</span>
   <span class="ruby-identifier">key_data</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">key2</span><span class="ruby-operator">|</span> <span class="ruby-identifier">key_manager</span>.<span class="ruby-identifier">add_key_data</span>(<span class="ruby-identifier">key2</span>) } <span class="ruby-keyword">unless</span> <span class="ruby-identifier">key_data</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-identifier">default_keys</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span> <span class="ruby-identifier">key_manager</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">key</span>) } <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:keys</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-value">:key_data</span>)
 
   <span class="ruby-identifier">attempted</span> = []
 
@@ -294,7 +295,7 @@ authenticating the user, and false otherwise.</p>
         <span class="ruby-identifier">auth_class</span> = <span class="ruby-constant">Methods</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">name</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\W+/</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">capitalize</span> }.<span class="ruby-identifier">join</span>)
         <span class="ruby-identifier">method</span> = <span class="ruby-identifier">auth_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">key_manager</span><span class="ruby-operator">:</span> <span class="ruby-identifier">key_manager</span>, <span class="ruby-identifier">password_prompt</span><span class="ruby-operator">:</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:password_prompt</span>])
       <span class="ruby-keyword">rescue</span> <span class="ruby-constant">NameError</span>
-        <span class="ruby-identifier">debug</span>{<span class="ruby-node">&quot;Mechanism #{name} was requested, but isn&#39;t a known type.  Ignoring it.&quot;</span>}
+        <span class="ruby-identifier">debug</span> {<span class="ruby-node">&quot;Mechanism #{name} was requested, but isn&#39;t a known type.  Ignoring it.&quot;</span>}
         <span class="ruby-keyword">next</span>
       <span class="ruby-keyword">end</span>
 
@@ -338,12 +339,10 @@ type. If it is not, an exception is raised.</p>
 
           
           <div class="method-source-code" id="expect_message-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/session.rb, line 123</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/session.rb, line 128</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">expect_message</span>(<span class="ruby-identifier">type</span>)
   <span class="ruby-identifier">message</span> = <span class="ruby-identifier">next_message</span>
-  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">message</span>.<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">type</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>, <span class="ruby-node">&quot;expected #{type}, got #{message.type} (#{message})&quot;</span>
-  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>, <span class="ruby-node">&quot;expected #{type}, got #{message.type} (#{message})&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">message</span>.<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">type</span>
   <span class="ruby-identifier">message</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -377,7 +376,7 @@ valid during user authentication.</p>
 
           
           <div class="method-source-code" id="next_message-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/session.rb, line 94</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/session.rb, line 99</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">next_message</span>
   <span class="ruby-identifier">loop</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">packet</span> = <span class="ruby-identifier">transport</span>.<span class="ruby-identifier">next_message</span>
@@ -385,7 +384,7 @@ valid during user authentication.</p>
     <span class="ruby-keyword">case</span> <span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>
     <span class="ruby-keyword">when</span> <span class="ruby-constant">USERAUTH_BANNER</span>
       <span class="ruby-identifier">info</span> { <span class="ruby-identifier">packet</span>[<span class="ruby-value">:message</span>] }
-      <span class="ruby-comment"># TODO add a hook for people to retrieve the banner when it is sent</span>
+    <span class="ruby-comment"># TODO add a hook for people to retrieve the banner when it is sent</span>
 
     <span class="ruby-keyword">when</span> <span class="ruby-constant">USERAUTH_FAILURE</span>
       <span class="ruby-ivar">@allowed_auth_methods</span> = <span class="ruby-identifier">packet</span>[<span class="ruby-value">:authentications</span>].<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/,/</span>)

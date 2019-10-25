@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH::Transport::KeyExpander - net-ssh 4.2.0</title>
+<title>module Net::SSH::Transport::KeyExpander - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -120,25 +120,25 @@
 
           
           <div class="method-source-code" id="expand_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/key_expander.rb, line 6</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/key_expander.rb, line 8</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">expand_key</span>(<span class="ruby-identifier">bytes</span>, <span class="ruby-identifier">start</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">bytes</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
     <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;&quot;</span>
   <span class="ruby-keyword">end</span>
-
+      
   <span class="ruby-identifier">k</span> = <span class="ruby-identifier">start</span>[<span class="ruby-value">0</span>, <span class="ruby-identifier">bytes</span>]
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">k</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">k</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">bytes</span>
-
+      
   <span class="ruby-identifier">digester</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:digester</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;No digester supplied&#39;</span>
   <span class="ruby-identifier">shared</span>   = <span class="ruby-identifier">options</span>[<span class="ruby-value">:shared</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;No shared secret supplied&#39;</span>
   <span class="ruby-identifier">hash</span>     = <span class="ruby-identifier">options</span>[<span class="ruby-value">:hash</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;No hash supplied&#39;</span>
-
+      
   <span class="ruby-keyword">while</span> <span class="ruby-identifier">k</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">bytes</span>
     <span class="ruby-identifier">step</span> = <span class="ruby-identifier">digester</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-identifier">shared</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">hash</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">k</span>)
     <span class="ruby-identifier">bytes_needed</span> = <span class="ruby-identifier">bytes</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">k</span>.<span class="ruby-identifier">length</span>
     <span class="ruby-identifier">k</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">step</span>[<span class="ruby-value">0</span>, <span class="ruby-identifier">bytes_needed</span>]
   <span class="ruby-keyword">end</span>
-
+      
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">k</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

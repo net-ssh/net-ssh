@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class OpenSSL::PKey::DH - net-ssh 4.2.0</title>
+<title>class OpenSSL::PKey::DH - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -86,10 +86,10 @@
 
   <section class="description">
     
-<p>This class is originally defined in the <a href="OpenSSL.html">OpenSSL</a>
-module. As needed, methods have been added to it by the <a
-href="../../Net/SSH.html">Net::SSH</a> module for convenience in dealing
-with SSH functionality.</p>
+<p>This class is originally defined in the <a
+href="../../OpenSSL.html">OpenSSL</a> module. As needed, methods have been
+added to it by the <a href="../../Net/SSH.html">Net::SSH</a> module for
+convenience in dealing with SSH functionality.</p>
 
   </section>
 
@@ -132,12 +132,12 @@ lifted more-or-less directly from OpenSSH, dh.c, dh_pub_is_valid.)</p>
 
           
           <div class="method-source-code" id="valid-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 42</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 38</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">valid?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">pub_key</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">pub_key</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>
   <span class="ruby-identifier">bits_set</span> = <span class="ruby-value">0</span>
   <span class="ruby-identifier">pub_key</span>.<span class="ruby-identifier">num_bits</span>.<span class="ruby-identifier">times</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">bits_set</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">pub_key</span>.<span class="ruby-identifier">bit_set?</span>(<span class="ruby-identifier">i</span>) }
-  <span class="ruby-keyword">return</span> ( <span class="ruby-identifier">bits_set</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">pub_key</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">p</span> )
+  <span class="ruby-keyword">return</span> (<span class="ruby-identifier">bits_set</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">pub_key</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">p</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           

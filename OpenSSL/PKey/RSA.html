@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class OpenSSL::PKey::RSA - net-ssh 4.2.0</title>
+<title>class OpenSSL::PKey::RSA - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -94,10 +94,10 @@
 
   <section class="description">
     
-<p>This class is originally defined in the <a href="OpenSSL.html">OpenSSL</a>
-module. As needed, methods have been added to it by the <a
-href="../../Net/SSH.html">Net::SSH</a> module for convenience in dealing
-with SSH functionality.</p>
+<p>This class is originally defined in the <a
+href="../../OpenSSL.html">OpenSSL</a> module. As needed, methods have been
+added to it by the <a href="../../Net/SSH.html">Net::SSH</a> module for
+convenience in dealing with SSH functionality.</p>
 
   </section>
 
@@ -139,7 +139,7 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="ssh_do_sign-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 77</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 71</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_do_sign</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">sign</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">data</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -172,7 +172,7 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="ssh_do_verify-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 72</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 66</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_do_verify</span>(<span class="ruby-identifier">sig</span>, <span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">verify</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">sig</span>, <span class="ruby-identifier">data</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -205,7 +205,7 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="ssh_signature_type-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 62</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 56</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_signature_type</span>
   <span class="ruby-identifier">ssh_type</span>
 <span class="ruby-keyword">end</span></pre>
@@ -239,7 +239,7 @@ SSH2 protocol.</p>
 
           
           <div class="method-source-code" id="ssh_type-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 58</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_type</span>
   <span class="ruby-string">&quot;ssh-rsa&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -272,7 +272,7 @@ SSH2 protocol.</p>
 
           
           <div class="method-source-code" id="to_blob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 67</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_blob</span>
   <span class="ruby-ivar">@blob</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:string</span>, <span class="ruby-identifier">ssh_type</span>, <span class="ruby-value">:bignum</span>, <span class="ruby-identifier">e</span>, <span class="ruby-value">:bignum</span>, <span class="ruby-identifier">n</span>).<span class="ruby-identifier">to_s</span>
 <span class="ruby-keyword">end</span></pre>

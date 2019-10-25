@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Config - net-ssh 4.2.0</title>
+<title>class Net::SSH::Config - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -133,7 +133,11 @@ keyboard-interactive</p>
 </li><li>
 <p>IdentityFile =&gt; maps to the :keys option</p>
 </li><li>
+<p>IdentityAgent =&gt; :identity_agent</p>
+</li><li>
 <p>IdentitiesOnly =&gt; :keys_only</p>
+</li><li>
+<p>CheckHostIP =&gt; :check_host_ip</p>
 </li><li>
 <p>Macs =&gt; maps to the :hmac option</p>
 </li><li>
@@ -151,11 +155,15 @@ keyboard-interactive</p>
 </li><li>
 <p>RekeyLimit =&gt; :rekey_limit</p>
 </li><li>
+<p>StrictHostKeyChecking =&gt; :strict_host_key_checking</p>
+</li><li>
 <p>User =&gt; :user</p>
 </li><li>
 <p>UserKnownHostsFile =&gt; :user_known_hosts_file</p>
 </li><li>
 <p>NumberOfPasswordPrompts =&gt; :number_of_password_prompts</p>
+</li><li>
+<p>FingerprintHash =&gt; :fingerprint_hash</p>
 </li></ul>
 
 <p>Note that you will never need to use this class directly–you can control
@@ -203,9 +211,9 @@ are, by default.)</p>
 
           
           <div class="method-source-code" id="default_auth_methods-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 55</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 60</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">default_auth_methods</span>
-  <span class="ruby-identifier">@@default_auth_methods</span>
+  <span class="ruby-identifier">@@default_auth_methods</span>.<span class="ruby-identifier">clone</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -237,9 +245,9 @@ default.</p>
 
           
           <div class="method-source-code" id="default_files-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 51</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 56</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">default_files</span>
-  <span class="ruby-identifier">@@default_files</span>
+  <span class="ruby-identifier">@@default_files</span>.<span class="ruby-identifier">clone</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -271,7 +279,7 @@ down to the files that are expandable.</p>
 
           
           <div class="method-source-code" id="expandable_default_files-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 176</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 186</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">expandable_default_files</span>
   <span class="ruby-identifier">default_files</span>.<span class="ruby-identifier">keep_if</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">begin</span>
@@ -314,7 +322,7 @@ by <a href="../SSH.html">Net::SSH</a>, and returns them.</p>
 
           
           <div class="method-source-code" id="for-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 63</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 68</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">for</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">files</span>=<span class="ruby-identifier">expandable_default_files</span>)
   <span class="ruby-identifier">translate</span>(<span class="ruby-identifier">files</span>.<span class="ruby-identifier">inject</span>({}) { <span class="ruby-operator">|</span><span class="ruby-identifier">settings</span>, <span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">load</span>(<span class="ruby-identifier">file</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>)
@@ -354,15 +362,15 @@ href="../SSH.html">Net::SSH</a> options.)</p>
 
           
           <div class="method-source-code" id="load-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 75</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 80</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load</span>(<span class="ruby-identifier">path</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>={}, <span class="ruby-identifier">base_dir</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">path</span>)
   <span class="ruby-identifier">base_dir</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">file</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">settings</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span>(<span class="ruby-identifier">file</span>)
 
   <span class="ruby-identifier">globals</span> = {}
-  <span class="ruby-identifier">host_matched</span> = <span class="ruby-keyword">false</span>
-  <span class="ruby-identifier">seen_host</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">block_matched</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">block_seen</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-constant">IO</span>.<span class="ruby-identifier">foreach</span>(<span class="ruby-identifier">file</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">line</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/^\s*(?:#.*)?$/</span>
 
@@ -376,14 +384,14 @@ href="../SSH.html">Net::SSH</a> options.)</p>
     <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">nil?</span>
 
     <span class="ruby-identifier">key</span>.<span class="ruby-identifier">downcase!</span>
-    <span class="ruby-identifier">value</span> = <span class="ruby-node">$1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^&quot;(.*)&quot;$/</span>
+    <span class="ruby-identifier">value</span> = <span class="ruby-identifier">unquote</span>(<span class="ruby-identifier">value</span>)
 
     <span class="ruby-identifier">value</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">strip</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^\d+$/</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^no$/i</span> <span class="ruby-keyword">then</span> <span class="ruby-keyword">false</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^yes$/i</span> <span class="ruby-keyword">then</span> <span class="ruby-keyword">true</span>
-      <span class="ruby-keyword">else</span> <span class="ruby-identifier">value</span>
-      <span class="ruby-keyword">end</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^\d+$/</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^no$/i</span> <span class="ruby-keyword">then</span> <span class="ruby-keyword">false</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^yes$/i</span> <span class="ruby-keyword">then</span> <span class="ruby-keyword">true</span>
+            <span class="ruby-keyword">else</span> <span class="ruby-identifier">value</span>
+            <span class="ruby-keyword">end</span>
 
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;host&#39;</span>
       <span class="ruby-comment"># Support &quot;Host host1 host2 hostN&quot;.</span>
@@ -395,14 +403,17 @@ href="../SSH.html">Net::SSH</a> options.)</p>
       <span class="ruby-identifier">negative_matched</span> = <span class="ruby-identifier">negative_hosts</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> <span class="ruby-identifier">host</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">pattern2regex</span>(<span class="ruby-identifier">h</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>]) }
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">negative_matched</span>
-        <span class="ruby-identifier">host_matched</span> = <span class="ruby-keyword">false</span>
+        <span class="ruby-identifier">block_matched</span> = <span class="ruby-keyword">false</span>
       <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">host_matched</span> = <span class="ruby-identifier">positive_hosts</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> <span class="ruby-identifier">host</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">pattern2regex</span>(<span class="ruby-identifier">h</span>) }
+        <span class="ruby-identifier">block_matched</span> = <span class="ruby-identifier">positive_hosts</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> <span class="ruby-identifier">host</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">pattern2regex</span>(<span class="ruby-identifier">h</span>) }
       <span class="ruby-keyword">end</span>
 
-      <span class="ruby-identifier">seen_host</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">block_seen</span> = <span class="ruby-keyword">true</span>
       <span class="ruby-identifier">settings</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">host</span>
-    <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">seen_host</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">key</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;match&#39;</span>
+      <span class="ruby-identifier">block_matched</span> = <span class="ruby-identifier">eval_match_conditions</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">settings</span>)
+      <span class="ruby-identifier">block_seen</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">block_seen</span>
       <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
       <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;identityfile&#39;</span>
         (<span class="ruby-identifier">globals</span>[<span class="ruby-identifier">key</span>] <span class="ruby-operator">||=</span> []) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">value</span>
@@ -413,7 +424,7 @@ href="../SSH.html">Net::SSH</a> options.)</p>
       <span class="ruby-keyword">else</span>
         <span class="ruby-identifier">globals</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>)
       <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">host_matched</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">block_matched</span>
       <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
       <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;identityfile&#39;</span>
         (<span class="ruby-identifier">settings</span>[<span class="ruby-identifier">key</span>] <span class="ruby-operator">||=</span> []) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">value</span>
@@ -425,20 +436,23 @@ href="../SSH.html">Net::SSH</a> options.)</p>
         <span class="ruby-identifier">settings</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>)
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">globals</span>
-    <span class="ruby-identifier">settings</span> = <span class="ruby-identifier">globals</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">settings</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">oldval</span>, <span class="ruby-identifier">newval</span><span class="ruby-operator">|</span>
-      <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;identityfile&#39;</span>
-        <span class="ruby-identifier">oldval</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">newval</span>
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">newval</span>
+    <span class="ruby-comment"># ProxyCommand and ProxyJump override each other so they need to be tracked togeather</span>
+    <span class="ruby-node">%w[proxyjump proxycommand]</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">proxy_key</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> (<span class="ruby-identifier">proxy_value</span> = <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">proxy_key</span>))
+        <span class="ruby-identifier">settings</span>[<span class="ruby-string">&#39;proxy&#39;</span>] <span class="ruby-operator">||=</span> [<span class="ruby-identifier">proxy_key</span>, <span class="ruby-identifier">proxy_value</span>]
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">settings</span>
+  <span class="ruby-identifier">globals</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">settings</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">oldval</span>, <span class="ruby-identifier">newval</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;identityfile&#39;</span>
+      <span class="ruby-identifier">oldval</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">newval</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">newval</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -472,13 +486,12 @@ downcased, and the returned hash will have Symbols for keys.</p>
 
           
           <div class="method-source-code" id="translate-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 165</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/config.rb, line 176</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">translate</span>(<span class="ruby-identifier">settings</span>)
   <span class="ruby-identifier">auth_methods</span> = <span class="ruby-identifier">default_auth_methods</span>.<span class="ruby-identifier">clone</span>
   (<span class="ruby-identifier">auth_methods</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;challenge-response&#39;</span>).<span class="ruby-identifier">uniq!</span>
-  <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">inject</span>({<span class="ruby-identifier">auth_methods</span><span class="ruby-operator">:</span> <span class="ruby-identifier">auth_methods</span>}) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hash</span>, (<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)<span class="ruby-operator">|</span>
+  <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">each_with_object</span>({ <span class="ruby-identifier">auth_methods</span><span class="ruby-operator">:</span> <span class="ruby-identifier">auth_methods</span> }) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>), <span class="ruby-identifier">hash</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">translate_config_key</span>(<span class="ruby-identifier">hash</span>, <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_sym</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">settings</span>)
-    <span class="ruby-identifier">hash</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">merge_challenge_response_with_keyboard_interactive</span>(<span class="ruby-identifier">ret</span>)
 <span class="ruby-keyword">end</span></pre>

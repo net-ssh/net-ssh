@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Proxy::HTTP - net-ssh 4.2.0</title>
+<title>class Net::SSH::Proxy::HTTP - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -209,7 +209,7 @@ are supported:</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/http.rb, line 43</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/http.rb, line 44</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>=<span class="ruby-value">80</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-ivar">@proxy_host</span> = <span class="ruby-identifier">proxy_host</span>
   <span class="ruby-ivar">@proxy_port</span> = <span class="ruby-identifier">proxy_port</span>
@@ -253,22 +253,23 @@ was requested when the socket factory was instantiated.</p>
 
           
           <div class="method-source-code" id="open-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/http.rb, line 51</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/http.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">connection_options</span>)
   <span class="ruby-identifier">socket</span> = <span class="ruby-identifier">establish_connection</span>(<span class="ruby-identifier">connection_options</span>[<span class="ruby-value">:timeout</span>])
-  <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-node">&quot;CONNECT #{host}:#{port} HTTP/1.0\r\n&quot;</span>
-
+  <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-node">&quot;CONNECT #{host}:#{port} HTTP/1.1\r\n&quot;</span>
+  <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-node">&quot;Host: #{host}:#{port}\r\n&quot;</span>
+    
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:user</span>]
     <span class="ruby-identifier">credentials</span> = [<span class="ruby-node">&quot;#{options[:user]}:#{options[:password]}&quot;</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;m*&quot;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/\s/</span>, <span class="ruby-string">&quot;&quot;</span>)
     <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-node">&quot;Proxy-Authorization: Basic #{credentials}\r\n&quot;</span>
   <span class="ruby-keyword">end</span>
-
+    
   <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">write</span> <span class="ruby-string">&quot;\r\n&quot;</span>
-
+    
   <span class="ruby-identifier">resp</span> = <span class="ruby-identifier">parse_response</span>(<span class="ruby-identifier">socket</span>)
-
+    
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">socket</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">resp</span>[<span class="ruby-value">:code</span>] <span class="ruby-operator">==</span> <span class="ruby-value">200</span>
-
+    
   <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">close</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConnectError</span>, <span class="ruby-identifier">resp</span>.<span class="ruby-identifier">inspect</span>
 <span class="ruby-keyword">end</span></pre>
@@ -309,7 +310,7 @@ was requested when the socket factory was instantiated.</p>
 
           
           <div class="method-source-code" id="establish_connection-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/http.rb, line 72</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/http.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">establish_connection</span>(<span class="ruby-identifier">connect_timeout</span>)
   <span class="ruby-constant">Socket</span>.<span class="ruby-identifier">tcp</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-keyword">nil</span>,
              <span class="ruby-identifier">connect_timeout</span><span class="ruby-operator">:</span> <span class="ruby-identifier">connect_timeout</span>)
@@ -343,20 +344,18 @@ was requested when the socket factory was instantiated.</p>
 
           
           <div class="method-source-code" id="parse_response-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/http.rb, line 77</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/http.rb, line 79</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_response</span>(<span class="ruby-identifier">socket</span>)
   <span class="ruby-identifier">version</span>, <span class="ruby-identifier">code</span>, <span class="ruby-identifier">reason</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">chomp</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/ /</span>, <span class="ruby-value">3</span>)
   <span class="ruby-identifier">headers</span> = {}
-
+    
   <span class="ruby-keyword">while</span> (<span class="ruby-identifier">line</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">gets</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">line</span>.<span class="ruby-identifier">chomp!</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;&quot;</span>)
     <span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span> = <span class="ruby-identifier">line</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/:/</span>, <span class="ruby-value">2</span>)
     <span class="ruby-identifier">headers</span>[<span class="ruby-identifier">name</span>.<span class="ruby-identifier">strip</span>] = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">strip</span>
   <span class="ruby-keyword">end</span>
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">headers</span>[<span class="ruby-string">&quot;Content-Length&quot;</span>]
-    <span class="ruby-identifier">body</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">headers</span>[<span class="ruby-string">&quot;Content-Length&quot;</span>].<span class="ruby-identifier">to_i</span>)
-  <span class="ruby-keyword">end</span>
-
+    
+  <span class="ruby-identifier">body</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">headers</span>[<span class="ruby-string">&quot;Content-Length&quot;</span>].<span class="ruby-identifier">to_i</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">headers</span>[<span class="ruby-string">&quot;Content-Length&quot;</span>]
+    
   <span class="ruby-keyword">return</span> { <span class="ruby-identifier">version</span><span class="ruby-operator">:</span> <span class="ruby-identifier">version</span>,
            <span class="ruby-identifier">code</span><span class="ruby-operator">:</span> <span class="ruby-identifier">code</span>.<span class="ruby-identifier">to_i</span>,
            <span class="ruby-identifier">reason</span><span class="ruby-operator">:</span> <span class="ruby-identifier">reason</span>,

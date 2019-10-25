@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1 - net-ssh 4.2.0</title>
+<title>class Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1 - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -59,26 +59,11 @@
   <h3>Parent</h3>
 
   
-  <p class="link">Object
+  <p class="link"><a href="Abstract.html">Net::SSH::Transport::Kex::Abstract</a>
   
 </div>
 
-    <div id="includes-section" class="nav-section">
-  <h3>Included Modules</h3>
-
-  <ul class="link-list">
-  
-  
-    <li><a class="include" href="../Constants.html">Net::SSH::Transport::Constants</a>
-  
-  
-  
-    <li><a class="include" href="../../Loggable.html">Net::SSH::Loggable</a>
-  
-  
-  </ul>
-</div>
-
+    
     
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
@@ -86,9 +71,7 @@
 
   <ul class="link-list" role="directory">
     
-    <li ><a href="#method-c-new">::new</a>
-    
-    <li ><a href="#method-i-exchange_keys">#exchange_keys</a>
+    <li ><a href="#method-i-digester">#digester</a>
     
   </ul>
 </div>
@@ -144,170 +127,18 @@ represents the value of P</p>
     
 
     
-    <section class="attribute-method-details" class="method-section">
-      <header>
-        <h3>Attributes</h3>
-      </header>
-
-      
-      <div id="attribute-i-algorithms" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">algorithms</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-connection" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">connection</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-data" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">data</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-dh" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">dh</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-digester" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">digester</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-g" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">g</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-p" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">p</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        
-        
-        </div>
-      </div>
-      
-    </section>
-    
 
     
-     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
-       <header>
-         <h3>Public Class Methods</h3>
-       </header>
-
-    
-      <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(algorithms, connection, data)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Create a new instance of the <a
-href="DiffieHellmanGroup1SHA1.html">DiffieHellmanGroup1SHA1</a> algorithm.
-The data is a Hash of symbols representing information required by this
-algorithm, which was acquired during earlier processing.</p>
-          
-          
-
-          
-          <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb, line 42</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">algorithms</span>, <span class="ruby-identifier">connection</span>, <span class="ruby-identifier">data</span>)
-  <span class="ruby-ivar">@p</span> = <span class="ruby-identifier">get_p</span>
-  <span class="ruby-ivar">@g</span> = <span class="ruby-identifier">get_g</span>
-
-  <span class="ruby-ivar">@digester</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>
-  <span class="ruby-ivar">@algorithms</span> = <span class="ruby-identifier">algorithms</span>
-  <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>
-
-  <span class="ruby-ivar">@data</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">dup</span>
-  <span class="ruby-ivar">@dh</span> = <span class="ruby-identifier">generate_key</span>
-  <span class="ruby-ivar">@logger</span> = <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:logger</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-    </section>
-  
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
     
-      <div id="method-i-exchange_keys" class="method-detail ">
+      <div id="method-i-digester" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">exchange_keys</span><span
+          <span class="method-name">digester</span><span
             class="method-args">()</span>
           
           <span class="method-click-advice">click to toggle source</span>
@@ -317,36 +148,15 @@ algorithm, which was acquired during earlier processing.</p>
 
         <div class="method-description">
           
-          <p>Perform the key-exchange for the given session, with the given data. This
-method will return a hash consisting of the following keys:</p>
-<ul><li>
-<p>:session_id</p>
-</li><li>
-<p>:server_key</p>
-</li><li>
-<p>:shared_secret</p>
-</li><li>
-<p>:hashing_algorithm</p>
-</li></ul>
-
-<p>The caller is expected to be able to understand how to use these
-deliverables.</p>
+          
           
           
 
           
-          <div class="method-source-code" id="exchange_keys-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb, line 66</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">exchange_keys</span>
-  <span class="ruby-identifier">result</span> = <span class="ruby-identifier">send_kexinit</span>
-  <span class="ruby-identifier">verify_server_key</span>(<span class="ruby-identifier">result</span>[<span class="ruby-value">:server_key</span>])
-  <span class="ruby-identifier">session_id</span> = <span class="ruby-identifier">verify_signature</span>(<span class="ruby-identifier">result</span>)
-  <span class="ruby-identifier">confirm_newkeys</span>
-
-  <span class="ruby-keyword">return</span> { <span class="ruby-identifier">session_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">session_id</span>,
-           <span class="ruby-identifier">server_key</span><span class="ruby-operator">:</span> <span class="ruby-identifier">result</span>[<span class="ruby-value">:server_key</span>],
-           <span class="ruby-identifier">shared_secret</span><span class="ruby-operator">:</span> <span class="ruby-identifier">result</span>[<span class="ruby-value">:shared_secret</span>],
-           <span class="ruby-identifier">hashing_algorithm</span><span class="ruby-operator">:</span> <span class="ruby-identifier">digester</span> }
+          <div class="method-source-code" id="digester-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb, line 26</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">digester</span>
+  <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

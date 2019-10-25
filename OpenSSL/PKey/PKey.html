@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class OpenSSL::PKey::PKey - net-ssh 4.2.0</title>
+<title>class OpenSSL::PKey::PKey - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -65,17 +65,7 @@
 
     
     
-    <!-- Method Quickref -->
-<div id="method-list-section" class="nav-section">
-  <h3>Methods</h3>
-
-  <ul class="link-list" role="directory">
     
-    <li ><a href="#method-i-fingerprint">#fingerprint</a>
-    
-  </ul>
-</div>
-
   </div>
 </nav>
 
@@ -101,47 +91,6 @@
     
 
     
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
-       <header>
-         <h3>Public Instance Methods</h3>
-       </header>
-
-    
-      <div id="method-i-fingerprint" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">fingerprint</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="fingerprint-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 30</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">fingerprint</span>
-  <span class="ruby-ivar">@fingerprint</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">MD5</span>.<span class="ruby-identifier">hexdigest</span>(<span class="ruby-identifier">to_blob</span>).<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/../</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;:&quot;</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-    </section>
-  
   </section>
 </main>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class OpenSSL::PKey::EC - net-ssh 4.2.0</title>
+<title>class OpenSSL::PKey::EC - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -96,10 +96,10 @@
 
   <section class="description">
     
-<p>This class is originally defined in the <a href="OpenSSL.html">OpenSSL</a>
-module. As needed, methods have been added to it by the <a
-href="../../Net/SSH.html">Net::SSH</a> module for convenience in dealing
-with SSH functionality.</p>
+<p>This class is originally defined in the <a
+href="../../OpenSSL.html">OpenSSL</a> module. As needed, methods have been
+added to it by the <a href="../../Net/SSH.html">Net::SSH</a> module for
+convenience in dealing with SSH functionality.</p>
 
   </section>
 
@@ -160,12 +160,14 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="read_keyblob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 150</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 140</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">curve_name_in_type</span>, <span class="ruby-identifier">buffer</span>)
   <span class="ruby-identifier">curve_name_in_key</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>
+
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">curve_name_in_type</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">curve_name_in_key</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>, <span class="ruby-node">&quot;curve name mismatched (`#{curve_name_in_key}&#39; with `#{curve_name_in_type}&#39;)&quot;</span>
   <span class="ruby-keyword">end</span>
+
   <span class="ruby-identifier">public_key_oct</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>
   <span class="ruby-keyword">begin</span>
     <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span><span class="ruby-operator">::</span><span class="ruby-constant">CurveNameAlias</span>[<span class="ruby-identifier">curve_name_in_key</span>])
@@ -177,7 +179,6 @@ with SSH functionality.</p>
   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">ECError</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-node">&quot;unsupported key type `#{type}&#39;&quot;</span>
   <span class="ruby-keyword">end</span>
-
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -216,16 +217,16 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="ssh_do_sign-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 230</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 221</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_do_sign</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">digest</span> = <span class="ruby-identifier">digester</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">sig</span> = <span class="ruby-identifier">dsa_sign_asn1</span>(<span class="ruby-identifier">digest</span>)
-  <span class="ruby-identifier">a1sig</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">ASN1</span>.<span class="ruby-identifier">decode</span>( <span class="ruby-identifier">sig</span> )
+  <span class="ruby-identifier">a1sig</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">ASN1</span>.<span class="ruby-identifier">decode</span>(<span class="ruby-identifier">sig</span>)
 
   <span class="ruby-identifier">sig_r</span> = <span class="ruby-identifier">a1sig</span>.<span class="ruby-identifier">value</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">value</span>
   <span class="ruby-identifier">sig_s</span> = <span class="ruby-identifier">a1sig</span>.<span class="ruby-identifier">value</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">value</span>
 
-  <span class="ruby-keyword">return</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:bignum</span>, <span class="ruby-identifier">sig_r</span>, <span class="ruby-value">:bignum</span>, <span class="ruby-identifier">sig_s</span>).<span class="ruby-identifier">to_s</span>
+  <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:bignum</span>, <span class="ruby-identifier">sig_r</span>, <span class="ruby-value">:bignum</span>, <span class="ruby-identifier">sig_s</span>).<span class="ruby-identifier">to_s</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -256,26 +257,26 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="ssh_do_verify-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 204</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 195</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_do_verify</span>(<span class="ruby-identifier">sig</span>, <span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">digest</span> = <span class="ruby-identifier">digester</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">a1sig</span> = <span class="ruby-keyword">nil</span>
 
   <span class="ruby-keyword">begin</span>
-    <span class="ruby-identifier">sig_r_len</span> = <span class="ruby-identifier">sig</span>[<span class="ruby-value">0</span>,<span class="ruby-value">4</span>].<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&quot;H*&quot;</span>)[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>)
-    <span class="ruby-identifier">sig_l_len</span> = <span class="ruby-identifier">sig</span>[<span class="ruby-value">4</span><span class="ruby-operator">+</span><span class="ruby-identifier">sig_r_len</span>,<span class="ruby-value">4</span>].<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&quot;H*&quot;</span>)[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>)
+    <span class="ruby-identifier">sig_r_len</span> = <span class="ruby-identifier">sig</span>[<span class="ruby-value">0</span>, <span class="ruby-value">4</span>].<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;H*&#39;</span>)[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>)
+    <span class="ruby-identifier">sig_l_len</span> = <span class="ruby-identifier">sig</span>[<span class="ruby-value">4</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">sig_r_len</span>, <span class="ruby-value">4</span>].<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;H*&#39;</span>)[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>)
 
-    <span class="ruby-identifier">sig_r</span> = <span class="ruby-identifier">sig</span>[<span class="ruby-value">4</span>,<span class="ruby-identifier">sig_r_len</span>].<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&quot;H*&quot;</span>)[<span class="ruby-value">0</span>]
-    <span class="ruby-identifier">sig_s</span> = <span class="ruby-identifier">sig</span>[<span class="ruby-value">4</span><span class="ruby-operator">+</span><span class="ruby-identifier">sig_r_len</span><span class="ruby-operator">+</span><span class="ruby-value">4</span>,<span class="ruby-identifier">sig_l_len</span>].<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&quot;H*&quot;</span>)[<span class="ruby-value">0</span>]
+    <span class="ruby-identifier">sig_r</span> = <span class="ruby-identifier">sig</span>[<span class="ruby-value">4</span>, <span class="ruby-identifier">sig_r_len</span>].<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;H*&#39;</span>)[<span class="ruby-value">0</span>]
+    <span class="ruby-identifier">sig_s</span> = <span class="ruby-identifier">sig</span>[<span class="ruby-value">4</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">sig_r_len</span> <span class="ruby-operator">+</span> <span class="ruby-value">4</span>, <span class="ruby-identifier">sig_l_len</span>].<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;H*&#39;</span>)[<span class="ruby-value">0</span>]
 
     <span class="ruby-identifier">a1sig</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">ASN1</span><span class="ruby-operator">::</span><span class="ruby-constant">Sequence</span>([
-      <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">ASN1</span><span class="ruby-operator">::</span><span class="ruby-constant">Integer</span>(<span class="ruby-identifier">sig_r</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>)),
-      <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">ASN1</span><span class="ruby-operator">::</span><span class="ruby-constant">Integer</span>(<span class="ruby-identifier">sig_s</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>)),
-    ])
-  <span class="ruby-keyword">rescue</span>
+                                      <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">ASN1</span><span class="ruby-operator">::</span><span class="ruby-constant">Integer</span>(<span class="ruby-identifier">sig_r</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>)),
+                                      <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">ASN1</span><span class="ruby-operator">::</span><span class="ruby-constant">Integer</span>(<span class="ruby-identifier">sig_s</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>))
+                                    ])
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">StandardError</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">a1sig</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">a1sig</span>.<span class="ruby-identifier">nil?</span>
     <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">dsa_verify_asn1</span>(<span class="ruby-identifier">digest</span>, <span class="ruby-identifier">a1sig</span>.<span class="ruby-identifier">to_der</span>)
@@ -310,7 +311,7 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="ssh_signature_type-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 175</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 166</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_signature_type</span>
   <span class="ruby-identifier">ssh_type</span>
 <span class="ruby-keyword">end</span></pre>
@@ -344,9 +345,9 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="ssh_type-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 171</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 162</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_type</span>
-  <span class="ruby-node">&quot;ecdsa-sha2-#{CurveNameAliasInv[self.group.curve_name]}&quot;</span>
+  <span class="ruby-node">&quot;ecdsa-sha2-#{CurveNameAliasInv[group.curve_name]}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -377,11 +378,11 @@ with SSH functionality.</p>
 
           
           <div class="method-source-code" id="to_blob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 196</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/openssl.rb, line 187</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_blob</span>
   <span class="ruby-ivar">@blob</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:string</span>, <span class="ruby-identifier">ssh_type</span>,
-                                  <span class="ruby-value">:string</span>, <span class="ruby-constant">CurveNameAliasInv</span>[<span class="ruby-keyword">self</span>.<span class="ruby-identifier">group</span>.<span class="ruby-identifier">curve_name</span>],
-                                  <span class="ruby-value">:mstring</span>, <span class="ruby-keyword">self</span>.<span class="ruby-identifier">public_key</span>.<span class="ruby-identifier">to_bn</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-value">2</span>)).<span class="ruby-identifier">to_s</span>
+                                  <span class="ruby-value">:string</span>, <span class="ruby-constant">CurveNameAliasInv</span>[<span class="ruby-identifier">group</span>.<span class="ruby-identifier">curve_name</span>],
+                                  <span class="ruby-value">:mstring</span>, <span class="ruby-identifier">public_key</span>.<span class="ruby-identifier">to_bn</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-value">2</span>)).<span class="ruby-identifier">to_s</span>
   <span class="ruby-ivar">@blob</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

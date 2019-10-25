@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::KeyFactory - net-ssh 4.2.0</title>
+<title>class Net::SSH::KeyFactory - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -95,7 +95,7 @@
   <section class="description">
     
 <p>A factory class for returning new Key classes. It is used for obtaining <a
-href="KeyFactory/OpenSSL.html">OpenSSL</a> key instances via their <a
+href="../../OpenSSL.html">OpenSSL</a> key instances via their <a
 href="../SSH.html">SSH</a> names, and for loading both public and private
 keys. It used used primarily by <a href="../SSH.html">Net::SSH</a> itself,
 internally, and will rarely (if ever) be directly used by consumers of the
@@ -127,7 +127,7 @@ library.</p>
         <dt id="MAP">MAP
         
         <dd><p>Specifies the mapping of <a href="../SSH.html">SSH</a> names to <a
-href="KeyFactory/OpenSSL.html">OpenSSL</a> key classes.</p>
+href="../../OpenSSL.html">OpenSSL</a> key classes.</p>
         
       
       </dl>
@@ -156,15 +156,15 @@ href="KeyFactory/OpenSSL.html">OpenSSL</a> key classes.</p>
 
         <div class="method-description">
           
-          <p>Fetch an <a href="KeyFactory/OpenSSL.html">OpenSSL</a> key instance by its
-<a href="../SSH.html">SSH</a> name. It will be a new, empty key of the
-given type.</p>
+          <p>Fetch an <a href="../../OpenSSL.html">OpenSSL</a> key instance by its <a
+href="../SSH.html">SSH</a> name. It will be a new, empty key of the given
+type.</p>
           
           
 
           
           <div class="method-source-code" id="get-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 32</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 31</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-constant">MAP</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">name</span>).<span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
@@ -200,18 +200,19 @@ will be prompted to enter their password unless passphrase works.</p>
 
           
           <div class="method-source-code" id="load_data_private_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 51</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load_data_private_key</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">ask_passphrase</span>=<span class="ruby-keyword">true</span>, <span class="ruby-identifier">filename</span>=<span class="ruby-string">&quot;&quot;</span>, <span class="ruby-identifier">prompt</span>=<span class="ruby-constant">Prompt</span>.<span class="ruby-identifier">default</span>)
-  <span class="ruby-identifier">key_read</span>, <span class="ruby-identifier">error_classes</span> = <span class="ruby-identifier">classify_key</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">filename</span>)
+  <span class="ruby-identifier">key_type</span> = <span class="ruby-identifier">classify_key</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">filename</span>)
 
-  <span class="ruby-identifier">encrypted_key</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/ENCRYPTED/</span>)
+  <span class="ruby-identifier">encrypted_key</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">tries</span> = <span class="ruby-value">0</span>
 
   <span class="ruby-identifier">prompter</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">result</span> =
     <span class="ruby-keyword">begin</span>
-      <span class="ruby-identifier">key_read</span>[<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;invalid&#39;</span>]
-    <span class="ruby-keyword">rescue</span> <span class="ruby-operator">*</span><span class="ruby-identifier">error_classes</span>
+      <span class="ruby-identifier">key_type</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;invalid&#39;</span>)
+    <span class="ruby-keyword">rescue</span> <span class="ruby-operator">*</span><span class="ruby-identifier">key_type</span>.<span class="ruby-identifier">error_classes</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+      <span class="ruby-identifier">encrypted_key</span> = <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-identifier">key_type</span>.<span class="ruby-identifier">encrypted_key?</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">e</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">encrypted_key</span>.<span class="ruby-identifier">nil?</span>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">encrypted_key</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ask_passphrase</span>
         <span class="ruby-identifier">tries</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
         <span class="ruby-keyword">if</span> <span class="ruby-identifier">tries</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">3</span>
@@ -308,7 +309,7 @@ works.</p>
 
           
           <div class="method-source-code" id="load_private_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 41</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/key_factory.rb, line 40</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load_private_key</span>(<span class="ruby-identifier">filename</span>, <span class="ruby-identifier">passphrase</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">ask_passphrase</span>=<span class="ruby-keyword">true</span>, <span class="ruby-identifier">prompt</span>=<span class="ruby-constant">Prompt</span>.<span class="ruby-identifier">default</span>)
   <span class="ruby-identifier">data</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">filename</span>))
   <span class="ruby-identifier">load_data_private_key</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">passphrase</span>, <span class="ruby-identifier">ask_passphrase</span>, <span class="ruby-identifier">filename</span>, <span class="ruby-identifier">prompt</span>)

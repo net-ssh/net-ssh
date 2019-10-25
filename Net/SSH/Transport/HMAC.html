@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH::Transport::HMAC - net-ssh 4.2.0</title>
+<title>module Net::SSH::Transport::HMAC - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -141,7 +141,7 @@ will be initialized with that key.</p>
 
           
           <div class="method-source-code" id="get-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac.rb, line 35</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac.rb, line 37</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">key</span>=<span class="ruby-string">&quot;&quot;</span>, <span class="ruby-identifier">parameters</span> = {})
   <span class="ruby-identifier">impl</span> = <span class="ruby-constant">MAP</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;hmac not found: #{name.inspect}&quot;</span>
   <span class="ruby-identifier">impl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyExpander</span>.<span class="ruby-identifier">expand_key</span>(<span class="ruby-identifier">impl</span>.<span class="ruby-identifier">key_length</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">parameters</span>))
@@ -176,7 +176,7 @@ href="../../SSH.html">SSH</a> type (<code>name</code>).</p>
 
           
           <div class="method-source-code" id="key_length-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac.rb, line 41</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac.rb, line 43</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">key_length</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">impl</span> = <span class="ruby-constant">MAP</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;hmac not found: #{name.inspect}&quot;</span>
   <span class="ruby-identifier">impl</span>.<span class="ruby-identifier">key_length</span>

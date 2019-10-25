@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH::BufferedIo - net-ssh 4.2.0</title>
+<title>module Net::SSH::BufferedIo - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -197,7 +197,7 @@ class&#39; initialize method:</p>
 
           
           <div class="method-source-code" id="available-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 82</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 83</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">available</span>
   <span class="ruby-identifier">input</span>.<span class="ruby-identifier">available</span>
 <span class="ruby-keyword">end</span></pre>
@@ -232,7 +232,7 @@ Note that the data is <em>not</em> sent immediately by this method!</p>
 
           
           <div class="method-source-code" id="enqueue-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 88</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 89</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">enqueue</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">output</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">data</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -267,7 +267,7 @@ or 0 if no data was available to be read.</p>
 
           
           <div class="method-source-code" id="fill-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 63</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 64</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">fill</span>(<span class="ruby-identifier">n</span>=<span class="ruby-value">8192</span>)
   <span class="ruby-identifier">input</span>.<span class="ruby-identifier">consume!</span>
   <span class="ruby-identifier">data</span> = <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)
@@ -308,7 +308,7 @@ and <code>false</code> otherwise.</p>
 
           
           <div class="method-source-code" id="pending_write-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 94</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 95</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">pending_write?</span>
   <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
@@ -343,7 +343,7 @@ and <code>false</code> otherwise.</p>
 
           
           <div class="method-source-code" id="read_available-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 76</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 77</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_available</span>(<span class="ruby-identifier">length</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">input</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">length</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">available</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -377,7 +377,7 @@ if any data was sent, and <code>false</code> otherwise.</p>
 
           
           <div class="method-source-code" id="send_pending-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 100</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 101</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">send_pending</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
     <span class="ruby-identifier">sent</span> = <span class="ruby-identifier">send</span>(<span class="ruby-identifier">output</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-value">0</span>)
@@ -418,11 +418,11 @@ repeatedly, if necessary, blocking until the output buffer is empty.</p>
 
           
           <div class="method-source-code" id="wait_for_pending_sends-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 113</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffered_io.rb, line 114</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">wait_for_pending_sends</span>
   <span class="ruby-identifier">send_pending</span>
   <span class="ruby-keyword">while</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
-    <span class="ruby-identifier">result</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Compat</span>.<span class="ruby-identifier">io_select</span>(<span class="ruby-keyword">nil</span>, [<span class="ruby-keyword">self</span>]) <span class="ruby-keyword">or</span> <span class="ruby-keyword">next</span>
+    <span class="ruby-identifier">result</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-keyword">nil</span>, [<span class="ruby-keyword">self</span>]) <span class="ruby-keyword">or</span> <span class="ruby-keyword">next</span>
     <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">result</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">any?</span>
     <span class="ruby-identifier">send_pending</span>
   <span class="ruby-keyword">end</span>

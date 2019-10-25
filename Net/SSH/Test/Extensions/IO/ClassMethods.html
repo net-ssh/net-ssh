@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH::Test::Extensions::IO::ClassMethods - net-ssh 4.2.0</title>
+<title>module Net::SSH::Test::Extensions::IO::ClassMethods - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../../";
@@ -121,23 +121,23 @@ href="../BufferedIo.html">Net::SSH::Test::Extensions::BufferedIo</a>.</p>
 
           
           <div class="method-source-code" id="select_for_test-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/extensions.rb, line 143</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/extensions.rb, line 145</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">select_for_test</span>(<span class="ruby-identifier">readers</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">writers</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">errors</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">wait</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">select_for_real</span>(<span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>, <span class="ruby-identifier">errors</span>, <span class="ruby-identifier">wait</span>) <span class="ruby-keyword">unless</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Test</span><span class="ruby-operator">::</span><span class="ruby-constant">Extensions</span><span class="ruby-operator">::</span><span class="ruby-constant">IO</span>.<span class="ruby-identifier">extension_enabled?</span>
   <span class="ruby-identifier">ready_readers</span> = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">readers</span>).<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">select_for_read?</span> }
   <span class="ruby-identifier">ready_writers</span> = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">writers</span>).<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">select_for_write?</span> }
   <span class="ruby-identifier">ready_errors</span>  = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">errors</span>).<span class="ruby-identifier">select</span>  { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">select_for_error?</span> }
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">ready_readers</span>.<span class="ruby-identifier">any?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ready_writers</span>.<span class="ruby-identifier">any?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ready_errors</span>.<span class="ruby-identifier">any?</span>
-    <span class="ruby-keyword">return</span> [<span class="ruby-identifier">ready_readers</span>, <span class="ruby-identifier">ready_writers</span>, <span class="ruby-identifier">ready_errors</span>]
-  <span class="ruby-keyword">end</span>
-
+    
+  <span class="ruby-keyword">return</span> [<span class="ruby-identifier">ready_readers</span>, <span class="ruby-identifier">ready_writers</span>, <span class="ruby-identifier">ready_errors</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">ready_readers</span>.<span class="ruby-identifier">any?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ready_writers</span>.<span class="ruby-identifier">any?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ready_errors</span>.<span class="ruby-identifier">any?</span>
+    
   <span class="ruby-identifier">processed</span> = <span class="ruby-value">0</span>
   <span class="ruby-constant">Array</span>(<span class="ruby-identifier">readers</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reader</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">processed</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">reader</span>.<span class="ruby-identifier">idle!</span>
   <span class="ruby-keyword">end</span>
-
+    
   <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;no readers were ready for reading, and none had any incoming packets&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">processed</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">wait</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+
+  [[], [], []]
 <span class="ruby-keyword">end</span></pre>
           </div>
           

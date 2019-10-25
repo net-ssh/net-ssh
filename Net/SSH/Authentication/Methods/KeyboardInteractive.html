@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Authentication::Methods::KeyboardInteractive - net-ssh 4.2.0</title>
+<title>class Net::SSH::Authentication::Methods::KeyboardInteractive - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -184,7 +184,7 @@ authentication method.</p>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-identifier">_</span> = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">read_string</span> <span class="ruby-comment"># lang_tag</span>
-      <span class="ruby-identifier">responses</span> =[]
+      <span class="ruby-identifier">responses</span> = []
 
       <span class="ruby-identifier">message</span>.<span class="ruby-identifier">read_long</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword">do</span>
         <span class="ruby-identifier">text</span> = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">read_string</span>

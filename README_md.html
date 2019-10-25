@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>README - net-ssh 6.0.0.beta1</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-Net-3A-3ASSH+6.x">Net::SSH 6.x</a>
+    <li><a href="#label-DESCRIPTION-3A">DESCRIPTION:</a>
+    <li><a href="#label-FEATURES-3A">FEATURES:</a>
+    <li><a href="#label-Supported+Algorithms">Supported Algorithms</a>
+    <li><a href="#label-Host+Keys">Host Keys</a>
+    <li><a href="#label-Key+Exchange">Key Exchange</a>
+    <li><a href="#label-Encryption+algorithms+-28ciphers-29">Encryption algorithms (ciphers)</a>
+    <li><a href="#label-Message+Authentication+Code+algorithms">Message Authentication Code algorithms</a>
+    <li><a href="#label-SYNOPSIS-3A">SYNOPSIS:</a>
+    <li><a href="#label-REQUIREMENTS-3A">REQUIREMENTS:</a>
+    <li><a href="#label-INSTALL-3A">INSTALL:</a>
+    <li><a href="#label-RUBY+SUPPORT">RUBY SUPPORT</a>
+    <li><a href="#label-RUNNING+TESTS">RUNNING TESTS</a>
+    <li><a href="#label-BUILDING+GEM">BUILDING GEM</a>
+    <li><a href="#label-GEM+SIGNING+-28for+maintainers-29">GEM SIGNING (for maintainers)</a>
+    <li><a href="#label-CREDITS">CREDITS</a>
+    <li><a href="#label-Contributors">Contributors</a>
+    <li><a href="#label-Backers">Backers</a>
+    <li><a href="#label-Sponsors">Sponsors</a>
+    <li><a href="#label-LICENSE-3A">LICENSE:</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./CHANGES_txt.html">CHANGES</a>
+  
+    <li><a href="./LICENSE_txt.html">LICENSE</a>
+  
+    <li><a href="./README_md.html">README</a>
+  
+    <li><a href="./THANKS_txt.html">THANKS</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page README.md">
+
+<p><a href="https://badge.fury.io/rb/net-ssh"><img
+src="https://badge.fury.io/rb/net-ssh.svg"></a> <a
+href="https://gitter.im/net-ssh/net-ssh?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img
+src="https://badges.gitter.im/net-ssh/net-ssh.svg"></a> <a
+href="https://travis-ci.org/net-ssh/net-ssh"><img
+src="https://travis-ci.org/net-ssh/net-ssh.svg?branch=master"></a> <a
+href="https://codecov.io/gh/net-ssh/net-ssh"><img
+src="https://codecov.io/gh/net-ssh/net-ssh/branch/master/graph/badge.svg"></a>
+<a href="#backers"><img
+src="https://opencollective.com/net-ssh/backers/badge.svg"></a>] <a
+href="#sponsors"><img
+src="https://opencollective.com/net-ssh/sponsors/badge.svg"></a></p>
+
+<h1 id="label-Net-3A-3ASSH+6.x"><a href="Net/SSH.html">Net::SSH</a> 6.x<span><a href="#label-Net-3A-3ASSH+6.x">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<ul><li>
+<p>Docs: <a
+href="http://net-ssh.github.com/net-ssh">net-ssh.github.com/net-ssh</a></p>
+</li><li>
+<p>Issues: <a
+href="https://github.com/net-ssh/net-ssh/issues">github.com/net-ssh/net-ssh/issues</a></p>
+</li><li>
+<p>Codes: <a
+href="https://github.com/net-ssh/net-ssh">github.com/net-ssh/net-ssh</a></p>
+</li><li>
+<p>Email: net-ssh@solutious.com</p>
+</li></ul>
+
+<p><em>As of v2.6.4, all gem releases are signed. See <a
+href="#install">INSTALL</a>.</em></p>
+
+<h2 id="label-DESCRIPTION-3A">DESCRIPTION:<span><a href="#label-DESCRIPTION-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p><a href="Net/SSH.html">Net::SSH</a> is a pure-Ruby implementation of the
+SSH2 client protocol. It allows you to write programs that invoke and
+interact with processes on remote servers, via SSH2.</p>
+
+<h2 id="label-FEATURES-3A">FEATURES:<span><a href="#label-FEATURES-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<ul><li>
+<p>Execute processes on remote servers and capture their output</p>
+</li><li>
+<p>Run multiple processes in parallel over a single SSH connection</p>
+</li><li>
+<p>Support for SSH subsystems</p>
+</li><li>
+<p>Forward local and remote ports via an SSH connection</p>
+</li></ul>
+
+<h2 id="label-Supported+Algorithms">Supported Algorithms<span><a href="#label-Supported+Algorithms">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p><a href="Net/SSH.html">Net::SSH</a> 6.0 disables by default the usage of
+weak algorithms. We strongly recommend that you install a servers&#39;s
+version that supports the latest algorithms.</p>
+
+<p>It is possible to return to the previous behavior by adding the option :
+<code>append_all_supported_algorithms: true</code></p>
+
+<p>Unsecure algoritms will be definively remove in <a
+href="Net/SSH.html">Net::SSH</a> 7.*.</p>
+
+<h3 id="label-Host+Keys">Host Keys<span><a href="#label-Host+Keys">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>| Name | Support | Details | |———————-|———————–|———-| | ssh-rsa | OK | | |
+ssh-ed25519 | OK | Require the gem <code>ed25519</code> | |
+ecdsa-sha2-nistp521 | OK | <a href="https://safecurves.cr.yp.to/">using
+weak elliptic curves</a> | | ecdsa-sha2-nistp384 | OK | <a
+href="https://safecurves.cr.yp.to/">using weak elliptic curves</a> | |
+ecdsa-sha2-nistp256 | OK | <a href="https://safecurves.cr.yp.to/">using
+weak elliptic curves</a> | | ssh-dss | Deprecated in 6.0 | unsecure, will
+be removed in 7.0 |</p>
+
+<h3 id="label-Key+Exchange">Key Exchange<span><a href="#label-Key+Exchange">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>| Name | Support | Details | |————————————–|———————–|———-| |
+curve25519-sha256 | OK | Require the gem <code>x25519</code> | |
+ecdh-sha2-nistp521 | OK | <a href="https://safecurves.cr.yp.to/">using weak
+elliptic curves</a> | | ecdh-sha2-nistp384 | OK | <a
+href="https://safecurves.cr.yp.to/">using weak elliptic curves</a> | |
+ecdh-sha2-nistp256 | OK | <a href="https://safecurves.cr.yp.to/">using weak
+elliptic curves</a> | | diffie-hellman-group1-sha1 | Deprecated in 6.0 |
+unsecure, will be removed in 7.0 | | diffie-hellman-group14-sha1 | OK | | |
+diffie-hellman-group-exchange-sha1 | Deprecated in 6.0 | unsecure, will be
+removed in 7.0 | | diffie-hellman-group-exchange-sha256 | OK | |</p>
+
+<h3 id="label-Encryption+algorithms+-28ciphers-29">Encryption algorithms (ciphers)<span><a href="#label-Encryption+algorithms+-28ciphers-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>| Name | Support | Details | |————————————–|———————–|———-| | aes256-ctr /
+aes192-ctr / aes128-ctr | OK | <a href="https://safecurves.cr.yp.to/">using
+weak elliptic curves</a> | | aes256-cbc / aes192-cbc / aes128-cbc |
+Deprecated in 6.0 | unsecure, will be removed in 7.0 | |
+rijndael-cbc@lysator.liu.se | Deprecated in 6.0 | unsecure, will be removed
+in 7.0 | | blowfish-ctr blowfish-cbc | Deprecated in 6.0 | unsecure, will
+be removed in 7.0 | | cast128-ctr cast128-cbc | Deprecated in 6.0 |
+unsecure, will be removed in 7.0 | | 3des-ctr 3des-cbc | Deprecated in 6.0
+| unsecure, will be removed in 7.0 | | idea-cbc | Deprecated in 6.0 |
+unsecure, will be removed in 7.0 | | none | Deprecated in 6.0 | unsecure,
+will be removed in 7.0 |</p>
+
+<h3 id="label-Message+Authentication+Code+algorithms">Message Authentication Code algorithms<span><a href="#label-Message+Authentication+Code+algorithms">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>| Name | Support | Details | |———————-|———————–|———-| | hmac-sha2-512-etm |
+OK | | | hmac-sha2-256-etm | OK | | | hmac-sha2-512 | OK | | |
+hmac-sha2-256 | OK | | | hmac-sha2-512-96 | Deprecated in 6.0 | removed
+from the specification, will be removed in 7.0 | | hmac-sha2-256-96 |
+Deprecated in 6.0 | removed from the specification, will be removed in 7.0
+| | hmac-sha1 | OK | for backward compatibility | | hmac-sha1-96 |
+Deprecated in 6.0 | unsecure, will be removed in 7.0 | | hmac-ripemd160 |
+Deprecated in 6.0 | unsecure, will be removed in 7.0 | | hmac-md5 |
+Deprecated in 6.0 | unsecure, will be removed in 7.0 | | hmac-md5-96 |
+Deprecated in 6.0 | unsecure, will be removed in 7.0 | | none | Deprecated
+in 6.0 | unsecure, will be removed in 7.0 |</p>
+
+<h2 id="label-SYNOPSIS-3A">SYNOPSIS:<span><a href="#label-SYNOPSIS-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>In a nutshell:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;net/ssh&#39;</span>
+
+<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span>.<span class="ruby-identifier">start</span>(<span class="ruby-string">&#39;host&#39;</span>, <span class="ruby-string">&#39;user&#39;</span>, <span class="ruby-identifier">password</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;password&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ssh</span><span class="ruby-operator">|</span>
+<span class="ruby-comment"># capture all stderr and stdout output from a remote process</span>
+<span class="ruby-identifier">output</span> = <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec!</span>(<span class="ruby-string">&quot;hostname&quot;</span>)
+<span class="ruby-identifier">puts</span> <span class="ruby-identifier">output</span>
+
+<span class="ruby-comment"># capture only stdout matching a particular pattern</span>
+<span class="ruby-identifier">stdout</span> = <span class="ruby-string">&quot;&quot;</span>
+<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec!</span>(<span class="ruby-string">&quot;ls -l /home/jamis&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">channel</span>, <span class="ruby-identifier">stream</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">stdout</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">data</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">stream</span> <span class="ruby-operator">==</span> :<span class="ruby-identifier">stdout</span>
+<span class="ruby-keyword">end</span>
+<span class="ruby-identifier">puts</span> <span class="ruby-identifier">stdout</span>
+
+<span class="ruby-comment"># run multiple processes in parallel to completion</span>
+<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;sed ...&quot;</span>
+<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;awk ...&quot;</span>
+<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;rm -rf ...&quot;</span>
+<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">loop</span>
+
+<span class="ruby-comment"># open a new channel and configure a minimal set of callbacks, then run</span>
+<span class="ruby-comment"># the event loop until the channel finishes (closes)</span>
+<span class="ruby-identifier">channel</span> = <span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;/usr/local/bin/ruby /path/to/file.rb&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;could not execute command&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">success</span>
+
+    <span class="ruby-comment"># &quot;on_data&quot; is called when the process writes something to stdout</span>
+    <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span> <span class="ruby-identifier">data</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># &quot;on_extended_data&quot; is called when the process writes something to stderr</span>
+    <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_extended_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">print</span> <span class="ruby-identifier">data</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_close</span> { <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;done!&quot;</span> }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">wait</span>
+
+<span class="ruby-comment"># forward connections on local port 1234 to port 80 of www.capify.org</span>
+<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">forward</span>.<span class="ruby-identifier">local</span>(<span class="ruby-value">1234</span>, <span class="ruby-string">&quot;www.capify.org&quot;</span>, <span class="ruby-value">80</span>)
+<span class="ruby-identifier">ssh</span>.<span class="ruby-identifier">loop</span> { <span class="ruby-keyword">true</span> }
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>See <a href="Net/SSH.html">Net::SSH</a> for more documentation, and links
+to further information.</p>
+
+<h2 id="label-REQUIREMENTS-3A">REQUIREMENTS:<span><a href="#label-REQUIREMENTS-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>The only requirement you might be missing is the <a
+href="OpenSSL.html">OpenSSL</a> bindings for Ruby with a version greather
+than <code>1.0.1</code>. These are built by default on most platforms, but
+you can verify that they&#39;re built and installed on your system by
+running the following command line:</p>
+
+<pre>ruby -ropenssl -e &#39;puts OpenSSL::OPENSSL_VERSION&#39;</pre>
+
+<p>If that spits out something like <code>OpenSSL 1.0.1 14 Mar 2012</code>,
+then you&#39;re set. If you get an error, then you&#39;ll need to see about
+rebuilding ruby with <a href="OpenSSL.html">OpenSSL</a> support, or (if
+your platform supports it) installing the <a
+href="OpenSSL.html">OpenSSL</a> bindings separately.</p>
+
+<h2 id="label-INSTALL-3A">INSTALL:<span><a href="#label-INSTALL-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<pre class="ruby"><span class="ruby-identifier">gem</span> <span class="ruby-identifier">install</span> <span class="ruby-identifier">net</span><span class="ruby-operator">-</span><span class="ruby-identifier">ssh</span> <span class="ruby-comment"># might need sudo privileges</span>
+</pre>
+
+<p>NOTE: If you are running on jruby on windows you need to install
+<code>jruby-pageant</code> manually (gemspec doesn&#39;t allow for platform
+specific dependencies).</p>
+
+<p>However, in order to be sure the code you&#39;re installing hasn&#39;t been
+tampered with, it&#39;s recommended that you verify the <a
+href="http://docs.rubygems.org/read/chapter/21">signature</a>.  To do this,
+you need to add my public key as a trusted certificate (you only need to do
+this once):</p>
+
+<pre># Add the public key as a trusted certificate
+# (You only need to do this once)
+curl -O https://raw.githubusercontent.com/net-ssh/net-ssh/master/net-ssh-public_cert.pem
+gem cert --add net-ssh-public_cert.pem</pre>
+
+<p>Then, when install the gem, do so with high security:</p>
+
+<pre>gem install net-ssh -P HighSecurity</pre>
+
+<p>If you don&#39;t add the public key, you&#39;ll see an error like
+“Couldn&#39;t verify data signature”. If you&#39;re still having trouble
+let me know and I&#39;ll give you a hand.</p>
+
+<p>For ed25519 public key auth support your bundle file should contain
+<code>ed25519</code>, <code>bcrypt_pbkdf</code> dependencies.</p>
+
+<pre class="ruby"><span class="ruby-identifier">gem</span> <span class="ruby-identifier">install</span> <span class="ruby-identifier">ed25519</span>
+<span class="ruby-identifier">gem</span> <span class="ruby-identifier">install</span> <span class="ruby-identifier">bcrypt_pbkdf</span>
+</pre>
+
+<p>For curve25519-sha256 kex exchange support your bundle file should contain
+<code>x25519</code> dependency.</p>
+
+<h2 id="label-RUBY+SUPPORT">RUBY SUPPORT<span><a href="#label-RUBY+SUPPORT">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<ul><li>
+<p>See <a
+href="https://github.com/net-ssh/net-ssh/blob/master/net-ssh.gemspec">net-ssh.gemspec</a>
+for current versions ruby requirements</p>
+</li></ul>
+
+<h2 id="label-RUNNING+TESTS">RUNNING TESTS<span><a href="#label-RUNNING+TESTS">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>If you want to run the tests or use any of the Rake tasks, you&#39;ll need
+Mocha and other dependencies listed in Gemfile</p>
+
+<p>Run the test suite from the net-ssh directory with the following command:</p>
+
+<pre class="ruby"><span class="ruby-identifier">bundle</span> <span class="ruby-identifier">exec</span> <span class="ruby-identifier">rake</span> <span class="ruby-identifier">test</span>
+</pre>
+
+<p>Run a single test file like this:</p>
+
+<pre>ruby -Ilib -Itest test/transport/test_server_version.rb</pre>
+
+<p>To run integration tests see test/integration/README.txt</p>
+
+<h3 id="label-BUILDING+GEM">BUILDING GEM<span><a href="#label-BUILDING+GEM">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">build</span>
+</pre>
+
+<h3 id="label-GEM+SIGNING+-28for+maintainers-29">GEM SIGNING (for maintainers)<span><a href="#label-GEM+SIGNING+-28for+maintainers-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>If you have the net-ssh private signing key, you will be able to create
+signed release builds. Make sure the private key path matches the
+<code>signing_key</code> path set in <code>net-ssh.gemspec</code> and tell
+rake to sign the gem by setting the <code>NET_SSH_BUILDGEM_SIGNED</code>
+flag:</p>
+
+<pre>NET_SSH_BUILDGEM_SIGNED=true rake build</pre>
+
+<p>For time to time, the public certificate associated to the private key
+needs to be renewed. You can do this with the following command:</p>
+
+<pre>gem cert --build netssh@solutious.com --private-key path/2/net-ssh-private_key.pem
+mv gem-public_cert.pem net-ssh-public_cert.pem
+gem cert --add net-ssh-public_cert.pem</pre>
+
+<h2 id="label-CREDITS">CREDITS<span><a href="#label-CREDITS">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<h3 id="label-Contributors">Contributors<span><a href="#label-Contributors">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>This project exists thanks to all the people who contribute.</p>
+
+<p><a href="graphs/contributors"><img
+src="https://opencollective.com/net-ssh/contributors.svg?width=890&button=false"></a></p>
+
+<h3 id="label-Backers">Backers<span><a href="#label-Backers">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Thank you to all our backers! 🙏 <a
+href="https://opencollective.com/net-ssh#backer">Become a backer</a></p>
+
+<p><a href="https://opencollective.com/net-ssh#backers"><img
+src="https://opencollective.com/net-ssh/backers.svg?width=890"></a></p>
+
+<h3 id="label-Sponsors">Sponsors<span><a href="#label-Sponsors">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Support this project by becoming a sponsor. Your logo will show up here
+with a link to your website. <a
+href="https://opencollective.com/net-ssh#sponsor">Become a sponsor</a></p>
+
+<p><a href="https://opencollective.com/net-ssh/sponsor/0/website"><img
+src="https://opencollective.com/net-ssh/sponsor/0/avatar.svg"></a></p>
+
+<h2 id="label-LICENSE-3A">LICENSE:<span><a href="#label-LICENSE-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>(The MIT License)</p>
+
+<p>Copyright © 2008 Jamis Buck</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+&#39;Software&#39;), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the
+following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED &#39;AS IS&#39;, WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

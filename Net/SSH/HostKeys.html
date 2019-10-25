@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::HostKeys - net-ssh 4.2.0</title>
+<title>class Net::SSH::HostKeys - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -166,12 +166,12 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 14</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 16</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">host_keys</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">known_hosts</span>, <span class="ruby-identifier">options</span> = {})
-   <span class="ruby-ivar">@host_keys</span> = <span class="ruby-identifier">host_keys</span>
-   <span class="ruby-ivar">@host</span> = <span class="ruby-identifier">host</span>
-   <span class="ruby-ivar">@known_hosts</span> = <span class="ruby-identifier">known_hosts</span>
-   <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
+  <span class="ruby-ivar">@host_keys</span> = <span class="ruby-identifier">host_keys</span>
+  <span class="ruby-ivar">@host</span> = <span class="ruby-identifier">host</span>
+  <span class="ruby-ivar">@known_hosts</span> = <span class="ruby-identifier">known_hosts</span>
+  <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -210,10 +210,10 @@
 
           
           <div class="method-source-code" id="add_host_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 21</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 23</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">add_host_key</span>(<span class="ruby-identifier">key</span>)
-   <span class="ruby-ivar">@known_hosts</span>.<span class="ruby-identifier">add</span>(<span class="ruby-ivar">@host</span>, <span class="ruby-identifier">key</span>, <span class="ruby-ivar">@options</span>)
-   <span class="ruby-ivar">@host_keys</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">key</span>)
+  <span class="ruby-ivar">@known_hosts</span>.<span class="ruby-identifier">add</span>(<span class="ruby-ivar">@host</span>, <span class="ruby-identifier">key</span>, <span class="ruby-ivar">@options</span>)
+  <span class="ruby-ivar">@host_keys</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">key</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -244,9 +244,9 @@
 
           
           <div class="method-source-code" id="each-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 26</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-   <span class="ruby-ivar">@host_keys</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-ivar">@host_keys</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -277,7 +277,7 @@
 
           
           <div class="method-source-code" id="empty-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 30</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/known_hosts.rb, line 32</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
   <span class="ruby-ivar">@host_keys</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>

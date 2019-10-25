@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Transport::Kex::EcdhSHA2NistP384 - net-ssh 4.2.0</title>
+<title>class Net::SSH::Transport::Kex::EcdhSHA2NistP384 - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -131,7 +131,7 @@ algorithm. (defined in RFC 5656)</p>
 
           
           <div class="method-source-code" id="curve_name-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp384.rb, line 9</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp384.rb, line 14</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">curve_name</span>
   <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span><span class="ruby-operator">::</span><span class="ruby-constant">CurveNameAlias</span>[<span class="ruby-string">&#39;nistp384&#39;</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -164,7 +164,7 @@ algorithm. (defined in RFC 5656)</p>
 
           
           <div class="method-source-code" id="digester-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp384.rb, line 6</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp384.rb, line 10</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">digester</span>
   <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA384</span>
 <span class="ruby-keyword">end</span></pre>

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Proxy::Jump - net-ssh 4.2.0</title>
+<title>class Net::SSH::Proxy::Jump - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -163,7 +163,7 @@ href=":port">user@]host</a>.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/jump.rb, line 23</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/jump.rb, line 24</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">jump_proxies</span>)
   <span class="ruby-ivar">@jump_proxies</span> = <span class="ruby-identifier">jump_proxies</span>
 <span class="ruby-keyword">end</span></pre>
@@ -205,12 +205,12 @@ option was specified during `Net::SSH.start`.</p>
 
           
           <div class="method-source-code" id="build_proxy_command_equivalent-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/jump.rb, line 36</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/jump.rb, line 37</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">build_proxy_command_equivalent</span>(<span class="ruby-identifier">connection_options</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">first_jump</span>, <span class="ruby-identifier">extra_jumps</span> = <span class="ruby-identifier">jump_proxies</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;,&quot;</span>, <span class="ruby-value">2</span>)
   <span class="ruby-identifier">config</span> = <span class="ruby-identifier">connection_options</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">connection_options</span>[<span class="ruby-value">:config</span>]
   <span class="ruby-identifier">uri</span> = <span class="ruby-constant">URI</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-node">&quot;ssh://#{first_jump}&quot;</span>)
-
+    
   <span class="ruby-identifier">template</span> = <span class="ruby-string">&quot;ssh&quot;</span>
   <span class="ruby-identifier">template</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot; -l #{uri.user}&quot;</span>    <span class="ruby-keyword">if</span> <span class="ruby-identifier">uri</span>.<span class="ruby-identifier">user</span>
   <span class="ruby-identifier">template</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot; -p #{uri.port}&quot;</span>    <span class="ruby-keyword">if</span> <span class="ruby-identifier">uri</span>.<span class="ruby-identifier">port</span>
@@ -218,7 +218,7 @@ option was specified during `Net::SSH.start`.</p>
   <span class="ruby-identifier">template</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot; -F #{config}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">config</span> <span class="ruby-operator">!=</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">config</span>
   <span class="ruby-identifier">template</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot; -W %h:%p &quot;</span>
   <span class="ruby-identifier">template</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">uri</span>.<span class="ruby-identifier">host</span>
-
+    
   <span class="ruby-ivar">@command_line_template</span> = <span class="ruby-identifier">template</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -256,7 +256,7 @@ that was requested when the socket factory was instantiated.</p>
 
           
           <div class="method-source-code" id="open-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/jump.rb, line 29</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/jump.rb, line 30</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">connection_options</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">build_proxy_command_equivalent</span>(<span class="ruby-identifier">connection_options</span>)
   <span class="ruby-keyword">super</span>

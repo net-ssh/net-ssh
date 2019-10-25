@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Proxy::Command - net-ssh 4.2.0</title>
+<title>class Net::SSH::Proxy::Command - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -72,6 +72,8 @@
   <ul class="link-list" role="directory">
     
     <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-close_on_error">#close_on_error</a>
     
     <li ><a href="#method-i-open">#open</a>
     
@@ -144,6 +146,19 @@ end</pre>
         </div>
       </div>
       
+      <div id="attribute-i-timeout" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">timeout</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p><a href="../Timeout.html">Timeout</a> in seconds in open, defaults to 60</p>
+        
+        </div>
+      </div>
+      
     </section>
     
 
@@ -176,10 +191,11 @@ connect and `%p&#39; by the port.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/command.rb, line 30</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/command.rb, line 34</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">command_line_template</span>)
   <span class="ruby-ivar">@command_line_template</span> = <span class="ruby-identifier">command_line_template</span>
   <span class="ruby-ivar">@command_line</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@timeout</span> = <span class="ruby-value">60</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -197,6 +213,40 @@ connect and `%p&#39; by the port.</p>
        <header>
          <h3>Public Instance Methods</h3>
        </header>
+
+    
+      <div id="method-i-close_on_error" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">close_on_error</span><span
+            class="method-args">(io)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="close_on_error-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/command.rb, line 117</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">close_on_error</span>(<span class="ruby-identifier">io</span>)
+  <span class="ruby-constant">Process</span>.<span class="ruby-identifier">kill</span>(<span class="ruby-string">&#39;TERM&#39;</span>, <span class="ruby-identifier">io</span>.<span class="ruby-identifier">pid</span>)
+  <span class="ruby-constant">Thread</span>.<span class="ruby-identifier">new</span> { <span class="ruby-identifier">io</span>.<span class="ruby-identifier">close</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
 
     
       <div id="method-i-open" class="method-detail ">
@@ -219,7 +269,7 @@ was requested when the socket factory was instantiated.</p>
 
           
           <div class="method-source-code" id="open-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/command.rb, line 37</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/command.rb, line 42</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">connection_options</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">command_line</span> = <span class="ruby-ivar">@command_line_template</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/%(.)/</span>) {
     <span class="ruby-keyword">case</span> <span class="ruby-node">$1</span>
@@ -242,15 +292,19 @@ was requested when the socket factory was instantiated.</p>
   }
   <span class="ruby-keyword">begin</span>
     <span class="ruby-identifier">io</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">popen</span>(<span class="ruby-identifier">command_line</span>, <span class="ruby-string">&quot;r+&quot;</span>)
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Compat</span>.<span class="ruby-identifier">io_select</span>([<span class="ruby-identifier">io</span>], <span class="ruby-keyword">nil</span>, [<span class="ruby-identifier">io</span>], <span class="ruby-value">60</span>)
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">any?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">io</span>.<span class="ruby-identifier">eof?</span>
-        <span class="ruby-identifier">io</span>.<span class="ruby-identifier">close</span>
-        <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;command failed&quot;</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>([<span class="ruby-identifier">io</span>], <span class="ruby-keyword">nil</span>, [<span class="ruby-identifier">io</span>], <span class="ruby-ivar">@timeout</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">any?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">io</span>.<span class="ruby-identifier">eof?</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;command failed&quot;</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;command timed out&quot;</span>
       <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;command timed out&quot;</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">StandardError</span>
+      <span class="ruby-identifier">close_on_error</span>(<span class="ruby-identifier">io</span>)
+      <span class="ruby-identifier">raise</span>
     <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">StandardError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">ConnectError</span>, <span class="ruby-node">&quot;#{e}: #{command_line}&quot;</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-ivar">@command_line</span> = <span class="ruby-identifier">command_line</span>

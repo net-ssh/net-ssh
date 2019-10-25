@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Prompt::Prompter - net-ssh 4.2.0</title>
+<title>class Net::SSH::Prompt::Prompter - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -133,7 +133,7 @@ might implement caching.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/prompt.rb, line 32</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/prompt.rb, line 33</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">info</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-value">:type</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&#39;keyboard-interactive&#39;</span>
     <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">puts</span>(<span class="ruby-identifier">info</span>[<span class="ruby-value">:name</span>]) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">info</span>[<span class="ruby-value">:name</span>].<span class="ruby-identifier">empty?</span>
@@ -178,7 +178,7 @@ and password) in a single session.</p>
 
           
           <div class="method-source-code" id="ask-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/prompt.rb, line 41</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/prompt.rb, line 42</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ask</span>(<span class="ruby-identifier">prompt</span>, <span class="ruby-identifier">echo</span>=<span class="ruby-keyword">true</span>)
   <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-identifier">prompt</span>)
   <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">flush</span>
@@ -216,7 +216,7 @@ good time to save password asked to a cache.</p>
 
           
           <div class="method-source-code" id="success-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/prompt.rb, line 51</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/prompt.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">success</span>; <span class="ruby-keyword">end</span></pre>
           </div>
           

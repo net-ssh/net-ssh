@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Test::LocalPacket - net-ssh 4.2.0</title>
+<title>class Net::SSH::Test::LocalPacket - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -166,7 +166,7 @@ href="LocalPacket.html#method-i-process">process</a> is first called.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/local_packet.rb, line 16</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/local_packet.rb, line 18</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-keyword">super</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-ivar">@init</span> = <span class="ruby-identifier">block</span>
@@ -208,7 +208,7 @@ href="LocalPacket.html#method-i-process">process</a> is first called.</p>
 
           
           <div class="method-source-code" id="local-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/local_packet.rb, line 22</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/local_packet.rb, line 24</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">local?</span>
   <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
@@ -246,7 +246,7 @@ exception is raised.</p>
 
           
           <div class="method-source-code" id="process-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/local_packet.rb, line 31</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/local_packet.rb, line 33</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">packet</span>)
   <span class="ruby-ivar">@init</span>.<span class="ruby-identifier">call</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Packet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">to_s</span>)) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@init</span>
   <span class="ruby-identifier">type</span> = <span class="ruby-identifier">packet</span>.<span class="ruby-identifier">read_byte</span>
@@ -254,11 +254,11 @@ exception is raised.</p>
 
   <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">types</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">expected</span>, <span class="ruby-identifier">_type</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">_type</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">case</span> <span class="ruby-identifier">expected</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">then</span> <span class="ruby-keyword">break</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-constant">Numeric</span> <span class="ruby-keyword">then</span> <span class="ruby-value">:long</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span> <span class="ruby-value">:string</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-constant">TrueClass</span>, <span class="ruby-constant">FalseClass</span> <span class="ruby-keyword">then</span> <span class="ruby-value">:bool</span>
-      <span class="ruby-keyword">end</span>
+              <span class="ruby-keyword">when</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">then</span> <span class="ruby-keyword">break</span>
+              <span class="ruby-keyword">when</span> <span class="ruby-constant">Numeric</span> <span class="ruby-keyword">then</span> <span class="ruby-value">:long</span>
+              <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span> <span class="ruby-value">:string</span>
+              <span class="ruby-keyword">when</span> <span class="ruby-constant">TrueClass</span>, <span class="ruby-constant">FalseClass</span> <span class="ruby-keyword">then</span> <span class="ruby-value">:bool</span>
+              <span class="ruby-keyword">end</span>
 
     <span class="ruby-identifier">actual</span> = <span class="ruby-identifier">packet</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;read_#{_type}&quot;</span>)
     <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">expected</span>.<span class="ruby-identifier">nil?</span>

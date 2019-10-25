@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Transport::Algorithms - net-ssh 4.2.0</title>
+<title>class Net::SSH::Transport::Algorithms - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -69,11 +69,11 @@
   <ul class="link-list">
   
   
-    <li><a class="include" href="Constants.html">Net::SSH::Transport::Constants</a>
-  
-  
-  
     <li><a class="include" href="../Loggable.html">Net::SSH::Loggable</a>
+  
+  
+  
+    <li><a class="include" href="Constants.html">Net::SSH::Transport::Constants</a>
   
   
   </ul>
@@ -95,6 +95,8 @@
     <li ><a href="#method-i-accept_kexinit">#accept_kexinit</a>
     
     <li ><a href="#method-i-allow-3F">#allow?</a>
+    
+    <li ><a href="#method-i-host_key_format">#host_key_format</a>
     
     <li ><a href="#method-i-initialized-3F">#initialized?</a>
     
@@ -144,6 +146,12 @@ internally by the transport layer.</p>
       <dl>
       
         <dt id="ALGORITHMS">ALGORITHMS
+        
+        <dd><p>Define all algorithms, with the deprecated, supported by <a
+href="../../SSH.html">Net::SSH</a>.</p>
+        
+      
+        <dt id="DEFAULT_ALGORITHMS">DEFAULT_ALGORITHMS
         
         <dd><p>Define the default algorithms, in order of preference, supported by <a
 href="../../SSH.html">Net::SSH</a>.</p>
@@ -378,10 +386,10 @@ exchange.</p>
 
           
           <div class="method-source-code" id="allowed_packet-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 104</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 138</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">allowed_packet?</span>(<span class="ruby-identifier">packet</span>)
-  ( <span class="ruby-value">1</span><span class="ruby-operator">..</span> <span class="ruby-value">4</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">||</span>
-  ( <span class="ruby-value">6</span><span class="ruby-operator">..</span><span class="ruby-value">19</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">||</span>
+  (<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">4</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">||</span>
+  (<span class="ruby-value">6</span><span class="ruby-operator">..</span><span class="ruby-value">19</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">||</span>
   (<span class="ruby-value">21</span><span class="ruby-operator">..</span><span class="ruby-value">49</span>).<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">packet</span>.<span class="ruby-identifier">type</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -415,7 +423,7 @@ and the <a href="Algorithms.html#ALGORITHMS">ALGORITHMS</a> constant.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 112</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 146</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>
   <span class="ruby-ivar">@logger</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">logger</span>
@@ -464,7 +472,7 @@ href="Algorithms.html#attribute-i-algorithms">algorithms</a>).</p>
 
           
           <div class="method-source-code" id="5B-5D-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 155</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 190</span>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)
   <span class="ruby-identifier">algorithms</span>[<span class="ruby-identifier">key</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -501,7 +509,7 @@ block until the key exchange completes.</p>
 
           
           <div class="method-source-code" id="accept_kexinit-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 142</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 177</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_kexinit</span>(<span class="ruby-identifier">packet</span>)
   <span class="ruby-identifier">info</span> { <span class="ruby-string">&quot;got KEXINIT from server&quot;</span> }
   <span class="ruby-ivar">@server_data</span> = <span class="ruby-identifier">parse_server_algorithm_packet</span>(<span class="ruby-identifier">packet</span>)
@@ -543,9 +551,47 @@ key exchange.</p>
 
           
           <div class="method-source-code" id="allow-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 171</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 206</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">allow?</span>(<span class="ruby-identifier">packet</span>)
   <span class="ruby-operator">!</span><span class="ruby-identifier">pending?</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Algorithms</span>.<span class="ruby-identifier">allowed_packet?</span>(<span class="ruby-identifier">packet</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-host_key_format" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">host_key_format</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="host_key_format-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 215</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">host_key_format</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">host_key</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^([a-z0-9-]+)-cert-v\d{2}@openssh.com$/</span>
+    <span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">last_match</span>[<span class="ruby-value">1</span>]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">host_key</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -576,7 +622,7 @@ key exchange.</p>
 
           
           <div class="method-source-code" id="initialized-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 176</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 211</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialized?</span>
   <span class="ruby-ivar">@initialized</span>
 <span class="ruby-keyword">end</span></pre>
@@ -613,7 +659,7 @@ this period.</p>
 
           
           <div class="method-source-code" id="pending-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 164</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 199</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">pending?</span>
   <span class="ruby-ivar">@pending</span>
 <span class="ruby-keyword">end</span></pre>
@@ -649,7 +695,7 @@ processed.</p>
 
           
           <div class="method-source-code" id="rekey-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 132</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 167</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">rekey!</span>
   <span class="ruby-ivar">@client_packet</span> = <span class="ruby-ivar">@server_packet</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@initialized</span> = <span class="ruby-keyword">false</span>
@@ -684,9 +730,10 @@ processed.</p>
 
           
           <div class="method-source-code" id="start-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 123</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/algorithms.rb, line 157</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">start</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;Cannot call start if it&#39;s negotiation started or done&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@pending</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@initialized</span>
+
   <span class="ruby-identifier">send_kexinit</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Version - net-ssh 4.2.0</title>
+<title>class Net::SSH::Version - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -254,7 +254,7 @@ href="Version.html">Version</a> instance with the given <code>major</code>,
 
           
           <div class="method-source-code" id="5B-5D-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/version.rb, line 19</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/version.rb, line 20</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-operator">[]</span>(<span class="ruby-identifier">major</span>, <span class="ruby-identifier">minor</span>, <span class="ruby-identifier">tiny</span>, <span class="ruby-identifier">pre</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">new</span>(<span class="ruby-identifier">major</span>, <span class="ruby-identifier">minor</span>, <span class="ruby-identifier">tiny</span>, <span class="ruby-identifier">pre</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -288,7 +288,7 @@ components.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/version.rb, line 26</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/version.rb, line 27</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">major</span>, <span class="ruby-identifier">minor</span>, <span class="ruby-identifier">tiny</span>, <span class="ruby-identifier">pre</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@major</span>, <span class="ruby-ivar">@minor</span>, <span class="ruby-ivar">@tiny</span>, <span class="ruby-ivar">@pre</span> = <span class="ruby-identifier">major</span>, <span class="ruby-identifier">minor</span>, <span class="ruby-identifier">tiny</span>, <span class="ruby-identifier">pre</span>
 <span class="ruby-keyword">end</span></pre>
@@ -329,7 +329,7 @@ components.</p>
 
           
           <div class="method-source-code" id="3C-3D-3E-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/version.rb, line 31</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/version.rb, line 32</span>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">&lt;=&gt;</span>(<span class="ruby-identifier">version</span>)
   <span class="ruby-identifier">to_i</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">version</span>.<span class="ruby-identifier">to_i</span>
 <span class="ruby-keyword">end</span></pre>
@@ -363,7 +363,7 @@ other version objects.</p>
 
           
           <div class="method-source-code" id="to_i-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/version.rb, line 43</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/version.rb, line 44</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_i</span>
   <span class="ruby-ivar">@to_i</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@major</span> <span class="ruby-operator">*</span> <span class="ruby-value">1_000_000</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@minor</span> <span class="ruby-operator">*</span> <span class="ruby-value">1_000</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@tiny</span>
 <span class="ruby-keyword">end</span></pre>
@@ -397,7 +397,7 @@ components are joined by the &#39;.&#39; character. E.g., 2.0.0.</p>
 
           
           <div class="method-source-code" id="to_s-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/version.rb, line 37</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/version.rb, line 38</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
   <span class="ruby-ivar">@to_s</span> <span class="ruby-operator">||=</span> [<span class="ruby-ivar">@major</span>, <span class="ruby-ivar">@minor</span>, <span class="ruby-ivar">@tiny</span>, <span class="ruby-ivar">@pre</span>].<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;.&quot;</span>)
 <span class="ruby-keyword">end</span></pre>

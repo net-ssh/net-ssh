@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Proxy::SOCKS4 - net-ssh 4.2.0</title>
+<title>class Net::SSH::Proxy::SOCKS4 - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -212,7 +212,7 @@ authenticate.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/socks4.rb, line 42</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/socks4.rb, line 41</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>=<span class="ruby-value">1080</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-ivar">@proxy_host</span> = <span class="ruby-identifier">proxy_host</span>
   <span class="ruby-ivar">@proxy_port</span> = <span class="ruby-identifier">proxy_port</span>
@@ -256,7 +256,7 @@ was requested when the socket factory was instantiated.</p>
 
           
           <div class="method-source-code" id="open-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/socks4.rb, line 50</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/socks4.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">connection_options</span>)
   <span class="ruby-identifier">socket</span> = <span class="ruby-constant">Socket</span>.<span class="ruby-identifier">tcp</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-keyword">nil</span>,
                       <span class="ruby-identifier">connect_timeout</span><span class="ruby-operator">:</span> <span class="ruby-identifier">connection_options</span>[<span class="ruby-value">:timeout</span>])

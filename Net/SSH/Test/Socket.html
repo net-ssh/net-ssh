@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Test::Socket - net-ssh 4.2.0</title>
+<title>class Net::SSH::Test::Socket - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -207,13 +207,13 @@ necessary events to power the initialization of the connection.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 22</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 24</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
   <span class="ruby-identifier">extend</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">PacketStream</span>)
   <span class="ruby-keyword">super</span> <span class="ruby-string">&quot;SSH-2.0-Test\r\n&quot;</span>
-
+    
   <span class="ruby-ivar">@script</span> = <span class="ruby-constant">Script</span>.<span class="ruby-identifier">new</span>
-
+    
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends</span>(<span class="ruby-value">:kexinit</span>)
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets</span>(<span class="ruby-value">:kexinit</span>, <span class="ruby-value">1</span>, <span class="ruby-value">2</span>, <span class="ruby-value">3</span>, <span class="ruby-value">4</span>, <span class="ruby-string">&quot;test&quot;</span>, <span class="ruby-string">&quot;ssh-rsa&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;none&quot;</span>, <span class="ruby-string">&quot;&quot;</span>, <span class="ruby-string">&quot;&quot;</span>, <span class="ruby-keyword">false</span>)
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends</span>(<span class="ruby-value">:newkeys</span>)
@@ -257,7 +257,7 @@ socket was instantiated.</p>
 
           
           <div class="method-source-code" id="getpeername-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 49</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 51</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">getpeername</span>
   <span class="ruby-operator">::</span><span class="ruby-constant">Socket</span>.<span class="ruby-identifier">sockaddr_in</span>(<span class="ruby-identifier">port</span>, <span class="ruby-identifier">host</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -291,7 +291,7 @@ socket was instantiated.</p>
 
           
           <div class="method-source-code" id="open-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 42</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 44</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-ivar">@host</span>, <span class="ruby-ivar">@port</span> = <span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>
   <span class="ruby-keyword">self</span>
@@ -325,7 +325,7 @@ socket was instantiated.</p>
 
           
           <div class="method-source-code" id="readpartial-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 58</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 60</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">readpartial</span>(<span class="ruby-identifier">n</span>)
   <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -358,7 +358,7 @@ socket was instantiated.</p>
 
           
           <div class="method-source-code" id="recv-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 54</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 56</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">recv</span>(<span class="ruby-identifier">n</span>)
   <span class="ruby-identifier">read</span>(<span class="ruby-identifier">n</span>) <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -392,7 +392,7 @@ gets written.</p>
 
           
           <div class="method-source-code" id="write-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 36</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/socket.rb, line 38</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-comment"># black hole, because we don&#39;t actually care about what gets written</span>
 <span class="ruby-keyword">end</span></pre>

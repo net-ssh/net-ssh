@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH::Test - net-ssh 4.2.0</title>
+<title>module Net::SSH::Test - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -176,11 +176,11 @@ the block passed to this assertion.</p>
 
           
           <div class="method-source-code" id="assert_scripted-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 85</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 86</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">assert_scripted</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;there is no script to be processed&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>.<span class="ruby-identifier">events</span>.<span class="ruby-identifier">empty?</span>
   <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Test</span><span class="ruby-operator">::</span><span class="ruby-constant">Extensions</span><span class="ruby-operator">::</span><span class="ruby-constant">IO</span>.<span class="ruby-identifier">with_test_extension</span> { <span class="ruby-keyword">yield</span> }
-  <span class="ruby-identifier">assert</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>.<span class="ruby-identifier">events</span>.<span class="ruby-identifier">empty?</span>, <span class="ruby-node">&quot;there should not be any remaining scripted events, but there are still #{socket.script.events.length} pending&quot;</span>
+  <span class="ruby-identifier">assert</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>.<span class="ruby-identifier">events</span>.<span class="ruby-identifier">empty?</span>, <span class="ruby-string">&quot;there should not be any remaining scripted events, but there are still&quot;</span>                                              <span class="ruby-node">&quot;#{socket.script.events.length} pending&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -213,7 +213,7 @@ session, operating over a mock socket (#socket).</p>
 
           
           <div class="method-source-code" id="connection-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 66</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 67</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">connection</span>(<span class="ruby-identifier">options</span>={})
   <span class="ruby-ivar">@connection</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Connection</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">transport</span>(<span class="ruby-identifier">options</span>), <span class="ruby-identifier">options</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -247,7 +247,7 @@ href="Test/Socket.html">Net::SSH::Test::Socket</a>).</p>
 
           
           <div class="method-source-code" id="socket-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 59</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 60</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">socket</span>(<span class="ruby-identifier">options</span>={})
   <span class="ruby-ivar">@socket</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Test</span><span class="ruby-operator">::</span><span class="ruby-constant">Socket</span>.<span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
@@ -282,7 +282,7 @@ href="Test/Script.html">Net::SSH::Test::Script</a>.</p>
 
           
           <div class="method-source-code" id="story-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 52</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 53</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">story</span>
   <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Test</span><span class="ruby-operator">::</span><span class="ruby-constant">Extensions</span><span class="ruby-operator">::</span><span class="ruby-constant">IO</span>.<span class="ruby-identifier">with_test_extension</span> { <span class="ruby-keyword">yield</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span> }
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">script</span>
@@ -318,11 +318,11 @@ transport session, operating over a mock socket (#socket).</p>
 
           
           <div class="method-source-code" id="transport-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 73</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">transport</span>(<span class="ruby-identifier">options</span>={})
   <span class="ruby-ivar">@transport</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>(
     <span class="ruby-identifier">options</span>[<span class="ruby-value">:host</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&quot;localhost&quot;</span>,
-    <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">kex</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;test&quot;</span>, <span class="ruby-identifier">host_key</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;ssh-rsa&quot;</span>, <span class="ruby-identifier">verify_host_key</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>, <span class="ruby-identifier">proxy</span><span class="ruby-operator">:</span> <span class="ruby-identifier">socket</span>(<span class="ruby-identifier">options</span>))
+    <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">kex</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;test&quot;</span>, <span class="ruby-identifier">host_key</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;ssh-rsa&quot;</span>, <span class="ruby-identifier">append_all_supported_algorithms</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span>, <span class="ruby-identifier">verify_host_key</span><span class="ruby-operator">:</span> <span class="ruby-value">:never</span>, <span class="ruby-identifier">proxy</span><span class="ruby-operator">:</span> <span class="ruby-identifier">socket</span>(<span class="ruby-identifier">options</span>))
   )
 <span class="ruby-keyword">end</span></pre>
           </div>

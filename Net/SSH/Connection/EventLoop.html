@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Connection::EventLoop - net-ssh 4.2.0</title>
+<title>class Net::SSH::Connection::EventLoop - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -154,7 +154,7 @@ event loop it doesnt makes sense and we don&#39;t pass session.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 14</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 16</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">logger</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">logger</span>
   <span class="ruby-ivar">@sessions</span> = []
@@ -197,7 +197,7 @@ then we exit the processing</p>
 
           
           <div class="method-source-code" id="ev_preprocess-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 46</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 48</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword">yield</span>(<span class="ruby-keyword">self</span>)
   <span class="ruby-ivar">@sessions</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:ev_preprocess</span>)
@@ -233,7 +233,7 @@ then we exit the processing</p>
 
           
           <div class="method-source-code" id="ev_select_and_postprocess-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 53</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 55</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_select_and_postprocess</span>(<span class="ruby-identifier">wait</span>)
   <span class="ruby-identifier">owners</span> = {}
   <span class="ruby-identifier">r</span> = []
@@ -247,28 +247,28 @@ then we exit the processing</p>
     <span class="ruby-identifier">sr</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ri</span><span class="ruby-operator">|</span> <span class="ruby-identifier">owners</span>[<span class="ruby-identifier">ri</span>] = <span class="ruby-identifier">session</span> }
     <span class="ruby-identifier">sw</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">wi</span><span class="ruby-operator">|</span> <span class="ruby-identifier">owners</span>[<span class="ruby-identifier">wi</span>] = <span class="ruby-identifier">session</span> }
   <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>, = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Compat</span>.<span class="ruby-identifier">io_select</span>(<span class="ruby-identifier">r</span>, <span class="ruby-identifier">w</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">minwait</span>)
-
+    
+  <span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>, = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-identifier">r</span>, <span class="ruby-identifier">w</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">minwait</span>)
+    
   <span class="ruby-identifier">fired_sessions</span> = {}
-
+    
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">readers</span>
     <span class="ruby-identifier">readers</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reader</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">session</span> = <span class="ruby-identifier">owners</span>[<span class="ruby-identifier">reader</span>]
-      (<span class="ruby-identifier">fired_sessions</span>[<span class="ruby-identifier">session</span>] <span class="ruby-operator">||=</span> {<span class="ruby-identifier">r</span><span class="ruby-operator">:</span> [],<span class="ruby-identifier">w</span><span class="ruby-operator">:</span> []})[<span class="ruby-value">:r</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">reader</span>
+      (<span class="ruby-identifier">fired_sessions</span>[<span class="ruby-identifier">session</span>] <span class="ruby-operator">||=</span> { <span class="ruby-identifier">r</span><span class="ruby-operator">:</span> [],<span class="ruby-identifier">w</span><span class="ruby-operator">:</span> [] })[<span class="ruby-value">:r</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">reader</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">writers</span>
     <span class="ruby-identifier">writers</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">session</span> = <span class="ruby-identifier">owners</span>[<span class="ruby-identifier">writer</span>]
-      (<span class="ruby-identifier">fired_sessions</span>[<span class="ruby-identifier">session</span>] <span class="ruby-operator">||=</span> {<span class="ruby-identifier">r</span><span class="ruby-operator">:</span> [],<span class="ruby-identifier">w</span><span class="ruby-operator">:</span> []})[<span class="ruby-value">:w</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">writer</span>
+      (<span class="ruby-identifier">fired_sessions</span>[<span class="ruby-identifier">session</span>] <span class="ruby-operator">||=</span> { <span class="ruby-identifier">r</span><span class="ruby-operator">:</span> [],<span class="ruby-identifier">w</span><span class="ruby-operator">:</span> [] })[<span class="ruby-value">:w</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">writer</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
-
+    
   <span class="ruby-identifier">fired_sessions</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span>,<span class="ruby-identifier">rw</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">s</span>.<span class="ruby-identifier">ev_do_handle_events</span>(<span class="ruby-identifier">rw</span>[<span class="ruby-value">:r</span>],<span class="ruby-identifier">rw</span>[<span class="ruby-value">:w</span>])
   <span class="ruby-keyword">end</span>
-
+    
   <span class="ruby-ivar">@sessions</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">ev_do_postprocess</span>(<span class="ruby-identifier">fired_sessions</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">s</span>)) }
   <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
@@ -302,10 +302,10 @@ loop if block returns false for that session</p>
 
           
           <div class="method-source-code" id="process-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 26</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">process</span>(<span class="ruby-identifier">wait</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">ev_preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-
+    
   <span class="ruby-identifier">ev_select_and_postprocess</span>(<span class="ruby-identifier">wait</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -337,7 +337,7 @@ loop if block returns false for that session</p>
 
           
           <div class="method-source-code" id="process_only-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 33</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 35</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">process_only</span>(<span class="ruby-identifier">session</span>, <span class="ruby-identifier">wait</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">orig_sessions</span> = <span class="ruby-ivar">@sessions</span>
   <span class="ruby-keyword">begin</span>
@@ -377,7 +377,7 @@ loop if block returns false for that session</p>
 
           
           <div class="method-source-code" id="register-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 19</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 21</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">register</span>(<span class="ruby-identifier">session</span>)
   <span class="ruby-ivar">@sessions</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">session</span>
 <span class="ruby-keyword">end</span></pre>

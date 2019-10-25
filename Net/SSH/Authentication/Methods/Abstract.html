@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Authentication::Methods::Abstract - net-ssh 4.2.0</title>
+<title>class Net::SSH::Authentication::Methods::Abstract - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -69,11 +69,11 @@
   <ul class="link-list">
   
   
-    <li><a class="include" href="../Constants.html">Net::SSH::Authentication::Constants</a>
-  
-  
-  
     <li><a class="include" href="../../Loggable.html">Net::SSH::Loggable</a>
+  
+  
+  
+    <li><a class="include" href="../Constants.html">Net::SSH::Authentication::Constants</a>
   
   
   </ul>
@@ -184,7 +184,7 @@ of common functionality.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/methods/abstract.rb, line 21</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/methods/abstract.rb, line 25</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>
   <span class="ruby-ivar">@key_manager</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:key_manager</span>]
@@ -230,7 +230,7 @@ block until the message is completely sent.</p>
 
           
           <div class="method-source-code" id="send_message-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/methods/abstract.rb, line 37</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/methods/abstract.rb, line 41</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">msg</span>)
   <span class="ruby-identifier">session</span>.<span class="ruby-identifier">transport</span>.<span class="ruby-identifier">send_message</span>(<span class="ruby-identifier">msg</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -264,7 +264,7 @@ href="../../../SSH.html">SSH</a> connection.</p>
 
           
           <div class="method-source-code" id="session_id-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/methods/abstract.rb, line 31</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/methods/abstract.rb, line 35</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">session_id</span>
   <span class="ruby-identifier">session</span>.<span class="ruby-identifier">transport</span>.<span class="ruby-identifier">algorithms</span>.<span class="ruby-identifier">session_id</span>
 <span class="ruby-keyword">end</span></pre>
@@ -299,7 +299,7 @@ packet. The new packet is returned, ready for sending.</p>
 
           
           <div class="method-source-code" id="userauth_request-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/methods/abstract.rb, line 44</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/methods/abstract.rb, line 48</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">userauth_request</span>(<span class="ruby-identifier">username</span>, <span class="ruby-identifier">next_service</span>, <span class="ruby-identifier">auth_method</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">others</span>)
   <span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(<span class="ruby-value">:byte</span>, <span class="ruby-constant">USERAUTH_REQUEST</span>,
     <span class="ruby-value">:string</span>, <span class="ruby-identifier">username</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">next_service</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">auth_method</span>)

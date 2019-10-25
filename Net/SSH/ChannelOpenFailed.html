@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::ChannelOpenFailed - net-ssh 4.2.0</title>
+<title>class Net::SSH::ChannelOpenFailed - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -172,7 +172,7 @@ will translate that into a “channel open failed” message.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 36</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 37</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">code</span>, <span class="ruby-identifier">reason</span>)
   <span class="ruby-ivar">@code</span>, <span class="ruby-ivar">@reason</span> = <span class="ruby-identifier">code</span>, <span class="ruby-identifier">reason</span>
   <span class="ruby-keyword">super</span> <span class="ruby-node">&quot;#{reason} (#{code})&quot;</span>

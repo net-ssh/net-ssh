@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>CHANGES - net-ssh 4.2.0</title>
+<title>CHANGES - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
@@ -56,6 +56,20 @@
   <h3>Table of Contents</h3>
 
   <ul class="link-list" role="directory">
+    <li><a href="#label-6.0.0+beta1">6.0.0 beta1</a>
+    <li><a href="#label-5.2.0">5.2.0</a>
+    <li><a href="#label-5.2.0.rc3">5.2.0.rc3</a>
+    <li><a href="#label-5.2.0.rc2">5.2.0.rc2</a>
+    <li><a href="#label-5.2.0.rc1">5.2.0.rc1</a>
+    <li><a href="#label-5.1.0">5.1.0</a>
+    <li><a href="#label-5.1.0.rc1">5.1.0.rc1</a>
+    <li><a href="#label-5.0.2">5.0.2</a>
+    <li><a href="#label-5.0.1">5.0.1</a>
+    <li><a href="#label-5.0.0">5.0.0</a>
+    <li><a href="#label-5.0.0.rc2">5.0.0.rc2</a>
+    <li><a href="#label-5.0.0.rc1">5.0.0.rc1</a>
+    <li><a href="#label-5.0.0.beta2">5.0.0.beta2</a>
+    <li><a href="#label-5.0.0.beta1">5.0.0.beta1</a>
     <li><a href="#label-4.2.0.rc2">4.2.0.rc2</a>
     <li><a href="#label-4.2.0.rc1">4.2.0.rc1</a>
     <li><a href="#label-4.1.0">4.1.0</a>
@@ -165,7 +179,7 @@
   
     <li><a href="./LICENSE_txt.html">LICENSE</a>
   
-    <li><a href="./README_rdoc.html">README</a>
+    <li><a href="./README_md.html">README</a>
   
     <li><a href="./THANKS_txt.html">THANKS</a>
   
@@ -176,6 +190,74 @@
 </nav>
 
 <main role="main" aria-label="Page CHANGES.txt">
+
+<h3 id="label-6.0.0+beta1">6.0.0 beta1<span><a href="#label-6.0.0+beta1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* curve25519sha256 support [Florian Wininger ,#690]
+* disabled insecure algs [Florian Wininger , #709]</pre>
+
+<h3 id="label-5.2.0">5.2.0<span><a href="#label-5.2.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h3 id="label-5.2.0.rc3">5.2.0.rc3<span><a href="#label-5.2.0.rc3">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* Fix check_host_ip read from config
+* Support ssh-ed25519 in kown hosts</pre>
+
+<h3 id="label-5.2.0.rc2">5.2.0.rc2<span><a href="#label-5.2.0.rc2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* Read check_host_ip from ssh config files</pre>
+
+<h3 id="label-5.2.0.rc1">5.2.0.rc1<span><a href="#label-5.2.0.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* Interpret * and ? in know_hosts file [Romain Tartière, #660]
+* New :check_host_ip so ip checking can be disabled in known hosts [Romain Tartière, #656]</pre>
+
+<h3 id="label-5.1.0">5.1.0<span><a href="#label-5.1.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h3 id="label-5.1.0.rc1">5.1.0.rc1<span><a href="#label-5.1.0.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* Support new OpenSSH private key format for rsa - bcrypt for rsa (ed25519 already supported) [#646]
+* Support IdentityAgent is ssh config [Frank Groeneveld, #645]
+* Improve Match processing in ssh config [Aleksandrs Ļedovskis, #642]
+* Ignore signature verification when verify_host_key is never [Piotr Kliczewski, #641]
+* Alg preference was changed to prefer stronger encryptions  [Tray, #637]</pre>
+
+<h3 id="label-5.0.2">5.0.2<span><a href="#label-5.0.2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* fix ctr for jruby [#612]</pre>
+
+<h3 id="label-5.0.1">5.0.1<span><a href="#label-5.0.1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* default_keys were not loaded even if no keys or key_data options specified [#607]</pre>
+
+<h3 id="label-5.0.0">5.0.0<span><a href="#label-5.0.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* Breaking change: ed25519 now requires ed25519 gem instead of RbNaCl gem [#563]
+* Verify_host_key options rename (true, false, :very, :secure depreacted new equivalents are :never, :accept_new_or_local_tunnel :accept_new :always) [Jared Beck, #595]</pre>
+
+<h3 id="label-5.0.0.rc2">5.0.0.rc2<span><a href="#label-5.0.0.rc2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* Add .dll extensions to dlopen on cygwin [#603]
+* Fix host certificate validation [#601]</pre>
+
+<h3 id="label-5.0.0.rc1">5.0.0.rc1<span><a href="#label-5.0.0.rc1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* Fix larger than 4GB file transfers [#599]
+* Update HTTP proxy to version 1.1 [Connor Dunn, #597]</pre>
+
+<h3 id="label-5.0.0.beta2">5.0.0.beta2<span><a href="#label-5.0.0.beta2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* Support for sha256 pubkey fingerprint [Tom Maher, #585]
+* Don&#39;t try to load default_keys if key_data option is used [Josh Larson, #589]
+* Added fingerprint_hash defaulting to SHA256 as fingerprint format, and MD5 can be used as an option [Miklós Fazekas, #591]</pre>
+
+<h3 id="label-5.0.0.beta1">5.0.0.beta1<span><a href="#label-5.0.0.beta1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>* Don&#39;t leave proxy command as zombie on timeout [DimitriosLisenko, #560]
+* Use OpenSSL for aes*-ctr for up to 5x throughput improvement [Miklós Fazekas, Harald Sitter, #570]
+* Optimize slice! usage in CTR for up to 2x throughput improvement [Harald Sitter, #569]
+* Replace RbNaCl dependency with ed25519 gem [Tony Arcieri ,#563]
+* Add initial Match support [Kasumi Hanazuki,  #553]</pre>
 
 <h3 id="label-4.2.0.rc2">4.2.0.rc2<span><a href="#label-4.2.0.rc2">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
@@ -447,7 +529,7 @@ versions [mfazekas]</p>
 <p>Remove advertised algorithms that were not working (ssh-rsa-cert-* *ed25519
 acm*-gcm@openssh.com) [mfazekas]</p>
 </li><li>
-<p>Unkown algorithms now ignored instead of failed [mfazekas]</p>
+<p>Unknown algorithms now ignored instead of failed [mfazekas]</p>
 </li><li>
 <p>Configuration change: Asks for password with password auth (up to
 number_of_password_prompts) [mfazekas]</p>

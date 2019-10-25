@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Authentication::KeyManager - net-ssh 4.2.0</title>
+<title>class Net::SSH::Authentication::KeyManager - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -95,6 +95,8 @@
     <li ><a href="#method-i-each_identity">#each_identity</a>
     
     <li ><a href="#method-i-finish">#finish</a>
+    
+    <li ><a href="#method-i-no_keys-3F">#no_keys?</a>
     
     <li ><a href="#method-i-sign">#sign</a>
     
@@ -234,7 +236,7 @@ is not false.</p>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">logger</span>
   <span class="ruby-ivar">@key_files</span> = []
   <span class="ruby-ivar">@key_data</span> = []
-  <span class="ruby-ivar">@use_agent</span> = <span class="ruby-operator">!</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:use_agent</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>)
+  <span class="ruby-ivar">@use_agent</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:use_agent</span>] <span class="ruby-operator">!=</span> <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@known_identities</span> = {}
   <span class="ruby-ivar">@agent</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
@@ -350,7 +352,7 @@ agent is otherwise not available.</p>
             <pre><span class="ruby-comment"># File lib/net/ssh/authentication/key_manager.rb, line 177</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">agent</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">use_agent?</span>
-  <span class="ruby-ivar">@agent</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Agent</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">logger</span>, <span class="ruby-identifier">options</span>[<span class="ruby-value">:agent_socket_factory</span>])
+  <span class="ruby-ivar">@agent</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Agent</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">logger</span>, <span class="ruby-identifier">options</span>[<span class="ruby-value">:agent_socket_factory</span>], <span class="ruby-identifier">options</span>[<span class="ruby-value">:identity_agent</span>])
 <span class="ruby-keyword">rescue</span> <span class="ruby-constant">AgentNotAvailable</span>
   <span class="ruby-ivar">@use_agent</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-keyword">nil</span>
@@ -513,6 +515,39 @@ immediate future.</p>
       </div>
 
     
+      <div id="method-i-no_keys-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">no_keys?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="no_keys-3F-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/key_manager.rb, line 185</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">no_keys?</span>
+  <span class="ruby-identifier">key_files</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">key_data</span>.<span class="ruby-identifier">empty?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
       <div id="method-i-sign" class="method-detail ">
         
         <div class="method-heading">
@@ -545,7 +580,7 @@ always return the signature in an SSH2-specified “signature blob” format.</p
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-value">:key</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">info</span>[<span class="ruby-value">:from</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:file</span>
     <span class="ruby-keyword">begin</span>
-      <span class="ruby-identifier">info</span>[<span class="ruby-value">:key</span>] = <span class="ruby-constant">KeyFactory</span>.<span class="ruby-identifier">load_private_key</span>(<span class="ruby-identifier">info</span>[<span class="ruby-value">:file</span>], <span class="ruby-identifier">options</span>[<span class="ruby-value">:passphrase</span>], <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>[<span class="ruby-value">:non_interactive</span>])
+      <span class="ruby-identifier">info</span>[<span class="ruby-value">:key</span>] = <span class="ruby-constant">KeyFactory</span>.<span class="ruby-identifier">load_private_key</span>(<span class="ruby-identifier">info</span>[<span class="ruby-value">:file</span>], <span class="ruby-identifier">options</span>[<span class="ruby-value">:passphrase</span>], <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>[<span class="ruby-value">:non_interactive</span>], <span class="ruby-identifier">options</span>[<span class="ruby-value">:password_prompt</span>])
     <span class="ruby-keyword">rescue</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">OpenSSLError</span>, <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">KeyManagerError</span>, <span class="ruby-node">&quot;the given identity is known, but the private key could not be loaded: #{e.class} (#{e.message})&quot;</span>
     <span class="ruby-keyword">end</span>

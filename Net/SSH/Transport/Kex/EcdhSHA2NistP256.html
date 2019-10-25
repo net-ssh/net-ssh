@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Transport::Kex::EcdhSHA2NistP256 - net-ssh 4.2.0</title>
+<title>class Net::SSH::Transport::Kex::EcdhSHA2NistP256 - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -59,34 +59,17 @@
   <h3>Parent</h3>
 
   
-  <p class="link"><a href="DiffieHellmanGroup1SHA1.html">Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1</a>
+  <p class="link"><a href="Abstract5656.html">Net::SSH::Transport::Kex::Abstract5656</a>
   
 </div>
 
-    <div id="includes-section" class="nav-section">
-  <h3>Included Modules</h3>
-
-  <ul class="link-list">
-  
-  
-    <li><a class="include" href="../Constants.html">Net::SSH::Transport::Constants</a>
-  
-  
-  
-    <li><a class="include" href="../../Loggable.html">Net::SSH::Loggable</a>
-  
-  
-  </ul>
-</div>
-
+    
     
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
-    <li ><a href="#method-c-new">::new</a>
     
     <li ><a href="#method-i-curve_name">#curve_name</a>
     
@@ -121,76 +104,8 @@ algorithm. (defined in RFC 5656)</p>
     
 
     
-    <section class="attribute-method-details" class="method-section">
-      <header>
-        <h3>Attributes</h3>
-      </header>
-
-      
-      <div id="attribute-i-ecdh" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">ecdh</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        
-        
-        </div>
-      </div>
-      
-    </section>
-    
 
     
-     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
-       <header>
-         <h3>Public Class Methods</h3>
-       </header>
-
-    
-      <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(algorithms, connection, data)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 21</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">algorithms</span>, <span class="ruby-identifier">connection</span>, <span class="ruby-identifier">data</span>)
-  <span class="ruby-ivar">@algorithms</span> = <span class="ruby-identifier">algorithms</span>
-  <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>
-
-  <span class="ruby-ivar">@digester</span> = <span class="ruby-identifier">digester</span>
-  <span class="ruby-ivar">@data</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">dup</span>
-  <span class="ruby-ivar">@ecdh</span> = <span class="ruby-identifier">generate_key</span>
-  <span class="ruby-ivar">@logger</span> = <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:logger</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-    </section>
-  
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
@@ -216,7 +131,7 @@ algorithm. (defined in RFC 5656)</p>
 
           
           <div class="method-source-code" id="curve_name-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 17</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 14</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">curve_name</span>
   <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span><span class="ruby-operator">::</span><span class="ruby-constant">CurveNameAlias</span>[<span class="ruby-string">&#39;nistp256&#39;</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -249,7 +164,7 @@ algorithm. (defined in RFC 5656)</p>
 
           
           <div class="method-source-code" id="digester-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 13</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/ecdh_sha2_nistp256.rb, line 10</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">digester</span>
   <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA256</span>
 <span class="ruby-keyword">end</span></pre>

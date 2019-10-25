@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Connection::Session::NilChannel - net-ssh 4.2.0</title>
+<title>class Net::SSH::Connection::Session::NilChannel - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -128,7 +128,7 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 56</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 59</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>)
   <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>
 <span class="ruby-keyword">end</span></pre>
@@ -169,7 +169,7 @@
 
           
           <div class="method-source-code" id="method_missing-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 60</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/session.rb, line 63</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">lwarn</span> { <span class="ruby-node">&quot;ignoring request #{sym.inspect} for non-existent (closed?) channel; probably ssh server bug&quot;</span> }
 <span class="ruby-keyword">end</span></pre>

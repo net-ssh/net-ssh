@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Authentication::ED25519::PrivKey - net-ssh 4.2.0</title>
+<title>class Net::SSH::Authentication::ED25519::PrivKey - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -74,8 +74,6 @@
     <li ><a href="#method-c-new">::new</a>
     
     <li ><a href="#method-c-read">::read</a>
-    
-    <li ><a href="#method-c-read_keyblob">::read_keyblob</a>
     
     <li ><a href="#method-i-public_key">#public_key</a>
     
@@ -175,7 +173,7 @@
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">(datafull,password)</span>
+            class="method-args">(buffer)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -190,58 +188,11 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 75</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">datafull</span>,<span class="ruby-identifier">password</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;Expected #{MBEGIN} at start of private key&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">datafull</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-constant">MBEGIN</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;Expected #{MEND} at end of private key&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">datafull</span>.<span class="ruby-identifier">end_with?</span>(<span class="ruby-constant">MEND</span>)
-  <span class="ruby-identifier">datab64</span> = <span class="ruby-identifier">datafull</span>[<span class="ruby-constant">MBEGIN</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">...</span> <span class="ruby-operator">-</span><span class="ruby-constant">MEND</span>.<span class="ruby-identifier">size</span>]
-  <span class="ruby-identifier">data</span> = <span class="ruby-constant">Base64</span>.<span class="ruby-identifier">decode64</span>(<span class="ruby-identifier">datab64</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;Expected #{MAGIC} at start of decoded private key&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-constant">MAGIC</span>)
-  <span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">data</span>[<span class="ruby-constant">MAGIC</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">+</span><span class="ruby-value">1</span> <span class="ruby-operator">..</span> <span class="ruby-value">-1</span>])
-
-  <span class="ruby-identifier">ciphername</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;#{ciphername} in private key is not supported&quot;</span>) <span class="ruby-keyword">unless</span>
-    <span class="ruby-constant">CipherFactory</span>.<span class="ruby-identifier">supported?</span>(<span class="ruby-identifier">ciphername</span>)
-
-  <span class="ruby-identifier">kdfname</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;Expected #{kdfname} to be or none or bcrypt&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-node">%w(none bcrypt)</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">kdfname</span>)
-
-  <span class="ruby-identifier">kdfopts</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>)
-  <span class="ruby-identifier">num_keys</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_long</span>
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;Only 1 key is supported in ssh keys #{num_keys} was in private key&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">num_keys</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
-  <span class="ruby-identifier">_pubkey</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>
-
-  <span class="ruby-identifier">len</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_long</span>
-
-  <span class="ruby-identifier">keylen</span>, <span class="ruby-identifier">blocksize</span>, <span class="ruby-identifier">ivlen</span> = <span class="ruby-constant">CipherFactory</span>.<span class="ruby-identifier">get_lengths</span>(<span class="ruby-identifier">ciphername</span>, <span class="ruby-identifier">iv_len</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;Private key len:#{len} is not a multiple of #{blocksize}&quot;</span>) <span class="ruby-keyword">if</span>
-    ((<span class="ruby-identifier">len</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">blocksize</span>) <span class="ruby-operator">||</span> ((<span class="ruby-identifier">blocksize</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">len</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">blocksize</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>))
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">kdfname</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;bcrypt&#39;</span>
-    <span class="ruby-identifier">salt</span> = <span class="ruby-identifier">kdfopts</span>.<span class="ruby-identifier">read_string</span>
-    <span class="ruby-identifier">rounds</span> = <span class="ruby-identifier">kdfopts</span>.<span class="ruby-identifier">read_long</span>
-
-    <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;BCryptPbkdf is not implemented for jruby&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RUBY_PLATFORM</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;java&quot;</span>
-    <span class="ruby-identifier">key</span> = <span class="ruby-constant">BCryptPbkdf</span><span class="ruby-operator">::</span><span class="ruby-identifier">key</span>(<span class="ruby-identifier">password</span>, <span class="ruby-identifier">salt</span>, <span class="ruby-identifier">keylen</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ivlen</span>, <span class="ruby-identifier">rounds</span>)
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">key</span> = <span class="ruby-string">&#39;\x00&#39;</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">keylen</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ivlen</span>)
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">cipher</span> = <span class="ruby-constant">CipherFactory</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">ciphername</span>, <span class="ruby-identifier">key</span><span class="ruby-operator">:</span> <span class="ruby-identifier">key</span>[<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-identifier">keylen</span>], <span class="ruby-identifier">iv</span><span class="ruby-value">:key</span>[<span class="ruby-identifier">keylen</span><span class="ruby-operator">...</span><span class="ruby-identifier">keylen</span><span class="ruby-operator">+</span><span class="ruby-identifier">ivlen</span>], <span class="ruby-identifier">decrypt</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span>)
-
-  <span class="ruby-identifier">decoded</span> = <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">remainder_as_buffer</span>.<span class="ruby-identifier">to_s</span>)
-  <span class="ruby-identifier">decoded</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">final</span>
-
-  <span class="ruby-identifier">decoded</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">decoded</span>)
-  <span class="ruby-identifier">check1</span> = <span class="ruby-identifier">decoded</span>.<span class="ruby-identifier">read_long</span>
-  <span class="ruby-identifier">check2</span> = <span class="ruby-identifier">decoded</span>.<span class="ruby-identifier">read_long</span>
-
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;Decrypt failed on private key&quot;</span> <span class="ruby-keyword">if</span> (<span class="ruby-identifier">check1</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">check2</span>)
-
-  <span class="ruby-identifier">_type_name</span> = <span class="ruby-identifier">decoded</span>.<span class="ruby-identifier">read_string</span>
-  <span class="ruby-identifier">pk</span> = <span class="ruby-identifier">decoded</span>.<span class="ruby-identifier">read_string</span>
-  <span class="ruby-identifier">sk</span> = <span class="ruby-identifier">decoded</span>.<span class="ruby-identifier">read_string</span>
-  <span class="ruby-identifier">_comment</span> = <span class="ruby-identifier">decoded</span>.<span class="ruby-identifier">read_string</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 144</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">buffer</span>)
+  <span class="ruby-identifier">pk</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>
+  <span class="ruby-identifier">sk</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>
+  <span class="ruby-identifier">_comment</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>
 
   <span class="ruby-ivar">@pk</span> = <span class="ruby-identifier">pk</span>
   <span class="ruby-ivar">@sign_key</span> = <span class="ruby-constant">SigningKeyFromFile</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">pk</span>,<span class="ruby-identifier">sk</span>)
@@ -260,7 +211,7 @@
         
         <div class="method-heading">
           <span class="method-name">read</span><span
-            class="method-args">(data,password)</span>
+            class="method-args">(data, password)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -275,42 +226,9 @@
 
           
           <div class="method-source-code" id="read-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 151</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">data</span>,<span class="ruby-identifier">password</span>)
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">data</span>,<span class="ruby-identifier">password</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-c-read_keyblob" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">read_keyblob</span><span
-            class="method-args">(buffer)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="read_keyblob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 155</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">buffer</span>)
-  <span class="ruby-constant">ED25519</span><span class="ruby-operator">::</span><span class="ruby-constant">PubKey</span>.<span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">buffer</span>)
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 173</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">password</span>)
+  <span class="ruby-constant">OpenSSHPrivateKeyLoader</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">password</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -349,7 +267,7 @@
 
           
           <div class="method-source-code" id="public_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 143</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 165</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">public_key</span>
   <span class="ruby-constant">PubKey</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@pk</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -382,7 +300,7 @@
 
           
           <div class="method-source-code" id="ssh_do_sign-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 147</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 169</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_do_sign</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-ivar">@sign_key</span>.<span class="ruby-identifier">sign</span>(<span class="ruby-identifier">data</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -415,7 +333,7 @@
 
           
           <div class="method-source-code" id="ssh_signature_type-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 139</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 161</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_signature_type</span>
   <span class="ruby-identifier">ssh_type</span>
 <span class="ruby-keyword">end</span></pre>
@@ -448,7 +366,7 @@
 
           
           <div class="method-source-code" id="ssh_type-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 135</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 157</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_type</span>
   <span class="ruby-string">&quot;ssh-ed25519&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -481,7 +399,7 @@
 
           
           <div class="method-source-code" id="to_blob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 131</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519.rb, line 153</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_blob</span>
   <span class="ruby-identifier">public_key</span>.<span class="ruby-identifier">to_blob</span>
 <span class="ruby-keyword">end</span></pre>

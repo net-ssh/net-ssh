@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Packet - net-ssh 4.2.0</title>
+<title>class Net::SSH::Packet - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -69,7 +69,7 @@
   <ul class="link-list">
   
   
-    <li><a class="include" href="Transport/Constants.html">Net::SSH::Transport::Constants</a>
+    <li><a class="include" href="Connection/Constants.html">Net::SSH::Connection::Constants</a>
   
   
   
@@ -77,7 +77,7 @@
   
   
   
-    <li><a class="include" href="Connection/Constants.html">Net::SSH::Connection::Constants</a>
+    <li><a class="include" href="Transport/Constants.html">Net::SSH::Transport::Constants</a>
   
   
   </ul>
@@ -197,7 +197,7 @@ href="Buffer.html">Net::SSH::Buffer</a> superclass.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 73</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">payload</span>)
   <span class="ruby-ivar">@named_elements</span> = {}
   <span class="ruby-keyword">super</span>
@@ -242,7 +242,7 @@ the field, and the second is the type.</p>
 
           
           <div class="method-source-code" id="register-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 34</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 35</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">register</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">pairs</span>)
   <span class="ruby-identifier">@@types</span>[<span class="ruby-identifier">type</span>] = <span class="ruby-identifier">pairs</span>
 <span class="ruby-keyword">end</span></pre>
@@ -284,7 +284,7 @@ by the given name exists.</p>
 
           
           <div class="method-source-code" id="5B-5D-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 82</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/packet.rb, line 85</span>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;no such element #{name}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@named_elements</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">name</span>)

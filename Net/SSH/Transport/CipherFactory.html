@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Transport::CipherFactory - net-ssh 4.2.0</title>
+<title>class Net::SSH::Transport::CipherFactory - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -121,14 +121,6 @@ algorithms.</p>
       </header>
       <dl>
       
-        <dt id="KEY_LEN_OVERRIDE">KEY_LEN_OVERRIDE
-        
-        <dd><p>Ruby&#39;s <a href="../../../OpenSSL.html">OpenSSL</a> bindings always
-return a key length of 16 for RC4 ciphers resulting in the error:
-OpenSSL::CipherError: key length too short. The following ciphers will
-override this key length.</p>
-        
-      
         <dt id="SSH_TO_OSSL">SSH_TO_OSSL
         
         <dd><p>Maps the <a href="../../SSH.html">SSH</a> name of a cipher to it&#39;s
@@ -171,24 +163,29 @@ encryption or decryption mode, based on the value of the
 
           
           <div class="method-source-code" id="get-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/cipher_factory.rb, line 57</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/cipher_factory.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-identifier">ossl_name</span> = <span class="ruby-constant">SSH_TO_OSSL</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-node">&quot;unimplemented cipher `#{name}&#39;&quot;</span>
   <span class="ruby-keyword">return</span> <span class="ruby-constant">IdentityCipher</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">ossl_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;none&quot;</span>
   <span class="ruby-identifier">cipher</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Cipher</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">ossl_name</span>)
-
+    
   <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:encrypt</span>] <span class="ruby-operator">?</span> <span class="ruby-value">:encrypt</span> <span class="ruby-operator">:</span> <span class="ruby-value">:decrypt</span>)
-
+    
   <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">padding</span> = <span class="ruby-value">0</span>
-
-  <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">CTR</span>) <span class="ruby-keyword">if</span> (<span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/-ctr(@openssh.org)?$/</span>)
-  <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">iv</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyExpander</span>.<span class="ruby-identifier">expand_key</span>(<span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">iv_len</span>, <span class="ruby-identifier">options</span>[<span class="ruby-value">:iv</span>], <span class="ruby-identifier">options</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">ossl_name</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;rc4&quot;</span>
-
-  <span class="ruby-identifier">key_len</span> = <span class="ruby-constant">KEY_LEN_OVERRIDE</span>[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">key_len</span>
+    
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/-ctr(@openssh.org)?$/</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">ossl_name</span> <span class="ruby-operator">!~</span> <span class="ruby-regexp">/-ctr/</span>
+      <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">CTR</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">cipher</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">OpenSSLAESCTR</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">cipher</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">iv</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyExpander</span>.<span class="ruby-identifier">expand_key</span>(<span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">iv_len</span>, <span class="ruby-identifier">options</span>[<span class="ruby-value">:iv</span>], <span class="ruby-identifier">options</span>)
+    
+  <span class="ruby-identifier">key_len</span> = <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">key_len</span>
   <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">key_len</span> = <span class="ruby-identifier">key_len</span>
   <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">key</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyExpander</span>.<span class="ruby-identifier">expand_key</span>(<span class="ruby-identifier">key_len</span>, <span class="ruby-identifier">options</span>[<span class="ruby-value">:key</span>], <span class="ruby-identifier">options</span>)
-  <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">update</span>(<span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">*</span> <span class="ruby-value">1536</span>) <span class="ruby-keyword">if</span> (<span class="ruby-identifier">ossl_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;rc4&quot;</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;arcfour&quot;</span>)
-
+    
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">cipher</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -223,7 +220,7 @@ supplied the third return value will be ivlen</p>
 
           
           <div class="method-source-code" id="get_lengths-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/cipher_factory.rb, line 82</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/cipher_factory.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_lengths</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span> = {})
   <span class="ruby-identifier">ossl_name</span> = <span class="ruby-constant">SSH_TO_OSSL</span>[<span class="ruby-identifier">name</span>]
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">ossl_name</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">ossl_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;none&quot;</span>
@@ -231,10 +228,18 @@ supplied the third return value will be ivlen</p>
     <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:iv_len</span>]
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">cipher</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Cipher</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">ossl_name</span>)
-    <span class="ruby-identifier">key_len</span> = <span class="ruby-constant">KEY_LEN_OVERRIDE</span>[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">key_len</span>
+    <span class="ruby-identifier">key_len</span> = <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">key_len</span>
     <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">key_len</span> = <span class="ruby-identifier">key_len</span>
-
-    <span class="ruby-identifier">result</span> = [<span class="ruby-identifier">key_len</span>, <span class="ruby-identifier">ossl_name</span><span class="ruby-operator">==</span><span class="ruby-string">&quot;rc4&quot;</span> <span class="ruby-operator">?</span> <span class="ruby-value">8</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">block_size</span>]
+    
+    <span class="ruby-identifier">block_size</span> =
+      <span class="ruby-keyword">case</span> <span class="ruby-identifier">ossl_name</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\-ctr/</span>
+        <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Transport</span><span class="ruby-operator">::</span><span class="ruby-constant">OpenSSLAESCTR</span>.<span class="ruby-identifier">block_size</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">block_size</span>
+      <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-identifier">result</span> = [<span class="ruby-identifier">key_len</span>, <span class="ruby-identifier">block_size</span>]
     <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">cipher</span>.<span class="ruby-identifier">iv_len</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:iv_len</span>]
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">result</span>
@@ -269,7 +274,7 @@ library supports the given cipher, and false otherwise.</p>
 
           
           <div class="method-source-code" id="supported-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/cipher_factory.rb, line 46</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/cipher_factory.rb, line 35</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">supported?</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">ossl_name</span> = <span class="ruby-constant">SSH_TO_OSSL</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-node">&quot;unimplemented cipher `#{name}&#39;&quot;</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">ossl_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;none&quot;</span>

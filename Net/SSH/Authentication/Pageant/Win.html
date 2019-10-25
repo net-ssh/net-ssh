@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH::Authentication::Pageant::Win - net-ssh 4.2.0</title>
+<title>module Net::SSH::Authentication::Pageant::Win - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -250,7 +250,7 @@ TOKEN_INFORMATION_CLASS enum.</p>
 
           
           <div class="method-source-code" id="get_ptr-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/pageant.rb, line 202</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/pageant.rb, line 204</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_ptr</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_ptr</span>
 <span class="ruby-keyword">end</span></pre>
@@ -283,7 +283,7 @@ TOKEN_INFORMATION_CLASS enum.</p>
 
           
           <div class="method-source-code" id="malloc_ptr-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/pageant.rb, line 198</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/pageant.rb, line 200</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">malloc_ptr</span>(<span class="ruby-identifier">size</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-constant">DL</span>.<span class="ruby-identifier">malloc</span>(<span class="ruby-identifier">size</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -316,7 +316,7 @@ TOKEN_INFORMATION_CLASS enum.</p>
 
           
           <div class="method-source-code" id="set_ptr_data-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/pageant.rb, line 206</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/pageant.rb, line 208</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">set_ptr_data</span>(<span class="ruby-identifier">ptr</span>, <span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">ptr</span>[<span class="ruby-value">0</span>] = <span class="ruby-identifier">data</span>
 <span class="ruby-keyword">end</span></pre>

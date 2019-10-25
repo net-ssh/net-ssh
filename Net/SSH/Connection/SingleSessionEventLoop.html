@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Connection::SingleSessionEventLoop - net-ssh 4.2.0</title>
+<title>class Net::SSH::Connection::SingleSessionEventLoop - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -131,7 +131,7 @@ session as argument</p>
 
           
           <div class="method-source-code" id="ev_preprocess-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 97</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 99</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_preprocess</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword">yield</span>(<span class="ruby-ivar">@sessions</span>.<span class="ruby-identifier">first</span>)
   <span class="ruby-ivar">@sessions</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:ev_preprocess</span>)
@@ -167,13 +167,13 @@ session as argument</p>
 
           
           <div class="method-source-code" id="ev_select_and_postprocess-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 104</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/connection/event_loop.rb, line 106</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ev_select_and_postprocess</span>(<span class="ruby-identifier">wait</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Only one session expected&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@sessions</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
   <span class="ruby-identifier">session</span> = <span class="ruby-ivar">@sessions</span>.<span class="ruby-identifier">first</span>
   <span class="ruby-identifier">sr</span>,<span class="ruby-identifier">sw</span>,<span class="ruby-identifier">actwait</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">ev_do_calculate_rw_wait</span>(<span class="ruby-identifier">wait</span>)
-  <span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>, = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Compat</span>.<span class="ruby-identifier">io_select</span>(<span class="ruby-identifier">sr</span>, <span class="ruby-identifier">sw</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">actwait</span>)
-
+  <span class="ruby-identifier">readers</span>, <span class="ruby-identifier">writers</span>, = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">select</span>(<span class="ruby-identifier">sr</span>, <span class="ruby-identifier">sw</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">actwait</span>)
+    
   <span class="ruby-identifier">session</span>.<span class="ruby-identifier">ev_do_handle_events</span>(<span class="ruby-identifier">readers</span>,<span class="ruby-identifier">writers</span>)
   <span class="ruby-identifier">session</span>.<span class="ruby-identifier">ev_do_postprocess</span>(<span class="ruby-operator">!</span>((<span class="ruby-identifier">readers</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">readers</span>.<span class="ruby-identifier">empty?</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">writers</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">writers</span>.<span class="ruby-identifier">empty?</span>)))
 <span class="ruby-keyword">end</span></pre>

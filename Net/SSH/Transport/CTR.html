@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH::Transport::CTR - net-ssh 4.2.0</title>
+<title>module Net::SSH::Transport::CTR - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -144,7 +144,7 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="extended-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 8</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 33</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">extended</span>(<span class="ruby-identifier">orig</span>)
   <span class="ruby-identifier">orig</span>.<span class="ruby-identifier">instance_eval</span> {
     <span class="ruby-ivar">@remaining</span> = <span class="ruby-string">&quot;&quot;</span>
@@ -152,7 +152,7 @@ Block Ciphers. See RFC4344 for detail.</p>
     <span class="ruby-ivar">@counter_len</span> = <span class="ruby-identifier">orig</span>.<span class="ruby-identifier">block_size</span>
     <span class="ruby-identifier">orig</span>.<span class="ruby-identifier">encrypt</span>
     <span class="ruby-identifier">orig</span>.<span class="ruby-identifier">padding</span> = <span class="ruby-value">0</span>
-    
+
     <span class="ruby-identifier">singleton_class</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:alias_method</span>, <span class="ruby-value">:_update</span>, <span class="ruby-value">:update</span>)
     <span class="ruby-identifier">singleton_class</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:private</span>, <span class="ruby-value">:_update</span>)
     <span class="ruby-identifier">singleton_class</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:undef_method</span>, <span class="ruby-value">:update</span>)
@@ -190,30 +190,27 @@ Block Ciphers. See RFC4344 for detail.</p>
 
       <span class="ruby-identifier">encrypted</span> = <span class="ruby-string">&quot;&quot;</span>
 
-      <span class="ruby-keyword">while</span> <span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">bytesize</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">block_size</span>
-        <span class="ruby-identifier">encrypted</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">xor!</span>(<span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">slice!</span>(<span class="ruby-value">0</span>, <span class="ruby-identifier">block_size</span>),
+      <span class="ruby-identifier">offset</span> = <span class="ruby-value">0</span>
+      <span class="ruby-keyword">while</span> (<span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">bytesize</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">offset</span>) <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">block_size</span>
+        <span class="ruby-identifier">encrypted</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">xor!</span>(<span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">offset</span>, <span class="ruby-identifier">block_size</span>),
                           <span class="ruby-identifier">_update</span>(<span class="ruby-ivar">@counter</span>))
         <span class="ruby-identifier">increment_counter!</span>
+        <span class="ruby-identifier">offset</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">block_size</span>
       <span class="ruby-keyword">end</span>
+      <span class="ruby-ivar">@remaining</span> = <span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">offset</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>)
 
       <span class="ruby-identifier">encrypted</span>
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-keyword">def</span> <span class="ruby-identifier">final</span>
-      <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">empty?</span>
-        <span class="ruby-identifier">s</span> = <span class="ruby-identifier">xor!</span>(<span class="ruby-ivar">@remaining</span>, <span class="ruby-identifier">_update</span>(<span class="ruby-ivar">@counter</span>))
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">s</span> = <span class="ruby-string">&quot;&quot;</span>
-      <span class="ruby-keyword">end</span>
-
+      <span class="ruby-identifier">s</span> = <span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">xor!</span>(<span class="ruby-ivar">@remaining</span>, <span class="ruby-identifier">_update</span>(<span class="ruby-ivar">@counter</span>))
       <span class="ruby-ivar">@remaining</span> = <span class="ruby-string">&quot;&quot;</span>
-
       <span class="ruby-identifier">s</span>
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-keyword">def</span> <span class="ruby-identifier">xor!</span>(<span class="ruby-identifier">s1</span>, <span class="ruby-identifier">s2</span>)
       <span class="ruby-identifier">s</span> = []
-      <span class="ruby-identifier">s1</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;Q*&#39;</span>).<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">s2</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;Q*&#39;</span>)) {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">a</span><span class="ruby-operator">^</span><span class="ruby-identifier">b</span>) }
+      <span class="ruby-identifier">s1</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;Q*&#39;</span>).<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">s2</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;Q*&#39;</span>)) {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">a</span> <span class="ruby-operator">^</span> <span class="ruby-identifier">b</span>) }
       <span class="ruby-identifier">s</span>.<span class="ruby-identifier">pack</span>(<span class="ruby-string">&#39;Q*&#39;</span>)
     <span class="ruby-keyword">end</span>
     <span class="ruby-identifier">singleton_class</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:private</span>, <span class="ruby-value">:xor!</span>)
@@ -266,7 +263,7 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="decrypt-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 36</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">decrypt</span>
   <span class="ruby-comment"># DO NOTHING (always set to &quot;encrypt&quot;)</span>
 <span class="ruby-keyword">end</span></pre>
@@ -299,7 +296,7 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="encrypt-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 32</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 57</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">encrypt</span>
   <span class="ruby-comment"># DO NOTHING (always set to &quot;encrypt&quot;)</span>
 <span class="ruby-keyword">end</span></pre>
@@ -332,16 +329,10 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="final-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 62</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 90</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">final</span>
-  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">empty?</span>
-    <span class="ruby-identifier">s</span> = <span class="ruby-identifier">xor!</span>(<span class="ruby-ivar">@remaining</span>, <span class="ruby-identifier">_update</span>(<span class="ruby-ivar">@counter</span>))
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">s</span> = <span class="ruby-string">&quot;&quot;</span>
-  <span class="ruby-keyword">end</span>
-
+  <span class="ruby-identifier">s</span> = <span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">xor!</span>(<span class="ruby-ivar">@remaining</span>, <span class="ruby-identifier">_update</span>(<span class="ruby-ivar">@counter</span>))
   <span class="ruby-ivar">@remaining</span> = <span class="ruby-string">&quot;&quot;</span>
-
   <span class="ruby-identifier">s</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -373,7 +364,7 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="increment_counter-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 81</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 103</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">increment_counter!</span>
   <span class="ruby-identifier">c</span> = <span class="ruby-ivar">@counter_len</span>
   <span class="ruby-keyword">while</span> ((<span class="ruby-identifier">c</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>)
@@ -411,7 +402,7 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="iv-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 20</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 45</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">iv</span>
   <span class="ruby-ivar">@counter</span>
 <span class="ruby-keyword">end</span></pre>
@@ -444,7 +435,7 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="iv-3D-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 28</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 53</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">iv=</span>(<span class="ruby-identifier">iv_s</span>)
   <span class="ruby-ivar">@counter</span> = <span class="ruby-identifier">iv_s</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">nil?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -477,7 +468,7 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="iv_len-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 24</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">iv_len</span>
   <span class="ruby-identifier">block_size</span>
 <span class="ruby-keyword">end</span></pre>
@@ -510,7 +501,7 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="padding-3D-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 40</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 65</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">padding=</span>(<span class="ruby-identifier">pad</span>)
   <span class="ruby-comment"># DO NOTHING (always 0)</span>
 <span class="ruby-keyword">end</span></pre>
@@ -543,7 +534,7 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="reset-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 44</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 69</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">reset</span>
   <span class="ruby-ivar">@remaining</span> = <span class="ruby-string">&quot;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -576,17 +567,20 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 48</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 73</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-ivar">@remaining</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">data</span>
 
   <span class="ruby-identifier">encrypted</span> = <span class="ruby-string">&quot;&quot;</span>
 
-  <span class="ruby-keyword">while</span> <span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">bytesize</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">block_size</span>
-    <span class="ruby-identifier">encrypted</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">xor!</span>(<span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">slice!</span>(<span class="ruby-value">0</span>, <span class="ruby-identifier">block_size</span>),
+  <span class="ruby-identifier">offset</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">while</span> (<span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">bytesize</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">offset</span>) <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">block_size</span>
+    <span class="ruby-identifier">encrypted</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">xor!</span>(<span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">offset</span>, <span class="ruby-identifier">block_size</span>),
                       <span class="ruby-identifier">_update</span>(<span class="ruby-ivar">@counter</span>))
     <span class="ruby-identifier">increment_counter!</span>
+    <span class="ruby-identifier">offset</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">block_size</span>
   <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@remaining</span> = <span class="ruby-ivar">@remaining</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">offset</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>)
 
   <span class="ruby-identifier">encrypted</span>
 <span class="ruby-keyword">end</span></pre>
@@ -619,10 +613,10 @@ Block Ciphers. See RFC4344 for detail.</p>
 
           
           <div class="method-source-code" id="xor-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 74</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/ctr.rb, line 96</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">xor!</span>(<span class="ruby-identifier">s1</span>, <span class="ruby-identifier">s2</span>)
   <span class="ruby-identifier">s</span> = []
-  <span class="ruby-identifier">s1</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;Q*&#39;</span>).<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">s2</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;Q*&#39;</span>)) {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">a</span><span class="ruby-operator">^</span><span class="ruby-identifier">b</span>) }
+  <span class="ruby-identifier">s1</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;Q*&#39;</span>).<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">s2</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&#39;Q*&#39;</span>)) {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">a</span> <span class="ruby-operator">^</span> <span class="ruby-identifier">b</span>) }
   <span class="ruby-identifier">s</span>.<span class="ruby-identifier">pack</span>(<span class="ruby-string">&#39;Q*&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>

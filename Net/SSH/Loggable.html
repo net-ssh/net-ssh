@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH::Loggable - net-ssh 4.2.0</title>
+<title>module Net::SSH::Loggable - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -166,7 +166,7 @@ greater.</p>
 
           
           <div class="method-source-code" id="debug-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 24</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 25</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">debug</span>
   <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">add</span>(<span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">DEBUG</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">facility</span>) { <span class="ruby-keyword">yield</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">logger</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -200,7 +200,7 @@ greater.</p>
 
           
           <div class="method-source-code" id="error-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 42</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 43</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">error</span>
   <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">add</span>(<span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">ERROR</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">facility</span>) { <span class="ruby-keyword">yield</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">logger</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -234,7 +234,7 @@ greater.</p>
 
           
           <div class="method-source-code" id="fatal-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 48</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">fatal</span>
   <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">add</span>(<span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">FATAL</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">facility</span>) { <span class="ruby-keyword">yield</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">logger</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">fatal?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -268,7 +268,7 @@ greater.</p>
 
           
           <div class="method-source-code" id="info-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 30</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 31</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">info</span>
   <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">add</span>(<span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">INFO</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">facility</span>) { <span class="ruby-keyword">yield</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">logger</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -302,7 +302,7 @@ greater. (Called lwarn to avoid shadowing with Kernel#warn.)</p>
 
           
           <div class="method-source-code" id="lwarn-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 36</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/loggable.rb, line 37</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">lwarn</span>
   <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">add</span>(<span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">WARN</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">facility</span>) { <span class="ruby-keyword">yield</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">logger</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">warn?</span>
 <span class="ruby-keyword">end</span></pre>

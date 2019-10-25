@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256 - net-ssh 4.2.0</title>
+<title>class Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256 - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -71,7 +71,7 @@
 
   <ul class="link-list" role="directory">
     
-    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    <li ><a href="#method-i-digester">#digester</a>
     
   </ul>
 </div>
@@ -104,17 +104,17 @@
     
 
     
-     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
-         <h3>Public Class Methods</h3>
+         <h3>Public Instance Methods</h3>
        </header>
 
     
-      <div id="method-c-new" class="method-detail ">
+      <div id="method-i-digester" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(*args)</span>
+          <span class="method-name">digester</span><span
+            class="method-args">()</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -126,19 +126,12 @@
           
           
           
-            <div class="method-calls-super">
-              Calls superclass method
-              <a href="DiffieHellmanGroup1SHA1.html#method-c-new">Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1.new</a>
-            </div>
-          
 
           
-          <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha256.rb, line 8</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-  <span class="ruby-keyword">super</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
-
-  <span class="ruby-ivar">@digester</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA256</span>
+          <div class="method-source-code" id="digester-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/kex/diffie_hellman_group_exchange_sha256.rb, line 7</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">digester</span>
+  <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA256</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

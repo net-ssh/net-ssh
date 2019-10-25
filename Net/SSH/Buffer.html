@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Buffer - net-ssh 4.2.0</title>
+<title>class Net::SSH::Buffer - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -112,6 +112,8 @@
     <li ><a href="#method-i-read_keyblob">#read_keyblob</a>
     
     <li ><a href="#method-i-read_long">#read_long</a>
+    
+    <li ><a href="#method-i-read_private_keyblob">#read_private_keyblob</a>
     
     <li ><a href="#method-i-read_string">#read_string</a>
     
@@ -279,14 +281,14 @@ to write multiple values of the same type in a briefer manner.</p>
 
           
           <div class="method-source-code" id="from-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 47</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 48</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">from</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;odd number of arguments given&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">%</span> <span class="ruby-value">2</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
 
   <span class="ruby-identifier">buffer</span> = <span class="ruby-identifier">new</span>
-  <span class="ruby-value">0</span>.<span class="ruby-identifier">step</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>, <span class="ruby-value">2</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
+  <span class="ruby-value">0</span>.<span class="ruby-identifier">step</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>, <span class="ruby-value">2</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">type</span> = <span class="ruby-identifier">args</span>[<span class="ruby-identifier">index</span>]
-    <span class="ruby-identifier">value</span> = <span class="ruby-identifier">args</span>[<span class="ruby-identifier">index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]
+    <span class="ruby-identifier">value</span> = <span class="ruby-identifier">args</span>[<span class="ruby-identifier">index</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>]
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:raw</span>
       <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>)
     <span class="ruby-keyword">elsif</span> <span class="ruby-constant">Array</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">value</span>
@@ -328,7 +330,7 @@ initialized to the beginning of the buffer.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 74</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 75</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">content</span>=<span class="ruby-string">&quot;&quot;</span>)
   <span class="ruby-ivar">@content</span> = <span class="ruby-identifier">content</span>.<span class="ruby-identifier">to_s</span>
   <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>
@@ -371,7 +373,7 @@ if they are identical in size and content.</p>
 
           
           <div class="method-source-code" id="3D-3D-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 97</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 98</span>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">buffer</span>)
   <span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">to_s</span>
 <span class="ruby-keyword">end</span></pre>
@@ -405,7 +407,7 @@ position. Returns the buffer object itself.</p>
 
           
           <div class="method-source-code" id="append-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 146</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 147</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">append</span>(<span class="ruby-identifier">text</span>)
   <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">self</span>
@@ -440,7 +442,7 @@ remain between the current position and the end of the buffer).</p>
 
           
           <div class="method-source-code" id="available-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 86</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 87</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">available</span>
   <span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">position</span>
 <span class="ruby-keyword">end</span></pre>
@@ -473,7 +475,7 @@ remain between the current position and the end of the buffer).</p>
 
           
           <div class="method-source-code" id="clear-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 120</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 121</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">clear!</span>
   <span class="ruby-ivar">@content</span> = <span class="ruby-string">&quot;&quot;</span>
   <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>
@@ -513,7 +515,7 @@ grow without bound.</p>
 
           
           <div class="method-source-code" id="consume-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 132</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 133</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">consume!</span>(<span class="ruby-identifier">n</span>=<span class="ruby-identifier">position</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">length</span>
     <span class="ruby-comment"># optimize for a fairly common case</span>
@@ -555,7 +557,7 @@ zero length).</p>
 
           
           <div class="method-source-code" id="empty-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 102</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 103</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -589,7 +591,7 @@ will return nil, in this case.</p>
 
           
           <div class="method-source-code" id="eof-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 114</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 115</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eof?</span>
   <span class="ruby-ivar">@position</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">length</span>
 <span class="ruby-keyword">end</span></pre>
@@ -622,7 +624,7 @@ will return nil, in this case.</p>
 
           
           <div class="method-source-code" id="length-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 80</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 81</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">length</span>
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">length</span>
 <span class="ruby-keyword">end</span></pre>
@@ -658,12 +660,12 @@ increment the pointer.</p>
 
           
           <div class="method-source-code" id="read-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 175</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 176</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">count</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">count</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">length</span>
   <span class="ruby-identifier">count</span> = <span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@position</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@position</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">length</span>
   <span class="ruby-ivar">@position</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">count</span>
-  <span class="ruby-ivar">@content</span>[<span class="ruby-ivar">@position</span><span class="ruby-operator">-</span><span class="ruby-identifier">count</span>, <span class="ruby-identifier">count</span>]
+  <span class="ruby-ivar">@content</span>[<span class="ruby-ivar">@position</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">count</span>, <span class="ruby-identifier">count</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -697,7 +699,7 @@ read position.</p>
 
           
           <div class="method-source-code" id="read-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 184</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 185</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read!</span>(<span class="ruby-identifier">count</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">data</span> = <span class="ruby-identifier">read</span>(<span class="ruby-identifier">count</span>)
   <span class="ruby-identifier">consume!</span>
@@ -732,7 +734,7 @@ read position.</p>
 
           
           <div class="method-source-code" id="read_all-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 191</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 192</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_all</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-constant">Enumerator</span>.<span class="ruby-identifier">new</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword">yield</span>(<span class="ruby-keyword">self</span>) <span class="ruby-keyword">until</span> <span class="ruby-identifier">eof?</span> }.<span class="ruby-identifier">to_a</span>
 <span class="ruby-keyword">end</span></pre>
@@ -767,7 +769,7 @@ format.</p>
 
           
           <div class="method-source-code" id="read_bignum-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 237</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 238</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_bignum</span>
   <span class="ruby-identifier">data</span> = <span class="ruby-identifier">read_string</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">data</span>
@@ -803,7 +805,7 @@ format.</p>
 
           
           <div class="method-source-code" id="read_bool-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 229</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 230</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_bool</span>
   <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read_byte</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">b</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
@@ -838,7 +840,7 @@ href="Buffer.html">Buffer</a> object that wraps it.</p>
 
           
           <div class="method-source-code" id="read_buffer-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 303</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 336</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_buffer</span>
   <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">read_string</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -872,7 +874,7 @@ end of the buffer.</p>
 
           
           <div class="method-source-code" id="read_byte-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 214</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 215</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_byte</span>
   <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read</span>(<span class="ruby-value">1</span>) <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">b</span>.<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)
@@ -908,7 +910,7 @@ buffer.</p>
 
           
           <div class="method-source-code" id="read_int64-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 198</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 199</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_int64</span>
   <span class="ruby-identifier">hi</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">lo</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
@@ -944,7 +946,7 @@ type. The remainder of the key is defined by the type that was read.</p>
 
           
           <div class="method-source-code" id="read_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 246</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 247</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_key</span>
   <span class="ruby-identifier">type</span> = <span class="ruby-identifier">read_string</span>
   <span class="ruby-keyword">return</span> (<span class="ruby-identifier">type</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">type</span>) <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>)
@@ -979,50 +981,42 @@ Only RSA, DSA, and ECDSA keys are supported.</p>
 
           
           <div class="method-source-code" id="read_keyblob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 253</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 294</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_keyblob</span>(<span class="ruby-identifier">type</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^(.*)-cert-v01@openssh\.com$/</span>
-      <span class="ruby-identifier">key</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">Certificate</span>.<span class="ruby-identifier">read_certblob</span>(<span class="ruby-keyword">self</span>, <span class="ruby-node">$1</span>)
-    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ssh-dss$/</span>
-      <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">DSA</span>.<span class="ruby-identifier">new</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_pqg</span>)
-        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_pqg</span>(<span class="ruby-identifier">read_bignum</span>, <span class="ruby-identifier">read_bignum</span>, <span class="ruby-identifier">read_bignum</span>)
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">p</span> = <span class="ruby-identifier">read_bignum</span>
-        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">q</span> = <span class="ruby-identifier">read_bignum</span>
-        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">g</span> = <span class="ruby-identifier">read_bignum</span>
-      <span class="ruby-keyword">end</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_key</span>)
-        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_key</span>(<span class="ruby-identifier">read_bignum</span>, <span class="ruby-keyword">nil</span>)
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">pub_key</span> = <span class="ruby-identifier">read_bignum</span>
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ssh-rsa$/</span>
-      <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">RSA</span>.<span class="ruby-identifier">new</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_key</span>)
-        <span class="ruby-identifier">e</span> = <span class="ruby-identifier">read_bignum</span>
-        <span class="ruby-identifier">n</span> = <span class="ruby-identifier">read_bignum</span>
-        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_key</span>(<span class="ruby-identifier">n</span>, <span class="ruby-identifier">e</span>, <span class="ruby-keyword">nil</span>)
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">e</span> = <span class="ruby-identifier">read_bignum</span>
-        <span class="ruby-identifier">key</span>.<span class="ruby-identifier">n</span> = <span class="ruby-identifier">read_bignum</span>
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ssh-ed25519$/</span>
-      <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">ED25519Loader</span>.<span class="ruby-identifier">raiseUnlessLoaded</span>(<span class="ruby-node">&quot;unsupported key type `#{type}&#39;&quot;</span>)
-      <span class="ruby-identifier">key</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">ED25519</span><span class="ruby-operator">::</span><span class="ruby-constant">PubKey</span>.<span class="ruby-identifier">read_keyblob</span>(<span class="ruby-keyword">self</span>)
-    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ecdsa\-sha2\-(\w*)$/</span>
-      <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span>)
-        <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-node">&quot;unsupported key type `#{type}&#39;&quot;</span>
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-keyword">begin</span>
-          <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span>.<span class="ruby-identifier">read_keyblob</span>(<span class="ruby-node">$1</span>, <span class="ruby-keyword">self</span>)
-        <span class="ruby-keyword">rescue</span> <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">ECError</span>
-          <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-node">&quot;unsupported key type `#{type}&#39;&quot;</span>
-        <span class="ruby-keyword">end</span>
-      <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^(.*)-cert-v01@openssh\.com$/</span>
+    <span class="ruby-identifier">key</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">Certificate</span>.<span class="ruby-identifier">read_certblob</span>(<span class="ruby-keyword">self</span>, <span class="ruby-node">$1</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ssh-dss$/</span>
+    <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">DSA</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_pqg</span>)
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_pqg</span>(<span class="ruby-identifier">read_bignum</span>, <span class="ruby-identifier">read_bignum</span>, <span class="ruby-identifier">read_bignum</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-node">&quot;unsupported key type `#{type}&#39;&quot;</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">p</span> = <span class="ruby-identifier">read_bignum</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">q</span> = <span class="ruby-identifier">read_bignum</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">g</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_key</span>)
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_key</span>(<span class="ruby-identifier">read_bignum</span>, <span class="ruby-keyword">nil</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">pub_key</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ssh-rsa$/</span>
+    <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">RSA</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_key</span>)
+      <span class="ruby-identifier">e</span> = <span class="ruby-identifier">read_bignum</span>
+      <span class="ruby-identifier">n</span> = <span class="ruby-identifier">read_bignum</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_key</span>(<span class="ruby-identifier">n</span>, <span class="ruby-identifier">e</span>, <span class="ruby-keyword">nil</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">e</span> = <span class="ruby-identifier">read_bignum</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">n</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ssh-ed25519$/</span>
+    <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">ED25519Loader</span>.<span class="ruby-identifier">raiseUnlessLoaded</span>(<span class="ruby-node">&quot;unsupported key type `#{type}&#39;&quot;</span>)
+    <span class="ruby-identifier">key</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Authentication</span><span class="ruby-operator">::</span><span class="ruby-constant">ED25519</span><span class="ruby-operator">::</span><span class="ruby-constant">PubKey</span>.<span class="ruby-identifier">read_keyblob</span>(<span class="ruby-keyword">self</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ecdsa\-sha2\-(\w*)$/</span>
+    <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">EC</span>.<span class="ruby-identifier">read_keyblob</span>(<span class="ruby-node">$1</span>, <span class="ruby-keyword">self</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>, <span class="ruby-node">&quot;unsupported key type `#{type}&#39;&quot;</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">key</span>
@@ -1058,10 +1052,79 @@ buffer.</p>
 
           
           <div class="method-source-code" id="read_long-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 207</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 208</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_long</span>
   <span class="ruby-identifier">b</span> = <span class="ruby-identifier">read</span>(<span class="ruby-value">4</span>) <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">b</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-string">&quot;N&quot;</span>).<span class="ruby-identifier">first</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-read_private_keyblob" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">read_private_keyblob</span><span
+            class="method-args">(type)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="read_private_keyblob-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 252</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">read_private_keyblob</span>(<span class="ruby-identifier">type</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^ssh-rsa$/</span>
+    <span class="ruby-identifier">key</span> = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">RSA</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-identifier">n</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-identifier">e</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-identifier">d</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-identifier">iqmp</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-identifier">p</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-identifier">q</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-identifier">_unkown1</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-identifier">_unkown2</span> = <span class="ruby-identifier">read_bignum</span>
+    <span class="ruby-identifier">dmp1</span> = <span class="ruby-identifier">d</span> <span class="ruby-operator">%</span> (<span class="ruby-identifier">p</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>)
+    <span class="ruby-identifier">dmq1</span> = <span class="ruby-identifier">d</span> <span class="ruby-operator">%</span> (<span class="ruby-identifier">q</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_key</span>)
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_key</span>(<span class="ruby-identifier">n</span>, <span class="ruby-identifier">e</span>, <span class="ruby-identifier">d</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">e</span> = <span class="ruby-identifier">e</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">n</span> = <span class="ruby-identifier">n</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">d</span> = <span class="ruby-identifier">d</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_factors</span>)
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_factors</span>(<span class="ruby-identifier">p</span>, <span class="ruby-identifier">q</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">p</span> = <span class="ruby-identifier">p</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">q</span> = <span class="ruby-identifier">q</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:set_crt_params</span>)
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">set_crt_params</span>(<span class="ruby-identifier">dmp1</span>, <span class="ruby-identifier">dmq1</span>, <span class="ruby-identifier">iqmp</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">dmp1</span> = <span class="ruby-identifier">dmp1</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">dmq1</span> = <span class="ruby-identifier">dmq1</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">iqmp</span> = <span class="ruby-identifier">iqmp</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">key</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">Exception</span>, <span class="ruby-node">&quot;Cannot decode private key of type #{type}&quot;</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -1094,7 +1157,7 @@ nil if there are not enough bytes to satisfy the request.</p>
 
           
           <div class="method-source-code" id="read_string-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 222</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 223</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_string</span>
   <span class="ruby-identifier">length</span> = <span class="ruby-identifier">read_long</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">read</span>(<span class="ruby-identifier">length</span>)
@@ -1132,15 +1195,15 @@ Returns all data up to and including the text that matched the pattern.</p>
 
           
           <div class="method-source-code" id="read_to-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 162</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 163</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read_to</span>(<span class="ruby-identifier">pattern</span>)
   <span class="ruby-identifier">index</span> = <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-ivar">@position</span>) <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">length</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">pattern</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">pattern</span>.<span class="ruby-identifier">length</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">Integer</span> <span class="ruby-keyword">then</span> <span class="ruby-value">1</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">Regexp</span> <span class="ruby-keyword">then</span> <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span>
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">index</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">index</span><span class="ruby-operator">+</span><span class="ruby-identifier">length</span>)
+           <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">pattern</span>.<span class="ruby-identifier">length</span>
+           <span class="ruby-keyword">when</span> <span class="ruby-constant">Integer</span> <span class="ruby-keyword">then</span> <span class="ruby-value">1</span>
+           <span class="ruby-keyword">when</span> <span class="ruby-constant">Regexp</span> <span class="ruby-keyword">then</span> <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span>
+           <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">index</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">index</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">length</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -1172,7 +1235,7 @@ Returns all data up to and including the text that matched the pattern.</p>
 
           
           <div class="method-source-code" id="remainder_as_buffer-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 153</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 154</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">remainder_as_buffer</span>
   <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@content</span>[<span class="ruby-ivar">@position</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>])
 <span class="ruby-keyword">end</span></pre>
@@ -1206,7 +1269,7 @@ at position 0.</p>
 
           
           <div class="method-source-code" id="reset-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 108</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 109</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">reset!</span>
   <span class="ruby-ivar">@position</span> = <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1239,7 +1302,7 @@ at position 0.</p>
 
           
           <div class="method-source-code" id="to_s-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 91</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 92</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
   (<span class="ruby-ivar">@content</span> <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>).<span class="ruby-identifier">dup</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1273,7 +1336,7 @@ position. Returns the buffer object.</p>
 
           
           <div class="method-source-code" id="write-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 309</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 342</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">data</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">datum</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">datum</span>.<span class="ruby-identifier">dup</span>.<span class="ruby-identifier">force_encoding</span>(<span class="ruby-string">&#39;BINARY&#39;</span>) }
   <span class="ruby-keyword">self</span>
@@ -1309,7 +1372,7 @@ read position. Returns the buffer object.</p>
 
           
           <div class="method-source-code" id="write_bignum-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 384</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 417</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_bignum</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)
   <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">to_ssh</span> }.<span class="ruby-identifier">join</span>
   <span class="ruby-keyword">self</span>
@@ -1345,7 +1408,7 @@ buffer object.</p>
 
           
           <div class="method-source-code" id="write_bool-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 376</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 409</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_bool</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">b</span>)
   <span class="ruby-identifier">b</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">v</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;\1&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&quot;\0&quot;</span>) }
   <span class="ruby-keyword">self</span>
@@ -1380,7 +1443,7 @@ position. Returns the buffer object.</p>
 
           
           <div class="method-source-code" id="write_byte-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 343</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 376</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_byte</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)
   <span class="ruby-identifier">n</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">chr</span> }
   <span class="ruby-keyword">self</span>
@@ -1416,7 +1479,7 @@ object.</p>
 
           
           <div class="method-source-code" id="write_int64-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 324</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 357</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_int64</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)
   <span class="ruby-identifier">n</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">hi</span> = (<span class="ruby-identifier">i</span> <span class="ruby-operator">&gt;&gt;</span> <span class="ruby-value">32</span>) <span class="ruby-operator">&amp;</span> <span class="ruby-value">0xFFFFFFFF</span>
@@ -1455,7 +1518,7 @@ alter the read position. Returns the buffer object.</p>
 
           
           <div class="method-source-code" id="write_key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 391</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 424</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_key</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">key</span>)
   <span class="ruby-identifier">key</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-identifier">append</span>(<span class="ruby-identifier">k</span>.<span class="ruby-identifier">to_blob</span>) }
   <span class="ruby-keyword">self</span>
@@ -1491,7 +1554,7 @@ object.</p>
 
           
           <div class="method-source-code" id="write_long-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 336</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 369</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_long</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">n</span>)
   <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;N*&quot;</span>)
   <span class="ruby-keyword">self</span>
@@ -1526,7 +1589,7 @@ the method. This way we can mutate the string.</p>
 
           
           <div class="method-source-code" id="write_moved-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 316</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 349</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_moved</span>(<span class="ruby-identifier">string</span>)
   <span class="ruby-ivar">@content</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">string</span>.<span class="ruby-identifier">force_encoding</span>(<span class="ruby-string">&#39;BINARY&#39;</span>)
   <span class="ruby-keyword">self</span>
@@ -1563,7 +1626,7 @@ href="Buffer.html#method-i-write_moved">#write_moved</a></p>
 
           
           <div class="method-source-code" id="write_mstring-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 364</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 397</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_mstring</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">text</span>)
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">string</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">s</span> = <span class="ruby-identifier">string</span>.<span class="ruby-identifier">to_s</span>
@@ -1603,7 +1666,7 @@ the read position. Returns the buffer object.</p>
 
           
           <div class="method-source-code" id="write_string-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 351</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/buffer.rb, line 384</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write_string</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">text</span>)
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">string</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">s</span> = <span class="ruby-identifier">string</span>.<span class="ruby-identifier">to_s</span>

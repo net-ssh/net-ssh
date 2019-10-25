@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Service::Forward - net-ssh 4.2.0</title>
+<title>class Net::SSH::Service::Forward - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -211,7 +211,7 @@ href="../../SSH.html">SSH</a> port forwarding protocols employ.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 24</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 26</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">session</span>)
   <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">logger</span>
@@ -262,7 +262,7 @@ is an array of Unix domain socket file paths.</p>
 
           
           <div class="method-source-code" id="active_local_sockets-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 168</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 171</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">active_local_sockets</span>
   <span class="ruby-ivar">@local_forwarded_sockets</span>.<span class="ruby-identifier">keys</span>
 <span class="ruby-keyword">end</span></pre>
@@ -297,7 +297,7 @@ the local port and bind address corresponding to the forwarding port.</p>
 
           
           <div class="method-source-code" id="active_locals-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 117</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 120</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">active_locals</span>
   <span class="ruby-ivar">@local_forwarded_ports</span>.<span class="ruby-identifier">keys</span>
 <span class="ruby-keyword">end</span></pre>
@@ -333,11 +333,10 @@ returned value is a hash from [&lt;forwarding port on the local host&gt;,
 
           
           <div class="method-source-code" id="active_remote_destinations-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 269</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 272</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">active_remote_destinations</span>
-  <span class="ruby-ivar">@remote_forwarded_ports</span>.<span class="ruby-identifier">inject</span>({}) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">result</span>, (<span class="ruby-identifier">remote</span>, <span class="ruby-identifier">local</span>)<span class="ruby-operator">|</span>
+  <span class="ruby-ivar">@remote_forwarded_ports</span>.<span class="ruby-identifier">each_with_object</span>({}) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span>(<span class="ruby-identifier">remote</span>, <span class="ruby-identifier">local</span>), <span class="ruby-identifier">result</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">result</span>[[<span class="ruby-identifier">local</span>.<span class="ruby-identifier">port</span>, <span class="ruby-identifier">local</span>.<span class="ruby-identifier">host</span>]] = <span class="ruby-identifier">remote</span>
-    <span class="ruby-identifier">result</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -371,7 +370,7 @@ host and the second is the bind address.</p>
 
           
           <div class="method-source-code" id="active_remotes-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 262</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 265</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">active_remotes</span>
   <span class="ruby-ivar">@remote_forwarded_ports</span>.<span class="ruby-identifier">keys</span>
 <span class="ruby-keyword">end</span></pre>
@@ -417,7 +416,7 @@ connection was created with :forward_agent set to true:</p>
 
           
           <div class="method-source-code" id="agent-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 289</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 291</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">agent</span>(<span class="ruby-identifier">channel</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@agent_forwarded</span>
   <span class="ruby-ivar">@agent_forwarded</span> = <span class="ruby-keyword">true</span>
@@ -469,7 +468,7 @@ connection was created with :forward_agent set to true:</p>
 
           
           <div class="method-source-code" id="cancel_local-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 106</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 109</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel_local</span>(<span class="ruby-identifier">port</span>, <span class="ruby-identifier">bind_address</span>=<span class="ruby-string">&quot;127.0.0.1&quot;</span>)
   <span class="ruby-identifier">socket</span> = <span class="ruby-ivar">@local_forwarded_ports</span>.<span class="ruby-identifier">delete</span>([<span class="ruby-identifier">port</span>, <span class="ruby-identifier">bind_address</span>])
   <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">shutdown</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
@@ -508,7 +507,7 @@ connection was created with :forward_agent set to true:</p>
 
           
           <div class="method-source-code" id="cancel_local_socket-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 159</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 162</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel_local_socket</span>(<span class="ruby-identifier">local_socket_path</span>)
   <span class="ruby-identifier">socket</span> = <span class="ruby-ivar">@local_forwarded_sockets</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">local_socket_path</span>)
   <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">shutdown</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
@@ -558,7 +557,7 @@ like this:</p>
 
           
           <div class="method-source-code" id="cancel_remote-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 249</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 252</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel_remote</span>(<span class="ruby-identifier">port</span>, <span class="ruby-identifier">host</span>=<span class="ruby-string">&quot;127.0.0.1&quot;</span>)
   <span class="ruby-identifier">session</span>.<span class="ruby-identifier">send_global_request</span>(<span class="ruby-string">&quot;cancel-tcpip-forward&quot;</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">host</span>, <span class="ruby-value">:long</span>, <span class="ruby-identifier">port</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">success</span>, <span class="ruby-identifier">response</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>
@@ -620,7 +619,7 @@ assigned.</p>
 
           
           <div class="method-source-code" id="local-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 56</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 58</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">local</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">3</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">4</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;expected 3 or 4 parameters, got #{args.length}&quot;</span>
@@ -651,7 +650,8 @@ assigned.</p>
     <span class="ruby-identifier">client</span> = <span class="ruby-identifier">server</span>.<span class="ruby-identifier">accept</span>
     <span class="ruby-identifier">debug</span> { <span class="ruby-node">&quot;received connection on #{socket}&quot;</span> }
 
-    <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">open_channel</span>(<span class="ruby-string">&quot;direct-tcpip&quot;</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">remote_host</span>, <span class="ruby-value">:long</span>, <span class="ruby-identifier">remote_port</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">bind_address</span>, <span class="ruby-identifier">local_port_type</span>, <span class="ruby-identifier">local_port</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">achannel</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">channel</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">open_channel</span>(<span class="ruby-string">&quot;direct-tcpip&quot;</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">remote_host</span>, <span class="ruby-value">:long</span>,
+                                   <span class="ruby-identifier">remote_port</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">bind_address</span>, <span class="ruby-identifier">local_port_type</span>, <span class="ruby-identifier">local_port</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">achannel</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">achannel</span>.<span class="ruby-identifier">info</span> { <span class="ruby-string">&quot;direct channel established&quot;</span> }
     <span class="ruby-keyword">end</span>
 
@@ -701,7 +701,7 @@ needs to have the socket file already available.</p>
 
           
           <div class="method-source-code" id="local_socket-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 127</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 130</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">local_socket</span>(<span class="ruby-identifier">local_socket_path</span>, <span class="ruby-identifier">remote_socket_path</span>)
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">local_socket_path</span>) <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">local_socket_path</span>)
   <span class="ruby-identifier">socket</span> = <span class="ruby-constant">Socket</span>.<span class="ruby-identifier">unix_server_socket</span>(<span class="ruby-identifier">local_socket_path</span>)
@@ -806,7 +806,7 @@ this:</p>
 
           
           <div class="method-source-code" id="remote-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 215</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/service/forward.rb, line 218</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">remote</span>(<span class="ruby-identifier">port</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">remote_port</span>, <span class="ruby-identifier">remote_host</span>=<span class="ruby-string">&quot;127.0.0.1&quot;</span>)
   <span class="ruby-identifier">session</span>.<span class="ruby-identifier">send_global_request</span>(<span class="ruby-string">&quot;tcpip-forward&quot;</span>, <span class="ruby-value">:string</span>, <span class="ruby-identifier">remote_host</span>, <span class="ruby-value">:long</span>, <span class="ruby-identifier">remote_port</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">success</span>, <span class="ruby-identifier">response</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>
@@ -816,8 +816,8 @@ this:</p>
       <span class="ruby-keyword">yield</span> <span class="ruby-identifier">remote_port</span>, <span class="ruby-identifier">remote_host</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
     <span class="ruby-keyword">else</span>
       <span class="ruby-identifier">instruction</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
-        <span class="ruby-keyword">yield</span> <span class="ruby-operator">:</span><span class="ruby-identifier">error</span>
-      <span class="ruby-keyword">end</span>
+                      <span class="ruby-keyword">yield</span> <span class="ruby-operator">:</span><span class="ruby-identifier">error</span>
+                    <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">unless</span> <span class="ruby-identifier">instruction</span> <span class="ruby-operator">==</span> <span class="ruby-value">:no_exception</span>
         <span class="ruby-identifier">error</span> { <span class="ruby-string">&quot;remote forwarding request failed&quot;</span> }
         <span class="ruby-identifier">raise</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Exception</span>, <span class="ruby-string">&quot;remote forwarding request failed&quot;</span>

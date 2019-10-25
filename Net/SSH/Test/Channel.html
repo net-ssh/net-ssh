@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Test::Channel - net-ssh 4.2.0</title>
+<title>class Net::SSH::Test::Channel - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -221,7 +221,7 @@ href="Script.html">Net::SSH::Test::Script</a> instance).</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 29</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 31</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">script</span>)
   <span class="ruby-ivar">@script</span> = <span class="ruby-identifier">script</span>
   <span class="ruby-ivar">@local_id</span> = <span class="ruby-ivar">@remote_id</span> = <span class="ruby-keyword">nil</span>
@@ -266,7 +266,7 @@ href="Script.html">Net::SSH::Test::Script</a> instance).</p>
 
           
           <div class="method-source-code" id="gets_close-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 140</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 142</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_close</span>
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_close</span>(<span class="ruby-keyword">self</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -302,7 +302,7 @@ href="Script.html">Net::SSH::Test::Script</a> instance).</p>
 
           
           <div class="method-source-code" id="gets_data-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 111</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 113</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_data</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_data</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">data</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -338,7 +338,7 @@ href="Script.html">Net::SSH::Test::Script</a> instance).</p>
 
           
           <div class="method-source-code" id="gets_eof-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 133</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 135</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_eof</span>
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_eof</span>(<span class="ruby-keyword">self</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -374,7 +374,7 @@ href="Script.html">Net::SSH::Test::Script</a> instance).</p>
 
           
           <div class="method-source-code" id="gets_exit_status-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 126</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 128</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_exit_status</span>(<span class="ruby-identifier">status</span>=<span class="ruby-value">0</span>)
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_request</span>(<span class="ruby-keyword">self</span>, <span class="ruby-string">&quot;exit-status&quot;</span>, <span class="ruby-keyword">false</span>, <span class="ruby-identifier">status</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -411,7 +411,7 @@ end.</p>
 
           
           <div class="method-source-code" id="gets_extended_data-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 119</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 121</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">gets_extended_data</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">gets_channel_extended_data</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">data</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -454,7 +454,7 @@ href="Channel.html#method-i-inject_remote_delay-21">inject_remote_delay!</a>
 
           
           <div class="method-source-code" id="inject_remote_delay-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 56</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 58</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">inject_remote_delay!</span>
   <span class="ruby-identifier">gets_data</span>(<span class="ruby-string">&quot;&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -490,7 +490,7 @@ href="Packet.html#method-i-instantiate-21">Net::SSH::Test::Packet#instantiate!</
 
           
           <div class="method-source-code" id="local_id-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 37</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 39</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">local_id</span>
   <span class="ruby-ivar">@local_id</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-ivar">@local_id</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;local-id has not been set yet!&quot;</span> }
 <span class="ruby-keyword">end</span></pre>
@@ -526,7 +526,7 @@ href="Packet.html#method-i-instantiate-21">Net::SSH::Test::Packet#instantiate!</
 
           
           <div class="method-source-code" id="remote_id-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 44</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">remote_id</span>
   <span class="ruby-ivar">@remote_id</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> { <span class="ruby-ivar">@remote_id</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;remote-id has not been set yet!&quot;</span> }
 <span class="ruby-keyword">end</span></pre>
@@ -562,7 +562,7 @@ href="Packet.html#method-i-instantiate-21">Net::SSH::Test::Packet#instantiate!</
 
           
           <div class="method-source-code" id="sends_close-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 97</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 99</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_close</span>
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_close</span>(<span class="ruby-keyword">self</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -598,7 +598,7 @@ href="Packet.html#method-i-instantiate-21">Net::SSH::Test::Packet#instantiate!</
 
           
           <div class="method-source-code" id="sends_data-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 83</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 85</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_data</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_data</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">data</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -634,7 +634,7 @@ href="Packet.html#method-i-instantiate-21">Net::SSH::Test::Packet#instantiate!</
 
           
           <div class="method-source-code" id="sends_eof-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 90</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 92</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_eof</span>
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_eof</span>(<span class="ruby-keyword">self</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -674,7 +674,7 @@ successful, otherwise a failure will be scripted.</p>
 
           
           <div class="method-source-code" id="sends_exec-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 67</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 69</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_exec</span>(<span class="ruby-identifier">command</span>, <span class="ruby-identifier">reply</span>=<span class="ruby-keyword">true</span>, <span class="ruby-identifier">success</span>=<span class="ruby-keyword">true</span>)
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_request</span>(<span class="ruby-keyword">self</span>, <span class="ruby-string">&quot;exec&quot;</span>, <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">command</span>, <span class="ruby-identifier">success</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -710,7 +710,7 @@ successful, otherwise a failure will be scripted.</p>
 
           
           <div class="method-source-code" id="sends_request_pty-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 104</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 106</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_request_pty</span>
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_request_pty</span>(<span class="ruby-keyword">self</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -749,7 +749,7 @@ discussion of the meaning of the <code>reply</code> and
 
           
           <div class="method-source-code" id="sends_subsystem-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 76</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/channel.rb, line 78</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sends_subsystem</span>(<span class="ruby-identifier">subsystem</span>, <span class="ruby-identifier">reply</span>=<span class="ruby-keyword">true</span>, <span class="ruby-identifier">success</span>=<span class="ruby-keyword">true</span>)
   <span class="ruby-identifier">script</span>.<span class="ruby-identifier">sends_channel_request</span>(<span class="ruby-keyword">self</span>, <span class="ruby-string">&quot;subsystem&quot;</span>, <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">subsystem</span>, <span class="ruby-identifier">success</span>)
 <span class="ruby-keyword">end</span></pre>

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Proxy::HTTPS - net-ssh 4.2.0</title>
+<title>class Net::SSH::Proxy::HTTPS - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -155,7 +155,7 @@ href="HTTP.html">Net::SSH::Proxy::HTTP</a> it supports:</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/https.rb, line 19</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/https.rb, line 20</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">proxy_host</span>, <span class="ruby-identifier">proxy_port</span>=<span class="ruby-value">80</span>, <span class="ruby-identifier">options</span>={})
   <span class="ruby-ivar">@ssl_context</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:ssl_context</span>) <span class="ruby-operator">||</span>
                    <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">SSL</span><span class="ruby-operator">::</span><span class="ruby-constant">SSLContext</span>.<span class="ruby-identifier">new</span>
@@ -203,7 +203,7 @@ href="HTTP.html">Net::SSH::Proxy::HTTP</a> it supports:</p>
 
           
           <div class="method-source-code" id="establish_connection-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/https.rb, line 40</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/proxy/https.rb, line 41</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">establish_connection</span>(<span class="ruby-identifier">connect_timeout</span>)
   <span class="ruby-identifier">plain_socket</span> = <span class="ruby-keyword">super</span>(<span class="ruby-identifier">connect_timeout</span>)
   <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">SSL</span><span class="ruby-operator">::</span><span class="ruby-constant">SSLSocket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">plain_socket</span>, <span class="ruby-ivar">@ssl_context</span>).<span class="ruby-identifier">tap</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">socket</span><span class="ruby-operator">|</span>

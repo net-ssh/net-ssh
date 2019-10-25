@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Test::Packet - net-ssh 4.2.0</title>
+<title>class Net::SSH::Test::Packet - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -169,7 +169,7 @@ href="Packet.html#method-i-types">types</a>).</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 34</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 36</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-ivar">@type</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">type</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">upcase</span>)
   <span class="ruby-ivar">@data</span> = <span class="ruby-identifier">args</span>
@@ -204,10 +204,10 @@ extra parameters</p>
 
           
           <div class="method-source-code" id="register_channel_request-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 22</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 24</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">register_channel_request</span>(<span class="ruby-identifier">request</span>, <span class="ruby-identifier">extra_parts</span>)
   <span class="ruby-ivar">@registered_requests</span> <span class="ruby-operator">||=</span> {}
-  <span class="ruby-ivar">@registered_requests</span>[<span class="ruby-identifier">request</span>] = {<span class="ruby-identifier">extra_parts</span><span class="ruby-operator">:</span> <span class="ruby-identifier">extra_parts</span>}
+  <span class="ruby-ivar">@registered_requests</span>[<span class="ruby-identifier">request</span>] = { <span class="ruby-identifier">extra_parts</span><span class="ruby-operator">:</span> <span class="ruby-identifier">extra_parts</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -238,7 +238,7 @@ extra parameters</p>
 
           
           <div class="method-source-code" id="registered_channel_requests-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 27</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 29</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">registered_channel_requests</span>(<span class="ruby-identifier">request</span>)
   <span class="ruby-ivar">@registered_requests</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@registered_requests</span>[<span class="ruby-identifier">request</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -276,7 +276,7 @@ extra parameters</p>
           <p>Instantiates the packets data elements. When the packet was first defined,
 some elements may not have been fully realized, and were described as Proc
 objects rather than atomic types. This invokes those Proc objects and
-replaces them with their returned values. This allows for values  like <a
+replaces them with their returned values. This allows for values like <a
 href="Channel.html#method-i-remote_id">Net::SSH::Test::Channel#remote_id</a>
 to be used in scripts before the remote_id is known (since it is only known
 after a channel has been confirmed open).</p>
@@ -285,7 +285,7 @@ after a channel has been confirmed open).</p>
 
           
           <div class="method-source-code" id="instantiate-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 56</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 58</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">instantiate!</span>
   <span class="ruby-ivar">@data</span>.<span class="ruby-identifier">map!</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">i</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">i</span>.<span class="ruby-identifier">call</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">i</span> }
 <span class="ruby-keyword">end</span></pre>
@@ -319,7 +319,7 @@ necessary.</p>
 
           
           <div class="method-source-code" id="local-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 45</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 47</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">local?</span>
   <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
@@ -353,7 +353,7 @@ as necessary.</p>
 
           
           <div class="method-source-code" id="remote-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 40</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 42</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">remote?</span>
   <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
@@ -394,33 +394,33 @@ Unsupported packet types will otherwise raise an exception.</p>
 
           
           <div class="method-source-code" id="types-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 69</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/test/packet.rb, line 71</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">types</span>
   <span class="ruby-ivar">@types</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">case</span> <span class="ruby-ivar">@type</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">KEXINIT</span> <span class="ruby-keyword">then</span> 
-      [<span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>,
-       <span class="ruby-value">:string</span>, <span class="ruby-value">:string</span>, <span class="ruby-value">:string</span>, <span class="ruby-value">:string</span>, <span class="ruby-value">:string</span>, <span class="ruby-value">:string</span>, <span class="ruby-value">:string</span>, <span class="ruby-value">:string</span>, <span class="ruby-value">:string</span>, <span class="ruby-value">:string</span>,
-       <span class="ruby-value">:bool</span>]
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">NEWKEYS</span> <span class="ruby-keyword">then</span> []
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_OPEN</span> <span class="ruby-keyword">then</span> [<span class="ruby-value">:string</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>]
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_OPEN_CONFIRMATION</span> <span class="ruby-keyword">then</span> [<span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>]
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_DATA</span> <span class="ruby-keyword">then</span> [<span class="ruby-value">:long</span>, <span class="ruby-value">:string</span>]
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_EXTENDED_DATA</span> <span class="ruby-keyword">then</span> [<span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:string</span>]
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_EOF</span>, <span class="ruby-constant">CHANNEL_CLOSE</span>, <span class="ruby-constant">CHANNEL_SUCCESS</span>, <span class="ruby-constant">CHANNEL_FAILURE</span> <span class="ruby-keyword">then</span> [<span class="ruby-value">:long</span>]
-    <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_REQUEST</span>
-      <span class="ruby-identifier">parts</span> = [<span class="ruby-value">:long</span>, <span class="ruby-value">:string</span>, <span class="ruby-value">:bool</span>]
-      <span class="ruby-keyword">case</span> <span class="ruby-ivar">@data</span>[<span class="ruby-value">1</span>]
-      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;exec&quot;</span>, <span class="ruby-string">&quot;subsystem&quot;</span>,<span class="ruby-string">&quot;shell&quot;</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">parts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">:string</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;exit-status&quot;</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">parts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">:long</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;pty-req&quot;</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">parts</span>.<span class="ruby-identifier">concat</span>([<span class="ruby-value">:string</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:long</span>, <span class="ruby-value">:string</span>])
-      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;env&quot;</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">parts</span>.<span class="ruby-identifier">contact</span>([<span class="ruby-value">:string</span>,<span class="ruby-value">:string</span>])
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">request</span> = <span class="ruby-constant">Packet</span>.<span class="ruby-identifier">registered_channel_requests</span>(<span class="ruby-ivar">@data</span>[<span class="ruby-value">1</span>])
-        <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;don&#39;t know what to do about #{@data[1]} channel request&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">request</span>
-        <span class="ruby-identifier">parts</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">request</span>[<span class="ruby-value">:extra_parts</span>])
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">else</span> <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;don&#39;t know how to parse packet type #{@type}&quot;</span>
-    <span class="ruby-keyword">end</span>
+             <span class="ruby-keyword">when</span> <span class="ruby-constant">KEXINIT</span> <span class="ruby-keyword">then</span>
+               <span class="ruby-operator">%</span>[<span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span>
+                  <span class="ruby-identifier">string</span> <span class="ruby-identifier">string</span> <span class="ruby-identifier">string</span> <span class="ruby-identifier">string</span> <span class="ruby-identifier">string</span> <span class="ruby-identifier">string</span> <span class="ruby-identifier">string</span> <span class="ruby-identifier">string</span> <span class="ruby-identifier">string</span> <span class="ruby-identifier">string</span>
+                  <span class="ruby-identifier">bool</span>]
+             <span class="ruby-keyword">when</span> <span class="ruby-constant">NEWKEYS</span> <span class="ruby-keyword">then</span> []
+             <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_OPEN</span> <span class="ruby-keyword">then</span> <span class="ruby-operator">%</span>[<span class="ruby-identifier">string</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span>]
+             <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_OPEN_CONFIRMATION</span> <span class="ruby-keyword">then</span> <span class="ruby-operator">%</span>[<span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span>]
+             <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_DATA</span> <span class="ruby-keyword">then</span> <span class="ruby-operator">%</span>[<span class="ruby-identifier">long</span> <span class="ruby-identifier">string</span>]
+             <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_EXTENDED_DATA</span> <span class="ruby-keyword">then</span> <span class="ruby-operator">%</span>[<span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">string</span>]
+             <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_EOF</span>, <span class="ruby-constant">CHANNEL_CLOSE</span>, <span class="ruby-constant">CHANNEL_SUCCESS</span>, <span class="ruby-constant">CHANNEL_FAILURE</span> <span class="ruby-keyword">then</span> [<span class="ruby-value">:long</span>]
+             <span class="ruby-keyword">when</span> <span class="ruby-constant">CHANNEL_REQUEST</span>
+               <span class="ruby-identifier">parts</span> = <span class="ruby-operator">%</span>[<span class="ruby-identifier">long</span> <span class="ruby-identifier">string</span> <span class="ruby-identifier">bool</span>]
+               <span class="ruby-keyword">case</span> <span class="ruby-ivar">@data</span>[<span class="ruby-value">1</span>]
+               <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;exec&quot;</span>, <span class="ruby-string">&quot;subsystem&quot;</span>,<span class="ruby-string">&quot;shell&quot;</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">parts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">:string</span>
+               <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;exit-status&quot;</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">parts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">:long</span>
+               <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;pty-req&quot;</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">parts</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-operator">%</span>[<span class="ruby-identifier">string</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">long</span> <span class="ruby-identifier">string</span>])
+               <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;env&quot;</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">parts</span>.<span class="ruby-identifier">contact</span>(<span class="ruby-operator">%</span>[<span class="ruby-identifier">string</span> <span class="ruby-identifier">string</span>])
+               <span class="ruby-keyword">else</span>
+                 <span class="ruby-identifier">request</span> = <span class="ruby-constant">Packet</span>.<span class="ruby-identifier">registered_channel_requests</span>(<span class="ruby-ivar">@data</span>[<span class="ruby-value">1</span>])
+                 <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;don&#39;t know what to do about #{@data[1]} channel request&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">request</span>
+                 <span class="ruby-identifier">parts</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">request</span>[<span class="ruby-value">:extra_parts</span>])
+               <span class="ruby-keyword">end</span>
+             <span class="ruby-keyword">else</span> <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;don&#39;t know how to parse packet type #{@type}&quot;</span>
+             <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

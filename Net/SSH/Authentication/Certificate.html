@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Authentication::Certificate - net-ssh 4.2.0</title>
+<title>class Net::SSH::Authentication::Certificate - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -328,7 +328,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="read_certblob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 23</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 25</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">read_certblob</span>(<span class="ruby-identifier">buffer</span>, <span class="ruby-identifier">type</span>)
   <span class="ruby-identifier">cert</span> = <span class="ruby-constant">Certificate</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">cert</span>.<span class="ruby-identifier">nonce</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span>
@@ -383,7 +383,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="fingerprint-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 69</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 71</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">fingerprint</span>
   <span class="ruby-identifier">key</span>.<span class="ruby-identifier">fingerprint</span>
 <span class="ruby-keyword">end</span></pre>
@@ -416,7 +416,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="sign-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 85</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 87</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sign</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">sign_nonce</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">cert</span> = <span class="ruby-identifier">clone</span>
   <span class="ruby-identifier">cert</span>.<span class="ruby-identifier">sign!</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">sign_nonce</span>)
@@ -450,7 +450,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="sign-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 74</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sign!</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">sign_nonce</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-comment"># ssh-keygen uses 32 bytes of nonce.</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">nonce</span> = <span class="ruby-identifier">sign_nonce</span> <span class="ruby-operator">||</span> <span class="ruby-constant">SecureRandom</span>.<span class="ruby-identifier">random_bytes</span>(<span class="ruby-value">32</span>)
@@ -490,7 +490,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="signature_valid-3F-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 91</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 93</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">signature_valid?</span>
   <span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">signature</span>)
   <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">read_string</span> <span class="ruby-comment"># skip signature format</span>
@@ -525,7 +525,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="ssh_do_sign-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 57</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 59</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_do_sign</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">key</span>.<span class="ruby-identifier">ssh_do_sign</span>(<span class="ruby-identifier">data</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -558,7 +558,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="ssh_do_verify-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 61</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 63</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_do_verify</span>(<span class="ruby-identifier">sig</span>, <span class="ruby-identifier">data</span>)
   <span class="ruby-identifier">key</span>.<span class="ruby-identifier">ssh_do_verify</span>(<span class="ruby-identifier">sig</span>, <span class="ruby-identifier">data</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -591,7 +591,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="ssh_signature_type-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 45</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 47</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_signature_type</span>
   <span class="ruby-identifier">key</span>.<span class="ruby-identifier">ssh_type</span>
 <span class="ruby-keyword">end</span></pre>
@@ -624,7 +624,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="ssh_type-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 41</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 43</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ssh_type</span>
   <span class="ruby-identifier">key</span>.<span class="ruby-identifier">ssh_type</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;-cert-v01@openssh.com&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -657,7 +657,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="to_blob-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 50</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_blob</span>
   <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">from</span>(
     <span class="ruby-value">:raw</span>, <span class="ruby-identifier">to_blob_without_signature</span>,
@@ -693,7 +693,7 @@ href="http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/usr.bin/ssh/PROTOC
 
           
           <div class="method-source-code" id="to_pem-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 65</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/certificate.rb, line 67</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_pem</span>
   <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_pem</span>
 <span class="ruby-keyword">end</span></pre>

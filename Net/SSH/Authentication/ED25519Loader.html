@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module Net::SSH::Authentication::ED25519Loader - net-ssh 4.2.0</title>
+<title>module Net::SSH::Authentication::ED25519Loader - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -143,13 +143,12 @@ dependecies like rbnacl, bcrypt_pbkdf</p>
 
           
           <div class="method-source-code" id="dependenciesRequiredForED25519-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519_loader.rb, line 22</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519_loader.rb, line 24</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">dependenciesRequiredForED25519</span>
   <span class="ruby-identifier">result</span> = <span class="ruby-string">&quot;net-ssh requires the following gems for ed25519 support:\n&quot;</span>
-  <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot; * rbnacl (&gt;= 3.2, &lt; 5.0)\n&quot;</span>
-  <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot; * rbnacl-libsodium, if your system doesn&#39;t have libsodium installed.\n&quot;</span>
+  <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot; * ed25519 (&gt;= 1.2, &lt; 2.0)\n&quot;</span>
   <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot; * bcrypt_pbkdf (&gt;= 1.0, &lt; 2.0)\n&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">RUBY_PLATFORM</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;java&quot;</span>
-  <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;See https://github.com/net-ssh/net-ssh/issues/478 for more information\n&quot;</span>
+  <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;See https://github.com/net-ssh/net-ssh/issues/565 for more information\n&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -180,7 +179,7 @@ dependecies like rbnacl, bcrypt_pbkdf</p>
 
           
           <div class="method-source-code" id="raiseUnlessLoaded-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519_loader.rb, line 16</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/authentication/ed25519_loader.rb, line 18</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">raiseUnlessLoaded</span>(<span class="ruby-identifier">message</span>)
   <span class="ruby-identifier">description</span> = <span class="ruby-constant">ERROR</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">LoadError</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">dependenciesRequiredForED25519</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;&#39;</span>
   <span class="ruby-identifier">description</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{ERROR.class} : \&quot;#{ERROR.message}\&quot;\n&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">ERROR</span>

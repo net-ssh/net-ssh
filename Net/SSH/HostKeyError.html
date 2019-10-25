@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::HostKeyError - net-ssh 4.2.0</title>
+<title>class Net::SSH::HostKeyError - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -147,7 +147,7 @@ href="HostKeyError.html#method-i-key">key</a>).</p>
 
           
           <div class="method-source-code" id="5B-5D-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 54</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 55</span>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)
   <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-identifier">key</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -181,7 +181,7 @@ or did not match.</p>
 
           
           <div class="method-source-code" id="fingerprint-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 60</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">fingerprint</span>
   <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-value">:fingerprint</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -214,7 +214,7 @@ or did not match.</p>
 
           
           <div class="method-source-code" id="host-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 65</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 66</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">host</span>
   <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-value">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-value">:peer</span>][<span class="ruby-value">:host</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -247,7 +247,7 @@ or did not match.</p>
 
           
           <div class="method-source-code" id="ip-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 75</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ip</span>
   <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-value">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-value">:peer</span>][<span class="ruby-value">:ip</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -280,7 +280,7 @@ or did not match.</p>
 
           
           <div class="method-source-code" id="key-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 80</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 81</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">key</span>
   <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-value">:key</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -313,7 +313,7 @@ or did not match.</p>
 
           
           <div class="method-source-code" id="port-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 70</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 71</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">port</span>
   <span class="ruby-ivar">@data</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-value">:peer</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@data</span>[<span class="ruby-value">:peer</span>][<span class="ruby-value">:port</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -347,7 +347,7 @@ known hosts file, so that subsequent connections will remember them.</p>
 
           
           <div class="method-source-code" id="remember_host-21-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 86</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/errors.rb, line 87</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">remember_host!</span>
   <span class="ruby-ivar">@callback</span>.<span class="ruby-identifier">call</span>
 <span class="ruby-keyword">end</span></pre>

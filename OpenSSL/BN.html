@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class OpenSSL::BN - net-ssh 4.2.0</title>
+<title>class OpenSSL::BN - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -139,7 +139,7 @@ that which is required by the SSH2 protocol.</p>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">buf</span> = <span class="ruby-identifier">to_s</span>(<span class="ruby-value">2</span>)
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">buf</span>.<span class="ruby-identifier">getbyte</span>(<span class="ruby-value">0</span>)[<span class="ruby-value">7</span>] <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
-      <span class="ruby-keyword">return</span> [<span class="ruby-identifier">buf</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">buf</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;NCA*&quot;</span>)
+      <span class="ruby-keyword">return</span> [<span class="ruby-identifier">buf</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">buf</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;NCA*&quot;</span>)
     <span class="ruby-keyword">else</span>
       <span class="ruby-keyword">return</span> [<span class="ruby-identifier">buf</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">buf</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-string">&quot;NA*&quot;</span>)
     <span class="ruby-keyword">end</span>

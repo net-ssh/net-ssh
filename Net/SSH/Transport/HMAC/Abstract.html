@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class Net::SSH::Transport::HMAC::Abstract - net-ssh 4.2.0</title>
+<title>class Net::SSH::Transport::HMAC::Abstract - net-ssh 6.0.0.beta1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../../";
@@ -73,6 +73,8 @@
     
     <li ><a href="#method-c-digest_class">::digest_class</a>
     
+    <li ><a href="#method-c-etm">::etm</a>
+    
     <li ><a href="#method-c-key_length">::key_length</a>
     
     <li ><a href="#method-c-mac_length">::mac_length</a>
@@ -82,6 +84,8 @@
     <li ><a href="#method-i-digest">#digest</a>
     
     <li ><a href="#method-i-digest_class">#digest_class</a>
+    
+    <li ><a href="#method-i-etm">#etm</a>
     
     <li ><a href="#method-i-key-3D">#key=</a>
     
@@ -166,7 +170,7 @@ algorithm wrappers.</p>
 
           
           <div class="method-source-code" id="digest_class-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 34</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 48</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">digest_class</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">v</span>)
   <span class="ruby-ivar">@digest_class</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@digest_class</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">empty?</span>
@@ -174,6 +178,47 @@ algorithm wrappers.</p>
     <span class="ruby-keyword">return</span> <span class="ruby-ivar">@digest_class</span>
   <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
     <span class="ruby-ivar">@digest_class</span> = <span class="ruby-identifier">v</span>.<span class="ruby-identifier">first</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;wrong number of arguments (#{v.length} for 1)&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-etm" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">etm</span><span
+            class="method-args">(*v)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="etm-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 12</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">etm</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">v</span>)
+  <span class="ruby-ivar">@etm</span> = <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@etm</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-ivar">@etm</span> = <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">etm</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@etm</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">superclass</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:etm</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-ivar">@etm</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+    <span class="ruby-ivar">@etm</span> = <span class="ruby-identifier">v</span>.<span class="ruby-identifier">first</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;wrong number of arguments (#{v.length} for 1)&quot;</span>
   <span class="ruby-keyword">end</span>
@@ -207,7 +252,7 @@ algorithm wrappers.</p>
 
           
           <div class="method-source-code" id="key_length-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 10</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 24</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">key_length</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">v</span>)
   <span class="ruby-ivar">@key_length</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@key_length</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">empty?</span>
@@ -248,7 +293,7 @@ algorithm wrappers.</p>
 
           
           <div class="method-source-code" id="mac_length-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 22</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 36</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">mac_length</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">v</span>)
   <span class="ruby-ivar">@mac_length</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@mac_length</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">empty?</span>
@@ -289,7 +334,7 @@ algorithm wrappers.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 62</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 80</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">key</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">key</span> = <span class="ruby-identifier">key</span>
 <span class="ruby-keyword">end</span></pre>
@@ -331,7 +376,7 @@ string.</p>
 
           
           <div class="method-source-code" id="digest-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 73</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 91</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">digest</span>(<span class="ruby-identifier">data</span>)
   <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">HMAC</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-identifier">digest_class</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">data</span>)[<span class="ruby-value">0</span>,<span class="ruby-identifier">mac_length</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -364,9 +409,42 @@ string.</p>
 
           
           <div class="method-source-code" id="digest_class-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 55</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 73</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">digest_class</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">digest_class</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-etm" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">etm</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="etm-source">
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">etm</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">etm</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -398,7 +476,7 @@ length.</p>
 
           
           <div class="method-source-code" id="key-3D-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 68</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 86</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">key=</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-ivar">@key</span> = <span class="ruby-identifier">value</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>[<span class="ruby-value">0</span>,<span class="ruby-identifier">key_length</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -431,7 +509,7 @@ length.</p>
 
           
           <div class="method-source-code" id="key_length-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 47</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 65</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">key_length</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">key_length</span>
 <span class="ruby-keyword">end</span></pre>
@@ -464,7 +542,7 @@ length.</p>
 
           
           <div class="method-source-code" id="mac_length-source">
-            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 51</span>
+            <pre><span class="ruby-comment"># File lib/net/ssh/transport/hmac/abstract.rb, line 69</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">mac_length</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">mac_length</span>
 <span class="ruby-keyword">end</span></pre>
