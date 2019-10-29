@@ -11,6 +11,7 @@ module Net
     #
     # * ChallengeResponseAuthentication => maps to the :auth_methods option challenge-response (then coleasced into keyboard-interactive)
     # * KbdInteractiveAuthentication => maps to the :auth_methods keyboard-interactive
+    # * CertificateFile => maps to the :keycerts option
     # * Ciphers => maps to the :encryption option
     # * Compression => :compression
     # * CompressionLevel => :compression_level
@@ -131,6 +132,8 @@ module Net
               case key
               when 'identityfile'
                 (globals[key] ||= []) << value
+              when 'certificatefile'
+                (settings[key] ||= []) << value
               when 'include'
                 included_file_paths(base_dir, value).each do |file_path|
                   globals = load(file_path, host, globals, base_dir)
@@ -141,6 +144,8 @@ module Net
             elsif block_matched
               case key
               when 'identityfile'
+                (settings[key] ||= []) << value
+              when 'certificatefile'
                 (settings[key] ||= []) << value
               when 'include'
                 included_file_paths(base_dir, value).each do |file_path|
@@ -161,7 +166,7 @@ module Net
 
           globals.merge(settings) do |key, oldval, newval|
             case key
-            when 'identityfile'
+            when 'identityfile', 'certificatefile'
               oldval + newval
             else
               newval
@@ -201,13 +206,14 @@ module Net
             bindaddress: :bind_address,
             compression: :compression,
             compressionlevel: :compression_level,
+            identityfile: :keys,
+            certificatefile: :keycerts,
             connecttimeout: :timeout,
             forwardagent: :forward_agent,
             identitiesonly: :keys_only,
             identityagent: :identity_agent,
             globalknownhostsfile: :global_known_hosts_file,
             hostkeyalias: :host_key_alias,
-            identityfile: :keys,
             fingerprinthash: :fingerprint_hash,
             port: :port,
             stricthostkeychecking: :strict_host_key_checking,
