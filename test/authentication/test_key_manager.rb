@@ -88,8 +88,8 @@ module Authentication
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
 
-      assert_equal({ from: :agent }, manager.known_identities[rsa])
-      assert_equal({ from: :agent }, manager.known_identities[dsa])
+      assert_equal({ from: :agent, identity: rsa }, manager.known_identities[rsa])
+      assert_equal({ from: :agent, identity: dsa }, manager.known_identities[dsa])
     end
 
     def test_identities_with_ecdsa_should_load_from_agent
@@ -105,11 +105,11 @@ module Authentication
       assert_equal ecdsa_sha2_nistp384.to_blob, identities[3].to_blob
       assert_equal ecdsa_sha2_nistp521.to_blob, identities[4].to_blob
 
-      assert_equal({ from: :agent }, manager.known_identities[rsa])
-      assert_equal({ from: :agent }, manager.known_identities[dsa])
-      assert_equal({ from: :agent }, manager.known_identities[ecdsa_sha2_nistp256])
-      assert_equal({ from: :agent }, manager.known_identities[ecdsa_sha2_nistp384])
-      assert_equal({ from: :agent }, manager.known_identities[ecdsa_sha2_nistp521])
+      assert_equal({ from: :agent, identity: rsa }, manager.known_identities[rsa])
+      assert_equal({ from: :agent, identity: dsa }, manager.known_identities[dsa])
+      assert_equal({ from: :agent, identity: ecdsa_sha2_nistp256 }, manager.known_identities[ecdsa_sha2_nistp256])
+      assert_equal({ from: :agent, identity: ecdsa_sha2_nistp384 }, manager.known_identities[ecdsa_sha2_nistp384])
+      assert_equal({ from: :agent, identity: ecdsa_sha2_nistp521 }, manager.known_identities[ecdsa_sha2_nistp521])
     end
 
     def test_only_identities_with_key_files_should_load_from_agent_of_keys_only_set
@@ -124,7 +124,7 @@ module Authentication
       assert_equal 1, identities.length
       assert_equal rsa.to_blob, identities.first.to_blob
 
-      assert_equal({ from: :agent }, manager.known_identities[rsa])
+      assert_equal({ from: :agent, identity: rsa }, manager.known_identities[rsa])
       assert manager.use_agent?
     end
 

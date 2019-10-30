@@ -118,7 +118,7 @@ module Net
               user_identities.delete(corresponding_user_identity) if corresponding_user_identity
 
               if !options[:keys_only] || corresponding_user_identity
-                known_identities[key] = { from: :agent }
+                known_identities[key] = { from: :agent, identity: key }
                 yield key
               end
             end
@@ -178,12 +178,7 @@ module Net
 
           if info[:from] == :agent
             raise KeyManagerError, "the agent is no longer available" unless agent
-            agent_identity = if agent.identities.include?(identity)
-                identity
-            else
-              identity.key
-            end
-            return agent.sign(agent_identity, data.to_s)
+            return agent.sign(info[:identity], data.to_s)
           end
 
           raise KeyManagerError, "[BUG] can't determine identity origin (#{info.inspect})"
