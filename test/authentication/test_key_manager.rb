@@ -69,6 +69,36 @@ module Authentication
       assert_equal({ from: :file, file: first }, manager.known_identities[rsa_cert])
     end
 
+    def test_each_identity_should_load_from_explicit_cert_file_given_matching_key_is_loaded
+      manager.stubs(:agent).returns(nil)
+      stub_explicit_file_cert File.expand_path("/rsa-cert"), rsa_cert
+      first = File.expand_path("/first")
+      stub_file_private_key first, rsa, rsa_pk
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 2, identities.length
+      assert_equal rsa.to_blob, identities.first.to_blob
+      assert_equal rsa_cert.to_blob, identities.last.to_blob
+      assert_equal({ from: :file, file: first, key: rsa }, manager.known_identities[rsa_pk])
+      assert_equal({ from: :file, file: first, key: rsa }, manager.known_identities[rsa_cert])
+    end
+
+    def test_each_identity_should_ignore_explicit_cert_file_unless_matching_key_is_avaiable
+      manager.stubs(:agent).returns(nil)
+      stub_explicit_file_cert File.expand_path("/rsa-cert"), rsa_cert
+      first = File.expand_path("/first")
+      stub_file_private_key first, dsa, dsa_pk
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 1, identities.length
+      assert_equal dsa.to_blob, identities.first.to_blob
+      assert_equal({ from: :file, file: first, key: dsa }, manager.known_identities[dsa_pk])
+    end
+
     def test_each_identity_should_not_prompt_for_passphrase_in_non_interactive_mode
       manager(non_interactive: true).stubs(:agent).returns(nil)
       first = File.expand_path("/first")
@@ -90,6 +120,23 @@ module Authentication
 
       assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_pk])
       assert_equal({ from: :agent, identity: dsa_pk }, manager.known_identities[dsa_pk])
+    end
+
+    def test_each_identity_should_match_explicit_keycert_with_agent_provided_identity
+      manager.stubs(:agent).returns(agent)
+      stub_explicit_file_cert File.expand_path("/cert"), rsa_cert
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 3, identities.length
+      assert_equal rsa_pk.to_blob, identities[0].to_blob
+      assert_equal dsa_pk.to_blob, identities[1].to_blob
+      assert_equal rsa_cert.to_blob, identities[2].to_blob
+
+      assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_pk])
+      assert_equal({ from: :agent, identity: dsa_pk }, manager.known_identities[dsa_pk])
+      assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_cert])
     end
 
     def test_identities_with_ecdsa_should_load_from_agent
@@ -225,6 +272,14 @@ module Authentication
       File.stubs(:readable?).with(name + "-cert.pub").returns(true)
 
       Net::SSH::KeyFactory.expects(:load_public_key).with(name + "-cert.pub").returns(cert).at_least_once
+    end
+
+    def stub_explicit_file_cert(name, cert)
+      manager.add_keycert(name)
+      File.stubs(:file?).with(name).returns(true)
+      File.stubs(:readable?).with(name).returns(true)
+
+      Net::SSH::KeyFactory.expects(:load_public_key).with(name).returns(cert).at_least_once
     end
 
     def rsa_cert
