@@ -25,6 +25,23 @@ unless ENV['NET_SSH_NO_ED25519']
         assert_equal "hello from:net_ssh_1\n", ret
       end
     end
+
+    def test_ed25519_with_cert_in_agent
+      Dir.mktmpdir do |dir|
+        with_agent do
+          sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
+          sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N 'pwd'"
+          sign_user_key('net_ssh_1',"#{dir}/id_rsa_ed25519.pub")
+          ssh_add("#{dir}/id_rsa_ed25519", "pwd")
+          sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub #{dir}/id_rsa_ed25519-cert.pub"
+
+          ret = Net::SSH.start("localhost", "net_ssh_1") do |ssh|
+            ssh.exec! 'echo "hello from:$USER"'
+          end
+          assert_equal "hello from:net_ssh_1\n", ret
+        end
+      end
+    end
   end
 
 end
