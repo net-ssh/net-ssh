@@ -42,8 +42,8 @@ module Authentication
       manager.stubs(:agent).returns(nil)
       first = File.expand_path("/first")
       second = File.expand_path("/second")
-      stub_file_private_key first, rsa
-      stub_file_private_key second, dsa
+      stub_file_private_key first, rsa, rsa_pk
+      stub_file_private_key second, dsa, dsa_pk
 
       identities = []
       manager.each_identity { |identity| identities << identity }
@@ -52,8 +52,8 @@ module Authentication
       assert_equal rsa.to_blob, identities.first.to_blob
       assert_equal dsa.to_blob, identities.last.to_blob
 
-      assert_equal({ from: :file, file: first, key: rsa }, manager.known_identities[rsa])
-      assert_equal({ from: :file, file: second, key: dsa }, manager.known_identities[dsa])
+      assert_equal({ from: :file, file: first, key: rsa }, manager.known_identities[rsa_pk])
+      assert_equal({ from: :file, file: second, key: dsa }, manager.known_identities[dsa_pk])
     end
 
     def test_each_identity_should_load_from_implicit_cert_file
@@ -72,7 +72,7 @@ module Authentication
     def test_each_identity_should_not_prompt_for_passphrase_in_non_interactive_mode
       manager(non_interactive: true).stubs(:agent).returns(nil)
       first = File.expand_path("/first")
-      stub_file_private_key first, rsa, passphrase: :should_not_be_asked
+      stub_file_private_key first, rsa, rsa_pk, passphrase: :should_not_be_asked
       identities = []
       manager.each_identity { |identity| identities << identity }
       assert_equal(identities, [])
@@ -85,11 +85,11 @@ module Authentication
       manager.each_identity { |identity| identities << identity }
 
       assert_equal 2, identities.length
-      assert_equal rsa.to_blob, identities.first.to_blob
-      assert_equal dsa.to_blob, identities.last.to_blob
+      assert_equal rsa_pk.to_blob, identities.first.to_blob
+      assert_equal dsa_pk.to_blob, identities.last.to_blob
 
-      assert_equal({ from: :agent, identity: rsa }, manager.known_identities[rsa])
-      assert_equal({ from: :agent, identity: dsa }, manager.known_identities[dsa])
+      assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_pk])
+      assert_equal({ from: :agent, identity: dsa_pk }, manager.known_identities[dsa_pk])
     end
 
     def test_identities_with_ecdsa_should_load_from_agent
@@ -99,32 +99,32 @@ module Authentication
       manager.each_identity { |identity| identities << identity }
       assert_equal 5, identities.length
 
-      assert_equal rsa.to_blob, identities[0].to_blob
-      assert_equal dsa.to_blob, identities[1].to_blob
-      assert_equal ecdsa_sha2_nistp256.to_blob, identities[2].to_blob
-      assert_equal ecdsa_sha2_nistp384.to_blob, identities[3].to_blob
-      assert_equal ecdsa_sha2_nistp521.to_blob, identities[4].to_blob
+      assert_equal rsa_pk.to_blob, identities[0].to_blob
+      assert_equal dsa_pk.to_blob, identities[1].to_blob
+      assert_equal ecdsa_sha2_nistp256_pk.to_blob, identities[2].to_blob
+      assert_equal ecdsa_sha2_nistp384_pk.to_blob, identities[3].to_blob
+      assert_equal ecdsa_sha2_nistp521_pk.to_blob, identities[4].to_blob
 
-      assert_equal({ from: :agent, identity: rsa }, manager.known_identities[rsa])
-      assert_equal({ from: :agent, identity: dsa }, manager.known_identities[dsa])
-      assert_equal({ from: :agent, identity: ecdsa_sha2_nistp256 }, manager.known_identities[ecdsa_sha2_nistp256])
-      assert_equal({ from: :agent, identity: ecdsa_sha2_nistp384 }, manager.known_identities[ecdsa_sha2_nistp384])
-      assert_equal({ from: :agent, identity: ecdsa_sha2_nistp521 }, manager.known_identities[ecdsa_sha2_nistp521])
+      assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_pk])
+      assert_equal({ from: :agent, identity: dsa_pk }, manager.known_identities[dsa_pk])
+      assert_equal({ from: :agent, identity: ecdsa_sha2_nistp256_pk }, manager.known_identities[ecdsa_sha2_nistp256_pk])
+      assert_equal({ from: :agent, identity: ecdsa_sha2_nistp384_pk }, manager.known_identities[ecdsa_sha2_nistp384_pk])
+      assert_equal({ from: :agent, identity: ecdsa_sha2_nistp521_pk }, manager.known_identities[ecdsa_sha2_nistp521_pk])
     end
 
     def test_only_identities_with_key_files_should_load_from_agent_of_keys_only_set
       manager(keys_only: true).stubs(:agent).returns(agent)
 
       first = File.expand_path("/first")
-      stub_file_private_key first, rsa
+      stub_file_private_key first, rsa, rsa_pk
 
       identities = []
       manager.each_identity { |identity| identities << identity }
 
       assert_equal 1, identities.length
-      assert_equal rsa.to_blob, identities.first.to_blob
+      assert_equal rsa_pk.to_blob, identities.first.to_blob
 
-      assert_equal({ from: :agent, identity: rsa }, manager.known_identities[rsa])
+      assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_pk])
       assert manager.use_agent?
     end
 
@@ -132,9 +132,9 @@ module Authentication
       manager.stubs(:agent).returns(agent)
 
       first = File.expand_path("/first")
-      stub_file_public_key first, rsa
+      stub_file_private_key first, rsa, rsa_pk
       second = File.expand_path("/second")
-      stub_file_private_key second, dsa, passphrase: :should_not_be_asked
+      stub_file_private_key second, dsa, dsa_pk, passphrase: :should_not_be_asked
 
       identities = []
       manager.each_identity do |identity|
@@ -143,23 +143,23 @@ module Authentication
       end
 
       assert_equal 1, identities.length
-      assert_equal rsa.to_blob, identities.first.to_blob
+      assert_equal rsa_pk.to_blob, identities.first.to_blob
     end
 
     def test_sign_with_agent_originated_key_should_request_signature_from_agent
       manager.stubs(:agent).returns(agent)
       manager.each_identity { |identity| } # preload the known_identities
-      agent.expects(:sign).with(rsa, "hello, world").returns("abcxyz123")
-      assert_equal "abcxyz123", manager.sign(rsa, "hello, world")
+      agent.expects(:sign).with(rsa_pk, "hello, world").returns("abcxyz123")
+      assert_equal "abcxyz123", manager.sign(rsa_pk, "hello, world")
     end
 
     def test_sign_with_file_originated_key_should_load_private_key_and_sign_with_it
       manager.stubs(:agent).returns(nil)
       first = File.expand_path("/first")
-      stub_file_private_key first, rsa(512)
+      stub_file_private_key first, rsa(512), rsa_pk
       rsa.expects(:ssh_do_sign).with("hello, world").returns("abcxyz123")
       manager.each_identity { |identity| } # preload the known_identities
-      assert_equal "\0\0\0\assh-rsa\0\0\0\011abcxyz123", manager.sign(rsa, "hello, world")
+      assert_equal "\0\0\0\assh-rsa\0\0\0\011abcxyz123", manager.sign(rsa_pk, "hello, world")
     end
 
     def test_sign_with_file_originated_key_should_raise_key_manager_error_if_unloadable
@@ -180,7 +180,7 @@ module Authentication
 
     private
 
-    def stub_file_private_key(name, key, options = {})
+    def stub_file_private_key(name, key, public_key, options = {})
       manager.add(name)
       File.stubs(:file?).with(name).returns(true)
       File.stubs(:readable?).with(name).returns(true)
@@ -199,9 +199,9 @@ module Authentication
         Net::SSH::KeyFactory.expects(:load_private_key).with(name, nil, any_of(true, false), prompt).returns(key).at_least_once
       end
 
-      # do not override OpenSSL::PKey::EC#public_key
-      # (it will be called in transport/openssl.rb.)
-      key.stubs(:public_key).returns(key) unless key.public_key.is_a?(OpenSSL::PKey::EC::Point)
+      # We need to stub #public_key as we rely on object identity to
+      # access #known_identities by private_key
+      key.stubs(:public_key).returns(public_key)
     end
 
     def stub_file_public_key(name, key)
@@ -231,7 +231,7 @@ module Authentication
       @cert ||= begin
         cert = Net::SSH::Authentication::Certificate.new
         cert.type = :user
-        cert.key = rsa.public_key
+        cert.key = rsa_pk
         cert.serial = 1
         cert.key_id = "test key"
         cert.valid_principals = %w{test user}
@@ -265,15 +265,35 @@ module Authentication
       @ecdsa_sha2_nistp521 ||= OpenSSL::PKey::EC.new('secp521r1').generate_key
     end
 
+    def rsa_pk
+      @rsa_pk ||= rsa.public_key
+    end
+
+    def dsa_pk
+      @dsa_pk ||= dsa.public_key
+    end
+
+    def ecdsa_sha2_nistp256_pk
+      @ecdsa_sha2_nistp256_pk ||= ecdsa_sha2_nistp256.public_key
+    end
+
+    def ecdsa_sha2_nistp384_pk
+      @ecdsa_sha2_nistp384_pk ||= ecdsa_sha2_nistp521.public_key
+    end
+
+    def ecdsa_sha2_nistp521_pk
+      @ecdsa_sha2_nistp521_pk ||= ecdsa_sha2_nistp521.public_key
+    end
+
     def agent
-      @agent ||= stub("agent", identities: [rsa, dsa])
+      @agent ||= stub("agent", identities: [rsa_pk, dsa_pk])
     end
 
     def agent_with_ecdsa_keys
-      @agent ||= stub("agent", identities: [rsa, dsa,
-                                            ecdsa_sha2_nistp256,
-                                            ecdsa_sha2_nistp384,
-                                            ecdsa_sha2_nistp521])
+      @agent ||= stub("agent", identities: [rsa_pk, dsa_pk,
+                                            ecdsa_sha2_nistp256_pk,
+                                            ecdsa_sha2_nistp384_pk,
+                                            ecdsa_sha2_nistp521_pk])
     end
 
     def prompt
