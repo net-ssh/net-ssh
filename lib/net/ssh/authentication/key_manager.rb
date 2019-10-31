@@ -138,7 +138,7 @@ module Net
             keycert = KeyFactory.load_public_key(keycert_file)
             next if known_identity_blobs.include?(keycert.to_blob)
 
-            (_, corresponding_identity) = known_identities.detect { |public_key, identity|
+            (_, corresponding_identity) = known_identities.detect { |public_key, _|
               public_key.to_pem == keycert.to_pem
             }
 
