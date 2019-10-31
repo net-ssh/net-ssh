@@ -197,26 +197,26 @@ module Net
 
         private
 
+        TRANSLATE_CONFIG_KEY_RENAME_MAP = {
+          bindaddress: :bind_address,
+          compression: :compression,
+          compressionlevel: :compression_level,
+          certificatefile: :keycerts,
+          connecttimeout: :timeout,
+          forwardagent: :forward_agent,
+          identitiesonly: :keys_only,
+          identityagent: :identity_agent,
+          globalknownhostsfile: :global_known_hosts_file,
+          hostkeyalias: :host_key_alias,
+          identityfile: :keys,
+          fingerprinthash: :fingerprint_hash,
+          port: :port,
+          stricthostkeychecking: :strict_host_key_checking,
+          user: :user,
+          userknownhostsfile: :user_known_hosts_file,
+          checkhostip: :check_host_ip
+        }.freeze
         def translate_config_key(hash, key, value, settings)
-          rename = {
-            bindaddress: :bind_address,
-            compression: :compression,
-            compressionlevel: :compression_level,
-            certificatefile: :keycerts,
-            connecttimeout: :timeout,
-            forwardagent: :forward_agent,
-            identitiesonly: :keys_only,
-            identityagent: :identity_agent,
-            globalknownhostsfile: :global_known_hosts_file,
-            hostkeyalias: :host_key_alias,
-            identityfile: :keys,
-            fingerprinthash: :fingerprint_hash,
-            port: :port,
-            stricthostkeychecking: :strict_host_key_checking,
-            user: :user,
-            userknownhostsfile: :user_known_hosts_file,
-            checkhostip: :check_host_ip
-          }
           case key
           when :ciphers
             hash[:encryption] = value.split(/,/)
@@ -278,8 +278,8 @@ module Net
             hash[:send_env] = multi_send_env.map { |e| Regexp.new pattern2regex(e).source, false }
           when :numberofpasswordprompts
             hash[:number_of_password_prompts] = value.to_i
-          when *rename.keys
-            hash[rename[key]] = value
+          when *TRANSLATE_CONFIG_KEY_RENAME_MAP.keys
+            hash[TRANSLATE_CONFIG_KEY_RENAME_MAP[key]] = value
           end
         end
 
