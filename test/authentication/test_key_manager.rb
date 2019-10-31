@@ -56,17 +56,17 @@ module Authentication
       assert_equal({ from: :file, file: second, key: dsa }, manager.known_identities[dsa])
     end
 
-    def test_each_identity_should_load_form_cert_file
+    def test_each_identity_should_load_from_implicit_cert_file
       manager.stubs(:agent).returns(nil)
       first = File.expand_path("/first")
-      stub_file_cert first, rsa
+      stub_implicit_file_cert first, rsa, rsa_cert
 
       identities = []
       manager.each_identity { |identity| identities << identity }
 
       assert_equal 1, identities.length
-      assert_equal rsa.to_blob, identities.first.to_blob
-      assert_equal({ from: :file, file: first }, manager.known_identities[rsa])
+      assert_equal rsa_cert.to_blob, identities.first.to_blob
+      assert_equal({ from: :file, file: first }, manager.known_identities[rsa_cert])
     end
 
     def test_each_identity_should_not_prompt_for_passphrase_in_non_interactive_mode
@@ -215,7 +215,7 @@ module Authentication
       Net::SSH::KeyFactory.expects(:load_public_key).with(name + ".pub").returns(key).at_least_once
     end
 
-    def stub_file_cert(name, key)
+    def stub_implicit_file_cert(name, key, cert)
       manager.add(name)
       File.stubs(:file?).with(name).returns(true)
       File.stubs(:readable?).with(name).returns(true)
@@ -224,7 +224,25 @@ module Authentication
       File.stubs(:file?).with(name + "-cert.pub").returns(true)
       File.stubs(:readable?).with(name + "-cert.pub").returns(true)
 
-      Net::SSH::KeyFactory.expects(:load_public_key).with(name + "-cert.pub").returns(key).at_least_once
+      Net::SSH::KeyFactory.expects(:load_public_key).with(name + "-cert.pub").returns(cert).at_least_once
+    end
+
+    def rsa_cert
+      @cert ||= begin
+        cert = Net::SSH::Authentication::Certificate.new
+        cert.type = :user
+        cert.key = rsa.public_key
+        cert.serial = 1
+        cert.key_id = "test key"
+        cert.valid_principals = %w{test user}
+        cert.valid_before = Time.now - 86400
+        cert.valid_after = Time.now + 86400
+        cert.critical_options = {}
+        cert.extensions = {}
+        cert.reserved = ''
+        cert.sign!(OpenSSL::PKey::DSA.new(512))
+        cert
+      end
     end
 
     def rsa(size=512)
