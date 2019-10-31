@@ -133,7 +133,7 @@ module Net
               when 'identityfile'
                 (globals[key] ||= []) << value
               when 'certificatefile'
-                (settings[key] ||= []) << value
+                (globals[key] ||= []) << value
               when 'include'
                 included_file_paths(base_dir, value).each do |file_path|
                   globals = load(file_path, host, globals, base_dir)
