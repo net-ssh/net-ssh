@@ -130,9 +130,7 @@ module Net
               block_seen = true
             elsif !block_seen
               case key
-              when 'identityfile'
-                (globals[key] ||= []) << value
-              when 'certificatefile'
+              when 'identityfile', 'certificatefile'
                 (globals[key] ||= []) << value
               when 'include'
                 included_file_paths(base_dir, value).each do |file_path|
@@ -143,9 +141,7 @@ module Net
               end
             elsif block_matched
               case key
-              when 'identityfile'
-                (settings[key] ||= []) << value
-              when 'certificatefile'
+              when 'identityfile', 'certificatefile'
                 (settings[key] ||= []) << value
               when 'include'
                 included_file_paths(base_dir, value).each do |file_path|
