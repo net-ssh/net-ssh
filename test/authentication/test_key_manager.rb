@@ -311,7 +311,7 @@ module Authentication
         cert.key = rsa_pk
         cert.serial = 1
         cert.key_id = "test key"
-        cert.valid_principals = %w{test user}
+        cert.valid_principals = %w[test user]
         cert.valid_before = Time.now - 86400
         cert.valid_after = Time.now + 86400
         cert.critical_options = {}

@@ -132,7 +132,6 @@ module Net
             yield key
           end
 
-
           known_identity_blobs = known_identities.keys.map(&:to_blob)
           keycert_files.each do |keycert_file|
             keycert = KeyFactory.load_public_key(keycert_file)
