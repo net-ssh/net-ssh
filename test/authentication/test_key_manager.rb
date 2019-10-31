@@ -9,6 +9,10 @@ module Authentication
       assert manager.known_identities.empty?
     end
 
+    def test_keycert_files_are_empty_by_default
+      assert manager.keycert_files.empty?
+    end
+
     def test_assume_agent_is_available_by_default
       assert manager.use_agent?
     end
@@ -20,6 +24,16 @@ module Authentication
       manager.add "/second"
       assert_equal 3, manager.key_files.length
       final_files = manager.key_files.map {|item| item.split('/').last}
+      assert_equal %w[first second third], final_files
+    end
+
+    def test_add_ensures_keycert_list_is_unique
+      manager.add_keycert "/first"
+      manager.add_keycert "/second"
+      manager.add_keycert "/third"
+      manager.add_keycert "/second"
+      assert_equal 3, manager.keycert_files.length
+      final_files = manager.keycert_files.map {|item| item.split('/').last}
       assert_equal %w[first second third], final_files
     end
 
