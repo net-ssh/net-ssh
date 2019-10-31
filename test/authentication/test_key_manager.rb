@@ -214,6 +214,14 @@ module Authentication
       assert_equal "abcxyz123", manager.sign(rsa_pk, "hello, world")
     end
 
+    def test_sign_with_agent_originated_key_should_be_signable_through_explicitly_loaded_cert
+      stub_explicit_file_cert File.expand_path("/cert"), rsa_cert
+      manager.stubs(:agent).returns(agent)
+      manager.each_identity { |identity| } # preload the known_identities
+      agent.expects(:sign).with(rsa_pk, "hello, world").returns("abcxyz123")
+      assert_equal "abcxyz123", manager.sign(rsa_cert, "hello, world")
+    end
+
     def test_sign_with_file_originated_key_should_load_private_key_and_sign_with_it
       manager.stubs(:agent).returns(nil)
       first = File.expand_path("/first")
