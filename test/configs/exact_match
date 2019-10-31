@@ -6,3 +6,5 @@ Host test.host
   Compression yes
   ForwardAgent yes
   Port 1234
+  CertificateFile ~/.ssh/id_rsa-my-cert.pub
+  CertificateFile ~/.ssh/cert.pub

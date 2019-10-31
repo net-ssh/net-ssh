@@ -89,6 +89,7 @@ class TestConfig < NetSSHTest
     assert config[:compression]
     assert config[:forward_agent]
     assert_equal %w(~/.ssh/id_dsa), config[:keys]
+    assert_equal %w(~/.ssh/id_rsa-my-cert.pub ~/.ssh/cert.pub), config[:keycerts]
     assert !config.key?(:rekey_limit)
   end
 
@@ -131,6 +132,7 @@ class TestConfig < NetSSHTest
       'hostkeyalgorithms'       => "d,e,f",
       'identityfile'            => %w(g h i),
       'macs'                    => "j,k,l",
+      'certificatefile'         => %w(m n o),
       'passwordauthentication'  => true,
       'port'                    => 1234,
       'pubkeyauthentication'    => true,
@@ -155,6 +157,7 @@ class TestConfig < NetSSHTest
     assert_equal %w(d e f), net_ssh[:host_key]
     assert_equal %w(g h i), net_ssh[:keys]
     assert_equal %w(j k l), net_ssh[:hmac]
+    assert_equal %w(m n o), net_ssh[:keycerts]
     assert_equal 1234,      net_ssh[:port]
     assert_equal 1024,      net_ssh[:rekey_limit]
     assert_equal "127.0.0.1", net_ssh[:bind_address]
