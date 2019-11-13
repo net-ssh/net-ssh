@@ -1,5 +1,4 @@
 require 'net/ssh/loggable'
-require 'net/ssh/ruby_compat'
 require 'net/ssh/connection/channel'
 require 'net/ssh/connection/constants'
 require 'net/ssh/service/forward'

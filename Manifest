@@ -33,7 +33,6 @@ lib/net/ssh/proxy/errors.rb
 lib/net/ssh/proxy/http.rb
 lib/net/ssh/proxy/socks4.rb
 lib/net/ssh/proxy/socks5.rb
-lib/net/ssh/ruby_compat.rb
 lib/net/ssh/service/forward.rb
 lib/net/ssh/test.rb
 lib/net/ssh/test/channel.rb

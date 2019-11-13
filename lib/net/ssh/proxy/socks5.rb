@@ -1,5 +1,4 @@
 require 'socket'
-require 'net/ssh/ruby_compat'
 require 'net/ssh/proxy/errors'
 
 module Net
