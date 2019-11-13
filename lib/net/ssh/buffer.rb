@@ -1,4 +1,3 @@
-require 'net/ssh/ruby_compat'
 require 'net/ssh/transport/openssl'
 
 require 'net/ssh/authentication/certificate'

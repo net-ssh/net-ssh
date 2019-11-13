@@ -1,7 +1,6 @@
 require 'net/ssh/buffered_io'
 require 'net/ssh/errors'
 require 'net/ssh/packet'
-require 'net/ssh/ruby_compat'
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'
 require 'net/ssh/transport/state'

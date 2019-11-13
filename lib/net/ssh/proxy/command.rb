@@ -1,7 +1,6 @@
 require 'socket'
 require 'rubygems'
 require 'net/ssh/proxy/errors'
-require 'net/ssh/ruby_compat'
 
 module Net
   module SSH
