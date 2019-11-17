@@ -12,6 +12,8 @@ module Authentication
     SSH2_AGENT_ADD_IDENTITY          = 17
     SSH2_AGENT_REMOVE_IDENTITY       = 18
     SSH2_AGENT_REMOVE_ALL_IDENTITIES = 19
+    SSH2_AGENT_LOCK                  = 22
+    SSH2_AGENT_UNLOCK                = 23
     SSH2_AGENT_ADD_ID_CONSTRAINED    = 25
     SSH2_AGENT_FAILURE               = 30
     SSH2_AGENT_VERSION_RESPONSE      = 103
