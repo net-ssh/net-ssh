@@ -65,7 +65,11 @@ module Net
     
           return socket if resp[:code] == 200
     
-          socket.close
+          begin
+            socket.close
+          rescue IOError
+            nil
+          end
           raise ConnectError, resp.inspect
         end
     
