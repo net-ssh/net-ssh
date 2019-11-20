@@ -127,7 +127,7 @@ module Net
         # Cleans up (see PacketStream#cleanup) and closes the underlying socket.
         def close
           socket.cleanup
-          socket.close
+          socket.close rescue IOError
         end
 
         # Performs a "hard" shutdown of the connection. In general, this should
@@ -136,7 +136,7 @@ module Net
         # underlying protocol's state).
         def shutdown!
           error { "forcing connection closed" }
-          socket.close
+          socket.close rescue IOError
         end
 
         # Returns a new service_request packet for the given service name, ready
