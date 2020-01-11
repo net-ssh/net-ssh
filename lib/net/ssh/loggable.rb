@@ -56,7 +56,7 @@ module Net
       # originates. It defaults to the name of class with the object_id
       # appended.
       def facility
-        @facility ||= self.class.name.gsub(/::/, ".").gsub(/([a-z])([A-Z])/, "\\1_\\2").downcase + "[%x]" % object_id
+        @facility ||= self.class.to_s.gsub(/::/, ".").gsub(/([a-z])([A-Z])/, "\\1_\\2").downcase + "[%x]" % object_id
       end
     end
   end
