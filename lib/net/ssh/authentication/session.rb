@@ -63,6 +63,7 @@ module Net
 
           key_manager = KeyManager.new(logger, options)
           keys.each { |key| key_manager.add(key) } unless keys.empty?
+          keycerts.each { |keycert| key_manager.add_keycert(keycert) } unless keycerts.empty?
           key_data.each { |key2| key_manager.add_key_data(key2) } unless key_data.empty?
           default_keys.each { |key| key_manager.add(key) } unless options.key?(:keys) || options.key?(:key_data)
 
@@ -144,6 +145,12 @@ module Net
         # attempting any key-based authentication mechanism.
         def keys
           Array(options[:keys])
+        end
+
+        # Returns an array of paths to the keycert files that should be used when
+        # attempting any key-based authentication mechanism.
+        def keycerts
+          Array(options[:keycerts])
         end
 
         # Returns an array of the key data that should be used when

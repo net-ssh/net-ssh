@@ -11,6 +11,7 @@ module Net
     #
     # * ChallengeResponseAuthentication => maps to the :auth_methods option challenge-response (then coleasced into keyboard-interactive)
     # * KbdInteractiveAuthentication => maps to the :auth_methods keyboard-interactive
+    # * CertificateFile => maps to the :keycerts option
     # * Ciphers => maps to the :encryption option
     # * Compression => :compression
     # * CompressionLevel => :compression_level
@@ -129,7 +130,7 @@ module Net
               block_seen = true
             elsif !block_seen
               case key
-              when 'identityfile'
+              when 'identityfile', 'certificatefile'
                 (globals[key] ||= []) << value
               when 'include'
                 included_file_paths(base_dir, value).each do |file_path|
@@ -140,7 +141,7 @@ module Net
               end
             elsif block_matched
               case key
-              when 'identityfile'
+              when 'identityfile', 'certificatefile'
                 (settings[key] ||= []) << value
               when 'include'
                 included_file_paths(base_dir, value).each do |file_path|
@@ -161,7 +162,7 @@ module Net
 
           globals.merge(settings) do |key, oldval, newval|
             case key
-            when 'identityfile'
+            when 'identityfile', 'certificatefile'
               oldval + newval
             else
               newval
@@ -196,25 +197,26 @@ module Net
 
         private
 
+        TRANSLATE_CONFIG_KEY_RENAME_MAP = {
+          bindaddress: :bind_address,
+          compression: :compression,
+          compressionlevel: :compression_level,
+          certificatefile: :keycerts,
+          connecttimeout: :timeout,
+          forwardagent: :forward_agent,
+          identitiesonly: :keys_only,
+          identityagent: :identity_agent,
+          globalknownhostsfile: :global_known_hosts_file,
+          hostkeyalias: :host_key_alias,
+          identityfile: :keys,
+          fingerprinthash: :fingerprint_hash,
+          port: :port,
+          stricthostkeychecking: :strict_host_key_checking,
+          user: :user,
+          userknownhostsfile: :user_known_hosts_file,
+          checkhostip: :check_host_ip
+        }.freeze
         def translate_config_key(hash, key, value, settings)
-          rename = {
-            bindaddress: :bind_address,
-            compression: :compression,
-            compressionlevel: :compression_level,
-            connecttimeout: :timeout,
-            forwardagent: :forward_agent,
-            identitiesonly: :keys_only,
-            identityagent: :identity_agent,
-            globalknownhostsfile: :global_known_hosts_file,
-            hostkeyalias: :host_key_alias,
-            identityfile: :keys,
-            fingerprinthash: :fingerprint_hash,
-            port: :port,
-            stricthostkeychecking: :strict_host_key_checking,
-            user: :user,
-            userknownhostsfile: :user_known_hosts_file,
-            checkhostip: :check_host_ip
-          }
           case key
           when :ciphers
             hash[:encryption] = value.split(/,/)
@@ -276,8 +278,8 @@ module Net
             hash[:send_env] = multi_send_env.map { |e| Regexp.new pattern2regex(e).source, false }
           when :numberofpasswordprompts
             hash[:number_of_password_prompts] = value.to_i
-          when *rename.keys
-            hash[rename[key]] = value
+          when *TRANSLATE_CONFIG_KEY_RENAME_MAP.keys
+            hash[TRANSLATE_CONFIG_KEY_RENAME_MAP[key]] = value
           end
         end
 
