@@ -1,6 +1,6 @@
 === 6.0.0 beta2
   
-  * Support :certkeys and CertificateFile configuration option  [Ander Scarling, #722]
+  * Support :certkeys and CertificateFile configuration option  [Anders Carling, #722]
 
 === 6.0.0 beta1
 
