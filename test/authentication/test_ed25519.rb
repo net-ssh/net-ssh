@@ -29,6 +29,23 @@ unless ENV['NET_SSH_NO_ED25519']
         self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_no_pwd)
       end
 
+      def test_no_pwd_key_with_newlines
+        pub = Net::SSH::Buffer.new(Base64.decode64(public_key_no_pwd.split(' ')[1]))
+        _type = pub.read_string
+        pub_data = pub.read_string
+        priv = private_key_no_pwd_with_newlines
+
+        pub_key = Net::SSH::Authentication::ED25519::PubKey.new(pub_data)
+        priv_key = Net::SSH::Authentication::ED25519::PrivKey.read(priv, nil)
+
+        shared_secret = "Hello"
+        signed = priv_key.ssh_do_sign(shared_secret)
+        self.assert_equal(true,pub_key.ssh_do_verify(signed,shared_secret))
+        self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
+        self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_no_pwd)
+        self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_no_pwd)
+      end
+
       def test_pwd_key
         if defined?(JRUBY_VERSION)
           puts "Skipping password protected ED25519 for JRuby"
@@ -111,6 +128,21 @@ unless ENV['NET_SSH_NO_ED25519']
           3Xcv55WoKC3OkBjFAbzJAAAAIHZhZ3JhbnRAdmFncmFudC11YnVudHUtdHJ1c3R5LTY0AQ
           IDBAU=
           -----END OPENSSH PRIVATE KEY-----
+        EOF
+      end
+
+      def private_key_no_pwd_with_newlines
+        @anonymous_key = <<~EOF
+          -----BEGIN OPENSSH PRIVATE KEY-----
+          b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+          QyNTUxOQAAACAwdjQYeBiTz1DdZFzzLvG+t913L+eVqCgtzpAYxQG8yQAAAKjlHzLo5R8y
+          6AAAAAtzc2gtZWQyNTUxOQAAACAwdjQYeBiTz1DdZFzzLvG+t913L+eVqCgtzpAYxQG8yQ
+          AAAEBPrD+n4901Y+NYJ2sry+EWRdltGFhMISvp91TywJ//mTB2NBh4GJPPUN1kXPMu8b63
+          3Xcv55WoKC3OkBjFAbzJAAAAIHZhZ3JhbnRAdmFncmFudC11YnVudHUtdHJ1c3R5LTY0AQ
+          IDBAU=
+          -----END OPENSSH PRIVATE KEY-----
+
+
         EOF
       end
 
