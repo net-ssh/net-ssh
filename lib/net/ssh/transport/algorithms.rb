@@ -58,7 +58,7 @@ module Net
         if Net::SSH::Transport::Kex::Curve25519Sha256Loader::LOADED
           DEFAULT_ALGORITHMS[:kex].unshift(
             'curve25519-sha256',
-            'curve22519-sha256@libssh.org'
+            'curve25519-sha256@libssh.org'
           )
         end
 

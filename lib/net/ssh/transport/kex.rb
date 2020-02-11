@@ -23,6 +23,7 @@ module Net::SSH::Transport
 
     if Net::SSH::Transport::Kex::Curve25519Sha256Loader::LOADED
       MAP['curve25519-sha256'] = Curve25519Sha256
+      MAP['curve25519-sha256@libssh.org'] = Curve25519Sha256
     end
   end
 end
