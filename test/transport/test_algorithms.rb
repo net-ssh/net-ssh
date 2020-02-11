@@ -83,7 +83,7 @@ module Transport
 
     def x25519_kex
       if Net::SSH::Transport::Kex::Curve25519Sha256Loader::LOADED
-        %w[curve25519-sha256 curve22519-sha256@libssh.org]
+        %w[curve25519-sha256 curve25519-sha256@libssh.org]
       else
         []
       end
