@@ -131,7 +131,8 @@ module Net
         File.open(source) do |file|
           file.each_line do |line|
             hosts, type, key_content = line.split(' ')
-            next unless hosts || hosts.start_with?('#')
+            # Skip empty line or one that is commented
+            next if hosts.nil? || hosts.start_with?('#')
 
             hostlist = hosts.split(',')
 

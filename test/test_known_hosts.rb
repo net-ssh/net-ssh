@@ -16,6 +16,10 @@ class TestKnownHosts < NetSSHTest
     perform_test(path("known_hosts/github_hash"))
   end
 
+  def test_parsing_known_hosts_empty_lines_and_comments
+    perform_test(path("known_hosts/known_hosts_ignore"))
+  end
+
   def test_missing_then_add
     Tempfile.open('github') do |f|
       f.write(File.read(path("known_hosts/github")))
