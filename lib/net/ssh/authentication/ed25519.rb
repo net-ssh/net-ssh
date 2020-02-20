@@ -26,7 +26,7 @@ module Net
           CipherFactory = Net::SSH::Transport::CipherFactory
 
           MBEGIN = "-----BEGIN OPENSSH PRIVATE KEY-----\n"
-          MEND = "-----END OPENSSH PRIVATE KEY-----\n"
+          MEND = "-----END OPENSSH PRIVATE KEY-----"
           MAGIC = "openssh-key-v1"
 
           class DecryptError < ArgumentError
@@ -41,6 +41,7 @@ module Net
           end
 
           def self.read(datafull, password)
+            datafull = datafull.strip
             raise ArgumentError.new("Expected #{MBEGIN} at start of private key") unless datafull.start_with?(MBEGIN)
             raise ArgumentError.new("Expected #{MEND} at end of private key") unless datafull.end_with?(MEND)
             datab64 = datafull[MBEGIN.size...-MEND.size]

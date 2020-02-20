@@ -88,14 +88,8 @@ module Net::SSH::Transport
         end
 
         def final
-          unless @remaining.empty?
-            s = xor!(@remaining, _update(@counter))
-          else
-            s = ""
-          end
-
+          s = @remaining.empty? ? '' : xor!(@remaining, _update(@counter))
           @remaining = ""
-
           s
         end
 

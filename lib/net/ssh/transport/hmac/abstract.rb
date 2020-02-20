@@ -9,6 +9,18 @@ module Net
         # The base class of all OpenSSL-based HMAC algorithm wrappers.
         class Abstract
           class <<self
+            def etm(*v)
+              @etm = false if !defined?(@etm)
+              if v.empty?
+                @etm = superclass.etm if @etm.nil? && superclass.respond_to?(:etm)
+                return @etm
+              elsif v.length == 1
+                @etm = v.first
+              else
+                raise ArgumentError, "wrong number of arguments (#{v.length} for 1)"
+              end
+            end
+
             def key_length(*v)
               @key_length = nil if !defined?(@key_length)
               if v.empty?
@@ -44,6 +56,10 @@ module Net
                 raise ArgumentError, "wrong number of arguments (#{v.length} for 1)"
               end
             end
+          end
+
+          def etm
+            self.class.etm
           end
 
           def key_length

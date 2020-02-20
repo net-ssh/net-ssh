@@ -1,3 +1,14 @@
+=== 6.0.0 beta2
+  
+  * Support :certkeys and CertificateFile configuration option  [Anders Carling, #722]
+
+=== 6.0.0 beta1
+
+  * curve25519sha256 support [Florian Wininger ,#690]
+  * disabled insecure algs [Florian Wininger , #709]
+
+=== 5.2.0
+
 === 5.2.0.rc3
 
   * Fix check_host_ip read from config

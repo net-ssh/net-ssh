@@ -5,13 +5,13 @@ require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/constants'
 require 'net/ssh/transport/hmac'
 require 'net/ssh/transport/kex'
+require 'net/ssh/transport/kex/curve25519_sha256_loader'
 require 'net/ssh/transport/server_version'
 require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
     module Transport
-
       # Implements the higher-level logic behind an SSH key-exchange. It handles
       # both the initial exchange, as well as subsequent re-exchanges (as needed).
       # It also encapsulates the negotiation of the algorithms, and provides a
@@ -23,18 +23,55 @@ module Net
         include Loggable
         include Constants
 
-        # Define the default algorithms, in order of preference, supported by
-        # Net::SSH.
-        ALGORITHMS = {
-          host_key: %w[ssh-rsa-cert-v01@openssh.com
+        # Define the default algorithms, in order of preference, supported by Net::SSH.
+        DEFAULT_ALGORITHMS = {
+          host_key: %w[ecdsa-sha2-nistp521-cert-v01@openssh.com
+                       ecdsa-sha2-nistp384-cert-v01@openssh.com
+                       ecdsa-sha2-nistp256-cert-v01@openssh.com
+                       ecdsa-sha2-nistp521
+                       ecdsa-sha2-nistp384
+                       ecdsa-sha2-nistp256
+                       ssh-rsa-cert-v01@openssh.com
                        ssh-rsa-cert-v00@openssh.com
-                       ssh-rsa ssh-dss],
-          kex: %w[diffie-hellman-group-exchange-sha256
-                  diffie-hellman-group-exchange-sha1
-                  diffie-hellman-group14-sha1
+                       ssh-rsa],
+
+          kex: %w[ecdh-sha2-nistp521
+                  ecdh-sha2-nistp384
+                  ecdh-sha2-nistp256
+                  diffie-hellman-group-exchange-sha256
+                  diffie-hellman-group14-sha1],
+
+          encryption: %w[aes256-ctr aes192-ctr aes128-ctr],
+
+          hmac: %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
+                   hmac-sha2-512 hmac-sha2-256
+                   hmac-sha1]
+        }.freeze
+
+        if Net::SSH::Authentication::ED25519Loader::LOADED
+          DEFAULT_ALGORITHMS[:host_key].unshift(
+            'ssh-ed25519-cert-v01@openssh.com',
+            'ssh-ed25519'
+          )
+        end
+
+        if Net::SSH::Transport::Kex::Curve25519Sha256Loader::LOADED
+          DEFAULT_ALGORITHMS[:kex].unshift(
+            'curve25519-sha256',
+            'curve25519-sha256@libssh.org'
+          )
+        end
+
+        # Define all algorithms, with the deprecated, supported by Net::SSH.
+        ALGORITHMS = {
+          host_key: DEFAULT_ALGORITHMS[:host_key] + %w[ssh-dss],
+
+          kex: DEFAULT_ALGORITHMS[:kex] +
+               %w[diffie-hellman-group-exchange-sha1
                   diffie-hellman-group1-sha1],
-          encryption: %w[aes256-ctr aes192-ctr aes128-ctr
-                         aes256-cbc aes192-cbc aes128-cbc
+
+          encryption: DEFAULT_ALGORITHMS[:encryption] +
+                      %w[aes256-cbc aes192-cbc aes128-cbc
                          rijndael-cbc@lysator.liu.se
                          blowfish-ctr blowfish-cbc
                          cast128-ctr cast128-cbc
@@ -42,37 +79,16 @@ module Net
                          idea-cbc
                          none],
 
-          hmac: %w[hmac-sha2-512 hmac-sha2-256
-                   hmac-sha2-512-96 hmac-sha2-256-96
-                   hmac-sha1 hmac-sha1-96
+          hmac: DEFAULT_ALGORITHMS[:hmac] +
+                %w[hmac-sha2-512-96 hmac-sha2-256-96
+                   hmac-sha1-96
                    hmac-ripemd160 hmac-ripemd160@openssh.com
                    hmac-md5 hmac-md5-96
                    none],
 
           compression: %w[none zlib@openssh.com zlib],
           language: %w[]
-        }
-        if defined?(OpenSSL::PKey::EC)
-          ALGORITHMS[:host_key].unshift(
-            "ecdsa-sha2-nistp521-cert-v01@openssh.com",
-            "ecdsa-sha2-nistp384-cert-v01@openssh.com",
-            "ecdsa-sha2-nistp256-cert-v01@openssh.com",
-            "ecdsa-sha2-nistp521",
-            "ecdsa-sha2-nistp384",
-            "ecdsa-sha2-nistp256"
-          )
-          if Net::SSH::Authentication::ED25519Loader::LOADED
-            ALGORITHMS[:host_key].unshift(
-              "ssh-ed25519-cert-v01@openssh.com",
-              "ssh-ed25519"
-            )
-          end
-          ALGORITHMS[:kex].unshift(
-            "ecdh-sha2-nistp521",
-            "ecdh-sha2-nistp384",
-            "ecdh-sha2-nistp256"
-          )
-        end
+        }.freeze
 
         # The underlying transport layer session that supports this object
         attr_reader :session
@@ -140,6 +156,7 @@ module Net
         # Start the algorithm negotation
         def start
           raise ArgumentError, "Cannot call start if it's negotiation started or done" if @pending || @initialized
+
           send_kexinit
         end
 
@@ -197,8 +214,8 @@ module Net
 
         def host_key_format
           case host_key
-          when "ssh-rsa-cert-v01@openssh.com", "ssh-rsa-cert-v00@openssh.com"
-            "ssh-rsa"
+          when /^([a-z0-9-]+)-cert-v\d{2}@openssh.com$/
+            Regexp.last_match[1]
           else
             host_key
           end
@@ -239,7 +256,10 @@ module Net
           options[:compression] = %w[zlib@openssh.com zlib] if options[:compression] == true
 
           ALGORITHMS.each do |algorithm, supported|
-            algorithms[algorithm] = compose_algorithm_list(supported, options[algorithm], options[:append_all_supported_algorithms])
+            algorithms[algorithm] = compose_algorithm_list(
+              supported, options[algorithm] || DEFAULT_ALGORITHMS[algorithm],
+              options[:append_all_supported_algorithms]
+            )
           end
 
           # for convention, make sure our list has the same keys as the server
@@ -356,7 +376,8 @@ module Net
 
           debug do
             "negotiated:\n" +
-              %i[kex host_key encryption_server encryption_client hmac_client hmac_server compression_client compression_server language_client language_server].map do |key|
+              %i[kex host_key encryption_server encryption_client hmac_client hmac_server
+                 compression_client compression_server language_client language_server].map do |key|
                 "* #{key}: #{instance_variable_get("@#{key}")}"
               end.join("\n")
           end

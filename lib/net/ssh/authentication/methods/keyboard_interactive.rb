@@ -40,7 +40,9 @@ module Net
                 instruction = message.read_string
                 debug { "keyboard-interactive info request" }
 
-                prompter = prompt.start(type: 'keyboard-interactive', name: name, instruction: instruction) if password.nil? && interactive? && prompter.nil?
+                if password.nil? && interactive? && prompter.nil?
+                  prompter = prompt.start(type: 'keyboard-interactive', name: name, instruction: instruction)
+                end
 
                 _ = message.read_string # lang_tag
                 responses = []

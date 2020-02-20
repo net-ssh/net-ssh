@@ -1,8 +1,11 @@
 inherit_from: .rubocop_todo.yml
 
-AllCops:
-  Exclude:
-    - 'tryout/**/*'
-
 Style/DoubleNegation:
-  Enabled: false
+  Exclude:
+    - 'lib/net/ssh/key_factory.rb'
+
+Metrics/LineLength:
+  Max: 150
+  Exclude:
+    - 'test/**/*.rb'
+    - 'net-ssh.gemspec'

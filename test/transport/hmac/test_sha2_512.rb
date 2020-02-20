@@ -22,6 +22,11 @@ module Transport
         assert_equal 64, subject.new.mac_length
       end
 
+      def test_expected_etm
+        assert_equal false, subject.etm
+        assert_equal false, subject.new.etm
+      end
+
       def test_expected_digest
         hmac = subject.new("1234567890123456")
         assert_equal "^\xB6\"\xED\x8B\xC4\xDE\xD4\xCF\xD0\r\x18\xA0<\xF4\xB5\x01Efz\xA80i\xFC\x18\xC1\x9A+\xDD\xFE<\xA2\xFDE1Ac\xF4\xADU\r\xFB^0\x90= \x837z\xCC\xD5p4a4\x83\xC6\x04m\xAA\xC1\xC0m", hmac.digest("hello world")

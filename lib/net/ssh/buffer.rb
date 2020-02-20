@@ -1,4 +1,3 @@
-require 'net/ssh/ruby_compat'
 require 'net/ssh/transport/openssl'
 
 require 'net/ssh/authentication/certificate'
@@ -323,15 +322,7 @@ module Net
           Net::SSH::Authentication::ED25519Loader.raiseUnlessLoaded("unsupported key type `#{type}'")
           key = Net::SSH::Authentication::ED25519::PubKey.read_keyblob(self)
         when /^ecdsa\-sha2\-(\w*)$/
-          unless defined?(OpenSSL::PKey::EC)
-            raise NotImplementedError, "unsupported key type `#{type}'"
-          else
-            begin
-              key = OpenSSL::PKey::EC.read_keyblob($1, self)
-            rescue OpenSSL::PKey::ECError
-              raise NotImplementedError, "unsupported key type `#{type}'"
-            end
-          end
+          key = OpenSSL::PKey::EC.read_keyblob($1, self)
         else
           raise NotImplementedError, "unsupported key type `#{type}'"
         end

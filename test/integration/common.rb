@@ -7,7 +7,7 @@ require 'expect'
 
 module IntegrationTestHelpers
   VERBOSE = false
-  def sh command
+  def sh(command)
     puts "$ #{command}" if VERBOSE
     res = system(command)
     status = $?
@@ -82,5 +82,42 @@ module IntegrationTestHelpers
       system("sudo cp -f /etc/ssh/sshd_config.original /etc/ssh/sshd_config")
       system("sudo service ssh restart")
     end
+  end
+
+  def with_lines_as_tempfile(lines = [], &block)
+    Tempfile.open('sshd_config') do |f|
+      f.write(lines)
+      f.close
+      yield(f.path)
+    end
+  end
+
+  # @yield [pid, port]
+  def start_sshd_7_or_later(port = '2200', config: nil)
+    if config
+      with_lines_as_tempfile(config) do |path|
+        pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port)
+        yield pid, port
+      end
+    else
+      pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-p', port)
+      yield pid, port
+    end
+  ensure
+    # Our pid is sudo, -9 (KILL) on sudo will not clean up its children
+    # properly, so we just have to hope that -15 (TERM) will manage to bring
+    # down sshd.
+    if pid
+      system('sudo', 'kill', '-15', pid.to_s)
+      Process.wait(pid)
+    end
+  end
+
+  def localhost
+    'localhost'
+  end
+
+  def user
+    'net_ssh_1'
   end
 end

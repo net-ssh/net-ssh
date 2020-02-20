@@ -1,5 +1,4 @@
 require 'net/ssh/loggable'
-require 'net/ssh/ruby_compat'
 require 'net/ssh/connection/channel'
 require 'net/ssh/connection/constants'
 require 'net/ssh/service/forward'
@@ -580,8 +579,10 @@ module Net
           info { "global request received: #{packet[:request_type]} #{packet[:want_reply]}" }
           callback = @on_global_request[packet[:request_type]]
           result = callback ? callback.call(packet[:request_data], packet[:want_reply]) : false
-    
-          raise "expected global request handler for `#{packet[:request_type]}' to return true, false, or :sent, but got #{result.inspect}" if result != :sent && result != true && result != false
+
+          if result != :sent && result != true && result != false
+            raise "expected global request handler for `#{packet[:request_type]}' to return true, false, or :sent, but got #{result.inspect}"
+          end
     
           if packet[:want_reply] && result != :sent
             msg = Buffer.from(:byte, result ? REQUEST_SUCCESS : REQUEST_FAILURE)
@@ -624,7 +625,9 @@ module Net
               failure = [err.code, err.reason]
             else
               channels[local_id] = channel
-              msg = Buffer.from(:byte, CHANNEL_OPEN_CONFIRMATION, :long, channel.remote_id, :long, channel.local_id, :long, channel.local_maximum_window_size, :long, channel.local_maximum_packet_size)
+              msg = Buffer.from(:byte, CHANNEL_OPEN_CONFIRMATION, :long, channel.remote_id, :long,
+                                channel.local_id, :long, channel.local_maximum_window_size, :long,
+                                channel.local_maximum_packet_size)
             end
           else
             failure = [3, "unknown channel type #{channel.type}"]

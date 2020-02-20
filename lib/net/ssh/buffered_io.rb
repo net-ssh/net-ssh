@@ -1,6 +1,5 @@
 require 'net/ssh/buffer'
 require 'net/ssh/loggable'
-require 'net/ssh/ruby_compat'
 
 module Net 
   module SSH

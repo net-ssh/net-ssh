@@ -8,13 +8,13 @@ module Transport
     class TestDiffieHellmanGroupExchangeSHA256 < TestDiffieHellmanGroupExchangeSHA1
       private
   
-        def subject
-          Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256
-        end
+      def subject
+        Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256
+      end
   
-        def digest_type
-          OpenSSL::Digest::SHA256
-        end
+      def digest_type
+        OpenSSL::Digest::SHA256
+      end
     end
 
   end

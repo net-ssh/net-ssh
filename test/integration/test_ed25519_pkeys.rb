@@ -16,10 +16,7 @@ unless ENV['NET_SSH_NO_ED25519']
         sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
         sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N ''"
         set_authorized_key('net_ssh_1',"#{dir}/id_rsa_ed25519.pub")
-  
-        #sshopts = '-vvvv -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-        #sh "ssh -i #{dir}/id_rsa_ed25519 #{sshopts} net_ssh_1@localhost echo 'hello'"
-  
+
         ret = Net::SSH.start("localhost", "net_ssh_1", { keys: "#{dir}/id_rsa_ed25519" }) do |ssh|
           ssh.exec! 'echo "hello from:$USER"'
         end
@@ -54,10 +51,7 @@ unless ENV['NET_SSH_NO_ED25519']
   
         # TODO: fix bug in net ssh which reads public key even if private key is there
         sh "mv #{dir}/id_rsa_ed25519.pub #{dir}/id_rsa_ed25519.pub.hidden"
-  
-        #sshopts = '-vvvv -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-        #sh "ssh -i #{dir}/id_rsa_ed25519 #{sshopts} net_ssh_1@localhost echo 'hello'"
-  
+
         ret = Net::SSH.start("localhost", "net_ssh_1", { keys: "#{dir}/id_rsa_ed25519", passphrase:'pwd' }) do |ssh|
           ssh.exec! 'echo "hello from:$USER"'
         end

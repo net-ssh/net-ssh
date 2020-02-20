@@ -119,7 +119,7 @@ module Connection
     def test_can_open_channels_in_process # see #110
       chid = session.send(:get_next_channel_id)
       session.channels[chid] = stub("channel", local_closed?: false)
-      session.channels[chid].expects(:process).with() do
+      session.channels[chid].expects(:process).with do
         session.open_channel
         true
       end
@@ -293,33 +293,33 @@ module Connection
     end
 
     def test_channel_eof_packet_should_be_routed_to_corresponding_channel
-      channel_at(14).expects(:do_eof).with()
+      channel_at(14).expects(:do_eof).with
       transport.return(CHANNEL_EOF, :long, 14)
       process_times(2)
     end
 
     def test_channel_success_packet_should_be_routed_to_corresponding_channel
-      channel_at(14).expects(:do_success).with()
+      channel_at(14).expects(:do_success).with
       transport.return(CHANNEL_SUCCESS, :long, 14)
       process_times(2)
     end
 
     def test_channel_failure_packet_should_be_routed_to_corresponding_channel
-      channel_at(14).expects(:do_failure).with()
+      channel_at(14).expects(:do_failure).with
       transport.return(CHANNEL_FAILURE, :long, 14)
       process_times(2)
     end
 
     def test_channel_close_packet_should_be_routed_to_corresponding_channel_and_channel_should_be_closed_and_removed
-      session.channels[14] = stub("channel") do
+      session.channels[14] = stub("channel").tap do |channel|
         # this simulates the case where we closed the channel first, sent
         # CHANNEL_CLOSE to server and are waiting for server's response.
-        expects(:local_closed?).returns(true)
-        expects(:do_close)
-        expects(:close).with()
-        expects(:remote_closed!).with()
-        expects(:remote_closed?).with().returns(true)
-        expects(:local_id).returns(14)
+        channel.expects(:local_closed?).returns(true)
+        channel.expects(:do_close)
+        channel.expects(:close).with
+        channel.expects(:remote_closed!).with.at_least_once
+        channel.expects(:remote_closed?).with.returns(true)
+        channel.expects(:local_id).returns(14)
       end
 
       transport.return(CHANNEL_CLOSE, :long, 14)
@@ -328,8 +328,8 @@ module Connection
     end
 
     def test_multiple_pending_dispatches_should_be_dispatched_together
-      channel_at(14).expects(:do_eof).with()
-      session.channels[14].expects(:do_success).with()
+      channel_at(14).expects(:do_eof).with
+      session.channels[14].expects(:do_success).with
       transport.return(CHANNEL_SUCCESS, :long, 14)
       transport.return(CHANNEL_EOF, :long, 14)
       process_times(2)
