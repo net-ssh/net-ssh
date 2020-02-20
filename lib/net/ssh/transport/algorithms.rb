@@ -270,7 +270,7 @@ module Net
           algorithms[:compression_client] = algorithms[:compression_server] = algorithms[:compression]
           algorithms[:language_client   ] = algorithms[:language_server   ] = algorithms[:language]
 
-          if !options.key?(:host_key) and options[:verify_host_key] != :never
+          if !options.key?(:host_key) && options[:verify_host_key] != :never
             # make sure the host keys are specified in preference order, where any
             # existing known key for the host has preference.
 
