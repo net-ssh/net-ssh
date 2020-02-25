@@ -154,6 +154,7 @@ Lint/HandleExceptions:
   Exclude:
     - 'lib/net/ssh/authentication/session.rb'
     - 'lib/net/ssh/known_hosts.rb'
+    - 'lib/net/ssh/known_hosts/cached.rb'
     - 'lib/net/ssh/transport/openssl.rb'
     - 'test/integration/common.rb'
     - 'test/integration/test_forward.rb'
