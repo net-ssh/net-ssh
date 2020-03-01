@@ -1,3 +1,5 @@
+require 'digest/sha2'
+
 module Net
   module SSH
     class KnownHosts
@@ -6,11 +8,13 @@ module Net
       # to determine what key a user prefers to use for a given host. This is different
       # From the KnownHosts class in that it builds a cache of parsed known hosts in order
       # to avoid re-parsing known hosts earch time it is needed.
+      #
+      # An instance of this class can optionaly be used by setting the :known_hosts option.
       class Cached
         def initialize(options)
           @user_files = Array(options[:user_known_hosts_file] || %w[~/.ssh/known_hosts ~/.ssh/known_hosts2])
           @global_files = Array(options[:global_known_hosts_file] || %w[/etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2])
-          @mtimes = {}
+          @sha_sums = {}
         end
 
         def search_for(host, options={})
@@ -45,7 +49,7 @@ module Net
           return unless File.readable?(source)
 
           File.open(source) do |file|
-            @mtimes[source] = File.mtime(source)
+            @sha_sums[source] = Digest::SHA256.hexdigest(File.read(file))
             file.each_line do |line|
               hosts, type, key_content = line.split(' ')
               # Skip empty line or one that is commented
@@ -86,10 +90,10 @@ module Net
 
           @user_files.each do |file|
             begin
-              # If this is the only modification since last read, update @mtimes to preserve cache
-              preserve_cache = File.mtime(file) == @mtimes[file]
+              # If this is the only modification since last read, update @sha_sums to preserve cache
+              preserve_cache = File.mtime(file) == @sha_sums[file]
               KnownHosts.new(file).add(host, key)
-              @mtimes[file] = File.mtime(file) if preserve_cache
+              @sha_sums[file] = Digest::SHA256.hexdigest(File.read(file)) if preserve_cache
               break
             rescue SystemCallError
             end
@@ -109,7 +113,13 @@ module Net
 
         def cache_invalid?
           (@user_files + @global_files).each do |file|
-            return true if File.readable?(file) && @mtimes[file] != File.mtime(file)
+            # Checksum is different, rebuild
+            if File.readable?(file) && @sha_sums[file] != Digest::SHA256.hexdigest(File.read(file))
+              return true
+            # File has been deleted, rebuild
+            elsif @sha_sums[file] && !File.readable?(file)
+              return true
+            end
           end
           false
         end

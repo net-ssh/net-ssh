@@ -161,9 +161,6 @@ class TestKnownHostsCached < NetSSHTest
       assert_equal(0, keys.count)
       f.write(File.read(path("known_hosts/github")))
       f.close
-      # Ensure mtime is different
-      sleep(1)
-      FileUtils.touch(f)
       keys = kh.search_for("github.com")
       assert_equal(1, keys.count)
       assert_equal("ssh-rsa", keys.first.ssh_type)
@@ -182,9 +179,22 @@ class TestKnownHostsCached < NetSSHTest
       f.rewind
       f.write('#')
       f.close
-      # Ensure mtime is different
-      sleep(1)
-      FileUtils.touch(f)
+      keys = kh.search_for("github.com")
+      assert_equal(0, keys.count)
+    end
+  end
+
+  def test_host_file_deleted
+    Tempfile.open('github') do |f|
+      f.write(File.read(path("known_hosts/github")))
+      f.flush
+      options = { user_known_hosts_file: f.path }
+      kh = Net::SSH::KnownHosts::Cached.new(build_opts(f.path))
+      keys = kh.search_for('github.com', options)
+      assert_equal(1, keys.count)
+      assert_equal("ssh-rsa", keys.first.ssh_type)
+      f.close
+      f.unlink
       keys = kh.search_for("github.com")
       assert_equal(0, keys.count)
     end
