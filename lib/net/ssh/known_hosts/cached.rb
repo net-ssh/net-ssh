@@ -13,8 +13,13 @@ module Net
       class Cached
         def initialize(options)
           @user_files = Array(options[:user_known_hosts_file] || %w[~/.ssh/known_hosts ~/.ssh/known_hosts2])
+          @user_files.map! { |file| File.expand_path(file) }
           @global_files = Array(options[:global_known_hosts_file] || %w[/etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2])
+          @global_files.map! { |file| File.expand_path(file) }
           @sha_sums = {}
+          @host_lookups = {}
+          @hmac_lookups = {}
+          @pattern_lookups = {}
         end
 
         def search_for(host, options={})
