@@ -682,9 +682,12 @@ module Net
         # Set a +Hash+ of environment variables in the remote process' environment.
         #
         #   channel.set_remote_env foo: 'bar', baz: 'whale'
+        #
+        # rubocop:disable Naming/AccessorMethodName
         def set_remote_env(env)
           env.each { |key, value| self.env(key, value) }
         end
+        # rubocop:enable Naming/AccessorMethodName
       end
 
     end

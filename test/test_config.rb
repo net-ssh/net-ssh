@@ -163,7 +163,7 @@ class TestConfig < NetSSHTest
     assert_equal 1024,      net_ssh[:rekey_limit]
     assert_equal "127.0.0.1", net_ssh[:bind_address]
     assert_equal [/^LC_.*$/], net_ssh[:send_env]
-    assert_equal Hash['foo'=>'bar', 'baz'=>'whale', 'cat'=>'black hole'], net_ssh[:set_env]
+    assert_equal Hash['foo' => 'bar', 'baz' => 'whale', 'cat' => 'black hole'], net_ssh[:set_env]
     assert_equal 123,       net_ssh[:number_of_password_prompts]
     assert_equal 4,         net_ssh[:keepalive_maxcount]
     assert_equal 2,         net_ssh[:keepalive_interval]
@@ -290,7 +290,7 @@ class TestConfig < NetSSHTest
   def test_load_with_set_env
     config = Net::SSH::Config.load(config(:set_env), '1234')
     net_ssh = Net::SSH::Config.translate(config)
-    assert_equal Hash['foo'=>'bar', 'baz'=>'whale', 'cat'=>'black hole'], net_ssh[:set_env]
+    assert_equal Hash['foo' => 'bar', 'baz' => 'whale', 'cat' => 'black hole'], net_ssh[:set_env]
   end
 
   def test_load_with_remote_user

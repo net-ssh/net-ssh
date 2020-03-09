@@ -216,6 +216,7 @@ module Net
           userknownhostsfile: :user_known_hosts_file,
           checkhostip: :check_host_ip
         }.freeze
+        # rubocop:disable Metrics/CyclomaticComplexity
         def translate_config_key(hash, key, value, settings)
           case key
           when :ciphers
@@ -284,6 +285,7 @@ module Net
             hash[TRANSLATE_CONFIG_KEY_RENAME_MAP[key]] = value
           end
         end
+        # rubocop:enable Metrics/CyclomaticComplexity
 
         def setup_proxy(type, value)
           case type
