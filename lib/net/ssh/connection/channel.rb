@@ -2,8 +2,8 @@ require 'net/ssh/loggable'
 require 'net/ssh/connection/constants'
 require 'net/ssh/connection/term'
 
-module Net 
-  module SSH 
+module Net
+  module SSH
     module Connection
 
       # The channel abstraction. Multiple "channels" can be multiplexed onto a
@@ -530,6 +530,7 @@ module Net
           @remote_maximum_packet_size = max_packet
           connection.forward.agent(self) if connection.options[:forward_agent] && type == "session"
           forward_local_env(connection.options[:send_env]) if connection.options[:send_env]
+          set_remote_env(connection.options[:set_env]) if connection.options[:set_env]
           @on_confirm_open.call(self) if @on_confirm_open
         end
     
@@ -676,6 +677,13 @@ module Net
               self.env(env_name, env_value)
             end
           end
+        end
+
+        # Set a +Hash+ of environment variables in the remote process' environment.
+        #
+        #   channel.set_remote_env foo: 'bar', baz: 'whale'
+        def set_remote_env(env)
+          env.each { |key, value| self.env(key, value) }
         end
       end
 
