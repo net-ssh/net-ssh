@@ -24,18 +24,6 @@ require 'tempfile'
 class ForwardTestBase < NetSSHTest
   include IntegrationTestHelpers
 
-  # @yield [pid, port]
-  def start_sshd_7_or_later(port = '2200')
-    pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-p', port)
-    yield pid, port
-  ensure
-    # Our pid is sudo, -9 (KILL) on sudo will not clean up its children
-    # properly, so we just have to hope that -15 (TERM) will manage to bring
-    # down sshd.
-    system('sudo', 'kill', '-15', pid.to_s)
-    Process.wait(pid)
-  end
-
   def localhost
     'localhost'
   end

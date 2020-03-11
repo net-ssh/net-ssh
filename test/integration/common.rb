@@ -94,6 +94,7 @@ module IntegrationTestHelpers
 
   # @yield [pid, port]
   def start_sshd_7_or_later(port = '2200', config: nil)
+    pid = nil
     if config
       with_lines_as_tempfile(config) do |path|
         pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port)
