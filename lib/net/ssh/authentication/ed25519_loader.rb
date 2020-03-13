@@ -3,7 +3,7 @@ module Net
     module Authentication
 
       # Loads ED25519 support which requires optinal dependecies like
-      # rbnacl, bcrypt_pbkdf
+      # ed25519, bcrypt_pbkdf
       module ED25519Loader
       
         begin
