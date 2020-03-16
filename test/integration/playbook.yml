@@ -41,14 +41,14 @@
     - lineinfile: dest=/etc/sudoers.d/net_ssh_1 mode=0440 state=present create=yes
         line='net_ssh_2 ALL=(ALL) NOPASSWD:ALL' regexp=net_ssh_2
     - unarchive:
-        src: https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.4p1.tar.gz
+        src: https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.9p1.tar.gz
         dest: /tmp
         remote_src: True
         validate_certs: False
-    - name: building and installing openssh 7.4 (used in forward test)
+    - name: building and installing openssh 7.9 (used in forward test)
       command: sh -c "./configure --prefix=/opt/net-ssh-openssh && make && sudo make install"
       args:
-        chdir: /tmp/openssh-7.4p1/
+        chdir: /tmp/openssh-7.9p1/
     - name: drop installed openssh etc/ in favor of symlink
       file:
         state: absent

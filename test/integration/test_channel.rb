@@ -51,11 +51,11 @@ class TestChannel < NetSSHTest
       proxy = Net::SSH::Proxy::Command.new("/bin/nc localhost 22")
       res = nil
       Net::SSH.start(*ssh_start_params(proxy: proxy)) do |ssh|
-        chanell_success_handler = lambda do
+        channel_success_handler = lambda do
           sleep(0.1)
           system("killall /bin/nc")
         end
-        channel = ssh_exec(ssh, "echo Begin ; sleep 100 ; echo End", chanell_success_handler) do |ch, _type, data|
+        channel = ssh_exec(ssh, "echo Begin ; sleep 100 ; echo End", channel_success_handler) do |ch, _type, data|
           ch[:result] ||= ""
           ch[:result] << data
         end
@@ -72,11 +72,11 @@ class TestChannel < NetSSHTest
       proxy = Net::SSH::Proxy::Command.new("/bin/nc localhost 22")
       res = nil
       Net::SSH.start(*ssh_start_params(proxy: proxy)) do |ssh|
-        chanell_success_handler = lambda do
+        channel_success_handler = lambda do
           sleep(0.1)
           system("killall /bin/nc")
         end
-        channel = ssh_exec(ssh, "echo Hello!", chanell_success_handler) do |ch, _type, data|
+        channel = ssh_exec(ssh, "echo Hello!", channel_success_handler) do |ch, _type, data|
           ch[:result] ||= ""
           ch[:result] << data
         end
@@ -101,6 +101,38 @@ class TestChannel < NetSSHTest
           remote_closed = channel.remote_closed?
         end
         assert_equal remote_closed, true
+      end
+    end
+  end
+
+  def test_channel_should_set_environment_variables_on_remote
+    setup_ssh_env do
+      start_sshd_7_or_later(config: 'AcceptEnv *') do |_pid, port|
+        Timeout.timeout(4) do
+          begin
+            # We have our own sshd, give it a chance to come up before
+            # listening.
+            proxy = Net::SSH::Proxy::Command.new("/bin/nc localhost #{port}")
+            res = nil
+            Net::SSH.start(*ssh_start_params(port: port, proxy: proxy, set_env: { foo: 'bar', baz: 'whale will' })) do |ssh|
+              channel_success_handler = lambda do
+                sleep(0.1)
+                system("killall /bin/nc")
+              end
+              channel = ssh_exec(ssh, "echo $foo; echo $baz", channel_success_handler) do |ch, _type, data|
+                ch[:result] ||= ""
+                ch[:result] << data
+              end
+              channel.wait
+              res = channel[:result]
+              assert_equal(res, "bar\nwhale will\n")
+            end
+            assert_equal(res, "bar\nwhale will\n")
+          rescue SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH, Net::SSH::Proxy::ConnectError
+            sleep 0.25
+            retry
+          end
+        end
       end
     end
   end

@@ -274,6 +274,8 @@ Metrics/ClassLength:
 # Offense count: 38
 Metrics/CyclomaticComplexity:
   Max: 27
+  Exclude:
+    - 'lib/net/ssh/config.rb'
 
 # Offense count: 211
 # Configuration parameters: CountComments, ExcludedMethods.
@@ -299,6 +301,7 @@ Naming/AccessorMethodName:
   Exclude:
     - 'lib/net/ssh/authentication/methods/password.rb'
     - 'lib/net/ssh/authentication/pageant.rb'
+    - 'lib/net/ssh/connection/channel.rb'
     - 'lib/net/ssh/connection/session.rb'
     - 'lib/net/ssh/transport/kex/abstract5656.rb'
     - 'lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb'

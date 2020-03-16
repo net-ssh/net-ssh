@@ -276,6 +276,8 @@ module Net
           when :sendenv
             multi_send_env = value.to_s.split(/\s+/)
             hash[:send_env] = multi_send_env.map { |e| Regexp.new pattern2regex(e).source, false }
+          when :setenv
+            hash[:set_env] = Shellwords.split(value.to_s).map { |e| e.split '=', 2 }.to_h
           when :numberofpasswordprompts
             hash[:number_of_password_prompts] = value.to_i
           when *TRANSLATE_CONFIG_KEY_RENAME_MAP.keys

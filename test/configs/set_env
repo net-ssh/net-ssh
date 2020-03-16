@@ -1,0 +1,2 @@
+Host 1234
+	SetEnv foo="bar" baz=whale cat="black hole"

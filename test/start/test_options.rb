@@ -32,6 +32,13 @@ module NetSSH
       end
     end
 
+    def test_start_should_accept_set_env_option
+      assert_nothing_raised do
+        options = { set_env: { foo: 'bar', baz: 'whale will' } }
+        Net::SSH.start('localhost', 'testuser', options)
+      end
+    end
+
     def test_start_should_accept_number_of_password_prompts_option
       assert_nothing_raised do
         options = { number_of_password_prompts: 2 }
