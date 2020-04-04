@@ -12,7 +12,7 @@ rvm:
   - 2.5.7
   - 2.6.5
   - 2.7.0
-  - jruby-9.2.8.0
+  - jruby-9.2.11.1
   - rbx-3.107
   - ruby-head
 env:
@@ -21,16 +21,15 @@ env:
 matrix:
   exclude:
     - rvm: rbx-3.107
-    - rvm: jruby-9.2.8.0
   include:
     - rvm: rbx-3.107
       env: NET_SSH_RUN_INTEGRATION_TESTS=
-    - rvm: jruby-9.2.8.0
+    - rvm: jruby-9.2.11.1
       env: JRUBY_OPTS='--client -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -Xcext.enabled=false -J-Xss2m -Xcompile.invokedynamic=false' NET_SSH_RUN_INTEGRATION_TESTS=
   fast_finish: true
   allow_failures:
     - rvm: rbx-3.107
-    - rvm: jruby-9.2.8.0
+    - rvm: jruby-9.2.11.1
     - rvm: ruby-head
 
 install:
