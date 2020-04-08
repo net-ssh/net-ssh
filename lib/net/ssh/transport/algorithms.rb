@@ -290,10 +290,24 @@ module Net
           list = []
           option = Array(option).compact.uniq
 
-          if option.first && option.first.start_with?('+')
+          if option.first && option.first.start_with?('+', '-')
             list = supported.dup
-            list << option.first[1..-1]
-            list.concat(option[1..-1])
+
+            appends = option.select { |opt| opt.start_with?('+') }.map { |opt| opt[1..-1] }
+            deletions = option.select { |opt| opt.start_with?('-') }.map { |opt| opt[1..-1] }
+
+            list.concat(appends)
+
+            deletions.each do |opt|
+              if opt.include?('*')
+                opt_escaped = Regexp.escape(opt)
+                algo_re = /\A#{opt_escaped.gsub('\*', '[A-Za-z\d\-@\.]*')}\z/
+                list.delete_if { |existing_opt| algo_re.match(existing_opt) }
+              else
+                list.delete(opt)
+              end
+            end
+
             list.uniq!
           else
             list = option
