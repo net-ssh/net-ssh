@@ -215,6 +215,7 @@ module Net
         # read, post-processed according to the cipher, hmac, and compression
         # algorithms specified in the server state object, and returned as a
         # new Packet object.
+        # rubocop:disable Metrics/AbcSize
         def poll_next_packet
           aad_length = server.hmac.etm ? 4 : 0
 
@@ -260,7 +261,7 @@ module Net
                              else
                                server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
                              end
-          raise Net::SSH::Exception, "corrupted hmac detected" if real_hmac != my_computed_hmac
+          raise Net::SSH::Exception, "corrupted hmac detected #{server.hmac.class}" if real_hmac != my_computed_hmac
 
           # try to decompress the payload, in case compression is active
           payload = server.decompress(payload)
@@ -273,6 +274,7 @@ module Net
           return Packet.new(payload)
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
     end
   end
