@@ -33,7 +33,7 @@ We strongly recommend that you install a servers's version that supports the lat
 
 It is possible to return to the previous behavior by adding the option : `append_all_supported_algorithms: true`
 
-Unsecure algoritms will be definitely removed in Net::SSH 7.*.
+Unsecure algoritms will definitely be removed in Net::SSH 7.*.
 
 ### Host Keys
 
