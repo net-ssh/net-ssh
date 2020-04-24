@@ -6,7 +6,7 @@ module NetSSH
   class TestProxy < NetSSHTest
     unless Gem.win_platform?
       def test_process_is_stopped_on_timeout
-        10.times do
+        30.times do
           Process.waitpid(0, Process::WNOHANG) rescue true # rubocop:disable Style/RescueModifier
         end
 
