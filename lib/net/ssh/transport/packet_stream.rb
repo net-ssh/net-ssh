@@ -263,10 +263,10 @@ module Net
                              end
           
           if real_hmac != my_computed_hmac
-            puts "hmaclen: #{server.hmac.mac_length}"
-            puts "padding_length: #{padding_length}"
-            puts "REAL_HMAC: #{real_hmac.inspect}"
-            puts "COMPUTED_HMAC: #{my_computed_hmac.inspect}"
+            STDOUT.puts "hmaclen: #{server.hmac.mac_length}"
+            STDOUT.puts "padding_length: #{padding_length}"
+            STDOUT.puts "REAL_HMAC: #{real_hmac.inspect}"
+            STDOUT.puts "COMPUTED_HMAC: #{my_computed_hmac.inspect}"
             raise Net::SSH::Exception, "corrupted hmac detected #{server.hmac.class}"
           end
 
