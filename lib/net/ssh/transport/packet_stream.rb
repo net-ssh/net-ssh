@@ -237,7 +237,7 @@ module Net
             end
           end
 
-          need = @packet_length + 4 - aad_length - server.block_size
+          need = @packet_length + 4 - aad_length - server.block_size # need = 16
           raise Net::SSH::Exception, "padding error, need #{need} block #{server.block_size}" if need % server.block_size != 0
 
           return nil if available < need + server.hmac.mac_length
@@ -245,7 +245,7 @@ module Net
           if need > 0
             # read the remainder of the packet and decrypt it.
             data = read_available(need)
-            mac_data_len_before = @mac_data.length
+            mac_data_len_before = @mac_data.length if server.hmac.etm
             @mac_data += data if server.hmac.etm
             @packet.append(server.update_cipher(data))
           end
