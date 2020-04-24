@@ -263,6 +263,8 @@ module Net
                              end
           
           if real_hmac != my_computed_hmac
+            STDOUT.puts "mac_data len: #{@mac_data.length}"
+            STDOUT.puts "need : #{need}"
             STDOUT.puts "hmaclen: #{server.hmac.mac_length}"
             STDOUT.puts "padding_length: #{padding_length}"
             STDOUT.puts "REAL_HMAC: #{real_hmac.inspect}"
