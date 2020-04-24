@@ -272,11 +272,11 @@ module Net
             STDOUT.puts "plen: #{@packet_length}"
             STDOUT.puts "mac_data len: #{@mac_data.length} #{@mac_data.inspect}"
             STDOUT.puts "need : #{need}"
-            STDOUT.puts "data.len: #{data.length} #{data.inspect}" # 32 bytes ????
+            STDOUT.puts "data.len: #{data.length} #{data.inspect}" # 16 bytes ????
             STDOUT.puts "hmaclen: #{server.hmac.mac_length}"
             STDOUT.puts "padding_length: #{padding_length}"
-            STDOUT.puts "REAL_HMAC: #{real_hmac.inspect}"
-            STDOUT.puts "COMPUTED_HMAC: #{my_computed_hmac.inspect}"
+            STDOUT.puts "REAL_HMAC: #{real_hmac.length} #{real_hmac.inspect}"
+            STDOUT.puts "COMPUTED_HMAC: #{my_computed_hmac.length} #{my_computed_hmac.inspect}"
             raise Net::SSH::Exception, "corrupted hmac detected #{server.hmac.class}"
           end
 
