@@ -33,6 +33,7 @@ unless ENV['NET_SSH_NO_ED25519']
               # We have our own sshd, give it a chance to come up before
               # listening.
               ret = Net::SSH.start("localhost", "net_ssh_1", password: 'foopwd', port: port, user_known_hosts_file: [f.path]) do |ssh|
+                assert_equal ssh.transport.algorithms.kex, "curve25519-sha256"
                 ssh.exec! "echo 'foo'"
               end
               assert_equal "foo\n", ret

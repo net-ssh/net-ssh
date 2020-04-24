@@ -8,8 +8,11 @@
     homedir: /home/vagrant
     ruby_version: '2.0.0-p598'
     ruby_versions:
-      - '2.0.0-p598'
-      - '2.3.0'
+      - '2.3.8'
+      - '2.5.9'
+      - '2.6.5'
+      - '2.7.1'
+      - 'ruby-head'
 #      - 'rbx-3.19'
 #      - 'jruby-9.0.5.0'
     rvm_install_path: '/usr/local/rvm'
