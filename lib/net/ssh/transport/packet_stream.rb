@@ -219,8 +219,8 @@ module Net
         def poll_next_packet
           aad_length = server.hmac.etm ? 4 : 0
 
-          no_packet = @packet.nil?
-          if @packet.nil?
+          no_packet = @packet.nil? # false
+          if @packet.nil? # false
             minimum = server.block_size < 4 ? 4 : server.block_size
             return nil if available < minimum
             data = read_available(minimum + aad_length)
@@ -264,10 +264,12 @@ module Net
                              end
           
           if real_hmac != my_computed_hmac
+            STDOUT.puts "aad_length: #{aad_length}"
             STDOUT.puts "no_packet: #{no_packet}"
             STDOUT.puts "plen: #{@packet_length}"
             STDOUT.puts "mac_data len: #{@mac_data.length}"
             STDOUT.puts "need : #{need}"
+            STDOUT.puts "data.len: #{data.length} #{data.inspect}"
             STDOUT.puts "hmaclen: #{server.hmac.mac_length}"
             STDOUT.puts "padding_length: #{padding_length}"
             STDOUT.puts "REAL_HMAC: #{real_hmac.inspect}"
