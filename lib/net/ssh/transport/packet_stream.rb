@@ -245,7 +245,7 @@ module Net
           if need > 0
             # read the remainder of the packet and decrypt it.
             data = read_available(need)
-            mac_data_len_before = @mac_data.length if server.hmac.etm
+            mac_data_len_before = @mac_data.length if server.hmac.etm # 16
             @mac_data += data if server.hmac.etm
             @packet.append(server.update_cipher(data))
           end
@@ -270,9 +270,9 @@ module Net
             STDOUT.puts "aad_length: #{aad_length}"
             STDOUT.puts "no_packet: #{no_packet}"
             STDOUT.puts "plen: #{@packet_length}"
-            STDOUT.puts "mac_data len: #{@mac_data.length}"
+            STDOUT.puts "mac_data len: #{@mac_data.length} #{@mac_data.inspect}"
             STDOUT.puts "need : #{need}"
-            STDOUT.puts "data.len: #{data.length} #{data.inspect}"
+            STDOUT.puts "data.len: #{data.length} #{data.inspect}" # 32 bytes ????
             STDOUT.puts "hmaclen: #{server.hmac.mac_length}"
             STDOUT.puts "padding_length: #{padding_length}"
             STDOUT.puts "REAL_HMAC: #{real_hmac.inspect}"
