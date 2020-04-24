@@ -48,5 +48,3 @@ script:
   - ssh -V
   - bundle _1.17_ exec rake test
   - BUNDLE_GEMFILE=./Gemfile.noed25519 bundle _1.17_ exec rake test
-  - bundle _1.17_ exec rake test_test
-  - bundle _1.17_ exec rubocop
