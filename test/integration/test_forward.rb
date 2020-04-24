@@ -609,36 +609,38 @@ class TestForwardOnUnixSockets < ForwardTestBase
     end
 
     def test_forward_local_unix_socket_to_remote_port
-      setup_ssh_env do
-        session = Net::SSH.start(*ssh_start_params)
-        server_exc = Queue.new
-        server = start_server_sending_lot_of_data(server_exc)
-        remote_port = server.addr[1]
-        client_data = nil
+      20.times do
+        setup_ssh_env do
+          session = Net::SSH.start(*ssh_start_params)
+          server_exc = Queue.new
+          server = start_server_sending_lot_of_data(server_exc)
+          remote_port = server.addr[1]
+          client_data = nil
 
-        create_local_socket do |local_socket|
-          session.forward.local(local_socket, localhost, remote_port)
-          client_done = Queue.new
+          create_local_socket do |local_socket|
+            session.forward.local(local_socket, localhost, remote_port)
+            client_done = Queue.new
 
-          Thread.start do
+            Thread.start do
+              begin
+                client = UNIXSocket.new(local_socket.path)
+                client_data = client.recv(1024)
+                client.close
+                sleep(0.2)
+              ensure
+                client_done << true
+              end
+            end
+
             begin
-              client = UNIXSocket.new(local_socket.path)
-              client_data = client.recv(1024)
-              client.close
-              sleep(0.2)
-            ensure
-              client_done << true
+              session.loop(0.1) { client_done.empty? }
+            rescue Errno::EPIPE
             end
           end
 
-          begin
-            session.loop(0.1) { client_done.empty? }
-          rescue Errno::EPIPE
-          end
+          assert_not_nil(client_data, "client should have received data")
+          assert(client_data.match(/item\d/), 'client should have received the string item')
         end
-
-        assert_not_nil(client_data, "client should have received data")
-        assert(client_data.match(/item\d/), 'client should have received the string item')
       end
     end
   end
