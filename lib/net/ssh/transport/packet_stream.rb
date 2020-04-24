@@ -220,6 +220,7 @@ module Net
           aad_length = server.hmac.etm ? 4 : 0
 
           no_packet = @packet.nil? # false
+          mac_data_len_before = 0
           if @packet.nil? # false
             minimum = server.block_size < 4 ? 4 : server.block_size
             return nil if available < minimum
@@ -244,6 +245,7 @@ module Net
           if need > 0
             # read the remainder of the packet and decrypt it.
             data = read_available(need)
+            mac_data_len_before = @mac_data.length
             @mac_data += data if server.hmac.etm
             @packet.append(server.update_cipher(data))
           end
@@ -264,6 +266,7 @@ module Net
                              end
           
           if real_hmac != my_computed_hmac
+            STDOUT.puts "mac_dlen_before: #{mac_data_len_before}"
             STDOUT.puts "aad_length: #{aad_length}"
             STDOUT.puts "no_packet: #{no_packet}"
             STDOUT.puts "plen: #{@packet_length}"
