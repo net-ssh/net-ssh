@@ -33,7 +33,7 @@ We strongly recommend that you install a servers's version that supports the lat
 
 It is possible to return to the previous behavior by adding the option : `append_all_supported_algorithms: true`
 
-Unsecure algoritms will be definively remove in Net::SSH 7.*.
+Unsecure algoritms will definitely be removed in Net::SSH 7.*.
 
 ### Host Keys
 
@@ -97,6 +97,7 @@ In a nutshell:
 require 'net/ssh'
 
 Net::SSH.start('host', 'user', password: "password") do |ssh|
+
 # capture all stderr and stdout output from a remote process
 output = ssh.exec!("hostname")
 puts output
@@ -104,7 +105,7 @@ puts output
 # capture only stdout matching a particular pattern
 stdout = ""
 ssh.exec!("ls -l /home/jamis") do |channel, stream, data|
-  stdout << data if stream == :stdout
+  stdout << data if stream == :stdout && /foo/.match(data)
 end
 puts stdout
 
@@ -164,7 +165,7 @@ gem install net-ssh # might need sudo privileges
 ```
 
 NOTE: If you are running on jruby on windows you need to install `jruby-pageant` manually
-(gemspec doesn't allow for platform specific dependencies).
+(gemspec doesn't allow for platform specific dependencies at gem installation time).
 
 However, in order to be sure the code you're installing hasn't been tampered with,
 it's recommended that you verify the [signature](http://docs.rubygems.org/read/chapter/21).
