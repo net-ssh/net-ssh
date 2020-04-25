@@ -1,3 +1,21 @@
+=== 6.1.0.rc1
+
+  * Make sha2-{256,512}-etm@openssh.com MAC default again [#761]
+  * Support algorithm subtraction syntax from ssh_config [#751]
+
+=== 6.0.2
+
+  * Fix corrupted hmac issue in etm hmac [#759]
+
+=== 6.0.1
+
+  * Make sha2-{256,512}-etm@openssh.com MAC opt-in as they seems to have issues [#757]
+
+=== 6.0.0
+
+  * Support empty lines and comments in known_hosts [donoghuc, #742]
+  * Add sha2-{256,512}-etm@openssh.com MAC algorithms [graaff, #714]
+
 === 6.0.0 beta2
   
   * Support :certkeys and CertificateFile configuration option  [Anders Carling, #722]
