@@ -148,12 +148,12 @@ module Transport
     end
 
     def test_constructor_with_preferred_hmac_supports_additions
-      assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha1 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96],
+      assert_equal %w[hmac-sha2-512 hmac-sha2-256 hmac-sha1 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96 hmac-sha2-256-etm@openssh.com hmac-sha2-512-etm@openssh.com],
                    algorithms(hmac: %w[+hmac-md5-96 -none])[:hmac]
     end
 
     def test_constructor_with_preferred_hmac_supports_removals_with_wildcard
-      assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-ripemd160 hmac-ripemd160@openssh.com],
+      assert_equal %w[hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512-etm@openssh.com],
                    algorithms(hmac: %w[-hmac-sha1* -hmac-md5* -none])[:hmac]
     end
 
