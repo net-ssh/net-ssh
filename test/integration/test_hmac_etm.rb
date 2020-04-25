@@ -1,4 +1,5 @@
 require_relative 'common'
+require_relative 'mitm_server'
 require 'fileutils'
 require 'tmpdir'
 
@@ -54,6 +55,29 @@ class TestHMacEtm < NetSSHTest
           end
         end
       end
+    end
+  end
+
+  variants.each do |key, variant|
+    define_method "test_hmac_through_proxy_#{key}" do
+      mitm = MitmServer.new('localhost', 22)
+
+      mitm.local_read_size = 2 * 1024
+      mitm.target_read_size = 19
+
+      mitm.run
+
+      # host, port = 'localhost', 22
+      host = mitm.host
+      port = mitm.port
+
+      hmac_options = { hmac: variant }
+      ssh = Net::SSH.start(host, "net_ssh_1", hmac_options.merge(port: port, password: 'foopwd'))
+      (1...20).each do |i|
+        ret = ssh.exec!("echo \"#{'f' * i}\"")
+        assert_includes ret, 'f' * i
+      end
+      ssh.close
     end
   end
 end
