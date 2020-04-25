@@ -1,3 +1,7 @@
+=== 6.0.2
+
+  * Fix corrupted hmac issue in etm hmac [#759]
+
 === 6.0.1
 
   * Make sha2-{256,512}-etm@openssh.com MAC opt-in as they seems to have issues [#757]
