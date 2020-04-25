@@ -63,7 +63,7 @@ Unsecure algoritms will be definively remove in Net::SSH 7.*.
 
 | Name                                 | Support               | Details  |
 |--------------------------------------|-----------------------|----------|
-| aes256-ctr / aes192-ctr / aes128-ctr | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| aes256-ctr / aes192-ctr / aes128-ctr | OK                    |          |
 | aes256-cbc / aes192-cbc / aes128-cbc | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
 | rijndael-cbc@lysator.liu.se          | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
 | blowfish-ctr blowfish-cbc            | Deprecated in 6.0     | unsecure, will be removed in 7.0 |
