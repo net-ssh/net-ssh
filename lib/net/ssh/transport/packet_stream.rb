@@ -221,7 +221,7 @@ module Net
 
           if @packet.nil?
             minimum = server.block_size < 4 ? 4 : server.block_size
-            return nil if available < minimum
+            return nil if available < minimum + aad_length
             data = read_available(minimum + aad_length)
 
             # decipher it
