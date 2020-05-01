@@ -251,7 +251,7 @@ module Net
       transport = Transport::Session.new(host, options)
       auth = Authentication::Session.new(transport, options)
 
-      user = options.fetch(:user, user) || Etc.getlogin
+      user = options.fetch(:user, user) || Etc.getpwuid.name
       if auth.authenticate("ssh-connection", user, options[:password])
         connection = Connection::Session.new(transport, options)
         if block_given?
