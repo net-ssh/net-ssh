@@ -1,3 +1,4 @@
+=== 6.1.0
 
   * adapt to ssh's default bahaviors when no username is provided.
     When Net::SSH.start user is nil and config has no entry
