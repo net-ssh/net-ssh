@@ -302,7 +302,7 @@ class TestForward < ForwardTestBase
   end
 
   class TCPProxy
-    def initialize()
+    def initialize
       @sockets = []
     end
     attr_reader :sockets

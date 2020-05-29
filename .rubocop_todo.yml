@@ -471,12 +471,6 @@ Style/ConditionalAssignment:
     - 'lib/net/ssh/transport/state.rb'
     - 'test/test_key_factory.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/DefWithParentheses:
-  Exclude:
-    - 'test/integration/test_forward.rb'
-
 # Offense count: 13
 Style/Documentation:
   Exclude:
