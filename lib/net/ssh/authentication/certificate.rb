@@ -35,8 +35,9 @@ module Net
           cert.valid_before = if RUBY_PLATFORM == "java"
                                 # 0x20c49ba5e353f7 = 0x7fffffffffffffff/1000, the largest value possible for JRuby
                                 # JRuby Time.at multiplies the arg by 1000, and then stores it in a signed long.
-                                # 0x20c49ba5e353f7 = 292278994-08-17 01:12:55 -0600
-                                Time.at([0x20c49ba5e353f7, buffer.read_int64].min)
+                                # 0x20c49ba2d52500 = 292278993-01-01 00:00:00 +0000
+                                # JRuby 9.1 does not accept the year 292278994 because of edge cases (https://github.com/JodaOrg/joda-time/issues/190)
+                                Time.at([0x20c49ba2d52500, buffer.read_int64].min)
                               else
                                 Time.at(buffer.read_int64)
                               end
