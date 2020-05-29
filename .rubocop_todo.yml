@@ -96,13 +96,6 @@ Layout/SpaceInsideReferenceBrackets:
   Exclude:
     - 'lib/net/ssh/transport/algorithms.rb'
 
-# Offense count: 18
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: final_newline, final_blank_line
-Layout/TrailingBlankLines:
-  Enabled: false
-
 # Offense count: 730
 # Cop supports --auto-correct.
 # Configuration parameters: AllowInHeredoc.
