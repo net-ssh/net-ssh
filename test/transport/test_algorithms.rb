@@ -18,7 +18,7 @@ module Transport
     end
 
     def test_constructor_should_build_default_list_of_preferred_algorithms
-      assert_equal ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa], algorithms[:host_key]
+      assert_equal ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa rsa-sha2-256 rsa-sha2-512], algorithms[:host_key]
       assert_equal x25519_kex + ec_kex + %w[diffie-hellman-group-exchange-sha256 diffie-hellman-group14-sha1], algorithms[:kex]
       assert_equal %w[aes256-ctr aes192-ctr aes128-ctr], algorithms[:encryption]
       assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha1], algorithms[:hmac]
@@ -27,7 +27,7 @@ module Transport
     end
 
     def test_constructor_should_build_complete_list_of_algorithms_with_append_all_supported_algorithms
-      assert_equal ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa ssh-dss], algorithms(append_all_supported_algorithms: true)[:host_key]
+      assert_equal ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa rsa-sha2-256 rsa-sha2-512 ssh-dss], algorithms(append_all_supported_algorithms: true)[:host_key]
       assert_equal x25519_kex + ec_kex + %w[diffie-hellman-group-exchange-sha256 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha1 diffie-hellman-group1-sha1], algorithms(append_all_supported_algorithms: true)[:kex]
       assert_equal %w[aes256-ctr aes192-ctr aes128-ctr aes256-cbc aes192-cbc aes128-cbc rijndael-cbc@lysator.liu.se blowfish-ctr blowfish-cbc cast128-ctr cast128-cbc 3des-ctr 3des-cbc idea-cbc none], algorithms(append_all_supported_algorithms: true)[:encryption]
       assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha1 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96 none], algorithms(append_all_supported_algorithms: true)[:hmac]
@@ -43,12 +43,12 @@ module Transport
     end
 
     def test_constructor_with_preferred_host_key_type_should_put_preferred_host_key_type_first
-      assert_equal %w[ssh-dss] + ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa], algorithms(host_key: "ssh-dss", append_all_supported_algorithms: true)[:host_key]
+      assert_equal %w[ssh-dss] + ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa rsa-sha2-256 rsa-sha2-512], algorithms(host_key: "ssh-dss", append_all_supported_algorithms: true)[:host_key]
     end
 
     def test_constructor_with_known_hosts_reporting_known_host_key_should_use_that_host_key_type
       Net::SSH::KnownHosts.expects(:search_for).with("net.ssh.test,127.0.0.1", {}).returns([stub("key", ssh_type: "ssh-dss")])
-      assert_equal %w[ssh-dss] + ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa], algorithms[:host_key]
+      assert_equal %w[ssh-dss] + ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa rsa-sha2-256 rsa-sha2-512], algorithms[:host_key]
     end
 
     def ed_host_keys
@@ -73,7 +73,7 @@ module Transport
     end
 
     def test_constructor_with_unrecognized_host_key_type_should_return_whats_supported
-      assert_equal ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa ssh-dss],
+      assert_equal ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa rsa-sha2-256 rsa-sha2-512 ssh-dss],
                    algorithms(host_key: "bogus ssh-rsa", append_all_supported_algorithms: true)[:host_key]
     end
 
@@ -182,7 +182,7 @@ module Transport
     end
 
     def test_constructor_with_host_key_removals_with_wildcard
-      assert_equal ed_host_keys + %w[ecdsa-sha2-nistp521-cert-v01@openssh.com ecdsa-sha2-nistp384-cert-v01@openssh.com ecdsa-sha2-nistp256-cert-v01@openssh.com ecdsa-sha2-nistp521 ecdsa-sha2-nistp384 ecdsa-sha2-nistp256], algorithms(host_key: %w[-ssh-rsa* -ssh-dss])[:host_key]
+      assert_equal ed_host_keys + %w[ecdsa-sha2-nistp521-cert-v01@openssh.com ecdsa-sha2-nistp384-cert-v01@openssh.com ecdsa-sha2-nistp256-cert-v01@openssh.com ecdsa-sha2-nistp521 ecdsa-sha2-nistp384 ecdsa-sha2-nistp256], algorithms(host_key: %w[-ssh-rsa* -ssh-dss -rsa-sha*])[:host_key]
     end
 
     def test_initial_state_should_be_neither_pending_nor_initialized
@@ -407,7 +407,7 @@ module Transport
       assert_equal KEXINIT, buffer.type
       assert_equal 16, buffer.read(16).length
       assert_equal options[:kex] || (x25519_kex + ec_kex + %w[diffie-hellman-group-exchange-sha256 diffie-hellman-group14-sha1]).join(','), buffer.read_string
-      assert_equal options[:host_key] || (ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa]).join(','), buffer.read_string
+      assert_equal options[:host_key] || (ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa rsa-sha2-256 rsa-sha2-512]).join(','), buffer.read_string
       assert_equal options[:encryption_client] || 'aes256-ctr,aes192-ctr,aes128-ctr', buffer.read_string
       assert_equal options[:encryption_server] || 'aes256-ctr,aes192-ctr,aes128-ctr', buffer.read_string
       assert_equal options[:hmac_client] || 'hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-sha1', buffer.read_string
