@@ -1,6 +1,6 @@
 === 6.1.0
 
-  * adapt to ssh's default bahaviors when no username is provided.
+  * Adapt to ssh's default behaviors when no username is provided.
     When Net::SSH.start user is nil and config has no entry
     we default to Etc.getpwuid.name() instead of Etc.getlogin(). [#749]
 
@@ -59,7 +59,7 @@
 
 === 5.0.2
 
-  * fix ctr for jruby [#612]
+  * Fix ctr for jruby [#612]
 
 === 5.0.1
 
