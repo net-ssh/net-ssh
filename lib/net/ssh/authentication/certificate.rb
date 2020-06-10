@@ -70,8 +70,8 @@ module Net
           key.ssh_do_sign(data)
         end
 
-        def ssh_do_verify(sig, data)
-          key.ssh_do_verify(sig, data)
+        def ssh_do_verify(sig, data, options = {})
+          key.ssh_do_verify(sig, data, options)
         end
 
         def to_pem

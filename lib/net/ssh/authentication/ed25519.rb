@@ -123,7 +123,7 @@ module Net
             ssh_type
           end
 
-          def ssh_do_verify(sig,data)
+          def ssh_do_verify(sig, data, options = {})
             @verify_key.verify(sig,data)
           end
 
