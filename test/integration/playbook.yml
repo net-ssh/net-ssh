@@ -93,13 +93,20 @@
     - name: add host aliases
       lineinfile: dest='/etc/hosts' owner='root' group='root' mode=0644
         regexp='^127\.0\.0\.1\s+gateway.netssh' line='127.0.0.1  gateway.netssh'
-    - apt:
+    - name: Update APT Cache
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+    - name: Wait for locfile removal
+      become: yes
+      shell:  while sudo fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+    - name: Install packages
+      apt:
         pkg:
           - pv
           - libgmp3-dev
           - git
         state: present
-        update_cache: yes
     - copy: content='echo "cd /net-ssh ; rake integration-test"' dest=/etc/update-motd.d/99-net-ssh-tests mode=0755
     - name: add user to rvm group so they can change gem wrappers
       user:

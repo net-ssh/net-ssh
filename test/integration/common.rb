@@ -110,7 +110,15 @@ module IntegrationTestHelpers
     # down sshd.
     if pid
       system('sudo', 'kill', '-15', pid.to_s)
-      Process.wait(pid)
+      begin
+        Timeout.timeout(5) do
+          Process.wait(pid)
+        end
+      rescue Timeout::Error
+        STDERR.puts "Failed to kill net-ssh process: #{pid.to_s}"
+        system('sudo', 'kill', '-9', pid)
+        raise
+      end
     end
   end
 

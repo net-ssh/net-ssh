@@ -1,7 +1,7 @@
 require 'openssl'
 require 'ostruct'
 require_relative '../../common'
-require 'transport/kex/test_diffie_hellman_group1_sha1'
+require_relative './test_diffie_hellman_group1_sha1'
 require 'net/ssh/transport/kex/ecdh_sha2_nistp256'
 
 module Transport

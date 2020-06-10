@@ -63,8 +63,17 @@ module OpenSSL
       end
 
       # Verifies the given signature matches the given data.
-      def ssh_do_verify(sig, data)
-        verify(OpenSSL::Digest::SHA1.new, sig, data)
+      def ssh_do_verify(sig, data, options = {})
+        digester =
+          if options[:host_key] == "rsa-sha2-512"
+            OpenSSL::Digest::SHA512.new
+          elsif options[:host_key] == "rsa-sha2-256"
+            OpenSSL::Digest::SHA256.new
+          else
+            OpenSSL::Digest::SHA1.new
+          end
+
+        verify(digester, sig, data)
       end
 
       # Returns the signature for the given data.
@@ -94,7 +103,7 @@ module OpenSSL
       end
 
       # Verifies the given signature matches the given data.
-      def ssh_do_verify(sig, data)
+      def ssh_do_verify(sig, data, options = {})
         sig_r = sig[0,20].unpack("H*")[0].to_i(16)
         sig_s = sig[20,20].unpack("H*")[0].to_i(16)
         a1sig = OpenSSL::ASN1::Sequence([
@@ -192,7 +201,7 @@ module OpenSSL
       end
 
       # Verifies the given signature matches the given data.
-      def ssh_do_verify(sig, data)
+      def ssh_do_verify(sig, data, options = {})
         digest = digester.digest(data)
         a1sig = nil
 

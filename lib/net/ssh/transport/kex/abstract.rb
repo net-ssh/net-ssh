@@ -64,11 +64,18 @@ module Net
 
           private
 
+          def is_matching(key_ssh_type, host_key_alg)
+            return true if key_ssh_type == host_key_alg
+            if key_ssh_type == 'ssh-rsa' &&  (host_key_alg == 'rsa-sha2-512' || host_key_alg == 'rsa-sha2-256')
+              return true
+            end
+          end
+
           # Verify that the given key is of the expected type, and that it
           # really is the key for the session's host. Raise Net::SSH::Exception
           # if it is not.
           def verify_server_key(key) #:nodoc:
-            if key.ssh_type != algorithms.host_key
+            if !is_matching(key.ssh_type, algorithms.host_key)
               raise Net::SSH::Exception, "host key algorithm mismatch '#{key.ssh_type}' != '#{algorithms.host_key}'"
             end
 
@@ -97,7 +104,7 @@ module Net
 
             hash = digester.digest(response.to_s)
 
-            unless connection.host_key_verifier.verify_signature { result[:server_key].ssh_do_verify(result[:server_sig], hash) }
+            unless connection.host_key_verifier.verify_signature { result[:server_key].ssh_do_verify(result[:server_sig], hash, {host_key: algorithms.host_key}) }
               raise Net::SSH::Exception, 'could not verify server signature'
             end
 
