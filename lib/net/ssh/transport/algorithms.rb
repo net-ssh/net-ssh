@@ -35,8 +35,7 @@ module Net
                        ssh-rsa-cert-v00@openssh.com
                        ssh-rsa
                        rsa-sha2-256
-                       rsa-sha2-512
-                      ],
+                       rsa-sha2-512],
 
           kex: %w[ecdh-sha2-nistp521
                   ecdh-sha2-nistp384

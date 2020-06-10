@@ -115,7 +115,7 @@ module IntegrationTestHelpers
           Process.wait(pid)
         end
       rescue Timeout::Error
-        STDERR.puts "Failed to kill net-ssh process: #{pid.to_s}"
+        warn "Failed to kill net-ssh process: #{pid.to_s}"
         system('sudo', 'kill', '-9', pid)
         raise
       end
