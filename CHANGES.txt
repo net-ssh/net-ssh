@@ -1,3 +1,8 @@
+=== 6.2.0. beta1
+
+  * rsa-sha2-512, rsa-sha2-256 host_key algs [#771]
+  * JRuby aes*-ctr suppport [#767]
+
 === 6.1.0
 
   * Adapt to ssh's default behaviors when no username is provided.
