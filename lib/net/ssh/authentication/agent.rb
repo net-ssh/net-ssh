@@ -191,7 +191,7 @@ module Net
           raise AgentError, "could not remove all identity from agent" if type != SSH_AGENT_SUCCESS
         end
 
-        # lock the ssh agend with password
+        # lock the ssh agent with password
         def lock(password)
           type, = send_and_wait(SSH2_AGENT_LOCK, :string, password)
           raise AgentError, "could not lock agent" if type != SSH_AGENT_SUCCESS
