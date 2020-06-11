@@ -197,7 +197,7 @@ module Net
           raise AgentError, "could not lock agent" if type != SSH_AGENT_SUCCESS
         end
         
-        # unlock the ssh agend with password
+        # unlock the ssh agent with password
         def unlock(password)
           type, = send_and_wait(SSH2_AGENT_UNLOCK, :string, password)
           raise AgentError, "could not unlock agent" if type != SSH_AGENT_SUCCESS
