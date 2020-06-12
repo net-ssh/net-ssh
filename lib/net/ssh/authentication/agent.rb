@@ -39,6 +39,8 @@ module Net
         SSH2_AGENT_ADD_IDENTITY          = 17
         SSH2_AGENT_REMOVE_IDENTITY       = 18
         SSH2_AGENT_REMOVE_ALL_IDENTITIES = 19
+        SSH2_AGENT_LOCK                  = 22
+        SSH2_AGENT_UNLOCK                = 23
         SSH2_AGENT_ADD_ID_CONSTRAINED    = 25
         SSH2_AGENT_FAILURE               = 30
         SSH2_AGENT_VERSION_RESPONSE      = 103
@@ -189,6 +191,18 @@ module Net
           raise AgentError, "could not remove all identity from agent" if type != SSH_AGENT_SUCCESS
         end
 
+        # lock the ssh agent with password
+        def lock(password)
+          type, = send_and_wait(SSH2_AGENT_LOCK, :string, password)
+          raise AgentError, "could not lock agent" if type != SSH_AGENT_SUCCESS
+        end
+        
+        # unlock the ssh agent with password
+        def unlock(password)
+          type, = send_and_wait(SSH2_AGENT_UNLOCK, :string, password)
+          raise AgentError, "could not unlock agent" if type != SSH_AGENT_SUCCESS
+        end
+        
         private
 
         def unix_socket_class
