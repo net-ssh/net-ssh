@@ -245,6 +245,10 @@ module OpenSSL
           "ecdsa-sha2-#{CurveNameAliasInv[group.curve_name]}"
         end
 
+        def ssh_signature_type
+          ssh_type
+        end
+
         # Converts the key to a blob, according to the SSH2 protocol.
         def to_blob
           @blob ||= Net::SSH::Buffer.from(:string, ssh_type,
