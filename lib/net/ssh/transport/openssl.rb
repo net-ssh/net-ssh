@@ -53,9 +53,7 @@ module OpenSSL
         "ssh-rsa"
       end
 
-      def ssh_signature_type
-        ssh_type
-      end
+      alias ssh_signature_type ssh_type
 
       # Converts the key to a blob, according to the SSH2 protocol.
       def to_blob
@@ -92,9 +90,7 @@ module OpenSSL
         "ssh-dss"
       end
 
-      def ssh_signature_type
-        ssh_type
-      end
+      alias ssh_signature_type ssh_type
 
       # Converts the key to a blob, according to the SSH2 protocol.
       def to_blob
@@ -172,9 +168,7 @@ module OpenSSL
         "ecdsa-sha2-#{CurveNameAliasInv[group.curve_name]}"
       end
 
-      def ssh_signature_type
-        ssh_type
-      end
+      alias ssh_signature_type ssh_type
 
       def digester
         if group.curve_name =~ /^[a-z]+(\d+)\w*\z/
@@ -245,9 +239,7 @@ module OpenSSL
           "ecdsa-sha2-#{CurveNameAliasInv[group.curve_name]}"
         end
 
-        def ssh_signature_type
-          ssh_type
-        end
+        alias ssh_signature_type ssh_type
 
         # Converts the key to a blob, according to the SSH2 protocol.
         def to_blob
