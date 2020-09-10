@@ -53,9 +53,9 @@ module Transport
       recv_times += 1 if data[-1] != "\n"
 
       if raise_eot
-        socket.expects(:readpartial).with(1).times(recv_times + 1).returns(*data).then.raises(EOFError, 'end of file reached')
+        socket.expects(:read_nonblock).with(1).times(recv_times + 1).returns(*data).then.raises(EOFError, 'end of file reached')
       else
-        socket.expects(:readpartial).with(1).times(recv_times).returns(*data).then.returns(nil)
+        socket.expects(:read_nonblock).with(1).times(recv_times).returns(*data).then.returns(nil)
       end
 
       socket

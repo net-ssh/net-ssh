@@ -50,15 +50,11 @@ module Net
             @version = ""
             loop do
               begin
-                if timeout
-                  b = socket.read_nonblock(1)
-                else
-                  b = socket.readpartial(1)
-                end
+                b = socket.read_nonblock(1)
                 raise Net::SSH::Disconnect, "connection closed by remote host" if b.nil?
               rescue EOFError
                 raise Net::SSH::Disconnect, "connection closed by remote host"
-              rescue IO::WaitReadable => e
+              rescue IO::WaitReadable
                 timed_out = IO.select([socket], nil, nil, timeout).nil?
                 if timed_out
                   raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating"
