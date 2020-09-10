@@ -45,16 +45,23 @@ module Net
           socket.write "#{PROTO_VERSION}\r\n"
           socket.flush
 
-          loop do
-            raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating" if timeout && !IO.select([socket], nil, nil, timeout)
+          raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating" if timeout && !IO.select([socket], nil, nil, timeout)
 
+          loop do
             @version = String.new
             loop do
               begin
-                b = socket.readpartial(1)
+                b = socket.read_nonblock(1)
                 raise Net::SSH::Disconnect, "connection closed by remote host" if b.nil?
               rescue EOFError
                 raise Net::SSH::Disconnect, "connection closed by remote host"
+              rescue IO::WaitReadable
+                timed_out = IO.select([socket], nil, nil, timeout).nil?
+                if timed_out
+                  raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating"
+                else
+                  retry
+                end
               end
               @version << b
               break if b == "\n"
