@@ -271,7 +271,7 @@ module Net
           server.increment(@packet_length)
           @packet = nil
 
-          return Packet.new(payload)
+          return payload.empty? ? nil : Packet.new(payload)
         end
       end
       # rubocop:enable Metrics/AbcSize
