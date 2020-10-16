@@ -7,14 +7,7 @@ addon:
     gateway.netssh
 
 rvm:
-  - 2.3.8
-  - 2.4.8
-  - 2.5.7
-  - 2.6.5
-  - 2.7.0
-  - jruby-9.2.11.1
-  - rbx-3.107
-  - ruby-head
+  - truffleruby-head
 env:
   NET_SSH_RUN_INTEGRATION_TESTS=1
 
