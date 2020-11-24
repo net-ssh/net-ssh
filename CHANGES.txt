@@ -43,7 +43,7 @@
 === 5.2.0.rc3
 
   * Fix check_host_ip read from config
-  * Support ssh-ed25519 in kown hosts
+  * Support ssh-ed25519 in known hosts
 
 === 5.2.0.rc2
 
