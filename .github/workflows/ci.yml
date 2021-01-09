@@ -1,0 +1,42 @@
+name: CI
+on: [pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: [2.7.x, 2.6.x, 2.5.x]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+
+      - name: Cache bundler
+        uses: actions/cache@v1
+        id: bundler-cache
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-v2-${{ hashFiles('**/.ruby-version') }}-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gem-v2-
+
+      - name: Bundle install
+        run: |
+          gem install bundler
+          bundle config set path 'vendor/bundle'
+          bundle config set --local path 'vendor/bundle'
+          bundle install --jobs 4 --retry 3 --path vendor/bundle
+          BUNDLE_GEMFILE=./Gemfile.noed25519 bundle install --jobs 4 --retry 3 --path vendor/bundle
+        env:
+          BUNDLE_PATH: vendor/bundle
+
+      - name: Run Tests
+        run: bundle _1.17_ exec rake test
+      - name: Run Tests
+        run: bundle _1.17_ exec rake test
+        end:
+          BUNDLE_GEMFILE=./Gemfile.noed25519
+      
