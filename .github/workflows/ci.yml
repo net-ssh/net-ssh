@@ -45,7 +45,8 @@ jobs:
           pwd
           uname -a
           export
-          ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true'
+          who am i
+          ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true' -e 'myuser=runner' -e 'mygroup=runner' -e 'homedir=/home/runner'
       - name: Run Tests
         run: bundle exec rake test
       - name: Run Tests
