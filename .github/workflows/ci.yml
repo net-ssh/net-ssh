@@ -37,6 +37,6 @@ jobs:
         run: bundle _1.17_ exec rake test
       - name: Run Tests
         run: bundle _1.17_ exec rake test
-        end:
-          BUNDLE_GEMFILE=./Gemfile.noed25519
+        env:
+          BUNDLE_GEMFILE: ./Gemfile.noed25519
       
