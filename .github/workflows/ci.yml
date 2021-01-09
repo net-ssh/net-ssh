@@ -42,6 +42,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible urllib3 pyOpenSSL ndg-httpsclient pyasn1
           ansible-galaxy install rvm.ruby
+          pwd
+          uname -a
+          export
           ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true'
       - name: Run Tests
         run: bundle exec rake test
