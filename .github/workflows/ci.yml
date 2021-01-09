@@ -13,6 +13,10 @@ jobs:
         uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: 2.7
 
       - name: Cache bundler
         uses: actions/cache@v1
@@ -32,7 +36,11 @@ jobs:
           BUNDLE_GEMFILE=./Gemfile.noed25519 bundle install --jobs 4 --retry 3 --path vendor/bundle
         env:
           BUNDLE_PATH: vendor/bundle
-
+      
+      - name: Ansible install
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible urllib3 pyOpenSSL ndg-httpsclient pyasn1
       - name: Run Tests
         run: bundle exec rake test
       - name: Run Tests
