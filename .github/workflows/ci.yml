@@ -26,7 +26,14 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.ruby-version }}-gem-v2-${{ hashFiles('**/Gemfile') }}-${{ hashFiles('**/net-ssh.gemspec') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.ruby-version }}-gem-v2-
-
+      - name: Cache pip
+        uses: actions/cache@v1
+        id: pip-cache
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-v1
+          restore-keys: |
+            ${{ runner.os }}-pip-v1
       - name: Bundle install
         run: |
           gem install bundler
