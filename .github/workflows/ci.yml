@@ -19,9 +19,9 @@ jobs:
         id: bundler-cache
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-gem-v2-${{ hashFiles('**/.ruby-version') }}-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ matrix.ruby-version }}-gem-v2-${{ hashFiles('**/Gemfile') }}-${{ hashFiles('**/net-ssh.gemspec') }}
           restore-keys: |
-            ${{ runner.os }}-gem-v2-
+            ${{ runner.os }}-${{ matrix.ruby-version }}-gem-v2-
 
       - name: Bundle install
         run: |
@@ -34,9 +34,9 @@ jobs:
           BUNDLE_PATH: vendor/bundle
 
       - name: Run Tests
-        run: bundle _1.17_ exec rake test
+        run: bundle exec rake test
       - name: Run Tests
-        run: bundle _1.17_ exec rake test
+        run: bundle exec rake test
         env:
           BUNDLE_GEMFILE: ./Gemfile.noed25519
       
