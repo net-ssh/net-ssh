@@ -35,7 +35,7 @@ class TestKnownHosts < NetSSHTest
   end
 
   def test_search_for
-    options = { user_known_hosts_file: path("known_hosts/github") }
+    options = { user_known_hosts_file: path("known_hosts/github"), global_known_hosts_file: [] }
     keys = Net::SSH::KnownHosts.search_for('github.com',options)
     assert_equal(["ssh-rsa"], keys.map(&:ssh_type))
   end
