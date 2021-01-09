@@ -26,6 +26,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.ruby-version }}-gem-v3-${{ hashFiles('**/Gemfile') }}-${{ hashFiles('**/net-ssh.gemspec') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.ruby-version }}-gem-v3-
+      
       - name: Cache pip
         uses: actions/cache@v1
         id: pip-cache
@@ -44,6 +45,9 @@ jobs:
         env:
           BUNDLE_PATH: vendor/bundle
       
+      - name: Add to etc/hosts
+        run: |
+          sudo echo "127.0.0.1 gateway.netssh" | sudo tee -a /etc/hosts
       - name: Ansible install
         run: |
           python -m pip install --upgrade pip
