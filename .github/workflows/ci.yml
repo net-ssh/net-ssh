@@ -5,24 +5,36 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: [2.7.x, 2.6.x, 2.5.x]
+        ruby-version: [2.7.2, 2.6.6, 2.5.8, 2.4.10, 3.0.0]
     steps:
       - uses: actions/checkout@v1
 
       - name: Set up Ruby ${{ matrix.ruby-version }}
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: 2.7
 
       - name: Cache bundler
         uses: actions/cache@v1
         id: bundler-cache
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-gem-v2-${{ hashFiles('**/.ruby-version') }}-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ matrix.ruby-version }}-gem-v3-${{ hashFiles('**/Gemfile') }}-${{ hashFiles('**/net-ssh.gemspec') }}
           restore-keys: |
-            ${{ runner.os }}-gem-v2-
-
+            ${{ runner.os }}-${{ matrix.ruby-version }}-gem-v3-
+      
+      - name: Cache pip
+        uses: actions/cache@v1
+        id: pip-cache
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-v1
+          restore-keys: |
+            ${{ runner.os }}-pip-v1
       - name: Bundle install
         run: |
           gem install bundler
@@ -32,11 +44,33 @@ jobs:
           BUNDLE_GEMFILE=./Gemfile.noed25519 bundle install --jobs 4 --retry 3 --path vendor/bundle
         env:
           BUNDLE_PATH: vendor/bundle
+      
+      - name: Add to etc/hosts
+        run: |
+          sudo echo "127.0.0.1  gateway.netssh" | sudo tee -a /etc/hosts
+      - name: Ansible install
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible urllib3 pyOpenSSL ndg-httpsclient pyasn1
+          ansible-galaxy install rvm.ruby
+          pwd
+          uname -a
+          export
+          who am i
+          ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true' -e 'myuser=runner' -e 'mygroup=runner' -e 'homedir=/home/runner'
+      - name: Run Tests
+        run: bundle exec rake test
+        env:
+          NET_SSH_RUN_INTEGRATION_TESTS_DISABLED: 1
+      - name: Run Tests (without ed25519)
+        run: bundle exec rake test
+        env:
+          BUNDLE_GEMFILE: ./Gemfile.noed25519
+          NET_SSH_RUN_INTEGRATION_TESTS_DISABLED: 1
+      - name: Run test helper test
+        run: bundle exec rake test_test
+      - name: Rubocop
+        if: matrix.ruby-version != '3.0.0'
+        run: bundle exec rubocop
 
-      - name: Run Tests
-        run: bundle _1.17_ exec rake test
-      - name: Run Tests
-        run: bundle _1.17_ exec rake test
-        end:
-          BUNDLE_GEMFILE=./Gemfile.noed25519
       
