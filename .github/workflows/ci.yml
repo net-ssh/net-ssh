@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: [2.7.2, 2.6.6, 2.5.8, 2.4.10, 3.0.0, 'head']
+        ruby-version: [2.7.2, 2.6.6, 2.5.8, 2.4.10, 3.0.0]
     steps:
       - uses: actions/checkout@v1
 
@@ -70,5 +70,7 @@ jobs:
       - name: Run test helper test
         run: bundle exec rake test_test
       - name: Rubocop
+        if: matrix.ruby-version != '3.0.0'
         run: bundle exec rubocop
+
       
