@@ -228,7 +228,7 @@ module Net
             puts e.message  
             puts e.backtrace.inspect  
           end  
-            type = buffer.read_byte
+          type = buffer.read_byte
           debug { "received agent packet #{type} len #{buffer.length - 4}" }
           return type, buffer
         end
