@@ -222,8 +222,13 @@ module Net
         # is returned as a Net::SSH::Buffer).
         def read_packet
           buffer = Net::SSH::Buffer.new(@socket.read(4))
-          buffer.append(@socket.read(buffer.read_long))
-          type = buffer.read_byte
+          begin
+            buffer.append(@socket.read(buffer.read_long))
+          rescue StandardError => e  
+            puts e.message  
+            puts e.backtrace.inspect  
+          end  
+            type = buffer.read_byte
           debug { "received agent packet #{type} len #{buffer.length - 4}" }
           return type, buffer
         end
