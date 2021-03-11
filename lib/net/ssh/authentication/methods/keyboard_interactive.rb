@@ -48,13 +48,20 @@ module Net
                 message.read_long.times do
                   text = message.read_string
                   echo = message.read_bool
-                  password_to_send = password || (prompter && prompter.ask(text, echo))
-                  responses << password_to_send
+                  debug { "keyboard-interactive info request checking if request #{text} is password" }
+                  if (/Password:/ =~ text)
+                    debug { "keyboard-interactive info request trying password" }
+                    password_to_send = password || (prompter && prompter.ask(text, echo))
+                    responses << password_to_send
+                    
+                    # if the password failed the first time around, don't try
+                    # and use it on subsequent requests.
+                    password = nil
+                  else
+                    debug { "keyboard-interactive info request responding to banner" }
+                    responses << "yes"
+                  end
                 end
-
-                # if the password failed the first time around, don't try
-                # and use it on subsequent requests.
-                password = nil
 
                 msg = Buffer.from(:byte, USERAUTH_INFO_RESPONSE, :long, responses.length, :string, responses)
                 send_message(msg)
