@@ -107,8 +107,8 @@ class TestChannel < NetSSHTest
 
   def test_channel_should_set_environment_variables_on_remote
     setup_ssh_env do
-      start_sshd_7_or_later(config: 'AcceptEnv *') do |_pid, port|
-        Timeout.timeout(4) do
+      start_sshd_7_or_later(config: 'AcceptEnv foo baz') do |_pid, port|
+        Timeout.timeout(20) do
           begin
             # We have our own sshd, give it a chance to come up before
             # listening.
@@ -119,15 +119,15 @@ class TestChannel < NetSSHTest
                 sleep(0.1)
                 system("killall /bin/nc")
               end
-              channel = ssh_exec(ssh, "echo $foo; echo $baz", channel_success_handler) do |ch, _type, data|
+              channel = ssh_exec(ssh, "echo A:$foo; echo B:$baz", channel_success_handler) do |ch, _type, data|
                 ch[:result] ||= ""
                 ch[:result] << data
               end
               channel.wait
               res = channel[:result]
-              assert_equal(res, "bar\nwhale will\n")
+              assert_equal(res, "A:bar\nB:whale will\n")
             end
-            assert_equal(res, "bar\nwhale will\n")
+            assert_equal(res, "A:bar\nB:whale will\n")
           rescue SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH, Net::SSH::Proxy::ConnectError
             sleep 0.25
             retry

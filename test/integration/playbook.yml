@@ -85,6 +85,9 @@
     - name: sshd allow forward
       lineinfile: dest='/etc/ssh/sshd_config' line='GatewayPorts yes' regexp=LogLevel
       notify: restart sshd
+    - name: sshd allow forward
+      lineinfile: dest='/etc/ssh/sshd_config' line='PasswordAuthentication=yes' regexp=PasswordAuthentication
+      notify: restart sshd
     - name: put NET_SSH_RUN_INTEGRATION_TESTS=YES environment
       lineinfile: dest='/etc/environment' line='NET_SSH_RUN_INTEGRATION_TESTS=YES'
     - name: change dir in bashrc
