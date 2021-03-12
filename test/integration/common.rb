@@ -89,7 +89,7 @@ module IntegrationTestHelpers
       f.write(lines)
       pidpath = nil
       if add_pid
-        pidpath = f.path+'.pid'
+        pidpath = f.path + '.pid'
         f.write("\nPIDFILE #{pidpath}")
       end
       # f.write("\nLogLevel DEBUG3")
@@ -98,8 +98,8 @@ module IntegrationTestHelpers
     end
   end
 
-  def is_port_open?(path)
-    Socket.tcp("localhost", 10567, connect_timeout: 1) { true } rescue false
+  def port_open?(path)
+    Socket.tcp("localhost", 10567, connect_timeout: 1) { true } rescue false # rubocop:disable Style/RescueModifier
   end
 
   # @yield [pid, port]
