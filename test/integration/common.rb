@@ -110,13 +110,16 @@ module IntegrationTestHelpers
       with_lines_as_tempfile(config) do |path, pidpath|
         # puts "DEBUG - SSH LOG: #{path}-log.txt"
         raise "A leftover sshd is already running" if is_port_open?(port)
-        pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port, '-E', "#{path}-log.txt")
+        pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port) # '-E', "#{path}-log.txt")
         sshpidfile = pidpath
         yield pid, port
       end
     else
-      pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-p', port)
-      yield pid, port
+      with_lines_as_tempfile('') do |path, pidpath|
+        pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port)
+        sshpidfile = pidpath
+        yield pid, port
+      end
     end
   ensure
     # Our pid is sudo and not sshd, -9 (KILL) on sudo will not clean up its children
