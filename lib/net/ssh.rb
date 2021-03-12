@@ -73,7 +73,7 @@ module Net
       max_win_size send_env use_agent number_of_password_prompts
       append_all_supported_algorithms non_interactive password_prompt
       agent_socket_factory minimum_dh_bits verify_host_key
-      fingerprint_hash check_host_ip
+      fingerprint_hash check_host_ip password_prompt_regex banner_response
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -208,6 +208,8 @@ module Net
     #   the +:fingerprint+ and the +:session+. Returning true accepts the host key,
     #   returning false declines it and closes the connection.
     # * :fingerprint_hash => 'MD5' or 'SHA256', defaults to 'SHA256'
+    # * :password_prompt_regex => confirm prompt is password in keyboard-interactive.
+    # * :banner_response => the response to non-password prompts in keyboard-interactive.
     # If +user+ parameter is nil it defaults to USER from ssh_config, or
     # local username
     def self.start(host, user=nil, options={}, &block)

@@ -16,6 +16,10 @@ module Net
             debug { "trying keyboard-interactive" }
             send_message(userauth_request(username, next_service, "keyboard-interactive", "", ""))
 
+            # Retrieve prompt regex and response
+            password_prompt_regex = get_password_prompt_regex
+            banner_response = get_banner_response
+
             prompter = nil
             loop do
               message = session.next_message
@@ -49,7 +53,9 @@ module Net
                   text = message.read_string
                   echo = message.read_bool
                   debug { "keyboard-interactive info request checking if request #{text} is password" }
-                  if (/Password:/ =~ text)
+
+                  # Check if prompt requests password and reply appropriately
+                  if (/#{password_prompt_regex}/ =~ text)
                     debug { "keyboard-interactive info request trying password" }
                     password_to_send = password || (prompter && prompter.ask(text, echo))
                     responses << password_to_send
@@ -59,7 +65,7 @@ module Net
                     password = nil
                   else
                     debug { "keyboard-interactive info request responding to banner" }
-                    responses << "yes"
+                    responses << banner_response
                   end
                 end
 
@@ -74,6 +80,17 @@ module Net
           def interactive?
             options = session.transport.options || {}
             !options[:non_interactive]
+          end
+
+          # Get 
+          def get_password_prompt_regex
+            options = session.transport.options || {}
+            result = options[:password_prompt_regex] || "^[Pp]assword"
+          end
+
+          def get_banner_response
+            options = session.transport.options || {}
+            result = options[:banner_response] || "yes"
           end
         end
       end
