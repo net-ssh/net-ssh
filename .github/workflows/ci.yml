@@ -53,6 +53,8 @@ jobs:
       - name: Add to etc/hosts
         run: |
           sudo echo "127.0.0.1  gateway.netssh" | sudo tee -a /etc/hosts
+      - name: Check sshd_config
+        run: sudo cat '/etc/ssh/sshd_config' || true
       - name: Ansible install
         run: |
           python -m pip install --upgrade pip
@@ -63,6 +65,8 @@ jobs:
           export
           who am i
           ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true' -e 'myuser=runner' -e 'mygroup=runner' -e 'homedir=/home/runner'
+      - name: Check sshd_config
+        run: sudo cat '/etc/ssh/sshd_config' || true
       - name: Run Tests
         run: bundle exec ruby test/integration/test_forward.rb -n test_server_eof_should_be_handled_remote
         env:
