@@ -79,11 +79,13 @@
       lineinfile: dest='/etc/ssh/sshd_config' line='TrustedUserCAKeys /etc/ssh/users_ca.pub'
       notify: restart sshd
     - name: sshd allow forward
-      lineinfile: dest='/etc/ssh/sshd_config' line='AllowTcpForwarding all' regexp=LogLevel
+      lineinfile: dest='/etc/ssh/sshd_config' line='AllowTcpForwarding all' regexp=AllowTcpForwarding
       notify: restart sshd
     - name: sshd allow forward
-      lineinfile: dest='/etc/ssh/sshd_config' line='GatewayPorts yes' regexp=LogLevel
+      lineinfile: dest='/etc/ssh/sshd_config' line='GatewayPorts yes' regexp=GatewayPorts
       notify: restart sshd
+    - name: disable x11 forward
+      lineinfile: dest='/etc/ssh/sshd_config' line='X11Forwarding no' regexp X11Forwarding
     - name: sshd allow forward
       lineinfile: dest='/etc/ssh/sshd_config' line='PasswordAuthentication=yes' regexp=PasswordAuthentication
       notify: restart sshd
