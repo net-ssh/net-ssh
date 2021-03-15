@@ -113,10 +113,6 @@ module IntegrationTestHelpers
       with_lines_as_tempfile(config) do |path, pidpath|
         # puts "DEBUG - SSH LOG: #{path}-log.txt"
         raise "A leftover sshd is already running" if port_open?(port)
-<<<<<<< HEAD
-
-=======
->>>>>>> 40c25c0d (Fix int test)
         pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port) # '-E', "#{path}-log.txt")
         sshpidfile = pidpath
         yield pid, port

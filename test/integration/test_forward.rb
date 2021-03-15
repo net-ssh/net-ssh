@@ -418,7 +418,7 @@ class TestForward < ForwardTestBase
   def test_server_eof_should_be_handled_remote
     setup_ssh_env do
       message = "This is a small message!"
-      session = Net::SSH.start(*ssh_start_params)
+      session = Net::SSH.start(*ssh_start_params(verbose: :debug))
       server = start_server do |client|
         client.write message
         client.close
@@ -426,18 +426,23 @@ class TestForward < ForwardTestBase
       client_done = Queue.new
       got_remote_port = Queue.new
       local_port = server.addr[1]
+      puts "LOCAL PORT: #{local_port}"
       session.forward.remote(0, localhost, local_port, localhost) do |actual_remote_port|
         got_remote_port << actual_remote_port
       end
       session.loop(0.1) { got_remote_port.empty? }
       remote_port = got_remote_port.pop
+      puts "Remote port:#{remote_port}"
       Thread.start do
-        client = TCPSocket.new(localhost, remote_port)
-        data = client.read(4096)
-        client.close
-        client_done << data
-      rescue StandardError
-        client_done << $!
+        begin
+          client = TCPSocket.new(localhost, remote_port)
+          data = client.read(4096)
+          client.close
+          client_done << data
+          puts "Received: #{data}"
+        rescue StandardError
+          client_done << $!
+        end
       end
       Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }

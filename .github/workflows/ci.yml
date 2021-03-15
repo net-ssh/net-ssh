@@ -64,12 +64,12 @@ jobs:
           who am i
           ansible-playbook ./test/integration/playbook.yml -i "localhost," --become -c local -e 'no_rvm=true' -e 'myuser=runner' -e 'mygroup=runner' -e 'homedir=/home/runner'
       - name: Run Tests
-        run: bundle exec rake test
+        run: bundle exec ruby test/integration/test_forward.rb -n test_server_eof_should_be_handled_remote
         env:
           NET_SSH_RUN_INTEGRATION_TESTS: 1
           CI: 1
       - name: Run Tests (without ed25519)
-        run: bundle exec rake test
+        run: bundle exec ruby test/integration/test_forward.rb -n test_server_eof_should_be_handled_remote
         env:
           BUNDLE_GEMFILE: ./Gemfile.noed25519
           NET_SSH_RUN_INTEGRATION_TESTS: 1
