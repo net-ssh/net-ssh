@@ -267,7 +267,7 @@ class TestForward < ForwardTestBase
       client_done = Queue.new
       got_remote_port = Queue.new
       local_port = server.addr[1]
-      session.forward.remote(0, localhost, local_port, localhost) do |actual_remote_port|
+      session.forward.remote(local_port, localhost, 0, localhost) do |actual_remote_port|
         got_remote_port << actual_remote_port
       end
       session.loop(0.1) { got_remote_port.empty? }
