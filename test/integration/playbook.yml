@@ -34,6 +34,10 @@
         rvm1_gpg_key_server: pool.sks-keyservers.net,
         when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}' and not no_rvm" }
   tasks:
+    - name: Install packages
+      apt:
+        pkg:
+          - libssl-dev
     - group: name="{{mygroup}}" state=present
     - user: name=net_ssh_1 password="{{foopwd}}" group="{{mygroup}}" state=present
     - user: name=net_ssh_2 password="{{foo2pwd}}" group="{{mygroup}}" state=present
@@ -111,6 +115,7 @@
           - pv
           - libgmp3-dev
           - git
+          - libssl-dev
         state: present
     - copy: content='echo "cd /net-ssh ; rake integration-test"' dest=/etc/update-motd.d/99-net-ssh-tests mode=0755
     - name: add user to rvm group so they can change gem wrappers
