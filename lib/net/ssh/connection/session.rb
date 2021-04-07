@@ -177,8 +177,8 @@ module Net
         #   ssh.loop(0.1) { not int_pressed }
         def loop(wait=nil, &block)
           running = block || Proc.new { busy? }
-          loop_forever { break unless process(wait, &running) }
           begin
+            loop_forever { break unless process(wait, &running) }
             process(0)
           rescue IOError => e
             if e.message =~ /closed/
