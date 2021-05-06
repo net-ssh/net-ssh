@@ -141,6 +141,7 @@ module Authentication
 
       def subject(options={})
         options[:key_manager] = key_manager(options) unless options.key?(:key_manager)
+        options[:rsa_sha2_auth_disable] = true
         @subject ||= Net::SSH::Authentication::Methods::Publickey.new(session(options), options)
       end
     end

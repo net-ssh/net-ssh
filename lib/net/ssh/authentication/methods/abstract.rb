@@ -21,12 +21,16 @@ module Net
           # this.
           attr_reader :key_manager
 
+          # Disable rsa SHA-2 auth, usefull for tests
+          attr_reader :rsa_sha2_auth_disable
+
           # Instantiates a new authentication method.
           def initialize(session, options={})
             @session = session
             @key_manager = options[:key_manager]
             @options = options
             @prompt = options[:password_prompt]
+            @rsa_sha2_auth_disable = options[:rsa_sha2_auth_disable] || false
             self.logger = session.logger
           end
 

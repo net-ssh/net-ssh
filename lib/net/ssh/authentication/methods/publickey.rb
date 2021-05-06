@@ -27,18 +27,19 @@ module Net
 
           # Builds a packet that contains the request formatted for sending
           # a public-key request to the server.
-          def build_request(pub_key, username, next_service, has_sig)
+          def build_request(pub_key, username, next_service, alg, has_sig)
             blob = Net::SSH::Buffer.new
             blob.write_key pub_key
 
             userauth_request(username, next_service, "publickey", has_sig,
-              pub_key.ssh_type, blob.to_s)
+              alg, blob.to_s)
           end
 
           # Builds and sends a request formatted for a public-key
           # authentication request.
-          def send_request(pub_key, username, next_service, signature=nil)
-            msg = build_request(pub_key, username, next_service, !signature.nil?)
+          def send_request(pub_key, username, next_service, alg, signature=nil)
+            msg = build_request(pub_key, username, next_service, alg,
+              !signature.nil?)
             msg.write_string(signature) if signature
             send_message(msg)
           end
@@ -46,22 +47,23 @@ module Net
           # Attempts to perform public-key authentication for the given
           # username, with the given identity (public key). Returns +true+ if
           # successful, or +false+ otherwise.
-          def authenticate_with(identity, next_service, username)
+          def authenticate_with_2(identity, next_service, username, alg, salg)
             debug { "trying publickey (#{identity.fingerprint})" }
-            send_request(identity, username, next_service)
+            send_request(identity, username, next_service, alg)
 
             message = session.next_message
 
             case message.type
             when USERAUTH_PK_OK
-              buffer = build_request(identity, username, next_service, true)
+              buffer = build_request(identity, username, next_service, alg,
+                true)
               sig_data = Net::SSH::Buffer.new
               sig_data.write_string(session_id)
               sig_data.append(buffer.to_s)
 
-              sig_blob = key_manager.sign(identity, sig_data)
+              sig_blob = key_manager.sign(identity, sig_data, salg)
 
-              send_request(identity, username, next_service, sig_blob.to_s)
+              send_request(identity, username, next_service, alg, sig_blob.to_s)
               message = session.next_message
 
               case message.type
@@ -89,6 +91,22 @@ module Net
               raise Net::SSH::Exception, "unexpected reply to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
             end
           end
+
+          def authenticate_with(identity, next_service, username)
+            alg = identity.ssh_type
+            salg = nil
+            if authenticate_with_2(identity, next_service, username, alg, salg)
+              return true
+            end
+            if !rsa_sha2_auth_disable && alg == "ssh-rsa"
+              # if ssh-rsa fails, retry with sha2
+              alg = salg = "rsa-sha2-256"
+              return authenticate_with_2(identity, next_service, username,
+                alg, salg)
+            end
+            return false
+          end
+
         end
 
       end

@@ -77,7 +77,8 @@ module Net
               debug { "trying #{name}" }
               begin
                 auth_class = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join)
-                method = auth_class.new(self, key_manager: key_manager, password_prompt: options[:password_prompt])
+                method = auth_class.new(self, key_manager: key_manager, password_prompt: options[:password_prompt],
+                  rsa_sha2_auth_disable: options[:rsa_sha2_auth_disable] || false)
               rescue NameError
                 debug {"Mechanism #{name} was requested, but isn't a known type.  Ignoring it."}
                 next
