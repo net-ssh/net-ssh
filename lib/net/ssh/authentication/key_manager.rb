@@ -172,10 +172,10 @@ module Net
 
           if info[:key]
             if salg.nil?
-                signed = info[:key].ssh_do_sign(data.to_s);
-                salg = identity.ssh_signature_type
+              signed = info[:key].ssh_do_sign(data.to_s)
+              salg = identity.ssh_signature_type
             else
-                signed = info[:key].ssh_do_sign(data.to_s, salg);
+              signed = info[:key].ssh_do_sign(data.to_s, salg)
             end
             return Net::SSH::Buffer.from(:string, salg,
               :mstring, signed).to_s

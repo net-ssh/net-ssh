@@ -96,6 +96,7 @@ module Net
             alg = identity.ssh_type
             salg = nil
             if authenticate_with_2(identity, next_service, username, alg, salg)
+              # success
               return true
             end
             if !rsa_sha2_auth_disable && alg == "ssh-rsa"
@@ -106,7 +107,6 @@ module Net
             end
             return false
           end
-
         end
 
       end
