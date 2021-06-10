@@ -7,7 +7,7 @@
 
 # Net::SSH 6.x
 
-* Docs: http://net-ssh.github.com/net-ssh
+* Docs: http://net-ssh.github.io/net-ssh
 * Issues: https://github.com/net-ssh/net-ssh/issues
 * Codes: https://github.com/net-ssh/net-ssh
 * Email: net-ssh@solutious.com
