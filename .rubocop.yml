@@ -4,7 +4,7 @@ Style/DoubleNegation:
   Exclude:
     - 'lib/net/ssh/key_factory.rb'
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 150
   Exclude:
     - 'test/**/*.rb'
