@@ -21,8 +21,10 @@ module Net
           # this.
           attr_reader :key_manager
 
-          # Disable rsa SHA-2 auth, usefull for tests
-          attr_reader :rsa_sha2_auth_disable
+          # So far only affects algorithms used for rsa keys, but can be
+          # extended to other keys, e.g after reading of
+          # PubkeyAcceptedAlgorithms option from ssh_config file is implemented.
+          attr_reader :pubkey_algorithms
 
           # Instantiates a new authentication method.
           def initialize(session, options={})
@@ -30,7 +32,11 @@ module Net
             @key_manager = options[:key_manager]
             @options = options
             @prompt = options[:password_prompt]
-            @rsa_sha2_auth_disable = options[:rsa_sha2_auth_disable] || false
+            @pubkey_algorithms = options[:pubkey_algorithms] \
+              || %w[rsa-sha2-256-cert-v01@openssh.com
+                    ssh-rsa-cert-v01@openssh.com
+                    rsa-sha2-256
+                    ssh-rsa]
             self.logger = session.logger
           end
 

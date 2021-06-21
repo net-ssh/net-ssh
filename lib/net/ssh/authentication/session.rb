@@ -79,7 +79,7 @@ module Net
                 auth_class = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join)
                 method = auth_class.new(self,
                   key_manager: key_manager, password_prompt: options[:password_prompt],
-                  rsa_sha2_auth_disable: options[:rsa_sha2_auth_disable] || false)
+                  pubkey_algorithms: options[:pubkey_algorithms] || nil)
               rescue NameError
                 debug {"Mechanism #{name} was requested, but isn't a known type.  Ignoring it."}
                 next

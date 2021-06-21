@@ -183,7 +183,14 @@ module Net
 
           if info[:from] == :agent
             raise KeyManagerError, "the agent is no longer available" unless agent
-            return agent.sign(info[:identity], data.to_s)
+            case salg
+            when "rsa-sha2-512"
+              return agent.sign(info[:identity], data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_512)
+            when "rsa-sha2-256"
+              return agent.sign(info[:identity], data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_256)
+            else
+              return agent.sign(info[:identity], data.to_s)
+            end
           end
 
           raise KeyManagerError, "[BUG] can't determine identity origin (#{info.inspect})"

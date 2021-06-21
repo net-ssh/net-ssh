@@ -93,18 +93,42 @@ module Net
           end
 
           def authenticate_with(identity, next_service, username)
-            alg = identity.ssh_type
-            salg = nil
-            if authenticate_with_2(identity, next_service, username, alg, salg)
+            type = identity.ssh_type
+            if type == "ssh-rsa"
+              pubkey_algorithms.each do |pkalg|
+                case pkalg
+                when "rsa-sha2-512", "rsa-sha2-256", "ssh-rsa"
+                  if authenticate_with_2(identity, next_service, username, pkalg, pkalg)
+                    # success
+                    return true
+                  end
+                end
+              end
+            elsif type == "ssh-rsa-cert-v01@openssh.com"
+              pubkey_algorithms.each do |pkalg|
+                case pkalg
+                when "rsa-sha2-512-cert-v01@openssh.com"
+                  if authenticate_with_2(identity, next_service, username, pkalg, "rsa-sha2-512")
+                    # success
+                    return true
+                  end
+                when "rsa-sha2-256-cert-v01@openssh.com"
+                  if authenticate_with_2(identity, next_service, username, pkalg, "rsa-sha2-256")
+                    # success
+                    return true
+                  end
+                when "ssh-rsa-cert-v01@openssh.com"
+                  if authenticate_with_2(identity, next_service, username, pkalg, nil)
+                    # success
+                    return true
+                  end
+                end
+              end
+            elsif authenticate_with_2(identity, next_service, username, type, nil)
               # success
               return true
             end
-            if !rsa_sha2_auth_disable && alg == "ssh-rsa"
-              # if ssh-rsa fails, retry with sha2
-              alg = salg = "rsa-sha2-256"
-              return authenticate_with_2(identity, next_service, username,
-                alg, salg)
-            end
+            # failure
             return false
           end
         end

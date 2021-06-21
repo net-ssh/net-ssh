@@ -170,7 +170,7 @@ module Authentication
 
     def session(options={})
       session_opts = options.clone
-      session_opts[:rsa_sha2_auth_disable] = true
+      session_opts[:pubkey_algorithms] = %w[ssh-rsa]
       @session ||= Net::SSH::Authentication::Session.new(transport(options), session_opts)
     end
 
