@@ -77,11 +77,11 @@ module OpenSSL
       end
 
       # Returns the signature for the given data.
-      def ssh_do_sign(data, salg=nil)
+      def ssh_do_sign(data, sig_alg=nil)
         digester =
-          if salg == "rsa-sha2-512"
+          if sig_alg == "rsa-sha2-512"
             OpenSSL::Digest::SHA512.new
-          elsif salg == "rsa-sha2-256"
+          elsif sig_alg == "rsa-sha2-256"
             OpenSSL::Digest::SHA256.new
           else
             OpenSSL::Digest::SHA1.new
@@ -122,7 +122,7 @@ module OpenSSL
       end
 
       # Signs the given data.
-      def ssh_do_sign(data, salg=nil)
+      def ssh_do_sign(data, sig_alg=nil)
         sig = sign(OpenSSL::Digest::SHA1.new, data)
         a1sig = OpenSSL::ASN1.decode(sig)
 
@@ -235,7 +235,7 @@ module OpenSSL
       end
 
       # Returns the signature for the given data.
-      def ssh_do_sign(data, salg=nil)
+      def ssh_do_sign(data, sig_alg=nil)
         digest = digester.digest(data)
         sig = dsa_sign_asn1(digest)
         a1sig = OpenSSL::ASN1.decode(sig)

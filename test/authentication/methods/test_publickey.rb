@@ -161,23 +161,23 @@ module Authentication
         end
       end
 
-      def signature_parameters_with_alg(key, sig_alg)
-        Proc.new do |given_key, data, given_sig_alg|
+      def signature_parameters_with_alg(key, alg)
+        Proc.new do |given_key, data, given_alg|
           next false unless given_key.to_blob == key.to_blob
-          next false unless given_sig_alg == sig_alg
+          next false unless given_alg == alg
           buffer = Net::SSH::Buffer.new(data)
           buffer.read_string == "abcxyz123"      && # session-id
           buffer.read_byte   == USERAUTH_REQUEST && # type
-          verify_userauth_request_packet(buffer, key, true, sig_alg)
+          verify_userauth_request_packet(buffer, key, true, alg)
         end
       end
 
-      def verify_userauth_request_packet(packet, key, has_sig, sig_alg = nil)
+      def verify_userauth_request_packet(packet, key, has_sig, alg = nil)
         packet.read_string == "jamis"          && # user-name
         packet.read_string == "ssh-connection" && # next service
         packet.read_string == "publickey"      && # auth-method
         packet.read_bool   == has_sig          && # whether a signature is appended
-        packet.read_string == (sig_alg || key.ssh_type) && # ssh key type
+        packet.read_string == (alg || key.ssh_type) && # ssh key type
         packet.read_buffer.read_key.to_blob == key.to_blob # key
       end
 

@@ -44,10 +44,7 @@ module Net
             send_message(msg)
           end
 
-          # Attempts to perform public-key authentication for the given
-          # username, with the given identity (public key). Returns +true+ if
-          # successful, or +false+ otherwise.
-          def authenticate_with_2(identity, next_service, username, alg, salg)
+          def authenticate_with_alg(identity, next_service, username, alg, sig_alg=nil)
             debug { "trying publickey (#{identity.fingerprint})" }
             send_request(identity, username, next_service, alg)
 
@@ -61,7 +58,7 @@ module Net
               sig_data.write_string(session_id)
               sig_data.append(buffer.to_s)
 
-              sig_blob = key_manager.sign(identity, sig_data, salg)
+              sig_blob = key_manager.sign(identity, sig_data, sig_alg)
 
               send_request(identity, username, next_service, alg, sig_blob.to_s)
               message = session.next_message
@@ -92,39 +89,42 @@ module Net
             end
           end
 
+          # Attempts to perform public-key authentication for the given
+          # username, with the given identity (public key). Returns +true+ if
+          # successful, or +false+ otherwise.
           def authenticate_with(identity, next_service, username)
             type = identity.ssh_type
             if type == "ssh-rsa"
-              pubkey_algorithms.each do |pkalg|
-                case pkalg
+              pubkey_algorithms.each do |pk_alg|
+                case pk_alg
                 when "rsa-sha2-512", "rsa-sha2-256", "ssh-rsa"
-                  if authenticate_with_2(identity, next_service, username, pkalg, pkalg)
+                  if authenticate_with_alg(identity, next_service, username, pk_alg, pk_alg)
                     # success
                     return true
                   end
                 end
               end
             elsif type == "ssh-rsa-cert-v01@openssh.com"
-              pubkey_algorithms.each do |pkalg|
-                case pkalg
+              pubkey_algorithms.each do |pk_alg|
+                case pk_alg
                 when "rsa-sha2-512-cert-v01@openssh.com"
-                  if authenticate_with_2(identity, next_service, username, pkalg, "rsa-sha2-512")
+                  if authenticate_with_alg(identity, next_service, username, pk_alg, "rsa-sha2-512")
                     # success
                     return true
                   end
                 when "rsa-sha2-256-cert-v01@openssh.com"
-                  if authenticate_with_2(identity, next_service, username, pkalg, "rsa-sha2-256")
+                  if authenticate_with_alg(identity, next_service, username, pk_alg, "rsa-sha2-256")
                     # success
                     return true
                   end
                 when "ssh-rsa-cert-v01@openssh.com"
-                  if authenticate_with_2(identity, next_service, username, pkalg, nil)
+                  if authenticate_with_alg(identity, next_service, username, pk_alg)
                     # success
                     return true
                   end
                 end
               end
-            elsif authenticate_with_2(identity, next_service, username, type, nil)
+            elsif authenticate_with_alg(identity, next_service, username, type)
               # success
               return true
             end

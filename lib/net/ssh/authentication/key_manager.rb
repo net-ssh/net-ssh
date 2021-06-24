@@ -159,7 +159,7 @@ module Net
         # Regardless of the identity's origin or who does the signing, this
         # will always return the signature in an SSH2-specified "signature
         # blob" format.
-        def sign(identity, data, salg=nil)
+        def sign(identity, data, sig_alg=nil)
           info = known_identities[identity] or raise KeyManagerError, "the given identity is unknown to the key manager"
 
           if info[:key].nil? && info[:from] == :file
@@ -171,19 +171,19 @@ module Net
           end
 
           if info[:key]
-            if salg.nil?
+            if sig_alg.nil?
               signed = info[:key].ssh_do_sign(data.to_s)
-              salg = identity.ssh_signature_type
+              sig_alg = identity.ssh_signature_type
             else
-              signed = info[:key].ssh_do_sign(data.to_s, salg)
+              signed = info[:key].ssh_do_sign(data.to_s, sig_alg)
             end
-            return Net::SSH::Buffer.from(:string, salg,
+            return Net::SSH::Buffer.from(:string, sig_alg,
               :mstring, signed).to_s
           end
 
           if info[:from] == :agent
             raise KeyManagerError, "the agent is no longer available" unless agent
-            case salg
+            case sig_alg
             when "rsa-sha2-512"
               return agent.sign(info[:identity], data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_512)
             when "rsa-sha2-256"

@@ -66,8 +66,8 @@ module Net
           ).to_s
         end
 
-        def ssh_do_sign(data, salg=nil)
-          key.ssh_do_sign(data, salg)
+        def ssh_do_sign(data, sig_alg=nil)
+          key.ssh_do_sign(data, sig_alg)
         end
 
         def ssh_do_verify(sig, data, options = {})
