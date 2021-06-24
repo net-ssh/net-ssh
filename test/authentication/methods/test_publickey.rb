@@ -105,6 +105,50 @@ module Authentication
         assert subject.authenticate("ssh-connection", "jamis")
       end
 
+      def test_authenticate_rsa_sha2
+        key_manager.expects(:sign).with(&signature_parameters_with_alg(keys.first, "rsa-sha2-256")).returns("sig-one")
+
+        transport.expect do |t, packet|
+          assert_equal USERAUTH_REQUEST, packet.type
+          assert verify_userauth_request_packet(packet, keys.first, false, "rsa-sha2-256")
+          t.return(USERAUTH_PK_OK, :string, "rsa-sha2-256", :string, Net::SSH::Buffer.from(:key, keys.first))
+
+          t.expect do |t2,packet2|
+            assert_equal USERAUTH_REQUEST, packet2.type
+            assert verify_userauth_request_packet(packet2, keys.first, true, "rsa-sha2-256")
+            assert_equal "sig-one", packet2.read_string
+            t2.return(USERAUTH_SUCCESS)
+          end
+        end
+
+        assert subject(pubkey_algorithms: %w[rsa-sha2-256]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_rsa_sha2_fallback
+        key_manager.expects(:sign).with(&signature_parameters(keys.first)).returns("sig-one")
+
+        transport.expect do |t, packet|
+          assert_equal USERAUTH_REQUEST, packet.type
+          assert verify_userauth_request_packet(packet, keys.first, false, "rsa-sha2-256")
+          t.return(USERAUTH_FAILURE, :string, "publickey")
+
+          t.expect do |t2, packet2|
+            assert_equal USERAUTH_REQUEST, packet2.type
+            assert verify_userauth_request_packet(packet2, keys.first, false)
+            t2.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
+
+            t2.expect do |t3, packet3|
+              assert_equal USERAUTH_REQUEST, packet3.type
+              assert verify_userauth_request_packet(packet3, keys.first, true)
+              assert_equal "sig-one", packet3.read_string
+              t3.return(USERAUTH_SUCCESS)
+            end
+          end
+        end
+
+        assert subject(pubkey_algorithms: %w[rsa-sha2-256 ssh-rsa]).authenticate("ssh-connection", "jamis")
+      end
+
       private
 
       def signature_parameters(key)
@@ -117,12 +161,23 @@ module Authentication
         end
       end
 
-      def verify_userauth_request_packet(packet, key, has_sig)
+      def signature_parameters_with_alg(key, sig_alg)
+        Proc.new do |given_key, data, given_sig_alg|
+          next false unless given_key.to_blob == key.to_blob
+          next false unless given_sig_alg == sig_alg
+          buffer = Net::SSH::Buffer.new(data)
+          buffer.read_string == "abcxyz123"      && # session-id
+          buffer.read_byte   == USERAUTH_REQUEST && # type
+          verify_userauth_request_packet(buffer, key, true, sig_alg)
+        end
+      end
+
+      def verify_userauth_request_packet(packet, key, has_sig, sig_alg = nil)
         packet.read_string == "jamis"          && # user-name
         packet.read_string == "ssh-connection" && # next service
         packet.read_string == "publickey"      && # auth-method
         packet.read_bool   == has_sig          && # whether a signature is appended
-        packet.read_string == key.ssh_type     && # ssh key type
+        packet.read_string == (sig_alg || key.ssh_type) && # ssh key type
         packet.read_buffer.read_key.to_blob == key.to_blob # key
       end
 
@@ -141,7 +196,7 @@ module Authentication
 
       def subject(options={})
         options[:key_manager] = key_manager(options) unless options.key?(:key_manager)
-        options[:pubkey_algorithms] = %w[ssh-rsa]
+        options[:pubkey_algorithms] = %w[ssh-rsa] unless options.key?(:pubkey_algorithms)
         @subject ||= Net::SSH::Authentication::Methods::Publickey.new(session(options), options)
       end
     end
