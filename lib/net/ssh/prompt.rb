@@ -13,8 +13,8 @@ module Net
     #
     #   prompter = options[:password_prompt].start({type:'password'})
     #   while !ok && max_retries < 3
-    #     user = prompter.ask("user: ", {}, true)
-    #     password = prompter.ask("password: ", {}, false)
+    #     user = prompter.ask("user: ", true)
+    #     password = prompter.ask("password: ", false)
     #     ok = send(user, password)
     #     prompter.sucess if ok
     #   end
