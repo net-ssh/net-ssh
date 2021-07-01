@@ -51,7 +51,6 @@ class ForwardTestBase < NetSSHTest
     Thread.start do
       loop do
         Thread.start(server.accept) do |client|
-          
           10000.times do |i|
             client.puts "item#{i}"
           end
@@ -59,7 +58,6 @@ class ForwardTestBase < NetSSHTest
         rescue StandardError
           exceptions << $!
           raise
-          
         end
       end
     end
@@ -73,14 +71,12 @@ class TestForward < ForwardTestBase
     Thread.start do
       loop do
         Thread.start(server.accept) do |client|
-          
           client.recv(1024)
           client.setsockopt(Socket::SOL_SOCKET, Socket::SO_LINGER, [1, 0].pack("ii"))
           client.close
         rescue StandardError
           exceptions << $!
           raise
-          
         end
       end
     end
@@ -187,14 +183,12 @@ class TestForward < ForwardTestBase
       session.forward.local(local_port, localhost, remote_port)
       client_done = Queue.new
       Thread.start do
-        
         client = TCPSocket.new(localhost, local_port)
         client.recv(1024)
         client.close
         sleep(0.2)
       ensure
         client_done << true
-        
       end
       session.loop(0.1) { client_done.empty? }
       assert_equal "Broken pipe", server_exc.pop.to_s unless server_exc.empty?
@@ -211,7 +205,6 @@ class TestForward < ForwardTestBase
       session.forward.local(local_port, localhost, remote_port)
       client_done = Queue.new
       Thread.start do
-        
         client = TCPSocket.new(localhost, local_port)
         client.recv(1024)
         client.setsockopt(Socket::SOL_SOCKET, Socket::SO_LINGER, [1, 0].pack("ii"))
@@ -219,7 +212,6 @@ class TestForward < ForwardTestBase
         sleep(0.1)
       ensure
         client_done << true
-        
       end
       session.loop(0.1) { client_done.empty? }
       assert_equal "Broken pipe", server_exc.pop.to_s unless server_exc.empty?
@@ -235,7 +227,6 @@ class TestForward < ForwardTestBase
       session.forward.local(local_port, localhost, remote_port)
       client_done = Queue.new
       Thread.start do
-        
         client = TCPSocket.new(localhost, local_port)
         1.times do |i|
           client.puts "item#{i}"
@@ -244,7 +235,6 @@ class TestForward < ForwardTestBase
         sleep(0.1)
       ensure
         client_done << true
-        
       end
       session.loop(0.1) { client_done.empty? }
     end
@@ -273,7 +263,6 @@ class TestForward < ForwardTestBase
         client.close
       rescue StandardError
         server_done << $!
-        
       end
       client_done = Queue.new
       got_remote_port = Queue.new
@@ -284,14 +273,12 @@ class TestForward < ForwardTestBase
       session.loop(0.1) { got_remote_port.empty? }
       remote_port = got_remote_port.pop
       Thread.start do
-        
         client = TCPSocket.new(localhost, remote_port)
         client.write(message)
         client.close
         client_done << true
       rescue StandardError
         client_done << $!
-        
       end
       Timeout.timeout(5) do
         session.loop(0.1) { server_done.empty? }
@@ -332,7 +319,6 @@ class TestForward < ForwardTestBase
       # read on forwarded port
       client_done = Queue.new
       Thread.start do
-        
         client = TCPSocket.new(localhost, local_port)
         client.read(6)
         proxy.close_all
@@ -341,16 +327,13 @@ class TestForward < ForwardTestBase
         client_done << true
       rescue StandardError
         client_done << $!
-        
       end
       server_error = nil
       Timeout.timeout(5) do
-        
         session.loop(0.1) { true }
       rescue IOError, Errno::EBADF
         server_error = $!
         # puts "Error: #{$!} #{$!.backtrace.join("\n")}"
-        
       end
       begin
         Timeout.timeout(5) do
@@ -378,7 +361,6 @@ class TestForward < ForwardTestBase
       # read on forwarded port
       client_done = Queue.new
       Thread.start do
-        
         client = TCPSocket.new(localhost, local_port)
         client.read(6)
         system("killall /bin/nc")
@@ -387,7 +369,6 @@ class TestForward < ForwardTestBase
         client_done << true
       rescue StandardError
         client_done << $!
-        
       end
       Timeout.timeout(5) do
         begin
@@ -415,20 +396,17 @@ class TestForward < ForwardTestBase
         client.close
       rescue StandardError
         server_done << $!
-        
       end
       client_done = Queue.new
       remote_port = server.addr[1]
       local_port = session.forward.local(0, localhost, remote_port)
       Thread.start do
-        
         client = TCPSocket.new(localhost, local_port)
         client.write(message)
         client.close
         client_done << true
       rescue StandardError
         client_done << $!
-        
       end
       Timeout.timeout(5) do
         session.loop(0.1) { server_done.empty? }
@@ -454,14 +432,12 @@ class TestForward < ForwardTestBase
       session.loop(0.1) { got_remote_port.empty? }
       remote_port = got_remote_port.pop
       Thread.start do
-        
         client = TCPSocket.new(localhost, remote_port)
         data = client.read(4096)
         client.close
         client_done << data
       rescue StandardError
         client_done << $!
-        
       end
       Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
@@ -482,14 +458,12 @@ class TestForward < ForwardTestBase
       remote_port = server.addr[1]
       local_port = session.forward.local(0, localhost, remote_port)
       Thread.start do
-        
         client = TCPSocket.new(localhost, local_port)
         data = client.read(4096)
         client.close
         client_done << data
       rescue StandardError
         client_done << $!
-        
       end
       Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
@@ -500,14 +474,12 @@ class TestForward < ForwardTestBase
 
   def _run_reading_client(client_done, local_port)
     Thread.start do
-      
       client = TCPSocket.new(localhost, local_port)
       data = client.read(4096)
       client.close
       client_done << data
     rescue StandardError
       client_done << $!
-      
     end
   end
 
@@ -619,14 +591,12 @@ class TestForwardOnUnixSockets < ForwardTestBase
           client_done = Queue.new
 
           Thread.start do
-            
             client = UNIXSocket.new(local_socket.path)
             client_data = client.recv(1024)
             client.close
             sleep(0.2)
           ensure
             client_done << true
-            
           end
 
           begin
@@ -644,7 +614,7 @@ class TestForwardOnUnixSockets < ForwardTestBase
   def test_forward_local_unix_socket_to_remote_socket
     setup_ssh_env do
       start_sshd_7_or_later do |_pid, port|
-        session = 
+        session =
           # We have our own sshd, give it a chance to come up before
           # listening.
           Timeout.timeout(4) do
@@ -652,7 +622,6 @@ class TestForwardOnUnixSockets < ForwardTestBase
           rescue SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH
             sleep 0.25
             retry
-        
           end
 
         create_local_socket do |remote_socket|

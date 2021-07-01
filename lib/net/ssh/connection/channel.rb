@@ -54,55 +54,55 @@ module Net
       class Channel
         include Loggable
         include Constants
-    
+
         # The local id for this channel, assigned by the Net::SSH::Connection::Session instance.
         attr_reader :local_id
-    
+
         # The remote id for this channel, assigned by the remote host.
         attr_reader :remote_id
-    
+
         # The type of this channel, usually "session".
         attr_reader :type
-    
+
         # The underlying Net::SSH::Connection::Session instance that supports this channel.
         attr_reader :connection
-    
+
         # The maximum packet size that the local host can receive.
         attr_reader :local_maximum_packet_size
-    
+
         # The maximum amount of data that the local end of this channel can
         # receive. This is a total, not per-packet.
         attr_reader :local_maximum_window_size
-    
+
         # The maximum packet size that the remote host can receive.
         attr_reader :remote_maximum_packet_size
-    
+
         # The maximum amount of data that the remote end of this channel can
         # receive. This is a total, not per-packet.
         attr_reader :remote_maximum_window_size
-    
+
         # This is the remaining window size on the local end of this channel. When
         # this reaches zero, no more data can be received.
         attr_reader :local_window_size
-    
+
         # This is the remaining window size on the remote end of this channel. When
         # this reaches zero, no more data can be sent.
         attr_reader :remote_window_size
-    
+
         # A hash of properties for this channel. These can be used to store state
         # information about this channel. See also #[] and #[]=.
         attr_reader :properties
-    
+
         # The output buffer for this channel. Data written to the channel is
         # enqueued here, to be written as CHANNEL_DATA packets during each pass of
         # the event loop. See Connection::Session#process and #enqueue_pending_output.
         attr_reader :output #:nodoc:
-    
+
         # The list of pending requests. Each time a request is sent which requires
         # a reply, the corresponding callback is pushed onto this queue. As responses
         # arrive, they are shifted off the front and handled.
         attr_reader :pending_requests #:nodoc:
-    
+
         # Instantiates a new channel on the given connection, of the given type,
         # and with the given id. If a block is given, it will be remembered until
         # the channel is confirmed open by the server, and will be invoked at
@@ -111,36 +111,36 @@ module Net
         # This also sets the default maximum packet size and maximum window size.
         def initialize(connection, type, local_id, max_pkt_size = 0x8000, max_win_size = 0x20000, &on_confirm_open)
           self.logger = connection.logger
-    
+
           @connection = connection
           @type       = type
           @local_id   = local_id
-    
+
           @local_maximum_packet_size = max_pkt_size
           @local_window_size = @local_maximum_window_size = max_win_size
-    
+
           @on_confirm_open = on_confirm_open
-    
+
           @output = Buffer.new
-    
+
           @properties = {}
-    
+
           @pending_requests = []
           @on_open_failed = @on_data = @on_extended_data = @on_process = @on_close = @on_eof = nil
           @on_request = {}
           @closing = @eof = @sent_eof = @local_closed = @remote_closed = false
         end
-    
+
         # A shortcut for accessing properties of the channel (see #properties).
         def [](name)
           @properties[name]
         end
-    
+
         # A shortcut for setting properties of the channel (see #properties).
         def []=(name, value)
           @properties[name] = value
         end
-    
+
         # Syntactic sugar for executing a command. Sends a channel request asking
         # that the given command be invoked. If the block is given, it will be
         # called when the server responds. The first parameter will be the
@@ -160,7 +160,7 @@ module Net
         def exec(command, &block)
           send_channel_request("exec", :string, command, &block)
         end
-    
+
         # Syntactic sugar for requesting that a subsystem be started. Subsystems
         # are a way for other protocols (like SFTP) to be run, using SSH as
         # the transport. Generally, you'll never need to call this directly unless
@@ -177,7 +177,7 @@ module Net
         def subsystem(subsystem, &block)
           send_channel_request("subsystem", :string, subsystem, &block)
         end
-    
+
         # Syntactic sugar for setting an environment variable in the remote
         # process' environment. Note that for security reasons, the server may
         # refuse to set certain environment variables, or all, at the server's
@@ -189,7 +189,7 @@ module Net
         def env(variable_name, variable_value, &block)
           send_channel_request("env", :string, variable_name, :string, variable_value, &block)
         end
-    
+
         # A hash of the valid PTY options (see #request_pty).
         VALID_PTY_OPTIONS = { term: "xterm",
                               chars_wide: 80,
@@ -197,7 +197,7 @@ module Net
                               pixels_wide: 640,
                               pixels_high: 480,
                               modes: {} }
-    
+
         # Requests that a pseudo-tty (or "pty") be made available for this channel.
         # This is useful when you want to invoke and interact with some kind of
         # screen-based program (e.g., vim, or some menuing system).
@@ -220,21 +220,21 @@ module Net
         def request_pty(opts={}, &block)
           extra = opts.keys - VALID_PTY_OPTIONS.keys
           raise ArgumentError, "invalid option(s) to request_pty: #{extra.inspect}" if extra.any?
-    
+
           opts = VALID_PTY_OPTIONS.merge(opts)
-    
+
           modes = opts[:modes].inject(Buffer.new) do |memo, (mode, data)|
             memo.write_byte(mode).write_long(data)
           end
           # mark the end of the mode opcode list with a 0 byte
           modes.write_byte(0)
-    
+
           send_channel_request("pty-req", :string, opts[:term],
             :long, opts[:chars_wide], :long, opts[:chars_high],
             :long, opts[:pixels_wide], :long, opts[:pixels_high],
             :string, modes.to_s, &block)
         end
-    
+
         # Sends data to the channel's remote endpoint. This usually has the
         # effect of sending the given string to the remote process' stdin stream.
         # Note that it does not immediately send the data across the channel,
@@ -253,7 +253,7 @@ module Net
 
           output.append(data.to_s)
         end
-    
+
         # Returns true if the channel exists in the channel list of the session,
         # and false otherwise. This can be used to determine whether a channel has
         # been closed or not.
@@ -262,7 +262,7 @@ module Net
         def active?
           connection.channels.key?(local_id)
         end
-    
+
         # Runs the SSH event loop until the channel is no longer active. This is
         # handy for blocking while you wait for some channel to finish.
         #
@@ -271,7 +271,7 @@ module Net
         def wait
           connection.loop { active? }
         end
-    
+
         # True if close() has been called; NOTE: if the channel has data waiting to
         # be sent then the channel will close after all the data is sent. See
         # closed?() to determine if we have actually sent CHANNEL_CLOSE to server.
@@ -280,20 +280,20 @@ module Net
         def closing?
           @closing
         end
-    
+
         # True if we have sent CHANNEL_CLOSE to the remote server.
         def local_closed?
           @local_closed
         end
-    
+
         def remote_closed?
           @remote_closed
         end
-    
+
         def remote_closed!
           @remote_closed = true
         end
-    
+
         # Requests that the channel be closed. It only marks the channel to be closed
         # the CHANNEL_CLOSE message will be sent from event loop
         def close
@@ -301,14 +301,14 @@ module Net
 
           @closing = true
         end
-    
+
         # Returns true if the local end of the channel has declared that no more
         # data is forthcoming (see #eof!). Trying to send data via #send_data when
         # this is true will result in an exception being raised.
         def eof?
           @eof
         end
-    
+
         # Tells the remote end of the channel that no more data is forthcoming
         # from this end of the channel. The remote end may still send data.
         # The CHANNEL_EOF packet will be sent once the output buffer is empty.
@@ -317,26 +317,26 @@ module Net
 
           @eof = true
         end
-    
+
         # If an #on_process handler has been set up, this will cause it to be
         # invoked (passing the channel itself as an argument). It also causes all
         # pending output to be enqueued as CHANNEL_DATA packets (see #enqueue_pending_output).
         def process
           @on_process.call(self) if @on_process
           enqueue_pending_output
-    
+
           if @eof and not @sent_eof and output.empty? and remote_id and not @local_closed
             connection.send_message(Buffer.from(:byte, CHANNEL_EOF, :long, remote_id))
             @sent_eof = true
           end
-    
+
           if @closing and not @local_closed and output.empty? and remote_id
             connection.send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, remote_id))
             @local_closed = true
             connection.cleanup_channel(self)
           end
         end
-    
+
         # Registers a callback to be invoked when data packets are received by the
         # channel. The callback is called with the channel as the first argument,
         # and the data as the second.
@@ -351,7 +351,7 @@ module Net
           old, @on_data = @on_data, block
           old
         end
-    
+
         # Registers a callback to be invoked when extended data packets are received
         # by the channel. The callback is called with the channel as the first
         # argument, the data type (as an integer) as the second, and the data as
@@ -366,7 +366,7 @@ module Net
           old, @on_extended_data = @on_extended_data, block
           old
         end
-    
+
         # Registers a callback to be invoked for each pass of the event loop for
         # this channel. There are no guarantees on timeliness in the event loop,
         # but it will be called roughly once for each packet received by the
@@ -393,7 +393,7 @@ module Net
           old, @on_process = @on_process, block
           old
         end
-    
+
         # Registers a callback to be invoked when the server acknowledges that a
         # channel is closed. This is invoked with the channel as the sole argument.
         #
@@ -404,7 +404,7 @@ module Net
           old, @on_close = @on_close, block
           old
         end
-    
+
         # Registers a callback to be invoked when the server indicates that no more
         # data will be sent to the channel (although the channel can still send
         # data to the server). The channel is the sole argument to the callback.
@@ -416,7 +416,7 @@ module Net
           old, @on_eof = @on_eof, block
           old
         end
-    
+
         # Registers a callback to be invoked when the server was unable to open
         # the requested channel. The channel itself will be passed to the block,
         # along with the integer "reason code" for the failure, and a textual
@@ -431,7 +431,7 @@ module Net
           old, @on_open_failed = @on_open_failed, block
           old
         end
-    
+
         # Registers a callback to be invoked when a channel request of the given
         # type is received. The callback will receive the channel as the first
         # argument, and the associated (unparsed) data as the second. The data
@@ -462,7 +462,7 @@ module Net
           old, @on_request[type] = @on_request[type], block
           old
         end
-    
+
         # Sends a new channel request with the given name. The extra +data+
         # parameter must either be empty, or consist of an even number of
         # arguments. See Net::SSH::Buffer.from for a description of their format.
@@ -495,9 +495,9 @@ module Net
           connection.send_message(msg)
           pending_requests << callback if callback
         end
-    
+
         public # these methods are public, but for Net::SSH internal use only
-    
+
         # Enqueues pending output at the connection as CHANNEL_DATA packets. This
         # does nothing if the channel has not yet been confirmed open (see
         # #do_open_confirmation). This is called automatically by #process, which
@@ -505,12 +505,12 @@ module Net
         # generally not need to invoke it directly.
         def enqueue_pending_output #:nodoc:
           return unless remote_id
-    
+
           while output.length > 0
             length = output.length
             length = remote_window_size if length > remote_window_size
             length = remote_maximum_packet_size if length > remote_maximum_packet_size
-    
+
             if length > 0
               connection.send_message(Buffer.from(:byte, CHANNEL_DATA, :long, remote_id, :string, output.read(length)))
               output.consume!
@@ -520,7 +520,7 @@ module Net
             end
           end
         end
-    
+
         # Invoked when the server confirms that a channel has been opened.
         # The remote_id is the id of the channel as assigned by the remote host,
         # and max_window and max_packet are the maximum window and maximum
@@ -536,7 +536,7 @@ module Net
           set_remote_env(connection.options[:set_env]) if connection.options[:set_env]
           @on_confirm_open.call(self) if @on_confirm_open
         end
-    
+
         # Invoked when the server failed to open the channel. If an #on_open_failed
         # callback was specified, it will be invoked with the channel, reason code,
         # and description as arguments. Otherwise, a ChannelOpenFailed exception
@@ -548,7 +548,7 @@ module Net
             raise ChannelOpenFailed.new(reason_code, description)
           end
         end
-    
+
         # Invoked when the server sends a CHANNEL_WINDOW_ADJUST packet, and
         # causes the remote window size to be adjusted upwards by the given
         # number of bytes. This has the effect of allowing more data to be sent
@@ -557,7 +557,7 @@ module Net
           @remote_maximum_window_size += bytes
           @remote_window_size += bytes
         end
-    
+
         # Invoked when the server sends a channel request. If any #on_request
         # callback has been registered for the specific type of this request,
         # it is invoked. If +want_reply+ is true, a packet will be sent of
@@ -568,20 +568,20 @@ module Net
         # request-specific data as the second.
         def do_request(request, want_reply, data) #:nodoc:
           result = true
-    
+
           begin
             callback = @on_request[request] or raise ChannelRequestFailed
             callback.call(self, data)
           rescue ChannelRequestFailed
             result = false
           end
-    
+
           if want_reply
             msg = Buffer.from(:byte, result ? CHANNEL_SUCCESS : CHANNEL_FAILURE, :long, remote_id)
             connection.send_message(msg)
           end
         end
-    
+
         # Invokes the #on_data callback when the server sends data to the
         # channel. This will reduce the available window size on the local end,
         # but does not actually throttle requests that come in illegally when
@@ -591,7 +591,7 @@ module Net
           update_local_window_size(data.length)
           @on_data.call(self, data) if @on_data
         end
-    
+
         # Invokes the #on_extended_data callback when the server sends
         # extended data to the channel. This will reduce the available window
         # size on the local end. The callback is invoked with the channel,
@@ -600,20 +600,20 @@ module Net
           update_local_window_size(data.length)
           @on_extended_data.call(self, type, data) if @on_extended_data
         end
-    
+
         # Invokes the #on_eof callback when the server indicates that no
         # further data is forthcoming. The callback is invoked with the channel
         # as the argument.
         def do_eof
           @on_eof.call(self) if @on_eof
         end
-    
+
         # Invokes the #on_close callback when the server closes a channel.
         # The channel is the only argument.
         def do_close
           @on_close.call(self) if @on_close
         end
-    
+
         # Invokes the next pending request callback with +false+ as the second
         # argument.
         def do_failure
@@ -623,7 +623,7 @@ module Net
             error { "channel failure received with no pending request to handle it (bug?)" }
           end
         end
-    
+
         # Invokes the next pending request callback with +true+ as the second
         # argument.
         def do_success

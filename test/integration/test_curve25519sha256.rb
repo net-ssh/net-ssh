@@ -28,7 +28,6 @@ unless ENV['NET_SSH_NO_ED25519']
         f.close
         start_sshd_7_or_later(config: config_lines) do |_pid, port|
           Timeout.timeout(4) do
-            
             # We have our own sshd, give it a chance to come up before
             # listening.
             ret = Net::SSH.start("localhost", "net_ssh_1", password: 'foopwd', port: port, user_known_hosts_file: [f.path]) do |ssh|
@@ -39,7 +38,6 @@ unless ENV['NET_SSH_NO_ED25519']
           rescue SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH
             sleep 0.25
             retry
-            
           end
         end
       end

@@ -34,7 +34,6 @@ class TestHMacEtm < NetSSHTest
     define_method "test_with_only_hmac_etm#{key}" do
       start_sshd_7_or_later(config: config_with_macs(variant)) do |_pid, port|
         Timeout.timeout(4) do
-          
           # We have our own sshd, give it a chance to come up before
           # listening.
           ret = Net::SSH.start(
@@ -52,7 +51,6 @@ class TestHMacEtm < NetSSHTest
         rescue SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH
           sleep 0.25
           retry
-          
         end
       end
     end

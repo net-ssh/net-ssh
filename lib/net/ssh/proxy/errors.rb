@@ -1,7 +1,7 @@
 require 'net/ssh/errors'
 
-module Net 
-  module SSH 
+module Net
+  module SSH
     module Proxy
       # A general exception class for all Proxy errors.
       class Error < Net::SSH::Exception; end

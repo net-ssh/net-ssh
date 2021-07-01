@@ -77,12 +77,6 @@ Layout/SpaceInsideReferenceBrackets:
   Exclude:
     - 'lib/net/ssh/transport/algorithms.rb'
 
-# Offense count: 732
-# Cop supports --auto-correct.
-# Configuration parameters: AllowInHeredoc.
-Layout/TrailingWhitespace:
-  Enabled: false
-
 # Offense count: 4
 # Configuration parameters: AllowSafeAssignment.
 Lint/AssignmentInCondition:
