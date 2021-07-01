@@ -3,7 +3,6 @@ require 'logger'
 require 'net/ssh/transport/algorithms'
 
 module Transport
-
   class TestAlgorithms < NetSSHTest
     include Net::SSH::Transport::Constants
 
@@ -191,7 +190,7 @@ module Transport
     end
 
     def test_key_exchange_when_initiated_by_server
-      transport.expect do |t, buffer|
+      transport.expect do |_t, buffer|
         assert_kexinit(buffer)
         install_mock_key_exchange(buffer)
       end
@@ -204,7 +203,7 @@ module Transport
 
     def test_key_exchange_when_initiated_by_client
       state = nil
-      transport.expect do |t, buffer|
+      transport.expect do |_t, buffer|
         assert_kexinit(buffer)
         state = :sent_kexinit
         install_mock_key_exchange(buffer)
@@ -222,7 +221,7 @@ module Transport
 
     def test_key_exchange_when_server_does_not_support_preferred_kex_should_fallback_to_secondary
       kexinit kex: "diffie-hellman-group14-sha1"
-      transport.expect do |t,buffer|
+      transport.expect do |_t,buffer|
         assert_kexinit(buffer)
         install_mock_key_exchange(buffer, kex: Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1)
       end
@@ -231,7 +230,7 @@ module Transport
 
     def test_key_exchange_when_server_does_not_support_any_preferred_kex_should_raise_error
       kexinit kex: "something-obscure"
-      transport.expect { |t,buffer| assert_kexinit(buffer) }
+      transport.expect { |_t,buffer| assert_kexinit(buffer) }
       assert_raises(Net::SSH::Exception) { algorithms.accept_kexinit(kexinit) }
     end
 
@@ -259,7 +258,7 @@ module Transport
     def test_exchange_with_zlib_compression_enabled_sets_compression_to_standard
       algorithms compression: 'zlib'
 
-      transport.expect do |t, buffer|
+      transport.expect do |_t, buffer|
         assert_kexinit(buffer, compression_client: 'zlib', compression_server: 'zlib')
         install_mock_key_exchange(buffer)
       end
@@ -274,7 +273,7 @@ module Transport
     def test_exchange_with_zlib_at_openssh_dot_com_compression_enabled_sets_compression_to_delayed
       algorithms compression: 'zlib@openssh.com'
 
-      transport.expect do |t, buffer|
+      transport.expect do |_t, buffer|
         assert_kexinit(buffer, compression_client: 'zlib@openssh.com', compression_server: 'zlib@openssh.com')
         install_mock_key_exchange(buffer)
       end
@@ -336,8 +335,9 @@ module Transport
     def install_mock_key_exchange(buffer, options={})
       kex = options[:kex] || Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256
 
-      Net::SSH::Transport::Kex::MAP.each do |name, klass|
+      Net::SSH::Transport::Kex::MAP.each do |_name, klass|
         next if klass == kex
+
         klass.expects(:new).never
       end
 
@@ -441,5 +441,4 @@ module Transport
       @transport ||= MockTransport.new(transport_options)
     end
   end
-
 end

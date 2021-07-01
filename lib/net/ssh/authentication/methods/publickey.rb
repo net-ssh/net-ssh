@@ -6,7 +6,6 @@ module Net
   module SSH
     module Authentication
       module Methods
-
         # Implements the "publickey" SSH authentication method.
         class Publickey < Abstract
           # Attempts to perform public-key authentication for the given
@@ -90,7 +89,6 @@ module Net
             end
           end
         end
-
       end
     end
   end

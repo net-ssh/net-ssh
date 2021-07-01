@@ -2,9 +2,8 @@ require 'common'
 require 'net/ssh/transport/hmac'
 
 module Transport
-
   class TestHMAC < NetSSHTest
-    Net::SSH::Transport::HMAC::MAP.each do |name, value|
+    Net::SSH::Transport::HMAC::MAP.each do |name, _value|
       method = name.tr("-", "_")
       define_method("test_get_with_#{method}_returns_new_hmac_instance") do
         key = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!&$%"[0,Net::SSH::Transport::HMAC::MAP[name].key_length]
@@ -30,5 +29,4 @@ module Transport
       end
     end
   end
-
 end

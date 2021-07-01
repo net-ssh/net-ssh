@@ -15,7 +15,6 @@ require 'net/ssh/verifiers/never'
 module Net
   module SSH
     module Transport
-
       # The transport layer represents the lowest level of the SSH protocol, and
       # implements basic message exchanging and protocol initialization. It will
       # never be instantiated directly (unless you really know what you're about),
@@ -160,6 +159,7 @@ module Net
         # one is performed, causing this method to block until it completes.
         def rekey_as_needed
           return if algorithms.pending?
+
           socket.if_needs_rekey? { rekey! }
         end
 
@@ -211,6 +211,7 @@ module Net
 
             else
               return packet if algorithms.allow?(packet)
+
               push(packet)
             end
           end
@@ -222,6 +223,7 @@ module Net
         def wait
           loop do
             break if block_given? && yield
+
             message = poll_message(:nonblock, false)
             push(message) if message
             break if !block_given?

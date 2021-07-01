@@ -11,7 +11,6 @@ require 'net/ssh/authentication/methods/keyboard_interactive'
 module Net
   module SSH
     module Authentication
-
       # Raised if the current authentication method is not allowed
       class DisallowedMethod < Net::SSH::Exception
       end
@@ -70,22 +69,21 @@ module Net
           attempted = []
 
           @auth_methods.each do |name|
+            next unless @allowed_auth_methods.include?(name)
+
+            attempted << name
+
+            debug { "trying #{name}" }
             begin
-              next unless @allowed_auth_methods.include?(name)
-              attempted << name
-
-              debug { "trying #{name}" }
-              begin
-                auth_class = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join)
-                method = auth_class.new(self, key_manager: key_manager, password_prompt: options[:password_prompt])
-              rescue NameError
-                debug {"Mechanism #{name} was requested, but isn't a known type.  Ignoring it."}
-                next
-              end
-
-              return true if method.authenticate(next_service, username, password)
-            rescue Net::SSH::Authentication::DisallowedMethod
+              auth_class = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join)
+              method = auth_class.new(self, key_manager: key_manager, password_prompt: options[:password_prompt])
+            rescue NameError
+              debug {"Mechanism #{name} was requested, but isn't a known type.  Ignoring it."}
+              next
             end
+
+            return true if method.authenticate(next_service, username, password)
+          rescue Net::SSH::Authentication::DisallowedMethod
           end
 
           error { "all authorization methods failed (tried #{attempted.join(', ')})" }
@@ -129,6 +127,7 @@ module Net
         def expect_message(type)
           message = next_message
           raise Net::SSH::Exception, "expected #{type}, got #{message.type} (#{message})" unless message.type == type
+
           message
         end
 

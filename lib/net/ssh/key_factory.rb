@@ -5,7 +5,6 @@ require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
-
     # A factory class for returning new Key classes. It is used for obtaining
     # OpenSSL key instances via their SSH names, and for loading both public and
     # private keys. It used used primarily by Net::SSH itself, internally, and

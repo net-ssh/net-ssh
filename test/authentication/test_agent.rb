@@ -2,7 +2,6 @@ require_relative '../common'
 require 'net/ssh/authentication/agent'
 
 module Authentication
-
   class TestAgent < NetSSHTest
     SSH2_AGENT_REQUEST_VERSION       = 1
     SSH2_AGENT_REQUEST_IDENTITIES    = 11
@@ -72,7 +71,7 @@ module Authentication
     end
 
     def test_negotiate_should_raise_error_if_response_was_unexpected
-      socket.expect do |s, type, buffer|
+      socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_VERSION, type
         s.return(255)
       end
@@ -80,7 +79,7 @@ module Authentication
     end
 
     def test_negotiate_should_be_successful_with_expected_response
-      socket.expect do |s, type, buffer|
+      socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_VERSION, type
         s.return(SSH_AGENT_RSA_IDENTITIES_ANSWER)
       end
@@ -88,7 +87,7 @@ module Authentication
     end
 
     def test_identities_should_fail_if_SSH_AGENT_FAILURE_received
-      socket.expect do |s, type, buffer|
+      socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
         s.return(SSH_AGENT_FAILURE)
       end
@@ -96,7 +95,7 @@ module Authentication
     end
 
     def test_identities_should_fail_if_SSH2_AGENT_FAILURE_received
-      socket.expect do |s, type, buffer|
+      socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
         s.return(SSH2_AGENT_FAILURE)
       end
@@ -104,7 +103,7 @@ module Authentication
     end
 
     def test_identities_should_fail_if_SSH_COM_AGENT2_FAILURE_received
-      socket.expect do |s, type, buffer|
+      socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
         s.return(SSH_COM_AGENT2_FAILURE)
       end
@@ -112,7 +111,7 @@ module Authentication
     end
 
     def test_identities_should_fail_if_response_is_not_SSH2_AGENT_IDENTITIES_ANSWER
-      socket.expect do |s, type, buffer|
+      socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
         s.return(255)
       end
@@ -123,7 +122,7 @@ module Authentication
       key1 = key
       key2 = OpenSSL::PKey::DSA.new(512)
 
-      socket.expect do |s, type, buffer|
+      socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
         s.return(SSH2_AGENT_IDENTITIES_ANSWER, :long, 2, :string, Net::SSH::Buffer.from(:key, key1), :string, "My favorite key", :string, Net::SSH::Buffer.from(:key, key2), :string, "Okay, but not the best")
       end
@@ -141,7 +140,7 @@ module Authentication
       key2.to_blob[0..5] = 'badkey'
       key3 = OpenSSL::PKey::DSA.new(512)
 
-      socket.expect do |s, type, buffer|
+      socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
         s.return(SSH2_AGENT_IDENTITIES_ANSWER, :long, 3, :string, Net::SSH::Buffer.from(:key, key1), :string, "My favorite key", :string, Net::SSH::Buffer.from(:key, key2), :string, "bad", :string, Net::SSH::Buffer.from(:key, key3), :string, "Okay, but not the best")
       end
@@ -159,7 +158,7 @@ module Authentication
       key2_bad = Net::SSH::Buffer.new("")
       key3 = OpenSSL::PKey::DSA.new(512)
 
-      socket.expect do |s, type, buffer|
+      socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
         s.return(SSH2_AGENT_IDENTITIES_ANSWER, :long, 3, :string, Net::SSH::Buffer.from(:key, key1), :string, "My favorite key", :string, key2_bad, :string, "bad", :string, Net::SSH::Buffer.from(:key, key3), :string, "Okay, but not the best")
       end
@@ -322,6 +321,7 @@ module Authentication
 
     def test_add_ed25519_identity
       return unless Net::SSH::Authentication::ED25519Loader::LOADED
+
       ed25519 = Net::SSH::Authentication::ED25519::PrivKey.read(ED25519, nil)
       socket.expect do |s,type,buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
@@ -339,6 +339,7 @@ module Authentication
 
     def test_add_ed25519_cert_identity
       return unless Net::SSH::Authentication::ED25519Loader::LOADED
+
       cert = make_cert(Net::SSH::Authentication::ED25519::PrivKey.read(ED25519, nil))
       socket.expect do |s,type,buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
@@ -356,7 +357,7 @@ module Authentication
     end
 
     def test_add_identity_should_raise_error_on_failure
-      socket.expect do |s,type,buffer|
+      socket.expect do |s,_type,_buffer|
         s.return(SSH_AGENT_FAILURE)
       end
 
@@ -378,7 +379,7 @@ module Authentication
     end
 
     def test_remove_identity_should_raise_error_on_failure
-      socket.expect do |s,type,buffer|
+      socket.expect do |s,_type,_buffer|
         s.return(SSH_AGENT_FAILURE)
       end
 
@@ -399,7 +400,7 @@ module Authentication
     end
 
     def test_remove_all_identities_should_raise_error_on_failure
-      socket.expect do |s,type,buffer|
+      socket.expect do |s,_type,_buffer|
         s.return(SSH_AGENT_FAILURE)
       end
 
@@ -433,6 +434,7 @@ module Authentication
 
       def send(data, flags)
         raise "got #{data.inspect} but no packet was expected" unless @expectation
+
         buffer = Net::SSH::Buffer.new(data)
         buffer.read_long # skip the length
         type = buffer.read_byte
@@ -467,8 +469,7 @@ module Authentication
     end
 
     def agent_socket_factory
-      @agent_socket_factory ||= -> {"/foo/bar.sock"}
+      @agent_socket_factory ||= -> { "/foo/bar.sock" }
     end
   end
-
 end

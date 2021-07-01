@@ -5,7 +5,6 @@ require 'net/ssh/verifiers/always'
 module Net
   module SSH
     module Verifiers
-
       # Does a strict host verification, looking the server up in the known
       # host files to see if a key has already been seen for this server. If this
       # server does not appear in any host file, this will silently add the
@@ -29,7 +28,6 @@ module Net
           return true
         end
       end
-
     end
   end
 end

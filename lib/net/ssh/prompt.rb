@@ -1,8 +1,7 @@
 require 'io/console'
 
-module Net 
+module Net
   module SSH
-
     # Default prompt implementation, called for asking password from user.
     # It will never be instantiated directly, but will instead be created for
     # you automatically.
@@ -24,9 +23,9 @@ module Net
       def self.default(options = {})
         @default ||= new(options)
       end
-  
+
       def initialize(options = {}); end
-  
+
       # default prompt object implementation. More sophisticated implemenetations
       # might implement caching.
       class Prompter
@@ -36,7 +35,7 @@ module Net
             $stdout.puts(info[:instruction]) unless info[:instruction].empty?
           end
         end
-  
+
         # ask input from user, a prompter might ask for multiple inputs
         # (like user and password) in a single session.
         def ask(prompt, echo=true)
@@ -46,12 +45,12 @@ module Net
           $stdout.print("\n")
           ret
         end
-  
+
         # success method will be called when the password was accepted
         # It's a good time to save password asked to a cache.
         def success; end
       end
-  
+
       # start password session. Multiple questions might be asked multiple times
       # on the returned object. Info hash tries to uniquely identify the password
       # session, so caching implementations can save passwords properly.
@@ -59,6 +58,5 @@ module Net
         Prompter.new(info)
       end
     end
-
   end
 end

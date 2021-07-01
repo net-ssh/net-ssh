@@ -6,7 +6,6 @@ require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
-
     # Represents the result of a search in known hosts
     # see search_for
     class HostKeys
@@ -87,12 +86,10 @@ module Net
         # to.
         def add(host, key, options={})
           hostfiles(options, :user).each do |file|
-            begin
-              KnownHosts.new(file).add(host, key)
-              return
-            rescue SystemCallError
-              # try the next hostfile
-            end
+            KnownHosts.new(file).add(host, key)
+            return
+          rescue SystemCallError
+            # try the next hostfile
           end
         end
       end

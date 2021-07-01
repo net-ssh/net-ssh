@@ -31,7 +31,7 @@ module Net
           cert.key_id = buffer.read_string
           cert.valid_principals = buffer.read_buffer.read_all(&:read_string)
           cert.valid_after = Time.at(buffer.read_int64)
-          
+
           cert.valid_before = if RUBY_PLATFORM == "java"
                                 # 0x20c49ba5e353f7 = 0x7fffffffffffffff/1000, the largest value possible for JRuby
                                 # JRuby Time.at multiplies the arg by 1000, and then stores it in a signed long.
@@ -125,6 +125,7 @@ module Net
         def self.type_symbol(type)
           types = { 1 => :user, 2 => :host }
           raise ArgumentError("unsupported type: #{type}") unless types.include?(type)
+
           types.fetch(type)
         end
         private_class_method :type_symbol
@@ -134,6 +135,7 @@ module Net
         def type_value(type)
           types = { user: 1, host: 2 }
           raise ArgumentError("unsupported type: #{type}") unless types.include?(type)
+
           types.fetch(type)
         end
 

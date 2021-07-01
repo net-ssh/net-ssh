@@ -4,7 +4,6 @@ require 'net/ssh/proxy/errors'
 module Net
   module SSH
     module Proxy
-
       # An implementation of a SOCKS5 proxy. To use it, instantiate it, then
       # pass the instantiated object via the :proxy key to Net::SSH.start:
       #
@@ -94,7 +93,7 @@ module Net
 
           packet << [port].pack("n")
           socket.send packet, 0
-          
+
           version, reply, = socket.recv(2).unpack("C*")
           socket.recv(1)
           address_type = socket.recv(1).getbyte(0)
@@ -111,7 +110,7 @@ module Net
             raise ConnectError, "Illegal response type"
           end
           portnum = socket.recv(2)
-          
+
           unless reply == SUCCESS
             socket.close
             raise ConnectError, "#{reply}"
@@ -136,7 +135,6 @@ module Net
           end
         end
       end
-
     end
   end
 end

@@ -64,11 +64,13 @@ module IntegrationTestHelpers
       pid, status = Process.wait2 pid
     end
     raise "Command: #{command} failed:#{status.exitstatus}" unless status
+
     status.exitstatus
   end
 
   def with_sshd_config(sshd_config, &block)
     raise "Failed to copy config" unless system("sudo cp -f /etc/ssh/sshd_config /etc/ssh/sshd_config.original")
+
     begin
       Tempfile.open('sshd_config') do |f|
         f.write(sshd_config)
@@ -77,6 +79,7 @@ module IntegrationTestHelpers
       end
       system("sudo chmod 0644 /etc/ssh/sshd_config")
       raise "Failed to restart sshd" unless system("sudo service ssh restart")
+
       yield
     ensure
       system("sudo cp -f /etc/ssh/sshd_config.original /etc/ssh/sshd_config")
@@ -110,6 +113,7 @@ module IntegrationTestHelpers
       with_lines_as_tempfile(config) do |path, pidpath|
         # puts "DEBUG - SSH LOG: #{path}-log.txt"
         raise "A leftover sshd is already running" if is_port_open?(port)
+
         pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port) # '-E', "#{path}-log.txt")
         sshpidfile = pidpath
         yield pid, port

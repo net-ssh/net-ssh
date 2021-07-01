@@ -13,6 +13,7 @@ module Net
     module Authentication
       # Class for representing agent-specific errors.
       class AgentError < Net::SSH::Exception; end
+
       # An exception for indicating that the SSH agent is not available.
       class AgentNotAvailable < AgentError; end
 
@@ -107,6 +108,7 @@ module Net
           type, body = send_and_wait(SSH2_AGENT_REQUEST_VERSION, :string, Transport::ServerVersion::PROTO_VERSION)
 
           raise AgentNotAvailable, "SSH2 agents are not yet supported" if type == SSH2_AGENT_VERSION_RESPONSE
+
           if type == SSH2_AGENT_FAILURE
             debug { "Unexpected response type==#{type}, this will be ignored" }
           elsif type != SSH_AGENT_RSA_IDENTITIES_ANSWER1 && type != SSH_AGENT_RSA_IDENTITIES_ANSWER2
@@ -196,13 +198,13 @@ module Net
           type, = send_and_wait(SSH2_AGENT_LOCK, :string, password)
           raise AgentError, "could not lock agent" if type != SSH_AGENT_SUCCESS
         end
-        
+
         # unlock the ssh agent with password
         def unlock(password)
           type, = send_and_wait(SSH2_AGENT_UNLOCK, :string, password)
           raise AgentError, "could not unlock agent" if type != SSH_AGENT_SUCCESS
         end
-        
+
         private
 
         def unix_socket_class
