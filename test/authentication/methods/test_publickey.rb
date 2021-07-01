@@ -112,18 +112,18 @@ module Authentication
 
           buffer = Net::SSH::Buffer.new(data)
           buffer.read_string == "abcxyz123"      && # session-id
-          buffer.read_byte   == USERAUTH_REQUEST && # type
-          verify_userauth_request_packet(buffer, key, true)
+            buffer.read_byte == USERAUTH_REQUEST && # type
+            verify_userauth_request_packet(buffer, key, true)
         end
       end
 
       def verify_userauth_request_packet(packet, key, has_sig)
-        packet.read_string == "jamis"          && # user-name
-        packet.read_string == "ssh-connection" && # next service
-        packet.read_string == "publickey"      && # auth-method
-        packet.read_bool   == has_sig          && # whether a signature is appended
-        packet.read_string == key.ssh_type     && # ssh key type
-        packet.read_buffer.read_key.to_blob == key.to_blob # key
+        packet.read_string == "jamis" && # user-name
+          packet.read_string == "ssh-connection" && # next service
+          packet.read_string == "publickey"      && # auth-method
+          packet.read_bool   == has_sig          && # whether a signature is appended
+          packet.read_string == key.ssh_type     && # ssh key type
+          packet.read_buffer.read_key.to_blob == key.to_blob # key
       end
 
       @@keys = nil

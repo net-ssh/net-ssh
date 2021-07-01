@@ -20,17 +20,6 @@ Gemspec/RequiredRubyVersion:
 Layout/ArgumentAlignment:
   Enabled: false
 
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: IndentationWidth.
-Layout/AssignmentIndentation:
-  Exclude:
-    - 'test/transport/kex/test_curve25519_sha256.rb'
-    - 'test/transport/kex/test_diffie_hellman_group1_sha1.rb'
-    - 'test/transport/kex/test_ecdh_sha2_nistp256.rb'
-    - 'test/transport/kex/test_ecdh_sha2_nistp384.rb'
-    - 'test/transport/kex/test_ecdh_sha2_nistp521.rb'
-
 # Offense count: 63
 # Cop supports --auto-correct.
 # Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
@@ -43,7 +32,6 @@ Layout/HashAlignment:
     - 'lib/net/ssh/transport/cipher_factory.rb'
     - 'lib/net/ssh/transport/hmac.rb'
     - 'lib/net/ssh/transport/kex.rb'
-    - 'test/test_config.rb'
 
 # Offense count: 23
 # Cop supports --auto-correct.
@@ -56,8 +44,6 @@ Layout/MultilineOperationIndentation:
     - 'lib/net/ssh/transport/algorithms.rb'
     - 'lib/net/ssh/transport/state.rb'
     - 'lib/net/ssh/verifiers/always.rb'
-    - 'test/authentication/methods/test_hostbased.rb'
-    - 'test/authentication/methods/test_publickey.rb'
 
 # Offense count: 290
 # Cop supports --auto-correct.
@@ -81,9 +67,6 @@ Layout/SpaceInsideBlockBraces:
     - 'lib/net/ssh/authentication/session.rb'
     - 'lib/net/ssh/transport/ctr.rb'
     - 'support/ssh_tunnel_bug.rb'
-    - 'test/authentication/test_agent.rb'
-    - 'test/authentication/test_key_manager.rb'
-    - 'test/start/test_user_nil.rb'
 
 # Offense count: 6
 # Cop supports --auto-correct.
@@ -202,13 +185,6 @@ Lint/UnusedBlockArgument:
     - 'lib/net/ssh/connection/keepalive.rb'
     - 'lib/net/ssh/connection/session.rb'
     - 'lib/net/ssh/service/forward.rb'
-    - 'test/authentication/methods/test_password.rb'
-    - 'test/authentication/test_agent.rb'
-    - 'test/common.rb'
-    - 'test/connection/test_channel.rb'
-    - 'test/connection/test_session.rb'
-    - 'test/transport/test_algorithms.rb'
-    - 'test/transport/test_hmac.rb'
 
 # Offense count: 69
 # Cop supports --auto-correct.

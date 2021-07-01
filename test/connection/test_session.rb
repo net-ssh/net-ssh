@@ -224,7 +224,7 @@ module Connection
 
     def test_channel_open_packet_with_corresponding_handler_should_result_in_channel_open_failure_when_handler_returns_an_error
       transport.return(CHANNEL_OPEN, :string, "auth-agent", :long, 14, :long, 0x20000, :long, 0x10000)
-      session.on_open_channel "auth-agent" do |s, ch, p|
+      session.on_open_channel "auth-agent" do |_s, _ch, _p|
         raise Net::SSH::ChannelOpenFailed.new(1234, "we iz in ur channelz!")
       end
       process_times(2)
@@ -459,7 +459,7 @@ module Connection
       prep_exec("ls", :stdout, "data packet", :stderr, "extended data packet")
 
       call = :first
-      session.exec "ls" do |channel, type, data|
+      session.exec "ls" do |_channel, type, data|
         if call == :first
           assert_equal :stdout, type
           assert_equal "data packet", data
@@ -489,7 +489,7 @@ module Connection
     def test_exec_bang_should_block_until_command_finishes
       prep_exec("ls", :stdout, "some data")
       called = false
-      session.exec! "ls" do |channel, type, data|
+      session.exec! "ls" do |_channel, type, data|
         called = true
         assert_equal :stdout, type
         assert_equal "some data", data
@@ -544,7 +544,7 @@ module Connection
           end
 
           t2.return(CHANNEL_CLOSE, :long, p[:remote_id])
-          t2.expect { |t3,p3| assert_equal CHANNEL_CLOSE, p3.type }
+          t2.expect { |_t3,p3| assert_equal CHANNEL_CLOSE, p3.type }
         end
       end
     end

@@ -35,7 +35,7 @@ module Authentication
           assert_equal "the-password", packet.read_string
           t.return(USERAUTH_FAILURE, :string, "publickey,password")
   
-          t.expect do |t2, packet2|
+          t.expect do |_t2, packet2|
             assert_equal USERAUTH_REQUEST, packet2.type
             assert_equal "jamis", packet2.read_string
             assert_equal "ssh-connection", packet2.read_string

@@ -22,7 +22,7 @@ module Authentication
       manager.add "/third"
       manager.add "/second"
       assert_equal 3, manager.key_files.length
-      final_files = manager.key_files.map {|item| item.split('/').last}
+      final_files = manager.key_files.map { |item| item.split('/').last }
       assert_equal %w[first second third], final_files
     end
 
@@ -32,7 +32,7 @@ module Authentication
       manager.add_keycert "/third"
       manager.add_keycert "/second"
       assert_equal 3, manager.keycert_files.length
-      final_files = manager.keycert_files.map {|item| item.split('/').last}
+      final_files = manager.keycert_files.map { |item| item.split('/').last }
       assert_equal %w[first second third], final_files
     end
 
