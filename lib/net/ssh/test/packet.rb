@@ -70,7 +70,7 @@ module Net
         # added. Unsupported packet types will otherwise raise an exception.
         def types
           @types ||= case @type
-                     when KEXINIT then
+                     when KEXINIT
                        %i[long long long long
                           string string string string string string string string string string
                           bool]

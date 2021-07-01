@@ -34,25 +34,25 @@ class TestHMacEtm < NetSSHTest
     define_method "test_with_only_hmac_etm#{key}" do
       start_sshd_7_or_later(config: config_with_macs(variant)) do |_pid, port|
         Timeout.timeout(4) do
-          begin
-            # We have our own sshd, give it a chance to come up before
-            # listening.
-            ret = Net::SSH.start(
-              "localhost",
-              "net_ssh_1",
-              password: 'foopwd',
-              port: port,
-              hmac: [variant]
-            ) do |ssh|
-              assert_equal ssh.transport.algorithms.hmac_client, variant
-              assert_equal ssh.transport.algorithms.hmac_server, variant
-              ssh.exec! "echo 'foo123'"
-            end
-            assert_equal "foo123\n", ret
-          rescue SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH
-            sleep 0.25
-            retry
+          
+          # We have our own sshd, give it a chance to come up before
+          # listening.
+          ret = Net::SSH.start(
+            "localhost",
+            "net_ssh_1",
+            password: 'foopwd',
+            port: port,
+            hmac: [variant]
+          ) do |ssh|
+            assert_equal ssh.transport.algorithms.hmac_client, variant
+            assert_equal ssh.transport.algorithms.hmac_server, variant
+            ssh.exec! "echo 'foo123'"
           end
+          assert_equal "foo123\n", ret
+        rescue SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+          sleep 0.25
+          retry
+          
         end
       end
     end
