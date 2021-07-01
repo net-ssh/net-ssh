@@ -4,7 +4,6 @@ require 'authentication/methods/common'
 
 module Authentication 
   module Methods
-
     class TestNone < NetSSHTest
       include Common
   
@@ -38,6 +37,5 @@ module Authentication
         @subject ||= Net::SSH::Authentication::Methods::None.new(session(options), options)
       end
     end
-
   end
 end

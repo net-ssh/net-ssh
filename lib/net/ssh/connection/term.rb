@@ -176,7 +176,6 @@ module Net
         # Specifies the output baud rate in bits per second.
         TTY_OP_OSPEED = 129
       end
-
     end
   end
 end

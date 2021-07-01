@@ -4,7 +4,6 @@ require_relative 'common'
 
 module Authentication 
   module Methods
-
     class TestKeyboardInteractive < NetSSHTest
       include Common
   
@@ -128,6 +127,5 @@ module Authentication
         subject(options)
       end
     end
-
   end
 end

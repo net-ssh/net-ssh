@@ -11,7 +11,6 @@ require 'net/ssh/authentication/methods/keyboard_interactive'
 module Net
   module SSH
     module Authentication
-
       # Raised if the current authentication method is not allowed
       class DisallowedMethod < Net::SSH::Exception
       end
@@ -71,6 +70,7 @@ module Net
 
           @auth_methods.each do |name|
             next unless @allowed_auth_methods.include?(name)
+
             attempted << name
 
             debug { "trying #{name}" }
@@ -127,6 +127,7 @@ module Net
         def expect_message(type)
           message = next_message
           raise Net::SSH::Exception, "expected #{type}, got #{message.type} (#{message})" unless message.type == type
+
           message
         end
 

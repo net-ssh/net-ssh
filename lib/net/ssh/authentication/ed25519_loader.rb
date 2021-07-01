@@ -1,7 +1,6 @@
 module Net 
   module SSH 
     module Authentication
-
       # Loads ED25519 support which requires optinal dependecies like
       # ed25519, bcrypt_pbkdf
       module ED25519Loader

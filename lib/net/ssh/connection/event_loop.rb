@@ -36,6 +36,7 @@ module Net
           begin
             @sessions = [session]
             return false unless ev_preprocess
+
             ev_select_and_postprocess(wait)
           ensure
             @sessions = orig_sessions
@@ -46,8 +47,10 @@ module Net
         # block retuns false then we exit the processing
         def ev_preprocess(&block)
           return false if block_given? && !yield(self)
+
           @sessions.each(&:ev_preprocess)
           return false if block_given? && !yield(self)
+
           return true
         end
     
@@ -97,13 +100,16 @@ module Net
         # we call block with session as argument
         def ev_preprocess(&block)
           return false if block_given? && !yield(@sessions.first)
+
           @sessions.each(&:ev_preprocess)
           return false if block_given? && !yield(@sessions.first)
+
           return true
         end
     
         def ev_select_and_postprocess(wait)
           raise "Only one session expected" unless @sessions.count == 1
+
           session = @sessions.first
           sr,sw,actwait = session.ev_do_calculate_rw_wait(wait)
           readers, writers, = IO.select(sr, sw, nil, actwait)

@@ -1,6 +1,5 @@
 module Authentication 
   module Methods
-
     module Common
       include Net::SSH::Authentication::Constants
   
@@ -31,6 +30,5 @@ module Authentication
       end
   
     end
-
   end
 end

@@ -5,7 +5,6 @@ require 'net/ssh/transport/hmac/sha2_512_etm'
 
 module Transport
   module HMAC
-
     class TestSHA2_512_Etm < NetSSHTest
       def test_expected_digest_class
         assert_equal OpenSSL::Digest::SHA512, subject.digest_class

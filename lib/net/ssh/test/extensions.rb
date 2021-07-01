@@ -9,7 +9,6 @@ require 'net/ssh/transport/packet_stream'
 module Net 
   module SSH 
     module Test
-
       # A collection of modules used to extend/override the default behavior of
       # Net::SSH internals for ease of testing. As a consumer of Net::SSH, you'll
       # never need to use this directly--they're all used under the covers by
@@ -70,6 +69,7 @@ module Net
           # Returns true if there is data pending to be read. Otherwise calls #idle!.
           def test_available_for_read?
             return true if select_for_read?
+
             idle!
             false
           end
@@ -85,6 +85,7 @@ module Net
           # Reads the next available packet from the IO object and returns it.
           def test_poll_next_packet
             return nil if available <= 0
+
             packet = Net::SSH::Buffer.new(read_available(4))
             length = packet.read_long
             Net::SSH::Packet.new(read_available(length))
@@ -144,6 +145,7 @@ module Net
             # that mix in Net::SSH::Test::Extensions::BufferedIo.
             def select_for_test(readers=nil, writers=nil, errors=nil, wait=nil)
               return select_for_real(readers, writers, errors, wait) unless Net::SSH::Test::Extensions::IO.extension_enabled?
+
               ready_readers = Array(readers).select { |r| r.select_for_read? }
               ready_writers = Array(writers).select { |r| r.select_for_write? }
               ready_errors  = Array(errors).select  { |r| r.select_for_error? }
@@ -162,7 +164,6 @@ module Net
           end
         end
       end
-
     end
   end
 end

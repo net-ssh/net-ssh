@@ -6,7 +6,6 @@ require 'net/ssh/test/script'
 module Net 
   module SSH 
     module Test
-
       # A mock socket implementation for use in testing. It implements the minimum
       # necessary interface for interacting with the rest of the Net::SSH::Test
       # system.
@@ -62,7 +61,6 @@ module Net
         end
         
       end
-
     end
   end
 end

@@ -44,9 +44,11 @@ module Net
             datafull = datafull.strip
             raise ArgumentError.new("Expected #{MBEGIN} at start of private key") unless datafull.start_with?(MBEGIN)
             raise ArgumentError.new("Expected #{MEND} at end of private key") unless datafull.end_with?(MEND)
+
             datab64 = datafull[MBEGIN.size...-MEND.size]
             data = Base64.decode64(datab64)
             raise ArgumentError.new("Expected #{MAGIC} at start of decoded private key") unless data.start_with?(MAGIC)
+
             buffer = Net::SSH::Buffer.new(data[MAGIC.size + 1..-1])
 
             ciphername = buffer.read_string
@@ -59,6 +61,7 @@ module Net
             kdfopts = Net::SSH::Buffer.new(buffer.read_string)
             num_keys = buffer.read_long
             raise ArgumentError.new("Only 1 key is supported in ssh keys #{num_keys} was in private key") unless num_keys == 1
+
             _pubkey = buffer.read_string
 
             len = buffer.read_long
@@ -72,6 +75,7 @@ module Net
               rounds = kdfopts.read_long
 
               raise "BCryptPbkdf is not implemented for jruby" if RUBY_PLATFORM == "java"
+
               key = BCryptPbkdf::key(password, salt, keylen + ivlen, rounds)
             else
               key = '\x00' * (keylen + ivlen)

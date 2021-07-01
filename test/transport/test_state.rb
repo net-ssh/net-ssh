@@ -4,7 +4,6 @@ require 'common'
 require 'net/ssh/transport/state'
 
 module Transport
-
   class TestState < NetSSHTest
     def setup
       @socket = @state = @deflater = @inflater = nil
@@ -119,6 +118,7 @@ module Transport
       # JRuby Zlib implementation (1.4 & 1.5) does not have byte-to-byte compatibility with MRI's.
       # skip this test under JRuby.
       return if defined?(JRUBY_VERSION)
+
       assert_equal "x\234\312H\315\311\311WH-K-\252L\312O\251\004\000\000\000\377\377", state.compress("hello everybody")
     end
 
@@ -127,6 +127,7 @@ module Transport
       # JRuby Zlib implementation (1.4 & 1.5) does not have byte-to-byte compatibility with MRI's.
       # skip this test under JRuby.
       return if defined?(JRUBY_VERSION)
+
       assert_equal "hello everybody", state.decompress("x\234\312H\315\311\311WH-K-\252L\312O\251\004\000\000\000\377\377")
     end
 
@@ -176,5 +177,4 @@ module Transport
       @state ||= Net::SSH::Transport::State.new(socket, :test)
     end
   end
-
 end

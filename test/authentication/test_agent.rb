@@ -2,7 +2,6 @@ require_relative '../common'
 require 'net/ssh/authentication/agent'
 
 module Authentication
-
   class TestAgent < NetSSHTest
     SSH2_AGENT_REQUEST_VERSION       = 1
     SSH2_AGENT_REQUEST_IDENTITIES    = 11
@@ -322,6 +321,7 @@ module Authentication
 
     def test_add_ed25519_identity
       return unless Net::SSH::Authentication::ED25519Loader::LOADED
+
       ed25519 = Net::SSH::Authentication::ED25519::PrivKey.read(ED25519, nil)
       socket.expect do |s,type,buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
@@ -339,6 +339,7 @@ module Authentication
 
     def test_add_ed25519_cert_identity
       return unless Net::SSH::Authentication::ED25519Loader::LOADED
+
       cert = make_cert(Net::SSH::Authentication::ED25519::PrivKey.read(ED25519, nil))
       socket.expect do |s,type,buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
@@ -433,6 +434,7 @@ module Authentication
 
       def send(data, flags)
         raise "got #{data.inspect} but no packet was expected" unless @expectation
+
         buffer = Net::SSH::Buffer.new(data)
         buffer.read_long # skip the length
         type = buffer.read_byte
@@ -470,5 +472,4 @@ module Authentication
       @agent_socket_factory ||= -> {"/foo/bar.sock"}
     end
   end
-
 end

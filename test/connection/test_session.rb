@@ -2,7 +2,6 @@ require_relative '../common'
 require 'net/ssh/connection/session'
 
 module Connection
-
   class TestSession < NetSSHTest
     include Net::SSH::Connection::Constants
 
@@ -536,6 +535,7 @@ module Connection
 
           data.each_slice(2) do |type, datum|
             next if datum.empty?
+
             if type == :stdout
               t2.return(CHANNEL_DATA, :long, p[:remote_id], :string, datum)
             else
@@ -583,5 +583,4 @@ module Connection
       session.process { (i += 1) < n }
     end
   end
-
 end

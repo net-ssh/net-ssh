@@ -3,7 +3,6 @@ require 'net/ssh/loggable'
 
 module Net 
   module SSH
-
     # This module is used to extend sockets and other IO objects, to allow
     # them to be buffered for both read and write. This abstraction makes it
     # quite easy to write a select-based event loop
@@ -115,6 +114,7 @@ module Net
         while output.length > 0
           result = IO.select(nil, [self]) or next
           next unless result[1].any?
+
           send_pending
         end
       end
@@ -198,6 +198,5 @@ module Net
         end
       end
     end
-
   end
 end

@@ -6,7 +6,6 @@ require 'net/ssh/authentication/agent'
 module Net
   module SSH
     module Authentication
-
       # A trivial exception class used to report errors in the key manager.
       class KeyManagerError < Net::SSH::Exception; end
 
@@ -177,6 +176,7 @@ module Net
 
           if info[:from] == :agent
             raise KeyManagerError, "the agent is no longer available" unless agent
+
             return agent.sign(info[:identity], data.to_s)
           end
 
@@ -201,6 +201,7 @@ module Net
         # or if the agent is otherwise not available.
         def agent
           return unless use_agent?
+
           @agent ||= Agent.connect(logger, options[:agent_socket_factory], options[:identity_agent])
         rescue AgentNotAvailable
           @use_agent = false

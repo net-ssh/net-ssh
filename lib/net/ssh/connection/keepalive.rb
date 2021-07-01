@@ -2,7 +2,6 @@ require 'net/ssh/loggable'
 module Net 
   module SSH 
     module Connection
-
       class Keepalive
         include Loggable
       
@@ -28,6 +27,7 @@ module Net
         def should_send?
           return false unless enabled?
           return true unless @last_keepalive_sent_at
+
           Time.now - @last_keepalive_sent_at >= interval
         end
       
@@ -38,6 +38,7 @@ module Net
         def send_as_needed(was_events)
           return if was_events
           return unless should_send?
+
           info { "sending keepalive #{@unresponded_keepalive_count}" }
       
           @unresponded_keepalive_count += 1
@@ -53,7 +54,6 @@ module Net
           end
         end
       end
-
     end
   end
 end

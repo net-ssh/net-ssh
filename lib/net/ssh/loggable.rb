@@ -1,6 +1,5 @@
 module Net 
   module SSH
-
     # A simple module to make logging easier to deal with. It assumes that the
     # logger instance (if not nil) quacks like a Logger object (in Ruby's
     # standard library). Although used primarily internally by Net::SSH, it

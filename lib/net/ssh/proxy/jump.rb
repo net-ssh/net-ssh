@@ -4,7 +4,6 @@ require 'net/ssh/proxy/command'
 module Net 
   module SSH 
     module Proxy
-
       # An implementation of a jump proxy. To use it, instantiate it,
       # then pass the instantiated object via the :proxy key to
       # Net::SSH.start:
@@ -50,7 +49,6 @@ module Net
           @command_line_template = template
         end
       end
-
     end
   end
 end

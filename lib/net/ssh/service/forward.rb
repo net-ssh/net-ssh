@@ -3,7 +3,6 @@ require 'net/ssh/loggable'
 module Net
   module SSH
     module Service
-
       # This class implements various port forwarding services for use by
       # Net::SSH clients. The Forward class should never need to be instantiated
       # directly; instead, it should be accessed via the singleton instance
@@ -290,6 +289,7 @@ module Net
         #    end
         def agent(channel)
           return if @agent_forwarded
+
           @agent_forwarded = true
 
           channel.send_channel_request("auth-agent-req@openssh.com") do |achannel, success|
@@ -420,7 +420,6 @@ module Net
           end
         end
       end
-
     end
   end
 end

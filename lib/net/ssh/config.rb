@@ -1,6 +1,5 @@
 module Net
   module SSH
-
     # The Net::SSH::Config class is used to parse OpenSSH configuration files,
     # and translates that syntax into the configuration syntax that Net::SSH
     # understands. This lets Net::SSH scripts read their configuration (to

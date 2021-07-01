@@ -5,7 +5,6 @@ require 'net/ssh/transport/hmac'
 module Net 
   module SSH 
     module Transport
-
       # Encapsulates state information about one end of an SSH connection. Such
       # state includes the packet sequence number, the algorithms in use, how
       # many packets and blocks have been processed since the last reset, and so
@@ -122,6 +121,7 @@ module Net
         def compress(data)
           data = data.to_s
           return data unless compression?
+
           compressor.deflate(data, Zlib::SYNC_FLUSH)
         end
     
@@ -130,6 +130,7 @@ module Net
         def decompress(data)
           data = data.to_s
           return data unless compression?
+
           decompressor.inflate(data)
         end
     
@@ -202,7 +203,6 @@ module Net
           return data
         end
       end
-
     end
   end
 end

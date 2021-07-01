@@ -8,7 +8,6 @@ require 'net/ssh/transport/kex'
 module Net 
   module SSH 
     module Test
-
       # An implementation of a key-exchange strategy specifically for unit tests.
       # (This strategy would never really work against a real SSH server--it makes
       # too many assumptions about the server's response.)
@@ -39,7 +38,6 @@ module Net
             hashing_algorithm: OpenSSL::Digest::SHA1 }
         end
       end
-
     end
   end
 end

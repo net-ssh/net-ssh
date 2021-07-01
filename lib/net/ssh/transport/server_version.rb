@@ -5,7 +5,6 @@ require 'net/ssh/version'
 module Net 
   module SSH 
     module Transport
-
       # Negotiates the SSH protocol version and trades information about server
       # and client. This is never used directly--it is always called by the
       # transport layer as part of the initialization process of the transport
@@ -47,6 +46,7 @@ module Net
           socket.flush
     
           raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating" if timeout && !IO.select([socket], nil, nil, timeout)
+
           loop do
             @version = ""
             loop do
@@ -60,6 +60,7 @@ module Net
               break if b == "\n"
             end
             break if @version.match(/^SSH-/)
+
             @header << @version
           end
     

@@ -34,6 +34,7 @@ class TestChannel < NetSSHTest
     ssh.open_channel do |channel|
       channel.exec(command) do |_ch, success|
         raise "could not execute command: #{command.inspect}" unless success
+
         channel_success_handler.call
         channel.on_data do |ch2, data|
           yield(ch2, :stdout, data)

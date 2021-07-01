@@ -24,7 +24,6 @@ require 'net/ssh/errors'
 module Net 
   module SSH 
     module Authentication
-
       # This module encapsulates the implementation of a socket factory that
       # uses the PuTTY "pageant" utility to obtain information about SSH
       # identities.
@@ -285,6 +284,7 @@ module Net
               first = ptr.ptr.to_i
               second = ptr_to_s(ptr,Win::SIZEOF_DWORD).unpack('L')[0]
               raise "Error" unless first == second
+
               first
             end
     
@@ -421,10 +421,12 @@ module Net
     
             while true
               return ret if @input_buffer.length < 4
+
               msg_length = @input_buffer.read_long + 4
               @input_buffer.reset!
     
               return ret if @input_buffer.length < msg_length
+
               msg = @input_buffer.read!(msg_length)
               @output_buffer.append(send_query(msg))
             end
@@ -491,7 +493,6 @@ module Net
           end
         end
       end
-
     end
   end
 end

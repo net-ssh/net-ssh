@@ -125,6 +125,7 @@ module Net
         def self.type_symbol(type)
           types = { 1 => :user, 2 => :host }
           raise ArgumentError("unsupported type: #{type}") unless types.include?(type)
+
           types.fetch(type)
         end
         private_class_method :type_symbol
@@ -134,6 +135,7 @@ module Net
         def type_value(type)
           types = { user: 1, host: 2 }
           raise ArgumentError("unsupported type: #{type}") unless types.include?(type)
+
           types.fetch(type)
         end
 

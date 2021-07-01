@@ -6,7 +6,6 @@ require 'net/ssh/transport/hmac/sha2_256_96'
 
 module Transport 
   module HMAC
-
     class TestSHA2_256_96 < TestSHA2_256
       def test_expected_mac_length
         assert_equal 12, subject.mac_length
@@ -24,6 +23,5 @@ module Transport
         Net::SSH::Transport::HMAC::SHA2_256_96
       end
     end
-
   end
 end

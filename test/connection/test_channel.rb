@@ -2,7 +2,6 @@ require 'common'
 require 'net/ssh/connection/channel'
 
 module Connection
-
   class TestChannel < NetSSHTest
     include Net::SSH::Connection::Constants
 
@@ -457,6 +456,7 @@ module Connection
 
       def send_message(msg)
         raise "#{msg.to_s.inspect} received but no message was expected" unless @expectation
+
         packet = Net::SSH::Packet.new(msg.to_s)
         callback, @expectation = @expectation, nil
         callback.call(self, packet)
@@ -483,5 +483,4 @@ module Connection
         &block)
     end
   end
-
 end

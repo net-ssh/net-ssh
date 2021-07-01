@@ -3,7 +3,6 @@ require 'net/ssh/transport/hmac/none'
 
 module Transport 
   module HMAC
-
     class TestNone < NetSSHTest
       def test_expected_digest_class
         assert_nil subject.digest_class
@@ -31,6 +30,5 @@ module Transport
         Net::SSH::Transport::HMAC::None
       end
     end
-
   end
 end

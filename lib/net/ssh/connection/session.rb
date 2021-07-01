@@ -8,7 +8,6 @@ require 'net/ssh/connection/event_loop'
 module Net 
   module SSH 
     module Connection
-
       # A session class representing the connection service running on top of
       # the SSH transport layer. It manages the creation of channels (see
       # #open_channel), and the dispatching of messages to the various channels.
@@ -237,8 +236,10 @@ module Net
         # false, this method returns false. Otherwise, it returns true.
         def preprocess(&block)
           return false if block_given? && !yield(self)
+
           ev_preprocess(&block)
           return false if block_given? && !yield(self)
+
           return true
         end
     
@@ -702,10 +703,10 @@ module Net
         MAP = Constants.constants.each_with_object({}) do |name, memo|
           value = const_get(name)
           next unless Integer === value
+
           memo[value] = name.downcase.to_sym
         end
       end
-
     end
   end
 end

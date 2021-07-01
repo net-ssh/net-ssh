@@ -3,7 +3,6 @@ require 'net/ssh/errors'
 module Net 
   module SSH 
     module Proxy
-
       # A general exception class for all Proxy errors.
       class Error < Net::SSH::Exception; end
 
@@ -12,7 +11,6 @@ module Net
 
       # Used when the server doesn't recognize the user's credentials.
       class UnauthorizedError < Error; end
-
     end
   end
 end

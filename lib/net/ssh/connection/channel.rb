@@ -5,7 +5,6 @@ require 'net/ssh/connection/term'
 module Net
   module SSH
     module Connection
-
       # The channel abstraction. Multiple "channels" can be multiplexed onto a
       # single SSH channel, each operating independently and seemingly in parallel.
       # This class represents a single such channel. Most operations performed
@@ -251,6 +250,7 @@ module Net
         #   channel.send_data("the password\n")
         def send_data(data)
           raise EOFError, "cannot send data if channel has declared eof" if eof?
+
           output.append(data.to_s)
         end
     
@@ -298,6 +298,7 @@ module Net
         # the CHANNEL_CLOSE message will be sent from event loop
         def close
           return if @closing
+
           @closing = true
         end
     
@@ -313,6 +314,7 @@ module Net
         # The CHANNEL_EOF packet will be sent once the output buffer is empty.
         def eof!
           return if eof?
+
           @eof = true
         end
     
@@ -486,6 +488,7 @@ module Net
         def send_channel_request(request_name, *data, &callback)
           info { "sending channel request #{request_name.inspect}" }
           fail "Channel open not yet confirmed, please call send_channel_request(or exec) from block of open_channel" unless remote_id
+
           msg = Buffer.from(:byte, CHANNEL_REQUEST,
             :long, remote_id, :string, request_name,
             :bool, !callback.nil?, *data)
@@ -687,7 +690,6 @@ module Net
           env.each { |key, value| self.env(key, value) }
         end
       end
-
     end
   end
 end

@@ -4,7 +4,6 @@ require 'authentication/methods/common'
 
 module Authentication
   module Methods
-
     class TestPublickey < NetSSHTest
       include Common
 
@@ -110,6 +109,7 @@ module Authentication
       def signature_parameters(key)
         Proc.new do |given_key, data|
           next false unless given_key.to_blob == key.to_blob
+
           buffer = Net::SSH::Buffer.new(data)
           buffer.read_string == "abcxyz123"      && # session-id
           buffer.read_byte   == USERAUTH_REQUEST && # type

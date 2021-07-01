@@ -6,7 +6,6 @@ require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
-
     # Represents the result of a search in known hosts
     # see search_for
     class HostKeys

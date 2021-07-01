@@ -6,7 +6,6 @@ require 'net/ssh/proxy/http'
 module Net 
   module SSH 
     module Proxy
-
       # A specialization of the HTTP proxy which encrypts the whole connection
       # using OpenSSL. This has the advantage that proxy authentication
       # information is not sent in plaintext.
@@ -46,7 +45,6 @@ module Net
           end
         end
       end
-
     end
   end
 end

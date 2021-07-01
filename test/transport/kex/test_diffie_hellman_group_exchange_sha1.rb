@@ -4,7 +4,6 @@ require 'net/ssh/transport/kex/diffie_hellman_group_exchange_sha1'
 
 module Transport 
   module Kex
-
     class TestDiffieHellmanGroupExchangeSHA1 < TestDiffieHellmanGroup1SHA1
       KEXDH_GEX_GROUP   = 31
       KEXDH_GEX_INIT    = 32
@@ -49,6 +48,7 @@ module Transport
   
       def need_minimum(bits=1024)
         return @dh_options[:minimum_dh_bits] if @dh_options && @dh_options[:minimum_dh_bits]
+
         bits
       end
   
@@ -104,6 +104,5 @@ module Transport
         end
       end
     end
-
   end
 end

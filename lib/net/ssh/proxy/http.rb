@@ -4,7 +4,6 @@ require 'net/ssh/proxy/errors'
 module Net 
   module SSH 
     module Proxy
-
       # An implementation of an HTTP proxy. To use it, instantiate it, then
       # pass the instantiated object via the :proxy key to Net::SSH.start:
       #
@@ -94,7 +93,6 @@ module Net
                    body: body }
         end
       end
-
     end
   end
 end

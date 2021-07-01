@@ -4,7 +4,6 @@ require 'transport/kex/test_diffie_hellman_group_exchange_sha1'
 
 module Transport 
   module Kex
-
     class TestDiffieHellmanGroupExchangeSHA256 < TestDiffieHellmanGroupExchangeSHA1
       private
   
@@ -16,6 +15,5 @@ module Transport
         OpenSSL::Digest::SHA256
       end
     end
-
   end
 end

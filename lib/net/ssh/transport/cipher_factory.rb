@@ -6,7 +6,6 @@ require 'net/ssh/transport/identity_cipher'
 module Net 
   module SSH 
     module Transport
-
       # Implements a factory of OpenSSL cipher algorithms.
       class CipherFactory
         # Maps the SSH name of a cipher to it's corresponding OpenSSL name
@@ -35,6 +34,7 @@ module Net
         def self.supported?(name)
           ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
           return true if ossl_name == "none"
+
           return OpenSSL::Cipher.ciphers.include?(ossl_name)
         end
     
@@ -46,6 +46,7 @@ module Net
         def self.get(name, options={})
           ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
           return IdentityCipher if ossl_name == "none"
+
           cipher = OpenSSL::Cipher.new(ossl_name)
     
           cipher.send(options[:encrypt] ? :encrypt : :decrypt)
@@ -97,7 +98,6 @@ module Net
           result
         end
       end
-
     end
   end
 end

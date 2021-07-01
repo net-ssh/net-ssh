@@ -4,7 +4,6 @@ require 'net/ssh/test/packet'
 module Net 
   module SSH 
     module Test
-
       # This is a specialization of Net::SSH::Test::Packet for representing mock
       # packets that are received by the local (client) host. These are created
       # automatically by Net::SSH::Test::Script and Net::SSH::Test::Channel by any
@@ -36,7 +35,6 @@ module Net
           end
         end
       end
-
     end
   end
 end

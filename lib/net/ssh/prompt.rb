@@ -2,7 +2,6 @@ require 'io/console'
 
 module Net 
   module SSH
-
     # Default prompt implementation, called for asking password from user.
     # It will never be instantiated directly, but will instead be created for
     # you automatically.
@@ -59,6 +58,5 @@ module Net
         Prompter.new(info)
       end
     end
-
   end
 end

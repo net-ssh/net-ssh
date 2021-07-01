@@ -2,7 +2,6 @@ require_relative '../common'
 require 'net/ssh/authentication/key_manager'
 
 module Authentication
-
   class TestKeyManager < NetSSHTest
     def test_key_files_and_known_identities_are_empty_by_default
       assert manager.key_files.empty?
@@ -381,5 +380,4 @@ module Authentication
       @manager ||= Net::SSH::Authentication::KeyManager.new(nil, { password_prompt: prompt }.merge(options))
     end
   end
-
 end

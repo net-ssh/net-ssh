@@ -5,7 +5,6 @@ require 'ostruct'
 
 module Transport 
   module Kex
-
     class TestDiffieHellmanGroup14SHA1 < TestDiffieHellmanGroup1SHA1
       def subject
         Net::SSH::Transport::Kex::DiffieHellmanGroup14SHA1

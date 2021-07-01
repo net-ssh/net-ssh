@@ -3,7 +3,6 @@ require 'logger'
 require 'net/ssh/transport/algorithms'
 
 module Transport
-
   class TestAlgorithms < NetSSHTest
     include Net::SSH::Transport::Constants
 
@@ -338,6 +337,7 @@ module Transport
 
       Net::SSH::Transport::Kex::MAP.each do |name, klass|
         next if klass == kex
+
         klass.expects(:new).never
       end
 
@@ -441,5 +441,4 @@ module Transport
       @transport ||= MockTransport.new(transport_options)
     end
   end
-
 end
