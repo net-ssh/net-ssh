@@ -11,7 +11,7 @@ if ENV["CI"]
 end
 
 require 'minitest'
-require 'mocha/setup'
+require 'mocha/minitest'
 require 'net/ssh/buffer'
 require 'net/ssh/config'
 require 'net/ssh/loggable'
