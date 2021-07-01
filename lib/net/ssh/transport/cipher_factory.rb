@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'openssl'
 require 'net/ssh/transport/ctr.rb'
 require 'net/ssh/transport/key_expander'

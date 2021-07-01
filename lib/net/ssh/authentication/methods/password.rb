@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/errors'
 require 'net/ssh/prompt'
 require 'net/ssh/authentication/methods/abstract'

@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/loggable'
 
 module Net

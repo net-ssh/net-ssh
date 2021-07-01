@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'common'
 require 'net/ssh/authentication/methods/hostbased'
 require 'authentication/methods/common'

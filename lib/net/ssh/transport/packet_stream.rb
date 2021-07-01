@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/buffered_io'
 require 'net/ssh/errors'
 require 'net/ssh/packet'

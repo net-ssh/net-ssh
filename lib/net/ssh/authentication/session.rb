@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/loggable'
 require 'net/ssh/transport/constants'
 require 'net/ssh/authentication/constants'

@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'securerandom'
 
 module Net

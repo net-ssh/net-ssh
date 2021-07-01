@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'common'
 require 'net/ssh/authentication/methods/none'
 require 'authentication/methods/common'

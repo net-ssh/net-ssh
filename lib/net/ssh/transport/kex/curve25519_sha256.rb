@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 gem 'x25519' # raise if the gem x25519 is not installed
 
 require 'x25519'

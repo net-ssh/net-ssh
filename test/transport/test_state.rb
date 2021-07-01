@@ -1,4 +1,5 @@
 # encoding: ASCII-8BIT
+# frozen_string_literal: false
 
 require 'common'
 require 'net/ssh/transport/state'

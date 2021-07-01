@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 module Net
   module SSH
     # A class for describing the current version of a library. The version

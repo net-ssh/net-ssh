@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/transport/kex/ecdh_sha2_nistp256'
 
 module Net

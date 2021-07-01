@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'uri'
 require 'net/ssh/proxy/command'
 

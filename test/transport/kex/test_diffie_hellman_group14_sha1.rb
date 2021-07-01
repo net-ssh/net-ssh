@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'common'
 require 'net/ssh/transport/kex/diffie_hellman_group14_sha1'
 require 'transport/kex/test_diffie_hellman_group1_sha1'

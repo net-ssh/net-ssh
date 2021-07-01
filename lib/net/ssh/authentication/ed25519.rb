@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 gem 'ed25519', '~> 1.2'
 gem 'bcrypt_pbkdf', '~> 1.0' unless RUBY_PLATFORM == "java"
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require_relative '../../common'
 require 'net/ssh/authentication/methods/keyboard_interactive'
 require_relative 'common'

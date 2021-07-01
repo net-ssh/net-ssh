@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/connection/constants'
 require 'net/ssh/transport/constants'
 

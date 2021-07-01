@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/packet'
 require 'net/ssh/test/packet'
 

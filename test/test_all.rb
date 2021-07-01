@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 $: << '.'
 
 Dir.chdir(File.dirname(__FILE__)) do

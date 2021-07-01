@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/verifiers/accept_new'
 
 module Net
