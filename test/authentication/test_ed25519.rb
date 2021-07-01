@@ -8,7 +8,6 @@ unless ENV['NET_SSH_NO_ED25519']
   require 'base64'
 
   module Authentication
-
     class TestED25519 < NetSSHTest
       def setup
         raise "No ED25519 set NET_SSH_NO_ED25519 to ignore this test" unless Net::SSH::Authentication::ED25519Loader::LOADED
@@ -160,7 +159,6 @@ unless ENV['NET_SSH_NO_ED25519']
         'SHA256:u6mXnY8P1b0FODGp8mckqOB33u8+jvkSCtJbD5Q9klg'
       end
     end
-
   end
 
 end

@@ -6,7 +6,6 @@ require 'timeout'
 require 'net/ssh/transport/packet_stream'
 
 module Transport
-
   class TestPacketStream < NetSSHTest # rubocop:disable Metrics/ClassLength
     include Net::SSH::Transport::Constants
 
@@ -1130,5 +1129,4 @@ module Transport
       end
     end
   end
-
 end

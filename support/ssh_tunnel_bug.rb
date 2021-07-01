@@ -17,12 +17,12 @@
 #       visible_hostname netsshtest
 #     * Start squid squid -N -d 1 -D
 # * Run this script
-# * Configure browser proxy to use localhost with LOCAL_PORT. 
+# * Configure browser proxy to use localhost with LOCAL_PORT.
 # * Load any page, wait for it to load fully. If the page loads
 #   correctly, move on. If not, something needs to be corrected.
 # * Refresh the page several times. This should cause this
 #   script to failed with the error: "closed stream". You may
-#   need to try a few times. 
+#   need to try a few times.
 #
 
 require 'highline/import'
@@ -39,7 +39,7 @@ pass = ask("Password: ") { |q| q.echo = "*" }
 puts "Configure your browser proxy to localhost:#{LOCAL_PORT}"
 
 begin
-  session = Net::SSH.start(host, user, password: pass)  
+  session = Net::SSH.start(host, user, password: pass)
   session.forward.local(LOCAL_PORT, host, PROXY_PORT)
   session.loop {true}
 rescue StandardError => e

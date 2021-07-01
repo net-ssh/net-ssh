@@ -7,7 +7,6 @@ module Net
   module SSH
     module Transport
       module HMAC
-
         # The base class of all OpenSSL-based HMAC algorithm wrappers.
         class Abstract
           class <<self

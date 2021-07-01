@@ -17,7 +17,6 @@ require_relative '../common'
 require 'net/ssh/authentication/agent'
 
 module Authentication
-
   class TestPageapnt < NetSSHTest
     def test_agent_should_be_able_to_negotiate
       begin
@@ -39,5 +38,4 @@ module Authentication
       end
     end
   end
-
 end

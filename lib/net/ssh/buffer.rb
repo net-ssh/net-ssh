@@ -7,7 +7,6 @@ require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
-
     # Net::SSH::Buffer is a flexible class for building and parsing binary
     # data packets. It provides a stream-like interface for sequentially
     # reading data items from the buffer, as well as a useful helper method
@@ -239,6 +238,7 @@ module Net
       def read_bignum
         data = read_string
         return unless data
+
         OpenSSL::BN.new(data, 2)
       end
 

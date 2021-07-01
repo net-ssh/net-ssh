@@ -71,5 +71,4 @@ module Net::SSH::Transport::Kex
       response
     end
   end
-
 end

@@ -6,7 +6,6 @@ require 'net/ssh/authentication/methods/abstract'
 
 module Authentication
   module Methods
-
     class TestAbstract < NetSSHTest
       include Common
 

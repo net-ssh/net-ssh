@@ -124,29 +124,29 @@ class TestConfig < NetSSHTest
 
   def test_translate_should_correctly_translate_from_openssh_to_net_ssh_names
     open_ssh = {
-      'bindaddress'             => "127.0.0.1",
-      'ciphers'                 => "a,b,c",
-      'compression'             => true,
-      'compressionlevel'        => 6,
-      'connecttimeout'          => 100,
-      'forwardagent'            => true,
+      'bindaddress' => "127.0.0.1",
+      'ciphers' => "a,b,c",
+      'compression' => true,
+      'compressionlevel' => 6,
+      'connecttimeout' => 100,
+      'forwardagent' => true,
       'hostbasedauthentication' => true,
-      'hostkeyalgorithms'       => "d,e,f",
-      'identityfile'            => %w(g h i),
-      'macs'                    => "j,k,l",
-      'certificatefile'         => %w(m n o),
-      'passwordauthentication'  => true,
-      'port'                    => 1234,
-      'pubkeyauthentication'    => true,
-      'rekeylimit'              => 1024,
-      'sendenv'                 => "LC_*",
-      'setenv'                  => 'foo="bar" baz=whale cat="black hole"',
+      'hostkeyalgorithms' => "d,e,f",
+      'identityfile' => %w(g h i),
+      'macs' => "j,k,l",
+      'certificatefile' => %w(m n o),
+      'passwordauthentication' => true,
+      'port' => 1234,
+      'pubkeyauthentication' => true,
+      'rekeylimit' => 1024,
+      'sendenv' => "LC_*",
+      'setenv' => 'foo="bar" baz=whale cat="black hole"',
       'numberofpasswordprompts' => '123',
-      'serveraliveinterval'     => '2',
-      'serveralivecountmax'     => '4',
-      'fingerprinthash'         => 'MD5',
-      'userknownhostsfile'      => '/dev/null',
-      'stricthostkeychecking'   => false
+      'serveraliveinterval' => '2',
+      'serveralivecountmax' => '4',
+      'fingerprinthash' => 'MD5',
+      'userknownhostsfile' => '/dev/null',
+      'stricthostkeychecking' => false
     }
 
     net_ssh = Net::SSH::Config.translate(open_ssh)
@@ -177,11 +177,11 @@ class TestConfig < NetSSHTest
 
   def test_translate_should_turn_off_authentication_methods
     open_ssh = {
-      'hostbasedauthentication'         => false,
-      'passwordauthentication'          => false,
-      'pubkeyauthentication'            => false,
+      'hostbasedauthentication' => false,
+      'passwordauthentication' => false,
+      'pubkeyauthentication' => false,
       'challengeresponseauthentication' => false,
-      'kbdinteractiveauthentication'    => false
+      'kbdinteractiveauthentication' => false
     }
 
     net_ssh = Net::SSH::Config.translate(open_ssh)
@@ -191,11 +191,11 @@ class TestConfig < NetSSHTest
 
   def test_translate_should_turn_on_authentication_methods
     open_ssh = {
-      'hostbasedauthentication'         => true,
-      'passwordauthentication'          => true,
-      'pubkeyauthentication'            => true,
+      'hostbasedauthentication' => true,
+      'passwordauthentication' => true,
+      'pubkeyauthentication' => true,
       'challengeresponseauthentication' => true,
-      'kbdinteractiveauthentication'    => true
+      'kbdinteractiveauthentication' => true
     }
 
     net_ssh = Net::SSH::Config.translate(open_ssh)

@@ -5,7 +5,6 @@ require 'net/ssh/verifiers/accept_new'
 module Net
   module SSH
     module Verifiers
-
       # Basically the same as the AcceptNew verifier, but does not try to actually
       # verify a connection if the server is the localhost and the port is a
       # nonstandard port number. Those two conditions will typically mean the
@@ -16,6 +15,7 @@ module Net
         # returns true. Otherwise, performs the standard strict verification.
         def verify(arguments)
           return true if tunnelled?(arguments)
+
           super
         end
 
@@ -30,7 +30,6 @@ module Net
           return ip == "127.0.0.1" || ip == "::1"
         end
       end
-
     end
   end
 end

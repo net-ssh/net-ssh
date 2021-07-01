@@ -6,7 +6,6 @@ require 'net/ssh/transport/constants'
 module Net
   module SSH
     module Test
-
       # This is an abstract class, not to be instantiated directly, subclassed by
       # Net::SSH::Test::LocalPacket and Net::SSH::Test::RemotePacket. It implements
       # functionality common to those subclasses.
@@ -72,7 +71,7 @@ module Net
         # added. Unsupported packet types will otherwise raise an exception.
         def types
           @types ||= case @type
-                     when KEXINIT then
+                     when KEXINIT
                        %i[long long long long
                           string string string string string string string string string string
                           bool]
@@ -92,6 +91,7 @@ module Net
                        else
                          request = Packet.registered_channel_requests(@data[1])
                          raise "don't know what to do about #{@data[1]} channel request" unless request
+
                          parts.concat(request[:extra_parts])
                        end
                      else raise "don't know how to parse packet type #{@type}"

@@ -7,7 +7,6 @@ require 'net/ssh/connection/constants'
 
 module Net
   module SSH
-
     # A specialization of Buffer that knows the format of certain common
     # packet types. It auto-parses those packet types, and allows them to
     # be accessed via the #[] accessor.
@@ -87,6 +86,7 @@ module Net
       def [](name)
         name = name.to_sym
         raise ArgumentError, "no such element #{name}" unless @named_elements.key?(name)
+
         @named_elements[name]
       end
 

@@ -8,7 +8,6 @@ require 'net/ssh/authentication/agent'
 module Net
   module SSH
     module Authentication
-
       # A trivial exception class used to report errors in the key manager.
       class KeyManagerError < Net::SSH::Exception; end
 
@@ -179,6 +178,7 @@ module Net
 
           if info[:from] == :agent
             raise KeyManagerError, "the agent is no longer available" unless agent
+
             return agent.sign(info[:identity], data.to_s)
           end
 
@@ -203,6 +203,7 @@ module Net
         # or if the agent is otherwise not available.
         def agent
           return unless use_agent?
+
           @agent ||= Agent.connect(logger, options[:agent_socket_factory], options[:identity_agent])
         rescue AgentNotAvailable
           @use_agent = false
@@ -250,37 +251,35 @@ module Net
         # Load prepared identities. Private key decryption errors ignored if ignore_decryption_errors
         def load_identities(identities, ask_passphrase, ignore_decryption_errors)
           identities.map do |identity|
-            begin
-              case identity[:load_from]
-              when :pubkey_file
-                key = KeyFactory.load_public_key(identity[:pubkey_file])
-                { public_key: key, from: :file, file: identity[:privkey_file] }
-              when :privkey_file
-                private_key = KeyFactory.load_private_key(
-                  identity[:privkey_file], options[:passphrase], ask_passphrase, options[:password_prompt]
-                )
-                key = private_key.send(:public_key)
-                { public_key: key, from: :file, file: identity[:privkey_file], key: private_key }
-              when :data
-                private_key = KeyFactory.load_data_private_key(
-                  identity[:data], options[:passphrase], ask_passphrase, "<key in memory>", options[:password_prompt]
-                )
-                key = private_key.send(:public_key)
-                { public_key: key, from: :key_data, data: identity[:data], key: private_key }
-              else
-                identity
-              end
-            rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError, OpenSSL::PKey::PKeyError, ArgumentError => e
-              if ignore_decryption_errors
-                identity
-              else
-                process_identity_loading_error(identity, e)
-                nil
-              end
-            rescue Exception => e
+            case identity[:load_from]
+            when :pubkey_file
+              key = KeyFactory.load_public_key(identity[:pubkey_file])
+              { public_key: key, from: :file, file: identity[:privkey_file] }
+            when :privkey_file
+              private_key = KeyFactory.load_private_key(
+                identity[:privkey_file], options[:passphrase], ask_passphrase, options[:password_prompt]
+              )
+              key = private_key.send(:public_key)
+              { public_key: key, from: :file, file: identity[:privkey_file], key: private_key }
+            when :data
+              private_key = KeyFactory.load_data_private_key(
+                identity[:data], options[:passphrase], ask_passphrase, "<key in memory>", options[:password_prompt]
+              )
+              key = private_key.send(:public_key)
+              { public_key: key, from: :key_data, data: identity[:data], key: private_key }
+            else
+              identity
+            end
+          rescue OpenSSL::PKey::RSAError, OpenSSL::PKey::DSAError, OpenSSL::PKey::ECError, OpenSSL::PKey::PKeyError, ArgumentError => e
+            if ignore_decryption_errors
+              identity
+            else
               process_identity_loading_error(identity, e)
               nil
             end
+          rescue Exception => e
+            process_identity_loading_error(identity, e)
+            nil
           end.compact
         end
 

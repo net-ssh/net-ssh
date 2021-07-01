@@ -10,7 +10,6 @@ require 'net/ssh/transport/state'
 module Net
   module SSH
     module Transport
-
       # A module that builds additional functionality onto the Net::SSH::BufferedIo
       # module. It adds SSH encryption, compression, and packet validation, as
       # per the SSH2 protocol. It also adds an abstraction for polling packets,
@@ -224,6 +223,7 @@ module Net
           if @packet.nil?
             minimum = server.block_size < 4 ? 4 : server.block_size
             return nil if available < minimum + aad_length
+
             data = read_available(minimum + aad_length)
 
             # decipher it
@@ -277,7 +277,6 @@ module Net
         end
       end
       # rubocop:enable Metrics/AbcSize
-
     end
   end
 end

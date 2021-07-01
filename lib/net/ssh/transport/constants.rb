@@ -1,7 +1,7 @@
 # frozen_string_literal: false
 
-module Net 
-  module SSH 
+module Net
+  module SSH
     module Transport
       module Constants
         #--
@@ -14,7 +14,7 @@ module Net
         DEBUG                     = 4
         SERVICE_REQUEST           = 5
         SERVICE_ACCEPT            = 6
-    
+
         #--
         # Algorithm negotiation messages
         #++

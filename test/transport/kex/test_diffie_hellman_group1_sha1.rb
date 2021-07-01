@@ -6,13 +6,12 @@ require 'ostruct'
 
 module Transport
   module Kex
-
     class TestDiffieHellmanGroup1SHA1 < NetSSHTest
       include Net::SSH::Transport::Constants
 
       def setup
         @dh_options = @dh = @algorithms = @connection = @server_key =
-                                                          @packet_data = @shared_secret = nil
+                                            @packet_data = @shared_secret = nil
       end
 
       def digest_type
@@ -153,7 +152,7 @@ module Transport
             :bignum, dh.dh.pub_key,
             :bignum, server_dh_pubkey,
             :bignum, shared_secret)
-          OpenSSL::Digest::SHA1.digest(buffer.to_s)
+          digest_type.digest(buffer.to_s)
         end
       end
 
@@ -169,6 +168,5 @@ module Transport
         Net::SSH::Buffer.from(*args)
       end
     end
-
   end
 end

@@ -4,7 +4,6 @@ require_relative '../common'
 require 'net/ssh/authentication/key_manager'
 
 module Authentication
-
   class TestKeyManager < NetSSHTest
     def test_key_files_and_known_identities_are_empty_by_default
       assert manager.key_files.empty?
@@ -25,7 +24,7 @@ module Authentication
       manager.add "/third"
       manager.add "/second"
       assert_equal 3, manager.key_files.length
-      final_files = manager.key_files.map {|item| item.split('/').last}
+      final_files = manager.key_files.map { |item| item.split('/').last }
       assert_equal %w[first second third], final_files
     end
 
@@ -35,7 +34,7 @@ module Authentication
       manager.add_keycert "/third"
       manager.add_keycert "/second"
       assert_equal 3, manager.keycert_files.length
-      final_files = manager.keycert_files.map {|item| item.split('/').last}
+      final_files = manager.keycert_files.map { |item| item.split('/').last }
       assert_equal %w[first second third], final_files
     end
 
@@ -383,5 +382,4 @@ module Authentication
       @manager ||= Net::SSH::Authentication::KeyManager.new(nil, { password_prompt: prompt }.merge(options))
     end
   end
-
 end

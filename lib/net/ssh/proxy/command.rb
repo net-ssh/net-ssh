@@ -7,7 +7,6 @@ require 'net/ssh/proxy/errors'
 module Net
   module SSH
     module Proxy
-
       # An implementation of a command proxy. To use it, instantiate it,
       # then pass the instantiated object via the :proxy key to
       # Net::SSH.start:
@@ -107,6 +106,7 @@ module Net
                 if IO.select([self], nil, [self], timeout_in_seconds) == nil
                   raise "Unexpected spurious read wakeup"
                 end
+
                 retry
               end
               result

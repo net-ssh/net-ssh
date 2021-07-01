@@ -54,7 +54,7 @@ class MitmServer < TCPServer
         r,_w,_e = IO.select([local, remote],nil,nil)
         if r.include? local
           begin
-            data = local.recv local_read_size 
+            data = local.recv local_read_size
           rescue StandardError => e
             data = nil
             dlog "Local closed: #{e}"

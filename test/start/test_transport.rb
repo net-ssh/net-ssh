@@ -7,19 +7,19 @@ module NetSSH
   class TestStart < NetSSHTest
     attr_reader :transport_session
     attr_reader :authentication_session
-    
+
     def setup
       @transport_session = mock('transport_session')
       @authentication_session = mock('authentication_session')
       Net::SSH::Transport::Session.expects(new: transport_session)
       Net::SSH::Authentication::Session.expects(new: authentication_session)
     end
-    
+
     def test_close_transport_when_authentication_fails
       authentication_session.expects(authenticate: false)
-      
+
       transport_session.expects(:close).at_least_once
-      
+
       begin
         Net::SSH.start('localhost', 'testuser') {}
       rescue Net::SSH::AuthenticationFailed

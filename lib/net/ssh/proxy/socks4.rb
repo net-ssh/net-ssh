@@ -8,7 +8,6 @@ require 'net/ssh/proxy/errors'
 module Net
   module SSH
     module Proxy
-
       # An implementation of a SOCKS4 proxy. To use it, instantiate it, then
       # pass the instantiated object via the :proxy key to Net::SSH.start:
       #
@@ -52,7 +51,7 @@ module Net
           socket = Socket.tcp(proxy_host, proxy_port, nil, nil,
                               connect_timeout: connection_options[:timeout])
           ip_addr = IPAddr.new(Resolv.getaddress(host))
-          
+
           packet = [VERSION, CONNECT, port.to_i, ip_addr.to_i, options[:user]].pack("CCnNZ*")
           socket.send packet, 0
 
@@ -65,7 +64,6 @@ module Net
           return socket
         end
       end
-
     end
   end
 end

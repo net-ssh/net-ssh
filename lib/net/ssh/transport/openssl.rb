@@ -4,7 +4,6 @@ require 'openssl'
 require 'net/ssh/authentication/pub_key_fingerprint'
 
 module OpenSSL
-
   # This class is originally defined in the OpenSSL module. As needed, methods
   # have been added to it by the Net::SSH module for convenience in dealing with
   # SSH functionality.
@@ -26,7 +25,6 @@ module OpenSSL
   end
 
   module PKey
-
     class PKey
       include Net::SSH::Authentication::PubKeyFingerprint
     end
@@ -39,6 +37,7 @@ module OpenSSL
       # lifted more-or-less directly from OpenSSH, dh.c, dh_pub_is_valid.)
       def valid?
         return false if pub_key.nil? || pub_key < 0
+
         bits_set = 0
         pub_key.num_bits.times { |i| bits_set += 1 if pub_key.bit_set?(i) }
         return (bits_set > 1 && pub_key < p)

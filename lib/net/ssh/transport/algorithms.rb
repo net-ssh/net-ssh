@@ -43,6 +43,7 @@ module Net
                   ecdh-sha2-nistp384
                   ecdh-sha2-nistp256
                   diffie-hellman-group-exchange-sha256
+                  diffie-hellman-group14-sha256
                   diffie-hellman-group14-sha1],
 
           encryption: %w[aes256-ctr aes192-ctr aes128-ctr],

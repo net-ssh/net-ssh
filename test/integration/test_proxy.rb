@@ -139,6 +139,7 @@ class TestProxy < NetSSHTest
       @io
     end
   end
+
   def test_does_close_proxy_on_proxy_failure
     setup_ssh_env do
       proxy = DbgProxy.new(Net::SSH::Proxy::Command.new('sleep 2 && ssh -W %h:%p -o "PreferredAuthentications none" user@localhost'))

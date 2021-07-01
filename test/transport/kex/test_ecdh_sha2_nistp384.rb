@@ -8,7 +8,7 @@ module Transport
     class TestEcdhSHA2NistP384 < TestEcdhSHA2NistP256
       def setup
         @ecdh = @algorithms = @connection = @server_key =
-                                              @packet_data = @shared_secret = nil
+                                @packet_data = @shared_secret = nil
       end
 
       def test_exchange_keys_should_return_expected_results_when_successful

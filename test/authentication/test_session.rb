@@ -4,7 +4,6 @@ require_relative '../common'
 require 'net/ssh/authentication/session'
 
 module Authentication
-
   class TestSession < NetSSHTest
     include Net::SSH::Transport::Constants
     include Net::SSH::Authentication::Constants
@@ -294,5 +293,4 @@ module Authentication
       EOF
     end
   end
-
 end

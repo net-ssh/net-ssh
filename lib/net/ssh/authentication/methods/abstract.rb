@@ -9,7 +9,6 @@ module Net
   module SSH
     module Authentication
       module Methods
-
         # The base class of all user authentication methods. It provides a few
         # bits of common functionality.
         class Abstract

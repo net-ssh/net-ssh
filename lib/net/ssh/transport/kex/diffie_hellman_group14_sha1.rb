@@ -2,9 +2,9 @@
 
 require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 
-module Net 
-  module SSH 
-    module Transport 
+module Net
+  module SSH
+    module Transport
       module Kex
         # A key-exchange service implementing the "diffie-hellman-group14-sha1"
         # key-exchange algorithm. (defined in RFC 4253)
@@ -26,7 +26,7 @@ module Net
                 "B5C55DF0" "6F4C52C9" "DE2BCBF6" "95581718" +
                 "3995497C" "EA956AE5" "15D22618" "98FA0510" +
                 "15728E5A" "8AACAA68" "FFFFFFFF" "FFFFFFFF"
-      
+
           # The radix in which P_s represents the value of P
           P_r = 16
 
