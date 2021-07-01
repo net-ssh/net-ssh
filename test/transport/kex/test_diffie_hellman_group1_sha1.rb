@@ -151,7 +151,7 @@ module Transport
             :bignum, dh.dh.pub_key,
             :bignum, server_dh_pubkey,
             :bignum, shared_secret)
-          OpenSSL::Digest::SHA1.digest(buffer.to_s)
+          digest_type.digest(buffer.to_s)
         end
       end
 
