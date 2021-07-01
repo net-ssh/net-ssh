@@ -77,7 +77,7 @@ module Net
               key = '\x00' * (keylen + ivlen)
             end
 
-            cipher = CipherFactory.get(ciphername, key: key[0...keylen], iv:key[keylen...keylen + ivlen], decrypt: true)
+            cipher = CipherFactory.get(ciphername, key: key[0...keylen], iv: key[keylen...keylen + ivlen], decrypt: true)
 
             decoded = cipher.update(buffer.remainder_as_buffer.to_s)
             decoded << cipher.final

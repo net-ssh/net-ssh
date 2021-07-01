@@ -52,7 +52,7 @@ unless ENV['NET_SSH_NO_ED25519']
         # TODO: fix bug in net ssh which reads public key even if private key is there
         sh "mv #{dir}/id_rsa_ed25519.pub #{dir}/id_rsa_ed25519.pub.hidden"
 
-        ret = Net::SSH.start("localhost", "net_ssh_1", { keys: "#{dir}/id_rsa_ed25519", passphrase:'pwd' }) do |ssh|
+        ret = Net::SSH.start("localhost", "net_ssh_1", { keys: "#{dir}/id_rsa_ed25519", passphrase: 'pwd' }) do |ssh|
           ssh.exec! 'echo "hello from:$USER"'
         end
         assert_equal "hello from:net_ssh_1\n", ret

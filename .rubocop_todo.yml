@@ -79,14 +79,6 @@ Layout/MultilineOperationIndentation:
     - 'test/authentication/methods/test_hostbased.rb'
     - 'test/authentication/methods/test_publickey.rb'
 
-# Offense count: 16
-# Cop supports --auto-correct.
-Layout/SpaceAfterColon:
-  Exclude:
-    - 'lib/net/ssh/authentication/ed25519.rb'
-    - 'test/integration/test_ed25519_pkeys.rb'
-    - 'test/verifiers/test_always.rb'
-
 # Offense count: 290
 # Cop supports --auto-correct.
 Layout/SpaceAfterComma:
