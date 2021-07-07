@@ -4,7 +4,6 @@ require 'common'
 require 'net/ssh/transport/cipher_factory'
 
 module Transport
-
   class TestCipherFactory < NetSSHTest
     def self.if_supported?(name)
       yield if Net::SSH::Transport::CipherFactory.supported?(name)
@@ -308,5 +307,4 @@ module Transport
       [first, second]
     end
   end
-
 end

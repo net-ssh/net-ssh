@@ -11,7 +11,7 @@ if ENV["CI"]
 end
 
 require 'minitest'
-require 'mocha/setup'
+require 'mocha/minitest'
 require 'net/ssh/buffer'
 require 'net/ssh/config'
 require 'net/ssh/loggable'
@@ -104,7 +104,7 @@ class MockTransport < Net::SSH::Transport::Session
     @hints = {}
     @socket = options[:socket]
     @algorithms = OpenStruct.new(session_id: "abcxyz123")
-    verifier { |data| true }
+    verifier { |_data| true }
   end
 
   def send_message(message)

@@ -3,10 +3,9 @@ require 'openssl'
 require 'net/ssh/proxy/errors'
 require 'net/ssh/proxy/http'
 
-module Net 
-  module SSH 
+module Net
+  module SSH
     module Proxy
-
       # A specialization of the HTTP proxy which encrypts the whole connection
       # using OpenSSL. This has the advantage that proxy authentication
       # information is not sent in plaintext.
@@ -22,9 +21,9 @@ module Net
                            OpenSSL::SSL::SSLContext.new
           super(proxy_host, proxy_port, options)
         end
-    
+
         protected
-    
+
         # Shim to make OpenSSL::SSL::SSLSocket behave like a regular TCPSocket
         # for all intents and purposes of Net::SSH::BufferedIo
         module SSLSocketCompatibility
@@ -32,12 +31,12 @@ module Net
             object.define_singleton_method(:recv, object.method(:sysread))
             object.sync_close = true
           end
-    
+
           def send(data, _opts)
             syswrite(data)
           end
         end
-    
+
         def establish_connection(connect_timeout)
           plain_socket = super(connect_timeout)
           OpenSSL::SSL::SSLSocket.new(plain_socket, @ssl_context).tap do |socket|
@@ -46,7 +45,6 @@ module Net
           end
         end
       end
-
     end
   end
 end

@@ -48,6 +48,7 @@ namespace :cert do
     raw = File.read "net-ssh-public_cert.pem"
     certificate = OpenSSL::X509::Certificate.new raw
     raise Exception, "Not yet expired: #{certificate.not_after}" unless certificate.not_after < Time.now
+
     sh "gem cert --build netssh@solutious.com --days 365*5 --private-key /mnt/gem/net-ssh-private_key.pem"
     sh "mv gem-public_cert.pem net-ssh-public_cert.pem"
     sh "gem cert --add net-ssh-public_cert.pem"

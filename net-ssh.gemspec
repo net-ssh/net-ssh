@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Net::SSH: a pure-Ruby implementation of the SSH2 client protocol. It allows you to write programs that invoke and interact with processes on remote servers, via SSH2.}
   spec.homepage      = "https://github.com/net-ssh/net-ssh"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.3")
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.5")
   spec.metadata = {
     "changelog_uri" => "https://github.com/net-ssh/net-ssh/blob/master/CHANGES.txt"
   }
@@ -40,5 +40,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest", "~> 5.10"
   spec.add_development_dependency "mocha", "~> 1.11.2"
   spec.add_development_dependency "rake", "~> 12.0"
-  spec.add_development_dependency "rubocop", "~> 0.74.0"
+  spec.add_development_dependency "rubocop", "~> 1.12.1"
 end

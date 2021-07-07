@@ -1,11 +1,11 @@
 name: CI
-on: [pull_request]
+on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: [2.7.2, 2.6.6, 2.5.8, 2.4.10, 3.0.0]
+        ruby-version: [2.7.2, 2.6.6, 2.5.8, 3.0.1]
     steps:
       - uses: actions/checkout@v1
 
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: 2.7
+          python-version: 3.8
 
       - name: Cache bundler
         uses: actions/cache@v1
@@ -70,7 +70,5 @@ jobs:
       - name: Run test helper test
         run: bundle exec rake test_test
       - name: Rubocop
-        if: matrix.ruby-version != '3.0.0'
-        run: bundle exec rubocop
-
-      
+        if: matrix.ruby-version == '3.0.1'
+        run: bundle exec rubocop --fail-level C -f s

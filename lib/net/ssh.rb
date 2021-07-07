@@ -15,7 +15,6 @@ require 'net/ssh/connection/session'
 require 'net/ssh/prompt'
 
 module Net
-
   # Net::SSH is a library for interacting, programmatically, with remote
   # processes via the SSH2 protocol. Sessions are always initiated via
   # Net::SSH.start. From there, a program interacts with the new SSH session

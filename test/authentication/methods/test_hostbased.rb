@@ -4,7 +4,6 @@ require 'authentication/methods/common'
 
 module Authentication
   module Methods
-
     class TestHostbased < NetSSHTest
       include Common
 
@@ -57,21 +56,22 @@ module Authentication
       def signature_parameters(key)
         Proc.new do |given_key, data|
           next false unless given_key.to_blob == key.to_blob
+
           buffer = Net::SSH::Buffer.new(data)
           buffer.read_string == "abcxyz123"      && # session-id
-          buffer.read_byte   == USERAUTH_REQUEST && # type
-          verify_userauth_request_packet(buffer, key)
+            buffer.read_byte == USERAUTH_REQUEST && # type
+            verify_userauth_request_packet(buffer, key)
         end
       end
 
       def verify_userauth_request_packet(packet, key)
-        packet.read_string == "jamis"          && # user-name
-        packet.read_string == "ssh-connection" && # next service
-        packet.read_string == "hostbased"      && # auth-method
-        packet.read_string == key.ssh_type     && # key type
-        packet.read_buffer.read_key.to_blob == key.to_blob && # key
-        packet.read_string == "me.ssh.test." && # client hostname
-        packet.read_string == "jamis" # client username
+        packet.read_string == "jamis" && # user-name
+          packet.read_string == "ssh-connection" && # next service
+          packet.read_string == "hostbased"      && # auth-method
+          packet.read_string == key.ssh_type     && # key type
+          packet.read_buffer.read_key.to_blob == key.to_blob && # key
+          packet.read_string == "me.ssh.test." && # client hostname
+          packet.read_string == "jamis" # client username
       end
 
       @@keys = nil

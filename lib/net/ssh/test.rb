@@ -5,7 +5,6 @@ require 'net/ssh/test/socket'
 
 module Net
   module SSH
-
     # This module may be used in unit tests, for when you want to test that your
     # SSH state machines are really doing what you expect they are doing. You will
     # typically include this module in your unit test class, and then build a
@@ -85,11 +84,11 @@ module Net
       # the block passed to this assertion.
       def assert_scripted
         raise "there is no script to be processed" if socket.script.events.empty?
+
         Net::SSH::Test::Extensions::IO.with_test_extension { yield }
         assert socket.script.events.empty?, "there should not be any remaining scripted events, but there are still" \
                                             "#{socket.script.events.length} pending"
       end
     end
-
   end
 end
