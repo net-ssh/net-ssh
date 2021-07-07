@@ -171,7 +171,7 @@ module Net
             PubKey.new(@pk)
           end
 
-          def ssh_do_sign(data)
+          def ssh_do_sign(data, sig_alg=nil)
             @sign_key.sign(data)
           end
 

@@ -168,7 +168,9 @@ module Authentication
     private
 
     def session(options={})
-      @session ||= Net::SSH::Authentication::Session.new(transport(options), options)
+      session_opts = options.clone
+      session_opts[:pubkey_algorithms] = %w[ssh-rsa]
+      @session ||= Net::SSH::Authentication::Session.new(transport(options), session_opts)
     end
 
     def transport(options={})
