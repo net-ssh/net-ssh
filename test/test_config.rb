@@ -170,7 +170,23 @@ class TestConfig < NetSSHTest
     assert_equal 'MD5',     net_ssh[:fingerprint_hash]
     assert_equal true,      net_ssh[:keepalive]
     assert_equal '/dev/null', net_ssh[:user_known_hosts_file]
-    assert_equal false, net_ssh[:strict_host_key_checking]
+    assert_equal :never, net_ssh[:verify_host_key]
+  end
+
+  def test_translate_should_turn_on_host_key_verification
+    open_ssh = { 'stricthostkeychecking' => true }
+
+    net_ssh = Net::SSH::Config.translate(open_ssh)
+
+    assert_equal :always, net_ssh[:verify_host_key]
+  end
+
+  def test_translate_should_accept_new_host_key
+    open_ssh = { 'stricthostkeychecking' => 'accept-new' }
+
+    net_ssh = Net::SSH::Config.translate(open_ssh)
+
+    assert_equal :accept_new, net_ssh[:verify_host_key]
   end
 
   def test_translate_should_turn_off_authentication_methods
@@ -202,9 +218,7 @@ class TestConfig < NetSSHTest
   end
 
   def test_translate_should_not_disable_keyboard_interactive_when_challange_or_keyboardinterective_is_on
-    open_ssh = {
-      'kbdinteractiveauthentication' => false
-    }
+    open_ssh = { 'kbdinteractiveauthentication' => false }
     net_ssh = Net::SSH::Config.translate(open_ssh)
     assert_equal %w(keyboard-interactive none password publickey), net_ssh[:auth_methods].sort
 
