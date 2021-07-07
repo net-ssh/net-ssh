@@ -1,4 +1,5 @@
 # encoding: ASCII-8BIT
+# frozen_string_literal: false
 
 require 'common'
 require 'transport/hmac/test_sha2_512'

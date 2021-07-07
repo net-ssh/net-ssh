@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'socket'
 require 'net/ssh/proxy/errors'
 

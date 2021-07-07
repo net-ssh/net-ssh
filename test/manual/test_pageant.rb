@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 #
 # Tests for communication capability with Pageant (or KeeAgent)
 # process, to include the case where it is running in different UAC

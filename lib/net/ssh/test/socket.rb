@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'socket'
 require 'stringio'
 require 'net/ssh/test/extensions'

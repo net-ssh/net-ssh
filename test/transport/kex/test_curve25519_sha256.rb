@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 unless ENV['NET_SSH_NO_ED25519']
   require_relative '../../common'
   require 'transport/kex/test_diffie_hellman_group1_sha1'

@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require_relative '../../common'
 require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 require 'ostruct'

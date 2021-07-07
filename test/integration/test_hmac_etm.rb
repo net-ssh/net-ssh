@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require_relative 'common'
 require_relative 'mitm_server'
 require 'fileutils'

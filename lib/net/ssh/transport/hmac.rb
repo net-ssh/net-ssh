@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/hmac/md5'
 require 'net/ssh/transport/hmac/md5_96'

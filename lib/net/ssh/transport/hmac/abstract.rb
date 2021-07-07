@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'openssl'
 require 'openssl/digest'
 

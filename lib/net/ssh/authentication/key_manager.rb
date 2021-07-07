@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/errors'
 require 'net/ssh/key_factory'
 require 'net/ssh/loggable'

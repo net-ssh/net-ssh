@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
 
 if ENV["CI"]

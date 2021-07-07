@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 module Net
   module SSH
     # The Net::SSH::Config class is used to parse OpenSSH configuration files,

@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'strscan'
 require 'openssl'
 require 'base64'

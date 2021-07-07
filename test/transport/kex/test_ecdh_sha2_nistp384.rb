@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'openssl'
 require 'transport/kex/test_ecdh_sha2_nistp256'
 

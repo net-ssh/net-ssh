@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 require 'net/ssh/errors'
 require 'net/ssh/known_hosts'
 require 'net/ssh/verifiers/always'
