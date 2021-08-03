@@ -101,7 +101,7 @@ module IntegrationTestHelpers
     end
   end
 
-  def port_open?(path)
+  def is_port_open?(path)
     Socket.tcp("localhost", 10567, connect_timeout: 1) { true } rescue false # rubocop:disable Style/RescueModifier
   end
 
