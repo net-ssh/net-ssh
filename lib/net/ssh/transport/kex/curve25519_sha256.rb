@@ -1,6 +1,8 @@
 gem 'x25519' # raise if the gem x25519 is not installed
 
 require 'x25519'
+
+X25519.provider = X25519::Provider::Ref10 # https://github.com/RubyCrypto/x25519/issues/22
 require 'net/ssh/transport/constants'
 require 'net/ssh/transport/kex/abstract5656'
 
