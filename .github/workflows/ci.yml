@@ -67,11 +67,13 @@ jobs:
         run: bundle exec rake test
         env:
           NET_SSH_RUN_INTEGRATION_TESTS: 1
+          CI: 1
       - name: Run Tests (without ed25519)
         run: bundle exec rake test
         env:
           BUNDLE_GEMFILE: ./Gemfile.noed25519
           NET_SSH_RUN_INTEGRATION_TESTS: 1
+          CI: 1
       - name: Run test helper test
         run: bundle exec rake test_test
       - name: Rubocop
