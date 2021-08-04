@@ -434,15 +434,13 @@ class TestForward < ForwardTestBase
       remote_port = got_remote_port.pop
       puts "Remote port:#{remote_port}"
       Thread.start do
-        begin
-          client = TCPSocket.new(localhost, remote_port)
-          data = client.read(4096)
-          client.close
-          client_done << data
-          puts "Received: #{data}"
-        rescue StandardError
-          client_done << $!
-        end
+        client = TCPSocket.new(localhost, remote_port)
+        data = client.read(4096)
+        client.close
+        client_done << data
+        puts "Received: #{data}"
+      rescue StandardError
+        client_done << $!
       end
       Timeout.timeout(5) do
         session.loop(0.1) { client_done.empty? }
