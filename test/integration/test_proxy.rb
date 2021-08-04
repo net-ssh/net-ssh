@@ -3,6 +3,7 @@ require 'net/ssh/buffer'
 require 'net/ssh'
 require 'timeout'
 require 'tempfile'
+require 'fileutils'
 require 'net/ssh/proxy/command'
 require 'net/ssh/proxy/jump'
 
@@ -43,6 +44,7 @@ class TestProxy < NetSSHTest
                   IdentityFile #{@gwkey_id_rsa}
                   StrictHostKeyChecking no
                "
+      FileUtils.mkdir_p File.expand_path("~/.ssh")
       my_config = File.expand_path("~/.ssh/config")
       File.open(my_config, 'w') { |file| file.write(config) }
       begin
@@ -97,7 +99,7 @@ class TestProxy < NetSSHTest
         ok = Net::SSH.start(*ssh_start_params(proxy: proxy)) do |ssh|
           with_spurious_write_wakeup_emulate do
             ret = ssh.exec! "echo \"$USER:#{large_msg}\""
-            assert_equal "/bin/sh: Argument list too long\n", ret
+            assert_match(%r{/bin/.*sh: Argument list too long\n}, ret)
             hello_count = 1000
             ret = ssh.exec! "ruby -e 'puts \"Hello\"*#{hello_count}'"
             assert_equal "Hello" * hello_count + "\n", ret

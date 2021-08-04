@@ -388,12 +388,13 @@ module Net
           originator_address = packet.read_string
           originator_port    = packet.read_long
 
+          puts "REMOTE 0: #{connected_port} #{connected_address} #{originator_address} #{originator_port}"
           remote = @remote_forwarded_ports[[connected_port, connected_address]]
-
           if remote.nil?
             raise Net::SSH::ChannelOpenFailed.new(1, "unknown request from remote forwarded connection on #{connected_address}:#{connected_port}")
           end
 
+          puts "REMOTE: #{remote.host} #{remote.port}"
           client = TCPSocket.new(remote.host, remote.port)
           info { "connected #{connected_address}:#{connected_port} originator #{originator_address}:#{originator_port}" }
 
