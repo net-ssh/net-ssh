@@ -97,7 +97,7 @@ module IntegrationTestHelpers
       end
       f.write("\nLogLevel DEBUG3\n") if debug
       f.close
-      puts "CONFIG: #{f.path} PID: #{pidpath}"
+      puts "CONFIG: #{f.path} PID: #{pidpath}" if debug
       yield(f.path, pidpath)
     end
   end
