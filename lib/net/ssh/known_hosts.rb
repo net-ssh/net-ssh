@@ -6,6 +6,21 @@ require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
+    class HostCertPub
+      def ssh_type
+        "ecdsa-sha2-nistp256-cert-v01@openssh.com"
+      end
+
+      def initialize(content)
+        @content = content
+      end
+
+      def matches?(server_key)
+        certblob = Buffer.new(server_key).read_key
+        certblob.signature_valid? && (certblob.signature_key.to_blob == @content.to_blob)
+      end
+    end
+
     # Represents the result of a search in known hosts
     # see search_for
     class HostKeys
@@ -127,22 +142,28 @@ module Net
 
         File.open(source) do |file|
           file.each_line do |line|
-            hosts, type, key_content = line.split(' ')
-            # Skip empty line or one that is commented
-            next if hosts.nil? || hosts.start_with?('#')
+            if line.start_with?("@cert-authority ")
+              cert_auth, hosts, type, key_content = line.split(' ')
+              blob = key_content.unpack("m*").first
+              keys << HostCertPub.new(Net::SSH::Buffer.new(blob).read_key )
+            else
+              hosts, type, key_content = line.split(' ')
+              # Skip empty line or one that is commented
+              next if hosts.nil? || hosts.start_with?('#')
 
-            hostlist = hosts.split(',')
+              hostlist = hosts.split(',')
 
-            next unless SUPPORTED_TYPE.include?(type)
+              next unless SUPPORTED_TYPE.include?(type)
 
-            found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
-            next unless found
+              found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
+              next unless found
 
-            found = hostlist.include?(host_ip) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
-            next unless found
+              found = hostlist.include?(host_ip) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
+              next unless found
 
-            blob = key_content.unpack("m*").first
-            keys << Net::SSH::Buffer.new(blob).read_key
+              blob = key_content.unpack("m*").first
+              keys << Net::SSH::Buffer.new(blob).read_key
+            end
           end
         end
 

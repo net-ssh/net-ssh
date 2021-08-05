@@ -23,7 +23,10 @@ module Net
           # blob also match.
           found = host_keys.any? do |key|
             key.ssh_type == arguments[:key].ssh_type &&
-            key.to_blob  == arguments[:key].to_blob
+            (
+              (key.respond_to?(:to_blob) && key.to_blob  == arguments[:key].to_blob) ||
+              (key.respond_to?(:matches?) && key.matches?(arguments[:key].to_blob))
+            )
           end
 
           # If a match was found, return true. Otherwise, raise an exception

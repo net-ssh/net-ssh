@@ -87,16 +87,17 @@ module IntegrationTestHelpers
     end
   end
 
-  def with_lines_as_tempfile(lines = [], add_pid = true, &block)
+  def with_lines_as_tempfile(lines = [], add_pid: true, debug: false, &block)
     Tempfile.open('sshd_config') do |f|
-      f.write(lines)
+      f.write(lines.join("\n"))
       pidpath = nil
       if add_pid
         pidpath = f.path + '.pid'
-        f.write("\nPIDFILE #{pidpath}")
+        f.write("\nPidFile #{pidpath}\n")
       end
-      # f.write("\nLogLevel DEBUG3")
+      f.write("\nLogLevel DEBUG3\n") if debug
       f.close
+      puts "CONFIG: #{f.path} PID: #{pidpath}"
       yield(f.path, pidpath)
     end
   end
@@ -106,15 +107,17 @@ module IntegrationTestHelpers
   end
 
   # @yield [pid, port]
-  def start_sshd_7_or_later(port = '2200', config: nil)
+  def start_sshd_7_or_later(port = '2200', config: nil, debug: false)
     pid = nil
     sshpidfile = nil
     if config
-      with_lines_as_tempfile(config) do |path, pidpath|
-        # puts "DEBUG - SSH LOG: #{path}-log.txt"
+      with_lines_as_tempfile(config, debug: debug) do |path, pidpath|
+        puts "DEBUG - SSH LOG: #{path}-log.txt config: #{path}" if debug
         raise "A leftover sshd is already running" if port_open?(port)
 
-        pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port) # '-E', "#{path}-log.txt")
+        extra_params = []
+        extra_params = ['-E', "#{path}-log.txt"] if debug
+        pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port, *extra_params)
         sshpidfile = pidpath
         yield pid, port
       end
