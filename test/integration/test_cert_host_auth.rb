@@ -34,17 +34,23 @@ class TestCertHostAuth < NetSSHTest
     end
   end
 
+  def debug
+    false
+  end
+
   def test_host_should_match_when_host_key_was_signed_by_key
     Tempfile.open('cert_kh') do |f|
       setup_ssh_env do |params|
         data = File.read(params[:cert_pub])
-        f.write("@cert-authority *.hosts.netssh #{data}")
+        f.write("@cert-authority [*.hosts.netssh]:2200 #{data}")
         f.close
 
         config_lines = ["HostCertificate #{params[:signed_host_key]}"]
         start_sshd_7_or_later(config: config_lines) do |_pid, port|
-          Timeout.timeout(100) do
-            ret = Net::SSH.start("one.hosts.netssh", "net_ssh_1", password: 'foopwd', port: port, verify_host_key: :always, user_known_hosts_file: [f.path], verbose: :debug) do |ssh|
+          Timeout.timeout(500) do
+            # sleep 0.2
+            # sh "ssh -v -i ~/.ssh/id_ed25519 one.hosts.netssh -o UserKnownHostsFile=#{f.path} -p 2200"
+            ret = Net::SSH.start("one.hosts.netssh", "net_ssh_1", password: 'foopwd', port: port, verify_host_key: :always, user_known_hosts_file: [f.path]) do |ssh|
               ssh.exec! "echo 'foo'"
             end
             assert_equal "foo\n", ret
@@ -61,7 +67,7 @@ class TestCertHostAuth < NetSSHTest
     Tempfile.open('cert_kh') do |f|
       setup_ssh_env do |params|
         data = File.read(params[:badcert_pub])
-        f.write("@cert-authority *.hosts.netssh #{data}")
+        f.write("@cert-authority [*.hosts.netssh]:2200 #{data}")
         f.close
 
         config_lines = ["HostCertificate #{params[:signed_host_key]}"]
@@ -69,7 +75,7 @@ class TestCertHostAuth < NetSSHTest
           Timeout.timeout(100) do
             sleep 0.2
             assert_raises(Net::SSH::HostKeyMismatch) do
-              Net::SSH.start("one.hosts.netssh", "net_ssh_1", password: 'foopwd', port: port, verify_host_key: :always, user_known_hosts_file: [f.path], verbose: :debug) do |ssh|
+              Net::SSH.start("one.hosts.netssh", "net_ssh_1", password: 'foopwd', port: port, verify_host_key: :always, user_known_hosts_file: [f.path]) do |ssh|
                 ssh.exec! "echo 'foo'"
               end
             end

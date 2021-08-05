@@ -189,26 +189,28 @@ module Net
               hosts, type, key_content, comment = line.split(' ')
             end
 
-            if marker == "@cert-authority"
-              blob = key_content.unpack("m*").first
-              keys << HostKeyEntries::CertAuthority.new(Net::SSH::Buffer.new(blob).read_key, comment: comment)
-            else
-              # Skip empty line or one that is commented
-              next if hosts.nil? || hosts.start_with?('#')
+            # Skip empty line or one that is commented
+            next if hosts.nil? || hosts.start_with?('#')
 
-              hostlist = hosts.split(',')
+            hostlist = hosts.split(',')
 
-              next unless SUPPORTED_TYPE.include?(type)
+            next unless SUPPORTED_TYPE.include?(type)
 
-              found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
-              next unless found
+            found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
+            next unless found
 
-              found = hostlist.include?(host_ip) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
-              next unless found
+            found = hostlist.include?(host_ip) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
+            next unless found
 
-              blob = key_content.unpack("m*").first
-              keys << HostKeyEntries::PubKey.new(Net::SSH::Buffer.new(blob).read_key, comment: comment)
-            end
+            blob = key_content.unpack("m*").first
+            raw_key = Net::SSH::Buffer.new(blob).read_key
+
+            keys <<
+              if marker == "@cert-authority"
+                HostKeyEntries::CertAuthority.new(raw_key, comment: comment)
+              else
+                HostKeyEntries::PubKey.new(raw_key, comment: comment)
+              end
           end
         end
 
