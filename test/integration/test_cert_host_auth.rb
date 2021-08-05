@@ -1,7 +1,6 @@
 require_relative 'common'
 require 'fileutils'
 require 'tmpdir'
-require 'byebug'
 require 'net/ssh'
 
 require 'timeout'

@@ -3,7 +3,6 @@ require 'openssl'
 require 'base64'
 require 'net/ssh/buffer'
 require 'net/ssh/authentication/ed25519_loader'
-require 'byebug'
 
 module Net
   module SSH
