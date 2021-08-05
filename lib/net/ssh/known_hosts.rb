@@ -8,9 +8,12 @@ require 'byebug'
 module Net
   module SSH
     module HostKeyEntries
+      # regular public key entry
       class PubKey < Delegator
-        def initialize(key)
+        def initialize(key, comment: nil)
+          super()
           @key = key
+          @comment = comment
         end
 
         def ssh_type
@@ -35,6 +38,7 @@ module Net
         end
       end
 
+      # @cert-authority entry
       class CertAuthority
         def ssh_types
           %w[
@@ -43,9 +47,10 @@ module Net
             ecdsa-sha2-nistp521-cert-v01@openssh.com
           ]
         end
-  
-        def initialize(key)
+
+        def initialize(key, comment: nil)
           @key = key
+          @comment = comment
         end
 
         def matches_key?(server_key)
@@ -179,18 +184,17 @@ module Net
 
         File.open(source) do |file|
           file.each_line do |line|
-            marker = nil
-            hosts, type, key_content, comment, last = line.split(' ')
-
-            if ['@cert-authority'].include?(hosts)
-              marker, hosts, type, key_content, comment = hosts, type, key_content, comment, last
+            if line.start_with?('@')
+              marker, hosts, type, key_content, comment = line.split(' ')
+            else
+              marker = nil
+              hosts, type, key_content, comment = line.split(' ')
             end
 
             if marker == "@cert-authority"
               blob = key_content.unpack("m*").first
-              keys << HostKeyEntries::CertAuthority.new(Net::SSH::Buffer.new(blob).read_key)
+              keys << HostKeyEntries::CertAuthority.new(Net::SSH::Buffer.new(blob).read_key, comment: comment)
             else
-              hosts, type, key_content = line.split(' ')
               # Skip empty line or one that is commented
               next if hosts.nil? || hosts.start_with?('#')
 
@@ -205,7 +209,7 @@ module Net
               next unless found
 
               blob = key_content.unpack("m*").first
-              keys << HostKeyEntries::PubKey.new(Net::SSH::Buffer.new(blob).read_key)
+              keys << HostKeyEntries::PubKey.new(Net::SSH::Buffer.new(blob).read_key, comment: comment)
             end
           end
         end

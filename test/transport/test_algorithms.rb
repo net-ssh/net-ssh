@@ -46,9 +46,10 @@ module Transport
     end
 
     def test_constructor_with_known_hosts_reporting_known_host_key_should_use_that_host_key_type
-      Net::SSH::KnownHosts.expects(:search_for).with("net.ssh.test,127.0.0.1", {
-        user_known_hosts_file: "/dev/null", global_known_hosts_file: "/dev/null"
-      }).returns([stub("key", ssh_type: "ssh-dss")])
+      Net::SSH::KnownHosts.expects(:search_for).with(
+        "net.ssh.test,127.0.0.1",
+        { user_known_hosts_file: "/dev/null", global_known_hosts_file: "/dev/null" }
+      ).returns([stub("key", ssh_type: "ssh-dss")])
       assert_equal %w[ssh-dss] + ed_ec_host_keys + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa rsa-sha2-256 rsa-sha2-512], algorithms[:host_key]
     end
 
@@ -441,8 +442,10 @@ module Transport
 
     def transport(transport_options={})
       @transport ||= MockTransport.new(
-        {user_known_hosts_file: '/dev/null',
-        global_known_hosts_file: '/dev/null'}.merge(transport_options)  
+        {
+          user_known_hosts_file: '/dev/null',
+          global_known_hosts_file: '/dev/null'
+        }.merge(transport_options)
       )
     end
   end

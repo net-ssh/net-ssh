@@ -17,7 +17,7 @@ class TestCertHostAuth < NetSSHTest
       @badcert = "#{dir}/badca"
       sh "rm -rf #{@badcert} #{@badcert}.pub"
       sh "ssh-keygen -t rsa -N '' -C 'ca@hosts.netssh' -f #{@badcert}"
-       
+
       @cert = "#{dir}/ca"
       sh "rm -rf #{@cert} #{@cert}.pub"
       sh "ssh-keygen -t rsa -N '' -C 'ca@hosts.netssh' -f #{@cert}"
@@ -42,7 +42,7 @@ class TestCertHostAuth < NetSSHTest
         puts "Data: #{data}"
         f.write("@cert-authority *.hosts.netssh #{data}")
         f.close
-      
+
         start_sshd_7_or_later(config: config_lines, debug: true) do |_pid, port|
           Timeout.timeout(400) do
             # We have our own sshd, give it a chance to come up before
@@ -64,7 +64,7 @@ class TestCertHostAuth < NetSSHTest
   def test_failure
     config_lines = []
     config_lines.push("HostCertificate /etc/ssh/ssh_host_ecdsa_key-cert.pub")
-    
+
     Tempfile.open('empty_kh') do |f|
       setup_ssh_env do |params|
         data = File.read(params[:badcert_pub])
@@ -72,13 +72,11 @@ class TestCertHostAuth < NetSSHTest
         puts "Data: #{data}"
         f.write("@cert-authority *.hosts.netssh #{data}")
         f.close
-      
+
         start_sshd_7_or_later(config: config_lines, debug: true) do |_pid, port|
           Timeout.timeout(400) do
-            # We have our own sshd, give it a chance to come up before
-            # listening.
-            #sh "ssh net_ssh_1@one.hosts.netssh -p #{port} -o UserKnownHostsFile=#{f.path}"
-            
+            # sh "ssh net_ssh_1@one.hosts.netssh -p #{port} -o UserKnownHostsFile=#{f.path}"
+
             sleep 0.2
             assert_raises(Net::SSH::HostKeyMismatch) do
               Net::SSH.start("one.hosts.netssh", "net_ssh_1", password: 'foopwd', port: port, verify_host_key: :always, user_known_hosts_file: [f.path], verbose: :debug) do |ssh|
