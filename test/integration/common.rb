@@ -122,7 +122,7 @@ module IntegrationTestHelpers
         yield pid, port
       end
     else
-      with_lines_as_tempfile('') do |path, pidpath|
+      with_lines_as_tempfile(['']) do |path, pidpath|
         pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port)
         sshpidfile = pidpath
         yield pid, port
