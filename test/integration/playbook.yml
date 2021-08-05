@@ -92,7 +92,10 @@
       lineinfile: dest='/etc/ssh/sshd_config' line='X11Forwarding no' regexp=X11Forwarding
       notify: restart sshd
     - name: sshd allow forward
-      lineinfile: dest='/etc/ssh/sshd_config' line='PasswordAuthentication=yes' regexp=PasswordAuthentication
+      lineinfile: dest='/etc/ssh/sshd_config' line='#PasswordAuthentication no' regexp='#?PasswordAuthentication.+no'
+      notify: restart sshd
+    - name: sshd allow forward
+      lineinfile: dest='/etc/ssh/sshd_config' line='PasswordAuthentication yes' regexp=PasswordAuthentication
       notify: restart sshd
     - name: put NET_SSH_RUN_INTEGRATION_TESTS=YES environment
       lineinfile: dest='/etc/environment' line='NET_SSH_RUN_INTEGRATION_TESTS=YES'
