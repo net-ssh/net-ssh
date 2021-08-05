@@ -121,7 +121,7 @@ module Net
     # * :forward_agent => set to true if you want the SSH agent connection to
     #   be forwarded
     # * :known_hosts => a custom object holding known hosts records.
-    #   It must implement #search_for and add in a similiar manner as KnownHosts.
+    #   It must implement #search_for and `add` in a similiar manner as KnownHosts.
     # * :global_known_hosts_file => the location of the global known hosts
     #   file. Set to an array if you want to specify multiple global known
     #   hosts files. Defaults to %w(/etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2).

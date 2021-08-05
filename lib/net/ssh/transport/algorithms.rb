@@ -278,7 +278,7 @@ module Net
             # existing known key for the host has preference.
 
             existing_keys = session.host_keys
-            host_keys = existing_keys.map { |key| key.ssh_type }.uniq
+            host_keys = existing_keys.flat_map { |key| key.respond_to?(:ssh_types) ? key.ssh_types : [key.ssh_type] }.uniq
             algorithms[:host_key].each do |name|
               host_keys << name unless host_keys.include?(name)
             end

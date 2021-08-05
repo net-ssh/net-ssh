@@ -442,7 +442,7 @@ module Transport
     def transport(transport_options={})
       @transport ||= MockTransport.new(
         {user_known_hosts_file: '/dev/null',
-        global_known_hosts_file: '/dev/null'}.merge(transport_options)
+        global_known_hosts_file: '/dev/null'}.merge(transport_options)  
       )
     end
   end

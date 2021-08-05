@@ -3,21 +3,58 @@ require 'openssl'
 require 'base64'
 require 'net/ssh/buffer'
 require 'net/ssh/authentication/ed25519_loader'
+require 'byebug'
 
 module Net
   module SSH
-    class HostCertPub
-      def ssh_type
-        "ecdsa-sha2-nistp256-cert-v01@openssh.com"
+    module HostKeyEntries
+      class PubKey < Delegator
+        def initialize(key)
+          @key = key
+        end
+
+        def ssh_type
+          @key.ssh_type
+        end
+
+        def ssh_types
+          [ssh_type]
+        end
+
+        def to_blob
+          @key.to_blob
+        end
+
+        def __getobj__
+          Kernel.warn("Calling Net::SSH::Buffer methods on HostKeyEntries PubKey is deprecated")
+          @key
+        end
+
+        def matches_key?(server_key)
+          @key.ssh_type == server_key.ssh_type && @key.to_blob == server_key.to_blob
+        end
       end
 
-      def initialize(content)
-        @content = content
-      end
+      class CertAuthority
+        def ssh_types
+          %w[
+            ecdsa-sha2-nistp256-cert-v01@openssh.com
+            ecdsa-sha2-nistp384-cert-v01@openssh.com
+            ecdsa-sha2-nistp521-cert-v01@openssh.com
+          ]
+        end
+  
+        def initialize(key)
+          @key = key
+        end
 
-      def matches?(server_key)
-        certblob = Buffer.new(server_key).read_key
-        certblob.signature_valid? && (certblob.signature_key.to_blob == @content.to_blob)
+        def matches_key?(server_key)
+          if ssh_types.include?(server_key.ssh_type)
+            server_key.signature_valid? && (server_key.signature_key.to_blob == @key.to_blob)
+          else
+            false
+          end
+        end
       end
     end
 
@@ -142,10 +179,16 @@ module Net
 
         File.open(source) do |file|
           file.each_line do |line|
-            if line.start_with?("@cert-authority ")
-              cert_auth, hosts, type, key_content = line.split(' ')
+            marker = nil
+            hosts, type, key_content, comment, last = line.split(' ')
+
+            if ['@cert-authority'].include?(hosts)
+              marker, hosts, type, key_content, comment = hosts, type, key_content, comment, last
+            end
+
+            if marker == "@cert-authority"
               blob = key_content.unpack("m*").first
-              keys << HostCertPub.new(Net::SSH::Buffer.new(blob).read_key )
+              keys << HostKeyEntries::CertAuthority.new(Net::SSH::Buffer.new(blob).read_key)
             else
               hosts, type, key_content = line.split(' ')
               # Skip empty line or one that is commented
@@ -162,7 +205,7 @@ module Net
               next unless found
 
               blob = key_content.unpack("m*").first
-              keys << Net::SSH::Buffer.new(blob).read_key
+              keys << HostKeyEntries::PubKey.new(Net::SSH::Buffer.new(blob).read_key)
             end
           end
         end
