@@ -10,8 +10,7 @@ module Net
     module HostKeyEntries
       # regular public key entry
       class PubKey < Delegator
-        def initialize(key, comment: nil)
-          super()
+        def initialize(key, comment: nil) # rubocop:disable Lint/MissingSuper
           @key = key
           @comment = comment
         end
