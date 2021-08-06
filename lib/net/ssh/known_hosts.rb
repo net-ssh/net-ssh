@@ -223,11 +223,11 @@ module Net
       def match(host, pattern)
         if pattern.include?('*') || pattern.include?('?')
           # see man 8 sshd for pattern details
-          pattern_regexp = pattern.split('*').map do |x|
-            x.split('?').map do |y|
+          pattern_regexp = pattern.split('*', -1).map do |x|
+            x.split('?', -1).map do |y|
               Regexp.escape(y)
             end.join('.')
-          end.join('[^.]*')
+          end.join('.*')
 
           host =~ Regexp.new("\\A#{pattern_regexp}\\z")
         else
