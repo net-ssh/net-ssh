@@ -13,23 +13,27 @@ class TestCertHostAuth < NetSSHTest
 
   def setup_ssh_env(&block)
     tmpdir do |dir|
+      cert_type = "rsa"
+      # cert_type = "ssh-ed25519"
+      host_key_type = "ecdsa"
+      # host_key_type = "ed25519"
+
       # create a cert, and sign the host key
       @cert = "#{dir}/ca"
       sh "rm -rf #{@cert} #{@cert}.pub"
-      sh "ssh-keygen -t rsa -N '' -C 'ca@hosts.netssh' -f #{@cert}"
-      FileUtils.cp "/etc/ssh/ssh_host_ecdsa_key.pub", "#{dir}/one.hosts.netssh.pub"
+      sh "ssh-keygen -t #{cert_type} -N '' -C 'ca@hosts.netssh' -f #{@cert} #{debug ? '' : '-q'}"
+      FileUtils.cp "/etc/ssh/ssh_host_#{host_key_type}_key.pub", "#{dir}/one.hosts.netssh.pub"
       Dir.chdir(dir) do
-        sh "ssh-keygen -s #{@cert} -h -I one.hosts.netssh -n one.hosts.netssh #{dir}/one.hosts.netssh.pub"
-        sh "ssh-keygen -L -f one.hosts.netssh-cert.pub"
+        sh "ssh-keygen -s #{@cert} -h -I one.hosts.netssh -n one.hosts.netssh #{debug ? '' : '-q'} #{dir}/one.hosts.netssh.pub"
+        sh "ssh-keygen -L -f one.hosts.netssh-cert.pub" if debug
       end
-      signed_host_key = "/etc/ssh/ssh_host_ecdsa_key-cert.pub"
+      signed_host_key = "/etc/ssh/ssh_host_#{host_key_type}_key-cert.pub"
       sh "sudo cp -f #{dir}/one.hosts.netssh-cert.pub #{signed_host_key}"
 
       # we don't use this for signing the cert
       @badcert = "#{dir}/badca"
       sh "rm -rf #{@badcert} #{@badcert}.pub"
-      sh "ssh-keygen -t rsa -N '' -C 'ca@hosts.netssh' -f #{@badcert}"
-
+      sh "ssh-keygen -t #{cert_type} -N '' -C 'ca@hosts.netssh' -f #{@badcert} #{debug ? '' : '-q'}"
       yield(cert_pub: "#{@cert}.pub", badcert_pub: "#{@badcert}.pub", signed_host_key: signed_host_key)
     end
   end
