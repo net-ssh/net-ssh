@@ -1,6 +1,6 @@
 [![Gem Version](https://badge.fury.io/rb/net-ssh.svg)](https://badge.fury.io/rb/net-ssh)
 [![Join the chat at https://gitter.im/net-ssh/net-ssh](https://badges.gitter.im/net-ssh/net-ssh.svg)](https://gitter.im/net-ssh/net-ssh?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/net-ssh/net-ssh.svg?branch=master)](https://travis-ci.org/net-ssh/net-ssh)
+[![Build status](https://github.com/net-ssh/net-ssh/actions/workflows/ci.yml/badge.svg)](https://github.com/net-ssh/net-ssh/actions/workflows/ci.yml)
 [![Coverage status](https://codecov.io/gh/net-ssh/net-ssh/branch/master/graph/badge.svg)](https://codecov.io/gh/net-ssh/net-ssh)
 [![Backers on Open Collective](https://opencollective.com/net-ssh/backers/badge.svg)](#backers])
 [![Sponsors on Open Collective](https://opencollective.com/net-ssh/sponsors/badge.svg)](#sponsors)
