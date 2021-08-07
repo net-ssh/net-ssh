@@ -27,7 +27,7 @@ module Net
         # Instantiates a new ServerVersion and immediately (and synchronously)
         # negotiates the SSH protocol in effect, using the given socket.
         def initialize(socket, logger, timeout = nil)
-          @header = ""
+          @header = String.new
           @version = nil
           @logger = logger
           negotiate!(socket, timeout)
@@ -48,7 +48,7 @@ module Net
           raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating" if timeout && !IO.select([socket], nil, nil, timeout)
 
           loop do
-            @version = ""
+            @version = String.new
             loop do
               begin
                 b = socket.readpartial(1)

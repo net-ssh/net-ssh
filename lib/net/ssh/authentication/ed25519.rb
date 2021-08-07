@@ -116,7 +116,7 @@ module Net
           end
 
           def to_blob
-            Net::SSH::Buffer.from(:mstring,"ssh-ed25519",:string,@verify_key.to_bytes).to_s
+            Net::SSH::Buffer.from(:mstring,"ssh-ed25519".dup,:string,@verify_key.to_bytes).to_s
           end
 
           def ssh_type

@@ -288,7 +288,7 @@ module Transport
     # Verification for https://github.com/net-ssh/net-ssh/issues/483
     def test_that_algorithm_undefined_doesnt_throw_exception
       # Create a logger explicitly with DEBUG logging
-      string_io = StringIO.new("")
+      string_io = StringIO.new(String.new)
       debug_logger = Logger.new(string_io)
       debug_logger.level = Logger::DEBUG
 

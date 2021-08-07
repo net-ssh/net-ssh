@@ -57,7 +57,7 @@ class TestChannel < NetSSHTest
           system("killall /bin/nc")
         end
         channel = ssh_exec(ssh, "echo Begin ; sleep 100 ; echo End", channel_success_handler) do |ch, _type, data|
-          ch[:result] ||= ""
+          ch[:result] ||= String.new
           ch[:result] << data
         end
         assert_raises(IOError) { channel.wait }
@@ -78,7 +78,7 @@ class TestChannel < NetSSHTest
           system("killall /bin/nc")
         end
         channel = ssh_exec(ssh, "echo Hello!", channel_success_handler) do |ch, _type, data|
-          ch[:result] ||= ""
+          ch[:result] ||= "".dup
           ch[:result] << data
         end
         channel.wait
@@ -120,7 +120,7 @@ class TestChannel < NetSSHTest
               system("killall /bin/nc")
             end
             channel = ssh_exec(ssh, "echo A:$foo; echo B:$baz", channel_success_handler) do |ch, _type, data|
-              ch[:result] ||= ""
+              ch[:result] ||= String.new
               ch[:result] << data
             end
             channel.wait

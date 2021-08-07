@@ -32,7 +32,7 @@ module Net::SSH::Transport
   module CTR
     def self.extended(orig)
       orig.instance_eval {
-        @remaining = ""
+        @remaining = String.new
         @counter = nil
         @counter_len = orig.block_size
         orig.encrypt
@@ -67,13 +67,13 @@ module Net::SSH::Transport
         end
 
         def reset
-          @remaining = ""
+          @remaining = String.new
         end
 
         def update(data)
           @remaining += data
 
-          encrypted = ""
+          encrypted = String.new
 
           offset = 0
           while (@remaining.bytesize - offset) >= block_size
@@ -89,7 +89,7 @@ module Net::SSH::Transport
 
         def final
           s = @remaining.empty? ? '' : xor!(@remaining, _update(@counter))
-          @remaining = ""
+          @remaining = String.new
           s
         end
 

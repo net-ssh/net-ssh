@@ -9,3 +9,6 @@ Layout/LineLength:
   Exclude:
     - 'test/**/*.rb'
     - 'net-ssh.gemspec'
+
+Style/EmptyLiteral:
+  Enabled: false
