@@ -33,7 +33,7 @@ module Net
     # * ProxyJump => maps to the :proxy option
     # * PubKeyAuthentication => maps to the :auth_methods option
     # * RekeyLimit => :rekey_limit
-    # * StrictHostKeyChecking => :strict_host_key_checking
+    # * StrictHostKeyChecking => :verify_host_key
     # * User => :user
     # * UserKnownHostsFile => :user_known_hosts_file
     # * NumberOfPasswordPrompts => :number_of_password_prompts
@@ -194,6 +194,26 @@ module Net
 
         private
 
+        def translate_verify_host_key(value)
+          case value
+          when false
+            :never
+          when true
+            :always
+          when 'accept-new'
+            :accept_new
+          end
+        end
+
+        def translate_keepalive(hash, value)
+          if value && value.to_i > 0
+            hash[:keepalive] = true
+            hash[:keepalive_interval] = value.to_i
+          else
+            hash[:keepalive] = false
+          end
+        end
+
         TRANSLATE_CONFIG_KEY_RENAME_MAP = {
           bindaddress: :bind_address,
           compression: :compression,
@@ -208,13 +228,14 @@ module Net
           identityfile: :keys,
           fingerprinthash: :fingerprint_hash,
           port: :port,
-          stricthostkeychecking: :strict_host_key_checking,
           user: :user,
           userknownhostsfile: :user_known_hosts_file,
           checkhostip: :check_host_ip
         }.freeze
         def translate_config_key(hash, key, value, settings)
           case key
+          when :stricthostkeychecking
+            hash[:verify_host_key] = translate_verify_host_key(value)
           when :ciphers
             hash[:encryption] = value.split(/,/)
           when :hostbasedauthentication
@@ -232,12 +253,7 @@ module Net
           when :serveralivecountmax
             hash[:keepalive_maxcount] = value.to_i if value
           when :serveraliveinterval
-            if value && value.to_i > 0
-              hash[:keepalive] = true
-              hash[:keepalive_interval] = value.to_i
-            else
-              hash[:keepalive] = false
-            end
+            translate_keepalive(hash, value)
           when :passwordauthentication
             if value
               (hash[:auth_methods] << 'password').uniq!
