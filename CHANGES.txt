@@ -2,6 +2,7 @@
 
   * Support cert based host key auth, fix asterisk in known_hosts [#833]
   * Support kex dh-group14-sha256  [#795]
+  * Fix StrictHostKeyChecking ssh config parameter translation [#765]
 
 === 6.2.0 rc1
 
