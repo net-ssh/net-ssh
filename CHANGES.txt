@@ -1,3 +1,8 @@
+=== 6.3.0 beta1
+
+  * Support cert based host key auth, fix asterisk in known_hosts [#833]
+  * Support kex dh-group14-sha256  [#795]
+
 === 6.2.0 rc1
 
 === 6.2.0 beta1

@@ -92,16 +92,22 @@
       lineinfile: dest='/etc/ssh/sshd_config' line='X11Forwarding no' regexp=X11Forwarding
       notify: restart sshd
     - name: sshd allow forward
-      lineinfile: dest='/etc/ssh/sshd_config' line='PasswordAuthentication=yes' regexp=PasswordAuthentication
+      lineinfile: dest='/etc/ssh/sshd_config' line='#PasswordAuthentication no' regexp='#?PasswordAuthentication.+no'
+      notify: restart sshd
+    - name: sshd allow forward
+      lineinfile: dest='/etc/ssh/sshd_config' line='PasswordAuthentication yes' regexp=PasswordAuthentication
       notify: restart sshd
     - name: put NET_SSH_RUN_INTEGRATION_TESTS=YES environment
       lineinfile: dest='/etc/environment' line='NET_SSH_RUN_INTEGRATION_TESTS=YES'
     - name: change dir in bashrc
       lineinfile: dest="{{homedir}}/.bashrc" owner="{{myuser}}" mode=0644
         regexp='^cd ' line='cd /net-ssh'
-    - name: add host aliases
+    - name: add host aliases1
       lineinfile: dest='/etc/hosts' owner='root' group='root' mode=0644
         regexp='^127\.0\.0\.1\s+gateway.netssh' line='127.0.0.1  gateway.netssh'
+    - name: add host aliases2
+      lineinfile: dest='/etc/hosts' owner='root' group='root' mode=0644
+        regexp='^127\.0\.0\.1\s+one.hosts.netssh' line='127.0.0.1  one.hosts.netssh'
     - name: Update APT Cache
       apt:
         update_cache: yes

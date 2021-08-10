@@ -108,7 +108,7 @@ class TestChannel < NetSSHTest
 
   def test_channel_should_set_environment_variables_on_remote
     setup_ssh_env do
-      start_sshd_7_or_later(config: 'AcceptEnv foo baz') do |_pid, port|
+      start_sshd_7_or_later(config: ['AcceptEnv foo baz']) do |_pid, port|
         Timeout.timeout(20) do
           # We have our own sshd, give it a chance to come up before
           # listening.

@@ -1,4 +1,4 @@
-require 'common'
+require_relative './common'
 
 class TestKnownHosts < NetSSHTest
   def perform_test(source)
@@ -109,7 +109,29 @@ class TestKnownHosts < NetSSHTest
   def test_search_for_with_hostname_not_matching_pattern_3
     options = { user_known_hosts_file: path("known_hosts/misc") }
     keys = Net::SSH::KnownHosts.search_for('subsubdomain.subdomain.gitfoo.com',options)
-    assert_equal(0, keys.count)
+    assert_equal(1, keys.count)
+  end
+
+  def test_asterisk_matches_multiple_dots
+    with_config_file(lines: ["*.git???.com #{sample_key}"]) do |path|
+      options = { user_known_hosts_file: path }
+      keys = Net::SSH::KnownHosts.search_for('subsubdomain.subdomain.gitfoo.com',options)
+      assert_equal(1, keys.count)
+
+      keys = Net::SSH::KnownHosts.search_for('subsubdomain.subdomain.gitfoo2.com',options)
+      assert_equal(0, keys.count)
+    end
+  end
+
+  def test_asterisk_matches_everything
+    with_config_file(lines: ["* #{sample_key}"]) do |path|
+      options = { user_known_hosts_file: path }
+      keys = Net::SSH::KnownHosts.search_for('subsubdomain.subdomain.gitfoo.com',options)
+      assert_equal(1, keys.count)
+
+      keys = Net::SSH::KnownHosts.search_for('subsubdomain.subdomain.gitfoo2.com',options)
+      assert_equal(1, keys.count)
+    end
   end
 
   def test_search_for_then_add
@@ -129,6 +151,18 @@ class TestKnownHosts < NetSSHTest
 
   def path(relative_path)
     File.join(File.dirname(__FILE__), relative_path)
+  end
+
+  def sample_key
+    "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
+  end
+
+  def with_config_file(lines: [], &block)
+    Tempfile.open('known_hosts') do |f|
+      f.write(lines.join("\n"))
+      f.close
+      yield(f.path)
+    end
   end
 
   def rsa_key

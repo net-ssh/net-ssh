@@ -6,6 +6,64 @@ require 'net/ssh/authentication/ed25519_loader'
 
 module Net
   module SSH
+    module HostKeyEntries
+      # regular public key entry
+      class PubKey < Delegator
+        def initialize(key, comment: nil) # rubocop:disable Lint/MissingSuper
+          @key = key
+          @comment = comment
+        end
+
+        def ssh_type
+          @key.ssh_type
+        end
+
+        def ssh_types
+          [ssh_type]
+        end
+
+        def to_blob
+          @key.to_blob
+        end
+
+        def __getobj__
+          Kernel.warn("Calling Net::SSH::Buffer methods on HostKeyEntries PubKey is deprecated")
+          @key
+        end
+
+        def matches_key?(server_key)
+          @key.ssh_type == server_key.ssh_type && @key.to_blob == server_key.to_blob
+        end
+      end
+
+      # @cert-authority entry
+      class CertAuthority
+        def ssh_types
+          %w[
+            ecdsa-sha2-nistp256-cert-v01@openssh.com
+            ecdsa-sha2-nistp384-cert-v01@openssh.com
+            ecdsa-sha2-nistp521-cert-v01@openssh.com
+            ssh-ed25519-cert-v01@openssh.com
+            ssh-rsa-cert-v01@openssh.com
+            ssh-rsa-cert-v00@openssh.com
+          ]
+        end
+
+        def initialize(key, comment: nil)
+          @key = key
+          @comment = comment
+        end
+
+        def matches_key?(server_key)
+          if ssh_types.include?(server_key.ssh_type)
+            server_key.signature_valid? && (server_key.signature_key.to_blob == @key.to_blob)
+          else
+            false
+          end
+        end
+      end
+    end
+
     # Represents the result of a search in known hosts
     # see search_for
     class HostKeys
@@ -127,7 +185,13 @@ module Net
 
         File.open(source) do |file|
           file.each_line do |line|
-            hosts, type, key_content = line.split(' ')
+            if line.start_with?('@')
+              marker, hosts, type, key_content, comment = line.split(' ')
+            else
+              marker = nil
+              hosts, type, key_content, comment = line.split(' ')
+            end
+
             # Skip empty line or one that is commented
             next if hosts.nil? || hosts.start_with?('#')
 
@@ -142,7 +206,14 @@ module Net
             next unless found
 
             blob = key_content.unpack("m*").first
-            keys << Net::SSH::Buffer.new(blob).read_key
+            raw_key = Net::SSH::Buffer.new(blob).read_key
+
+            keys <<
+              if marker == "@cert-authority"
+                HostKeyEntries::CertAuthority.new(raw_key, comment: comment)
+              else
+                HostKeyEntries::PubKey.new(raw_key, comment: comment)
+              end
           end
         end
 
@@ -152,11 +223,11 @@ module Net
       def match(host, pattern)
         if pattern.include?('*') || pattern.include?('?')
           # see man 8 sshd for pattern details
-          pattern_regexp = pattern.split('*').map do |x|
-            x.split('?').map do |y|
+          pattern_regexp = pattern.split('*', -1).map do |x|
+            x.split('?', -1).map do |y|
               Regexp.escape(y)
             end.join('.')
-          end.join('[^.]*')
+          end.join('.*')
 
           host =~ Regexp.new("\\A#{pattern_regexp}\\z")
         else
