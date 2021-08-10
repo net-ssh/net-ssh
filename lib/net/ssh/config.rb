@@ -299,7 +299,7 @@ module Net
         # host names.
         def pattern2regex(pattern)
           tail = pattern
-          prefix = ""
+          prefix = String.new
           while !tail.empty? do
             head,sep,tail = tail.partition(/[\*\?]/)
             prefix = prefix + Regexp.quote(head)

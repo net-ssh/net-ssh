@@ -38,7 +38,7 @@ module Net
           config = connection_options && connection_options[:config]
           uri = URI.parse("ssh://#{first_jump}")
 
-          template = "ssh"
+          template = "ssh".dup
           template << " -l #{uri.user}"    if uri.user
           template << " -p #{uri.port}"    if uri.port
           template << " -J #{extra_jumps}" if extra_jumps

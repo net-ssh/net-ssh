@@ -1,6 +1,6 @@
 # encoding: ASCII-8BIT
 
-require 'common'
+require_relative '../common'
 require 'timeout'
 require 'net/ssh/transport/packet_stream'
 

@@ -529,12 +529,6 @@ Style/Documentation:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-Style/EmptyLiteral:
-  Exclude:
-    - 'lib/net/ssh/transport/kex/diffie_hellman_group1_sha1.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 Style/EvenOdd:
   Exclude:
     - 'lib/net/ssh/buffer.rb'

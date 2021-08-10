@@ -70,7 +70,7 @@ module Net
 
       # Creates a new buffer, initialized to the given content. The position
       # is initialized to the beginning of the buffer.
-      def initialize(content="")
+      def initialize(content=String.new)
         @content = content.to_s
         @position = 0
       end
@@ -117,7 +117,7 @@ module Net
       # Resets the buffer, making it empty. Also, resets the read position to
       # 0.
       def clear!
-        @content = ""
+        @content = String.new
         @position = 0
       end
 
@@ -133,7 +133,7 @@ module Net
           # optimize for a fairly common case
           clear!
         elsif n > 0
-          @content = @content[n..-1] || ""
+          @content = @content[n..-1] || String.new
           @position -= n
           @position = 0 if @position < 0
         end
@@ -346,7 +346,12 @@ module Net
       # Optimized version of write where the caller gives up ownership of string
       # to the method. This way we can mutate the string.
       def write_moved(string)
-        @content << string.force_encoding('BINARY')
+        @content <<
+          if string.frozen?
+            string.dup.force_encoding('BINARY')
+          else
+            string.force_encoding('BINARY')
+          end
         self
       end
 

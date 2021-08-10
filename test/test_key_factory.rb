@@ -277,7 +277,7 @@ class TestKeyFactory < NetSSHTest
   end
 
   def public(key, args = nil)
-    result = ""
+    result = String.new
     if !args.nil?
       result << "#{args} "
     end
