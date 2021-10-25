@@ -80,7 +80,7 @@ module Net
         # available or not, and will return nil if there is no packet ready to be
         # returned. If the mode parameter is :block, then this method will block
         # until a packet is available or timeout seconds have passed.
-        def next_packet(mode=:nonblock, timeout=nil)
+        def next_packet(mode = :nonblock, timeout = nil)
           case mode
           when :nonblock then
             packet = poll_next_packet

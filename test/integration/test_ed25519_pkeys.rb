@@ -15,7 +15,7 @@ unless ENV['NET_SSH_NO_ED25519']
       Dir.mktmpdir do |dir|
         sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
         sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N ''"
-        set_authorized_key('net_ssh_1',"#{dir}/id_rsa_ed25519.pub")
+        set_authorized_key('net_ssh_1', "#{dir}/id_rsa_ed25519.pub")
 
         ret = Net::SSH.start("localhost", "net_ssh_1", { keys: "#{dir}/id_rsa_ed25519" }) do |ssh|
           ssh.exec! 'echo "hello from:$USER"'
@@ -29,8 +29,8 @@ unless ENV['NET_SSH_NO_ED25519']
         with_agent do
           sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
           sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N 'pwd'"
-          set_authorized_key('net_ssh_1',"#{dir}/id_rsa_ed25519.pub")
-          ssh_add("#{dir}/id_rsa_ed25519","pwd")
+          set_authorized_key('net_ssh_1', "#{dir}/id_rsa_ed25519.pub")
+          ssh_add("#{dir}/id_rsa_ed25519", "pwd")
 
           # TODO: fix bug in net ssh which reads public key even if private key is there
           sh "mv #{dir}/id_rsa_ed25519.pub #{dir}/id_rsa_ed25519.pub.hidden"
@@ -47,7 +47,7 @@ unless ENV['NET_SSH_NO_ED25519']
       Dir.mktmpdir do |dir|
         sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
         sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N 'pwd'"
-        set_authorized_key('net_ssh_1',"#{dir}/id_rsa_ed25519.pub")
+        set_authorized_key('net_ssh_1', "#{dir}/id_rsa_ed25519.pub")
 
         # TODO: fix bug in net ssh which reads public key even if private key is there
         sh "mv #{dir}/id_rsa_ed25519.pub #{dir}/id_rsa_ed25519.pub.hidden"

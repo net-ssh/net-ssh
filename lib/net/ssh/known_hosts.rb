@@ -105,10 +105,10 @@ module Net
 
       SUPPORTED_TYPE.push('ssh-ed25519') if Net::SSH::Authentication::ED25519Loader::LOADED
 
-      class <<self
+      class << self
         # Searches all known host files (see KnownHosts.hostfiles) for all keys
         # of the given host. Returns an enumerable of keys found.
-        def search_for(host, options={})
+        def search_for(host, options = {})
           HostKeys.new(search_in(hostfiles(options), host, options), host, self, options)
         end
 
@@ -127,7 +127,7 @@ module Net
         #
         # If you only want the user known host files, you can pass :user as
         # the second option.
-        def hostfiles(options, which=:all)
+        def hostfiles(options, which = :all)
           files = []
 
           files += Array(options[:user_known_hosts_file] || %w[~/.ssh/known_hosts ~/.ssh/known_hosts2]) if which == :all || which == :user
@@ -142,7 +142,7 @@ module Net
         # Looks in all user known host files (see KnownHosts.hostfiles) and tries to
         # add an entry for the given host and key to the first file it is able
         # to.
-        def add(host, key, options={})
+        def add(host, key, options = {})
           hostfiles(options, :user).each do |file|
             KnownHosts.new(file).add(host, key)
             return

@@ -40,7 +40,7 @@ module Net
 
         # Allows the socket to also mimic a socket factory, simply returning
         # +self+.
-        def open(host, port, options={})
+        def open(host, port, options = {})
           @host, @port = host, port
           self
         end

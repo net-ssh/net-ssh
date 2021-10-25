@@ -33,7 +33,7 @@ module Net
         #
         # A new Net::SSH::Test::Channel instance is returned, which can be used
         # to script additional channel operations.
-        def opens_channel(confirm=true)
+        def opens_channel(confirm = true)
           channel = Channel.new(self)
           channel.remote_id = 5555
 
@@ -70,7 +70,7 @@ module Net
         #
         # This will typically be called via Net::SSH::Test::Channel#sends_exec or
         # Net::SSH::Test::Channel#sends_subsystem.
-        def sends_channel_request(channel, request, reply, data, success=true)
+        def sends_channel_request(channel, request, reply, data, success = true)
           if data.is_a? Array
             events << LocalPacket.new(:channel_request, channel.remote_id, request, reply, *data)
           else
@@ -163,7 +163,7 @@ module Net
         #
         #   # peek at the next event
         #   event = script.next(:first)
-        def next(mode=:shift)
+        def next(mode = :shift)
           events.send(mode)
         end
 

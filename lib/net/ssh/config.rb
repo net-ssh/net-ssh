@@ -65,7 +65,7 @@ module Net
         # given +files+ (defaulting to the list of files returned by
         # #default_files), translates the resulting hash into the options
         # recognized by Net::SSH, and returns them.
-        def for(host, files=expandable_default_files)
+        def for(host, files = expandable_default_files)
           translate(files.inject({}) { |settings, file|
             load(file, host, settings)
           })
@@ -77,7 +77,7 @@ module Net
         # ones. Returns a hash containing the OpenSSH options. (See
         # #translate for how to convert the OpenSSH options into Net::SSH
         # options.)
-        def load(path, host, settings={}, base_dir = nil)
+        def load(path, host, settings = {}, base_dir = nil)
           file = File.expand_path(path)
           base_dir ||= File.dirname(file)
           return settings unless File.readable?(file)
@@ -317,7 +317,7 @@ module Net
           tail = pattern
           prefix = String.new
           while !tail.empty? do
-            head,sep,tail = tail.partition(/[\*\?]/)
+            head, sep, tail = tail.partition(/[\*\?]/)
             prefix = prefix + Regexp.quote(head)
             case sep
             when '*'
@@ -371,7 +371,7 @@ module Net
 
           conditions = conditions.each_slice(2)
           condition_matches = []
-          conditions.each do |(kind,exprs)|
+          conditions.each do |(kind, exprs)|
             exprs = unquote(exprs)
 
             case kind.downcase

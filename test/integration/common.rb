@@ -20,14 +20,14 @@ module IntegrationTestHelpers
     end
   end
 
-  def set_authorized_key(user,pubkey)
+  def set_authorized_key(user, pubkey)
     authorized_key = "/home/#{user}/.ssh/authorized_keys"
     sh "sudo cp #{pubkey} #{authorized_key}"
     sh "sudo chown #{user} #{authorized_key}"
     sh "sudo chmod 0744 #{authorized_key}"
   end
 
-  def sign_user_key(user,pubkey)
+  def sign_user_key(user, pubkey)
     cert = "/etc/ssh/users_ca"
     sh "sudo ssh-keygen -s #{cert} -I user_#{user} -n #{user} -V +52w #{pubkey}"
   end
@@ -48,7 +48,7 @@ module IntegrationTestHelpers
     end
   end
 
-  def ssh_add(key,password)
+  def ssh_add(key, password)
     command = "ssh-add #{key}"
     status = nil
     PTY.spawn(command) do |reader, writer, pid|

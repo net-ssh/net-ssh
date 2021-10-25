@@ -191,7 +191,7 @@ module Net
 
         private
 
-        def update_next_iv(data, reset=false)
+        def update_next_iv(data, reset = false)
           @next_iv << data
           @next_iv = @next_iv[@next_iv.size - cipher.iv_len..-1]
 

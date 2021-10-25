@@ -49,7 +49,7 @@ class MitmServer < TCPServer
     server = start_server(server) do |local|
       remote = TCPSocket.new(remote_host, remote_port)
       loop do
-        r,_w,_e = IO.select([local, remote],nil,nil)
+        r, _w, _e = IO.select([local, remote], nil, nil)
         if r.include? local
           begin
             data = local.recv local_read_size

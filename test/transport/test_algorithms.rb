@@ -146,7 +146,7 @@ module Transport
 
     def test_constructor_with_unrecognized_hmac_should_ignore_those
       assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha1 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96 none],
-        algorithms(hmac: "unknown hmac-md5-96", append_all_supported_algorithms: true)[:hmac]
+                   algorithms(hmac: "unknown hmac-md5-96", append_all_supported_algorithms: true)[:hmac]
     end
 
     def test_constructor_with_preferred_hmac_supports_additions
@@ -224,7 +224,7 @@ module Transport
 
     def test_key_exchange_when_server_does_not_support_preferred_kex_should_fallback_to_secondary
       kexinit kex: "diffie-hellman-group14-sha1"
-      transport.expect do |_t,buffer|
+      transport.expect do |_t, buffer|
         assert_kexinit(buffer)
         install_mock_key_exchange(buffer, kex: Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1)
       end
@@ -233,7 +233,7 @@ module Transport
 
     def test_key_exchange_when_server_does_not_support_any_preferred_kex_should_raise_error
       kexinit kex: "something-obscure"
-      transport.expect { |_t,buffer| assert_kexinit(buffer) }
+      transport.expect { |_t, buffer| assert_kexinit(buffer) }
       assert_raises(Net::SSH::Exception) { algorithms.accept_kexinit(kexinit) }
     end
 
@@ -335,7 +335,7 @@ module Transport
 
     private
 
-    def install_mock_key_exchange(buffer, options={})
+    def install_mock_key_exchange(buffer, options = {})
       kex = options[:kex] || Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256
 
       Net::SSH::Transport::Kex::MAP.each do |_name, klass|
@@ -346,17 +346,17 @@ module Transport
 
       kex.expects(:new)
          .with(algorithms, transport,
-          client_version_string: Net::SSH::Transport::ServerVersion::PROTO_VERSION,
-          server_version_string: transport.server_version.version,
-          server_algorithm_packet: kexinit.to_s,
-          client_algorithm_packet: buffer.to_s,
-          need_bytes: 32,
-          minimum_dh_bits: nil,
-          logger: nil)
+               client_version_string: Net::SSH::Transport::ServerVersion::PROTO_VERSION,
+               server_version_string: transport.server_version.version,
+               server_algorithm_packet: kexinit.to_s,
+               client_algorithm_packet: buffer.to_s,
+               need_bytes: 32,
+               minimum_dh_bits: nil,
+               logger: nil)
          .returns(stub("kex", exchange_keys: { shared_secret: shared_secret, session_id: session_id, hashing_algorithm: hashing_algorithm }))
     end
 
-    def install_mock_algorithm_lookups(options={})
+    def install_mock_algorithm_lookups(options = {})
       params = { shared: shared_secret.to_ssh, hash: session_id, digester: hashing_algorithm }
       Net::SSH::Transport::CipherFactory.expects(:get)
                                         .with(options[:client_cipher] || "aes256-ctr", params.merge(iv: key("A"), key: key("C"), encrypt: true))
@@ -386,27 +386,27 @@ module Transport
       hashing_algorithm.digest(shared_secret.to_ssh + session_id + salt + session_id)
     end
 
-    def cipher(type, options={})
+    def cipher(type, options = {})
       Net::SSH::Transport::CipherFactory.get(type, options)
     end
 
-    def kexinit(options={})
+    def kexinit(options = {})
       @kexinit ||= P(:byte, KEXINIT,
-        :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF),
-        :string, options[:kex] || "diffie-hellman-group-exchange-sha256,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha256,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1",
-        :string, options[:host_key] || "ssh-rsa,ssh-dss",
-        :string, options[:encryption_client] || "aes256-ctr,aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
-        :string, options[:encryption_server] || "aes256-ctr,aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
-        :string, options[:hmac_client] || "hmac-sha2-256,hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96",
-        :string, options[:hmac_server] || "hmac-sha2-256,hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96",
-        :string, options[:compression_client] || "none,zlib@openssh.com,zlib",
-        :string, options[:compression_server] || "none,zlib@openssh.com,zlib",
-        :string, options[:language_client] || "",
-        :string, options[:language_server] || "",
-        :bool, options[:first_kex_follows])
+                     :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF), :long, rand(0xFFFFFFFF),
+                     :string, options[:kex] || "diffie-hellman-group-exchange-sha256,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha256,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1",
+                     :string, options[:host_key] || "ssh-rsa,ssh-dss",
+                     :string, options[:encryption_client] || "aes256-ctr,aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
+                     :string, options[:encryption_server] || "aes256-ctr,aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se,idea-cbc",
+                     :string, options[:hmac_client] || "hmac-sha2-256,hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96",
+                     :string, options[:hmac_server] || "hmac-sha2-256,hmac-sha1,hmac-md5,hmac-sha1-96,hmac-md5-96",
+                     :string, options[:compression_client] || "none,zlib@openssh.com,zlib",
+                     :string, options[:compression_server] || "none,zlib@openssh.com,zlib",
+                     :string, options[:language_client] || "",
+                     :string, options[:language_server] || "",
+                     :bool, options[:first_kex_follows])
     end
 
-    def assert_kexinit(buffer, options={})
+    def assert_kexinit(buffer, options = {})
       assert_equal KEXINIT, buffer.type
       assert_equal 16, buffer.read(16).length
       assert_equal options[:kex] || (x25519_kex + ec_kex + %w[diffie-hellman-group-exchange-sha256 diffie-hellman-group14-sha256 diffie-hellman-group14-sha1]).join(','), buffer.read_string
@@ -433,14 +433,14 @@ module Transport
       assert_equal :server_hmac, transport.server_options[:hmac]
     end
 
-    def algorithms(algorithms_options={}, transport_options={})
+    def algorithms(algorithms_options = {}, transport_options = {})
       @algorithms ||= Net::SSH::Transport::Algorithms.new(
         transport(transport_options),
         algorithms_options
       )
     end
 
-    def transport(transport_options={})
+    def transport(transport_options = {})
       @transport ||= MockTransport.new(
         {
           user_known_hosts_file: '/dev/null',

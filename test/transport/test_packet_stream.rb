@@ -57,12 +57,12 @@ module Transport
     end
 
     def test_available_for_read_should_return_nontrue_when_self_is_not_ready
-      IO.expects(:select).with([stream], nil, nil, 0).returns([[],[],[]])
+      IO.expects(:select).with([stream], nil, nil, 0).returns([[], [], []])
       assert !stream.available_for_read?
     end
 
     def test_available_for_read_should_return_true_when_self_is_ready
-      IO.expects(:select).with([stream], nil, nil, 0).returns([[self],[],[]])
+      IO.expects(:select).with([stream], nil, nil, 0).returns([[self], [], []])
       assert stream.available_for_read?
     end
 
@@ -134,7 +134,7 @@ module Transport
 
     def test_next_packet_should_eventually_return_packet_when_non_blocking_and_partial_read
       IO.stubs(:select).returns([[stream]])
-      stream.stubs(:recv).returns(packet[0,10], packet[10..-1])
+      stream.stubs(:recv).returns(packet[0, 10], packet[10..-1])
       assert_nil stream.next_packet(:nonblock)
       packet = stream.next_packet(:nonblock)
       assert_not_nil packet
@@ -159,7 +159,7 @@ module Transport
 
     def test_next_packet_should_block_when_requested_until_entire_packet_is_available
       IO.stubs(:select).returns([[stream]])
-      stream.stubs(:recv).returns(packet[0,10], packet[10,20], packet[20..-1])
+      stream.stubs(:recv).returns(packet[0, 10], packet[10, 20], packet[20..-1])
       packet = stream.next_packet(:block)
       assert_not_nil packet
       assert_equal DEBUG, packet.type
@@ -181,7 +181,7 @@ module Transport
     end
 
     def test_send_packet_should_enqueue_and_send_data_immediately
-      stream.expects(:send).times(3).with { |a,b| a == stream.write_buffer && b == 0 }.returns(15)
+      stream.expects(:send).times(3).with { |a, b| a == stream.write_buffer && b == 0 }.returns(15)
       IO.expects(:select).times(2).returns([[], [stream]])
       stream.send_packet(ssh_packet)
       assert !stream.pending_write?

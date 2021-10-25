@@ -17,7 +17,7 @@ module Net
 
           private
 
-          def generate_key #:nodoc:
+          def generate_key # :nodoc:
             OpenSSL::PKey::EC.new(curve_name).generate_key
           end
 

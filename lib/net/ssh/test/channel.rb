@@ -65,7 +65,7 @@ module Net
         # be scripted.
         #
         #   channel.sends_exec "ls -l"
-        def sends_exec(command, reply=true, success=true)
+        def sends_exec(command, reply = true, success = true)
           script.sends_channel_request(self, "exec", reply, command, success)
         end
 
@@ -74,7 +74,7 @@ module Net
         # and +success+ arguments.
         #
         #   channel.sends_subsystem "sftp"
-        def sends_subsystem(subsystem, reply=true, success=true)
+        def sends_subsystem(subsystem, reply = true, success = true)
           script.sends_channel_request(self, "subsystem", reply, subsystem, success)
         end
 
@@ -124,7 +124,7 @@ module Net
         # Scripts the reception of an "exit-status" channel request packet.
         #
         #   channel.gets_exit_status(127)
-        def gets_exit_status(status=0)
+        def gets_exit_status(status = 0)
           script.gets_channel_request(self, "exit-status", false, status)
         end
 

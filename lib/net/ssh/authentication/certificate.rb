@@ -83,7 +83,7 @@ module Net
         end
 
         # Signs the certificate with key.
-        def sign!(key, sign_nonce=nil)
+        def sign!(key, sign_nonce = nil)
           # ssh-keygen uses 32 bytes of nonce.
           self.nonce = sign_nonce || SecureRandom.random_bytes(32)
           self.signature_key = key
@@ -94,7 +94,7 @@ module Net
           self
         end
 
-        def sign(key, sign_nonce=nil)
+        def sign(key, sign_nonce = nil)
           cert = clone
           cert.sign!(key, sign_nonce)
         end

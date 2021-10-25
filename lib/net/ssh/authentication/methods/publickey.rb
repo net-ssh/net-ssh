@@ -12,7 +12,7 @@ module Net
           # username, trying each identity known to the key manager. If any of
           # them succeed, returns +true+, otherwise returns +false+. This
           # requires the presence of a key manager.
-          def authenticate(next_service, username, password=nil)
+          def authenticate(next_service, username, password = nil)
             return false unless key_manager
 
             key_manager.each_identity do |identity|
@@ -31,12 +31,12 @@ module Net
             blob.write_key pub_key
 
             userauth_request(username, next_service, "publickey", has_sig,
-              pub_key.ssh_type, blob.to_s)
+                             pub_key.ssh_type, blob.to_s)
           end
 
           # Builds and sends a request formatted for a public-key
           # authentication request.
-          def send_request(pub_key, username, next_service, signature=nil)
+          def send_request(pub_key, username, next_service, signature = nil)
             msg = build_request(pub_key, username, next_service, !signature.nil?)
             msg.write_string(signature) if signature
             send_message(msg)
@@ -76,7 +76,7 @@ module Net
                 return false
               else
                 raise Net::SSH::Exception,
-                  "unexpected server response to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
+                      "unexpected server response to USERAUTH_REQUEST: #{message.type} (#{message.inspect})"
               end
 
             when USERAUTH_FAILURE

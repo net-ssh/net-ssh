@@ -5,8 +5,8 @@ if ENV["CI"]
     require 'simplecov'
     SimpleCov.start
 
-#    require 'codecov'
-#    SimpleCov.formatter = SimpleCov::Formatter::Codecov
+    #    require 'codecov'
+    #    SimpleCov.formatter = SimpleCov::Formatter::Codecov
   end
 end
 
@@ -94,7 +94,7 @@ class MockTransport < Net::SSH::Transport::Session
 
   attr_accessor :mock_enqueue
 
-  def initialize(options={})
+  def initialize(options = {})
     @options = options
     self.logger = options[:logger]
     self.host_as_string = "net.ssh.test,127.0.0.1"
@@ -161,7 +161,7 @@ class MockTransport < Net::SSH::Transport::Session
     @server_options = options
   end
 
-  def hint(name, value=true)
+  def hint(name, value = true)
     @hints[name] = value
   end
 end

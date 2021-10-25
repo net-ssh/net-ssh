@@ -79,7 +79,7 @@ module Authentication
         @@keys ||= [OpenSSL::PKey::RSA.new(512), OpenSSL::PKey::DSA.new(512)]
       end
 
-      def key_manager(options={})
+      def key_manager(options = {})
         @key_manager ||= begin
           manager = stub("key_manager")
           manager.stubs(:each_identity).multiple_yields(*(options[:keys] || keys))
@@ -87,20 +87,20 @@ module Authentication
         end
       end
 
-      def subject(options={})
+      def subject(options = {})
         options[:key_manager] = key_manager(options) unless options.key?(:key_manager)
         @subject ||= Net::SSH::Authentication::Methods::Hostbased.new(session(options), options)
       end
 
-      def socket(options={})
+      def socket(options = {})
         @socket ||= stub("socket", client_name: "me.ssh.test")
       end
 
-      def transport(options={})
+      def transport(options = {})
         @transport ||= MockTransport.new(options.merge(socket: socket))
       end
 
-      def session(options={})
+      def session(options = {})
         @session ||= begin
           sess = stub("auth-session", logger: nil, transport: transport(options))
           def sess.next_message

@@ -14,7 +14,7 @@ class TestIDRSAPKeys < NetSSHTest
     tmpdir do |dir|
       sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
       sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N ''"
-      set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
+      set_authorized_key('net_ssh_1', "#{dir}/id_rsa.pub")
 
       ret = Net::SSH.start("localhost", "net_ssh_1", { keys: "#{dir}/id_rsa" }) do |ssh|
         ssh.exec! 'echo "hello from:$USER"'
@@ -29,8 +29,8 @@ class TestIDRSAPKeys < NetSSHTest
       with_agent do
         sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
         sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd123'"
-        set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
-        ssh_add("#{dir}/id_rsa","pwd123")
+        set_authorized_key('net_ssh_1', "#{dir}/id_rsa.pub")
+        ssh_add("#{dir}/id_rsa", "pwd123")
 
         ret = Net::SSH.start("localhost", "net_ssh_1") do |ssh|
           ssh.exec! 'echo "hello from:$USER"'
@@ -45,8 +45,8 @@ class TestIDRSAPKeys < NetSSHTest
       with_agent do
         sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
         sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd123'"
-        set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
-        ssh_add("#{dir}/id_rsa","pwd123")
+        set_authorized_key('net_ssh_1', "#{dir}/id_rsa.pub")
+        ssh_add("#{dir}/id_rsa", "pwd123")
 
         ret = Net::SSH.start("localhost", "net_ssh_1", keys: ["#{dir}/id_rsa"]) do |ssh|
           ssh.exec! 'echo "hello from:$USER"'
@@ -60,7 +60,7 @@ class TestIDRSAPKeys < NetSSHTest
     tmpdir do |dir|
       sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
       sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd12'"
-      set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
+      set_authorized_key('net_ssh_1', "#{dir}/id_rsa.pub")
 
       ret = Net::SSH.start("localhost", "net_ssh_1", { keys: "#{dir}/id_rsa", passphrase: 'pwd12' }) do |ssh|
         ssh.exec! 'echo "hello from:$USER"'
@@ -74,7 +74,7 @@ class TestIDRSAPKeys < NetSSHTest
     tmpdir do |dir|
       sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
       sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd12'"
-      set_authorized_key('net_ssh_1',"#{dir}/id_rsa.pub")
+      set_authorized_key('net_ssh_1', "#{dir}/id_rsa.pub")
       private_key = File.read("#{dir}/id_rsa")
 
       options = { keys: [], key_data: [private_key] }

@@ -22,12 +22,12 @@ module Net
         # returned by OpenSSH's <tt>`ssh-add -l -E SHA256`</tt>, i.e.,
         # trailing base64 padding '=' characters are stripped and the
         # literal string +SHA256:+ is prepended.
-        def fingerprint(algorithm='MD5')
+        def fingerprint(algorithm = 'MD5')
           @fingerprint ||= {}
           @fingerprint[algorithm] ||= PubKeyFingerprint.fingerprint(to_blob, algorithm)
         end
 
-        def self.fingerprint(blob, algorithm='MD5')
+        def self.fingerprint(blob, algorithm = 'MD5')
           case algorithm.to_s.upcase
           when 'MD5'
             OpenSSL::Digest.hexdigest(algorithm, blob).scan(/../).join(":")

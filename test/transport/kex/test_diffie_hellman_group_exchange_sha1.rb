@@ -42,11 +42,11 @@ module Transport
 
       private
 
-      def need_bits(bits=1024)
+      def need_bits(bits = 1024)
         @need_bits ||= need_minimum(bits)
       end
 
-      def need_minimum(bits=1024)
+      def need_minimum(bits = 1024)
         return @dh_options[:minimum_dh_bits] if @dh_options && @dh_options[:minimum_dh_bits]
 
         bits
@@ -56,7 +56,7 @@ module Transport
         142326151570335518660743995281621698377057354949884468943021767573608899048361360422513557553514790045512299468953431585300812548859419857171094366358158903433167915517332113861059747425408670144201099811846875730766487278261498262568348338476437200556998366087779709990807518291581860338635288400119315130179
       end
 
-      def exchange!(options={})
+      def exchange!(options = {})
         connection.expect do |t, buffer|
           assert_equal KEXDH_GEX_REQUEST, buffer.type
           assert_equal need_minimum, buffer.read_long
@@ -88,18 +88,18 @@ module Transport
       def session_id
         @session_id ||= begin
           buffer = Net::SSH::Buffer.from(:string, packet_data[:client_version_string],
-            :string, packet_data[:server_version_string],
-            :string, packet_data[:client_algorithm_packet],
-            :string, packet_data[:server_algorithm_packet],
-            :string, Net::SSH::Buffer.from(:key, server_key),
-            :long,   1024,
-            :long,   need_bits, # need bits, figure this part out,
-            :long,   8192,
-            :bignum, dh.dh.p,
-            :bignum, dh.dh.g,
-            :bignum, dh.dh.pub_key,
-            :bignum, server_dh_pubkey,
-            :bignum, shared_secret)
+                                         :string, packet_data[:server_version_string],
+                                         :string, packet_data[:client_algorithm_packet],
+                                         :string, packet_data[:server_algorithm_packet],
+                                         :string, Net::SSH::Buffer.from(:key, server_key),
+                                         :long,   1024,
+                                         :long,   need_bits, # need bits, figure this part out,
+                                         :long,   8192,
+                                         :bignum, dh.dh.p,
+                                         :bignum, dh.dh.g,
+                                         :bignum, dh.dh.pub_key,
+                                         :bignum, server_dh_pubkey,
+                                         :bignum, shared_secret)
           digest_type.digest(buffer.to_s)
         end
       end

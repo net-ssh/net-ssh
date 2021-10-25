@@ -321,7 +321,7 @@ module Authentication
       end
     end
 
-    def rsa(size=512)
+    def rsa(size = 512)
       @rsa ||= OpenSSL::PKey::RSA.new(size)
     end
 

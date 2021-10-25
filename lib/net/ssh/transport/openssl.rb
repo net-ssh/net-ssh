@@ -94,13 +94,13 @@ module OpenSSL
       # Converts the key to a blob, according to the SSH2 protocol.
       def to_blob
         @blob ||= Net::SSH::Buffer.from(:string, ssh_type,
-          :bignum, p, :bignum, q, :bignum, g, :bignum, pub_key).to_s
+                                        :bignum, p, :bignum, q, :bignum, g, :bignum, pub_key).to_s
       end
 
       # Verifies the given signature matches the given data.
       def ssh_do_verify(sig, data, options = {})
-        sig_r = sig[0,20].unpack("H*")[0].to_i(16)
-        sig_s = sig[20,20].unpack("H*")[0].to_i(16)
+        sig_r = sig[0, 20].unpack("H*")[0].to_i(16)
+        sig_s = sig[20, 20].unpack("H*")[0].to_i(16)
         a1sig = OpenSSL::ASN1::Sequence([
                                           OpenSSL::ASN1::Integer(sig_r),
                                           OpenSSL::ASN1::Integer(sig_s)

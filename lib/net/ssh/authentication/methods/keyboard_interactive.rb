@@ -11,7 +11,7 @@ module Net
           USERAUTH_INFO_RESPONSE = 61
 
           # Attempt to authenticate the given user for the given service.
-          def authenticate(next_service, username, password=nil)
+          def authenticate(next_service, username, password = nil)
             debug { "trying keyboard-interactive" }
             send_message(userauth_request(username, next_service, "keyboard-interactive", "", ""))
 

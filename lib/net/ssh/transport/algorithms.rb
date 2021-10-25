@@ -146,7 +146,7 @@ module Net
 
         # Instantiates a new Algorithms object, and prepares the hash of preferred
         # algorithms based on the options parameter and the ALGORITHMS constant.
-        def initialize(session, options={})
+        def initialize(session, options = {})
           @session = session
           @logger = session.logger
           @options = options
@@ -369,10 +369,10 @@ module Net
           language    = algorithms[:language].join(",")
 
           Net::SSH::Buffer.from(:byte, KEXINIT,
-            :long, [rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF)],
-            :mstring, [kex, host_key, encryption, encryption, hmac, hmac],
-            :mstring, [compression, compression, language, language],
-            :bool, false, :long, 0)
+                                :long, [rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF), rand(0xFFFFFFFF)],
+                                :mstring, [kex, host_key, encryption, encryption, hmac, hmac],
+                                :mstring, [compression, compression, language, language],
+                                :bool, false, :long, 0)
         end
 
         # Given the parsed server KEX packet, and the client's preferred algorithm
@@ -438,13 +438,13 @@ module Net
           debug { "exchanging keys" }
 
           algorithm = Kex::MAP[kex].new(self, session,
-            client_version_string: Net::SSH::Transport::ServerVersion::PROTO_VERSION,
-            server_version_string: session.server_version.version,
-            server_algorithm_packet: @server_packet,
-            client_algorithm_packet: @client_packet,
-            need_bytes: kex_byte_requirement,
-            minimum_dh_bits: options[:minimum_dh_bits],
-            logger: logger)
+                                        client_version_string: Net::SSH::Transport::ServerVersion::PROTO_VERSION,
+                                        server_version_string: session.server_version.version,
+                                        server_algorithm_packet: @server_packet,
+                                        client_algorithm_packet: @client_packet,
+                                        need_bytes: kex_byte_requirement,
+                                        minimum_dh_bits: options[:minimum_dh_bits],
+                                        logger: logger)
           result = algorithm.exchange_keys
 
           secret   = result[:shared_secret].to_ssh

@@ -18,7 +18,7 @@ module Net
 
           private
 
-          def generate_key #:nodoc:
+          def generate_key # :nodoc:
             ::X25519::Scalar.generate
           end
 

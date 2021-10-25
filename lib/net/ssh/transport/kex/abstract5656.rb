@@ -32,7 +32,7 @@ module Net
             response
           end
 
-          def send_kexinit #:nodoc:
+          def send_kexinit # :nodoc:
             init, reply = get_message_types
 
             # send the KEXECDH_INIT message

@@ -10,12 +10,12 @@ module Net
 
           # Attempts to perform host-based authorization of the user by trying
           # all known keys.
-          def authenticate(next_service, username, password=nil)
+          def authenticate(next_service, username, password = nil)
             return false unless key_manager
 
             key_manager.each_identity do |identity|
               return true if authenticate_with(identity, next_service,
-                username, key_manager)
+                                               username, key_manager)
             end
 
             return false
@@ -63,7 +63,7 @@ module Net
           # Build the "core" hostbased request string.
           def build_request(identity, next_service, username, hostname, client_username)
             userauth_request(username, next_service, "hostbased", identity.ssh_type,
-              Buffer.from(:key, identity).to_s, hostname, client_username).to_s
+                             Buffer.from(:key, identity).to_s, hostname, client_username).to_s
           end
         end
       end

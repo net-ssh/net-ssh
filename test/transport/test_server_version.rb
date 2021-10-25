@@ -42,7 +42,7 @@ module Transport
 
     private
 
-    def socket(good, version_header, raise_eot=false)
+    def socket(good, version_header, raise_eot = false)
       socket = mock("socket")
 
       socket.expects(:write).with("#{Net::SSH::Transport::ServerVersion::PROTO_VERSION}\r\n")

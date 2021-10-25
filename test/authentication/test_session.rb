@@ -167,11 +167,11 @@ module Authentication
 
     private
 
-    def session(options={})
+    def session(options = {})
       @session ||= Net::SSH::Authentication::Session.new(transport(options), options)
     end
 
-    def transport(options={})
+    def transport(options = {})
       @transport ||= MockTransport.new(options)
     end
 

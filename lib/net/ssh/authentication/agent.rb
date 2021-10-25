@@ -65,7 +65,7 @@ module Net
 
         # Instantiates a new agent object, connects to a running SSH agent,
         # negotiates the agent protocol version, and returns the agent object.
-        def self.connect(logger=nil, agent_socket_factory = nil, identity_agent = nil)
+        def self.connect(logger = nil, agent_socket_factory = nil, identity_agent = nil)
           agent = new(logger)
           agent.connect!(agent_socket_factory, identity_agent)
           agent.negotiate!
@@ -74,7 +74,7 @@ module Net
 
         # Creates a new Agent object, using the optional logger instance to
         # report status.
-        def initialize(logger=nil)
+        def initialize(logger = nil)
           self.logger = logger
         end
 
@@ -177,7 +177,7 @@ module Net
 
           req_type = constraints.empty? ? SSH2_AGENT_ADD_IDENTITY : SSH2_AGENT_ADD_ID_CONSTRAINED
           type, = send_and_wait(req_type, :string, priv_key.ssh_type, :raw, blob_for_add(priv_key),
-                      :string, comment, :raw, constraints)
+                                :string, comment, :raw, constraints)
           raise AgentError, "could not add identity to agent" if type != SSH_AGENT_SUCCESS
         end
 
@@ -251,31 +251,31 @@ module Net
           case priv_key.ssh_type
           when /^ssh-dss$/
             Net::SSH::Buffer.from(:bignum, priv_key.p, :bignum, priv_key.q, :bignum, priv_key.g,
-                        :bignum, priv_key.pub_key, :bignum, priv_key.priv_key).to_s
+                                  :bignum, priv_key.pub_key, :bignum, priv_key.priv_key).to_s
           when /^ssh-dss-cert-v01@openssh\.com$/
             Net::SSH::Buffer.from(:string, priv_key.to_blob, :bignum, priv_key.key.priv_key).to_s
           when /^ecdsa\-sha2\-(\w*)$/
             curve_name = OpenSSL::PKey::EC::CurveNameAliasInv[priv_key.group.curve_name]
             Net::SSH::Buffer.from(:string, curve_name, :mstring, priv_key.public_key.to_bn.to_s(2),
-                        :bignum, priv_key.private_key).to_s
+                                  :bignum, priv_key.private_key).to_s
           when /^ecdsa\-sha2\-(\w*)-cert-v01@openssh\.com$/
             Net::SSH::Buffer.from(:string, priv_key.to_blob, :bignum, priv_key.key.private_key).to_s
           when /^ssh-ed25519$/
             Net::SSH::Buffer.from(:string, priv_key.public_key.verify_key.to_bytes,
-                        :string, priv_key.sign_key.keypair).to_s
+                                  :string, priv_key.sign_key.keypair).to_s
           when /^ssh-ed25519-cert-v01@openssh\.com$/
             # Unlike the other certificate types, the public key is included after the certifiate.
             Net::SSH::Buffer.from(:string, priv_key.to_blob,
-                        :string, priv_key.key.public_key.verify_key.to_bytes,
-                        :string, priv_key.key.sign_key.keypair).to_s
+                                  :string, priv_key.key.public_key.verify_key.to_bytes,
+                                  :string, priv_key.key.sign_key.keypair).to_s
           when /^ssh-rsa$/
             # `n` and `e` are reversed compared to the ordering in `OpenSSL::PKey::RSA#to_blob`.
             Net::SSH::Buffer.from(:bignum, priv_key.n, :bignum, priv_key.e, :bignum, priv_key.d,
-                        :bignum, priv_key.iqmp, :bignum, priv_key.p, :bignum, priv_key.q).to_s
+                                  :bignum, priv_key.iqmp, :bignum, priv_key.p, :bignum, priv_key.q).to_s
           when /^ssh-rsa-cert-v01@openssh\.com$/
             Net::SSH::Buffer.from(:string, priv_key.to_blob, :bignum, priv_key.key.d,
-                        :bignum, priv_key.key.iqmp, :bignum, priv_key.key.p,
-                        :bignum, priv_key.key.q).to_s
+                                  :bignum, priv_key.key.iqmp, :bignum, priv_key.key.p,
+                                  :bignum, priv_key.key.q).to_s
           end
         end
       end

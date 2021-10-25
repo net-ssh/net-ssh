@@ -19,7 +19,7 @@ class TestProxy < NetSSHTest
   end
 
   def ssh_start_params(options)
-    [localhost,user, { keys: @key_id_rsa }.merge(options)]
+    [localhost, user, { keys: @key_id_rsa }.merge(options)]
   end
 
   def setup_ssh_env(&block)
@@ -27,7 +27,7 @@ class TestProxy < NetSSHTest
       @key_id_rsa = "#{dir}/id_rsa"
       sh "rm -rf #{@key_id_rsa} #{@key_id_rsa}.pub"
       sh "ssh-keygen -q -f #{@key_id_rsa} -t rsa -N ''"
-      set_authorized_key(user,"#{@key_id_rsa}.pub")
+      set_authorized_key(user, "#{@key_id_rsa}.pub")
       yield
     end
   end
@@ -39,7 +39,7 @@ class TestProxy < NetSSHTest
       @gwkey_id_rsa = "#{dir}/id_rsa"
       sh "rm -rf #{@gwkey_id_rsa} #{@gwkey_id_rsa}.pub"
       sh "ssh-keygen -q -f #{@gwkey_id_rsa} -t rsa -N ''"
-      set_authorized_key(gwuser,"#{@gwkey_id_rsa}.pub")
+      set_authorized_key(gwuser, "#{@gwkey_id_rsa}.pub")
       config = "Host #{gwhost}
                   IdentityFile #{@gwkey_id_rsa}
                   StrictHostKeyChecking no
@@ -67,7 +67,7 @@ class TestProxy < NetSSHTest
     end
   end
 
-  def with_spurious_write_wakeup_emulate(rate=99,&block)
+  def with_spurious_write_wakeup_emulate(rate = 99, &block)
     orig_io_select = IO.method(:select)
     count = 0
 
@@ -75,7 +75,7 @@ class TestProxy < NetSSHTest
       count += 1
       if (count % rate != 0)
         if params && params[1] && !params[1].empty?
-          return [[],params[1],[]]
+          return [[], params[1], []]
         end
       end
       orig_io_select.call(*params)

@@ -85,7 +85,7 @@ module Transport
 
       private
 
-      def exchange!(options={})
+      def exchange!(options = {})
         connection.expect do |t, buffer|
           assert_equal KEXDH_INIT, buffer.type
           assert_equal dh.dh.pub_key, buffer.read_bignum
@@ -99,7 +99,7 @@ module Transport
         dh.exchange_keys
       end
 
-      def dh_options(options={})
+      def dh_options(options = {})
         @dh_options = options
       end
 
@@ -107,7 +107,7 @@ module Transport
         @dh ||= subject.new(algorithms, connection, packet_data.merge(need_bytes: 20).merge(@dh_options || {}))
       end
 
-      def algorithms(options={})
+      def algorithms(options = {})
         @algorithms ||= OpenStruct.new(host_key: options[:host_key] || "ssh-rsa", host_key_format: options[:host_key] || "ssh-rsa")
       end
 
@@ -121,7 +121,7 @@ module Transport
 
       # 512 bits is the smallest possible key that will work with this, so
       # we use it for speed reasons
-      def server_key(bits=512)
+      def server_key(bits = 512)
         @server_key ||= OpenSSL::PKey::RSA.new(bits)
       end
 
@@ -143,13 +143,13 @@ module Transport
       def session_id
         @session_id ||= begin
           buffer = Net::SSH::Buffer.from(:string, packet_data[:client_version_string],
-            :string, packet_data[:server_version_string],
-            :string, packet_data[:client_algorithm_packet],
-            :string, packet_data[:server_algorithm_packet],
-            :string, Net::SSH::Buffer.from(:key, server_key),
-            :bignum, dh.dh.pub_key,
-            :bignum, server_dh_pubkey,
-            :bignum, shared_secret)
+                                         :string, packet_data[:server_version_string],
+                                         :string, packet_data[:client_algorithm_packet],
+                                         :string, packet_data[:server_algorithm_packet],
+                                         :string, Net::SSH::Buffer.from(:key, server_key),
+                                         :bignum, dh.dh.pub_key,
+                                         :bignum, server_dh_pubkey,
+                                         :bignum, shared_secret)
           digest_type.digest(buffer.to_s)
         end
       end
@@ -158,7 +158,7 @@ module Transport
         @signature ||= server_key.ssh_do_sign(session_id)
       end
 
-      def bn(number, base=10)
+      def bn(number, base = 10)
         OpenSSL::BN.new(number.to_s, base)
       end
 
