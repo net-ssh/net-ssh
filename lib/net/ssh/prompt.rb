@@ -38,7 +38,7 @@ module Net
 
         # ask input from user, a prompter might ask for multiple inputs
         # (like user and password) in a single session.
-        def ask(prompt, echo=true)
+        def ask(prompt, echo = true)
           $stdout.print(prompt)
           $stdout.flush
           ret = $stdin.noecho(&:gets).chomp

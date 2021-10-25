@@ -7,7 +7,7 @@ module Net
       module HMAC
         # The base class of all OpenSSL-based HMAC algorithm wrappers.
         class Abstract
-          class <<self
+          class << self
             def etm(*v)
               @etm = false if !defined?(@etm)
               if v.empty?
@@ -76,19 +76,19 @@ module Net
           # The key in use for this instance.
           attr_reader :key
 
-          def initialize(key=nil)
+          def initialize(key = nil)
             self.key = key
           end
 
           # Sets the key to the given value, truncating it so that it is the correct
           # length.
           def key=(value)
-            @key = value ? value.to_s[0,key_length] : nil
+            @key = value ? value.to_s[0, key_length] : nil
           end
 
           # Compute the HMAC digest for the given data string.
           def digest(data)
-            OpenSSL::HMAC.digest(digest_class.new, key, data)[0,mac_length]
+            OpenSSL::HMAC.digest(digest_class.new, key, data)[0, mac_length]
           end
         end
       end

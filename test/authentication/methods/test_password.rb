@@ -9,7 +9,7 @@ module Authentication
       include Common
 
       def test_authenticate_should_raise_if_password_disallowed
-        transport.expect do |t,packet|
+        transport.expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert_equal "jamis", packet.read_string
           assert_equal "ssh-connection", packet.read_string
@@ -26,7 +26,7 @@ module Authentication
       end
 
       def test_authenticate_ask_for_password_for_second_time_when_password_is_incorrect
-        transport.expect do |t,packet|
+        transport.expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert_equal "jamis", packet.read_string
           assert_equal "ssh-connection", packet.read_string
@@ -52,7 +52,7 @@ module Authentication
       end
 
       def test_authenticate_ask_for_password_if_not_given
-        transport.expect do |t,packet|
+        transport.expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert_equal "bill", packet.read_string
           assert_equal "ssh-connection", packet.read_string
@@ -69,7 +69,7 @@ module Authentication
       end
 
       def test_authenticate_when_password_is_acceptible_should_return_true
-        transport.expect do |t,packet|
+        transport.expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           t.return(USERAUTH_SUCCESS)
         end
@@ -78,7 +78,7 @@ module Authentication
       end
 
       def test_authenticate_should_return_false_if_password_change_request_is_received
-        transport.expect do |t,packet|
+        transport.expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           t.return(USERAUTH_PASSWD_CHANGEREQ, :string, "Change your password:", :string, "")
         end
@@ -88,7 +88,7 @@ module Authentication
 
       private
 
-      def subject(options={})
+      def subject(options = {})
         @subject ||= Net::SSH::Authentication::Methods::Password.new(session(options), options)
       end
     end

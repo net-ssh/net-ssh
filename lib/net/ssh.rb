@@ -214,7 +214,7 @@ module Net
     # * :fingerprint_hash => 'MD5' or 'SHA256', defaults to 'SHA256'
     # If +user+ parameter is nil it defaults to USER from ssh_config, or
     # local username
-    def self.start(host, user=nil, options={}, &block)
+    def self.start(host, user = nil, options = {}, &block)
       invalid_options = options.keys - VALID_OPTIONS
       if invalid_options.any?
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
@@ -301,9 +301,9 @@ module Net
     end
 
     def self._sanitize_options(options)
-      invalid_option_values = [nil,[nil]]
+      invalid_option_values = [nil, [nil]]
       unless (options.values & invalid_option_values).empty?
-        nil_options = options.select { |_k,v| invalid_option_values.include?(v) }.map(&:first)
+        nil_options = options.select { |_k, v| invalid_option_values.include?(v) }.map(&:first)
         Kernel.warn "#{caller_locations(2, 1)[0]}: Passing nil, or [nil] to Net::SSH.start is deprecated for keys: #{nil_options.join(', ')}"
       end
     end

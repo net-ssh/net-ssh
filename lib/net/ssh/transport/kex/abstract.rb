@@ -72,7 +72,7 @@ module Net
           # Verify that the given key is of the expected type, and that it
           # really is the key for the session's host. Raise Net::SSH::Exception
           # if it is not.
-          def verify_server_key(key) #:nodoc:
+          def verify_server_key(key) # :nodoc:
             unless matching?(key.ssh_type, algorithms.host_key)
               raise Net::SSH::Exception, "host key algorithm mismatch '#{key.ssh_type}' != '#{algorithms.host_key}'"
             end
@@ -97,7 +97,7 @@ module Net
           # Verify the signature that was received. Raise Net::SSH::Exception
           # if the signature could not be verified. Otherwise, return the new
           # session-id.
-          def verify_signature(result) #:nodoc:
+          def verify_signature(result) # :nodoc:
             response = build_signature_buffer(result)
 
             hash = digester.digest(response.to_s)
@@ -113,7 +113,7 @@ module Net
 
           # Send the NEWKEYS message, and expect the NEWKEYS message in
           # reply.
-          def confirm_newkeys #:nodoc:
+          def confirm_newkeys # :nodoc:
             # send own NEWKEYS message first (the wodSSHServer won't send first)
             response = Net::SSH::Buffer.new
             response.write_byte(NEWKEYS)

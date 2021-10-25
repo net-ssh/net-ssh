@@ -41,7 +41,7 @@ module Net
         # Create a new KeyManager. By default, the manager will
         # use the ssh-agent if it is running and the `:use_agent` option
         # is not false.
-        def initialize(logger, options={})
+        def initialize(logger, options = {})
           self.logger = logger
           @key_files = []
           @key_data = []
@@ -171,7 +171,7 @@ module Net
 
           if info[:key]
             return Net::SSH::Buffer.from(:string, identity.ssh_signature_type,
-              :mstring, info[:key].ssh_do_sign(data.to_s)).to_s
+                                         :mstring, info[:key].ssh_do_sign(data.to_s)).to_s
           end
 
           if info[:from] == :agent

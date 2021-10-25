@@ -543,7 +543,7 @@ class TestConfig < NetSSHTest
 
   private
 
-  def with_home_env(value,&block)
+  def with_home_env(value, &block)
     env_home_before = ENV['HOME']
     begin
       ENV['HOME'] = value

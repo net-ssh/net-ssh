@@ -30,7 +30,7 @@ class TestHMacEtm < NetSSHTest
     config_lines.push("MACs #{macs}")
   end
 
-  variants.each do |key,variant|
+  variants.each do |key, variant|
     define_method "test_with_only_hmac_etm#{key}" do
       start_sshd_7_or_later(config: config_with_macs(variant)) do |_pid, port|
         Timeout.timeout(4) do

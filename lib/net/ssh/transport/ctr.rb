@@ -2,7 +2,7 @@ require 'openssl'
 require 'delegate'
 
 module Net::SSH::Transport
-  #:nodoc:
+  # :nodoc:
   class OpenSSLAESCTR < SimpleDelegator
     def initialize(original)
       super
@@ -26,7 +26,7 @@ module Net::SSH::Transport
     end
   end
 
-  #:nodoc:
+  # :nodoc:
   # Pure-Ruby implementation of Stateful Decryption Counter(SDCTR) Mode
   # for Block Ciphers. See RFC4344 for detail.
   module CTR
@@ -95,7 +95,7 @@ module Net::SSH::Transport
 
         def xor!(s1, s2)
           s = []
-          s1.unpack('Q*').zip(s2.unpack('Q*')) {|a,b| s.push(a ^ b) }
+          s1.unpack('Q*').zip(s2.unpack('Q*')) {|a, b| s.push(a ^ b) }
           s.pack('Q*')
         end
         singleton_class.send(:private, :xor!)

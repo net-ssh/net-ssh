@@ -10,7 +10,7 @@ module Net
         class Password < Abstract
           # Attempt to authenticate the given user for the given service. If
           # the password parameter is nil, this will ask for password
-          def authenticate(next_service, username, password=nil)
+          def authenticate(next_service, username, password = nil)
             clear_prompter!
             retries = 0
             max_retries = get_max_retries

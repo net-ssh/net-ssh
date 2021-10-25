@@ -17,14 +17,14 @@ module Net
     class KeyFactory
       # Specifies the mapping of SSH names to OpenSSL key classes.
       MAP = {
-        'dh'    => OpenSSL::PKey::DH,
-        'rsa'   => OpenSSL::PKey::RSA,
-        'dsa'   => OpenSSL::PKey::DSA,
+        'dh' => OpenSSL::PKey::DH,
+        'rsa' => OpenSSL::PKey::RSA,
+        'dsa' => OpenSSL::PKey::DSA,
         'ecdsa' => OpenSSL::PKey::EC
       }
       MAP["ed25519"] = Net::SSH::Authentication::ED25519::PrivKey if defined? Net::SSH::Authentication::ED25519
 
-      class <<self
+      class << self
         # Fetch an OpenSSL key instance by its SSH name. It will be a new,
         # empty key of the given type.
         def get(name)
@@ -36,7 +36,7 @@ module Net
         # appropriately. The new key is returned. If the key itself is
         # encrypted (requiring a passphrase to use), the user will be
         # prompted to enter their password unless passphrase works.
-        def load_private_key(filename, passphrase=nil, ask_passphrase=true, prompt=Prompt.default)
+        def load_private_key(filename, passphrase = nil, ask_passphrase = true, prompt = Prompt.default)
           data = File.read(File.expand_path(filename))
           load_data_private_key(data, passphrase, ask_passphrase, filename, prompt)
         end
@@ -46,7 +46,7 @@ module Net
         # appropriately. The new key is returned. If the key itself is
         # encrypted (requiring a passphrase to use), the user will be
         # prompted to enter their password unless passphrase works.
-        def load_data_private_key(data, passphrase=nil, ask_passphrase=true, filename="", prompt=Prompt.default)
+        def load_data_private_key(data, passphrase = nil, ask_passphrase = true, filename = "", prompt = Prompt.default)
           key_type = classify_key(data, filename)
 
           encrypted_key = nil
@@ -86,7 +86,7 @@ module Net
         # Loads a public key. It will correctly determine whether
         # the file describes an RSA or DSA key, and will load it
         # appropriately. The new public key is returned.
-        def load_data_public_key(data, filename="")
+        def load_data_public_key(data, filename = "")
           fields = data.split(/ /)
 
           blob = nil

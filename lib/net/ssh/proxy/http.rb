@@ -40,7 +40,7 @@ module Net
         #
         # * :user => the user name to use when authenticating to the proxy
         # * :password => the password to use when authenticating
-        def initialize(proxy_host, proxy_port=80, options={})
+        def initialize(proxy_host, proxy_port = 80, options = {})
           @proxy_host = proxy_host
           @proxy_port = proxy_port
           @options = options

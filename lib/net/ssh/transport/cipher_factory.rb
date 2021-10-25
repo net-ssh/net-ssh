@@ -10,23 +10,23 @@ module Net
       class CipherFactory
         # Maps the SSH name of a cipher to it's corresponding OpenSSL name
         SSH_TO_OSSL = {
-          "3des-cbc"                    => "des-ede3-cbc",
-          "blowfish-cbc"                => "bf-cbc",
-          "aes256-cbc"                  => "aes-256-cbc",
-          "aes192-cbc"                  => "aes-192-cbc",
-          "aes128-cbc"                  => "aes-128-cbc",
-          "idea-cbc"                    => "idea-cbc",
-          "cast128-cbc"                 => "cast-cbc",
+          "3des-cbc" => "des-ede3-cbc",
+          "blowfish-cbc" => "bf-cbc",
+          "aes256-cbc" => "aes-256-cbc",
+          "aes192-cbc" => "aes-192-cbc",
+          "aes128-cbc" => "aes-128-cbc",
+          "idea-cbc" => "idea-cbc",
+          "cast128-cbc" => "cast-cbc",
           "rijndael-cbc@lysator.liu.se" => "aes-256-cbc",
-          "3des-ctr"                    => "des-ede3",
-          "blowfish-ctr"                => "bf-ecb",
+          "3des-ctr" => "des-ede3",
+          "blowfish-ctr" => "bf-ecb",
 
-          "aes256-ctr"                  => ::OpenSSL::Cipher.ciphers.include?("aes-256-ctr") ? "aes-256-ctr" : "aes-256-ecb",
-          "aes192-ctr"                  => ::OpenSSL::Cipher.ciphers.include?("aes-192-ctr") ? "aes-192-ctr" : "aes-192-ecb",
-          "aes128-ctr"                  => ::OpenSSL::Cipher.ciphers.include?("aes-128-ctr") ? "aes-128-ctr" : "aes-128-ecb",
-          'cast128-ctr'                 => 'cast5-ecb',
+          "aes256-ctr" => ::OpenSSL::Cipher.ciphers.include?("aes-256-ctr") ? "aes-256-ctr" : "aes-256-ecb",
+          "aes192-ctr" => ::OpenSSL::Cipher.ciphers.include?("aes-192-ctr") ? "aes-192-ctr" : "aes-192-ecb",
+          "aes128-ctr" => ::OpenSSL::Cipher.ciphers.include?("aes-128-ctr") ? "aes-128-ctr" : "aes-128-ecb",
+          'cast128-ctr' => 'cast5-ecb',
 
-          'none'                        => 'none'
+          'none' => 'none'
         }
 
         # Returns true if the underlying OpenSSL library supports the given cipher,
@@ -43,7 +43,7 @@ module Net
         # iv, key, shared, hash and digester values. Additionally, the
         # cipher will be put into encryption or decryption mode, based on the
         # value of the +encrypt+ parameter.
-        def self.get(name, options={})
+        def self.get(name, options = {})
           ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
           return IdentityCipher if ossl_name == "none"
 

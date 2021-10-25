@@ -402,7 +402,7 @@ module Transport
       @algorithms ||= stub("algorithms", initialized?: true, allow?: true, start: true)
     end
 
-    def session(options={})
+    def session(options = {})
       @session ||= begin
         host = options.delete(:host) || TEST_HOST
         if (proxy = options[:proxy])

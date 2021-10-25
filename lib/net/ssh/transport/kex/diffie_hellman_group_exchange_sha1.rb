@@ -34,7 +34,7 @@ module Net::SSH::Transport::Kex
 
       # request the DH key parameters for the given number of bits.
       buffer = Net::SSH::Buffer.from(:byte, KEXDH_GEX_REQUEST, :long, data[:minimum_dh_bits],
-        :long, data[:need_bits], :long, MAXIMUM_BITS)
+                                     :long, data[:need_bits], :long, MAXIMUM_BITS)
       connection.send_message(buffer)
 
       buffer = connection.next_message

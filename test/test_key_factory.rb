@@ -65,7 +65,7 @@ class TestKeyFactory < NetSSHTest
   def test_load_encrypted_private_key_should_give_three_tries_for_the_password_and_then_raise_exception
     prompt = MockPrompt.new
     File.expects(:read).with(@key_file).returns(encrypted(rsa_key, "password"))
-    prompt.expects(:_ask).times(3).with("Enter passphrase for #{@key_file}:", has_entries(type: 'private_key', filename: @key_file), false).returns("passwod","passphrase","passwd")
+    prompt.expects(:_ask).times(3).with("Enter passphrase for #{@key_file}:", has_entries(type: 'private_key', filename: @key_file), false).returns("passwod", "passphrase", "passwd")
     if OpenSSL::PKey.respond_to?(:read)
       error_class = [ArgumentError, OpenSSL::PKey::PKeyError]
     else

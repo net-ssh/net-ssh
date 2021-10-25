@@ -13,14 +13,14 @@ module Net::SSH::Transport
     # Maps the supported key-exchange algorithms as named by the SSH protocol
     # to their corresponding implementors.
     MAP = {
-      'diffie-hellman-group1-sha1'           => DiffieHellmanGroup1SHA1,
-      'diffie-hellman-group14-sha1'          => DiffieHellmanGroup14SHA1,
-      'diffie-hellman-group14-sha256'        => DiffieHellmanGroup14SHA256,
-      'diffie-hellman-group-exchange-sha1'   => DiffieHellmanGroupExchangeSHA1,
+      'diffie-hellman-group1-sha1' => DiffieHellmanGroup1SHA1,
+      'diffie-hellman-group14-sha1' => DiffieHellmanGroup14SHA1,
+      'diffie-hellman-group14-sha256' => DiffieHellmanGroup14SHA256,
+      'diffie-hellman-group-exchange-sha1' => DiffieHellmanGroupExchangeSHA1,
       'diffie-hellman-group-exchange-sha256' => DiffieHellmanGroupExchangeSHA256,
-      'ecdh-sha2-nistp256'                   => EcdhSHA2NistP256,
-      'ecdh-sha2-nistp384'                   => EcdhSHA2NistP384,
-      'ecdh-sha2-nistp521'                   => EcdhSHA2NistP521
+      'ecdh-sha2-nistp256' => EcdhSHA2NistP256,
+      'ecdh-sha2-nistp384' => EcdhSHA2NistP384,
+      'ecdh-sha2-nistp521' => EcdhSHA2NistP521
     }
 
     if Net::SSH::Transport::Kex::Curve25519Sha256Loader::LOADED

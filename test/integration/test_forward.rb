@@ -33,7 +33,7 @@ class ForwardTestBase < NetSSHTest
   end
 
   def ssh_start_params(options = {})
-    [localhost,user, { keys: @key_id_rsa }.merge(options)]
+    [localhost, user, { keys: @key_id_rsa }.merge(options)]
   end
 
   def setup_ssh_env(&block)
@@ -41,7 +41,7 @@ class ForwardTestBase < NetSSHTest
       @key_id_rsa = "#{dir}/id_rsa"
       sh "rm -rf #{@key_id_rsa} #{@key_id_rsa}.pub"
       sh "ssh-keygen -q -f #{@key_id_rsa} -t rsa -N ''"
-      set_authorized_key(user,"#{@key_id_rsa}.pub")
+      set_authorized_key(user, "#{@key_id_rsa}.pub")
       yield
     end
   end
@@ -66,7 +66,7 @@ class ForwardTestBase < NetSSHTest
 end
 
 class TestForward < ForwardTestBase
-  def start_server_closing_soon(exceptions=nil)
+  def start_server_closing_soon(exceptions = nil)
     server = TCPServer.open(0)
     Thread.start do
       loop do
@@ -294,7 +294,7 @@ class TestForward < ForwardTestBase
     attr_reader :sockets
 
     def open(host, port, connection_options = nil)
-      socket = TCPSocket.new(host,port)
+      socket = TCPSocket.new(host, port)
       @sockets << socket
       socket
     end

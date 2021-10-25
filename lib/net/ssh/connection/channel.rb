@@ -96,12 +96,12 @@ module Net
         # The output buffer for this channel. Data written to the channel is
         # enqueued here, to be written as CHANNEL_DATA packets during each pass of
         # the event loop. See Connection::Session#process and #enqueue_pending_output.
-        attr_reader :output #:nodoc:
+        attr_reader :output # :nodoc:
 
         # The list of pending requests. Each time a request is sent which requires
         # a reply, the corresponding callback is pushed onto this queue. As responses
         # arrive, they are shifted off the front and handled.
-        attr_reader :pending_requests #:nodoc:
+        attr_reader :pending_requests # :nodoc:
 
         # Instantiates a new channel on the given connection, of the given type,
         # and with the given id. If a block is given, it will be remembered until
@@ -217,7 +217,7 @@ module Net
         #       puts "could not obtain pty"
         #     end
         #   end
-        def request_pty(opts={}, &block)
+        def request_pty(opts = {}, &block)
           extra = opts.keys - VALID_PTY_OPTIONS.keys
           raise ArgumentError, "invalid option(s) to request_pty: #{extra.inspect}" if extra.any?
 
@@ -230,9 +230,9 @@ module Net
           modes.write_byte(0)
 
           send_channel_request("pty-req", :string, opts[:term],
-            :long, opts[:chars_wide], :long, opts[:chars_high],
-            :long, opts[:pixels_wide], :long, opts[:pixels_high],
-            :string, modes.to_s, &block)
+                               :long, opts[:chars_wide], :long, opts[:chars_high],
+                               :long, opts[:pixels_wide], :long, opts[:pixels_high],
+                               :string, modes.to_s, &block)
         end
 
         # Sends data to the channel's remote endpoint. This usually has the
@@ -490,8 +490,8 @@ module Net
           fail "Channel open not yet confirmed, please call send_channel_request(or exec) from block of open_channel" unless remote_id
 
           msg = Buffer.from(:byte, CHANNEL_REQUEST,
-            :long, remote_id, :string, request_name,
-            :bool, !callback.nil?, *data)
+                            :long, remote_id, :string, request_name,
+                            :bool, !callback.nil?, *data)
           connection.send_message(msg)
           pending_requests << callback if callback
         end
@@ -503,7 +503,7 @@ module Net
         # #do_open_confirmation). This is called automatically by #process, which
         # is called from the event loop (Connection::Session#process). You will
         # generally not need to invoke it directly.
-        def enqueue_pending_output #:nodoc:
+        def enqueue_pending_output # :nodoc:
           return unless remote_id
 
           while output.length > 0
@@ -527,7 +527,7 @@ module Net
         # packet sizes, respectively. If an open-confirmation callback was
         # given when the channel was created, it is invoked at this time with
         # the channel itself as the sole argument.
-        def do_open_confirmation(remote_id, max_window, max_packet) #:nodoc:
+        def do_open_confirmation(remote_id, max_window, max_packet) # :nodoc:
           @remote_id = remote_id
           @remote_window_size = @remote_maximum_window_size = max_window
           @remote_maximum_packet_size = max_packet
@@ -553,7 +553,7 @@ module Net
         # causes the remote window size to be adjusted upwards by the given
         # number of bytes. This has the effect of allowing more data to be sent
         # from the local end to the remote end of the channel.
-        def do_window_adjust(bytes) #:nodoc:
+        def do_window_adjust(bytes) # :nodoc:
           @remote_maximum_window_size += bytes
           @remote_window_size += bytes
         end
@@ -566,7 +566,7 @@ module Net
         # CHANNEL_SUCCESS, unless the callback raised ChannelRequestFailed. The
         # callback should accept the channel as the first argument, and the
         # request-specific data as the second.
-        def do_request(request, want_reply, data) #:nodoc:
+        def do_request(request, want_reply, data) # :nodoc:
           result = true
 
           begin
@@ -587,7 +587,7 @@ module Net
         # but does not actually throttle requests that come in illegally when
         # the window size is too small. The callback is invoked with the channel
         # as the first argument, and the data as the second.
-        def do_data(data) #:nodoc:
+        def do_data(data) # :nodoc:
           update_local_window_size(data.length)
           @on_data.call(self, data) if @on_data
         end

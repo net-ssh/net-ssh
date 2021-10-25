@@ -82,7 +82,7 @@ module Net
                      when CHANNEL_REQUEST
                        parts = %i[long string bool]
                        case @data[1]
-                       when "exec", "subsystem","shell" then parts << :string
+                       when "exec", "subsystem", "shell" then parts << :string
                        when "exit-status" then parts << :long
                        when "pty-req" then parts.concat(%i[string long long long long string])
                        when "env" then parts.contact(%i[string string])

@@ -16,7 +16,7 @@ module Net
         # taken by Net::SSH::Proxy::HTTP it supports:
         #
         # * :ssl_context => the SSL configuration to use for the connection
-        def initialize(proxy_host, proxy_port=80, options={})
+        def initialize(proxy_host, proxy_port = 80, options = {})
           @ssl_context = options.delete(:ssl_context) ||
                            OpenSSL::SSL::SSLContext.new
           super(proxy_host, proxy_port, options)
@@ -27,7 +27,7 @@ module Net
         # Shim to make OpenSSL::SSL::SSLSocket behave like a regular TCPSocket
         # for all intents and purposes of Net::SSH::BufferedIo
         module SSLSocketCompatibility
-          def self.extended(object) #:nodoc:
+          def self.extended(object) # :nodoc:
             object.define_singleton_method(:recv, object.method(:sysread))
             object.sync_close = true
           end

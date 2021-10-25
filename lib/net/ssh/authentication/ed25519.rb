@@ -14,7 +14,7 @@ module Net
     module Authentication
       module ED25519
         class SigningKeyFromFile < SimpleDelegator
-          def initialize(pk,sk)
+          def initialize(pk, sk)
             key = ::Ed25519::SigningKey.from_keypair(sk)
             raise ArgumentError, "pk does not match sk" unless pk == key.verify_key.to_bytes
 
@@ -116,7 +116,7 @@ module Net
           end
 
           def to_blob
-            Net::SSH::Buffer.from(:mstring,"ssh-ed25519".dup,:string,@verify_key.to_bytes).to_s
+            Net::SSH::Buffer.from(:mstring, "ssh-ed25519".dup, :string, @verify_key.to_bytes).to_s
           end
 
           def ssh_type
@@ -128,7 +128,7 @@ module Net
           end
 
           def ssh_do_verify(sig, data, options = {})
-            @verify_key.verify(sig,data)
+            @verify_key.verify(sig, data)
           end
 
           def to_pem
@@ -152,7 +152,7 @@ module Net
             _comment = buffer.read_string
 
             @pk = pk
-            @sign_key = SigningKeyFromFile.new(pk,sk)
+            @sign_key = SigningKeyFromFile.new(pk, sk)
           end
 
           def to_blob

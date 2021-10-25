@@ -25,7 +25,7 @@ class TestChannel < NetSSHTest
       @key_id_rsa = "#{dir}/id_rsa"
       sh "rm -rf #{@key_id_rsa} #{@key_id_rsa}.pub"
       sh "ssh-keygen -q -f #{@key_id_rsa} -t rsa -N ''"
-      set_authorized_key(user,"#{@key_id_rsa}.pub")
+      set_authorized_key(user, "#{@key_id_rsa}.pub")
       yield
     end
   end

@@ -21,7 +21,7 @@ module Net
           attr_reader :key_manager
 
           # Instantiates a new authentication method.
-          def initialize(session, options={})
+          def initialize(session, options = {})
             @session = session
             @key_manager = options[:key_manager]
             @options = options
@@ -46,7 +46,7 @@ module Net
           # of the packet. The new packet is returned, ready for sending.
           def userauth_request(username, next_service, auth_method, *others)
             buffer = Net::SSH::Buffer.from(:byte, USERAUTH_REQUEST,
-              :string, username, :string, next_service, :string, auth_method)
+                                           :string, username, :string, next_service, :string, auth_method)
 
             others.each do |value|
               case value

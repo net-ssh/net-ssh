@@ -5,7 +5,7 @@ module Net
       # keeps things in the code nice and clean when a cipher has not yet been
       # determined (i.e., during key exchange).
       class IdentityCipher
-        class <<self
+        class << self
           # A default block size of 8 is required by the SSH2 protocol.
           def block_size
             8

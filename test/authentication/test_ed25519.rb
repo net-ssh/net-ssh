@@ -22,7 +22,7 @@ unless ENV['NET_SSH_NO_ED25519']
 
         shared_secret = "Hello"
         signed = priv_key.ssh_do_sign(shared_secret)
-        self.assert_equal(true,pub_key.ssh_do_verify(signed,shared_secret))
+        self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
         self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
         self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_no_pwd)
         self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_no_pwd)
@@ -39,7 +39,7 @@ unless ENV['NET_SSH_NO_ED25519']
 
         shared_secret = "Hello"
         signed = priv_key.ssh_do_sign(shared_secret)
-        self.assert_equal(true,pub_key.ssh_do_verify(signed,shared_secret))
+        self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
         self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
         self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_no_pwd)
         self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_no_pwd)
@@ -56,11 +56,11 @@ unless ENV['NET_SSH_NO_ED25519']
         priv = private_key_pwd
 
         pub_key = Net::SSH::Authentication::ED25519::PubKey.new(pub_data)
-        priv_key = Net::SSH::Authentication::ED25519::PrivKey.read(priv,'pwd')
+        priv_key = Net::SSH::Authentication::ED25519::PrivKey.read(priv, 'pwd')
 
         shared_secret = "Hello"
         signed = priv_key.ssh_do_sign(shared_secret)
-        self.assert_equal(true,pub_key.ssh_do_verify(signed,shared_secret))
+        self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
         self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
         self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_pwd)
         self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_pwd)
@@ -86,7 +86,7 @@ unless ENV['NET_SSH_NO_ED25519']
 
         shared_secret = "Hello"
         signed = priv_key.ssh_do_sign(shared_secret)
-        self.assert_equal(true,pub_key.ssh_do_verify(signed,shared_secret))
+        self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
         self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
         self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_pwd)
         self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_pwd)

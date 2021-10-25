@@ -8,7 +8,7 @@ module Net
         # Implements the "none" SSH authentication method.
         class None < Abstract
           # Attempt to authenticate as "none"
-          def authenticate(next_service, user="", password="")
+          def authenticate(next_service, user = "", password = "")
             send_message(userauth_request(user, next_service, "none"))
             message = session.next_message
 

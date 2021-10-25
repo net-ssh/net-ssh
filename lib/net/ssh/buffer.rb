@@ -70,7 +70,7 @@ module Net
 
       # Creates a new buffer, initialized to the given content. The position
       # is initialized to the beginning of the buffer.
-      def initialize(content=String.new)
+      def initialize(content = String.new)
         @content = content.to_s
         @position = 0
       end
@@ -128,7 +128,7 @@ module Net
       # would otherwise tend to grow without bound.
       #
       # Returns the buffer object itself.
-      def consume!(n=position)
+      def consume!(n = position)
         if n >= length
           # optimize for a fairly common case
           clear!
@@ -171,7 +171,7 @@ module Net
       # Reads and returns the next +count+ bytes from the buffer, starting from
       # the read position. If +count+ is +nil+, this will return all remaining
       # text in the buffer. This method will increment the pointer.
-      def read(count=nil)
+      def read(count = nil)
         count ||= length
         count = length - @position if @position + count > length
         @position += count
@@ -180,7 +180,7 @@ module Net
 
       # Reads (as #read) and returns the given number of bytes from the buffer,
       # and then consumes (as #consume!) all data up to the new read position.
-      def read!(count=nil)
+      def read!(count = nil)
         data = read(count)
         consume!
         data

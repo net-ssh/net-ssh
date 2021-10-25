@@ -12,7 +12,7 @@ module Net
       class EventLoop
         include Loggable
 
-        def initialize(logger=nil)
+        def initialize(logger = nil)
           self.logger = logger
           @sessions = []
         end
@@ -60,7 +60,7 @@ module Net
           w = []
           minwait = nil
           @sessions.each do |session|
-            sr,sw,actwait = session.ev_do_calculate_rw_wait(wait)
+            sr, sw, actwait = session.ev_do_calculate_rw_wait(wait)
             minwait = actwait if actwait && (minwait.nil? || actwait < minwait)
             r.push(*sr)
             w.push(*sw)
@@ -75,18 +75,18 @@ module Net
           if readers
             readers.each do |reader|
               session = owners[reader]
-              (fired_sessions[session] ||= { r: [],w: [] })[:r] << reader
+              (fired_sessions[session] ||= { r: [], w: [] })[:r] << reader
             end
           end
           if writers
             writers.each do |writer|
               session = owners[writer]
-              (fired_sessions[session] ||= { r: [],w: [] })[:w] << writer
+              (fired_sessions[session] ||= { r: [], w: [] })[:w] << writer
             end
           end
 
-          fired_sessions.each do |s,rw|
-            s.ev_do_handle_events(rw[:r],rw[:w])
+          fired_sessions.each do |s, rw|
+            s.ev_do_handle_events(rw[:r], rw[:w])
           end
 
           @sessions.each { |s| s.ev_do_postprocess(fired_sessions.key?(s)) }
@@ -111,10 +111,10 @@ module Net
           raise "Only one session expected" unless @sessions.count == 1
 
           session = @sessions.first
-          sr,sw,actwait = session.ev_do_calculate_rw_wait(wait)
+          sr, sw, actwait = session.ev_do_calculate_rw_wait(wait)
           readers, writers, = IO.select(sr, sw, nil, actwait)
 
-          session.ev_do_handle_events(readers,writers)
+          session.ev_do_handle_events(readers, writers)
           session.ev_do_postprocess(!((readers.nil? || readers.empty?) && (writers.nil? || writers.empty?)))
         end
       end

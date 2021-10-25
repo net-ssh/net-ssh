@@ -59,7 +59,7 @@ module Net
 
           # Generate a DH key with a private key consisting of the given
           # number of bytes.
-          def generate_key #:nodoc:
+          def generate_key # :nodoc:
             dh = OpenSSL::PKey::DH.new
 
             if dh.respond_to?(:set_pqg)
@@ -86,7 +86,7 @@ module Net
           #
           # Parse the buffer from a KEXDH_REPLY message, returning a hash of
           # the extracted values.
-          def send_kexinit #:nodoc:
+          def send_kexinit # :nodoc:
             init, reply = get_message_types
 
             # send the KEXDH_INIT message
@@ -108,8 +108,8 @@ module Net
             sig_type = sig_buffer.read_string
             if sig_type != algorithms.host_key_format
               raise Net::SSH::Exception,
-                "host key algorithm mismatch for signature " +
-                "'#{sig_type}' != '#{algorithms.host_key_format}'"
+                    "host key algorithm mismatch for signature " +
+                    "'#{sig_type}' != '#{algorithms.host_key_format}'"
             end
             result[:server_sig] = sig_buffer.read_string
 

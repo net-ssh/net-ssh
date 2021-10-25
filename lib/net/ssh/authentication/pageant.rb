@@ -50,13 +50,13 @@ module Net
             SIZEOF_DWORD = DL.sizeof('L')
           elsif RUBY_VERSION < "2.1"
             extend DL::Importer
-            dlload 'user32.dll','kernel32.dll', 'advapi32.dll'
+            dlload 'user32.dll', 'kernel32.dll', 'advapi32.dll'
             include DL::Win32Types
 
             SIZEOF_DWORD = DL::SIZEOF_LONG
           else
             extend Fiddle::Importer
-            dlload 'user32.dll','kernel32.dll', 'advapi32.dll'
+            dlload 'user32.dll', 'kernel32.dll', 'advapi32.dll'
             include Fiddle::Win32Types
             SIZEOF_DWORD = Fiddle::SIZEOF_LONG
           end
@@ -240,7 +240,7 @@ module Net
             end
 
             def self.set_ptr_data(ptr, data)
-              DL::CPtr.new(ptr)[0,data.size] = data
+              DL::CPtr.new(ptr)[0, data.size] = data
             end
           end
 
@@ -281,7 +281,7 @@ module Net
 
             def self.ptr_to_dword(ptr)
               first = ptr.ptr.to_i
-              second = ptr_to_s(ptr,Win::SIZEOF_DWORD).unpack('L')[0]
+              second = ptr_to_s(ptr, Win::SIZEOF_DWORD).unpack('L')[0]
               raise "Error" unless first == second
 
               first
@@ -296,7 +296,7 @@ module Net
             end
 
             def self.get_sid(user)
-              ptr_to_s(user.to_ptr.ptr,Win::SIZEOF_DWORD).unpack('L')[0]
+              ptr_to_s(user.to_ptr.ptr, Win::SIZEOF_DWORD).unpack('L')[0]
             end
 
             def self.get_sid_ptr(user)
@@ -332,7 +332,7 @@ module Net
             token_handle = open_process_token(Win.GetCurrentProcess,
                                               Win::TOKEN_QUERY)
             token_user = get_token_information(token_handle,
-                            Win::TOKEN_USER_INFORMATION_CLASS)
+                                               Win::TOKEN_USER_INFORMATION_CLASS)
             return token_user
           end
 
@@ -404,7 +404,7 @@ module Net
 
             if @win.to_i == 0
               raise Net::SSH::Exception,
-                "pageant process not running"
+                    "pageant process not running"
             end
 
             @input_buffer = Net::SSH::Buffer.new
@@ -458,7 +458,7 @@ module Net
 
             if filemap == 0 || filemap == Win::INVALID_HANDLE_VALUE
               raise Net::SSH::Exception,
-                "Creation of file mapping failed with error: #{Win.GetLastError}"
+                    "Creation of file mapping failed with error: #{Win.GetLastError}"
             end
 
             ptr = Win.MapViewOfFile(filemap, Win::FILE_MAP_WRITE, 0, 0,

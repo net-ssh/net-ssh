@@ -45,10 +45,10 @@ module Net
     # the remember_host! method on the exception, and then retry.
     class HostKeyError < Net::SSH::Exception
       # the callback to use when #remember_host! is called
-      attr_writer :callback #:nodoc:
+      attr_writer :callback # :nodoc:
 
       # situation-specific data describing the host (see #host, #port, etc.)
-      attr_writer :data #:nodoc:
+      attr_writer :data # :nodoc:
 
       # An accessor for getting at the data that was used to look up the host
       # (see also #fingerprint, #host, #port, #ip, and #key).

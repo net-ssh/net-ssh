@@ -30,7 +30,7 @@ module Authentication
 
       private
 
-      def agent(auto=:connect)
+      def agent(auto = :connect)
         @agent ||= begin
           agent = Net::SSH::Authentication::Agent.new
           agent.connect! if auto == :connect

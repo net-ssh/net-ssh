@@ -38,7 +38,7 @@ module Net
         module PacketStream
           include BufferedIo # make sure we get the extensions here, too
 
-          def self.included(base) #:nodoc:
+          def self.included(base) # :nodoc:
             base.send :alias_method, :real_available_for_read?, :available_for_read?
             base.send :alias_method, :available_for_read?, :test_available_for_read?
 
@@ -93,7 +93,7 @@ module Net
 
         # An extension to Net::SSH::Connection::Channel. Facilitates unit testing.
         module Channel
-          def self.included(base) #:nodoc:
+          def self.included(base) # :nodoc:
             base.send :alias_method, :send_data_for_real, :send_data
             base.send :alias_method, :send_data, :send_data_for_test
           end
@@ -111,7 +111,7 @@ module Net
         # An extension to the built-in ::IO class. Simply redefines IO.select
         # so that it can be scripted in Net::SSH unit tests.
         module IO
-          def self.included(base) #:nodoc:
+          def self.included(base) # :nodoc:
             base.extend(ClassMethods)
           end
 
@@ -132,8 +132,8 @@ module Net
           end
 
           module ClassMethods
-            def self.extended(obj) #:nodoc:
-              class <<obj
+            def self.extended(obj) # :nodoc:
+              class << obj
                 alias_method :select_for_real, :select
                 alias_method :select, :select_for_test
               end
@@ -142,7 +142,7 @@ module Net
             # The testing version of ::IO.select. Assumes that all readers,
             # writers, and errors arrays are either nil, or contain only objects
             # that mix in Net::SSH::Test::Extensions::BufferedIo.
-            def select_for_test(readers=nil, writers=nil, errors=nil, wait=nil)
+            def select_for_test(readers = nil, writers = nil, errors = nil, wait = nil)
               return select_for_real(readers, writers, errors, wait) unless Net::SSH::Test::Extensions::IO.extension_enabled?
 
               ready_readers = Array(readers).select { |r| r.select_for_read? }
