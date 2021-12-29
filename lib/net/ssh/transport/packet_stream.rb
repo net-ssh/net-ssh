@@ -12,7 +12,7 @@ module Net
       # module. It adds SSH encryption, compression, and packet validation, as
       # per the SSH2 protocol. It also adds an abstraction for polling packets,
       # to allow for both blocking and non-blocking reads.
-      module PacketStream
+      module PacketStream # rubocop:disable Metrics/ModuleLength
         PROXY_COMMAND_HOST_IP = '<no hostip for proxy command>'.freeze
 
         include BufferedIo
@@ -123,18 +123,18 @@ module Net
         # Enqueues a packet to be sent, but does not immediately send the packet.
         # The given payload is pre-processed according to the algorithms specified
         # in the client state (compression, cipher, and hmac).
-        def enqueue_packet(payload)
+        def enqueue_packet(payload) # rubocop:disable Metrics/AbcSize
           # try to compress the packet
           payload = client.compress(payload)
 
           # the length of the packet, minus the padding
-          actual_length = (client.hmac.etm ? 0 : 4) + payload.bytesize + 1
+          mac_len = client.hmac.etm || client.hmac.aead ? 0 : 4
+          actual_length = payload.bytesize + mac_len + 1
 
           # compute the padding length
           padding_length = client.block_size - (actual_length % client.block_size)
           padding_length += client.block_size if padding_length < 4
 
-          # compute the packet length (sans the length field itself)
           packet_length = payload.bytesize + padding_length + 1
 
           if packet_length < 16
@@ -161,12 +161,27 @@ module Net
             mac = client.hmac.digest([client.sequence_number, mac_data].pack("NA*"))
 
             message = mac_data + mac
+          elsif client.hmac.aead
+            # Details of this implementation can be found in RFC 5647
+            unencrypted_data = [padding_length, payload, padding].pack("CA*A*")
+
+            # Despite SSH spec, when using AEAD encryption, packet_length is not ciphered. It is transported as identity,
+            # and added in the auth_data. See RFC 5647 7.3
+            client.cipher.auth_data = [packet_length].pack('N')
+            encrypted_data = client.update_cipher(unencrypted_data)
+            encrypted_data << client.final_cipher
+
+            # For SSH, GCM auth_tag acts as MAC
+            mac = client.auth_tag
+
+            message = [packet_length].pack("N") + encrypted_data + [mac].pack("A*")
           else
             unencrypted_data = [packet_length, padding_length, payload, padding].pack("NCA*A*")
 
             mac = client.hmac.digest([client.sequence_number, unencrypted_data].pack("NA*"))
 
             encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
+
 
             message = encrypted_data + mac
           end
@@ -216,7 +231,7 @@ module Net
         # new Packet object.
         # rubocop:disable Metrics/AbcSize
         def poll_next_packet
-          aad_length = server.hmac.etm ? 4 : 0
+          aad_length = server.hmac.etm || server.hmac.aead ? 4 : 0
 
           if @packet.nil?
             minimum = server.block_size < 4 ? 4 : server.block_size
@@ -229,6 +244,11 @@ module Net
               @packet_length = data.unpack("N").first
               @mac_data = data
               @packet = Net::SSH::Buffer.new(server.update_cipher(data[aad_length..-1]))
+            elsif server.hmac.aead
+              # In order to decipher data, we need to extract the fixed 4 bytes packet length...
+              @packet_length = data.unpack("N").first
+              # ...so payload data is the remaining bytes
+              @packet = Net::SSH::Buffer.new(data[4..])
             else
               @packet = Net::SSH::Buffer.new(server.update_cipher(data))
               @packet_length = @packet.read_long
@@ -243,26 +263,38 @@ module Net
           if need > 0
             # read the remainder of the packet and decrypt it.
             data = read_available(need)
-            @mac_data += data if server.hmac.etm
-            @packet.append(server.update_cipher(data))
+            if server.hmac.aead
+              @packet.append(data)
+            else
+              @mac_data += data if server.hmac.etm
+              @packet.append(server.update_cipher(data))
+            end
           end
 
           # get the hmac from the tail of the packet (if one exists), and
           # then validate it.
           real_hmac = read_available(server.hmac.mac_length) || ""
 
-          @packet.append(server.final_cipher)
-          padding_length = @packet.read_byte
+          if server.hmac.aead
+            payload_length = [@packet_length].pack('N')
+            server.cipher.auth_tag = real_hmac.to_s
+            server.cipher.auth_data = payload_length
+            payload = server.cipher.update(@packet.to_s) + server.final_cipher
+            padding_length = payload[0].unpack('C').first.to_i
+            payload = payload[1..@packet_length - padding_length - 1]
+          else
+            @packet.append(server.final_cipher)
+            padding_length = @packet.read_byte
 
-          payload = @packet.read(@packet_length - padding_length - 1)
+            payload = @packet.read(@packet_length - padding_length - 1)
 
-          my_computed_hmac = if server.hmac.etm
-                               server.hmac.digest([server.sequence_number, @mac_data].pack("NA*"))
-                             else
-                               server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
-                             end
-          raise Net::SSH::Exception, "corrupted hmac detected #{server.hmac.class}" if real_hmac != my_computed_hmac
-
+            my_computed_hmac = if server.hmac.etm
+                                 server.hmac.digest([server.sequence_number, @mac_data].pack("NA*"))
+                               else
+                                 server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
+                               end
+            raise Net::SSH::Exception, "corrupted hmac detected #{server.hmac.class}" if real_hmac != my_computed_hmac
+          end
           # try to decompress the payload, in case compression is active
           payload = server.decompress(payload)
 

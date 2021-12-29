@@ -1,5 +1,6 @@
 require 'openssl'
 require 'net/ssh/transport/ctr.rb'
+require 'net/ssh/transport/aead_aes_gcm'
 require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/identity_cipher'
 
@@ -25,6 +26,8 @@ module Net
           "aes192-ctr" => ::OpenSSL::Cipher.ciphers.include?("aes-192-ctr") ? "aes-192-ctr" : "aes-192-ecb",
           "aes128-ctr" => ::OpenSSL::Cipher.ciphers.include?("aes-128-ctr") ? "aes-128-ctr" : "aes-128-ecb",
           'cast128-ctr' => 'cast5-ecb',
+          "aes256-gcm@openssh.com" => "aes-256-gcm",
+          "aes128-gcm@openssh.com" => "aes-128-gcm",
 
           'none' => 'none'
         }
@@ -59,6 +62,10 @@ module Net
             else
               cipher = Net::SSH::Transport::OpenSSLAESCTR.new(cipher)
             end
+          end
+
+          if name =~ /-gcm/
+            cipher.extend(Net::SSH::Transport::AEADAESGCM)
           end
           cipher.iv = Net::SSH::Transport::KeyExpander.expand_key(cipher.iv_len, options[:iv], options)
 

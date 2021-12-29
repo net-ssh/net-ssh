@@ -78,7 +78,7 @@ module Net
 
         def update_cipher(data)
           result = cipher.update(data)
-          update_next_iv(role == :client ? result : data)
+          update_next_iv(role == :client ? result : data) unless hmac.aead
           return result
         end
 
@@ -86,6 +86,10 @@ module Net
           result = cipher.final
           update_next_iv(role == :client ? result : "", true)
           return result
+        end
+
+        def auth_tag
+          hmac.aead ? cipher.auth_tag : ''
         end
 
         # Increments the counters. The sequence number is incremented (and remapped
@@ -192,15 +196,20 @@ module Net
         private
 
         def update_next_iv(data, reset = false)
-          @next_iv << data
-          @next_iv = @next_iv[@next_iv.size - cipher.iv_len..-1]
-
-          if reset
+          if hmac.aead
+            cipher.incr_iv
             cipher.reset
-            cipher.iv = @next_iv
-          end
+          else
+            @next_iv << data
+            @next_iv = @next_iv[@next_iv.size - cipher.iv_len..-1]
 
-          return data
+            if reset
+              cipher.reset
+              cipher.iv = @next_iv
+            end
+
+            return data
+          end
         end
       end
     end

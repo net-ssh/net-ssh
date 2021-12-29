@@ -238,6 +238,17 @@ module Transport
       assert_equal TEXT, decrypt("aes256-ctr", AES256_CTR)
     end
 
+    AES256_GCM = "\xA0\xDC#-\xB4\x010+\aP\x85 \x0E\xD0!\x8D\xB3\xA9\x8A\x92K\x0F\x82?*\xCA[\f\eJ{\x97\a\xB1Z\f\x93\x16\xEF%\xCA\xAC\xE4\x0E\xF6Y\xA9H\xC2\"zsg\xD3\xF69\xF9\xE3-\xCF\t\x1A\xA6\xA4U\xF5w\x89?k\x04\xE2I\xD9\xC4\x03\xD9\x9D~\xF5\xF9\xDE\x04\xC3\xF8\xCC\x9B\xB8&2\xF8B+e\x92\v"
+    AES256_GCM2 = "\xA2d\xE2v\xB6\xC7\xA6}\xAE\xBC'\xEBe\xE2*l\xC1\xFF\x96\xF0\\:\xA4\xCF\xAD\a\xAFW\x90\x1C4\x7F7E\xF4\xDF \xB5\x1C\xB6K\x18s^\f\x96S#7F\x99\xCAP_\x98\xFC\x13\xF5c-\xF2@6\x9Cg\xE8\xF3Q%\xC6\xF5K\xCE\xD7\xB9\xDF\xC5\x04K\xD1\xF2\xB0M\xF0\x9F(\xD8\x05u\xE8\xBA\xAA\x81\xF0nD"
+
+    def test_aes256_gcm_for_encryption
+      assert_equal AES256_GCM, encrypt("aes256-gcm@openssh.com")
+    end
+
+    def test_aes256_gcm_for_encryption2
+      assert_equal [AES256_GCM, AES256_GCM2], encrypt2("aes256-gcm@openssh.com")
+    end
+
     def test_none_for_encryption
       assert_equal TEXT, encrypt("none").strip
     end
@@ -278,7 +289,8 @@ module Transport
 
       cipher.reset
 
-      cipher.iv = "0123456789123456"
+      cipher.iv = "012345678912"
+
       padding = TEXT2.length % cipher.block_size
       result2 = cipher.update(TEXT2.dup)
       result2 << cipher.update(" " * (cipher.block_size - padding)) if padding > 0

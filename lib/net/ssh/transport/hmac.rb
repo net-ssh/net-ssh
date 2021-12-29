@@ -1,4 +1,6 @@
 require 'net/ssh/transport/key_expander'
+require 'net/ssh/transport/hmac/aead_aes128_gcm'
+require 'net/ssh/transport/hmac/aead_aes256_gcm'
 require 'net/ssh/transport/hmac/md5'
 require 'net/ssh/transport/hmac/md5_96'
 require 'net/ssh/transport/hmac/sha1'
@@ -29,6 +31,8 @@ module Net::SSH::Transport::HMAC
     'hmac-sha2-512-etm@openssh.com' => SHA2_512_Etm,
     'hmac-ripemd160' => RIPEMD160,
     'hmac-ripemd160@openssh.com' => RIPEMD160,
+    'aes128-gcm@openssh.com' => Aes128gcm,
+    'aes256-gcm@openssh.com' => Aes256gcm,
     'none' => None
   }
 
