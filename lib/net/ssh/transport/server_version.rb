@@ -45,9 +45,9 @@ module Net
           socket.write "#{PROTO_VERSION}\r\n"
           socket.flush
 
-          raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating" if timeout && !IO.select([socket], nil, nil, timeout)
-
           loop do
+            raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating" if timeout && !IO.select([socket], nil, nil, timeout)
+
             @version = String.new
             loop do
               begin
