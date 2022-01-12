@@ -56,11 +56,10 @@ module Net
               rescue EOFError
                 raise Net::SSH::Disconnect, "connection closed by remote host"
               rescue IO::WaitReadable
-                timed_out = IO.select([socket], nil, nil, timeout).nil?
-                if timed_out
-                  raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating"
-                else
+                if IO.select([socket], nil, nil, timeout)
                   retry
+                else
+                  raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating"
                 end
               end
               @version << b
