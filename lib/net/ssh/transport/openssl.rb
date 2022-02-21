@@ -124,7 +124,8 @@ module OpenSSL
         sig_r = a1sig.value[0].value.to_s(2)
         sig_s = a1sig.value[1].value.to_s(2)
 
-        raise OpenSSL::PKey::DSAError, "bad sig size" if sig_r.length > 20 || sig_s.length > 20
+        sig_size = params["q"].num_bits / 8
+        raise OpenSSL::PKey::DSAError, "bad sig size" if sig_r.length > sig_size || sig_s.length > sig_size
 
         sig_r = "\0" * (20 - sig_r.length) + sig_r if sig_r.length < 20
         sig_s = "\0" * (20 - sig_s.length) + sig_s if sig_s.length < 20
