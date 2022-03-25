@@ -183,9 +183,12 @@ module Net
         class PubKey
           include Net::SSH::Authentication::PubKeyFingerprint
 
-          def initialize(data)
+          attr_accessor :comment
+
+          def initialize(data, comment = "")
             ED25519.validate_key_bytes!(data, "public key", KEY_BYTES)
             @public_key_bytes = data.dup.force_encoding('BINARY')
+            @comment = comment
           end
 
           def self.read_keyblob(buffer)
@@ -220,17 +223,21 @@ module Net
           def verify_key
             @verify_key ||= ED25519.new_public_key(@public_key_bytes)
           end
+
+          def to_ssh
+            "#{ssh_type} #{Base64.strict_encode64(to_blob)} #{comment}"
+          end
         end
 
         class PrivKey
           CipherFactory = Net::SSH::Transport::CipherFactory
 
-          attr_reader :sign_key
+          attr_reader :sign_key, :comment
 
           def initialize(buffer)
             pk = buffer.read_string
             sk = buffer.read_string
-            _comment = buffer.read_string
+            @comment = buffer.read_string
 
             ED25519.validate_key_bytes!(pk, "public key", KEY_BYTES)
             ED25519.validate_key_bytes!(sk, "private key field", PRIVATE_KEY_BYTES)
@@ -258,7 +265,7 @@ module Net
           end
 
           def public_key
-            PubKey.new(public_key_bytes)
+            PubKey.new(public_key_bytes, @comment)
           end
 
           def ssh_do_sign(data, sig_alg = nil)
