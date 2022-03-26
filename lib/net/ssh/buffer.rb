@@ -283,6 +283,12 @@ module Net
             key.iqmp = iqmp
           end
           key
+        when /^ecdsa\-sha2\-(\w*)$/
+          key = OpenSSL::PKey::EC.read_keyblob($1, self)
+          key.private_key = read_bignum
+          _key_comment = read_string
+
+          key
         else
           raise Exception, "Cannot decode private key of type #{type}"
         end
