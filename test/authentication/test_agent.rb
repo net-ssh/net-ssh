@@ -51,6 +51,11 @@ module Authentication
       agent(false).connect!
     end
 
+    def test_connect_should_expand_path_to_identity_agent
+      factory.expects(:open).with("#{Dir.home}/path/to/ssh.agent.sock").returns(socket)
+      agent(false).connect! nil, "~/path/to/ssh.agent.sock"
+    end
+
     def test_connect_should_use_agent_socket_factory_instead_of_factory
       assert_equal agent.connect!, socket
       assert_equal agent.connect!(agent_socket_factory), "/foo/bar.sock"

@@ -88,9 +88,9 @@ module Net
             if agent_socket_factory
               agent_socket_factory.call
             elsif identity_agent
-              unix_socket_class.open(identity_agent)
+              unix_socket_class.open(File.expand_path(identity_agent))
             elsif ENV['SSH_AUTH_SOCK'] && unix_socket_class
-              unix_socket_class.open(ENV['SSH_AUTH_SOCK'])
+              unix_socket_class.open(File.expand_path(ENV['SSH_AUTH_SOCK']))
             elsif Gem.win_platform? && RUBY_ENGINE != "jruby"
               Pageant::Socket.open
             else
