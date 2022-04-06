@@ -95,6 +95,12 @@ Rake::TestTask.new do |t|
   t.test_files = test_files
 end
 
+# We need to enable the OpenSSL 3.0 legacy providers for our test suite
+require 'openssl'
+if OpenSSL::OPENSSL_LIBRARY_VERSION.start_with? "OpenSSL 3" then
+  ENV['OPENSSL_CONF'] = 'test/openssl3.conf'
+end
+
 desc "Run tests of Net::SSH:Test"
 Rake::TestTask.new do |t|
   t.name = "test_test"
