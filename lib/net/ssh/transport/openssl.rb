@@ -159,10 +159,18 @@ module OpenSSL
 
         public_key_oct = buffer.read_string
         begin
-          key = OpenSSL::PKey::EC.new(OpenSSL::PKey::EC::CurveNameAlias[curve_name_in_key])
-          group = key.group
+          curvename = OpenSSL::PKey::EC::CurveNameAlias[curve_name_in_key]
+          group = OpenSSL::PKey::EC::Group.new(curvename)
           point = OpenSSL::PKey::EC::Point.new(group, OpenSSL::BN.new(public_key_oct, 2))
-          key.public_key = point
+          asn1 = OpenSSL::ASN1::Sequence([
+            OpenSSL::ASN1::Sequence([
+              OpenSSL::ASN1::ObjectId("id-ecPublicKey"),
+              OpenSSL::ASN1::ObjectId(curvename)
+            ]),
+            OpenSSL::ASN1::BitString(point.to_octet_string(:uncompressed))
+          ])
+
+          key = OpenSSL::PKey::EC.new(asn1.to_der)
 
           return key
         rescue OpenSSL::PKey::ECError
