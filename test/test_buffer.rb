@@ -337,13 +337,15 @@ class TestBuffer < NetSSHTest
   def test_write_rsa_key_should_write_argument_to_end_of_buffer
     buffer = new("start")
 
-    key = OpenSSL::PKey::RSA.new
-    if key.respond_to?(:set_key)
-      key.set_key(0x7766554433221100, 0xffeeddccbbaa9988, nil)
-    else
-      key.e = 0xffeeddccbbaa9988
-      key.n = 0x7766554433221100
-    end
+    n = 0x7766554433221100
+    e = 0xffeeddccbbaa9988
+
+    asn1 = OpenSSL::ASN1::Sequence([
+      OpenSSL::ASN1::Integer(n),
+      OpenSSL::ASN1::Integer(e)
+    ])
+
+    key = OpenSSL::PKey::RSA.new(asn1.to_der)
 
     buffer.write_key(key)
     assert_equal "start\0\0\0\7ssh-rsa\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0\0\0\010\x77\x66\x55\x44\x33\x22\x11\x00", buffer.to_s
