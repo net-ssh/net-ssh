@@ -316,7 +316,7 @@ module Authentication
         cert.critical_options = {}
         cert.extensions = {}
         cert.reserved = ''
-        cert.sign!(OpenSSL::PKey::DSA.new(512))
+        cert.sign!(OpenSSL::PKey::DSA.new(1024))
         cert
       end
     end
@@ -326,7 +326,7 @@ module Authentication
     end
 
     def dsa
-      @dsa ||= OpenSSL::PKey::DSA.new(512)
+      @dsa ||= OpenSSL::PKey::DSA.new(1024)
     end
 
     def ecdsa_sha2_nistp256

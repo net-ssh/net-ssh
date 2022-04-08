@@ -125,7 +125,7 @@ module Authentication
 
     def test_identities_should_augment_identities_with_comment_field
       key1 = key
-      key2 = OpenSSL::PKey::DSA.new(512)
+      key2 = OpenSSL::PKey::DSA.new(1024)
 
       socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
@@ -141,9 +141,9 @@ module Authentication
 
     def test_identities_should_ignore_unimplemented_ones
       key1 = key
-      key2 = OpenSSL::PKey::DSA.new(512)
+      key2 = OpenSSL::PKey::DSA.new(1024)
       key2.to_blob[0..5] = 'badkey'
-      key3 = OpenSSL::PKey::DSA.new(512)
+      key3 = OpenSSL::PKey::DSA.new(1024)
 
       socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
@@ -161,7 +161,7 @@ module Authentication
     def test_identities_should_ignore_invalid_ones
       key1 = key
       key2_bad = Net::SSH::Buffer.new(String.new)
-      key3 = OpenSSL::PKey::DSA.new(512)
+      key3 = OpenSSL::PKey::DSA.new(1024)
 
       socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
@@ -257,7 +257,7 @@ module Authentication
     end
 
     def test_add_dsa_identity
-      dsa = OpenSSL::PKey::DSA.new(512)
+      dsa = OpenSSL::PKey::DSA.new(1024)
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-dss"
@@ -276,7 +276,7 @@ module Authentication
     end
 
     def test_add_dsa_cert_identity
-      cert = make_cert(OpenSSL::PKey::DSA.new(512))
+      cert = make_cert(OpenSSL::PKey::DSA.new(1024))
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-dss-cert-v01@openssh.com"
