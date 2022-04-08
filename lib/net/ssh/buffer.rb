@@ -301,19 +301,24 @@ module Net
         when /^(.*)-cert-v01@openssh\.com$/
           key = Net::SSH::Authentication::Certificate.read_certblob(self, $1)
         when /^ssh-dss$/
-          key = OpenSSL::PKey::DSA.new
-          if key.respond_to?(:set_pqg)
-            key.set_pqg(read_bignum, read_bignum, read_bignum)
-          else
-            key.p = read_bignum
-            key.q = read_bignum
-            key.g = read_bignum
-          end
-          if key.respond_to?(:set_key)
-            key.set_key(read_bignum, nil)
-          else
-            key.pub_key = read_bignum
-          end
+          p = read_bignum
+          q = read_bignum
+          g = read_bignum
+          pub_key = read_bignum
+
+          asn1 = OpenSSL::ASN1::Sequence.new([
+            OpenSSL::ASN1::Sequence.new([
+              OpenSSL::ASN1::ObjectId.new('DSA'),
+              OpenSSL::ASN1::Sequence.new([
+                OpenSSL::ASN1::Integer.new(p),
+                OpenSSL::ASN1::Integer.new(q),
+                OpenSSL::ASN1::Integer.new(g)
+              ]),
+            ]),
+            OpenSSL::ASN1::BitString.new(OpenSSL::ASN1::Integer.new(pub_key).to_der)
+          ])
+
+          key = OpenSSL::PKey::DSA.new(asn1.to_der)
         when /^ssh-rsa$/
           e = read_bignum
           n = read_bignum

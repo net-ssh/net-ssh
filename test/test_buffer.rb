@@ -319,16 +319,24 @@ class TestBuffer < NetSSHTest
   def test_write_dss_key_should_write_argument_to_end_of_buffer
     buffer = new("start")
 
-    key = OpenSSL::PKey::DSA.new
-    if key.respond_to?(:set_pqg)
-      key.set_pqg(0xffeeddccbbaa9988, 0x7766554433221100, 0xffddbb9977553311)
-      key.set_key(0xeeccaa8866442200, nil)
-    else
-      key.p = 0xffeeddccbbaa9988
-      key.q = 0x7766554433221100
-      key.g = 0xffddbb9977553311
-      key.pub_key = 0xeeccaa8866442200
-    end
+    p = 0xffeeddccbbaa9988
+    q = 0x7766554433221100
+    g = 0xffddbb9977553311
+    pub_key = 0xeeccaa8866442200
+
+    asn1 = OpenSSL::ASN1::Sequence.new([
+      OpenSSL::ASN1::Sequence.new([
+        OpenSSL::ASN1::ObjectId.new('DSA'),
+        OpenSSL::ASN1::Sequence.new([
+          OpenSSL::ASN1::Integer.new(p),
+          OpenSSL::ASN1::Integer.new(q),
+          OpenSSL::ASN1::Integer.new(g)
+        ]),
+      ]),
+      OpenSSL::ASN1::BitString.new(OpenSSL::ASN1::Integer.new(pub_key).to_der)
+    ])
+
+    key = OpenSSL::PKey::DSA.new(asn1.to_der)
 
     buffer.write_key(key)
     assert_equal "start\0\0\0\7ssh-dss\0\0\0\011\0\xff\xee\xdd\xcc\xbb\xaa\x99\x88\0\0\0\010\x77\x66\x55\x44\x33\x22\x11\x00\0\0\0\011\0\xff\xdd\xbb\x99\x77\x55\x33\x11\0\0\0\011\0\xee\xcc\xaa\x88\x66\x44\x22\x00", buffer.to_s
