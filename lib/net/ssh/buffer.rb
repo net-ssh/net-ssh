@@ -315,15 +315,15 @@ module Net
             key.pub_key = read_bignum
           end
         when /^ssh-rsa$/
-          key = OpenSSL::PKey::RSA.new
-          if key.respond_to?(:set_key)
-            e = read_bignum
-            n = read_bignum
-            key.set_key(n, e, nil)
-          else
-            key.e = read_bignum
-            key.n = read_bignum
-          end
+          e = read_bignum
+          n = read_bignum
+
+          asn1 = OpenSSL::ASN1::Sequence([
+            OpenSSL::ASN1::Integer(n),
+            OpenSSL::ASN1::Integer(e)
+          ])
+
+          key = OpenSSL::PKey::RSA.new(asn1.to_der)
         when /^ssh-ed25519$/
           Net::SSH::Authentication::ED25519Loader.raiseUnlessLoaded("unsupported key type `#{type}'")
           key = Net::SSH::Authentication::ED25519::PubKey.read_keyblob(self)

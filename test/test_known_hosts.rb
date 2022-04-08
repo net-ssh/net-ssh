@@ -166,13 +166,12 @@ class TestKnownHosts < NetSSHTest
   end
 
   def rsa_key
-    key = OpenSSL::PKey::RSA.new
-    if key.respond_to?(:set_key)
-      key.set_key(0x7766554433221100, 0xffeeddccbbaa9988, nil)
-    else
-      key.e = 0xffeeddccbbaa9988
-      key.n = 0x7766554433221100
-    end
-    key
+    n = 0x7766554433221100
+    e = 0xffeeddccbbaa9988
+    asn1 = OpenSSL::ASN1::Sequence([
+      OpenSSL::ASN1::Integer(n),
+      OpenSSL::ASN1::Integer(e)
+    ])
+    OpenSSL::PKey::RSA.new(asn1.to_der)
   end
 end
