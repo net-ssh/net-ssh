@@ -60,25 +60,25 @@ module Net
           # Generate a DH key with a private key consisting of the given
           # number of bytes.
           def generate_key # :nodoc:
-            dh = OpenSSL::PKey::DH.new
+            p, g = get_parameters
 
-            if dh.respond_to?(:set_pqg)
-              p, g = get_parameters
-              dh.set_pqg(p, nil, g)
+            asn1 = OpenSSL::ASN1::Sequence(
+              [
+                OpenSSL::ASN1::Integer(p),
+                OpenSSL::ASN1::Integer(g)
+              ]
+            )
+
+            dh_params = OpenSSL::PKey::DH.new(asn1.to_der)
+            # XXX No private key size check! In theory the latter call should work but fails on OpenSSL 3.0 as
+            # dh_paramgen_subprime_len is now reserved for DHX algorithm
+            # key = OpenSSL::PKey.generate_key(dh_params, "dh_paramgen_subprime_len" => data[:need_bytes]/8)
+            if OpenSSL::PKey.respond_to?(:generate_key)
+              OpenSSL::PKey.generate_key(dh_params)
             else
-              dh.p, dh.g = get_parameters
+              dh_params.generate_key!
+              dh_params
             end
-
-            dh.generate_key!
-            until dh.valid? && dh.priv_key.num_bytes == data[:need_bytes]
-              if dh.respond_to?(:set_key)
-                dh.set_key(nil, OpenSSL::BN.rand(data[:need_bytes] * 8))
-              else
-                dh.priv_key = OpenSSL::BN.rand(data[:need_bytes] * 8)
-              end
-              dh.generate_key!
-            end
-            dh
           end
 
           # Send the KEXDH_INIT message, and expect the KEXDH_REPLY. Return the
