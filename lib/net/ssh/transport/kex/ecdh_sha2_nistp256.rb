@@ -18,7 +18,7 @@ module Net
           private
 
           def generate_key # :nodoc:
-            OpenSSL::PKey::EC.new(curve_name).generate_key
+            OpenSSL::PKey::EC.generate(curve_name)
           end
 
           # compute shared secret from server's public key and client's private key

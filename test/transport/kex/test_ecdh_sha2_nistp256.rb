@@ -109,11 +109,11 @@ module Transport
       end
 
       def server_key
-        @server_key ||= OpenSSL::PKey::EC.new(ecparam).generate_key
+        @server_key ||= OpenSSL::PKey::EC.generate(ecparam)
       end
 
       def server_host_key
-        @server_host_key ||= OpenSSL::PKey::EC.new('prime256v1').generate_key
+        @server_host_key ||= OpenSSL::PKey::EC.generate('prime256v1')
       end
 
       def packet_data
