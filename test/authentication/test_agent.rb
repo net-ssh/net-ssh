@@ -292,7 +292,7 @@ module Authentication
     end
 
     def test_add_ecdsa_identity
-      ecdsa = OpenSSL::PKey::EC.new("prime256v1").generate_key
+      ecdsa = OpenSSL::PKey::EC.generate("prime256v1")
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ecdsa-sha2-nistp256"
@@ -309,7 +309,7 @@ module Authentication
     end
 
     def test_add_ecdsa_cert_identity
-      cert = make_cert(OpenSSL::PKey::EC.new("prime256v1").generate_key)
+      cert = make_cert(OpenSSL::PKey::EC.generate("prime256v1"))
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ecdsa-sha2-nistp256-cert-v01@openssh.com"

@@ -457,7 +457,7 @@ class TestBuffer < NetSSHTest
   end
 
   def random_ecdsa_sha2_nistp256
-    k = OpenSSL::PKey::EC.new('prime256v1').generate_key
+    k = OpenSSL::PKey::EC.generate('prime256v1')
     buffer = Net::SSH::Buffer.from(:string, 'nistp256',
                                    :string, k.public_key.to_bn.to_s(2))
     key = yield(buffer)
@@ -466,7 +466,7 @@ class TestBuffer < NetSSHTest
   end
 
   def random_ecdsa_sha2_nistp384
-    k = OpenSSL::PKey::EC.new('secp384r1').generate_key
+    k = OpenSSL::PKey::EC.generate('secp384r1')
     buffer = Net::SSH::Buffer.from(:string, 'nistp384',
                                    :string, k.public_key.to_bn.to_s(2))
     key = yield(buffer)
@@ -475,7 +475,7 @@ class TestBuffer < NetSSHTest
   end
 
   def random_ecdsa_sha2_nistp521
-    k = OpenSSL::PKey::EC.new('secp521r1').generate_key
+    k = OpenSSL::PKey::EC.generate('secp521r1')
     buffer = Net::SSH::Buffer.from(:string, 'nistp521',
                                    :string, k.public_key.to_bn.to_s(2))
     key = yield(buffer)
