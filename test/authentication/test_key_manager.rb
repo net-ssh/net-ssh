@@ -330,15 +330,15 @@ module Authentication
     end
 
     def ecdsa_sha2_nistp256
-      @ecdsa_sha2_nistp256 ||= OpenSSL::PKey::EC.new('prime256v1').generate_key
+      @ecdsa_sha2_nistp256 ||= OpenSSL::PKey::EC.generate('prime256v1')
     end
 
     def ecdsa_sha2_nistp384
-      @ecdsa_sha2_nistp384 ||= OpenSSL::PKey::EC.new('secp384r1').generate_key
+      @ecdsa_sha2_nistp384 ||= OpenSSL::PKey::EC.generate('secp384r1')
     end
 
     def ecdsa_sha2_nistp521
-      @ecdsa_sha2_nistp521 ||= OpenSSL::PKey::EC.new('secp521r1').generate_key
+      @ecdsa_sha2_nistp521 ||= OpenSSL::PKey::EC.generate('secp521r1')
     end
 
     def rsa_pk

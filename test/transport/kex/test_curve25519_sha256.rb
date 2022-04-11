@@ -111,7 +111,7 @@ unless ENV['NET_SSH_NO_ED25519']
         end
 
         def server_host_key
-          @server_host_key ||= OpenSSL::PKey::EC.new('prime256v1').generate_key
+          @server_host_key ||= OpenSSL::PKey::EC.generate('prime256v1')
         end
 
         def packet_data
