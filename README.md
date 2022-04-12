@@ -211,6 +211,12 @@ Run the test suite from the net-ssh directory with the following command:
 bundle exec rake test
 ```
 
+NOTE : you can run test on all ruby versions with docker :
+
+```
+docker-compose up --build
+```
+
 Run a single test file like this:
 
 ```sh
