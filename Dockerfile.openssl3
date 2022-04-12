@@ -1,0 +1,17 @@
+FROM ubuntu:22.04
+
+ENV INSTALL_PATH="/netssh"
+
+RUN apt update && apt install -y openssl ruby ruby-dev git build-essential
+
+WORKDIR $INSTALL_PATH
+
+COPY Gemfile net-ssh.gemspec $INSTALL_PATH/
+
+COPY lib/net/ssh/version.rb $INSTALL_PATH/lib/net/ssh/version.rb
+
+RUN ls -l && gem install bundler && bundle install
+
+COPY . $INSTALL_PATH/
+
+CMD openssl version && ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION' && rake test
