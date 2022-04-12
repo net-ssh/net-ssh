@@ -28,3 +28,17 @@ jobs:
 
     - name: Run ruby 3.1
       run: docker-compose run ruby-3.1
+
+  test_openssl3:
+    name: Run test suite with docker and openssl 3.0
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build docker images
+      run: docker build -t netssh_openssl3 -f Dockerfile.openssl3 .
+
+    - name: Run ruby 3.0 with openssl3
+      run: docker run --rm netssh_openssl3
