@@ -217,7 +217,7 @@ Run a single test file like this:
 ruby -Ilib -Itest test/transport/test_server_version.rb
 ```
 
-To run integration tests see [here](test/integration/README.txt)
+To run integration tests see [here](test/integration/README.md)
 
 ### BUILDING GEM
 
