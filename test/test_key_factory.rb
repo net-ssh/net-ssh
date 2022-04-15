@@ -133,7 +133,7 @@ class TestKeyFactory < NetSSHTest
   def test_load_should_parse_openssh_format_private_ecdsa_sha2_nistp256_key
     File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp256_key_openssh)
     assert_equal ecdsa_sha2_nistp256_key.to_blob,
-      Net::SSH::KeyFactory.load_private_key('/key-file').to_blob
+                 Net::SSH::KeyFactory.load_private_key('/key-file').to_blob
   end
 
   def test_load_unencrypted_private_ecdsa_sha2_nistp384_key_should_have_fp_md5
@@ -149,7 +149,7 @@ class TestKeyFactory < NetSSHTest
   def test_load_should_parse_openssh_format_private_ecdsa_sha2_nistp384_key
     File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp384_key_openssh)
     assert_equal ecdsa_sha2_nistp384_key.to_blob,
-      Net::SSH::KeyFactory.load_private_key('/key-file').to_blob
+                 Net::SSH::KeyFactory.load_private_key('/key-file').to_blob
   end
 
   def test_load_unencrypted_private_ecdsa_sha2_nistp521_key_should_have_fp_md5
@@ -165,7 +165,7 @@ class TestKeyFactory < NetSSHTest
   def test_load_should_parse_openssh_format_private_ecdsa_sha2_nistp521_key
     File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp521_key_openssh)
     assert_equal ecdsa_sha2_nistp521_key.to_blob,
-      Net::SSH::KeyFactory.load_private_key('/key-file').to_blob
+                 Net::SSH::KeyFactory.load_private_key('/key-file').to_blob
   end
 
   def test_load_public_ecdsa_sha2_nistp256_key_should_return_key
@@ -277,7 +277,7 @@ class TestKeyFactory < NetSSHTest
   end
 
   def ecdsa_sha2_nistp521_key_openssh
-    @ecdsa_sha2_nistp384_key_openssh ||= <<~EOF
+    @ecdsa_sha2_nistp521_key_openssh ||= <<~EOF
       -----BEGIN OPENSSH PRIVATE KEY-----
       b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAArAAAABNlY2RzYS
       1zaGEyLW5pc3RwNTIxAAAACG5pc3RwNTIxAAAAhQQA3XgUAIpuz8pOrDivGKN6jMZNUlOH
