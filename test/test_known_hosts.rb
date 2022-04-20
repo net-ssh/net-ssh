@@ -168,10 +168,12 @@ class TestKnownHosts < NetSSHTest
   def rsa_key
     n = 0x7766554433221100
     e = 0xffeeddccbbaa9988
-    asn1 = OpenSSL::ASN1::Sequence([
-      OpenSSL::ASN1::Integer(n),
-      OpenSSL::ASN1::Integer(e)
-    ])
+    asn1 = OpenSSL::ASN1::Sequence(
+      [
+        OpenSSL::ASN1::Integer(n),
+        OpenSSL::ASN1::Integer(e)
+      ]
+    )
     OpenSSL::PKey::RSA.new(asn1.to_der)
   end
 end
