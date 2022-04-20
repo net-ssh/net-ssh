@@ -162,13 +162,17 @@ module OpenSSL
           curvename = OpenSSL::PKey::EC::CurveNameAlias[curve_name_in_key]
           group = OpenSSL::PKey::EC::Group.new(curvename)
           point = OpenSSL::PKey::EC::Point.new(group, OpenSSL::BN.new(public_key_oct, 2))
-          asn1 = OpenSSL::ASN1::Sequence([
-            OpenSSL::ASN1::Sequence([
-              OpenSSL::ASN1::ObjectId("id-ecPublicKey"),
-              OpenSSL::ASN1::ObjectId(curvename)
-            ]),
-            OpenSSL::ASN1::BitString(point.to_octet_string(:uncompressed))
-          ])
+          asn1 = OpenSSL::ASN1::Sequence(
+            [
+              OpenSSL::ASN1::Sequence(
+                [
+                  OpenSSL::ASN1::ObjectId("id-ecPublicKey"),
+                  OpenSSL::ASN1::ObjectId(curvename)
+                ]
+              ),
+              OpenSSL::ASN1::BitString(point.to_octet_string(:uncompressed))
+            ]
+          )
 
           key = OpenSSL::PKey::EC.new(asn1.to_der)
 

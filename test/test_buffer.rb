@@ -324,17 +324,23 @@ class TestBuffer < NetSSHTest
     g = 0xffddbb9977553311
     pub_key = 0xeeccaa8866442200
 
-    asn1 = OpenSSL::ASN1::Sequence.new([
-      OpenSSL::ASN1::Sequence.new([
-        OpenSSL::ASN1::ObjectId.new('DSA'),
-        OpenSSL::ASN1::Sequence.new([
-          OpenSSL::ASN1::Integer.new(p),
-          OpenSSL::ASN1::Integer.new(q),
-          OpenSSL::ASN1::Integer.new(g)
-        ]),
-      ]),
-      OpenSSL::ASN1::BitString.new(OpenSSL::ASN1::Integer.new(pub_key).to_der)
-    ])
+    asn1 = OpenSSL::ASN1::Sequence.new(
+      [
+        OpenSSL::ASN1::Sequence.new(
+          [
+            OpenSSL::ASN1::ObjectId.new('DSA'),
+            OpenSSL::ASN1::Sequence.new(
+              [
+                OpenSSL::ASN1::Integer.new(p),
+                OpenSSL::ASN1::Integer.new(q),
+                OpenSSL::ASN1::Integer.new(g)
+              ]
+            )
+          ]
+        ),
+        OpenSSL::ASN1::BitString.new(OpenSSL::ASN1::Integer.new(pub_key).to_der)
+      ]
+    )
 
     key = OpenSSL::PKey::DSA.new(asn1.to_der)
 
@@ -348,10 +354,12 @@ class TestBuffer < NetSSHTest
     n = 0x7766554433221100
     e = 0xffeeddccbbaa9988
 
-    asn1 = OpenSSL::ASN1::Sequence([
-      OpenSSL::ASN1::Integer(n),
-      OpenSSL::ASN1::Integer(e)
-    ])
+    asn1 = OpenSSL::ASN1::Sequence(
+      [
+        OpenSSL::ASN1::Integer(n),
+        OpenSSL::ASN1::Integer(e)
+      ]
+    )
 
     key = OpenSSL::PKey::RSA.new(asn1.to_der)
 
