@@ -284,11 +284,7 @@ module Net
           end
           key
         when /^ecdsa\-sha2\-(\w*)$/
-          key = OpenSSL::PKey::EC.read_keyblob($1, self)
-          key.private_key = read_bignum
-          _key_comment = read_string
-
-          key
+          OpenSSL::PKey::EC.read_keyblob($1, self)
         else
           raise Exception, "Cannot decode private key of type #{type}"
         end
