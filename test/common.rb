@@ -46,6 +46,18 @@ def P(*args)
   Net::SSH::Packet.new(Net::SSH::Buffer.from(*args))
 end
 
+# DH key generate with OpenSSL::PKey::DH.new(512).to_pem
+def dh_512bits_bn
+  OpenSSL::PKey::DH.new(
+    <<~DH_KEY
+      -----BEGIN DH PARAMETERS-----
+      MEYCQQDkZMgCTieW40x/bmCpf6m1XHERNnyOodot21UsJkCidr+T6aAcy/Oz4mWo
+      aYudmZZLQz7jhz0Ut2VQUw0Nz033AgEC
+      -----END DH PARAMETERS-----
+    DH_KEY
+  ).p
+end
+
 class NetSSHTest < Minitest::Test
   def assert_nothing_raised(&block)
     yield
