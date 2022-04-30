@@ -46,10 +46,10 @@ module Net
       end
 
       # The major component of this version of the Net::SSH library
-      MAJOR = 6
+      MAJOR = 7
 
       # The minor component of this version of the Net::SSH library
-      MINOR = 3
+      MINOR = 0
 
       # The tiny component of this version of the Net::SSH library
       TINY  = 0
