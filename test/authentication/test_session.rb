@@ -1,5 +1,6 @@
 require_relative '../common'
 require 'net/ssh/authentication/session'
+require 'logger'
 
 module Authentication
   class TestSession < NetSSHTest
@@ -165,6 +166,68 @@ module Authentication
       session(key_data: custom_private_key).authenticate("next service", "username")
     end
 
+    # Authentication for AuthenticationMethods "publickey,password"
+    def test_mfa
+      File.stubs(:file?).returns(false)
+
+      file_on_filesystem("~/.ssh/id_rsa", default_private_key)
+
+      transport.expect do |t, packet|
+        assert_equal SERVICE_REQUEST, packet.type
+        assert_equal "ssh-userauth", packet.read_string
+        t.return(SERVICE_ACCEPT)
+      end
+
+      transport.expect do |t, packet|
+        assert_none_request packet
+        t.return(USERAUTH_FAILURE, :string, "publickey")
+      end
+
+      transport.expect do |t, packet|
+        assert_public_key_request default_public_key, packet
+        t.return(USERAUTH_FAILURE, :string, "password")
+      end
+
+      transport.expect do |t, packet|
+        assert_equal packet.type, USERAUTH_REQUEST
+        assert_password_request "username", "password", "next service", packet
+        t.return(USERAUTH_SUCCESS, :string, "password")
+      end
+
+      assert(session.authenticate("next service", "username", "password"))
+    end
+
+    # Authentication for AuthenticationMethods "password,publickey"
+    def test_mfa_reverse_order
+      File.stubs(:file?).returns(false)
+
+      file_on_filesystem("~/.ssh/id_rsa", default_private_key)
+
+      transport.expect do |t, packet|
+        assert_equal SERVICE_REQUEST, packet.type
+        assert_equal "ssh-userauth", packet.read_string
+        t.return(SERVICE_ACCEPT)
+      end
+
+      transport.expect do |t, packet|
+        assert_none_request packet
+        t.return(USERAUTH_FAILURE, :string, "password")
+      end
+
+      transport.expect do |t, packet|
+        assert_equal packet.type, USERAUTH_REQUEST
+        assert_password_request "username", "password", "next service", packet
+        t.return(USERAUTH_FAILURE, :string, "publickey")
+      end
+
+      transport.expect do |t, packet|
+        assert_public_key_request default_public_key, packet
+        t.return(USERAUTH_SUCCESS)
+      end
+
+      assert(session.authenticate("next service", "username", "password"))
+    end
+
     private
 
     def session(options = {})
@@ -191,6 +254,15 @@ module Authentication
       assert_equal "ssh-rsa", packet.read_string
       key_in_packet = Net::SSH::Buffer.new(packet.read_string).read_key
       assert_equal public_key, key_in_packet.to_pem
+    end
+
+    def assert_password_request(user, password, next_service, packet)
+      assert_equal USERAUTH_REQUEST, packet.type
+      assert_equal user, packet.read_string
+      assert_equal next_service, packet.read_string
+      assert_equal "password", packet.read_string
+      assert_equal false, packet.read_bool
+      assert_equal password, packet.read_string
     end
 
     def file_on_filesystem(name, contents)
