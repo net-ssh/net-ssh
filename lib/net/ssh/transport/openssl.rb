@@ -124,7 +124,8 @@ module OpenSSL
         sig_r = a1sig.value[0].value.to_s(2)
         sig_s = a1sig.value[1].value.to_s(2)
 
-        raise OpenSSL::PKey::DSAError, "bad sig size" if sig_r.length > 20 || sig_s.length > 20
+        sig_size = params["q"].num_bits / 8
+        raise OpenSSL::PKey::DSAError, "bad sig size" if sig_r.length > sig_size || sig_s.length > sig_size
 
         sig_r = "\0" * (20 - sig_r.length) + sig_r if sig_r.length < 20
         sig_s = "\0" * (20 - sig_s.length) + sig_s if sig_s.length < 20
@@ -158,10 +159,22 @@ module OpenSSL
 
         public_key_oct = buffer.read_string
         begin
-          key = OpenSSL::PKey::EC.new(OpenSSL::PKey::EC::CurveNameAlias[curve_name_in_key])
-          group = key.group
+          curvename = OpenSSL::PKey::EC::CurveNameAlias[curve_name_in_key]
+          group = OpenSSL::PKey::EC::Group.new(curvename)
           point = OpenSSL::PKey::EC::Point.new(group, OpenSSL::BN.new(public_key_oct, 2))
-          key.public_key = point
+          asn1 = OpenSSL::ASN1::Sequence(
+            [
+              OpenSSL::ASN1::Sequence(
+                [
+                  OpenSSL::ASN1::ObjectId("id-ecPublicKey"),
+                  OpenSSL::ASN1::ObjectId(curvename)
+                ]
+              ),
+              OpenSSL::ASN1::BitString(point.to_octet_string(:uncompressed))
+            ]
+          )
+
+          key = OpenSSL::PKey::EC.new(asn1.to_der)
 
           return key
         rescue OpenSSL::PKey::ECError

@@ -133,7 +133,7 @@ module Transport
       end
 
       def server_dh_pubkey
-        @server_dh_pubkey ||= bn(1234567890)
+        @server_dh_pubkey ||= OpenSSL::BN.new(dh_512bits_bn, 10)
       end
 
       def shared_secret

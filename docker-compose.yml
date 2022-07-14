@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  ruby-3.1:
+    build:
+      context: .
+      args: 
+        RUBY_VERSION: 3.1
+  ruby-3.0:
+    build:
+      context: .
+      args: 
+        RUBY_VERSION: 3.0
+  ruby-2.7:
+    build:
+      context: .
+      args: 
+        RUBY_VERSION: 2.7
+  ruby-2.6:
+    build:
+      context: .
+      args: 
+        RUBY_VERSION: 2.6

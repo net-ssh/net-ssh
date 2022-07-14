@@ -371,7 +371,7 @@ module Transport
     end
 
     def shared_secret
-      @shared_secret ||= OpenSSL::BN.new("1234567890", 10)
+      @shared_secret ||= dh_512bits_bn
     end
 
     def session_id

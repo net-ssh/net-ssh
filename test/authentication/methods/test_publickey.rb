@@ -184,7 +184,7 @@ module Authentication
 
       @@keys = nil
       def keys
-        @@keys ||= [OpenSSL::PKey::RSA.new(512), OpenSSL::PKey::DSA.new(512)]
+        @@keys ||= [OpenSSL::PKey::RSA.new(512), OpenSSL::PKey::DSA.new(1024)]
       end
 
       def key_manager(options = {})

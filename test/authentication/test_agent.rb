@@ -51,6 +51,11 @@ module Authentication
       agent(false).connect!
     end
 
+    def test_connect_should_expand_path_to_identity_agent
+      factory.expects(:open).with("#{Dir.home}/path/to/ssh.agent.sock").returns(socket)
+      agent(false).connect! nil, "~/path/to/ssh.agent.sock"
+    end
+
     def test_connect_should_use_agent_socket_factory_instead_of_factory
       assert_equal agent.connect!, socket
       assert_equal agent.connect!(agent_socket_factory), "/foo/bar.sock"
@@ -120,7 +125,7 @@ module Authentication
 
     def test_identities_should_augment_identities_with_comment_field
       key1 = key
-      key2 = OpenSSL::PKey::DSA.new(512)
+      key2 = OpenSSL::PKey::DSA.new(1024)
 
       socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
@@ -136,9 +141,9 @@ module Authentication
 
     def test_identities_should_ignore_unimplemented_ones
       key1 = key
-      key2 = OpenSSL::PKey::DSA.new(512)
+      key2 = OpenSSL::PKey::DSA.new(1024)
       key2.to_blob[0..5] = 'badkey'
-      key3 = OpenSSL::PKey::DSA.new(512)
+      key3 = OpenSSL::PKey::DSA.new(1024)
 
       socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
@@ -156,7 +161,7 @@ module Authentication
     def test_identities_should_ignore_invalid_ones
       key1 = key
       key2_bad = Net::SSH::Buffer.new(String.new)
-      key3 = OpenSSL::PKey::DSA.new(512)
+      key3 = OpenSSL::PKey::DSA.new(1024)
 
       socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
@@ -252,7 +257,7 @@ module Authentication
     end
 
     def test_add_dsa_identity
-      dsa = OpenSSL::PKey::DSA.new(512)
+      dsa = OpenSSL::PKey::DSA.new(1024)
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-dss"
@@ -271,7 +276,7 @@ module Authentication
     end
 
     def test_add_dsa_cert_identity
-      cert = make_cert(OpenSSL::PKey::DSA.new(512))
+      cert = make_cert(OpenSSL::PKey::DSA.new(1024))
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ssh-dss-cert-v01@openssh.com"
@@ -287,7 +292,7 @@ module Authentication
     end
 
     def test_add_ecdsa_identity
-      ecdsa = OpenSSL::PKey::EC.new("prime256v1").generate_key
+      ecdsa = OpenSSL::PKey::EC.generate("prime256v1")
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ecdsa-sha2-nistp256"
@@ -304,7 +309,7 @@ module Authentication
     end
 
     def test_add_ecdsa_cert_identity
-      cert = make_cert(OpenSSL::PKey::EC.new("prime256v1").generate_key)
+      cert = make_cert(OpenSSL::PKey::EC.generate("prime256v1"))
       socket.expect do |s, type, buffer|
         assert_equal SSH2_AGENT_ADD_IDENTITY, type
         assert_equal buffer.read_string, "ecdsa-sha2-nistp256-cert-v01@openssh.com"

@@ -1,16 +1,13 @@
 name: CI
-on: [push, pull_request]
+on:
+  pull_request:
+  push: { branches: master }
 jobs:
   test:
     runs-on: ubuntu-18.04
-    continue-on-error: ${{ matrix.flaky }}
     strategy:
       matrix:
-        ruby-version: [2.7.2, 2.6.6, 3.0.1]
-        flaky: [false]
-        include:
-          - ruby-version: 2.5.8
-            flaky: true
+        ruby-version: [2.6.6, 2.7.2, 3.0.1, 3.1.1]
     steps:
       - uses: actions/checkout@v1
 
@@ -88,6 +85,3 @@ jobs:
           CI: 1
       - name: Run test helper test
         run: bundle exec rake test_test
-      - name: Rubocop
-        if: matrix.ruby-version == '3.0.1'
-        run: bundle exec rubocop --fail-level C -f s

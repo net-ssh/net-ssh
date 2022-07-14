@@ -1,0 +1,4 @@
+rubocop_fail_level: "convention"
+
+versions:
+  rubocop: "1.27.0"
