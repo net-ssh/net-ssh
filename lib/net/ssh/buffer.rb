@@ -251,7 +251,6 @@ module Net
       def read_private_keyblob(type)
         case type
         when /^ssh-rsa$/
-          key = OpenSSL::PKey::RSA.new
           n = read_bignum
           e = read_bignum
           d = read_bignum
@@ -262,27 +261,28 @@ module Net
           _unkown2 = read_bignum
           dmp1 = d % (p - 1)
           dmq1 = d % (q - 1)
-          if key.respond_to?(:set_key)
-            key.set_key(n, e, d)
-          else
-            key.e = e
-            key.n = n
-            key.d = d
+          # Public key
+          data_sequence = OpenSSL::ASN1::Sequence([
+                                                    OpenSSL::ASN1::Integer(n),
+                                                    OpenSSL::ASN1::Integer(e),
+                                                  ])
+
+          if d && p && q && dmp1 && dmq1 && iqmp
+            data_sequence = OpenSSL::ASN1::Sequence([
+                                                      OpenSSL::ASN1::Integer(0),
+                                                      OpenSSL::ASN1::Integer(n),
+                                                      OpenSSL::ASN1::Integer(e),
+                                                      OpenSSL::ASN1::Integer(d),
+                                                      OpenSSL::ASN1::Integer(p),
+                                                      OpenSSL::ASN1::Integer(q),
+                                                      OpenSSL::ASN1::Integer(dmp1),
+                                                      OpenSSL::ASN1::Integer(dmq1),
+                                                      OpenSSL::ASN1::Integer(iqmp),
+                                                    ])
           end
-          if key.respond_to?(:set_factors)
-            key.set_factors(p, q)
-          else
-            key.p = p
-            key.q = q
-          end
-          if key.respond_to?(:set_crt_params)
-            key.set_crt_params(dmp1, dmq1, iqmp)
-          else
-            key.dmp1 = dmp1
-            key.dmq1 = dmq1
-            key.iqmp = iqmp
-          end
-          key
+
+          asn1 = OpenSSL::ASN1::Sequence(data_sequence)
+          OpenSSL::PKey::RSA.new(asn1.to_der)
         when /^ecdsa\-sha2\-(\w*)$/
           OpenSSL::PKey::EC.read_keyblob($1, self)
         else
