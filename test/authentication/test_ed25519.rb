@@ -92,6 +92,12 @@ unless ENV['NET_SSH_NO_ED25519']
         self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_pwd)
       end
 
+      def test_priv_key_no_rounds_should_raise
+        self.assert_raises(Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader::DecryptError) do
+          Net::SSH::Authentication::ED25519::PrivKey.read(private_key_no_rounds, 'pwd')
+        end
+      end
+
       def private_key_pwd
         @pwd_key = <<~EOF
           -----BEGIN OPENSSH PRIVATE KEY-----
@@ -101,6 +107,20 @@ unless ENV['NET_SSH_NO_ED25519']
           46vPiECi6R6OdYGSd7W3fdzUDeyOYCY9ZVIjAzENG+9FsygYzMi6XCuw00OuDFLUp4fL4K
           i/coUIVqouB4TPQAmsCVXiIRVTWQtRG0kWfFaV3qRt/bc22ZCvCT6ZZ1UmtulqqfUhSlKM
           oPcTikV1iWH5Xc+GxRFRRGTN/6HvBf0AKDB1kMXlDhGnBnHGeNH1pk44xG
+          -----END OPENSSH PRIVATE KEY-----
+        EOF
+      end
+
+      def private_key_no_rounds
+        @private_key_no_rounds = <<~EOF
+          -----BEGIN OPENSSH PRIVATE KEY-----
+          b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jYmMAAAAGYmNyeXB0AAAAGAAA
+          ABBxwCvr3V/8pWhC/xvTnGJhAAAAAAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5
+          AAAAICaHkFaGXqYhUVFcaZ10TPUbkIvmaFXwYRoOS5qE8MciAAAAsNUAhbNQ
+          KwNcOr0eNq3nhtjoyeVyH8hRrpWsiY46vPiECi6R6OdYGSd7W3fdzUDeyOYC
+          Y9ZVIjAzENG+9FsygYzMi6XCuw00OuDFLUp4fL4Ki/coUIVqouB4TPQAmsCV
+          XiIRVTWQtRG0kWfFaV3qRt/bc22ZCvCT6ZZ1UmtulqqfUhSlKMoPcTikV1iW
+          H5Xc+GxRFRRGTN/6HvBf0AKDB1kMXlDhGnBnHGeNH1pk44xG
           -----END OPENSSH PRIVATE KEY-----
         EOF
       end
