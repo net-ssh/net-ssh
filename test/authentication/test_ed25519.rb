@@ -92,6 +92,12 @@ unless ENV['NET_SSH_NO_ED25519']
         self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_pwd)
       end
 
+      def test_pwd_key_blank
+        self.assert_raises(Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader::DecryptError) do
+          Net::SSH::Authentication::ED25519::PrivKey.read(private_key_no_rounds, '')
+        end
+      end
+
       def test_priv_key_no_rounds_should_raise
         self.assert_raises(Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader::DecryptError) do
           Net::SSH::Authentication::ED25519::PrivKey.read(private_key_no_rounds, 'pwd')
