@@ -1,3 +1,17 @@
+=== 7.0.1
+
+  * Drop leftover debug statement [#866]
+
+=== 7.0.0
+
+  * BREAKING: Drop support for Ruby 2.5
+  * Fix decoding of ecdsa-sha2-nistp256 private keys [#657, #854]
+  * Fix missing require [#855]
+  * Support `~` in the path to the SSH agent's unix socket [#850]
+  * Add support for RSA client authentication with SHA-2 [a45f54]
+  * openssl: DSA: don't hardcode expected signature size, see ruby/openssl#483 [23a15c]
+  * Internal housekeeping (rubocop, codecov, remove travis, adding/improving tests)
+
 === 6.3.0 beta1
 
   * Support cert based host key auth, fix asterisk in known_hosts [#833]
