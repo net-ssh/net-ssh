@@ -264,7 +264,7 @@ module Net
           # Public key
           data_sequence = OpenSSL::ASN1::Sequence([
                                                     OpenSSL::ASN1::Integer(n),
-                                                    OpenSSL::ASN1::Integer(e),
+                                                    OpenSSL::ASN1::Integer(e)
                                                   ])
 
           if d && p && q && dmp1 && dmq1 && iqmp
@@ -277,7 +277,7 @@ module Net
                                                       OpenSSL::ASN1::Integer(q),
                                                       OpenSSL::ASN1::Integer(dmp1),
                                                       OpenSSL::ASN1::Integer(dmq1),
-                                                      OpenSSL::ASN1::Integer(iqmp),
+                                                      OpenSSL::ASN1::Integer(iqmp)
                                                     ])
           end
 
