@@ -93,34 +93,31 @@ module Net
           # successful, or +false+ otherwise.
           def authenticate_with(identity, next_service, username)
             type = identity.ssh_type
+            pk_alg = session.transport.algorithms.host_key
             if type == "ssh-rsa"
-              pubkey_algorithms.each do |pk_alg|
-                case pk_alg
-                when "rsa-sha2-512", "rsa-sha2-256", "ssh-rsa"
-                  if authenticate_with_alg(identity, next_service, username, pk_alg, pk_alg)
-                    # success
-                    return true
-                  end
+              case pk_alg
+              when "rsa-sha2-512", "rsa-sha2-256", "ssh-rsa"
+                if authenticate_with_alg(identity, next_service, username, pk_alg, pk_alg)
+                  # success
+                  return true
                 end
               end
             elsif type == "ssh-rsa-cert-v01@openssh.com"
-              pubkey_algorithms.each do |pk_alg|
-                case pk_alg
-                when "rsa-sha2-512-cert-v01@openssh.com"
-                  if authenticate_with_alg(identity, next_service, username, pk_alg, "rsa-sha2-512")
-                    # success
-                    return true
-                  end
-                when "rsa-sha2-256-cert-v01@openssh.com"
-                  if authenticate_with_alg(identity, next_service, username, pk_alg, "rsa-sha2-256")
-                    # success
-                    return true
-                  end
-                when "ssh-rsa-cert-v01@openssh.com"
-                  if authenticate_with_alg(identity, next_service, username, pk_alg)
-                    # success
-                    return true
-                  end
+              case pk_alg
+              when "rsa-sha2-512-cert-v01@openssh.com"
+                if authenticate_with_alg(identity, next_service, username, pk_alg, "rsa-sha2-512")
+                  # success
+                  return true
+                end
+              when "rsa-sha2-256-cert-v01@openssh.com"
+                if authenticate_with_alg(identity, next_service, username, pk_alg, "rsa-sha2-256")
+                  # success
+                  return true
+                end
+              when "ssh-rsa-cert-v01@openssh.com"
+                if authenticate_with_alg(identity, next_service, username, pk_alg)
+                  # success
+                  return true
                 end
               end
             elsif authenticate_with_alg(identity, next_service, username, type)
