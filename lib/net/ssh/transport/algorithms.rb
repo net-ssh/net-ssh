@@ -198,17 +198,6 @@ module Net
               packet.read_buffer
             end
           end
-
-          data[:kex]                = packet.read_string.split(/,/)
-          data[:host_key]           = packet.read_string.split(/,/)
-          data[:encryption_client]  = packet.read_string.split(/,/)
-          data[:encryption_server]  = packet.read_string.split(/,/)
-          data[:hmac_client]        = packet.read_string.split(/,/)
-          data[:hmac_server]        = packet.read_string.split(/,/)
-          data[:compression_client] = packet.read_string.split(/,/)
-          data[:compression_server] = packet.read_string.split(/,/)
-          data[:language_client]    = packet.read_string.split(/,/)
-          data[:language_server]    = packet.read_string.split(/,/)
         end
         # Called by the transport layer when a KEXINIT packet is received, indicating
         # that the server wants to exchange keys. This can be spontaneous, or it
