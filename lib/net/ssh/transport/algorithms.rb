@@ -104,6 +104,9 @@ module Net
 
         # The type of host key that will be used for this session.
         attr_reader :host_key
+        
+        # Which signature algorithms are supported
+        attr_reader :supported_signature_algs
 
         # The type of the cipher to use to encrypt packets sent from the client to
         # the server.
@@ -390,7 +393,13 @@ module Net
           @compression_server = negotiate(:compression_server)
           @language_client    = negotiate(:language_client) rescue ""
           @language_server    = negotiate(:language_server) rescue ""
-
+          
+          # according to (the very non-authoritative) this: https://levelup.gitconnected.com/demystifying-ssh-rsa-in-openssh-deprecation-notice-22feb1b52acd
+          # the host_key field will list all the supported public key signature algorithms, including (but not limited to) the valid RSA signature algorithms.
+          # global-ftp-server returns ssh-ed25519, rsa-sha2-512, rsa-sha2-256, ssh-rsa, WF returns just ssh-rsa
+          # this needs to be separate from the @host_key since that negotiation isn't limited to RSA keys
+          # we don't "negotiate" supported_signature_algs - we iterate over the keys the client supports until we find one the server claims to support too
+          @supported_signature_algs = @server_data[:host_key]
           debug do
             "negotiated:\n" +
               %i[kex host_key encryption_server encryption_client hmac_client hmac_server
