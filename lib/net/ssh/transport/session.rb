@@ -209,6 +209,9 @@ module Net
             when KEXINIT
               algorithms.accept_kexinit(packet)
 
+            when EXT_INFO
+              algorithms.accept_ext_info(packet)
+
             else
               return packet if algorithms.allow?(packet)
 

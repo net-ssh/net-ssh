@@ -37,7 +37,8 @@ module Net
                        rsa-sha2-256
                        rsa-sha2-512],
 
-          kex: %w[ecdh-sha2-nistp521
+          kex: %w[ext-info-c
+                  ecdh-sha2-nistp521
                   ecdh-sha2-nistp384
                   ecdh-sha2-nistp256
                   diffie-hellman-group-exchange-sha256
@@ -104,7 +105,7 @@ module Net
 
         # The type of host key that will be used for this session.
         attr_reader :host_key
-        
+
         # Which signature algorithms are supported
         attr_reader :supported_signature_algs
 
@@ -156,6 +157,11 @@ module Net
           @algorithms = {}
           @pending = @initialized = false
           @client_packet = @server_packet = nil
+
+          # according to the spec, it MAY be reasonable to default to ssh-rsa (since it's technically deprecated now, probably not - but this is necessary)
+          # if we receive an EXT_INFO packet, we'll update this to use those algorithms
+          @supported_signature_algs = ["ssh-rsa"]
+
           prepare_preferred_algorithms!
         end
 
@@ -176,6 +182,34 @@ module Net
           send_kexinit
         end
 
+        def accept_ext_info(packet)
+          info { "got EXT_INFO from server" }
+
+          data = { raw: packet.content }
+
+          nr_extensions = packet.read_long
+          for extension in 1..nr_extensions do
+            extension_name = packet.read_string
+            if extension_name == "server-sig-algs"
+              @supported_signature_algs = packet.read_string.split(/,/)
+              debug { "supported sig algs: #{@supported_signature_algs}" }
+            else
+              # discard it
+              packet.read_buffer
+            end
+          end
+
+          data[:kex]                = packet.read_string.split(/,/)
+          data[:host_key]           = packet.read_string.split(/,/)
+          data[:encryption_client]  = packet.read_string.split(/,/)
+          data[:encryption_server]  = packet.read_string.split(/,/)
+          data[:hmac_client]        = packet.read_string.split(/,/)
+          data[:hmac_server]        = packet.read_string.split(/,/)
+          data[:compression_client] = packet.read_string.split(/,/)
+          data[:compression_server] = packet.read_string.split(/,/)
+          data[:language_client]    = packet.read_string.split(/,/)
+          data[:language_server]    = packet.read_string.split(/,/)
+        end
         # Called by the transport layer when a KEXINIT packet is received, indicating
         # that the server wants to exchange keys. This can be spontaneous, or it
         # can be in response to a client-initiated rekey request (see #rekey!). Either
@@ -393,13 +427,6 @@ module Net
           @compression_server = negotiate(:compression_server)
           @language_client    = negotiate(:language_client) rescue ""
           @language_server    = negotiate(:language_server) rescue ""
-          
-          # according to (the very non-authoritative) this: https://levelup.gitconnected.com/demystifying-ssh-rsa-in-openssh-deprecation-notice-22feb1b52acd
-          # the host_key field will list all the supported public key signature algorithms, including (but not limited to) the valid RSA signature algorithms.
-          # global-ftp-server returns ssh-ed25519, rsa-sha2-512, rsa-sha2-256, ssh-rsa, WF returns just ssh-rsa
-          # this needs to be separate from the @host_key since that negotiation isn't limited to RSA keys
-          # we don't "negotiate" supported_signature_algs - we iterate over the keys the client supports until we find one the server claims to support too
-          @supported_signature_algs = @server_data[:host_key]
           debug do
             "negotiated:\n" +
               %i[kex host_key encryption_server encryption_client hmac_client hmac_server
