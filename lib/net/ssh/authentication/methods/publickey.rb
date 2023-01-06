@@ -97,9 +97,11 @@ module Net
               pubkey_algorithms.each do |pk_alg|
                 case pk_alg
                 when "rsa-sha2-512", "rsa-sha2-256", "ssh-rsa"
-                  if authenticate_with_alg(identity, next_service, username, pk_alg, pk_alg)
-                    # success
-                    return true
+                  if session.transport.algorithms.supported_signature_algs.includes? ok_alg
+                    if authenticate_with_alg(identity, next_service, username, type, pk_alg)
+                      # success
+                      return true
+                    end
                   end
                 end
               end
