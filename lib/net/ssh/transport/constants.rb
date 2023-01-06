@@ -12,6 +12,7 @@ module Net
         DEBUG                     = 4
         SERVICE_REQUEST           = 5
         SERVICE_ACCEPT            = 6
+        EXT_INFO                  = 7
 
         #--
         # Algorithm negotiation messages
