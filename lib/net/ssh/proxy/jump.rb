@@ -43,6 +43,7 @@ module Net
           template << " -p #{uri.port}"    if uri.port
           template << " -J #{extra_jumps}" if extra_jumps
           template << " -F #{config}" if config != true && config
+          # When ProxyJump is set to none explicity disable the jumphost
           unless uri.host == 'none'
             template << " -W %h:%p "
             template << uri.host
