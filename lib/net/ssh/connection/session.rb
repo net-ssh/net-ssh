@@ -416,7 +416,7 @@ module Net
         #
         #   matches = ssh.exec!("grep something /some/files")
         #
-        # the returned string has an exitstatus method to query it's exit satus
+        # the returned string has an exitstatus method to query its exit status
         def exec!(command, status: nil, &block)
           block_or_concat = block || Proc.new do |ch, type, data|
             ch[:result] ||= String.new
