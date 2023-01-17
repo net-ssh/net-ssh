@@ -43,9 +43,10 @@ module Net
           template << " -p #{uri.port}"    if uri.port
           template << " -J #{extra_jumps}" if extra_jumps
           template << " -F #{config}" if config != true && config
-          template << " -W %h:%p "
-          template << uri.host
-
+          unless uri.host == 'none'
+            template << " -W %h:%p "
+            template << uri.host
+          end
           @command_line_template = template
         end
       end

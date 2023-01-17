@@ -10,7 +10,7 @@ class TestProxyJump < NetSSHTest
   def test_proxy_none
      proxy = Net::SSH::Proxy::Jump.new("none")
      proxy.build_proxy_command_equivalent
-     assert_equal "ssh jumphost", proxy.command_line_template
+     assert_equal "ssh", proxy.command_line_template
   end
 
   def test_host

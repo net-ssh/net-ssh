@@ -153,8 +153,8 @@ module Net
 
             # ProxyCommand and ProxyJump override each other so they need to be tracked togeather
             %w[proxyjump proxycommand].each do |proxy_key|
-              unless proxy_key == 'proxyjump' and proxy_value == 'none'
-                if (proxy_value = settings.delete(proxy_key))
+              if (proxy_value = settings.delete(proxy_key))
+                unless proxy_key == 'proxyjump' and proxy_value == 'none'
                   settings['proxy'] ||= [proxy_key, proxy_value]
                 end
               end
