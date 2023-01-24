@@ -77,6 +77,7 @@ module Net
               raise "BCryptPbkdf is not implemented for jruby" if RUBY_PLATFORM == "java"
 
               key = BCryptPbkdf::key(password, salt, keylen + ivlen, rounds)
+              raise DecryptError.new("BCyryptPbkdf failed", encrypted_key: true) unless key
             else
               key = '\x00' * (keylen + ivlen)
             end
