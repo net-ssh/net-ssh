@@ -98,7 +98,7 @@ module Net
                 case pk_alg
                 when "rsa-sha2-512", "rsa-sha2-256", "ssh-rsa"
                   if session.transport.algorithms.supported_signature_algs.include? pk_alg
-                    if authenticate_with_alg(identity, next_service, username, type, pk_alg)
+                    if authenticate_with_alg(identity, next_service, username, pk_alg, pk_alg)
                       # success
                       return true
                     end
