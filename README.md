@@ -5,7 +5,7 @@
 [![Backers on Open Collective](https://opencollective.com/net-ssh/backers/badge.svg)](#backers])
 [![Sponsors on Open Collective](https://opencollective.com/net-ssh/sponsors/badge.svg)](#sponsors)
 
-# Net::SSH 6.x
+# Net::SSH 7.x
 
 * Docs: http://net-ssh.github.io/net-ssh
 * Issues: https://github.com/net-ssh/net-ssh/issues
@@ -246,6 +246,12 @@ gem cert --build netssh@solutious.com --private-key path/2/net-ssh-private_key.p
 mv gem-public_cert.pem net-ssh-public_cert.pem
 gem cert --add net-ssh-public_cert.pem
 ```
+
+## Security contact information
+
+To report a security vulnerability, please use the
+[Tidelift security contact](https://tidelift.com/security).
+Tidelift will coordinate the fix and disclosure.
 
 ## CREDITS
 
