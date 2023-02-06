@@ -249,9 +249,7 @@ gem cert --add net-ssh-public_cert.pem
 
 ## Security contact information
 
-To report a security vulnerability, please use the
-[Tidelift security contact](https://tidelift.com/security).
-Tidelift will coordinate the fix and disclosure.
+See [SECURITY.md](SECURITY.md)
 
 ## CREDITS
 
