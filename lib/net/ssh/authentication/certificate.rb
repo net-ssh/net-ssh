@@ -102,8 +102,8 @@ module Net
         # Checks whether the certificate's signature was signed by signature key.
         def signature_valid?
           buffer = Buffer.new(signature)
-          buffer.read_string # skip signature format
-          signature_key.ssh_do_verify(buffer.read_string, to_blob_without_signature)
+          sig_format = buffer.read_string
+          signature_key.ssh_do_verify(buffer.read_string, to_blob_without_signature, host_key: sig_format)
         end
 
         def self.read_options(buffer)
