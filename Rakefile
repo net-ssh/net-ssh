@@ -55,6 +55,37 @@ namespace :cert do
   end
 end
 
+namespace :vbump do
+  desc "Increment prerelease"
+  task :pre do
+    version_file = 'lib/net/ssh/version.rb'
+    require_relative version_file
+    pre = Net::SSH::Version::PRE
+    if pre =~ /^([a-z]+)(\d+)/
+      new_pre = "#{$1}#{$2.to_i+1}"
+      found = false
+
+      File.open("#{version_file}.new", "w") do |f|
+        File.readlines(version_file).each do |line|
+          if line =~ /^(\s+PRE\s+=\s+")#{pre}("\s*)$/
+            new_line = "#{$1}#{new_pre}#{$2}"
+            puts "Changing:\n  - #{line}  + #{new_line}"
+            line = new_line
+            found = true
+          end
+          f.write(line)
+        end
+        raise ArugmentError, 'Cound not find line: PRE = \"#{pre}\" in #{version_file}"' unless found
+      end
+
+      FileUtils.mv version_file, "#{version_file}.old"
+      FileUtils.mv "#{version_file}.new", version_file
+    else
+      raise ArgumentError, "Unepexeted pre string: #{pre}"
+    end
+  end
+end
+
 namespace :rdoc do
   desc "Update gh-pages branch"
   task :publish do

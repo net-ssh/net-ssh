@@ -1,3 +1,9 @@
+
+=== 7.1.0 beta1
+
+  * Don't use the deprecated set_XXX methods on RSA keys. [#875]
+  * Raise error when BCryptPbkdf fails [#876]
+
 === 7.0.1
 
   * Drop leftover debug statement [#866]
