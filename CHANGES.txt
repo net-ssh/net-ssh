@@ -1,4 +1,8 @@
 
+=== 7.1.0
+
+  * Accept pubkey_algorithms option when starting a new connection [#891]
+
 === 7.1.0 beta1
 
   * Don't use the deprecated set_XXX methods on RSA keys. [#875]
