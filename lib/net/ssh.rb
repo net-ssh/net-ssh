@@ -73,7 +73,7 @@ module Net
       max_win_size send_env set_env use_agent number_of_password_prompts
       append_all_supported_algorithms non_interactive password_prompt
       agent_socket_factory minimum_dh_bits verify_host_key
-      fingerprint_hash check_host_ip
+      fingerprint_hash check_host_ip pubkey_algorithms
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -170,6 +170,11 @@ module Net
     # * :properties => a hash of key/value pairs to add to the new connection's
     #   properties (see Net::SSH::Connection::Session#properties)
     # * :proxy => a proxy instance (see Proxy) to use when connecting
+    # * :pubkey_algorithms => the public key authentication algorithms to use for
+    #   this connection. Valid values are 'rsa-sha2-256-cert-v01@openssh.com',
+    #   'ssh-rsa-cert-v01@openssh.com', 'rsa-sha2-256', 'ssh-rsa'. Currently, this
+    #   option is only used for RSA public key authentication and ignored for other
+    #   types.
     # * :rekey_blocks_limit => the max number of blocks to process before rekeying
     # * :rekey_limit => the max number of bytes to process before rekeying
     # * :rekey_packet_limit => the max number of packets to process before rekeying
