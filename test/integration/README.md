@@ -13,9 +13,9 @@ Setup:
     rvm all do sh -c 'rm Gemfile.lock; bundle'
     rvm all do rake test
 
-# Debugging on travis
+# Debugging
 
-Logging the ssh logs might be useful:
+Checking the ssh logs might be useful:
 
 ```yml
 script:

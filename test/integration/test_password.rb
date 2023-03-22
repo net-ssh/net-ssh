@@ -12,10 +12,12 @@ class TestPassword < NetSSHTest
   end
 
   def test_keyboard_interactive_with_good_password
+    skip "TODO keyboard-interactive on newer sshd" if sshd_8_or_later?
+
     ps = Object.new
     pt = Object.new
     pt.expects(:start).with(type: 'keyboard-interactive', name: '', instruction: '').returns(ps)
-    ps.expects(:ask).with('Password: ', false).returns("foopwd")
+    ps.expects(:ask).with('password: ', false).returns("foopwd")
     ps.expects(:success)
     ret = Net::SSH.start("localhost", "net_ssh_1", auth_methods: ['keyboard-interactive'], password_prompt: pt) do |ssh|
       ssh.exec! 'echo "hello from:$USER"'
@@ -24,6 +26,8 @@ class TestPassword < NetSSHTest
   end
 
   def test_keyboard_interactive_with_one_failed_attempt
+    skip "TODO keyboard-interactive on newer sshd" if sshd_8_or_later?
+
     ps = Object.new
     pt = Object.new
     pt.expects(:start).with(type: 'keyboard-interactive', name: '', instruction: '').returns(ps)

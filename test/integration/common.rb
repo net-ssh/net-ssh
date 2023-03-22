@@ -20,6 +20,10 @@ module IntegrationTestHelpers
     end
   end
 
+  def sshd_8_or_later?
+    !!(`sshd  -v 2>&1 |grep 'OpenSSH_'` =~ /OpenSSH_8./)
+  end
+
   def set_authorized_key(user, pubkey)
     authorized_key = "/home/#{user}/.ssh/authorized_keys"
     sh "sudo cp #{pubkey} #{authorized_key}"
