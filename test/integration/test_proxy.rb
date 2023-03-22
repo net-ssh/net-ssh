@@ -25,8 +25,7 @@ class TestProxy < NetSSHTest
   def setup_ssh_env(&block)
     tmpdir do |dir|
       @key_id_rsa = "#{dir}/id_rsa"
-      sh "rm -rf #{@key_id_rsa} #{@key_id_rsa}.pub"
-      sh "ssh-keygen -q -f #{@key_id_rsa} -t rsa -N ''"
+      ssh_keygen @key_id_rsa, "rsa"
       set_authorized_key(user, "#{@key_id_rsa}.pub")
       yield
     end
@@ -37,8 +36,7 @@ class TestProxy < NetSSHTest
     gwuser = 'net_ssh_2'
     tmpdir do |dir|
       @gwkey_id_rsa = "#{dir}/id_rsa"
-      sh "rm -rf #{@gwkey_id_rsa} #{@gwkey_id_rsa}.pub"
-      sh "ssh-keygen -q -f #{@gwkey_id_rsa} -t rsa -N ''"
+      ssh_keygen @gwkey_id_rsa, "rsa"
       set_authorized_key(gwuser, "#{@gwkey_id_rsa}.pub")
       config = "Host #{gwhost}
                   IdentityFile #{@gwkey_id_rsa}

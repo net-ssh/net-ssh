@@ -24,6 +24,19 @@ module IntegrationTestHelpers
     !!(`sshd  -v 2>&1 |grep 'OpenSSH_'` =~ /OpenSSH_8./)
   end
 
+  def ssh_keygen(file, type = 'rsa', password = '')
+    sh "rm -rf #{file} #{file}.pub"
+    sh "ssh-keygen #{ssh_keygen_format} -q -f #{file} -t #{type} -N '#{password}'"
+  end
+
+  def ssh_keygen_format
+    if Net::SSH::Authentication::ED25519Loader::LOADED
+      ""
+    else
+      "-m PEM"
+    end
+  end
+
   def set_authorized_key(user, pubkey)
     authorized_key = "/home/#{user}/.ssh/authorized_keys"
     sh "sudo cp #{pubkey} #{authorized_key}"
