@@ -12,8 +12,7 @@ unless ENV['NET_SSH_NO_ED25519']
 
     def test_ed25519_with_implicit_cert
       Dir.mktmpdir do |dir|
-        sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
-        sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N ''"
+        ssh_keygen "#{dir}/id_rsa_ed25519", "ed25519"
         sign_user_key('net_ssh_1', "#{dir}/id_rsa_ed25519.pub")
 
         ret = Net::SSH.start("localhost", "net_ssh_1", keys: "#{dir}/id_rsa_ed25519") do |ssh|
@@ -25,8 +24,7 @@ unless ENV['NET_SSH_NO_ED25519']
 
     def test_ed25519_with_explicit_cert
       Dir.mktmpdir do |dir|
-        sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
-        sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N ''"
+        ssh_keygen "#{dir}/id_rsa_ed25519", "ed25519"
         sign_user_key('net_ssh_1', "#{dir}/id_rsa_ed25519.pub")
         sh "mv #{dir}/id_rsa_ed25519-cert.pub #{dir}/cert"
 
@@ -40,8 +38,7 @@ unless ENV['NET_SSH_NO_ED25519']
     def test_ed25519_with_cert_in_agent
       Dir.mktmpdir do |dir|
         with_agent do
-          sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
-          sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N 'pwd'"
+          ssh_keygen "#{dir}/id_rsa_ed25519", "ed25519", "pwd"
           sign_user_key('net_ssh_1', "#{dir}/id_rsa_ed25519.pub")
           ssh_add("#{dir}/id_rsa_ed25519", "pwd")
           sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub #{dir}/id_rsa_ed25519-cert.pub"
@@ -57,8 +54,7 @@ unless ENV['NET_SSH_NO_ED25519']
     def test_ed25519_with_key_in_agent_and_explicit_cert
       Dir.mktmpdir do |dir|
         with_agent do
-          sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
-          sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N ''"
+          ssh_keygen "#{dir}/id_rsa_ed25519", "ed25519"
           # add key before signing cert
           ssh_add("#{dir}/id_rsa_ed25519", "pwd")
           sign_user_key('net_ssh_1', "#{dir}/id_rsa_ed25519.pub")
