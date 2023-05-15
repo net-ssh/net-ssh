@@ -144,31 +144,36 @@ module Net
 
           padding = Array.new(padding_length) { rand(256) }.pack("C*")
 
-          if client.hmac.etm
-            debug { "using encrypt-then-mac" }
-
-            # Encrypt padding_length, payload, and padding. Take MAC
-            # from the unencrypted packet_lenght and the encrypted
-            # data.
-            length_data = [packet_length].pack("N")
-
+          if client.cipher.name == "chacha20-poly1305@openssh.com"
             unencrypted_data = [padding_length, payload, padding].pack("CA*A*")
-
-            encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
-
-            mac_data = length_data + encrypted_data
-
-            mac = client.hmac.digest([client.sequence_number, mac_data].pack("NA*"))
-
-            message = mac_data + mac
+            message = client.cipher.update_cipher_mac(unencrypted_data, client.sequence_number)
           else
-            unencrypted_data = [packet_length, padding_length, payload, padding].pack("NCA*A*")
+            if client.hmac.etm
+              debug { "using encrypt-then-mac" }
 
-            mac = client.hmac.digest([client.sequence_number, unencrypted_data].pack("NA*"))
+              # Encrypt padding_length, payload, and padding. Take MAC
+              # from the unencrypted packet_lenght and the encrypted
+              # data.
+              length_data = [packet_length].pack("N")
 
-            encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
+              unencrypted_data = [padding_length, payload, padding].pack("CA*A*")
 
-            message = encrypted_data + mac
+              encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
+
+              mac_data = length_data + encrypted_data
+
+              mac = client.hmac.digest([client.sequence_number, mac_data].pack("NA*"))
+
+              message = mac_data + mac
+            else
+              unencrypted_data = [packet_length, padding_length, payload, padding].pack("NCA*A*")
+
+              mac = client.hmac.digest([client.sequence_number, unencrypted_data].pack("NA*"))
+
+              encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
+
+              message = encrypted_data + mac
+            end
           end
 
           debug { "queueing packet nr #{client.sequence_number} type #{payload.getbyte(0)} len #{packet_length}" }
@@ -225,44 +230,63 @@ module Net
             data = read_available(minimum + aad_length)
 
             # decipher it
-            if server.hmac.etm
-              @packet_length = data.unpack("N").first
+            if server.cipher.name == "chacha20-poly1305@openssh.com"
+              @packet_length = server.cipher.read_length(data[0...4], server.sequence_number)
+              @packet = Net::SSH::Buffer.new()
               @mac_data = data
-              @packet = Net::SSH::Buffer.new(server.update_cipher(data[aad_length..-1]))
             else
-              @packet = Net::SSH::Buffer.new(server.update_cipher(data))
-              @packet_length = @packet.read_long
+              if server.hmac.etm
+                @packet_length = data.unpack("N").first
+                @mac_data = data
+                @packet = Net::SSH::Buffer.new(server.update_cipher(data[aad_length..-1]))
+              else
+                @packet = Net::SSH::Buffer.new(server.update_cipher(data))
+                @packet_length = @packet.read_long
+              end
             end
           end
 
           need = @packet_length + 4 - aad_length - server.block_size
           raise Net::SSH::Exception, "padding error, need #{need} block #{server.block_size}" if need % server.block_size != 0
 
-          return nil if available < need + server.hmac.mac_length
+          if server.cipher.name == "chacha20-poly1305@openssh.com"
+            return nil if available < need + server.cipher.mac_length
+          else
+            return nil if available < need + server.hmac.mac_length
+          end
 
           if need > 0
             # read the remainder of the packet and decrypt it.
             data = read_available(need)
-            @mac_data += data if server.hmac.etm
-            @packet.append(server.update_cipher(data))
+            @mac_data += data if server.hmac.etm || (server.cipher.name == "chacha20-poly1305@openssh.com")
+            if server.cipher.name != "chacha20-poly1305@openssh.com"
+              @packet.append(server.update_cipher(data))
+            end
           end
 
-          # get the hmac from the tail of the packet (if one exists), and
-          # then validate it.
-          real_hmac = read_available(server.hmac.mac_length) || ""
+          if server.cipher.name != "chacha20-poly1305@openssh.com"
+            # get the hmac from the tail of the packet (if one exists), and
+            # then validate it.
+            real_hmac = read_available(server.hmac.mac_length) || ""
 
-          @packet.append(server.final_cipher)
-          padding_length = @packet.read_byte
+            @packet.append(server.final_cipher)
+            padding_length = @packet.read_byte
 
-          payload = @packet.read(@packet_length - padding_length - 1)
+            payload = @packet.read(@packet_length - padding_length - 1)
+            
 
-          my_computed_hmac = if server.hmac.etm
+            my_computed_hmac = if server.hmac.etm
                                server.hmac.digest([server.sequence_number, @mac_data].pack("NA*"))
                              else
                                server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
                              end
-          raise Net::SSH::Exception, "corrupted hmac detected #{server.hmac.class}" if real_hmac != my_computed_hmac
-
+            raise Net::SSH::Exception, "corrupted hmac detected #{server.hmac.class}" if real_hmac != my_computed_hmac
+          else
+            real_hmac = read_available(server.cipher.mac_length) || ""
+            @packet = Net::SSH::Buffer.new(server.cipher.read_and_mac(@mac_data, real_hmac, server.sequence_number))
+            padding_length = @packet.read_byte
+            payload = @packet.read(@packet_length - padding_length - 1)
+          end
           # try to decompress the payload, in case compression is active
           payload = server.decompress(payload)
 

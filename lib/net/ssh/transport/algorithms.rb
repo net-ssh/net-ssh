@@ -44,7 +44,7 @@ module Net
                   diffie-hellman-group14-sha256
                   diffie-hellman-group14-sha1],
 
-          encryption: %w[aes256-ctr aes192-ctr aes128-ctr],
+          encryption: %w[aes256-ctr aes192-ctr aes128-ctr chacha20-poly1305@openssh.com],
 
           hmac: %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
                    hmac-sha2-512 hmac-sha2-256
@@ -430,6 +430,15 @@ module Net
           sizes.max
         end
 
+        def expand_key(key, need_size, digester, secret, hash)
+          result = key
+          while result.size < need_size
+            new_part = digester.digest(secret + hash + result)
+            result += new_part
+          end
+          return result
+        end
+
         # Instantiates one of the Transport::Kex classes (based on the negotiated
         # kex algorithm), and uses it to exchange keys. Then, the ciphers and
         # HMACs are initialized and fed to the transport layer, to be used in
@@ -437,12 +446,13 @@ module Net
         def exchange_keys
           debug { "exchanging keys" }
 
+          need_bytes = kex_byte_requirement
           algorithm = Kex::MAP[kex].new(self, session,
                                         client_version_string: Net::SSH::Transport::ServerVersion::PROTO_VERSION,
                                         server_version_string: session.server_version.version,
                                         server_algorithm_packet: @server_packet,
                                         client_algorithm_packet: @client_packet,
-                                        need_bytes: kex_byte_requirement,
+                                        need_bytes: need_bytes,
                                         minimum_dh_bits: options[:minimum_dh_bits],
                                         logger: logger)
           result = algorithm.exchange_keys
@@ -464,8 +474,8 @@ module Net
 
           parameters = { shared: secret, hash: hash, digester: digester }
 
-          cipher_client = CipherFactory.get(encryption_client, parameters.merge(iv: iv_client, key: key_client, encrypt: true))
-          cipher_server = CipherFactory.get(encryption_server, parameters.merge(iv: iv_server, key: key_server, decrypt: true))
+          cipher_client = CipherFactory.get(encryption_client, parameters.merge(iv: iv_client, key: expand_key(key_client, need_bytes, digester, secret, hash), encrypt: true))
+          cipher_server = CipherFactory.get(encryption_server, parameters.merge(iv: iv_server, key: expand_key(key_server, need_bytes, digester, secret, hash), decrypt: true))
 
           mac_client = HMAC.get(hmac_client, mac_key_client, parameters)
           mac_server = HMAC.get(hmac_server, mac_key_server, parameters)
