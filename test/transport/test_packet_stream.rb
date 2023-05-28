@@ -1052,7 +1052,7 @@ module Transport
     end
 
     ciphers = Net::SSH::Transport::CipherFactory::SSH_TO_OSSL.keys
-    hmacs = Net::SSH::Transport::HMAC::MAP.keys
+    hmacs = Net::SSH::Transport::HMAC::MAP.keys - %w[aes256-gcm@openssh.com aes128-gcm@openssh.com]
 
     ciphers.each do |cipher_name|
       unless Net::SSH::Transport::CipherFactory.supported?(cipher_name) && PACKETS.key?(cipher_name)
@@ -1102,6 +1102,42 @@ module Transport
           end
         end
       end
+    end
+
+    def test_enqueue_aead_packet
+      opts = { shared: "123", digester: OpenSSL::Digest::SHA1, hash: "^&*" }
+      cipher = Net::SSH::Transport::CipherFactory.get('aes256-gcm@openssh.com', opts.merge(key: "abcabcabcabcabca", iv: "abcabcabcabc", encrypt: true))
+      hmac = Net::SSH::Transport::HMAC.get('aes256-gcm@openssh.com', "{}|", opts)
+      expected_packet = "\x00\x00\x00 \x13X5\x00\x0FM\v@E\x8C\x9F\"fk\x8A\x8B!\x95\x030Tz\xDB\x86\x9C\xE0\f\xB8\x0E\x05\b&\xE1\x8B\xDE\xED\xB2\xEE\xB3\xB25in\x8C\x12\xD7*\xF4"
+
+      stream.client.set cipher: cipher, hmac: hmac
+      stream.enqueue_packet(ssh_packet)
+      bytes = stream.instance_variable_get('@output').content
+      # The test ssh packet is 20 bytes long, padded until 32. Auth tag is 16 bytes long
+      # and packet length is 4 bytes length, so the ciphered payload should be 52 bytes long
+      assert_equal 52, bytes.bytesize
+      # After the 24 first bytes, the random padding takes place. So, the auth tag is unpredictable too
+      # Actually, the auth_tag mechanism is tested in #test_next_aead_packet
+      assert_equal expected_packet[0...24], bytes[0...24]
+      stream.cleanup
+    end
+
+    def test_next_aead_packet
+      opts = { shared: "123", digester: OpenSSL::Digest::SHA1, hash: "^&*" }
+      cipher = Net::SSH::Transport::CipherFactory.get('aes256-gcm@openssh.com', opts.merge(key: "abcabcabcabcabca", iv: "abcabcabcabc", decrypt: true))
+      hmac = Net::SSH::Transport::HMAC.get('aes256-gcm@openssh.com', "{}|", opts)
+      aead_ssh_packet = "\x00\x00\x00 \x13X5\x00\x0FM\v@E\x8C\x9F\"fk\x8A\x8B!\x95\x030Tz\xDB\x86\x9C\xE0\f\xB8\x0E\x05\b&\xE1\x8B\xDE\xED\xB2\xEE\xB3\xB25in\x8C\x12\xD7*\xF4"
+
+      stream.server.set cipher: cipher, hmac: hmac
+      stream.stubs(:recv).returns(aead_ssh_packet)
+      IO.stubs(:select).returns([[stream]])
+      packet = stream.next_packet(:nonblock)
+      assert_not_nil packet
+      assert_equal DEBUG, packet.type
+      assert packet[:always_display]
+      assert_equal "debugging", packet[:message]
+      assert_equal "", packet[:language]
+      stream.cleanup
     end
 
     private

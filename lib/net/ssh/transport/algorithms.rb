@@ -44,7 +44,7 @@ module Net
                   diffie-hellman-group14-sha256
                   diffie-hellman-group14-sha1],
 
-          encryption: %w[aes256-ctr aes192-ctr aes128-ctr],
+          encryption: %w[aes256-ctr aes192-ctr aes128-ctr aes256-gcm@openssh.com aes128-gcm@openssh.com],
 
           hmac: %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
                    hmac-sha2-512 hmac-sha2-256
@@ -405,7 +405,6 @@ module Net
         # #negotiate_algorithms.
         def negotiate(algorithm)
           match = self[algorithm].find { |item| @server_data[algorithm].include?(item) }
-
           if match.nil?
             raise Net::SSH::Exception, "could not settle on #{algorithm} algorithm\n"\
               "Server #{algorithm} preferences: #{@server_data[algorithm].join(',')}\n"\
@@ -467,8 +466,17 @@ module Net
           cipher_client = CipherFactory.get(encryption_client, parameters.merge(iv: iv_client, key: key_client, encrypt: true))
           cipher_server = CipherFactory.get(encryption_server, parameters.merge(iv: iv_server, key: key_server, decrypt: true))
 
-          mac_client = HMAC.get(hmac_client, mac_key_client, parameters)
-          mac_server = HMAC.get(hmac_server, mac_key_server, parameters)
+          # When aesXXX-gcm is used, mac algorithm is implicit, so we have to use a kind of placeholder.
+          aead_client, aead_server = nil
+
+          aead_client = 'aes128-gcm@openssh.com' if cipher_client.name == 'id-aes128-GCM'
+          aead_server = 'aes128-gcm@openssh.com' if cipher_server.name == 'id-aes128-GCM'
+
+          aead_client = 'aes256-gcm@openssh.com' if cipher_client.name == 'id-aes256-GCM'
+          aead_server = 'aes256-gcm@openssh.com' if cipher_server.name == 'id-aes256-GCM'
+
+          mac_client = HMAC.get(aead_client || hmac_client, mac_key_client, parameters)
+          mac_server = HMAC.get(aead_server || hmac_server, mac_key_server, parameters)
 
           session.configure_client cipher: cipher_client, hmac: mac_client,
                                    compression: normalize_compression_name(compression_client),
