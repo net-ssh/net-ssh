@@ -54,6 +54,10 @@ module Net
           def reset
             self
           end
+
+          def implicit_mac?
+            false
+          end
         end
       end
     end

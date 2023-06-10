@@ -77,6 +77,12 @@ jobs:
         env:
           NET_SSH_RUN_INTEGRATION_TESTS: 1
           CI: 1
+      - name: Run tests (without rbnacl)
+        run: bundle exec rake test
+        env:
+          BUNDLE_GEMFILE: ./Gemfile.norbnacl
+          NET_SSH_RUN_INTEGRATION_TESTS: 1
+          CI: 1
       - name: Run Tests (without ed25519)
         run: bundle exec rake test
         env:

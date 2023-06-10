@@ -144,36 +144,34 @@ module Net
 
           padding = Array.new(padding_length) { rand(256) }.pack("C*")
 
-          if client.cipher.name == "chacha20-poly1305@openssh.com"
+          if client.cipher.implicit_mac?
             unencrypted_data = [padding_length, payload, padding].pack("CA*A*")
             message = client.cipher.update_cipher_mac(unencrypted_data, client.sequence_number)
+          elsif client.hmac.etm # rubocop:disable Style/IfInsideElse
+            debug { "using encrypt-then-mac" }
+
+            # Encrypt padding_length, payload, and padding. Take MAC
+            # from the unencrypted packet_lenght and the encrypted
+            # data.
+            length_data = [packet_length].pack("N")
+
+            unencrypted_data = [padding_length, payload, padding].pack("CA*A*")
+
+            encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
+
+            mac_data = length_data + encrypted_data
+
+            mac = client.hmac.digest([client.sequence_number, mac_data].pack("NA*"))
+
+            message = mac_data + mac
           else
-            if client.hmac.etm # rubocop:disable Style/IfInsideElse
-              debug { "using encrypt-then-mac" }
+            unencrypted_data = [packet_length, padding_length, payload, padding].pack("NCA*A*")
 
-              # Encrypt padding_length, payload, and padding. Take MAC
-              # from the unencrypted packet_lenght and the encrypted
-              # data.
-              length_data = [packet_length].pack("N")
+            mac = client.hmac.digest([client.sequence_number, unencrypted_data].pack("NA*"))
 
-              unencrypted_data = [padding_length, payload, padding].pack("CA*A*")
+            encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
 
-              encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
-
-              mac_data = length_data + encrypted_data
-
-              mac = client.hmac.digest([client.sequence_number, mac_data].pack("NA*"))
-
-              message = mac_data + mac
-            else
-              unencrypted_data = [packet_length, padding_length, payload, padding].pack("NCA*A*")
-
-              mac = client.hmac.digest([client.sequence_number, unencrypted_data].pack("NA*"))
-
-              encrypted_data = client.update_cipher(unencrypted_data) << client.final_cipher
-
-              message = encrypted_data + mac
-            end
+            message = encrypted_data + mac
           end
 
           debug { "queueing packet nr #{client.sequence_number} type #{payload.getbyte(0)} len #{packet_length}" }

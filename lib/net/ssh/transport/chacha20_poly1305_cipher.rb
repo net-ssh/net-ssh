@@ -1,16 +1,19 @@
 require 'rbnacl'
+require 'net/ssh/loggable'
 
 module Net
   module SSH
     module Transport
-      ## Implements the chacha20-poly1305@opnessh cipher
+      ## Implements the chacha20-poly1305@openssh cipher
       class ChaCha20Poly1305Cipher
+        include Net::SSH::Loggable
+
         def initialize(encrypt:, key:)
           @chacha_hdr = OpenSSL::Cipher.new("chacha20")
           key_len = @chacha_hdr.key_len
           @chacha_main = OpenSSL::Cipher.new("chacha20")
           @poly = RbNaCl::OneTimeAuths::Poly1305
-          if key.size != key_len * 2
+          if key.size < key_len * 2
             error { "chacha20_poly1305: keylength doesn't match" }
             raise "chacha20_poly1305: keylength doesn't match"
           end
@@ -22,9 +25,9 @@ module Net
             @chacha_main.decrypt
           end
           main_key = key[0...key_len]
-          @chacha_main.key = main_key # k2
+          @chacha_main.key = main_key
           hdr_key = key[key_len...(2 * key_len)]
-          @chacha_hdr.key = hdr_key # k1
+          @chacha_hdr.key = hdr_key
         end
 
         def update_cipher_mac(payload, sequence_number)
@@ -73,10 +76,6 @@ module Net
           16
         end
 
-        def self.key_length
-          64
-        end
-
         def block_size
           8
         end
@@ -85,16 +84,16 @@ module Net
           "chacha20-poly1305@openssh.com"
         end
 
-        class << self
-          # A default block size of 8 is required by the SSH2 protocol.
-          def block_size
-            8
-          end
+        def implicit_mac?
+          true
+        end
 
-          # Returns an arbitrary integer.
-          def iv_len
-            4
-          end
+        def self.block_size
+          8
+        end
+
+        def self.key_length
+          64
         end
       end
     end

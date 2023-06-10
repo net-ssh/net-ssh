@@ -3,6 +3,7 @@ require 'net/ssh/transport/ctr.rb'
 require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/identity_cipher'
 require 'net/ssh/transport/chacha20_poly1305_cipher_loader'
+require 'net/ssh/transport/openssl_cipher_extensions'
 
 module Net
   module SSH
@@ -67,6 +68,7 @@ module Net
 
           cipher.padding = 0
 
+          cipher.extend(Net::SSH::Transport::OpenSSLCipherExtensions)
           if name =~ /-ctr(@openssh.org)?$/
             if ossl_name !~ /-ctr/
               cipher.extend(Net::SSH::Transport::CTR)
