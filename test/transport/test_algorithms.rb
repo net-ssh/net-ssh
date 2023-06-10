@@ -358,12 +358,14 @@ module Transport
 
     def install_mock_algorithm_lookups(options = {})
       params = { shared: shared_secret.to_ssh, hash: session_id, digester: hashing_algorithm }
+      key = expanded_key("C", params)
       Net::SSH::Transport::CipherFactory.expects(:get)
-                                        .with(options[:client_cipher] || "aes256-ctr", params.merge(iv: key("A"), key: key("C"), encrypt: true))
+                                        .with(options[:client_cipher] || "aes256-ctr", params.merge(iv: key("A"), key: key, encrypt: true))
                                         .returns(:client_cipher)
 
+      key = expanded_key("D", params)
       Net::SSH::Transport::CipherFactory.expects(:get)
-                                        .with(options[:server_cipher] || "aes256-ctr", params.merge(iv: key("B"), key: key("D"), decrypt: true))
+                                        .with(options[:server_cipher] || "aes256-ctr", params.merge(iv: key("B"), key: key, decrypt: true))
                                         .returns(:server_cipher)
 
       Net::SSH::Transport::HMAC.expects(:get).with(options[:client_hmac] || "hmac-sha2-256", key("E"), params).returns(:client_hmac)
@@ -380,6 +382,22 @@ module Transport
 
     def hashing_algorithm
       OpenSSL::Digest::SHA1
+    end
+
+    def expand_key(key, need_size, digester, secret, hash)
+      result = key
+      while result.size < need_size
+        new_part = digester.digest(secret + hash + result)
+        result += new_part
+      end
+      return result
+    end
+
+    def expanded_key(salt, params)
+      secret   = params[:shared]
+      hash     = params[:hash]
+      digester = params[:digester]
+      expand_key(key(salt), 32, digester, secret, hash)
     end
 
     def key(salt)

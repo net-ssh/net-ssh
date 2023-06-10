@@ -3,6 +3,7 @@ require 'rbnacl'
 module Net
   module SSH
     module Transport
+      ## Implements the chacha20-poly1305@opnessh cipher
       class ChaCha20Poly1305Cipher
         def initialize(encrypt:, key:)
           @chacha_hdr = OpenSSL::Cipher.new("chacha20")
@@ -48,7 +49,7 @@ module Net
         def read_length(data, sequence_number)
           iv_data = [0, 0, 0, sequence_number].pack("NNNN")
           @chacha_hdr.iv = iv_data
-          length_data = @chacha_hdr.update(data).unpack("N").first
+          @chacha_hdr.update(data).unpack1("N")
         end
 
         def read_and_mac(data, mac, sequence_number)
@@ -58,11 +59,11 @@ module Net
 
           iv_data[0] = 1.chr
           @chacha_main.iv = iv_data
-          unencrypted_data = @chacha_main.update(data[4..-1])
+          unencrypted_data = @chacha_main.update(data[4..])
           begin
-            ok = @poly.verify(poly_key, mac, data[0..-1])
+            ok = @poly.verify(poly_key, mac, data[0..])
             raise Net::SSH::Exception, "corrupted hmac detected #{name}" unless ok
-          rescue RbNaCl::BadAuthenticatorError => e
+          rescue RbNaCl::BadAuthenticatorError
             raise Net::SSH::Exception, "corrupted hmac detected #{name}"
           end
           return unencrypted_data
@@ -93,41 +94,6 @@ module Net
           # Returns an arbitrary integer.
           def iv_len
             4
-          end
-
-          # Does nothing. Returns self.
-          def encrypt
-            self
-          end
-
-          # Does nothing. Returns self.
-          def decrypt
-            self
-          end
-
-          # Passes its single argument through unchanged.
-          def update(text)
-            text
-          end
-
-          # Returns the empty string.
-          def final
-            ""
-          end
-
-          # The name of this cipher, which is "chacha20-poly1305@openssh.com".
-          def name
-            "chacha20-poly1305@openssh.com"
-          end
-
-          # Does nothing. Returns nil.
-          def iv=(v)
-            nil
-          end
-
-          # Does nothing. Returns self.
-          def reset
-            self
           end
         end
       end

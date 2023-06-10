@@ -1,6 +1,6 @@
 # encoding: ASCII-8BIT
 
-require 'common'
+require_relative '../common'
 require 'net/ssh/transport/cipher_factory'
 
 module Transport
@@ -245,6 +245,55 @@ module Transport
     def test_none_for_decryption
       assert_equal TEXT, decrypt("none", TEXT)
     end
+
+    CHACHA20POLY1305 = ["73cbe4dd0d6495d2048bb1ba5f01f055f6271efaa5e56b9de3586bd116ededab481dc7833d5b6aaa7f7827d49c82185a02f62262d9efae8e6973a4e98251dcbbf2beebfc29c40a75192604729b6f7d412add8fe1a730e4b21c8aa1c73786090bd46bb66121c888b3e628c3f5a9a6a0738f8fcc2a611ef97bd0a665eb565ba0247d"].pack('H*')
+
+    OPTIONS_CHACHAPOLY = { iv: "ABC",
+      key: "abcd"*16,
+      digester: OpenSSL::Digest::MD5,
+      shared: "1234567890123456780",
+      hash: '!@#$%#$^%$&^&%#$@$' }
+
+    def encrypt_cha_cha_poly(type)
+      cipher = factory.get(type, OPTIONS_CHACHAPOLY.merge(encrypt: true))
+      padding = TEXT.length % cipher.block_size
+      sequence_number = 1
+      result = cipher.update_cipher_mac(TEXT.dup[0...64], sequence_number)
+      result << cipher.update_cipher_mac(TEXT.dup[64...], sequence_number+1)
+      result
+    end
+
+    def decrypt_chacha_poly(type, data)
+      cipher = factory.get(type, OPTIONS_CHACHAPOLY.merge(decrypt: true))
+      result = ""
+      sequence_number = 1
+      pos = 0
+      2.times do
+        encrypted_len = data[pos...pos+4]
+        len = cipher.read_length(encrypted_len, sequence_number)
+        encrypted_data = data[pos+4...pos+4+len]
+        mac_data = data[pos+4+len...pos+(4+len+cipher.mac_length)]
+        result <<  cipher.read_and_mac(encrypted_len+encrypted_data, mac_data.dup, sequence_number)
+
+        sequence_number += 1
+        pos = pos+(4+len+cipher.mac_length)
+      end
+      return result.strip
+    end
+
+    def test_chacha20_poly1305_for_encryption
+      skip "TODO: chacha20-poly1305 not loaded" unless Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
+
+      ret = encrypt_cha_cha_poly("chacha20-poly1305@openssh.com")
+      assert_equal CHACHA20POLY1305, ret
+    end
+
+    def test_chacha20_poly1305_for_decryption
+      skip "TODO: chacha20-poly1305 not loaded" unless Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
+
+      assert_equal TEXT, decrypt_chacha_poly("chacha20-poly1305@openssh.com", CHACHA20POLY1305)
+    end
+
 
     private
 

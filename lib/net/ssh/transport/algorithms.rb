@@ -44,13 +44,18 @@ module Net
                   diffie-hellman-group14-sha256
                   diffie-hellman-group14-sha1],
 
-          encryption: %w[aes256-ctr aes192-ctr aes128-ctr chacha20-poly1305@openssh.com],
+          encryption: %w[aes256-ctr aes192-ctr aes128-ctr],
 
           hmac: %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
                    hmac-sha2-512 hmac-sha2-256
                    hmac-sha1]
         }.freeze
 
+        if Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
+          DEFAULT_ALGORITHMS[:encryption].unshift(
+            'chacha20-poly1305@openssh.com'
+          )
+        end
         if Net::SSH::Authentication::ED25519Loader::LOADED
           DEFAULT_ALGORITHMS[:host_key].unshift(
             'ssh-ed25519-cert-v01@openssh.com',
@@ -474,8 +479,14 @@ module Net
 
           parameters = { shared: secret, hash: hash, digester: digester }
 
-          cipher_client = CipherFactory.get(encryption_client, parameters.merge(iv: iv_client, key: expand_key(key_client, need_bytes, digester, secret, hash), encrypt: true))
-          cipher_server = CipherFactory.get(encryption_server, parameters.merge(iv: iv_server, key: expand_key(key_server, need_bytes, digester, secret, hash), decrypt: true))
+          cipher_client = CipherFactory.get(
+            encryption_client,
+            parameters.merge(iv: iv_client, key: expand_key(key_client, need_bytes, digester, secret, hash), encrypt: true)
+          )
+          cipher_server = CipherFactory.get(
+            encryption_server,
+            parameters.merge(iv: iv_server, key: expand_key(key_server, need_bytes, digester, secret, hash), decrypt: true)
+          )
 
           mac_client = HMAC.get(hmac_client, mac_key_client, parameters)
           mac_server = HMAC.get(hmac_server, mac_key_server, parameters)

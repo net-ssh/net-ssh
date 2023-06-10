@@ -2,7 +2,7 @@ require 'openssl'
 require 'net/ssh/transport/ctr.rb'
 require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/identity_cipher'
-require 'net/ssh/transport/chacha20_poly1305_cipher'
+require 'net/ssh/transport/chacha20_poly1305_cipher_loader'
 
 module Net
   module SSH
@@ -30,9 +30,15 @@ module Net
           'none' => 'none'
         }
 
-        SSH_TO_CLASS = {
-          'chacha20-poly1305@openssh.com' => Net::SSH::Transport::ChaCha20Poly1305Cipher
-        }
+        SSH_TO_CLASS =
+          if Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
+            {
+              'chacha20-poly1305@openssh.com' => Net::SSH::Transport::ChaCha20Poly1305Cipher
+            }
+          else
+            {
+            }
+          end
 
         # Returns true if the underlying OpenSSL library supports the given cipher,
         # and false otherwise.

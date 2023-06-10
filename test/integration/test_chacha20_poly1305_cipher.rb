@@ -30,7 +30,7 @@ class TestChacha20Poly1305Cipher < NetSSHTest
           # We have our own sshd, give it a chance to come up before
           # listening.
           ret = Net::SSH.start("localhost", "net_ssh_1", encryption: "chacha20-poly1305@openssh.com", password: 'foopwd', port: port, user_known_hosts_file: [f.path], verbose: :debug) do |ssh|
-            #assert_equal ssh.transport.algorithms.kex, "curve25519-sha256"
+            # assert_equal ssh.transport.algorithms.kex, "curve25519-sha256"
             ssh.exec! "echo 'foo'"
           end
           assert_equal "foo\n", ret
