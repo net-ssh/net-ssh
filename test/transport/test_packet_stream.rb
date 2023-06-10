@@ -3,7 +3,6 @@
 require_relative '../common'
 require 'timeout'
 require 'net/ssh/transport/packet_stream'
-require 'byebug'
 
 module Transport
   class TestPacketStream < NetSSHTest # rubocop:disable Metrics/ClassLength
