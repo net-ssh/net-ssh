@@ -1,4 +1,8 @@
 
+=== 7.2.0 beta1
+
+  * Support `chacha20-poly1305@opnessh.com` cypher if `RbNaCl` gem is installed [#908]
+
 === 7.1.0
 
   * Accept pubkey_algorithms option when starting a new connection [#891]
