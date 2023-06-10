@@ -8,6 +8,18 @@ module Net
       class ChaCha20Poly1305Cipher
         include Net::SSH::Loggable
 
+        # Implicit HMAC, no need to do anything
+        class ImplicitHMac
+          def etm
+            # TODO: ideally this shouln't be called
+            true
+          end
+
+          def key_length
+            64
+          end
+        end
+
         def initialize(encrypt:, key:)
           @chacha_hdr = OpenSSL::Cipher.new("chacha20")
           key_len = @chacha_hdr.key_len
@@ -86,6 +98,10 @@ module Net
 
         def implicit_mac?
           true
+        end
+
+        def implicit_mac
+          return ImplicitHMac.new
         end
 
         def self.block_size

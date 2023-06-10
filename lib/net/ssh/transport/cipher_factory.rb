@@ -44,6 +44,8 @@ module Net
         # Returns true if the underlying OpenSSL library supports the given cipher,
         # and false otherwise.
         def self.supported?(name)
+          return true if SSH_TO_CLASS.key?(name)
+
           ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
           return true if ossl_name == "none"
 
@@ -57,7 +59,11 @@ module Net
         # value of the +encrypt+ parameter.
         def self.get(name, options = {})
           klass = SSH_TO_CLASS[name]
-          return klass.new(encrypt: options[:encrypt], key: options[:key]) unless klass.nil?
+          unless klass.nil?
+            key_len = klass.key_length
+            key = Net::SSH::Transport::KeyExpander.expand_key(key_len, options[:key], options)
+            return klass.new(encrypt: options[:encrypt], key: key)
+          end
 
           ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
           return IdentityCipher if ossl_name == "none"

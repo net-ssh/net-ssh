@@ -435,15 +435,6 @@ module Net
           sizes.max
         end
 
-        def expand_key(key, need_size, digester, secret, hash)
-          result = key
-          while result.size < need_size
-            new_part = digester.digest(secret + hash + result)
-            result += new_part
-          end
-          return result
-        end
-
         # Instantiates one of the Transport::Kex classes (based on the negotiated
         # kex algorithm), and uses it to exchange keys. Then, the ciphers and
         # HMACs are initialized and fed to the transport layer, to be used in
@@ -481,15 +472,25 @@ module Net
 
           cipher_client = CipherFactory.get(
             encryption_client,
-            parameters.merge(iv: iv_client, key: expand_key(key_client, need_bytes, digester, secret, hash), encrypt: true)
+            parameters.merge(iv: iv_client, key: key_client, encrypt: true)
           )
           cipher_server = CipherFactory.get(
             encryption_server,
-            parameters.merge(iv: iv_server, key: expand_key(key_server, need_bytes, digester, secret, hash), decrypt: true)
+            parameters.merge(iv: iv_server, key: key_server, decrypt: true)
           )
 
-          mac_client = HMAC.get(hmac_client, mac_key_client, parameters)
-          mac_server = HMAC.get(hmac_server, mac_key_server, parameters)
+          mac_client =
+            if cipher_client.implicit_mac?
+              cipher_client.implicit_mac
+            else
+              HMAC.get(hmac_client, mac_key_client, parameters)
+            end
+          mac_server =
+            if cipher_server.implicit_mac?
+              cipher_server.implicit_mac
+            else
+              HMAC.get(hmac_server, mac_key_server, parameters)
+            end
 
           session.configure_client cipher: cipher_client, hmac: mac_client,
                                    compression: normalize_compression_name(compression_client),
