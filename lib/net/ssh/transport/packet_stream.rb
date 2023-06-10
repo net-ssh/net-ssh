@@ -147,7 +147,7 @@ module Net
           if client.cipher.implicit_mac?
             unencrypted_data = [padding_length, payload, padding].pack("CA*A*")
             message = client.cipher.update_cipher_mac(unencrypted_data, client.sequence_number)
-          elsif client.hmac.etm # rubocop:disable Style/IfInsideElse
+          elsif client.hmac.etm
             debug { "using encrypt-then-mac" }
 
             # Encrypt padding_length, payload, and padding. Take MAC
@@ -228,7 +228,7 @@ module Net
             data = read_available(minimum + aad_length)
 
             # decipher it
-            if server.cipher.name == "chacha20-poly1305@openssh.com"
+            if server.cipher.implicit_mac?
               @packet_length = server.cipher.read_length(data[0...4], server.sequence_number)
               @packet = Net::SSH::Buffer.new
               @mac_data = data
@@ -245,7 +245,7 @@ module Net
           need = @packet_length + 4 - aad_length - server.block_size
           raise Net::SSH::Exception, "padding error, need #{need} block #{server.block_size}" if need % server.block_size != 0
 
-          if server.cipher.name == "chacha20-poly1305@openssh.com"
+          if server.cipher.implicit_mac?
             return nil if available < need + server.cipher.mac_length
           else
             return nil if available < need + server.hmac.mac_length # rubocop:disable Style/IfInsideElse
@@ -254,15 +254,20 @@ module Net
           if need > 0
             # read the remainder of the packet and decrypt it.
             data = read_available(need)
-            @mac_data += data if server.hmac.etm || (server.cipher.name == "chacha20-poly1305@openssh.com")
-            if server.cipher.name != "chacha20-poly1305@openssh.com"
+            @mac_data += data if server.hmac.etm || server.cipher.implicit_mac?
+            unless server.cipher.implicit_mac?
               @packet.append(
                 server.update_cipher(data)
               )
             end
           end
 
-          if server.cipher.name != "chacha20-poly1305@openssh.com" # rubocop:disable Style/NegatedIfElseCondition
+          if server.cipher.implicit_mac?
+            real_hmac = read_available(server.cipher.mac_length) || ""
+            @packet = Net::SSH::Buffer.new(server.cipher.read_and_mac(@mac_data, real_hmac, server.sequence_number))
+            padding_length = @packet.read_byte
+            payload = @packet.read(@packet_length - padding_length - 1)
+          else
             # get the hmac from the tail of the packet (if one exists), and
             # then validate it.
             real_hmac = read_available(server.hmac.mac_length) || ""
@@ -278,11 +283,6 @@ module Net
                                  server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
                                end
             raise Net::SSH::Exception, "corrupted hmac detected #{server.hmac.class}" if real_hmac != my_computed_hmac
-          else
-            real_hmac = read_available(server.cipher.mac_length) || ""
-            @packet = Net::SSH::Buffer.new(server.cipher.read_and_mac(@mac_data, real_hmac, server.sequence_number))
-            padding_length = @packet.read_byte
-            payload = @packet.read(@packet_length - padding_length - 1)
           end
           # try to decompress the payload, in case compression is active
           payload = server.decompress(payload)

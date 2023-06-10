@@ -1,5 +1,6 @@
 module Net::SSH::Transport
-  module OpenSSLCipherExtensions 
+  # we add those mehtods to OpenSSL::Chipher instances
+  module OpenSSLCipherExtensions
     def implicit_mac?
       false
     end
