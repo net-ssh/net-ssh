@@ -51,6 +51,11 @@ module Net
                    hmac-sha1]
         }.freeze
 
+        if Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
+          DEFAULT_ALGORITHMS[:encryption].unshift(
+            'chacha20-poly1305@openssh.com'
+          )
+        end
         if Net::SSH::Authentication::ED25519Loader::LOADED
           DEFAULT_ALGORITHMS[:host_key].unshift(
             'ssh-ed25519-cert-v01@openssh.com',
@@ -437,12 +442,13 @@ module Net
         def exchange_keys
           debug { "exchanging keys" }
 
+          need_bytes = kex_byte_requirement
           algorithm = Kex::MAP[kex].new(self, session,
                                         client_version_string: Net::SSH::Transport::ServerVersion::PROTO_VERSION,
                                         server_version_string: session.server_version.version,
                                         server_algorithm_packet: @server_packet,
                                         client_algorithm_packet: @client_packet,
-                                        need_bytes: kex_byte_requirement,
+                                        need_bytes: need_bytes,
                                         minimum_dh_bits: options[:minimum_dh_bits],
                                         logger: logger)
           result = algorithm.exchange_keys
@@ -464,11 +470,27 @@ module Net
 
           parameters = { shared: secret, hash: hash, digester: digester }
 
-          cipher_client = CipherFactory.get(encryption_client, parameters.merge(iv: iv_client, key: key_client, encrypt: true))
-          cipher_server = CipherFactory.get(encryption_server, parameters.merge(iv: iv_server, key: key_server, decrypt: true))
+          cipher_client = CipherFactory.get(
+            encryption_client,
+            parameters.merge(iv: iv_client, key: key_client, encrypt: true)
+          )
+          cipher_server = CipherFactory.get(
+            encryption_server,
+            parameters.merge(iv: iv_server, key: key_server, decrypt: true)
+          )
 
-          mac_client = HMAC.get(hmac_client, mac_key_client, parameters)
-          mac_server = HMAC.get(hmac_server, mac_key_server, parameters)
+          mac_client =
+            if cipher_client.implicit_mac?
+              cipher_client.implicit_mac
+            else
+              HMAC.get(hmac_client, mac_key_client, parameters)
+            end
+          mac_server =
+            if cipher_server.implicit_mac?
+              cipher_server.implicit_mac
+            else
+              HMAC.get(hmac_server, mac_key_server, parameters)
+            end
 
           session.configure_client cipher: cipher_client, hmac: mac_client,
                                    compression: normalize_compression_name(compression_client),

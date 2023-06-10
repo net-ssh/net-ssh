@@ -11,6 +11,10 @@ module Net
             8
           end
 
+          def key_length
+            0
+          end
+
           # Returns an arbitrary integer.
           def iv_len
             4
@@ -49,6 +53,10 @@ module Net
           # Does nothing. Returns self.
           def reset
             self
+          end
+
+          def implicit_mac?
+            false
           end
         end
       end

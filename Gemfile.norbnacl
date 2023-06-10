@@ -1,0 +1,12 @@
+source 'https://rubygems.org'
+
+ENV['NET_SSH_NO_RBNACL'] = 'true'
+# Specify your gem's dependencies in mygem.gemspec
+gemspec
+
+if ENV["CI"] && !Gem.win_platform?
+  gem 'simplecov', require: false, group: :test
+  gem 'codecov', require: false, group: :test
+end
+
+gem 'webrick', group: %i[development test] if RUBY_VERSION.split(".")[0].to_i >= 3

@@ -36,6 +36,8 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency('x25519') unless RUBY_PLATFORM == 'java'
   end
 
+  spec.add_development_dependency('rbnacl', '~> 7.1') unless ENV['NET_SSH_NO_RBNACL']
+
   spec.add_development_dependency "bundler", ">= 1.17"
   spec.add_development_dependency "minitest", "~> 5.10"
   spec.add_development_dependency "mocha", "~> 1.11.2"
