@@ -64,6 +64,7 @@ Unsecure algoritms will definitely be removed in Net::SSH 8.*.
 | Name                                 | Support               | Details  |
 |--------------------------------------|-----------------------|----------|
 | aes256-ctr / aes192-ctr / aes128-ctr | OK                    |          |
+| chacha20-poly1305@openssh.com        | OK.                   | Requires the gem `rbnacl` |
 | aes256-cbc / aes192-cbc / aes128-cbc | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
 | rijndael-cbc@lysator.liu.se          | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
 | blowfish-ctr blowfish-cbc            | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
