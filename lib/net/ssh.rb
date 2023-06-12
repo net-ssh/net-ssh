@@ -64,7 +64,7 @@ module Net
     # Net::SSH.start for a description of each option.
     VALID_OPTIONS = %i[
       auth_methods bind_address compression compression_level config
-      encryption forward_agent hmac host_key remote_user
+      encryption forward_agent hmac host_key identity_agent remote_user
       keepalive keepalive_interval keepalive_maxcount kex keys key_data
       keycerts languages logger paranoid password port proxy
       rekey_blocks_limit rekey_limit rekey_packet_limit timeout verbose
