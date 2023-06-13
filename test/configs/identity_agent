@@ -1,0 +1,2 @@
+Host use-agent
+  IdentityAgent /path/to/auth.sock
