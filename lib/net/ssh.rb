@@ -192,6 +192,7 @@ module Net
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
     # * :use_agent => Set false to disable the use of ssh-agent. Defaults to
     #   true
+    # * :identity_agent => the path to the ssh-agent's UNIX socket
     # * :verbose => how verbose to be (Logger verbosity constants, Logger::DEBUG
     #   is very verbose, Logger::FATAL is all but silent). Logger::FATAL is the
     #   default. The symbols :debug, :info, :warn, :error, and :fatal are also
