@@ -53,10 +53,10 @@ module Net
           end
 
           # Include identities from SSH connection
-          connection_options.fetch(:keys, []).each do |identity_file|
+          connection_options&.fetch(:keys, [])&.each do |identity_file|
             template << " -i #{identity_file}"
           end
-          connection_options.fetch(:key_data, []).each do |key_data|
+          connection_options&.fetch(:key_data, [])&.each do |key_data|
             template << " -i #{key_data_tempfile(key_data).path}"
           end
 
