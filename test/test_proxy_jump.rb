@@ -48,4 +48,23 @@ class TestProxyJump < NetSSHTest
     proxy.build_proxy_command_equivalent(config: true)
     assert_equal "ssh -W %h:%p proxy", proxy.command_line_template
   end
+
+  def test_options
+    proxy = Net::SSH::Proxy::Jump.new("proxy", options: ["StrictHostKeyChecking=no", "UserKnownHostsFile=/dev/null"])
+    proxy.build_proxy_command_equivalent
+    assert_equal "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p proxy", proxy.command_line_template
+  end
+
+  def test_connection_keys
+    proxy = Net::SSH::Proxy::Jump.new("proxy")
+    proxy.build_proxy_command_equivalent(keys: ["~/.ssh/id_ed25519"])
+    assert_equal "ssh -i ~/.ssh/id_ed25519 -W %h:%p proxy", proxy.command_line_template
+  end
+
+  def test_connection_key_data
+    proxy = Net::SSH::Proxy::Jump.new("proxy")
+    proxy.build_proxy_command_equivalent(key_data: ["EXAMPLE_PRIVATE_KEY"])
+    keyfile= proxy.instance_variable_get(:@key_data_tempfiles).first
+    assert_equal "ssh -i #{keyfile.path} -W %h:%p proxy", proxy.command_line_template
+  end
 end
