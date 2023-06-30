@@ -64,7 +64,7 @@ class TestProxyJump < NetSSHTest
   def test_connection_key_data
     proxy = Net::SSH::Proxy::Jump.new("proxy")
     proxy.build_proxy_command_equivalent(key_data: ["EXAMPLE_PRIVATE_KEY"])
-    keyfile= proxy.instance_variable_get(:@key_data_tempfiles).first
+    keyfile = proxy.instance_variable_get(:@key_data_tempfiles).first
     assert_equal "ssh -i #{keyfile.path} -W %h:%p proxy", proxy.command_line_template
   end
 end
