@@ -1,7 +1,7 @@
 ARG RUBY_VERSION=3.1
 FROM ruby:${RUBY_VERSION}
 
-RUN apt update && apt install -y openssh-server sudo netcat \
+RUN apt update && apt install -y openssh-server sudo netcat-openbsd \
   && useradd --create-home --shell '/bin/bash' --comment 'NetSSH' 'net_ssh_1' \
   && useradd --create-home --shell '/bin/bash' --comment 'NetSSH' 'net_ssh_2' \
   && echo net_ssh_1:foopwd | chpasswd \
