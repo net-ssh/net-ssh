@@ -1,5 +1,7 @@
 === 7.2.0
 
+  * Add debugging information for algorithm of pubkey in use [#918]
+
 === 7.2.0 rc1
 
   * Allow IdentityAgent as option to Net::SSH.start [#912]
