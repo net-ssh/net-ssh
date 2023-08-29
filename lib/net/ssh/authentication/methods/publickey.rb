@@ -15,6 +15,8 @@ module Net
           def authenticate(next_service, username, password = nil)
             return false unless key_manager
 
+            debug { "pubkey_algorithms: #{pubkey_algorithms.join(', ')}" }
+
             key_manager.each_identity do |identity|
               return true if authenticate_with(identity, next_service, username)
             end
@@ -123,7 +125,7 @@ module Net
                   end
                 end
               end
-            elsif authenticate_with_alg(identity, next_service, username, type)
+            elsif pubkey_algorithms.include?(type) && authenticate_with_alg(identity, next_service, username, type)
               # success
               return true
             end

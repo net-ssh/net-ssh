@@ -170,11 +170,10 @@ module Net
     # * :properties => a hash of key/value pairs to add to the new connection's
     #   properties (see Net::SSH::Connection::Session#properties)
     # * :proxy => a proxy instance (see Proxy) to use when connecting
-    # * :pubkey_algorithms => the public key authentication algorithms to use for
-    #   this connection. Valid values are 'rsa-sha2-256-cert-v01@openssh.com',
-    #   'ssh-rsa-cert-v01@openssh.com', 'rsa-sha2-256', 'ssh-rsa'. Currently, this
-    #   option is only used for RSA public key authentication and ignored for other
-    #   types.
+    # * :pubkey_algorithms => an array of public key authentication algorithms
+    #   to use for this connection. (Example of valid values:
+    #   'rsa-sha2-256-cert-v01@openssh.com', 'ssh-rsa-cert-v01@openssh.com',
+    #   'rsa-sha2-256', 'ssh-rsa' ).
     # * :rekey_blocks_limit => the max number of blocks to process before rekeying
     # * :rekey_limit => the max number of bytes to process before rekeying
     # * :rekey_packet_limit => the max number of packets to process before rekeying
