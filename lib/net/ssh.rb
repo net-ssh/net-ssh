@@ -66,7 +66,7 @@ module Net
       auth_methods bind_address compression compression_level config
       encryption forward_agent hmac host_key identity_agent remote_user
       keepalive keepalive_interval keepalive_maxcount kex keys key_data
-      keycerts languages logger paranoid password port proxy
+      keycerts keycert_data languages logger paranoid password port proxy
       rekey_blocks_limit rekey_limit rekey_packet_limit timeout verbose
       known_hosts global_known_hosts_file user_known_hosts_file host_key_alias
       host_name user properties passphrase keys_only max_pkt_size
@@ -146,6 +146,8 @@ module Net
     #   and hostbased authentication
     # * :keycerts => an array of file names of key certificates to use
     #    with publickey authentication
+    # * :keycert_data => an array of strings, which each element of the array
+    #   being a key certificate to use with publickey authentication
     # * :key_data => an array of strings, with each element of the array being
     #   a raw private key in PEM format.
     # * :keys_only => set to +true+ to use only private keys from +keys+ and

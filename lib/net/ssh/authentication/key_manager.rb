@@ -32,6 +32,9 @@ module Net
         # The list of user key certificate files that will be examined
         attr_reader :keycert_files
 
+        # The list of user key certificate data that will be examined
+        attr_reader :keycert_data
+
         # The map of loaded identities
         attr_reader :known_identities
 
@@ -46,6 +49,7 @@ module Net
           @key_files = []
           @key_data = []
           @keycert_files = []
+          @keycert_data = []
           @use_agent = options[:use_agent] != false
           @known_identities = {}
           @agent = nil
@@ -59,6 +63,7 @@ module Net
         def clear!
           key_files.clear
           key_data.clear
+          keycert_data.clear
           known_identities.clear
           self
         end
@@ -72,6 +77,12 @@ module Net
         # Add the given keycert_file to the list of keycert files that will be used.
         def add_keycert(keycert_file)
           keycert_files.push(File.expand_path(keycert_file)).uniq!
+          self
+        end
+
+        # Add the given keycert_data to the list of keycerts that will be used.
+        def add_keycert_data(keycert_data_)
+          keycert_data.push(keycert_data_).uniq!
           self
         end
 
@@ -132,8 +143,8 @@ module Net
           end
 
           known_identity_blobs = known_identities.keys.map(&:to_blob)
-          keycert_files.each do |keycert_file|
-            keycert = KeyFactory.load_public_key(keycert_file)
+
+          keycerts.each do |keycert|
             next if known_identity_blobs.include?(keycert.to_blob)
 
             (_, corresponding_identity) = known_identities.detect { |public_key, _|
@@ -226,6 +237,12 @@ module Net
         end
 
         private
+
+        # Load keycerts from files and data.
+        def keycerts
+          keycert_files.map { |keycert_file| KeyFactory.load_public_key(keycert_file) } +
+            keycert_data.map { |data| KeyFactory.load_data_public_key(data) }
+        end
 
         # Prepares identities from user key_files for loading, preserving their order and sources.
         def prepare_identities_from_files
