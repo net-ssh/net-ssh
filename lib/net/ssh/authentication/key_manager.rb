@@ -261,6 +261,8 @@ module Net
                 identity[:load_from] = :privkey_file
               end
               identity.merge(privkey_file: file)
+            else
+              raise "not readable file: #{file}"
             end
           end.compact
         end
