@@ -124,7 +124,6 @@ namespace :vbump do
       match = /^([a-z]+)(\d+)/.match(pre)
       raise ArgumentError, "Unexpected pre: #{pre}" if match.nil? && args[:type].nil?
 
-      byebug
       if match.nil? || (!args[:type].nil? && args[:type] != match[1])
         if pre.nil?
           { pre: "#{args[:type]}1", tiny: tiny + 1 }
@@ -134,16 +133,6 @@ namespace :vbump do
       else
         { pre: "#{match[1]}#{match[2].to_i + 1}" }
       end
-    end
-  end
-
-  desc "Increment prerelease"
-  task :pre_rc do
-    change_version do |pre:|
-      match = /^([a-z]+)(\d+)/.match(pre)
-      raise ArgumentError, "Unexpected pre: #{pre}" if match.nil?
-
-      { pre: "#{match[1]}#{match[2].to_i + 1}" }
     end
   end
 end
