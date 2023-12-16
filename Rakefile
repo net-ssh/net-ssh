@@ -65,7 +65,7 @@ def change_version(&block)
 
   new_pre = result[:pre]
   new_tiny = result[:tiny] || tiny
-  found = {pre: false, tiny: false}
+  found = { pre: false, tiny: false }
   File.open("#{version_file}.new", "w") do |f|
     File.readlines(version_file).each do |line|
       match =
@@ -118,7 +118,7 @@ namespace :vbump do
   end
 
   desc "Increment prerelease"
-  task :pre, [:type] do |t, args|
+  task :pre, [:type] do |_t, args|
     change_version do |pre:, tiny:|
       puts " PRE => #{pre.inspect}"
       match = /^([a-z]+)(\d+)/.match(pre)
