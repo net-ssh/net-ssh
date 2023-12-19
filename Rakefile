@@ -100,7 +100,7 @@ def change_version(&block)
       f.write(line)
     end
     raise ArgumentError, "Cound not find line: PRE = \"#{pre}\" in #{version_file}" unless found[:pre]
-    raise ArgumentError, "Cound not find line: TINY = \"#{tiny}\" in #{version_file}" unless found[:tiny]
+    raise ArgumentError, "Cound not find line: TINY = \"#{tiny}\" in #{version_file}" unless found[:tiny] || new_tiny == tiny
   end
 
   FileUtils.mv version_file, "#{version_file}.old"
