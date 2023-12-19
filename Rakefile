@@ -110,7 +110,7 @@ end
 namespace :vbump do
   desc "Final release"
   task :final do
-    change_version do |pre:|
+    change_version do |pre:, tiny:|
       raise ArgumentError, "Unexpected pre: #{pre}" if pre.nil?
 
       { pre: nil }
