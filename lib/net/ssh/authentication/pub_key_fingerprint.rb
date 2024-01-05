@@ -32,7 +32,7 @@ module Net
           when 'MD5'
             OpenSSL::Digest.hexdigest(algorithm, blob).scan(/../).join(":")
           when 'SHA256'
-            "SHA256:#{Base64.encode64(OpenSSL::Digest.digest(algorithm, blob)).chomp.gsub(/=+\z/, '')}"
+            "SHA256:#{[OpenSSL::Digest.digest(algorithm, blob)].pack('m').chomp.gsub(/=+\z/, '')}"
           else
             raise OpenSSL::Digest::DigestError, "unsupported ssh key digest #{algorithm}"
           end
