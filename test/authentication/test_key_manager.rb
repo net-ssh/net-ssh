@@ -1,5 +1,6 @@
 require_relative '../common'
 require 'net/ssh/authentication/key_manager'
+require 'base64'
 
 module Authentication
   class TestKeyManager < NetSSHTest

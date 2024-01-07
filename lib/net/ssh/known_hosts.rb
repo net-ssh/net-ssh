@@ -1,6 +1,5 @@
 require 'strscan'
 require 'openssl'
-require 'base64'
 require 'delegate'
 require 'net/ssh/buffer'
 require 'net/ssh/authentication/ed25519_loader'
