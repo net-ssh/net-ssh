@@ -3,8 +3,6 @@ gem 'bcrypt_pbkdf', '~> 1.0' unless RUBY_PLATFORM == "java"
 
 require 'ed25519'
 
-require 'base64'
-
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/authentication/pub_key_fingerprint'
 require 'bcrypt_pbkdf' unless RUBY_PLATFORM == "java"
