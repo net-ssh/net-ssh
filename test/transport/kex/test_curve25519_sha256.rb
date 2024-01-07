@@ -2,6 +2,7 @@ unless ENV['NET_SSH_NO_ED25519']
   require_relative '../../common'
   require 'transport/kex/test_diffie_hellman_group1_sha1'
   require 'net/ssh/transport/kex/curve25519_sha256_loader'
+  require 'base64'
   require 'ostruct'
 
   module Transport

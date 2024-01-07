@@ -1,3 +1,4 @@
+require 'base64'
 require 'openssl'
 require 'ostruct'
 require_relative '../../common'
