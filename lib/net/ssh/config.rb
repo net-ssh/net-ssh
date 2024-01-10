@@ -31,6 +31,7 @@ module Net
     # * PreferredAuthentications => maps to the :auth_methods option
     # * ProxyCommand => maps to the :proxy option
     # * ProxyJump => maps to the :proxy option
+    # * PubkeyAcceptedAlgorithms => maps to :pubkey_algorithms
     # * PubKeyAuthentication => maps to the :auth_methods option
     # * RekeyLimit => :rekey_limit
     # * StrictHostKeyChecking => :verify_host_key
@@ -232,7 +233,7 @@ module Net
           userknownhostsfile: :user_known_hosts_file,
           checkhostip: :check_host_ip
         }.freeze
-        def translate_config_key(hash, key, value, settings)
+        def translate_config_key(hash, key, value, settings) # rubocop:disable Metrics/AbcSize
           case key
           when :stricthostkeychecking
             hash[:verify_host_key] = translate_verify_host_key(value)
@@ -278,6 +279,8 @@ module Net
             if (proxy = setup_proxy(*value))
               hash[:proxy] = proxy
             end
+          when :pubkeyacceptedalgorithms
+            hash[:pubkey_algorithms] = value.split(/,/)
           when :pubkeyauthentication
             if value
               (hash[:auth_methods] << 'publickey').uniq!
