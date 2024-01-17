@@ -185,10 +185,12 @@ module Net
         # Filters default_files down to the files that are expandable.
         def expandable_default_files
           default_files.keep_if do |path|
-            File.expand_path(path)
-            true
-          rescue ArgumentError
-            false
+            begin
+              File.expand_path(path)
+              true
+            rescue ArgumentError
+              false
+            end
           end
         end
 

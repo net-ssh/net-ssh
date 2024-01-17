@@ -52,11 +52,11 @@ module Net
       MINOR = 3
 
       # The tiny component of this version of the Net::SSH library
-      TINY  = 0
+      TINY  = 1
 
       # The prerelease component of this version of the Net::SSH library
       # nil allowed
-      PRE   = "beta1"
+      PRE   = "ruby-2.4.5-backport"
 
       # The current version of the Net::SSH library as a Version instance
       CURRENT = new(*[MAJOR, MINOR, TINY, PRE].compact)
