@@ -1,7 +1,7 @@
 require_relative 'lib/net/ssh/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "net-ssh"
+  spec.name          = "net-ssh-backports"
   spec.version       = Net::SSH::Version::STRING
   spec.authors       = ["Jamis Buck", "Delano Mandelbaum", "Mikl\u{f3}s Fazekas"]
   spec.email         = ["net-ssh@solutious.com"]
@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Net::SSH: a pure-Ruby implementation of the SSH2 client protocol. It allows you to write programs that invoke and interact with processes on remote servers, via SSH2.}
   spec.homepage      = "https://github.com/net-ssh/net-ssh"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.5")
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.4.5")
   spec.metadata = {
     "changelog_uri" => "https://github.com/net-ssh/net-ssh/blob/master/CHANGES.txt"
   }
