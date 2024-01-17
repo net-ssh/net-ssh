@@ -148,9 +148,9 @@ module Net
               KnownHosts.new(file).add(host, key)
               return
             end
-            rescue SystemCallError
+          rescue SystemCallError
               # try the next hostfile
-            end
+          end
         end
       end
 
