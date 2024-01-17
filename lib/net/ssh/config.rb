@@ -187,10 +187,10 @@ module Net
           begin
             default_files.keep_if do |path|
               File.expand_path(path)
-              true
+              return true
             end
           rescue ArgumentError
-            false
+            return false
           end
         end
 
