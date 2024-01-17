@@ -143,12 +143,14 @@ module Net
         # add an entry for the given host and key to the first file it is able
         # to.
         def add(host, key, options={})
-          hostfiles(options, :user).each do |file|
-            KnownHosts.new(file).add(host, key)
-            return
-          rescue SystemCallError
-            # try the next hostfile
-          end
+          begin
+            hostfiles(options, :user).each do |file|
+              KnownHosts.new(file).add(host, key)
+              return
+            end
+            rescue SystemCallError
+              # try the next hostfile
+            end
         end
       end
 
