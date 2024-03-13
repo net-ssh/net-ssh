@@ -30,6 +30,8 @@
       register: openssl_version_query
     - name: Install openssl-1.1.1g
       block:
+        - name: "Install make gcc"
+          command: sh -c "sudo apt-get update && sudo apt install -y make gcc"
         - name: "Download openssl-1.1.1g sources"
           unarchive:
             src: https://www.openssl.org/source/openssl-1.1.1g.tar.gz
