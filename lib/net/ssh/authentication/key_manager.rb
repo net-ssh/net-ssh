@@ -248,10 +248,14 @@ module Net
         def prepare_identities_from_files
           key_files.map do |file|
             if readable_file?(file)
-              identity = {}
+              identity = {privkey_file: file}
               cert_file = file + "-cert.pub"
               public_key_file = file + ".pub"
-              if readable_file?(cert_file)
+              if file.end_with?(".pub")
+                identity[:load_from] = :pubkey_file
+                identity[:pubkey_file] = file
+                identity.delete(:privkey_file)
+              elsif readable_file?(cert_file)
                 identity[:load_from] = :pubkey_file
                 identity[:pubkey_file] = cert_file
               elsif readable_file?(public_key_file)
@@ -260,7 +264,7 @@ module Net
               else
                 identity[:load_from] = :privkey_file
               end
-              identity.merge(privkey_file: file)
+              identity
             end
           end.compact
         end
