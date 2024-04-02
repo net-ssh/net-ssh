@@ -248,6 +248,8 @@ mv gem-public_cert.pem net-ssh-public_cert.pem
 gem cert --add net-ssh-public_cert.pem
 ```
 
+or `rake cert:update_public_when_expired`
+
 ## Security contact information
 
 See [SECURITY.md](SECURITY.md)
