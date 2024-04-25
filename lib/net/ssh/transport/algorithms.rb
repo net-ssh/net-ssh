@@ -265,7 +265,9 @@ module Net
 
           ALGORITHMS.each do |algorithm, supported|
             algorithms[algorithm] = compose_algorithm_list(
-              supported, options[algorithm] || DEFAULT_ALGORITHMS[algorithm],
+              supported,
+              DEFAULT_ALGORITHMS[algorithm],
+              options[algorithm] || DEFAULT_ALGORITHMS[algorithm],
               options[:append_all_supported_algorithms]
             )
           end
@@ -292,19 +294,35 @@ module Net
         end
 
         # Composes the list of algorithms by taking supported algorithms and matching with supplied options.
-        def compose_algorithm_list(supported, option, append_all_supported_algorithms = false)
+        def compose_algorithm_list(supported, defaults, option, append_all_supported_algorithms = false)
           return supported.dup unless option
 
           list = []
           option = Array(option).compact.uniq
 
-          if option.first && option.first.start_with?('+', '-')
-            list = supported.dup
+          if option.first && option.first.start_with?('+', '-', '^')
+            list = defaults.dup
 
-            appends = option.select { |opt| opt.start_with?('+') }.map { |opt| opt[1..-1] }
-            deletions = option.select { |opt| opt.start_with?('-') }.map { |opt| opt[1..-1] }
+            appends = []
+            deletions = []
+            prepends = []
+            cur_list = nil
+            option.each do |cur_opt|
+              if cur_opt.start_with?('+')
+                cur_list = appends
+                cur_opt = cur_opt[1..-1]
+              elsif cur_opt.start_with?('-')
+                cur_list = deletions
+                cur_opt = cur_opt[1..-1]
+              elsif cur_opt.start_with?('^')
+                cur_list = prepends
+                cur_opt = cur_opt[1..-1]
+              end
+              cur_list << cur_opt
+            end
 
-            list.concat(appends)
+            list = prepends + list + appends
+            list.concat(supported) if append_all_supported_algorithms
 
             deletions.each do |opt|
               if opt.include?('*')
