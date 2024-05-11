@@ -69,6 +69,7 @@ module Transport
     def test_cleanup_should_delegate_cleanup_to_client_and_server_states
       stream.client.expects(:cleanup)
       stream.server.expects(:cleanup)
+      stream.expects(:pid)
       stream.cleanup
     end
 
@@ -1102,6 +1103,7 @@ module Transport
             assert packet[:always_display]
             assert_equal "debugging", packet[:message]
             assert_equal "", packet[:language]
+            stream.stubs(:pid).returns(nil)
             stream.cleanup
           end
 
@@ -1120,6 +1122,7 @@ module Transport
             stream.client.set cipher: cipher, hmac: hmac, compression: compress
             stream.enqueue_packet(ssh_packet)
             assert_equal PACKETS[cipher_name][hmac_name][compress], stream.write_buffer
+            stream.stubs(:pid).returns(nil)
             stream.cleanup
           end
         end
