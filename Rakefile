@@ -61,7 +61,7 @@ def change_version(&block)
   pre = Net::SSH::Version::PRE
   tiny = Net::SSH::Version::TINY
   result = block[pre: pre, tiny: Net::SSH::Version::TINY]
-  raise "Version change logic should always return a pre", ArgumentError unless result.key?(:pre)
+  raise ArgumentError, "Version change logic should always return a pre" unless result.key?(:pre)
 
   new_pre = result[:pre]
   new_tiny = result[:tiny] || tiny
@@ -112,9 +112,13 @@ namespace :vbump do
   task :final do
     change_version do |pre:, tiny:|
       _ = tiny
-      raise ArgumentError, "Unexpected pre: #{pre}" if pre.nil?
+      if pre.nil?
+        { tiny: tiny + 1, pre: nil }
+      else
+        raise ArgumentError, "Unexpected pre: #{pre}" if pre.nil?
 
-      { pre: nil }
+        { pre: nil }
+      end
     end
   end
 
