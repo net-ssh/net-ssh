@@ -69,6 +69,7 @@ module Net
         # Creates a Tempfile containing the key data
         # Tempfiles are tracked so they are not cleaned up by Ruby's GC until the Jump instance is no longer needed
         def key_data_tempfile(key_data)
+          key_data += "\n" unless key_data.end_with? "\n"
           keyfile = Tempfile.new
           keyfile.write(key_data)
           keyfile.close
