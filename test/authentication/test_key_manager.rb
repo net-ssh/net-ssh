@@ -1,5 +1,6 @@
 require_relative '../common'
 require 'net/ssh/authentication/key_manager'
+require 'base64'
 
 module Authentication
   class TestKeyManager < NetSSHTest
@@ -10,6 +11,10 @@ module Authentication
 
     def test_keycert_files_are_empty_by_default
       assert manager.keycert_files.empty?
+    end
+
+    def test_keycert_data_are_empty_by_default
+      assert manager.keycert_data.empty?
     end
 
     def test_assume_agent_is_available_by_default
@@ -34,6 +39,15 @@ module Authentication
       assert_equal 3, manager.keycert_files.length
       final_files = manager.keycert_files.map { |item| item.split('/').last }
       assert_equal %w[first second third], final_files
+    end
+
+    def test_add_ensures_keycert_data_list_is_unique
+      manager.add_keycert_data "first"
+      manager.add_keycert_data "second"
+      manager.add_keycert_data "third"
+      manager.add_keycert_data "second"
+      assert_equal 3, manager.keycert_data.length
+      assert_equal %w[first second third], manager.keycert_data
     end
 
     def test_use_agent_should_be_set_to_false_if_agent_could_not_be_found
@@ -80,6 +94,20 @@ module Authentication
       assert_equal 1, identities.length
       assert_equal rsa_cert.to_blob, identities.first.to_blob
       assert_equal({ from: :file, file: first }, manager.known_identities[rsa_cert])
+    end
+
+    def test_each_identity_should_use_cert_data
+      manager.stubs(:agent).returns(nil)
+
+      manager.add_key_data(rsa.to_pem)
+      manager.add_keycert_data("ssh-rsa-cert-v01@openssh.com #{Base64.encode64(rsa_cert.to_blob)}")
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 2, identities.length
+      assert_equal rsa.to_blob, identities[0].to_blob
+      assert_equal rsa_cert.to_blob, identities[1].to_blob
     end
 
     def test_each_identity_should_load_from_explicit_cert_file_given_matching_key_is_loaded

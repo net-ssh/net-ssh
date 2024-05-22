@@ -1,6 +1,5 @@
 require 'strscan'
 require 'openssl'
-require 'base64'
 require 'delegate'
 require 'net/ssh/buffer'
 require 'net/ssh/authentication/ed25519_loader'
@@ -241,11 +240,11 @@ module Net
       def known_host_hash?(hostlist, entries)
         if hostlist.size == 1 && hostlist.first =~ /\A\|1(\|.+){2}\z/
           chunks = hostlist.first.split(/\|/)
-          salt = Base64.decode64(chunks[2])
+          salt = chunks[2].unpack1("m")
           digest = OpenSSL::Digest.new('sha1')
           entries.each do |entry|
             hmac = OpenSSL::HMAC.digest(digest, salt, entry)
-            return true if Base64.encode64(hmac).chomp == chunks[3]
+            return true if [hmac].pack("m").chomp == chunks[3]
           end
         end
         false

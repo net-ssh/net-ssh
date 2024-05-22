@@ -8,6 +8,8 @@ pkg
 test/integration/.vagrant
 test/integration/playbook.retry
 
+lib/net/ssh/version.rb.old
+
 .byebug_history
 
 tryout
