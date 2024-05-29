@@ -44,7 +44,11 @@ module Net
                   diffie-hellman-group14-sha256
                   diffie-hellman-group14-sha1],
 
-          encryption: %w[aes256-ctr aes192-ctr aes128-ctr],
+          encryption: %w[aes256-ctr
+                         aes192-ctr
+                         aes128-ctr
+                         aes256-gcm@openssh.com
+                         aes128-gcm@openssh.com],
 
           hmac: %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
                    hmac-sha2-512 hmac-sha2-256
@@ -491,6 +495,9 @@ module Net
             else
               HMAC.get(hmac_server, mac_key_server, parameters)
             end
+
+          cipher_client.nonce = iv_client if mac_client.respond_to?(:aead) && mac_client.aead
+          cipher_server.nonce = iv_server if mac_server.respond_to?(:aead) && mac_client.aead
 
           session.configure_client cipher: cipher_client, hmac: mac_client,
                                    compression: normalize_compression_name(compression_client),

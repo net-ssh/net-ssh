@@ -1,5 +1,7 @@
 require 'openssl'
 require 'net/ssh/transport/ctr.rb'
+require 'net/ssh/transport/aes128_gcm'
+require 'net/ssh/transport/aes256_gcm'
 require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/identity_cipher'
 require 'net/ssh/transport/chacha20_poly1305_cipher_loader'
@@ -31,15 +33,15 @@ module Net
           'none' => 'none'
         }
 
-        SSH_TO_CLASS =
+        SSH_TO_CLASS = {
+          'aes256-gcm@openssh.com' => Net::SSH::Transport::AES256_GCM,
+          'aes128-gcm@openssh.com' => Net::SSH::Transport::AES128_GCM
+        }.tap do |hash|
           if Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
-            {
-              'chacha20-poly1305@openssh.com' => Net::SSH::Transport::ChaCha20Poly1305Cipher
-            }
-          else
-            {
-            }
+            hash['chacha20-poly1305@openssh.com'] =
+              Net::SSH::Transport::ChaCha20Poly1305Cipher
           end
+        end
 
         # Returns true if the underlying OpenSSL library supports the given cipher,
         # and false otherwise.

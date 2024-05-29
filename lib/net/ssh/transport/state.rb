@@ -125,7 +125,7 @@ module Net
           compressor.deflate(data, Zlib::SYNC_FLUSH)
         end
 
-        # Deompresses the data. If no compression is in effect, this will just return
+        # Decompresses the data. If no compression is in effect, this will just return
         # the data unmodified, otherwise it uses #decompressor to decompress the data.
         def decompress(data)
           data = data.to_s
