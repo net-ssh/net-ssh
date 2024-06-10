@@ -128,7 +128,7 @@ module Net
           payload = client.compress(payload)
 
           # the length of the packet, minus the padding
-          actual_length = (client.hmac.etm ? 0 : 4) + payload.bytesize + 1
+          actual_length = (client.hmac.etm || client.hmac.aead ? 0 : 4) + payload.bytesize + 1
 
           # compute the padding length
           padding_length = client.block_size - (actual_length % client.block_size)
@@ -151,7 +151,7 @@ module Net
             debug { "using encrypt-then-mac" }
 
             # Encrypt padding_length, payload, and padding. Take MAC
-            # from the unencrypted packet_lenght and the encrypted
+            # from the unencrypted packet_length and the encrypted
             # data.
             length_data = [packet_length].pack("N")
 
@@ -219,7 +219,7 @@ module Net
         # new Packet object.
         # rubocop:disable Metrics/AbcSize
         def poll_next_packet
-          aad_length = server.hmac.etm ? 4 : 0
+          aad_length = server.hmac.etm || server.hmac.aead ? 4 : 0
 
           if @packet.nil?
             minimum = server.block_size < 4 ? 4 : server.block_size
