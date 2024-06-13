@@ -120,7 +120,12 @@ module Net
         # connection.
         def close
           info { "closing remaining channels (#{channels.length} open)" }
-          channels.each { |id, channel| channel.close }
+
+          channels.each do |id, channel|
+            channel.eof!
+            channel.close
+          end
+
           begin
             loop(0.1) { channels.any? }
           rescue Net::SSH::Disconnect
