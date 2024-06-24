@@ -159,7 +159,8 @@ module Net
             end
           end
 
-          globals.merge(settings) do |key, oldval, newval|
+          # Merge with globals after performing expansion of % tokens
+          globals.merge(expand_ssh_config_tokens(settings)) do |key, oldval, newval|
             case key
             when 'identityfile', 'certificatefile'
               oldval + newval
@@ -190,6 +191,44 @@ module Net
           rescue ArgumentError
             false
           end
+        end
+
+        def build_token_values_from_ssh_config(ssh_config)
+          # Build the list of values for the supported tokens, using ssh_config names
+          # A complete set of tokens can be found in the ssh_config(5) manpage
+          # For example https://man.openbsd.org/ssh_config#TOKENS
+          {
+            '%' => '%',
+            'h' => ssh_config["host"],
+            'r' => ssh_config["user"]
+          }
+        end
+
+        def build_token_values_from_net_ssh_config(ssh_config)
+          # Build the list of values for the supported tokens, using Net::SSH config names
+          # A complete set of tokens can be found in the ssh_config(5) manpage
+          # For example https://man.openbsd.org/ssh_config#TOKENS
+          {
+            '%' => '%',
+            'h' => ssh_config[:host],
+            'r' => ssh_config[:user]
+          }
+        end
+
+        # Based on the provided tokens hash substitute the % tokens in a given string
+        # Missing, or nil-valued tokens will either be left as-is, or cause an
+        # ArgumentError to be raised (if raise_unknown_keys is set to true)
+        def expand_tokens_in_string(string, token_values, raise_unknown_keys: false)
+          string.gsub(/%(.)/) {
+            if token_values.include?($1) && token_values[$1]
+              token_values[$1]
+            elsif raise_unknown_keys
+              raise ArgumentError, "unknown key: #{$1}"
+            else
+              # restore the original token
+              "%#{$1}"
+            end
+          }
         end
 
         private
@@ -227,6 +266,7 @@ module Net
           hostkeyalias: :host_key_alias,
           identityfile: :keys,
           fingerprinthash: :fingerprint_hash,
+          hostname: :host_name,
           port: :port,
           user: :user,
           userknownhostsfile: :user_known_hosts_file,
@@ -246,8 +286,6 @@ module Net
             end
           when :hostkeyalgorithms
             hash[:host_key] = value.split(/,/)
-          when :hostname
-            hash[:host_name] = value.gsub(/%h/, settings['host'])
           when :macs
             hash[:hmac] = value.split(/,/)
           when :serveralivecountmax
@@ -366,7 +404,9 @@ module Net
           # Not using `\s` for whitespace matching as canonical
           # ssh_config parser implementation (OpenSSH) has specific character set.
           # Ref: https://github.com/openssh/openssh-portable/blob/2581333d564d8697837729b3d07d45738eaf5a54/misc.c#L237-L239
-          conditions = condition.split(/[ \t\r\n]+|(?<!=)=(?!=)/).reject(&:empty?)
+          # This regex breaks up a match string, splitting on `=` or whitespace, but preserving quoted strings as a single
+          # matched entry
+          conditions = condition.split(/([^=" \t\r\n]+)?=?(?!=)(?:"([^"]+)")?(?:[ \t\r\n])*/).reject(&:empty?)
           return true if conditions == ["all"]
 
           conditions = conditions.each_slice(2)
@@ -391,6 +431,15 @@ module Net
               condition_matches << (true && negated ^ condition_met)
               # else
               # warn "net-ssh: Unsupported expr in Match block: #{kind}"
+            when "exec"
+              condition_met = false
+
+              token_values = build_token_values_from_ssh_config(settings)
+              command_line = expand_tokens_in_string(exprs, token_values)
+
+              condition_matches << (system(command_line) == true)
+              # else
+              # warn "net-ssh: Unsupported expr in Match block: #{kind}"
             end
           end
 
@@ -399,6 +448,31 @@ module Net
 
         def unquote(string)
           string =~ /^"(.*)"$/ ? Regexp.last_match(1) : string
+        end
+
+        def expand_ssh_config_tokens(settings)
+          token_values = build_token_values_from_ssh_config(settings)
+
+          # Run through the settings expanding tokens in values for supported
+          # keywords
+          # A complete set of keywords and the tokens they should support can
+          # be found in the ssh_config(5) manpage
+          # For example https://man.openbsd.org/ssh_config#TOKENS
+          settings.each do |key, value|
+            case key
+            when 'certificatefile', 'identityfile'
+              # Step through each entry in the array of values
+              value = value.map do |value_item|
+                expand_tokens_in_string(value_item, token_values)
+              end
+            when 'controlpath', 'identityagent',
+                'knownhostscommand', 'localforward', 'remotecommand',
+                'remoteforward', 'revokedhostkeys', 'userknownhostsfile', 'hostname'
+              value = expand_tokens_in_string(value, token_values)
+            end
+            settings[key] = value
+          end
+          settings
         end
       end
     end
