@@ -16,7 +16,7 @@ unless ENV['NET_SSH_NO_ED25519']
     def test_with_only_curve_kex
       config_lines = File.read('/etc/ssh/sshd_config').split("\n")
       config_lines = config_lines.map do |line|
-        if line =~ /^KexAlgorithms/
+        if line.match(/^KexAlgorithms/)
           "##{line}"
         else
           line

@@ -59,7 +59,7 @@ unless ENV['NET_SSH_NO_ED25519']
     def test_with_only_ed25519_host_key
       config_lines = File.read('/etc/ssh/sshd_config').split("\n")
       config_lines = config_lines.map do |line|
-        if (line =~ /^HostKey /) && line !~ /ed25519/
+        if (line.match(/^HostKey /)) && line !~ /ed25519/
           "##{line}"
         else
           line

@@ -229,7 +229,7 @@ module Net
             end.join('.')
           end.join('.*')
 
-          host =~ Regexp.new("\\A#{pattern_regexp}\\z")
+          host.match(Regexp.new("\\A#{pattern_regexp}\\z"))
         else
           host == pattern
         end
@@ -238,7 +238,7 @@ module Net
       # Indicates whether one of the entries matches an hostname that has been
       # stored as a HMAC-SHA1 hash in the known hosts.
       def known_host_hash?(hostlist, entries)
-        if hostlist.size == 1 && hostlist.first =~ /\A\|1(\|.+){2}\z/
+        if hostlist.size == 1 && hostlist.first.match(/\A\|1(\|.+){2}\z/)
           chunks = hostlist.first.split(/\|/)
           salt = chunks[2].unpack1("m")
           digest = OpenSSL::Digest.new('sha1')

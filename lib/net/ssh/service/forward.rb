@@ -67,7 +67,7 @@ module Net
               args.shift
             else
               bind_address = "127.0.0.1"
-              bind_address = args.shift if args.first.is_a?(String) && args.first =~ /\D/
+              bind_address = args.shift if args.first.is_a?(String) && args.first.match(/\D/)
               local_port = args.shift.to_i
               local_port_type = :long
               TCPServer.new(bind_address, local_port)
@@ -331,7 +331,7 @@ module Net
               ch[:socket].send_pending
               ch[:socket].shutdown Socket::SHUT_WR
             rescue IOError => e
-              if e.message =~ /closed/ then
+              if e.message.match(/closed/) then
                 debug { "epipe in on_eof => shallowing exception:#{e}" }
               else
                 raise

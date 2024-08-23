@@ -191,7 +191,7 @@ module OpenSSL
       alias ssh_signature_type ssh_type
 
       def digester
-        if group.curve_name =~ /^[a-z]+(\d+)\w*\z/
+        if group.curve_name.match(/^[a-z]+(\d+)\w*\z/)
           curve_size = Regexp.last_match(1).to_i
           if curve_size <= 256
             OpenSSL::Digest::SHA256.new

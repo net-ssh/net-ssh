@@ -16,7 +16,7 @@ unless ENV['NET_SSH_NO_RBNACL']
     def test_with_only_chacha20_cipher
       config_lines = File.read('/etc/ssh/sshd_config').split("\n")
       config_lines = config_lines.map do |line|
-        if line =~ /^Ciphers/
+        if line.match(/^Ciphers/)
           "##{line}"
         else
           line

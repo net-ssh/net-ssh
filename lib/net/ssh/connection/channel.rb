@@ -384,7 +384,7 @@ module Net
         #   end
         #
         #   channel.on_process do |ch|
-        #     if channel[:data] =~ /^.*?\n/
+        #     if channel[:data].match(/^.*?\n/)
         #       puts $&
         #       channel[:data] = $'
         #     end
@@ -672,7 +672,7 @@ module Net
           Array(env_variable_patterns).each do |env_variable_pattern|
             matched_variables = ENV.find_all do |env_name, _|
               case env_variable_pattern
-              when Regexp then env_name =~ env_variable_pattern
+              when Regexp then env_name.match(env_variable_pattern)
               when String then env_name == env_variable_pattern
               end
             end

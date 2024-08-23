@@ -86,9 +86,9 @@ module Net
           block_matched = false
           block_seen = false
           IO.foreach(file) do |line|
-            next if line =~ /^\s*(?:#.*)?$/
+            next if line.match(/^\s*(?:#.*)?$/)
 
-            if line =~ /^\s*(\S+)\s*=(.*)$/
+            if line.match(/^\s*(\S+)\s*=(.*)$/)
               key, value = $1, $2
             else
               key, value = line.strip.split(/\s+/, 2)
@@ -114,12 +114,12 @@ module Net
 
               # Check for negative patterns first. If the host matches, that overrules any other positive match.
               # The host substring code is used to strip out the starting "!" so the regexp will be correct.
-              negative_matched = negative_hosts.any? { |h| host =~ pattern2regex(h[1..-1]) }
+              negative_matched = negative_hosts.any? { |h| host.match(pattern2regex(h[1..-1])) }
 
               if negative_matched
                 block_matched = false
               else
-                block_matched = positive_hosts.any? { |h| host =~ pattern2regex(h) }
+                block_matched = positive_hosts.any? { |h| host.match(pattern2regex(h)) }
               end
 
               block_seen = true
@@ -386,7 +386,7 @@ module Net
               end
               condition_met = false
               exprs.split(",").each do |expr|
-                condition_met = condition_met || host =~ pattern2regex(expr)
+                condition_met = condition_met || host.match(pattern2regex(expr))
               end
               condition_matches << (true && negated ^ condition_met)
               # else
@@ -398,7 +398,9 @@ module Net
         end
 
         def unquote(string)
-          string =~ /^"(.*)"$/ ? Regexp.last_match(1) : string
+          return string if string.nil?
+
+          string.match(/^"(.*)"$/) ? Regexp.last_match(1) : string
         end
       end
     end

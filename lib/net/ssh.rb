@@ -92,7 +92,7 @@ module Net
     #
     #         ch.on_data do |ch, data|
     #           print data
-    #           if data =~ /sudo password: /
+    #           if data.match(/sudo password: /)
     #             ch.send_data("password\n")
     #           end
     #         end

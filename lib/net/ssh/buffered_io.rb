@@ -173,7 +173,7 @@ module Net
           debug { "connection was reset => shallowing exception:#{e}" }
           return 0
         rescue IOError => e
-          if e.message =~ /closed/ then
+          if e.message.match(/closed/) then
             debug { "connection was reset => shallowing exception:#{e}" }
             return 0
           else
@@ -189,7 +189,7 @@ module Net
           debug { "connection was reset => shallowing exception:#{e}" }
           return 0
         rescue IOError => e
-          if e.message =~ /closed/ then
+          if e.message.match(/closed/) then
             debug { "connection was reset => shallowing exception:#{e}" }
             return 0
           else

@@ -180,7 +180,7 @@ module Net
           begin
             process(0)
           rescue IOError => e
-            if e.message =~ /closed/
+            if e.message.match(/closed/)
               debug { "stream was closed after loop => shallowing exception so it will be re-raised in next loop" }
             else
               raise

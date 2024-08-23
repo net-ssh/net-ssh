@@ -17,7 +17,7 @@ class TestGcmCipher < NetSSHTest
   def run_with_only_cipher(cipher)
     config_lines = File.read('/etc/ssh/sshd_config').split("\n")
     config_lines = config_lines.map do |line|
-      if line =~ /^Ciphers/
+      if line.match(/^Ciphers/)
         "##{line}"
       else
         line

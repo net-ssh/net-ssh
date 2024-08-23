@@ -21,7 +21,7 @@ module IntegrationTestHelpers
   end
 
   def sshd_8_or_later?
-    !!(`sshd  -v 2>&1 |grep 'OpenSSH_'` =~ /OpenSSH_8./)
+    !!(`sshd  -v 2>&1 |grep 'OpenSSH_'`.match(/OpenSSH_8./))
   end
 
   def ssh_keygen(file, type = 'rsa', password = '')
@@ -53,7 +53,7 @@ module IntegrationTestHelpers
     puts "/usr/bin/ssh-agent -c" if VERBOSE
     agent_out = `/usr/bin/ssh-agent -c`
     agent_out.split("\n").each do |line|
-      if line =~ /setenv (\S+) (\S+);/
+      if line.match(/setenv (\S+) (\S+);/)
         ENV[$1] = $2
         puts "ENV[#{$1}]=#{$2}" if VERBOSE
       end

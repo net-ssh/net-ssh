@@ -21,7 +21,7 @@ class TestHMacEtm < NetSSHTest
   def config_with_macs(macs)
     config_lines = File.read('/etc/ssh/sshd_config').split("\n")
     config_lines = config_lines.map do |line|
-      if line =~ /^MACs/
+      if line.match(/^MACs/)
         "##{line}"
       else
         line

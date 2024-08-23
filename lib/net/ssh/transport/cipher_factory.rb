@@ -77,7 +77,7 @@ module Net
           cipher.padding = 0
 
           cipher.extend(Net::SSH::Transport::OpenSSLCipherExtensions)
-          if name =~ /-ctr(@openssh.org)?$/
+          if name.match(/-ctr(@openssh.org)?$/)
             if ossl_name !~ /-ctr/
               cipher.extend(Net::SSH::Transport::CTR)
             else
