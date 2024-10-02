@@ -16,7 +16,7 @@ module Authentication
       end
 
       def test_authenticate_should_return_false_if_no_keys_can_authenticate
-        transport.expect do |t, packet|
+        transport(pubkey_algorithms: %w[ssh-rsa ssh-dss]).expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert verify_userauth_request_packet(packet, keys.first, false)
           t.return(USERAUTH_FAILURE, :string, "hostbased,password")
@@ -34,7 +34,7 @@ module Authentication
       def test_authenticate_should_raise_if_publickey_disallowed
         key_manager.expects(:sign).with(&signature_parameters(keys.first)).returns("sig-one")
 
-        transport.expect do |t, packet|
+        transport(pubkey_algorithms: %w[ssh-rsa]).expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert verify_userauth_request_packet(packet, keys.first, false)
           t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
@@ -56,7 +56,7 @@ module Authentication
         key_manager.expects(:sign).with(&signature_parameters(keys.first)).returns("sig-one")
         key_manager.expects(:sign).with(&signature_parameters(keys.last)).returns("sig-two")
 
-        transport.expect do |t, packet|
+        transport(pubkey_algorithms: %w[ssh-rsa ssh-dss]).expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert verify_userauth_request_packet(packet, keys.first, false)
           t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
@@ -88,7 +88,7 @@ module Authentication
       def test_authenticate_should_return_true_if_any_key_can_authenticate
         key_manager.expects(:sign).with(&signature_parameters(keys.first)).returns("sig-one")
 
-        transport.expect do |t, packet|
+        transport(pubkey_algorithms: %w[ssh-rsa]).expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert verify_userauth_request_packet(packet, keys.first, false)
           t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
@@ -107,7 +107,7 @@ module Authentication
       def test_authenticate_rsa_sha2
         key_manager.expects(:sign).with(&signature_parameters_with_alg(keys.first, "rsa-sha2-256")).returns("sig-one")
 
-        transport.expect do |t, packet|
+        transport(pubkey_algorithms: %w[rsa-sha2-256]).expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert verify_userauth_request_packet(packet, keys.first, false, "rsa-sha2-256")
           t.return(USERAUTH_PK_OK, :string, "rsa-sha2-256", :string, Net::SSH::Buffer.from(:key, keys.first))
@@ -120,13 +120,13 @@ module Authentication
           end
         end
 
-        assert subject(pubkey_algorithms: %w[rsa-sha2-256]).authenticate("ssh-connection", "jamis")
+        assert subject.authenticate("ssh-connection", "jamis")
       end
 
       def test_authenticate_rsa_sha2_fallback
         key_manager.expects(:sign).with(&signature_parameters(keys.first)).returns("sig-one")
 
-        transport.expect do |t, packet|
+        transport(pubkey_algorithms: %w[rsa-sha2-256 ssh-rsa]).expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert verify_userauth_request_packet(packet, keys.first, false, "rsa-sha2-256")
           t.return(USERAUTH_FAILURE, :string, "publickey")
@@ -145,7 +145,7 @@ module Authentication
           end
         end
 
-        assert subject(pubkey_algorithms: %w[rsa-sha2-256 ssh-rsa]).authenticate("ssh-connection", "jamis")
+        assert subject.authenticate("ssh-connection", "jamis")
       end
 
       private
@@ -197,7 +197,6 @@ module Authentication
 
       def subject(options = {})
         options[:key_manager] = key_manager(options) unless options.key?(:key_manager)
-        options[:pubkey_algorithms] = %w[ssh-rsa] unless options.key?(:pubkey_algorithms)
         @subject ||= Net::SSH::Authentication::Methods::Publickey.new(session(options), options)
       end
     end
