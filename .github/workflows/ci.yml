@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        ruby-version: [2.6.10, 2.7.7, 3.0.6, 3.1.3, 3.2.1, 3.3.0]
+        ruby-version: [2.6.10, 2.7.7, 3.0.6, 3.1.3, 3.2.1, 3.3.0, 3.4.0-preview2]
     steps:
       - uses: actions/checkout@v3
 
@@ -47,7 +47,7 @@ jobs:
         env:
           BUNDLE_PATH: vendor/bundle
 
-      
+
       - name: Add to etc/hosts
         run: |
           sudo echo "127.0.0.1  gateway.netssh" | sudo tee -a /etc/hosts
@@ -78,17 +78,22 @@ jobs:
         env:
           NET_SSH_RUN_INTEGRATION_TESTS: 1
           CI: 1
+          RUBYOPT: ${{ startsWith(matrix.ruby, '3.4') && '--enable=frozen-string-literal' || '' }}
       - name: Run tests (without rbnacl)
         run: bundle exec rake test
         env:
           BUNDLE_GEMFILE: ./Gemfile.norbnacl
           NET_SSH_RUN_INTEGRATION_TESTS: 1
           CI: 1
+          RUBYOPT: ${{ startsWith(matrix.ruby, '3.4') && '--enable=frozen-string-literal' || '' }}
       - name: Run Tests (without ed25519)
         run: bundle exec rake test
         env:
           BUNDLE_GEMFILE: ./Gemfile.noed25519
           NET_SSH_RUN_INTEGRATION_TESTS: 1
           CI: 1
+          RUBYOPT: ${{ startsWith(matrix.ruby, '3.4') && '--enable=frozen-string-literal' || '' }}
       - name: Run test helper test
         run: bundle exec rake test_test
+        env:
+          RUBYOPT: ${{ startsWith(matrix.ruby, '3.4') && '--enable=frozen-string-literal' || '' }}
