@@ -57,7 +57,7 @@ module Net
             return false unless script.next(:first)
 
             if script.next(:first).remote?
-              self.string << script.next.to_s
+              self.string = "#{self.script.dup}#{script.next.to_s}"
               self.pos = pos
             end
 
