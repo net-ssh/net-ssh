@@ -281,7 +281,7 @@ module Transport
     def decrypt_implicit(type, data, options)
       cipher = factory.get(type, options.merge(encrypt: false))
       cipher.nonce = ["000000000000000000000032"].pack('H*') if options[:aead]
-      result = ""
+      result = +""
       sequence_number = 1
       pos = 0
       2.times do
@@ -289,7 +289,7 @@ module Transport
         len = cipher.read_length(encrypted_len, sequence_number)
         encrypted_data = data[pos + 4...pos + 4 + len]
         mac_data = data[pos + 4 + len...pos + (4 + len + cipher.mac_length)]
-        result <<  cipher.read_and_mac(encrypted_len + encrypted_data, mac_data.dup, sequence_number)
+        result << cipher.read_and_mac(encrypted_len + encrypted_data, mac_data.dup, sequence_number)
 
         sequence_number += 1
         pos += 4 + len + cipher.mac_length

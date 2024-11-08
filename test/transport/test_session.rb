@@ -408,7 +408,7 @@ module Transport
         if (proxy = options[:proxy])
           proxy.stubs("open").returns(socket)
         else
-          Socket.stubs(:tcp).with(host, options[:port] || TEST_PORT, nil, nil, { connect_timeout: options[:timeout] }).returns(socket)
+          Socket.stubs(:tcp).with(host, options[:port] || TEST_PORT, nil, nil, connect_timeout: options[:timeout]).returns(socket)
         end
         Net::SSH::Transport::ServerVersion.stubs(:new).returns(server_version)
         Net::SSH::Transport::Algorithms.stubs(:new).returns(algorithms)
