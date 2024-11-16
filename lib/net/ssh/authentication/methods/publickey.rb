@@ -44,7 +44,7 @@ module Net
           end
 
           def authenticate_with_alg(identity, next_service, username, alg, sig_alg = nil)
-            debug { "trying publickey (#{identity.fingerprint})" }
+            debug { "trying publickey (#{identity.fingerprint}) alg #{alg}" }
             send_request(identity, username, next_service, alg)
 
             message = session.next_message

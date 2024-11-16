@@ -20,7 +20,7 @@ class TestAgent < NetSSHTest
     @keys = [
       OpenSSL::PKey::RSA.new(1024),
       OpenSSL::PKey::DSA.new(1024),
-      OpenSSL::PKey::EC.new("prime256v1").generate_key
+      OpenSSL::PKey::EC.generate("prime256v1")
     ]
     @keys << Net::SSH::Authentication::ED25519::PrivKey.read(ED25519, nil) if Net::SSH::Authentication::ED25519Loader::LOADED
     @keys += @keys.map do |key|

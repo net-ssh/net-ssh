@@ -3,8 +3,6 @@ gem 'bcrypt_pbkdf', '~> 1.0' unless RUBY_PLATFORM == "java"
 
 require 'ed25519'
 
-require 'base64'
-
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/authentication/pub_key_fingerprint'
 require 'bcrypt_pbkdf' unless RUBY_PLATFORM == "java"
@@ -46,7 +44,7 @@ module Net
             raise ArgumentError.new("Expected #{MEND} at end of private key") unless datafull.end_with?(MEND)
 
             datab64 = datafull[MBEGIN.size...-MEND.size]
-            data = Base64.decode64(datab64)
+            data = datab64.unpack1("m")
             raise ArgumentError.new("Expected #{MAGIC} at start of decoded private key") unless data.start_with?(MAGIC)
 
             buffer = Net::SSH::Buffer.new(data[MAGIC.size + 1..-1])
@@ -134,7 +132,7 @@ module Net
 
           def to_pem
             # TODO this is not pem
-            ssh_type + Base64.encode64(@verify_key.to_bytes)
+            ssh_type + [@verify_key.to_bytes].pack("m")
           end
         end
 

@@ -1,7 +1,9 @@
 ARG RUBY_VERSION=3.1
 FROM ruby:${RUBY_VERSION}
 
-RUN apt update && apt install -y openssh-server sudo netcat \
+ARG BUNDLERV=
+
+RUN apt update && apt install -y openssh-server sudo netcat-openbsd \
   && useradd --create-home --shell '/bin/bash' --comment 'NetSSH' 'net_ssh_1' \
   && useradd --create-home --shell '/bin/bash' --comment 'NetSSH' 'net_ssh_2' \
   && echo net_ssh_1:foopwd | chpasswd \
@@ -20,7 +22,7 @@ COPY Gemfile net-ssh.gemspec $INSTALL_PATH/
 
 COPY lib/net/ssh/version.rb $INSTALL_PATH/lib/net/ssh/version.rb
 
-RUN gem install bundler && bundle install
+RUN gem install bundler ${BUNDLERV}  && bundle install
 
 COPY . $INSTALL_PATH/
 

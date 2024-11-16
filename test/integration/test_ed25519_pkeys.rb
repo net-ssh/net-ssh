@@ -13,8 +13,7 @@ unless ENV['NET_SSH_NO_ED25519']
 
     def test_in_file_no_password
       Dir.mktmpdir do |dir|
-        sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
-        sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N ''"
+        ssh_keygen "#{dir}/id_rsa_ed25519", "ed25519"
         set_authorized_key('net_ssh_1', "#{dir}/id_rsa_ed25519.pub")
 
         ret = Net::SSH.start("localhost", "net_ssh_1", { keys: "#{dir}/id_rsa_ed25519" }) do |ssh|
@@ -27,8 +26,7 @@ unless ENV['NET_SSH_NO_ED25519']
     def test_ssh_agent
       Dir.mktmpdir do |dir|
         with_agent do
-          sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
-          sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N 'pwd'"
+          ssh_keygen "#{dir}/id_rsa_ed25519", "ed25519"
           set_authorized_key('net_ssh_1', "#{dir}/id_rsa_ed25519.pub")
           ssh_add("#{dir}/id_rsa_ed25519", "pwd")
 
@@ -45,8 +43,7 @@ unless ENV['NET_SSH_NO_ED25519']
 
     def test_in_file_with_password
       Dir.mktmpdir do |dir|
-        sh "rm -rf #{dir}/id_rsa_ed25519 #{dir}/id_rsa_ed25519.pub"
-        sh "ssh-keygen -q -f #{dir}/id_rsa_ed25519 -t ed25519 -N 'pwd'"
+        ssh_keygen "#{dir}/id_rsa_ed25519", "ed25519"
         set_authorized_key('net_ssh_1', "#{dir}/id_rsa_ed25519.pub")
 
         # TODO: fix bug in net ssh which reads public key even if private key is there

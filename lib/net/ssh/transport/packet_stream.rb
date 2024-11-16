@@ -12,7 +12,7 @@ module Net
       # module. It adds SSH encryption, compression, and packet validation, as
       # per the SSH2 protocol. It also adds an abstraction for polling packets,
       # to allow for both blocking and non-blocking reads.
-      module PacketStream
+      module PacketStream # rubocop:disable Metrics/ModuleLength
         PROXY_COMMAND_HOST_IP = '<no hostip for proxy command>'.freeze
 
         include BufferedIo
@@ -123,12 +123,12 @@ module Net
         # Enqueues a packet to be sent, but does not immediately send the packet.
         # The given payload is pre-processed according to the algorithms specified
         # in the client state (compression, cipher, and hmac).
-        def enqueue_packet(payload)
+        def enqueue_packet(payload) # rubocop:disable Metrics/AbcSize
           # try to compress the packet
           payload = client.compress(payload)
 
           # the length of the packet, minus the padding
-          actual_length = (client.hmac.etm ? 0 : 4) + payload.bytesize + 1
+          actual_length = (client.hmac.etm || client.hmac.aead ? 0 : 4) + payload.bytesize + 1
 
           # compute the padding length
           padding_length = client.block_size - (actual_length % client.block_size)
@@ -144,11 +144,14 @@ module Net
 
           padding = Array.new(padding_length) { rand(256) }.pack("C*")
 
-          if client.hmac.etm
+          if client.cipher.implicit_mac?
+            unencrypted_data = [padding_length, payload, padding].pack("CA*A*")
+            message = client.cipher.update_cipher_mac(unencrypted_data, client.sequence_number)
+          elsif client.hmac.etm
             debug { "using encrypt-then-mac" }
 
             # Encrypt padding_length, payload, and padding. Take MAC
-            # from the unencrypted packet_lenght and the encrypted
+            # from the unencrypted packet_length and the encrypted
             # data.
             length_data = [packet_length].pack("N")
 
@@ -216,7 +219,7 @@ module Net
         # new Packet object.
         # rubocop:disable Metrics/AbcSize
         def poll_next_packet
-          aad_length = server.hmac.etm ? 4 : 0
+          aad_length = server.hmac.etm || server.hmac.aead ? 4 : 0
 
           if @packet.nil?
             minimum = server.block_size < 4 ? 4 : server.block_size
@@ -225,7 +228,11 @@ module Net
             data = read_available(minimum + aad_length)
 
             # decipher it
-            if server.hmac.etm
+            if server.cipher.implicit_mac?
+              @packet_length = server.cipher.read_length(data[0...4], server.sequence_number)
+              @packet = Net::SSH::Buffer.new
+              @mac_data = data
+            elsif server.hmac.etm
               @packet_length = data.unpack("N").first
               @mac_data = data
               @packet = Net::SSH::Buffer.new(server.update_cipher(data[aad_length..-1]))
@@ -238,31 +245,45 @@ module Net
           need = @packet_length + 4 - aad_length - server.block_size
           raise Net::SSH::Exception, "padding error, need #{need} block #{server.block_size}" if need % server.block_size != 0
 
-          return nil if available < need + server.hmac.mac_length
+          if server.cipher.implicit_mac?
+            return nil if available < need + server.cipher.mac_length
+          else
+            return nil if available < need + server.hmac.mac_length # rubocop:disable Style/IfInsideElse
+          end
 
           if need > 0
             # read the remainder of the packet and decrypt it.
             data = read_available(need)
-            @mac_data += data if server.hmac.etm
-            @packet.append(server.update_cipher(data))
+            @mac_data += data if server.hmac.etm || server.cipher.implicit_mac?
+            unless server.cipher.implicit_mac?
+              @packet.append(
+                server.update_cipher(data)
+              )
+            end
           end
 
-          # get the hmac from the tail of the packet (if one exists), and
-          # then validate it.
-          real_hmac = read_available(server.hmac.mac_length) || ""
+          if server.cipher.implicit_mac?
+            real_hmac = read_available(server.cipher.mac_length) || ""
+            @packet = Net::SSH::Buffer.new(server.cipher.read_and_mac(@mac_data, real_hmac, server.sequence_number))
+            padding_length = @packet.read_byte
+            payload = @packet.read(@packet_length - padding_length - 1)
+          else
+            # get the hmac from the tail of the packet (if one exists), and
+            # then validate it.
+            real_hmac = read_available(server.hmac.mac_length) || ""
 
-          @packet.append(server.final_cipher)
-          padding_length = @packet.read_byte
+            @packet.append(server.final_cipher)
+            padding_length = @packet.read_byte
 
-          payload = @packet.read(@packet_length - padding_length - 1)
+            payload = @packet.read(@packet_length - padding_length - 1)
 
-          my_computed_hmac = if server.hmac.etm
-                               server.hmac.digest([server.sequence_number, @mac_data].pack("NA*"))
-                             else
-                               server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
-                             end
-          raise Net::SSH::Exception, "corrupted hmac detected #{server.hmac.class}" if real_hmac != my_computed_hmac
-
+            my_computed_hmac = if server.hmac.etm
+                                 server.hmac.digest([server.sequence_number, @mac_data].pack("NA*"))
+                               else
+                                 server.hmac.digest([server.sequence_number, @packet.content].pack("NA*"))
+                               end
+            raise Net::SSH::Exception, "corrupted hmac detected #{server.hmac.class}" if real_hmac != my_computed_hmac
+          end
           # try to decompress the payload, in case compression is active
           payload = server.decompress(payload)
 

@@ -49,7 +49,7 @@ module Net
       MAJOR = 7
 
       # The minor component of this version of the Net::SSH library
-      MINOR = 1
+      MINOR = 3
 
       # The tiny component of this version of the Net::SSH library
       TINY  = 0

@@ -6,35 +6,63 @@
     myuser: vagrant
     mygroup: vagrant
     homedir: /home/vagrant
-    ruby_version: '2.0.0-p598'
+    ruby_version: '2.7.7'
+    ruby_versions_ssl1:
+      - '2.6.10'
+      - '2.7.7'
+      - '3.0.6'
     ruby_versions:
-      - '2.5.8'
-      - '2.6.6'
-      - '2.7.1'
-      - '3.0.1'
+      - '3.2.1'
+      - '3.1.3'
     rvm_install_path: '/usr/local/rvm'
     foopwd: "$6$mhOzf/yapZwS$3RwDl4GfWZ5VcfcsHrK9xNNTxyzLOJBsmMttDNaegIbXxMahV86.v/5HsNtit16MEl0EFf5CSW8Dz2yXV.8GB0"
     foo2pwd: "$6$JiB7y7.M0yI$Abt.ZGIc4DwkRWeI6nKxzzPUZcux7hLRXSdpoKoZvswJz1SZyg5GRQWn9pGID0dgC6e4wFglfW6ev/qZoTqGk/"
+    openssh_version: '9.3p1'
+    openssh_with_ssl1: False
   pre_tasks:
     - name: get currently installed ruby version
-      command: "{{rvm_install_path}}/rubies/ruby-{{ruby_version}}/bin/ruby -e 'puts \"#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}\"'"
+      command: "{{rvm_install_path}}/rubies/ruby-{{ruby_version}}/bin/ruby -e 'puts \"#{RUBY_VERSION}\"'"
       register: current_ruby_version
-      ignore_errors: True
+      ignore_errors: true
+    - name: check openssl version
+      shell: "openssl version"
+      ignore_errors: true
+      register: openssl_version_query
+    - name: Install openssl-1.1.1g
+      block:
+        - name: "Install make gcc"
+          command: sh -c "sudo apt-get update && sudo apt install -y make gcc"
+        - name: "Download openssl-1.1.1g sources"
+          unarchive:
+            src: https://www.openssl.org/source/openssl-1.1.1g.tar.gz
+            dest: /tmp
+            remote_src: True
+            validate_certs: False
+        - name: Install openssl 1.1
+          command: sh -c "./config --prefix=/opt/openssl-1.1.1g --openssldir=/opt/openssl-1.1.1g && make && sudo make install"
+          args:
+            chdir: /tmp/openssl-1.1.1g
+            creates: /opt/openssl-1.1.1g/lib/libssl.so
+      when:
+        openssl_version_query.stdout.find('OpenSSL 3.') != -1
   roles:
     - { role: rvm.ruby,
         tags: ruby,
-        become: yes,
+        become: true,
         rvm1_user: 'root',
-        rvm1_rubies: "{{ ruby_versions }}",
+        rvm1_rubies: "{{ ruby_versions_ssl1 }}",
         rvm1_install_path: "{{rvm_install_path}}",
         rvm1_install_flags: '--auto-dotfiles', # Make sure RVM sets itself up so the user has access to it
-        rvm1_gpg_key_server: pool.sks-keyservers.net,
-        when: "'{{current_ruby_version.stdout|default()}}' != '{{ruby_version}}' and not no_rvm" }
+        rvm1_ruby_install_flags: '--with-openssl-dir=/opt/openssl-1.1.1g',
+        rvm1_gpg_key_server: 'hkp://keys.openpgp.org',
+        when: "current_ruby_version.stdout|default() != ruby_version and not no_rvm and openssl_version_query.stdout.find('OpenSSL 3.') != -1" 
+      }
   tasks:
     - name: Install packages
       apt:
         pkg:
           - libssl-dev
+          - build-essential
     - group: name="{{mygroup}}" state=present
     - user: name=net_ssh_1 password="{{foopwd}}" group="{{mygroup}}" state=present
     - user: name=net_ssh_2 password="{{foo2pwd}}" group="{{mygroup}}" state=present
@@ -45,14 +73,24 @@
     - lineinfile: dest=/etc/sudoers.d/net_ssh_1 mode=0440 state=present create=yes
         line='net_ssh_2 ALL=(ALL) NOPASSWD:ALL' regexp=net_ssh_2
     - unarchive:
-        src: https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.9p1.tar.gz
+        src: https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-{{openssh_version}}.tar.gz
         dest: /tmp
         remote_src: True
         validate_certs: False
-    - name: building and installing openssh 7.9 (used in forward test)
+    - name: building and installing openssh {{openssh_version}} with OpenSSL 1 (used in forward test)
+      command: sh -c "LD_LIBRARY_PATH=/opt/openssl-1.1.1g/lib ./configure --prefix=/opt/net-ssh-openssh --with-ssl-dir=/opt/openssl-1.1.1g --with-ldflags="-fcommon -L/opt/openssl-1.1.1g/lib" && make && sudo make install"
+      args:
+        chdir: /tmp/openssh-{{openssh_version}}/
+        creates: /opt/net-ssh-openssh
+      when:
+        openssh_with_ssl1 == True
+    - name: building and installing openssh {{openssh_version}} (used in forward test)
       command: sh -c "./configure --prefix=/opt/net-ssh-openssh && make && sudo make install"
       args:
-        chdir: /tmp/openssh-7.9p1/
+        chdir: /tmp/openssh-{{openssh_version}}/
+        creates: /opt/net-ssh-openssh
+      when:
+        openssh_with_ssl1 != True
     - name: drop installed openssh etc/ in favor of symlink
       file:
         state: absent

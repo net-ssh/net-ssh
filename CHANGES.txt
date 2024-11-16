@@ -1,3 +1,27 @@
+=== 7.3.0 rc0
+
+ * aes(128|256)gcm [#946]
+
+=== 7.2.2
+
+  * ruby 3.3.0: base64 fix
+
+=== 7.2.1 rc1
+
+  * feat: allow load of certkey from string [#926]
+  * fix: fix for  Socket#recv returning nil on ruby 3.3.0 [#928]
+
+=== 7.2.0
+
+  * Add debugging information for algorithm of pubkey in use [#918]
+
+=== 7.2.0 rc1
+
+  * Allow IdentityAgent as option to Net::SSH.start [#912]
+
+=== 7.2.0 beta1
+
+  * Support `chacha20-poly1305@opnessh.com` cypher if `RbNaCl` gem is installed [#908]
 
 === 7.1.0
 

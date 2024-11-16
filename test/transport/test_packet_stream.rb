@@ -203,6 +203,24 @@ module Transport
     end
 
     PACKETS = {
+      'chacha20-poly1305@openssh.com' => {
+        'implicit' => {
+          false => ["5aa01d1e3eff7c277d19f111a384b229fec8652db616d9350d6ef9f51f2011637b60d406673fffad5a647eba"].pack('H*'),
+          :standard => ["5aa01d263f83e1451c7d981526aa8e03b3ec44857a5dde471d76ba92fd92c9a77911c43ca96a13e37a5b1a346508016793f4a57a"].pack('H*')
+        }
+      },
+      'aes128-gcm@openssh.com' => {
+        'implicit' => {
+          false => ["00000020462f5dc27e3ba9da491bbfa70deb5183ffc808c9178e505374ed437b46eb2474c470d68dc015cc677c91794a0d5603a8"].pack('H*'),
+          :standard => ["000000204f53c0a01f5fc0decc35838d40cf702b33830fbb07961334235d0cf9001c211636ef2046feff51f3e1d5e7375308896d"].pack('H*')
+        }
+      },
+      'aes256-gcm@openssh.com' => {
+        'implicit' => {
+          false => ["00000020dfd5571fd6a781e395dcf18552a2b93628bf6a2f3ce456bd08dd3a457094b967d47977a309126e7d02dfc8d5f91a5588"].pack('H*'),
+          :standard => ["00000020d6a9ca7db7c3e8e710f2cdaf1f86989ee4f46d5d2cfc15da5f6d75c73663bc056b6644958591f155d06816aa87adbaff"].pack('H*')
+        }
+      },
       "3des-cbc" => {
         "hmac-md5" => {
           false => "\003\352\031\261k\243\200\204\301\203]!\a\306\217\201\a[^\304\317\322\264\265~\361\017\n\205\272, \000\032w\312\t\306\374\271\345p\215\224\373\363\v\261",
@@ -1051,8 +1069,9 @@ module Transport
       PACKETS[key].merge!(val)
     end
 
-    ciphers = Net::SSH::Transport::CipherFactory::SSH_TO_OSSL.keys
-    hmacs = Net::SSH::Transport::HMAC::MAP.keys
+    ciphers = Net::SSH::Transport::CipherFactory::SSH_TO_OSSL.keys + Net::SSH::Transport::CipherFactory::SSH_TO_CLASS.keys
+    hmacs = Net::SSH::Transport::HMAC::MAP.keys + ["implicit"]
+    implicit_ciphers = %w[chacha20-poly1305@openssh.com aes256-gcm@openssh.com aes128-gcm@openssh.com]
 
     ciphers.each do |cipher_name|
       unless Net::SSH::Transport::CipherFactory.supported?(cipher_name) && PACKETS.key?(cipher_name)
@@ -1069,13 +1088,24 @@ module Transport
 
       hmacs.each do |hmac_name|
         [false, :standard].each do |compress|
+          next if (hmac_name != "implicit" && implicit_ciphers.include?(cipher_name)) ||
+                  (hmac_name == "implicit" && !implicit_ciphers.include?(cipher_name))
+
           cipher_method_name = cipher_name.gsub(/\W/, "_")
           hmac_method_name   = hmac_name.gsub(/\W/, "_")
 
           define_method("test_next_packet_with_#{cipher_method_name}_and_#{hmac_method_name}_and_#{compress}_compression") do
             opts = { shared: "123", hash: "^&*", digester: OpenSSL::Digest::SHA1 }
-            cipher = Net::SSH::Transport::CipherFactory.get(cipher_name, opts.merge(key: "ABC", decrypt: true, iv: "abc"))
-            hmac = Net::SSH::Transport::HMAC.get(hmac_name, "{}|", opts)
+            key = "ABC"
+            cipher = Net::SSH::Transport::CipherFactory.get(cipher_name, opts.merge(key: key, decrypt: true, iv: "abc"))
+            hmac =
+              if cipher.implicit_mac?
+                cipher.implicit_mac
+              else
+                Net::SSH::Transport::HMAC.get(hmac_name, "{}|", opts)
+              end
+
+            cipher.nonce = ["000000000000000000000031"].pack('H*') if hmac.respond_to?(:aead) && hmac.aead
 
             stream.server.set cipher: cipher, hmac: hmac, compression: compress
             stream.stubs(:recv).returns(PACKETS[cipher_name][hmac_name][compress])
@@ -1091,8 +1121,16 @@ module Transport
 
           define_method("test_enqueue_packet_with_#{cipher_method_name}_and_#{hmac_method_name}_and_#{compress}_compression") do
             opts = { shared: "123", digester: OpenSSL::Digest::SHA1, hash: "^&*" }
-            cipher = Net::SSH::Transport::CipherFactory.get(cipher_name, opts.merge(key: "ABC", iv: "abc", encrypt: true))
-            hmac = Net::SSH::Transport::HMAC.get(hmac_name, "{}|", opts)
+            key = "ABC"
+            cipher = Net::SSH::Transport::CipherFactory.get(cipher_name, opts.merge(key: key, iv: "abc", encrypt: true))
+            hmac =
+              if cipher.implicit_mac?
+                cipher.implicit_mac
+              else
+                Net::SSH::Transport::HMAC.get(hmac_name, "{}|", opts)
+              end
+
+            cipher.nonce = ["000000000000000000000031"].pack('H*') if hmac.respond_to?(:aead) && hmac.aead
 
             srand(100)
             stream.client.set cipher: cipher, hmac: hmac, compression: compress

@@ -235,7 +235,7 @@ Lint/UselessTimes:
 # Offense count: 205
 # Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
 Metrics/AbcSize:
-  Max: 74
+  Max: 75
 
 # Offense count: 16
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
@@ -251,7 +251,7 @@ Metrics/BlockNesting:
 # Offense count: 33
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
-  Max: 488
+  Max: 350
 
 # Offense count: 38
 # Configuration parameters: IgnoredMethods.

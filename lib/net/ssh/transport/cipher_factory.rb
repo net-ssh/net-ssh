@@ -1,7 +1,11 @@
 require 'openssl'
 require 'net/ssh/transport/ctr.rb'
+require 'net/ssh/transport/aes128_gcm'
+require 'net/ssh/transport/aes256_gcm'
 require 'net/ssh/transport/key_expander'
 require 'net/ssh/transport/identity_cipher'
+require 'net/ssh/transport/chacha20_poly1305_cipher_loader'
+require 'net/ssh/transport/openssl_cipher_extensions'
 
 module Net
   module SSH
@@ -29,13 +33,25 @@ module Net
           'none' => 'none'
         }
 
+        SSH_TO_CLASS = {
+          'aes256-gcm@openssh.com' => Net::SSH::Transport::AES256_GCM,
+          'aes128-gcm@openssh.com' => Net::SSH::Transport::AES128_GCM
+        }.tap do |hash|
+          if Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
+            hash['chacha20-poly1305@openssh.com'] =
+              Net::SSH::Transport::ChaCha20Poly1305Cipher
+          end
+        end
+
         # Returns true if the underlying OpenSSL library supports the given cipher,
         # and false otherwise.
         def self.supported?(name)
+          return true if SSH_TO_CLASS.key?(name)
+
           ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
           return true if ossl_name == "none"
 
-          return OpenSSL::Cipher.ciphers.include?(ossl_name)
+          return SSH_TO_CLASS.key?(name) || OpenSSL::Cipher.ciphers.include?(ossl_name)
         end
 
         # Retrieves a new instance of the named algorithm. The new instance
@@ -44,6 +60,13 @@ module Net
         # cipher will be put into encryption or decryption mode, based on the
         # value of the +encrypt+ parameter.
         def self.get(name, options = {})
+          klass = SSH_TO_CLASS[name]
+          unless klass.nil?
+            key_len = klass.key_length
+            key = Net::SSH::Transport::KeyExpander.expand_key(key_len, options[:key], options)
+            return klass.new(encrypt: options[:encrypt], key: key)
+          end
+
           ossl_name = SSH_TO_OSSL[name] or raise NotImplementedError, "unimplemented cipher `#{name}'"
           return IdentityCipher if ossl_name == "none"
 
@@ -53,6 +76,7 @@ module Net
 
           cipher.padding = 0
 
+          cipher.extend(Net::SSH::Transport::OpenSSLCipherExtensions)
           if name =~ /-ctr(@openssh.org)?$/
             if ossl_name !~ /-ctr/
               cipher.extend(Net::SSH::Transport::CTR)
@@ -75,6 +99,9 @@ module Net
         # of the tuple.
         # if :iv_len option is supplied the third return value will be ivlen
         def self.get_lengths(name, options = {})
+          klass = SSH_TO_CLASS[name]
+          return [klass.key_length, klass.block_size] unless klass.nil?
+
           ossl_name = SSH_TO_OSSL[name]
           if ossl_name.nil? || ossl_name == "none"
             result = [0, 0]

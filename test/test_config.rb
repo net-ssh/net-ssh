@@ -319,6 +319,12 @@ class TestConfig < NetSSHTest
     assert net_ssh[:proxy]
   end
 
+  def test_load_with_identity_agent
+    config = Net::SSH::Config.load(config(:identity_agent), "use-agent")
+    net_ssh = Net::SSH::Config.translate(config)
+    assert_equal "/path/to/auth.sock", net_ssh[:identity_agent]
+  end
+
   def test_load_with_include_keyword
     config = Net::SSH::Config.load(config(:include), "xyz")
     net_ssh = Net::SSH::Config.translate(config)

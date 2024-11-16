@@ -23,8 +23,7 @@ class TestChannel < NetSSHTest
   def setup_ssh_env(&block)
     tmpdir do |dir|
       @key_id_rsa = "#{dir}/id_rsa"
-      sh "rm -rf #{@key_id_rsa} #{@key_id_rsa}.pub"
-      sh "ssh-keygen -q -f #{@key_id_rsa} -t rsa -N ''"
+      ssh_keygen @key_id_rsa, "rsa"
       set_authorized_key(user, "#{@key_id_rsa}.pub")
       yield
     end

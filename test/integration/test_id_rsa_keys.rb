@@ -12,8 +12,7 @@ class TestIDRSAPKeys < NetSSHTest
 
   def test_in_file_no_password
     tmpdir do |dir|
-      sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
-      sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N ''"
+      ssh_keygen "#{dir}/id_rsa", "rsa"
       set_authorized_key('net_ssh_1', "#{dir}/id_rsa.pub")
 
       ret = Net::SSH.start("localhost", "net_ssh_1", { keys: "#{dir}/id_rsa" }) do |ssh|
@@ -27,8 +26,7 @@ class TestIDRSAPKeys < NetSSHTest
   def test_ssh_agent
     tmpdir do |dir|
       with_agent do
-        sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
-        sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd123'"
+        ssh_keygen "#{dir}/id_rsa", "rsa", 'pwd123'
         set_authorized_key('net_ssh_1', "#{dir}/id_rsa.pub")
         ssh_add("#{dir}/id_rsa", "pwd123")
 
@@ -43,8 +41,7 @@ class TestIDRSAPKeys < NetSSHTest
   def test_ssh_agent_ignores_if_already_in_agent
     tmpdir do |dir|
       with_agent do
-        sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
-        sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd123'"
+        ssh_keygen "#{dir}/id_rsa", "rsa", 'pwd123'
         set_authorized_key('net_ssh_1', "#{dir}/id_rsa.pub")
         ssh_add("#{dir}/id_rsa", "pwd123")
 
@@ -58,8 +55,7 @@ class TestIDRSAPKeys < NetSSHTest
 
   def test_in_file_with_password
     tmpdir do |dir|
-      sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
-      sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd12'"
+      ssh_keygen "#{dir}/id_rsa", "rsa", 'pwd12'
       set_authorized_key('net_ssh_1', "#{dir}/id_rsa.pub")
 
       ret = Net::SSH.start("localhost", "net_ssh_1", { keys: "#{dir}/id_rsa", passphrase: 'pwd12' }) do |ssh|
@@ -72,8 +68,7 @@ class TestIDRSAPKeys < NetSSHTest
 
   def test_asks_for_passwords_when_read_from_memory
     tmpdir do |dir|
-      sh "rm -rf #{dir}/id_rsa #{dir}/id_rsa.pub"
-      sh "ssh-keygen -q -f #{dir}/id_rsa -t rsa -N 'pwd12'"
+      ssh_keygen "#{dir}/id_rsa", "rsa", 'pwd12'
       set_authorized_key('net_ssh_1', "#{dir}/id_rsa.pub")
       private_key = File.read("#{dir}/id_rsa")
 

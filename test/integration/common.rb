@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../../lib"
 
 require_relative '../common'
-require 'mocha/setup'
+require 'mocha/minitest'
 require 'pty'
 require 'expect'
 
@@ -17,6 +17,23 @@ module IntegrationTestHelpers
   def tmpdir(&block)
     Dir.mktmpdir do |dir|
       yield(dir)
+    end
+  end
+
+  def sshd_8_or_later?
+    !!(`sshd  -v 2>&1 |grep 'OpenSSH_'` =~ /OpenSSH_8./)
+  end
+
+  def ssh_keygen(file, type = 'rsa', password = '')
+    sh "rm -rf #{file} #{file}.pub"
+    sh "ssh-keygen #{ssh_keygen_format} -q -f #{file} -t #{type} -N '#{password}'"
+  end
+
+  def ssh_keygen_format
+    if Net::SSH::Authentication::ED25519Loader::LOADED
+      ""
+    else
+      "-m PEM"
     end
   end
 
@@ -110,15 +127,18 @@ module IntegrationTestHelpers
   def start_sshd_7_or_later(port = '2200', config: nil, debug: false)
     pid = nil
     sshpidfile = nil
+    sshlogpath = nil
     if config
       with_lines_as_tempfile(config, debug: debug) do |path, pidpath|
         puts "DEBUG - SSH LOG: #{path}-log.txt config: #{path}" if debug
         raise "A leftover sshd is already running" if port_open?(port)
 
         extra_params = []
-        extra_params = ['-E', "#{path}-log.txt"] if debug
+        sshlogpath = "#{path}-log.txt"
+        extra_params = ['-E', sshlogpath]
         pid = spawn('sudo', '/opt/net-ssh-openssh/sbin/sshd', '-D', '-f', path, '-p', port, *extra_params)
         sshpidfile = pidpath
+
         yield pid, port
       end
     else
@@ -133,6 +153,10 @@ module IntegrationTestHelpers
     # properly, so we just have to hope that -15 (TERM) will manage to bring
     # down sshd.
     if sshpidfile
+      if !File.exist?(sshpidfile) && !sshlogpath.nil?
+        loglines = `sudo tail -n 10 #{sshlogpath}`.split("\n")
+        puts "ERROR: sshpidfile #{sshpidfile} does not exist\n\nSSH server logs:\n#{loglines.join("\n")}"
+      end
       sshpid = File.read(sshpidfile).strip
       system('sudo', 'kill', '-15', sshpid.to_s)
       begin
