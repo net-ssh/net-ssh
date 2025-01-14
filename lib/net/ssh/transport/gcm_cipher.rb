@@ -13,7 +13,7 @@ module Net
 
             attr_reader   :cipher
             attr_reader   :key
-            attr_accessor :nonce
+            attr_reader   :nonce
 
             #
             # Semantically gcm cipher supplies the OpenSSL iv interface with a nonce
