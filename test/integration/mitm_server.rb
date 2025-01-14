@@ -58,7 +58,7 @@ class MitmServer < TCPServer
             dlog "Local closed: #{e}"
             break
           end
-          if data.empty?
+          if data.nil? || data.empty?
             dlog "Local closed: #{data.inspect}"
             break
           end
