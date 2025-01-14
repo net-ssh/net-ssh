@@ -22,7 +22,7 @@ module Net
         # connection.
         def initialize
           extend(Net::SSH::Transport::PacketStream)
-          super(+"SSH-2.0-Test\r\n")
+          super(String.new("SSH-2.0-Test\r\n"))
 
           @script = Script.new
 

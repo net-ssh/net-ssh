@@ -281,7 +281,7 @@ module Transport
     def decrypt_implicit(type, data, options)
       cipher = factory.get(type, options.merge(encrypt: false))
       cipher.nonce = ["000000000000000000000032"].pack('H*') if options[:aead]
-      result = +""
+      result = String.new("")
       sequence_number = 1
       pos = 0
       2.times do
