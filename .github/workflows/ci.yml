@@ -78,14 +78,14 @@ jobs:
         env:
           NET_SSH_RUN_INTEGRATION_TESTS: 1
           CI: 1
-          RUBYOPT: ${{ startsWith(matrix.ruby, '3.4') && '--enable=frozen-string-literal' || '' }}
+          RUBYOPT: '--enable=frozen-string-literal'
       - name: Run tests (without rbnacl)
         run: bundle exec rake test
         env:
           BUNDLE_GEMFILE: ./Gemfile.norbnacl
           NET_SSH_RUN_INTEGRATION_TESTS: 1
           CI: 1
-          RUBYOPT: ${{ startsWith(matrix.ruby, '3.4') && '--enable=frozen-string-literal' || '' }}
+          RUBYOPT: '--enable=frozen-string-literal'
       - name: Run Tests (without ed25519)
         run: bundle exec rake test
         env:
