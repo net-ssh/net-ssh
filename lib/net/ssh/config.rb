@@ -88,6 +88,8 @@ module Net
           IO.foreach(file) do |line|
             next if line =~ /^\s*(?:#.*)?$/
 
+            line = line.split('#', 2)[0].strip()
+
             if line =~ /^\s*(\S+)\s*=(.*)$/
               key, value = $1, $2
             else
