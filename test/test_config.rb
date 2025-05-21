@@ -547,6 +547,74 @@ class TestConfig < NetSSHTest
     end
   end
 
+  def test_proxyjump_none_is_ignored
+    data = '
+      Host example
+        ProxyJump none
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+    end
+  end
+
+  def test_proxyjump_none_case_insensitive
+    data = '
+      Host example
+        ProxyJump NONE
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+    end
+  end
+
+  def test_proxyjump_none_takes_precedence_over_later_proxyjump
+    data = '
+      Host example
+        ProxyJump none
+      Host *
+        ProxyJump jumphost.example.com
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+    end
+  end
+
+  def test_proxycommand_none_takes_precedence_over_later_proxycommand
+    data = '
+      Host example
+        ProxyCommand none
+      Host *
+        ProxyCommand ssh -W %h:%p jumphost.example.com
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+      assert_nil options[:proxy_command]
+    end
+  end
+
+  def test_proxyjump_none_takes_precedence_over_later_proxycommand
+    data = '
+      Host example
+        ProxyJump none
+      Host *
+        ProxyCommand ssh -W %h:%p jumphost.example.com
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+      assert_nil options[:proxy_command]
+    end
+  end
+
   private
 
   def with_home_env(value, &block)
