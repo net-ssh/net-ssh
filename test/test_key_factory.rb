@@ -195,6 +195,15 @@ class TestKeyFactory < NetSSHTest
     end
   end
 
+  unless ENV['NET_SSH_NO_ED25519']
+    def test_parse_ed25519_public_key_comment
+      raise "No ED25519 set NET_SSH_NO_ED25519 to ignore this test" unless Net::SSH::Authentication::ED25519Loader::LOADED
+
+      File.expects(:read).with(@key_file).returns(ed25519_public_key_no_pwd)
+      assert_equal "vagrant@vagrant-ubuntu-trusty-64", Net::SSH::KeyFactory.load_public_key('/key-file').comment
+    end
+  end
+
   private
 
   def rsa_key_fingerprint_md5
@@ -335,6 +344,10 @@ class TestKeyFactory < NetSSHTest
       WEKt5v3QsUEgVrzkM4K9UbI=
       -----END PRIVATE KEY-----
     EOF
+  end
+
+  def ed25519_public_key_no_pwd
+    'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDB2NBh4GJPPUN1kXPMu8b633Xcv55WoKC3OkBjFAbzJ vagrant@vagrant-ubuntu-trusty-64'
   end
 
   def encrypted(key, password)
