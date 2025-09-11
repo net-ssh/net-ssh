@@ -2,6 +2,7 @@
 
 require_relative '../common'
 require 'timeout'
+require 'zlib'
 require 'net/ssh/transport/packet_stream'
 
 module Transport
@@ -1120,6 +1121,11 @@ module Transport
           end
 
           define_method("test_enqueue_packet_with_#{cipher_method_name}_and_#{hmac_method_name}_and_#{compress}_compression") do
+            if compress == :standard && Zlib.zlib_version.include?("zlib-ng")
+              puts "Skipping zlib #{cipher_method_name} and #{hmac_method_name} and #{compress} compression test for zlib-ng"
+              next
+            end
+
             opts = { shared: "123", digester: OpenSSL::Digest::SHA1, hash: "^&*" }
             key = "ABC"
             cipher = Net::SSH::Transport::CipherFactory.get(cipher_name, opts.merge(key: key, iv: "abc", encrypt: true))
