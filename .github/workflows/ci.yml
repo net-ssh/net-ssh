@@ -28,9 +28,9 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.ruby-version }}-gem-v3-${{ hashFiles('**/Gemfile') }}-${{ hashFiles('**/net-ssh.gemspec') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.ruby-version }}-gem-v3-
-      
+
       - name: Cache pip
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         id: pip-cache
         with:
           path: ~/.cache/pip
