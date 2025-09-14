@@ -21,7 +21,7 @@ jobs:
           python-version: 3.8
 
       - name: Cache bundler
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         id: bundler-cache
         with:
           path: vendor/bundle
