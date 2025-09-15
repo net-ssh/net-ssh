@@ -42,3 +42,17 @@ jobs:
 
     - name: Run ruby 3.0 with openssl3
       run: docker run --rm netssh_openssl3
+
+  test_zlib_ng:
+    name: Run test suite with docker and zlib-ng
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build docker images
+      run: docker build -t netssh_zlib_ng -f Dockerfile.zlib_ng .
+
+    - name: Run ruby with zlib-ng
+      run: docker run --rm netssh_zlib_ng

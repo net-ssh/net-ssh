@@ -1,0 +1,19 @@
+FROM fedora:latest
+
+ENV INSTALL_PATH="/netssh"
+
+RUN dnf install -y openssl ruby ruby-devel git make gcc zlib-ng
+
+WORKDIR $INSTALL_PATH
+
+COPY Gemfile net-ssh.gemspec $INSTALL_PATH/
+
+COPY lib/net/ssh/version.rb $INSTALL_PATH/lib/net/ssh/version.rb
+
+RUN ls -l && gem install bundler && bundle install
+
+COPY . $INSTALL_PATH/
+
+CMD openssl version && ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION' && \
+  rpm -q zlib-ng && ruby -rzlib -e 'puts Zlib.zlib_version' && \
+  rake test
