@@ -409,7 +409,7 @@ module Net
           channel[:invisible] = true
 
           begin
-            agent = Authentication::Agent.connect(logger, session.options[:agent_socket_factory])
+            agent = Authentication::Agent.connect(logger, session.options[:agent_socket_factory], session.options[:identity_agent])
             if (agent.socket.is_a? ::IO)
               prepare_client(agent.socket, channel, :agent)
             else
