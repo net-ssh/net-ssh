@@ -108,7 +108,7 @@ module Net
     # * :bind_address => the IP address on the connecting machine to use in
     #   establishing connection. (:bind_address is discarded if :proxy
     #   is set.)
-    # * :check_host_ip => Also ckeck IP address when connecting to remote host.
+    # * :check_host_ip => Also check IP address when connecting to remote host.
     #   Defaults to +true+.
     # * :compression => the compression algorithm to use, or +true+ to use
     #   whatever is supported.
