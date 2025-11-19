@@ -102,8 +102,8 @@ module Net
         # SSH known-host files.
         def host_as_string
           @host_as_string ||= begin
-            string = String.new("#{host}")
-            string = String.new("[#{string}]:#{port}") if port != DEFAULT_PORT
+            string = +"#{host}"
+            string = +"[#{string}]:#{port}" if port != DEFAULT_PORT
 
             peer_ip = socket.peer_ip
 
