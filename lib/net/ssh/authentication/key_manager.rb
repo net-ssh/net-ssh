@@ -123,9 +123,14 @@ module Net
           if agent
             agent.identities.each do |key|
               corresponding_user_identity = user_identities.detect { |identity|
-                identity[:public_key] && identity[:public_key].to_pem == key.to_pem
+                identity[:public_key] && identity[:public_key].to_blob == key.to_blob
               }
-              user_identities.delete(corresponding_user_identity) if corresponding_user_identity
+              if corresponding_user_identity
+                user_identities.delete_if do |ui|
+                  # OpenSSL raises TypeError when OpenSSL::PKey::EC::Point is compared with incompatible class
+                  ui[:public_key].class == corresponding_user_identity[:public_key].class && ui == corresponding_user_identity
+                end
+              end
 
               if !options[:keys_only] || corresponding_user_identity
                 known_identities[key] = { from: :agent, identity: key }
