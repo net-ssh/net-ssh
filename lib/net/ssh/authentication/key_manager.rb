@@ -172,6 +172,10 @@ module Net
         def sign(identity, data, sig_alg = nil)
           info = known_identities[identity] or raise KeyManagerError, "the given identity is unknown to the key manager"
 
+          if info[:from] == :pubkey_file_only
+            raise KeyManagerError, "the given identity is a public key only and cannot be used for signing without an agent"
+          end
+
           if info[:key].nil? && info[:from] == :file
             begin
               info[:key] = KeyFactory.load_private_key(info[:file], options[:passphrase], !options[:non_interactive], options[:password_prompt])
@@ -252,7 +256,7 @@ module Net
               cert_file = file + "-cert.pub"
               public_key_file = file + ".pub"
               if file.end_with?(".pub")
-                identity[:load_from] = :pubkey_file
+                identity[:load_from] = :pubkey_file_only
                 identity[:pubkey_file] = file
                 identity.delete(:privkey_file)
               elsif readable_file?(cert_file)
@@ -286,7 +290,10 @@ module Net
             case identity[:load_from]
             when :pubkey_file
               key = KeyFactory.load_public_key(identity[:pubkey_file])
-              { public_key: key, from: :file, file: identity[:privkey_file] }
+              { public_key: key, from: :pubkey_file, file: identity[:privkey_file] }
+            when :pubkey_file_only
+              key = KeyFactory.load_public_key(identity[:pubkey_file])
+              { public_key: key, from: :pubkey_file_only, file: identity[:privkey_file] }
             when :privkey_file
               private_key = KeyFactory.load_private_key(
                 identity[:privkey_file], options[:passphrase], ask_passphrase, options[:password_prompt]
