@@ -1,3 +1,8 @@
+=== 7.3.1 rc1
+
+  * Support frozen string literals [#958]
+  * GCM cipher: change nonce to attr_reader (remove public writer)
+
 === 7.3.0 rc0
 
  * aes(128|256)gcm [#946]
