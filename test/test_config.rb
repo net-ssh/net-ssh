@@ -169,7 +169,7 @@ class TestConfig < NetSSHTest
     assert_equal 2,         net_ssh[:keepalive_interval]
     assert_equal 'MD5',     net_ssh[:fingerprint_hash]
     assert_equal true,      net_ssh[:keepalive]
-    assert_equal '/dev/null', net_ssh[:user_known_hosts_file]
+    assert_equal ['/dev/null'], net_ssh[:user_known_hosts_file]
     assert_equal :never, net_ssh[:verify_host_key]
   end
 
@@ -544,6 +544,28 @@ class TestConfig < NetSSHTest
       proxy.build_proxy_command_equivalent if proxy.is_a? Net::SSH::Proxy::Jump
 
       assert_equal 'ssh -W %h:%p jump2', config[:proxy].command_line_template
+    end
+  end
+
+  def test_single_user_known_hosts_is_array
+    data = '
+      Host *
+        UserKnownHostsFile ~/.special_known_hosts
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.for("foo", [f])
+      assert_equal ["~/.special_known_hosts"], config[:user_known_hosts_file]
+    end
+  end
+
+  def test_multiple_user_known_hosts
+    data = '
+      Host *
+        UserKnownHostsFile ~/.ssh/known_hosts ~/.special_known_hosts
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.for("foo", [f])
+      assert_equal ["~/.ssh/known_hosts", "~/.special_known_hosts"], config[:user_known_hosts_file]
     end
   end
 
