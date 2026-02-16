@@ -50,13 +50,21 @@ module Net
                 message.read_long.times do
                   text = message.read_string
                   echo = message.read_bool
-                  password_to_send = password || (prompter && prompter.ask(text, echo))
-                  responses << password_to_send
-                end
 
-                # if the password failed the first time around, don't try
-                # and use it on subsequent requests.
-                password = nil
+                  # if request is for password, handle as normal
+                  # otherwise grab yes keyword from the prompt and enter it.
+                  if text.match(/[Pp]assword/)
+                    password_to_send = password || (prompter && prompter.ask(text, echo))
+
+                    # if the password failed the first time around, don't try
+                    # and use it on subsequent requests. Moved into the if/else
+                    password = nil
+                  elsif response = text.match(/(yes|y)\//i)
+                    debug { " response: #{response}"}
+                    password_to_send = response[1]
+                  end
+                    responses << password_to_send
+                end
 
                 msg = Buffer.from(:byte, USERAUTH_INFO_RESPONSE, :long, responses.length, :string, responses)
                 send_message(msg)
