@@ -122,6 +122,11 @@ module Transport
                    algorithms(kex: %w[+diffie-hellman-group1-sha1])[:kex]
     end
 
+    def test_constructor_with_preferred_kex_supports_prepend
+      assert_equal %w[diffie-hellman-group1-sha1] + x25519_kex + ec_kex + %w[diffie-hellman-group-exchange-sha256 diffie-hellman-group14-sha256 diffie-hellman-group14-sha1 diffie-hellman-group-exchange-sha1],
+                   algorithms(kex: %w[^diffie-hellman-group1-sha1])[:kex]
+    end
+
     def test_constructor_with_preferred_kex_supports_removals_with_wildcard
       assert_equal x25519_kex + ec_kex + %w[diffie-hellman-group-exchange-sha256 diffie-hellman-group14-sha256],
                    algorithms(kex: %w[-diffie-hellman-group*-sha1 -diffie-hellman-group-exchange-sha1])[:kex]
@@ -147,9 +152,14 @@ module Transport
                    algorithms(encryption: %w[+3des-cbc])[:encryption]
     end
 
+    def test_constructor_with_preferred_encryption_supports_prepend
+      assert_equal %w[3des-cbc] + chacha_poly_cipher + %w[aes256-ctr aes192-ctr aes128-ctr aes256-gcm@openssh.com aes128-gcm@openssh.com aes256-cbc aes192-cbc aes128-cbc rijndael-cbc@lysator.liu.se blowfish-ctr blowfish-cbc cast128-ctr cast128-cbc 3des-ctr idea-cbc none],
+                   algorithms(encryption: %w[^3des-cbc])[:encryption]
+    end
+
     def test_constructor_with_preferred_encryption_supports_removals_with_wildcard
       assert_equal chacha_poly_cipher + %w[aes256-ctr aes192-ctr aes128-ctr aes256-gcm@openssh.com aes128-gcm@openssh.com cast128-ctr],
-                   algorithms(encryption: %w[-rijndael-cbc@lysator.liu.se -blowfish-* -3des-* -*-cbc -none])[:encryption]
+                   algorithms(encryption: %w[-rijndael-cbc@lysator.liu.se blowfish-* 3des-* *-cbc none])[:encryption]
     end
 
     def test_constructor_with_preferred_hmac_should_put_preferred_hmac_first
@@ -166,13 +176,18 @@ module Transport
     end
 
     def test_constructor_with_preferred_hmac_supports_additions
-      assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha1 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96],
-                   algorithms(hmac: %w[+hmac-md5-96 -none])[:hmac]
+      assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha1 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96 none],
+                   algorithms(hmac: %w[+none])[:hmac]
+    end
+
+    def test_constructor_with_preferred_hmac_supports_prepend
+      assert_equal %w[none hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha1 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96],
+                   algorithms(hmac: %w[^none])[:hmac]
     end
 
     def test_constructor_with_preferred_hmac_supports_removals_with_wildcard
       assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-ripemd160 hmac-ripemd160@openssh.com],
-                   algorithms(hmac: %w[-hmac-sha1* -hmac-md5* -none])[:hmac]
+                   algorithms(hmac: %w[-hmac-sha1* hmac-md5* none])[:hmac]
     end
 
     def test_constructor_with_preferred_compression_should_put_preferred_compression_first
@@ -200,7 +215,7 @@ module Transport
     end
 
     def test_constructor_with_host_key_removals_with_wildcard
-      assert_equal ed_host_keys + %w[ecdsa-sha2-nistp521-cert-v01@openssh.com ecdsa-sha2-nistp384-cert-v01@openssh.com ecdsa-sha2-nistp256-cert-v01@openssh.com ecdsa-sha2-nistp521 ecdsa-sha2-nistp384 ecdsa-sha2-nistp256], algorithms(host_key: %w[-ssh-rsa* -ssh-dss -rsa-sha*])[:host_key]
+      assert_equal ed_host_keys + %w[ecdsa-sha2-nistp521-cert-v01@openssh.com ecdsa-sha2-nistp384-cert-v01@openssh.com ecdsa-sha2-nistp256-cert-v01@openssh.com ecdsa-sha2-nistp521 ecdsa-sha2-nistp384 ecdsa-sha2-nistp256], algorithms(host_key: %w[-ssh-rsa* ssh-dss rsa-sha*])[:host_key]
     end
 
     def test_initial_state_should_be_neither_pending_nor_initialized

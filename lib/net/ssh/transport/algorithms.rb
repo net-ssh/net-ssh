@@ -302,22 +302,28 @@ module Net
           list = []
           option = Array(option).compact.uniq
 
-          if option.first && option.first.start_with?('+', '-')
+          if option.first && option.first.start_with?('+', '-', '^')
             list = supported.dup
 
-            appends = option.select { |opt| opt.start_with?('+') }.map { |opt| opt[1..-1] }
-            deletions = option.select { |opt| opt.start_with?('-') }.map { |opt| opt[1..-1] }
+            modifier = option.first[0]
+            options_without_modifier = [option.first[1..-1]] + option[1..-1]
 
-            list.concat(appends)
-
-            deletions.each do |opt|
-              if opt.include?('*')
-                opt_escaped = Regexp.escape(opt)
-                algo_re = /\A#{opt_escaped.gsub('\*', '[A-Za-z\d\-@\.]*')}\z/
-                list.delete_if { |existing_opt| algo_re.match(existing_opt) }
-              else
-                list.delete(opt)
+            case modifier
+            when '+'
+              list.concat(options_without_modifier)
+            when '^'
+              list.unshift(*options_without_modifier)
+            when '-'
+              options_without_modifier.each do |opt|
+                if opt.include?('*')
+                  opt_escaped = Regexp.escape(opt)
+                  algo_re = /\A#{opt_escaped.gsub('\*', '[A-Za-z\d\-@\.]*')}\z/
+                  list.delete_if { |existing_opt| algo_re.match(existing_opt) }
+                else
+                  list.delete(opt)
+                end
               end
+
             end
 
             list.uniq!
