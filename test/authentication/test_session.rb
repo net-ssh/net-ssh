@@ -168,13 +168,11 @@ module Authentication
     private
 
     def session(options = {})
-      session_opts = options.clone
-      session_opts[:pubkey_algorithms] = %w[ssh-rsa]
-      @session ||= Net::SSH::Authentication::Session.new(transport(options), session_opts)
+      @session ||= Net::SSH::Authentication::Session.new(transport(options), options)
     end
 
     def transport(options = {})
-      @transport ||= MockTransport.new(options)
+      @transport ||= MockTransport.new(options.merge(pubkey_algorithms: %w[ssh-rsa]))
     end
 
     def assert_none_request(packet)
