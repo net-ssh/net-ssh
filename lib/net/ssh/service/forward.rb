@@ -48,9 +48,9 @@ module Net
         # If three arguments are given, it is as if the local bind address is
         # "127.0.0.1", and the rest are applied as above.
         #
-        # To request an ephemeral port on the remote server, provide 0 (zero) for
-        # the port number. In all cases, this method will return the port that
-        # has been assigned.
+        # To request an ephemeral port on the local server, provide 0 (zero) for
+        # the local port number. In all cases, this method will return the port 
+        # that has been assigned.
         #
         #   ssh.forward.local(1234, "www.capify.org", 80)
         #   assigned_port = ssh.forward.local("0.0.0.0", 0, "www.capify.org", 80)
