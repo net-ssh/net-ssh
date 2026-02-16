@@ -93,7 +93,38 @@ module Authentication
 
       assert_equal 1, identities.length
       assert_equal rsa_cert.to_blob, identities.first.to_blob
-      assert_equal({ from: :file, file: first }, manager.known_identities[rsa_cert])
+      assert_equal({ from: :pubkey_file, file: first }, manager.known_identities[rsa_cert])
+    end
+
+    def test_each_identity_should_load_from_public_key_files
+      manager.stubs(:agent).returns(nil)
+      first = File.expand_path("/first")
+      second = File.expand_path("/second")
+      stub_file_public_key first, rsa
+      stub_file_public_key second, dsa
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 2, identities.length
+      assert_equal rsa.to_blob, identities.first.to_blob
+      assert_equal dsa.to_blob, identities.last.to_blob
+
+      assert_equal({ from: :pubkey_file_only, file: nil }, manager.known_identities[rsa])
+      assert_equal({ from: :pubkey_file_only, file: nil }, manager.known_identities[dsa])
+    end
+
+    def test_sign_with_public_key_identity_should_not_try_loading_private_key
+      manager.stubs(:agent).returns(nil)
+      first = File.expand_path("/first")
+      stub_file_public_key first, rsa
+
+      manager.each_identity { |identity| }
+
+      Net::SSH::KeyFactory.expects(:load_private_key).never
+      assert_raises Net::SSH::Authentication::KeyManagerError do
+        manager.sign(rsa, "hello, world")
+      end
     end
 
     def test_each_identity_should_use_cert_data
@@ -301,9 +332,7 @@ module Authentication
     end
 
     def stub_file_public_key(name, key)
-      manager.add(name)
-      File.stubs(:file?).with(name).returns(true)
-      File.stubs(:readable?).with(name).returns(true)
+      manager.add(name + ".pub")
       File.stubs(:file?).with(name + ".pub").returns(true)
       File.stubs(:readable?).with(name + ".pub").returns(true)
       File.stubs(:file?).with(name + "-cert.pub").returns(false)
