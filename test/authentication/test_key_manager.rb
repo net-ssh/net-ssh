@@ -217,12 +217,14 @@ module Authentication
     end
 
     def test_identities_without_public_key_files_should_not_be_touched_if_identity_loaded_from_agent
-      manager.stubs(:agent).returns(agent)
+      manager.stubs(:agent).returns(agent_with_ecdsa_keys)
 
       first = File.expand_path("/first")
       stub_file_private_key first, rsa, rsa_pk
       second = File.expand_path("/second")
       stub_file_private_key second, dsa, dsa_pk, passphrase: :should_not_be_asked
+      key3 = File.expand_path("/key3")
+      stub_file_private_key key3, ecdsa_sha2_nistp256, ecdsa_sha2_nistp256_pk
 
       identities = []
       manager.each_identity do |identity|
