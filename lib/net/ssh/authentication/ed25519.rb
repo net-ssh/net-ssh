@@ -105,9 +105,11 @@ module Net
           include Net::SSH::Authentication::PubKeyFingerprint
 
           attr_reader :verify_key
+          attr_accessor :comment
 
-          def initialize(data)
+          def initialize(data, comment = "")
             @verify_key = ::Ed25519::VerifyKey.new(data)
+            @comment = comment
           end
 
           def self.read_keyblob(buffer)
@@ -134,6 +136,10 @@ module Net
             # TODO this is not pem
             ssh_type + [@verify_key.to_bytes].pack("m")
           end
+
+          def to_ssh
+            "#{ssh_type} #{Base64.strict_encode64(to_blob)} #{comment}"
+          end
         end
 
         class PrivKey
@@ -143,12 +149,12 @@ module Net
           MEND = "-----END OPENSSH PRIVATE KEY-----\n"
           MAGIC = "openssh-key-v1"
 
-          attr_reader :sign_key
+          attr_reader :sign_key, :comment
 
           def initialize(buffer)
             pk = buffer.read_string
             sk = buffer.read_string
-            _comment = buffer.read_string
+            @comment = buffer.read_string
 
             @pk = pk
             @sign_key = SigningKeyFromFile.new(pk, sk)
@@ -167,7 +173,7 @@ module Net
           end
 
           def public_key
-            PubKey.new(@pk)
+            PubKey.new(@pk, @comment)
           end
 
           def ssh_do_sign(data, sig_alg = nil)
