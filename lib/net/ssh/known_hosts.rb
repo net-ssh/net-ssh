@@ -61,6 +61,20 @@ module Net
             false
           end
         end
+
+        # Returns true if the certificate lists no principals (unrestricted) or
+        # if the given hostname is among the listed principals.
+        def matches_principal?(server_key, hostname)
+          server_key.valid_principals.empty? || server_key.valid_principals.include?(hostname)
+        end
+
+        # Returns true if the certificate's validity window covers the current time.
+        def matches_validity?(server_key)
+          return false if server_key.valid_after && server_key.valid_after > Time.now
+          return false if server_key.valid_before && server_key.valid_before < Time.now
+
+          true
+        end
       end
     end
 
@@ -88,6 +102,17 @@ module Net
 
       def empty?
         @host_keys.empty?
+      end
+
+      # Returns the bare hostname, stripping port and IP portions from the
+      # comma-separated host string used internally.
+      #
+      # Examples:
+      #   "server.example.com"            => "server.example.com"
+      #   "server.example.com,1.2.3.4"    => "server.example.com"
+      #   "[server.example.com]:2222"      => "server.example.com"
+      def hostname
+        @host.split(",").first.gsub(/\[|\]:\d+/, "")
       end
     end
 
