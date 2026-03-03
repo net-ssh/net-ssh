@@ -548,7 +548,16 @@ class TestConfig < NetSSHTest
   end
 
   def test_comments_are_ignored
-    config = Net::SSH::Config.for('example', [config(:comments)])
+    config = Net::SSH::Config.for('example1', [config(:comments)])
+    assert_equal 'person', config[:user]
+
+    config = Net::SSH::Config.for('example2', [config(:comments)])
+    assert_equal 'person', config[:user]
+
+    config = Net::SSH::Config.for('example3', [config(:comments)])
+    assert_equal 'person#notacomment', config[:user]
+
+    config = Net::SSH::Config.for('example4', [config(:comments)])
     assert_equal 'person', config[:user]
   end
 
