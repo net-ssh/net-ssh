@@ -2,10 +2,10 @@ Host example1 #host comment
   User person #commentcomment
 
 Host example2   #host comment
-  User "person" #commentcomment
+  User "person person" #commentcomment
 
 Host example3 #host comment
-  User person#commentcomment
+  User person#notacomment
 
 Host example4   #host comment
   User=person #commentcomment
