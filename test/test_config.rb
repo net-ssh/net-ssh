@@ -547,6 +547,11 @@ class TestConfig < NetSSHTest
     end
   end
 
+  def test_comments_are_ignored
+    config = Net::SSH::Config.for('example', [config(:comments)])
+    assert_equal 'person', config[:user]
+  end
+
   private
 
   def with_home_env(value, &block)

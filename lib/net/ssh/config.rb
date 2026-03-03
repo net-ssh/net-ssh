@@ -99,6 +99,7 @@ module Net
 
             key.downcase!
             value = unquote(value)
+            value = uncomment(value)
 
             value = case value.strip
                     when /^\d+$/ then value.to_i
@@ -395,6 +396,10 @@ module Net
           end
 
           !condition_matches.empty? && condition_matches.all?
+        end
+
+        def uncomment(string)
+          string[...string =~ /\s*#.*?$/]
         end
 
         def unquote(string)
