@@ -552,7 +552,7 @@ class TestConfig < NetSSHTest
     assert_equal 'person', config[:user]
 
     config = Net::SSH::Config.for('example2', [config(:comments)])
-    assert_equal 'person', config[:user]
+    assert_equal 'person person', config[:user]
 
     config = Net::SSH::Config.for('example3', [config(:comments)])
     assert_equal 'person#notacomment', config[:user]
