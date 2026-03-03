@@ -98,8 +98,8 @@ module Net
             next if value.nil?
 
             key.downcase!
-            value = unquote(value)
             value = uncomment(value)
+            value = unquote(value)
 
             value = case value.strip
                     when /^\d+$/ then value.to_i
