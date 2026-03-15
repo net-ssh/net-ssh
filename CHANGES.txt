@@ -1,11 +1,8 @@
-=== 7.3.2 rc2
-
- * Fix Ruby 2.6 compat: use public_to_der fallback for EC public keys [#993]
- * Fix test framework hang: preserve StringIO position in idle!
-
-=== 7.3.2 rc1
+=== 7.3.2
 
  * Support frozen strings [#958]
+ * Fix Ruby 2.6 compat: use public_to_der fallback for EC public keys [#993]
+ * Fix test framework hang: preserve StringIO position in idle!
 
 === 7.3.0 rc0
 
