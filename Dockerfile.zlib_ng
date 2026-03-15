@@ -2,7 +2,17 @@ FROM fedora:latest
 
 ENV INSTALL_PATH="/netssh"
 
-RUN dnf install -y openssl ruby ruby-devel git make gcc zlib-ng
+# Fedora's OpenSSL 3.x blocks SHA-1 for RSA/DSA signing by default.
+# - LEGACY crypto policy relaxes the system-wide restrictions.
+# - OPENSSL_CONF points to our config which activates the legacy provider,
+#   sets SECLEVEL=0, and sets rh-allow-sha1-signatures=yes (Fedora/RHEL
+#   OpenSSL patch that gates SHA-1 signing independently of the policy level).
+# OPENSSL_CONF must be set as a Docker ENV so it is in the environment before
+# Ruby/OpenSSL initialises — setting it in the Rakefile is too late.
+ENV OPENSSL_CONF="/netssh/test/openssl3.conf"
+
+RUN dnf install -y openssl ruby ruby-devel git make gcc zlib-ng crypto-policies-scripts && \
+    update-crypto-policies --set LEGACY
 
 WORKDIR $INSTALL_PATH
 
