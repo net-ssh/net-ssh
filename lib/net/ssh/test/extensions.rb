@@ -57,8 +57,9 @@ module Net
             return false unless script.next(:first)
 
             if script.next(:first).remote?
+              current_pos = pos
               self.string = "#{self.string}#{script.next}"
-              self.pos = pos
+              self.pos = current_pos
             end
 
             return true
