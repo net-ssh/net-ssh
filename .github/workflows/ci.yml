@@ -42,8 +42,8 @@ jobs:
           gem install bundler ${{ (startsWith(matrix.ruby-version, '2.6.') || startsWith(matrix.ruby-version, '2.7.')) && '-v 2.4.22' || '' }}
           bundle config set path 'vendor/bundle'
           bundle config set --local path 'vendor/bundle'
-          bundle install --jobs 4 --retry 3 --path vendor/bundle
-          BUNDLE_GEMFILE=./Gemfile.noed25519 bundle install --jobs 4 --retry 3 --path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          BUNDLE_GEMFILE=./Gemfile.noed25519 bundle install --jobs 4 --retry 3
         env:
           BUNDLE_PATH: vendor/bundle
 
