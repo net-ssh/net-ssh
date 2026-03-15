@@ -381,14 +381,14 @@ module Authentication
     # EC::Point (returned by EC#public_key in older openssl gem) has a broken
     # eql? that raises TypeError when compared to non-Point keys, causing
     # non-deterministic crashes when used as a Hash key alongside DSA/RSA keys.
-    def ec_public_key(ec)
-      if ec.respond_to?(:public_to_der)
+    def ec_public_key(key)
+      if key.respond_to?(:public_to_der)
         # openssl gem >= 3.0 (Ruby >= 3.1)
-        OpenSSL::PKey::EC.new(ec.public_to_der)
+        OpenSSL::PKey::EC.new(key.public_to_der)
       else
         # openssl gem < 3.0: build a public-only EC key via the old setter API
-        pub = OpenSSL::PKey::EC.new(ec.group)
-        pub.public_key = ec.public_key
+        pub = OpenSSL::PKey::EC.new(key.group)
+        pub.public_key = key.public_key
         pub
       end
     end
