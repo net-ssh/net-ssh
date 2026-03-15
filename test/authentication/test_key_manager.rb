@@ -378,15 +378,15 @@ module Authentication
     end
 
     def ecdsa_sha2_nistp256_pk
-      @ecdsa_sha2_nistp256_pk ||= ecdsa_sha2_nistp256.public_key
+      @ecdsa_sha2_nistp256_pk ||= OpenSSL::PKey::EC.new(ecdsa_sha2_nistp256.public_to_der)
     end
 
     def ecdsa_sha2_nistp384_pk
-      @ecdsa_sha2_nistp384_pk ||= ecdsa_sha2_nistp521.public_key
+      @ecdsa_sha2_nistp384_pk ||= OpenSSL::PKey::EC.new(ecdsa_sha2_nistp384.public_to_der)
     end
 
     def ecdsa_sha2_nistp521_pk
-      @ecdsa_sha2_nistp521_pk ||= ecdsa_sha2_nistp521.public_key
+      @ecdsa_sha2_nistp521_pk ||= OpenSSL::PKey::EC.new(ecdsa_sha2_nistp521.public_to_der)
     end
 
     def agent
