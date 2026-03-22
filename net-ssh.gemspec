@@ -30,6 +30,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_runtime_dependency 'fiddle', '< 2'
+  spec.add_runtime_dependency 'logger', '< 2'
+
   unless ENV['NET_SSH_NO_ED25519']
     spec.add_development_dependency("bcrypt_pbkdf", "~> 1.0") unless RUBY_PLATFORM == "java"
     spec.add_development_dependency("ed25519", "~> 1.2")
