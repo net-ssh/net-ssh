@@ -98,6 +98,7 @@ module Net
             next if value.nil?
 
             key.downcase!
+            value = uncomment(value)
             value = unquote(value)
 
             value = case value.strip
@@ -395,6 +396,10 @@ module Net
           end
 
           !condition_matches.empty? && condition_matches.all?
+        end
+
+        def uncomment(string)
+          string[0...string =~ /\s+#.*?$/]
         end
 
         def unquote(string)
