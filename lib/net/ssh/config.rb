@@ -401,7 +401,7 @@ module Net
         end
 
         def uncomment(string)
-          string[...string =~ /\s+#.*?$/]
+          string[0...string =~ /\s+#.*?$/]
         end
 
         def unquote(string)
