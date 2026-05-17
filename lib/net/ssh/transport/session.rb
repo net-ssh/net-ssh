@@ -126,6 +126,7 @@ module Net
         # Cleans up (see PacketStream#cleanup) and closes the underlying socket.
         def close
           socket.cleanup
+          Process.kill('TERM', socket.pid) if options[:proxy].is_a?(Net::SSH::Proxy::Command)
           socket.close
         end
 
