@@ -19,10 +19,8 @@ module Net
           # We've never seen this host before, so raise an exception.
           process_cache_miss(host_keys, arguments, HostKeyUnknown, "is unknown") if host_keys.empty?
 
-          # If we found any matches, check to see that the key type and
-          # blob also match.
-
-          found = host_keys.any? do |key|
+          # Find the known-hosts entry whose key matches the presented certificate.
+          found_key = host_keys.find do |key|
             if key.respond_to?(:matches_key?)
               key.matches_key?(arguments[:key])
             else
@@ -30,11 +28,31 @@ module Net
             end
           end
 
-          # If a match was found, return true. Otherwise, raise an exception
-          # indicating that the key was not recognized.
-          process_cache_miss(host_keys, arguments, HostKeyMismatch, "does not match") unless found
+          # No matching entry found — key is not recognized.
+          process_cache_miss(host_keys, arguments, HostKeyMismatch, "does not match") unless found_key
 
-          found
+          # For @cert-authority entries: verify the certificate's validity window.
+          if found_key.respond_to?(:matches_validity?)
+            unless found_key.matches_validity?(arguments[:key])
+              cert = arguments[:key]
+              reason = if cert.valid_before && cert.valid_before < Time.now
+                         "Certificate has expired"
+                       else
+                         "Certificate is not yet valid"
+                       end
+              process_cache_miss(host_keys, arguments, HostKeyUnknown, reason)
+            end
+          end
+
+          # For @cert-authority entries: verify the hostname is a listed principal.
+          if found_key.respond_to?(:matches_principal?)
+            unless found_key.matches_principal?(arguments[:key], host_keys.hostname)
+              process_cache_miss(host_keys, arguments, HostKeyUnknown,
+                                 "Certificate invalid: name is not a listed principal")
+            end
+          end
+
+          true
         end
 
         def verify_signature(&block)

@@ -177,3 +177,89 @@ class TestKnownHosts < NetSSHTest
     OpenSSL::PKey::RSA.new(asn1.to_der)
   end
 end
+
+class TestCertAuthority < NetSSHTest
+  def make_cert(valid_principals: [], valid_after: nil, valid_before: nil)
+    OpenStruct.new(
+      valid_principals: valid_principals,
+      valid_after: valid_after,
+      valid_before: valid_before
+    )
+  end
+
+  def ca
+    Net::SSH::HostKeyEntries::CertAuthority.new(OpenStruct.new(to_blob: "ca-blob"))
+  end
+
+  # matches_principal?
+
+  def test_matches_principal_when_hostname_is_listed
+    cert = make_cert(valid_principals: ["server.example.com", "other.example.com"])
+    assert ca.matches_principal?(cert, "server.example.com")
+  end
+
+  def test_matches_principal_rejects_unlisted_hostname
+    cert = make_cert(valid_principals: ["server.example.com"])
+    refute ca.matches_principal?(cert, "other.example.com")
+  end
+
+  def test_matches_principal_allows_all_when_principals_empty
+    cert = make_cert(valid_principals: [])
+    assert ca.matches_principal?(cert, "any.host.example.com")
+  end
+
+  # matches_validity?
+
+  def test_matches_validity_for_cert_within_window
+    cert = make_cert(valid_after: Time.now - 3600, valid_before: Time.now + 3600)
+    assert ca.matches_validity?(cert)
+  end
+
+  def test_matches_validity_rejects_expired_cert
+    cert = make_cert(valid_after: Time.now - 7200, valid_before: Time.now - 3600)
+    refute ca.matches_validity?(cert)
+  end
+
+  def test_matches_validity_rejects_not_yet_valid_cert
+    cert = make_cert(valid_after: Time.now + 3600, valid_before: Time.now + 7200)
+    refute ca.matches_validity?(cert)
+  end
+
+  def test_matches_validity_when_valid_after_is_nil
+    cert = make_cert(valid_after: nil, valid_before: Time.now + 3600)
+    assert ca.matches_validity?(cert)
+  end
+
+  def test_matches_validity_when_valid_before_is_nil
+    cert = make_cert(valid_after: Time.now - 3600, valid_before: nil)
+    assert ca.matches_validity?(cert)
+  end
+
+  def test_matches_validity_when_both_bounds_are_nil
+    cert = make_cert(valid_after: nil, valid_before: nil)
+    assert ca.matches_validity?(cert)
+  end
+end
+
+class TestHostKeysHostname < NetSSHTest
+  def make_host_keys(host)
+    Net::SSH::HostKeys.new([], host, nil)
+  end
+
+  def test_hostname_plain
+    assert_equal "server.example.com", make_host_keys("server.example.com").hostname
+  end
+
+  def test_hostname_strips_ip
+    assert_equal "server.example.com", make_host_keys("server.example.com,1.2.3.4").hostname
+  end
+
+  def test_hostname_strips_port
+    assert_equal "server.example.com", make_host_keys("[server.example.com]:2222").hostname
+  end
+
+  def test_hostname_strips_port_and_ip
+    assert_equal "server.example.com",
+                 make_host_keys("[server.example.com]:2222,[1.2.3.4]:2222").hostname
+  end
+end
