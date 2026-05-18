@@ -51,10 +51,16 @@ module Net
             @version = String.new
             loop do
               begin
-                b = socket.readpartial(1)
+                b = socket.read_nonblock(1)
                 raise Net::SSH::Disconnect, "connection closed by remote host" if b.nil?
               rescue EOFError
                 raise Net::SSH::Disconnect, "connection closed by remote host"
+              rescue IO::WaitReadable
+                if IO.select([socket], nil, nil, timeout)
+                  retry
+                else
+                  raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating"
+                end
               end
               @version << b
               break if b == "\n"
