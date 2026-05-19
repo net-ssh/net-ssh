@@ -2,6 +2,7 @@ require 'net/ssh/transport/openssl'
 require 'net/ssh/prompt'
 
 require 'net/ssh/authentication/ed25519_loader'
+require 'net/ssh/authentication/openssh_private_key_loader'
 
 module Net
   module SSH
@@ -121,15 +122,15 @@ module Net
 
         class OpenSSHPrivateKeyType < KeyType
           def self.read(key_data, passphrase)
-            Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader.read(key_data, passphrase)
+            Net::SSH::Authentication::OpenSSHPrivateKeyLoader.read(key_data, passphrase)
           end
 
           def self.error_classes
-            [Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader::DecryptError]
+            [Net::SSH::Authentication::OpenSSHPrivateKeyLoader::DecryptError]
           end
 
           def self.encrypted_key?(key_data, decode_error)
-            decode_error.is_a?(Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader::DecryptError) && decode_error.encrypted_key?
+            decode_error.is_a?(Net::SSH::Authentication::OpenSSHPrivateKeyLoader::DecryptError) && decode_error.encrypted_key?
           end
         end
 
@@ -196,7 +197,6 @@ module Net
         # appropriately.
         def classify_key(data, filename)
           if data.match(/-----BEGIN OPENSSH PRIVATE KEY-----/)
-            Net::SSH::Authentication::ED25519Loader.raiseUnlessLoaded("OpenSSH keys only supported if ED25519 is available")
             return OpenSSHPrivateKeyType
           elsif OpenSSL::PKey.respond_to?(:read)
             return OpenSSLPKeyType

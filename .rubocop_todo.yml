@@ -489,7 +489,7 @@ Style/ClassVars:
 # This cop supports safe auto-correction (--auto-correct).
 Style/ColonMethodCall:
   Exclude:
-    - 'lib/net/ssh/authentication/ed25519.rb'
+    - 'lib/net/ssh/authentication/openssh_private_key_loader.rb'
 
 # Offense count: 2
 Style/CombinableLoops:
@@ -975,7 +975,7 @@ Style/SingleLineMethods:
 # This cop supports unsafe auto-correction (--auto-correct-all).
 Style/SlicingWithRange:
   Exclude:
-    - 'lib/net/ssh/authentication/ed25519.rb'
+    - 'lib/net/ssh/authentication/openssh_private_key_loader.rb'
     - 'lib/net/ssh/buffer.rb'
     - 'lib/net/ssh/config.rb'
     - 'lib/net/ssh/transport/algorithms.rb'
