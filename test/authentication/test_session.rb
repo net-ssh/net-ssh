@@ -92,6 +92,11 @@ module Authentication
       assert_equal SERVICE_ACCEPT, session.expect_message(SERVICE_ACCEPT).type
     end
 
+    def test_next_message_should_silently_handle_EXT_INFO
+      transport.return(EXT_INFO)
+      assert_equal EXT_INFO, session.next_message.type
+    end
+
     def test_uses_some_default_keys_if_none_are_provided
       File.stubs(:file?).returns(false)
 
