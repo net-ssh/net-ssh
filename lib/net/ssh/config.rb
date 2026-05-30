@@ -155,6 +155,9 @@ module Net
             %w[proxyjump proxycommand].each do |proxy_key|
               if (proxy_value = settings.delete(proxy_key))
                 settings['proxy'] ||= [proxy_key, proxy_value]
+                if proxy_key == 'proxyjump' and proxy_value == 'none'
+                  settings.delete('proxy')
+                end
               end
             end
           end
