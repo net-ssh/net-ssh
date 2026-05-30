@@ -83,9 +83,9 @@ module Net
           load_data_public_key(data, filename)
         end
 
-        # Loads a public key. It will correctly determine whether
-        # the file describes an RSA or DSA key, and will load it
-        # appropriately. The new public key is returned.
+        # Loads a public key. It will correctly determine the
+        # key type, and will load it appropriately. The new
+        # public key is returned.
         def load_data_public_key(data, filename = "")
           fields = data.split(/ /)
 
@@ -99,7 +99,11 @@ module Net
 
           blob = blob.unpack("m*").first
           reader = Net::SSH::Buffer.new(blob)
-          reader.read_key or raise OpenSSL::PKey::PKeyError, "not a public key #{filename.inspect}"
+          key = reader.read_key or raise OpenSSL::PKey::PKeyError, "not a public key #{filename.inspect}"
+          comment = fields.shift&.chomp
+          key.comment = comment if comment && key.respond_to?(:comment=)
+
+          key
         end
 
         private

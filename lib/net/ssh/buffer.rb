@@ -291,7 +291,7 @@ module Net
       end
 
       # Read a keyblob of the given type from the buffer, and return it as
-      # a key. Only RSA, DSA, and ECDSA keys are supported.
+      # a key.
       def read_keyblob(type)
         case type
         when /^(.*)-cert-v01@openssh\.com$/
