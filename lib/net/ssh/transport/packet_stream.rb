@@ -187,6 +187,7 @@ module Net
         def cleanup
           client.cleanup
           server.cleanup
+          Process.kill('HUP', pid) if pid
         end
 
         # If the IO object requires a rekey operation (as indicated by either its
