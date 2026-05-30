@@ -39,7 +39,7 @@ module Net
           end
 
           def self.read(datafull, password)
-            datafull = datafull.strip
+            datafull = datafull.strip.encode(universal_newline: true)
             raise ArgumentError.new("Expected #{MBEGIN} at start of private key") unless datafull.start_with?(MBEGIN)
             raise ArgumentError.new("Expected #{MEND} at end of private key") unless datafull.end_with?(MEND)
 
