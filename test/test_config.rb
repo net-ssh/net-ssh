@@ -135,6 +135,7 @@ class TestConfig < NetSSHTest
       'certificatefile' => %w(m n o),
       'passwordauthentication' => true,
       'port' => 1234,
+      'pubkeyacceptedalgorithms' => "p,q,r",
       'pubkeyauthentication' => true,
       'rekeylimit' => 1024,
       'sendenv' => "LC_*",
@@ -171,6 +172,7 @@ class TestConfig < NetSSHTest
     assert_equal true,      net_ssh[:keepalive]
     assert_equal '/dev/null', net_ssh[:user_known_hosts_file]
     assert_equal :never, net_ssh[:verify_host_key]
+    assert_equal %w(p q r), net_ssh[:pubkey_algorithms]
   end
 
   def test_translate_should_turn_on_host_key_verification

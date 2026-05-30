@@ -98,6 +98,10 @@ module Net
           end
         end
 
+        def pubkey_algorithms
+          algorithms[:pubkey_algorithms]
+        end
+
         # Returns the host (and possibly IP address) in a format compatible with
         # SSH known-host files.
         def host_as_string

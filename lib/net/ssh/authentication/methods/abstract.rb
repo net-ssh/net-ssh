@@ -20,9 +20,7 @@ module Net
           # this.
           attr_reader :key_manager
 
-          # So far only affects algorithms used for rsa keys, but can be
-          # extended to other keys, e.g after reading of
-          # PubkeyAcceptedAlgorithms option from ssh_config file is implemented.
+          # public key algorithms to be used
           attr_reader :pubkey_algorithms
 
           # Instantiates a new authentication method.
@@ -31,11 +29,7 @@ module Net
             @key_manager = options[:key_manager]
             @options = options
             @prompt = options[:password_prompt]
-            @pubkey_algorithms = options[:pubkey_algorithms] \
-              || %w[rsa-sha2-256-cert-v01@openssh.com
-                    ssh-rsa-cert-v01@openssh.com
-                    rsa-sha2-256
-                    ssh-rsa]
+            @pubkey_algorithms = session.transport.pubkey_algorithms
             self.logger = session.logger
           end
 

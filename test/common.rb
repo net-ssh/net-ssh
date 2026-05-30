@@ -137,6 +137,10 @@ class MockTransport < Net::SSH::Transport::Session
     end
   end
 
+  def pubkey_algorithms
+    options[:pubkey_algorithms] || Net::SSH::Transport::Algorithms::ALGORITHMS[:pubkey_algorithms]
+  end
+
   def closed?
     false
   end
