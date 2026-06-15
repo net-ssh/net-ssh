@@ -100,7 +100,11 @@ module Net
         # if :iv_len option is supplied the third return value will be ivlen
         def self.get_lengths(name, options = {})
           klass = SSH_TO_CLASS[name]
-          return [klass.key_length, klass.block_size] unless klass.nil?
+          unless klass.nil?
+            result = [klass.key_length, klass.block_size]
+            result << klass.iv_len if options[:iv_len]
+            return result
+          end
 
           ossl_name = SSH_TO_OSSL[name]
           if ossl_name.nil? || ossl_name == "none"
@@ -123,6 +127,24 @@ module Net
             result << cipher.iv_len if options[:iv_len]
           end
           result
+        end
+
+        def self.auth_length(name)
+          klass = SSH_TO_CLASS[name]
+          return klass.auth_length if klass.respond_to?(:auth_length)
+
+          0
+        end
+
+        def self.decrypt_private_key(name, ciphertext, auth_tag, key, initialization_vector)
+          klass = SSH_TO_CLASS[name]
+          raise Net::SSH::Exception, "#{name} does not support private key decryption" unless
+            klass.respond_to?(:decrypt_private_key)
+
+          raise Net::SSH::Exception, "incorrect auth_tag length" unless
+            auth_tag.respond_to?(:bytesize) && auth_tag.bytesize == klass.auth_length
+
+          klass.decrypt_private_key(ciphertext, auth_tag, key, initialization_vector)
         end
       end
     end

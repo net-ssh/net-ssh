@@ -64,6 +64,32 @@ module Authentication
       self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_pwd)
     end
 
+    def test_aes128_gcm_pwd_key
+      assert_pwd_key_matches_public_key(private_key_aes128_gcm_pwd, public_key_aes128_gcm_pwd)
+    end
+
+    def test_aes256_gcm_pwd_key
+      assert_pwd_key_matches_public_key(private_key_aes256_gcm_pwd, public_key_aes256_gcm_pwd)
+    end
+
+    def test_chacha20_poly1305_pwd_key
+      skip "chacha20-poly1305@openssh.com is not available" unless
+        Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
+
+      assert_pwd_key_matches_public_key(private_key_chacha20_poly1305_pwd, public_key_chacha20_poly1305_pwd)
+    end
+
+    def test_aead_pwd_key_with_wrong_password_is_retryable
+      skip "chacha20-poly1305@openssh.com is not available" unless
+        Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
+
+      error = assert_raises(Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader::DecryptError) do
+        Net::SSH::Authentication::ED25519::PrivKey.read(private_key_chacha20_poly1305_pwd, 'wrong')
+      end
+
+      assert error.encrypted_key?
+    end
+
     def test_no_pwd_key_does_not_require_bcrypt_pbkdf
       Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader.expects(:require_bcrypt_pbkdf).never
 
@@ -134,6 +160,20 @@ module Authentication
       end
     end
 
+    def assert_pwd_key_matches_public_key(private_key, public_key)
+      pub = Net::SSH::Buffer.new(Base64.decode64(public_key.split(' ')[1]))
+      _type = pub.read_string
+      pub_data = pub.read_string
+
+      pub_key = Net::SSH::Authentication::ED25519::PubKey.new(pub_data)
+      priv_key = Net::SSH::Authentication::ED25519::PrivKey.read(private_key, 'pwd')
+
+      shared_secret = "Hello"
+      signed = priv_key.ssh_do_sign(shared_secret)
+      self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
+      self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
+    end
+
     def private_key_pwd
       @pwd_key = <<~EOF
         -----BEGIN OPENSSH PRIVATE KEY-----
@@ -143,6 +183,46 @@ module Authentication
         46vPiECi6R6OdYGSd7W3fdzUDeyOYCY9ZVIjAzENG+9FsygYzMi6XCuw00OuDFLUp4fL4K
         i/coUIVqouB4TPQAmsCVXiIRVTWQtRG0kWfFaV3qRt/bc22ZCvCT6ZZ1UmtulqqfUhSlKM
         oPcTikV1iWH5Xc+GxRFRRGTN/6HvBf0AKDB1kMXlDhGnBnHGeNH1pk44xG
+        -----END OPENSSH PRIVATE KEY-----
+      EOF
+    end
+
+    def private_key_aes128_gcm_pwd
+      <<~EOF
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        b3BlbnNzaC1rZXktdjEAAAAAFmFlczEyOC1nY21Ab3BlbnNzaC5jb20AAAAGYmNyeXB0AA
+        AAGAAAABD7fJqyikc+oGFRyPNFeYW+AAAAGAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAA
+        ICjavy2Z6HRO1gnczDXj/li91GQ/yyd2UTk4cpHN3XotAAAAoHdc7A78wsOAwOzeuxuC5G
+        VeHz6StESIIrc/u0a2k1H4tHsAfVK1QphPTuhigypuko1cxbAjWDJ3l2m4TnGMltYNixBt
+        rcmDaMxhAVu2W1XQds7sfUw0BqbgkQDjAH5LQzv/897+QMdOziGWfR6jC+VBo+Gzgnbv4a
+        xivRbVdrUjhon9jdg2HiUZDLE14FOegWCSrc76UqS9gaScVQEc3WObuoxFZP3OTYMsg8FV
+        MnJJ
+        -----END OPENSSH PRIVATE KEY-----
+      EOF
+    end
+
+    def private_key_aes256_gcm_pwd
+      <<~EOF
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        b3BlbnNzaC1rZXktdjEAAAAAFmFlczI1Ni1nY21Ab3BlbnNzaC5jb20AAAAGYmNyeXB0AA
+        AAGAAAABAIYrZ1Iy7viUsL4JBEZBUQAAAAGAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAA
+        IOEnJoGcYaqIKnB8qUdFbCxewkX78jQop1KRb4F6xX/tAAAAkAue/lM/EQ+M8fbjG+ab3x
+        hrWZuaRvEbnzpe2+oPCxyGklVIC5pkNgDAfm4wGE+e81FGV0b323yMNbFZBWp61g+QLPEO
+        kK0U0L/oK8pbJc4sIu2X3dOnCsmgptbi7L/L1ABzbaD2nKKJ4JV1MDwGawKOryD4XAcVCG
+        4xrbZV1uR5iiq7wNQ3e6MVDbMlR7657aA7IBJ6zTlN8Ih9W6gb21w=
+        -----END OPENSSH PRIVATE KEY-----
+      EOF
+    end
+
+    def private_key_chacha20_poly1305_pwd
+      <<~EOF
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        b3BlbnNzaC1rZXktdjEAAAAAHWNoYWNoYTIwLXBvbHkxMzA1QG9wZW5zc2guY29tAAAABm
+        JjcnlwdAAAABgAAAAQF0S3Ou3bJxwGdfaAdynA5gAAABgAAAABAAAAMwAAAAtzc2gtZWQy
+        NTUxOQAAACBGlIfrlzFWtRPdTGzaIT4D84KuBCzLbukafbUIlslwjAAAAJALFmJsY67YcH
+        B01Fy7YoHRKUNL/82vC3uxTkhmqHhbDPeLdCdIyvdFpyKp5lrGtIx5K44PKOEU98hDL+Nk
+        QGM5HAurbKxg20ZaiYIaF/lmmXSIoEXDJjmxMZhf5c7UkqozXl4puRs6oxQChcg9Rzj9LO
+        b6XVrFTWbbgxAwzFkAs5qF0aPI5nsKgTdQX17M4afu86UIj6vPaHF4oMypei5N
         -----END OPENSSH PRIVATE KEY-----
       EOF
     end
@@ -171,6 +251,18 @@ module Authentication
 
     def key_fingerprint_sha256_pwd
       'SHA256:Uz5Qk/fB+f8Bu7FTxNcDh7+atpB29Q3tBBJX/gnUfGw'
+    end
+
+    def public_key_aes128_gcm_pwd
+      'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICjavy2Z6HRO1gnczDXj/li91GQ/yyd2UTk4cpHN3Xot aes128gcm-test'
+    end
+
+    def public_key_aes256_gcm_pwd
+      'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOEnJoGcYaqIKnB8qUdFbCxewkX78jQop1KRb4F6xX/t aesgcm-test'
+    end
+
+    def public_key_chacha20_poly1305_pwd
+      'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEaUh+uXMVa1E91MbNohPgPzgq4ELMtu6Rp9tQiWyXCM chacha-test'
     end
 
     def private_key_no_pwd

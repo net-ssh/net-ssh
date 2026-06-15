@@ -11,6 +11,7 @@ module Net
         POLY1305_ALGORITHM = "POLY1305"
         POLY1305_KEY_BYTES = 32
         POLY1305_TAG_BYTES = 16
+        NAME = "chacha20-poly1305@openssh.com"
         ZERO_BLOCK = "\x00".b * POLY1305_KEY_BYTES
         ZERO_IV = "\x00".b * 16
 
@@ -93,7 +94,7 @@ module Net
         end
 
         def mac_length
-          16
+          POLY1305_TAG_BYTES
         end
 
         def block_size
@@ -101,7 +102,7 @@ module Net
         end
 
         def name
-          "chacha20-poly1305@openssh.com"
+          NAME
         end
 
         def implicit_mac?
@@ -118,6 +119,35 @@ module Net
 
         def self.key_length
           64
+        end
+
+        def self.iv_len
+          0
+        end
+
+        def self.auth_length
+          POLY1305_TAG_BYTES
+        end
+
+        def self.decrypt_private_key(ciphertext, auth_tag, key, _initialization_vector)
+          raise ArgumentError, "chacha20_poly1305: keylength doesn't match" unless
+            key.respond_to?(:bytesize) && key.bytesize == key_length
+
+          ciphertext = binary_string(ciphertext)
+          chacha = OpenSSL::Cipher.new("chacha20")
+          chacha.decrypt
+          chacha.key = binary_string(key[0...POLY1305_KEY_BYTES])
+
+          iv_data = ZERO_IV.dup
+          chacha.iv = iv_data
+          poly_key = chacha.update(ZERO_BLOCK)
+
+          valid_mac = OpenSSL.fixed_length_secure_compare(poly1305_auth(poly_key, ciphertext), auth_tag)
+          raise Net::SSH::Exception, "corrupted hmac detected #{NAME}" unless valid_mac
+
+          iv_data.setbyte(0, 1)
+          chacha.iv = iv_data
+          chacha.update(ciphertext)
         end
 
         def self.ensure_supported!

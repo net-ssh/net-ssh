@@ -64,6 +64,46 @@ module Transport
       assert_equal [32, 16], factory.get_lengths("aes256-ctr")
     end
 
+    def test_lengths_for_aes128_gcm_with_iv
+      assert_equal [16, 16, 12], factory.get_lengths("aes128-gcm@openssh.com", iv_len: true)
+    end
+
+    def test_lengths_for_aes256_gcm_with_iv
+      assert_equal [32, 16, 12], factory.get_lengths("aes256-gcm@openssh.com", iv_len: true)
+    end
+
+    def test_lengths_for_chacha20_poly1305_with_iv
+      skip "chacha20-poly1305@openssh.com is not available" unless
+        Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
+
+      assert_equal [64, 8, 0], factory.get_lengths("chacha20-poly1305@openssh.com", iv_len: true)
+    end
+
+    def test_auth_lengths_for_aead_ciphers
+      assert_equal 16, factory.auth_length("aes128-gcm@openssh.com")
+      assert_equal 16, factory.auth_length("aes256-gcm@openssh.com")
+
+      assert_equal 16, factory.auth_length("chacha20-poly1305@openssh.com") if
+        Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
+    end
+
+    def test_private_key_decrypt_requires_cipher_decrypt_support
+      cipher_class = Class.new do
+        def self.auth_length
+          16
+        end
+      end
+
+      factory::SSH_TO_CLASS["test-aead@example.com"] = cipher_class
+      error = assert_raises(Net::SSH::Exception) do
+        factory.decrypt_private_key("test-aead@example.com", "", "\x00" * 16, "", "")
+      end
+
+      assert_match(/test-aead@example.com does not support private key decryption/, error.message)
+    ensure
+      factory::SSH_TO_CLASS.delete("test-aead@example.com")
+    end
+
     def test_lengths_for_blowfish_ctr
       assert_equal [16, 8], factory.get_lengths("blowfish-ctr")
     end

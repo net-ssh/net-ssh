@@ -95,10 +95,16 @@ module Net
             _pubkey = buffer.read_string
 
             len = buffer.read_long
+            encrypted_private = buffer.read(len)
 
             keylen, blocksize, ivlen = CipherFactory.get_lengths(ciphername, iv_len: true)
             raise ArgumentError.new("Private key len:#{len} is not a multiple of #{blocksize}") if
               (len < blocksize) || ((blocksize > 0) && (len % blocksize) != 0)
+
+            raise ArgumentError.new("Private key len:#{len} exceeds available data") unless encrypted_private.bytesize == len
+
+            authlen = CipherFactory.auth_length(ciphername)
+            auth_tag = authlen > 0 ? buffer.read(authlen) : nil
 
             if kdfname == 'bcrypt'
               salt = kdfopts.read_string
@@ -109,10 +115,14 @@ module Net
               key = "\x00" * (keylen + ivlen)
             end
 
-            cipher = CipherFactory.get(ciphername, key: key[0...keylen], iv: key[keylen...(keylen + ivlen)], decrypt: true)
-
-            decoded = cipher.update(buffer.remainder_as_buffer.to_s)
-            decoded << cipher.final
+            decoded = decrypt_private_key(
+              ciphername,
+              encrypted_private,
+              auth_tag,
+              key: key[0...keylen],
+              iv: key[keylen...(keylen + ivlen)],
+              encrypted_key: kdfname == 'bcrypt'
+            )
 
             decoded = Net::SSH::Buffer.new(decoded)
             check1 = decoded.read_long
@@ -144,6 +154,24 @@ module Net
 
           def self.require_bcrypt_pbkdf
             require 'bcrypt_pbkdf'
+          end
+
+          def self.decrypt_private_key(ciphername, encrypted_private, auth_tag, options)
+            if auth_tag
+              return CipherFactory.decrypt_private_key(
+                ciphername,
+                encrypted_private,
+                auth_tag,
+                options[:key],
+                options[:iv]
+              )
+            end
+
+            cipher = CipherFactory.get(ciphername, key: options[:key], iv: options[:iv], decrypt: true)
+            decoded = cipher.update(encrypted_private)
+            decoded << cipher.final
+          rescue Net::SSH::Exception, OpenSSL::Cipher::CipherError
+            raise DecryptError.new("Decrypt failed on private key", encrypted_key: options[:encrypted_key])
           end
         end
 
