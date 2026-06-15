@@ -78,13 +78,6 @@ jobs:
           NET_SSH_RUN_INTEGRATION_TESTS: 1
           CI: 1
           RUBYOPT: '--enable=frozen-string-literal'
-      - name: Run tests (without rbnacl)
-        run: bundle exec rake test
-        env:
-          BUNDLE_GEMFILE: ./Gemfile.norbnacl
-          NET_SSH_RUN_INTEGRATION_TESTS: 1
-          CI: 1
-          RUBYOPT: '--enable=frozen-string-literal'
       - name: Run test helper test
         run: bundle exec rake test_test
         env:

@@ -64,7 +64,7 @@ Unsecure algoritms will definitely be removed in Net::SSH 8.*.
 | Name                                 | Support               | Details  |
 |--------------------------------------|-----------------------|----------|
 | aes256-ctr / aes192-ctr / aes128-ctr | OK                    |          |
-| chacha20-poly1305@openssh.com        | OK.                   | Requires the gem `rbnacl` |
+| chacha20-poly1305@openssh.com        | OK.                   | Backed by Ruby OpenSSL ChaCha20 and Poly1305 APIs (`openssl >= 3.2.0`) |
 | aes256-cbc / aes192-cbc / aes128-cbc | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
 | rijndael-cbc@lysator.liu.se          | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
 | blowfish-ctr blowfish-cbc            | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
@@ -157,7 +157,7 @@ ruby -ropenssl -e 'puts OpenSSL::VERSION; puts OpenSSL::OPENSSL_VERSION'
 
 If `openssl` cannot be required, rebuild Ruby with OpenSSL support or install the Ruby `openssl` gem separately.
 
-Ed25519 and curve25519-sha256 support also require an OpenSSL backend with Ed25519 and X25519 enabled.
+Ed25519, curve25519-sha256, and chacha20-poly1305@openssh.com support also require an OpenSSL backend with Ed25519, X25519, ChaCha20, and Poly1305 enabled.
 
 ## INSTALL:
 
