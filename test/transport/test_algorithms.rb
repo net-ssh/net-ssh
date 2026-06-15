@@ -242,7 +242,7 @@ module Transport
       kexinit kex: "diffie-hellman-group14-sha1"
       transport.expect do |_t, buffer|
         assert_kexinit(buffer)
-        install_mock_key_exchange(buffer, kex: Net::SSH::Transport::Kex::DiffieHellmanGroup1SHA1)
+        install_mock_key_exchange(buffer, kex: Net::SSH::Transport::Kex::DiffieHellmanGroup14SHA1)
       end
       algorithms.accept_kexinit(kexinit)
     end
@@ -354,7 +354,7 @@ module Transport
     def install_mock_key_exchange(buffer, options = {})
       kex = options[:kex] || Net::SSH::Transport::Kex::DiffieHellmanGroupExchangeSHA256
 
-      Net::SSH::Transport::Kex::MAP.each do |_name, klass|
+      Net::SSH::Transport::Kex::MAP.each_value do |klass|
         next if klass == kex
 
         klass.expects(:new).never
