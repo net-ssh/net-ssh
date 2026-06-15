@@ -80,10 +80,10 @@ module Transport
       def exchange!(options = {})
         connection.expect do |t, buffer|
           assert_equal KEXECDH_INIT, buffer.type
-          assert_equal ecdh.ecdh.public_key.to_bytes, buffer.read_string
+          assert_equal ecdh.ecdh.raw_public_key, buffer.read_string
           t.return(KEXECDH_REPLY,
                    :string, b(:key, server_host_key),
-                   :string, server_ecdh_pubkey.to_bytes,
+                   :string, server_ecdh_pubkey,
                    :string, b(:string, options[:key_type] || key_type,
                               :string, signature))
           connection.expect do |t2, buffer2|
@@ -107,7 +107,7 @@ module Transport
       end
 
       def server_key
-        @server_key ||= ::X25519::Scalar.generate
+        @server_key ||= OpenSSL::PKey.generate_key('X25519')
       end
 
       def server_host_key
@@ -122,11 +122,14 @@ module Transport
       end
 
       def server_ecdh_pubkey
-        @server_ecdh_pubkey ||= server_key.public_key
+        @server_ecdh_pubkey ||= server_key.raw_public_key
       end
 
       def shared_secret
-        @shared_secret ||= OpenSSL::BN.new(ecdh.ecdh.diffie_hellman(server_ecdh_pubkey).to_bytes, 2)
+        @shared_secret ||= begin
+          client_public_key = OpenSSL::PKey.new_raw_public_key('X25519', ecdh.ecdh.raw_public_key)
+          OpenSSL::BN.new(server_key.derive(client_public_key), 2)
+        end
       end
 
       def session_id
@@ -136,8 +139,8 @@ module Transport
                                          :string, packet_data[:client_algorithm_packet],
                                          :string, packet_data[:server_algorithm_packet],
                                          :string, Net::SSH::Buffer.from(:key, server_host_key),
-                                         :string, ecdh.ecdh.public_key.to_bytes,
-                                         :string, server_ecdh_pubkey.to_bytes,
+                                         :string, ecdh.ecdh.raw_public_key,
+                                         :string, server_ecdh_pubkey,
                                          :bignum, shared_secret)
           digester.digest(buffer.to_s)
         end

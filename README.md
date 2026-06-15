@@ -50,7 +50,7 @@ Unsecure algoritms will definitely be removed in Net::SSH 8.*.
 
 | Name                                 | Support               | Details  |
 |--------------------------------------|-----------------------|----------|
-| curve25519-sha256                    | OK                    | Require the gem `x25519` |
+| curve25519-sha256                    | OK                    | Backed by Ruby OpenSSL raw X25519 APIs (`openssl >= 3.2.0`) |
 | ecdh-sha2-nistp521                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdh-sha2-nistp384                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdh-sha2-nistp256                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
@@ -157,7 +157,7 @@ ruby -ropenssl -e 'puts OpenSSL::VERSION; puts OpenSSL::OPENSSL_VERSION'
 
 If `openssl` cannot be required, rebuild Ruby with OpenSSL support or install the Ruby `openssl` gem separately.
 
-Ed25519 support also requires an OpenSSL backend with Ed25519 enabled.
+Ed25519 and curve25519-sha256 support also require an OpenSSL backend with Ed25519 and X25519 enabled.
 
 ## INSTALL:
 
@@ -193,8 +193,6 @@ Ed25519 public key auth is backed by Ruby OpenSSL. The `bcrypt_pbkdf` gem is onl
 ```sh
 gem install bcrypt_pbkdf
 ```
-
-For curve25519-sha256 kex exchange support your bundle file should contain `x25519` dependency.
 
 ## RUBY SUPPORT
 
