@@ -642,6 +642,47 @@ module Net
           connection.loop { !remote_id }
         end
 
+        public # internal use only; public so the Forward service can drive backpressure
+
+        # High/low-water marks (bytes) for a forwarded channel's downstream
+        # socket buffer. Configurable via the connection option
+        # :forward_max_buffered_bytes (defaults to 4 MiB).
+        def forward_high_water
+          (connection.options[:forward_max_buffered_bytes] || (4 * 1024 * 1024)).to_i
+        end
+
+        def forward_low_water
+          forward_high_water / 4
+        end
+
+        # True when this channel forwards to a local socket whose pending output
+        # exceeds the high-water mark.
+        def downstream_congested?
+          sock = self[:socket]
+          sock.respond_to?(:pending_write_bytes) &&
+            sock.pending_write_bytes > forward_high_water
+        end
+
+        # Re-advertise window once a previously congested downstream socket has
+        # drained below the low-water mark. Called from the forwarder's
+        # on_process hook every event-loop tick. Necessary because once the peer
+        # has consumed the granted window no further data arrives to re-trigger
+        # #update_local_window_size.
+        def resume_local_window_size
+          return unless remote_id
+          sock = self[:socket]
+          return unless sock.respond_to?(:pending_write_bytes)
+          return if sock.pending_write_bytes > forward_low_water
+          return unless local_window_size < local_maximum_window_size / 2
+
+          connection.send_message(
+            Buffer.from(:byte, CHANNEL_WINDOW_ADJUST, :long, remote_id, :long, LOCAL_WINDOW_SIZE_INCREMENT)
+          )
+          @local_window_size += LOCAL_WINDOW_SIZE_INCREMENT
+        end
+
+        private
+
         LOCAL_WINDOW_SIZE_INCREMENT = 0x20000
         GOOD_LOCAL_MAXIUMUM_WINDOW_SIZE = 10 * LOCAL_WINDOW_SIZE_INCREMENT
 
@@ -651,6 +692,15 @@ module Net
         # server telling it that the window size has grown.
         def update_local_window_size(size)
           @local_window_size -= size
+
+          # Backpressure (channel -> local socket direction): if this channel is
+          # forwarding to a local socket whose outbound buffer is already backed
+          # up, do NOT advertise more window. The peer keeps sending only until
+          # the window we already granted is exhausted, then stalls, instead of
+          # flooding us into unbounded memory. #resume_local_window_size re-opens
+          # the window once the socket drains.
+          return if downstream_congested?
+
           if local_window_size < local_maximum_window_size / 2
             connection.send_message(
               Buffer.from(:byte, CHANNEL_WINDOW_ADJUST, :long, remote_id, :long, LOCAL_WINDOW_SIZE_INCREMENT)
