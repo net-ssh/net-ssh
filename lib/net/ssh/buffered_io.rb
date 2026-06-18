@@ -129,6 +129,12 @@ module Net
         input.to_s
       end
 
+      # Returns the number of bytes currently queued in the output buffer
+      # but not yet written to the underlying IO. Used for backpressure.
+      def pending_write_bytes
+        output.length
+      end
+
       private
 
       #--
