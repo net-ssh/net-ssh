@@ -251,7 +251,9 @@ module Net
         # Prepares identities from user key_files for loading, preserving their order and sources.
         def prepare_identities_from_files
           key_files.map do |file|
-            if readable_file?(file)
+            if File.extname(file) == ".pub" && readable_file?(file)
+              { load_from: :pubkey_file, pubkey_file: file }
+            elsif readable_file?(file)
               identity = {}
               cert_file = file + "-cert.pub"
               public_key_file = file + ".pub"

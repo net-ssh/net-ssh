@@ -200,6 +200,22 @@ module Authentication
       assert_equal({ from: :agent, identity: ecdsa_sha2_nistp521_pk }, manager.known_identities[ecdsa_sha2_nistp521_pk])
     end
 
+    def test_uses_public_keys_without_private_keys_with_keys_only_set_to_restrict_which_keys_are_loaded_from_agent
+      manager(keys_only: true).stubs(:agent).returns(agent)
+
+      first = File.expand_path("/first")
+      stub_file_pure_public_key first, rsa_pk
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 1, identities.length
+      assert_equal rsa_pk.to_blob, identities.first.to_blob
+
+      assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_pk])
+      assert manager.use_agent?
+    end
+
     def test_only_identities_with_key_files_should_load_from_agent_of_keys_only_set
       manager(keys_only: true).stubs(:agent).returns(agent)
 
@@ -304,6 +320,17 @@ module Authentication
       manager.add(name)
       File.stubs(:file?).with(name).returns(true)
       File.stubs(:readable?).with(name).returns(true)
+      File.stubs(:file?).with(name + ".pub").returns(true)
+      File.stubs(:readable?).with(name + ".pub").returns(true)
+      File.stubs(:file?).with(name + "-cert.pub").returns(false)
+
+      Net::SSH::KeyFactory.expects(:load_public_key).with(name + ".pub").returns(key).at_least_once
+    end
+
+    def stub_file_pure_public_key(name, key)
+      manager.add(name + ".pub")
+      File.stubs(:file?).with(name).returns(false)
+      File.stubs(:readable?).with(name).returns(false)
       File.stubs(:file?).with(name + ".pub").returns(true)
       File.stubs(:readable?).with(name + ".pub").returns(true)
       File.stubs(:file?).with(name + "-cert.pub").returns(false)
