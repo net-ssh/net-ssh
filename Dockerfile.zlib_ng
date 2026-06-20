@@ -11,7 +11,7 @@ ENV INSTALL_PATH="/netssh"
 # Ruby/OpenSSL initialises — setting it in the Rakefile is too late.
 ENV OPENSSL_CONF="/netssh/test/openssl3.conf"
 
-RUN dnf install -y openssl ruby ruby-devel git make gcc zlib-ng crypto-policies-scripts && \
+RUN dnf install -y openssl openssl-devel ruby ruby-devel git make gcc zlib-ng crypto-policies-scripts && \
     update-crypto-policies --set LEGACY
 
 WORKDIR $INSTALL_PATH
