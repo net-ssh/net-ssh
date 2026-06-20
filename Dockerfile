@@ -26,4 +26,4 @@ RUN gem install bundler ${BUNDLERV}  && bundle install
 
 COPY . $INSTALL_PATH/
 
-CMD service ssh start && rake test && NET_SSH_NO_ED25519=1 rake test
+CMD service ssh start && rake test

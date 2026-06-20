@@ -40,7 +40,7 @@ Unsecure algoritms will definitely be removed in Net::SSH 8.*.
 | Name                 | Support               | Details  |
 |----------------------|-----------------------|----------|
 | ssh-rsa              | OK                    |          |
-| ssh-ed25519          | OK                    | Require the gem `ed25519` |
+| ssh-ed25519          | OK                    | Backed by Ruby OpenSSL raw Ed25519 APIs (`openssl >= 3.2.0`) |
 | ecdsa-sha2-nistp521  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdsa-sha2-nistp384  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdsa-sha2-nistp256  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
@@ -50,7 +50,7 @@ Unsecure algoritms will definitely be removed in Net::SSH 8.*.
 
 | Name                                 | Support               | Details  |
 |--------------------------------------|-----------------------|----------|
-| curve25519-sha256                    | OK                    | Require the gem `x25519` |
+| curve25519-sha256                    | OK                    | Backed by Ruby OpenSSL raw X25519 APIs (`openssl >= 3.2.0`) |
 | ecdh-sha2-nistp521                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdh-sha2-nistp384                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdh-sha2-nistp256                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
@@ -64,7 +64,7 @@ Unsecure algoritms will definitely be removed in Net::SSH 8.*.
 | Name                                 | Support               | Details  |
 |--------------------------------------|-----------------------|----------|
 | aes256-ctr / aes192-ctr / aes128-ctr | OK                    |          |
-| chacha20-poly1305@openssh.com        | OK.                   | Requires the gem `rbnacl` |
+| chacha20-poly1305@openssh.com        | OK.                   | Backed by Ruby OpenSSL ChaCha20 and Poly1305 APIs (`openssl >= 3.2.0`) |
 | aes256-cbc / aes192-cbc / aes128-cbc | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
 | rijndael-cbc@lysator.liu.se          | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
 | blowfish-ctr blowfish-cbc            | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
@@ -148,16 +148,16 @@ See Net::SSH for more documentation, and links to further information.
 
 ## REQUIREMENTS:
 
-The only requirement you might be missing is the OpenSSL bindings for Ruby with a version greather than `1.0.1`.
-These are built by default on most platforms, but you can verify that they're built and installed on your system by running the following command line:
+Net::SSH requires Ruby 2.7 or newer and the Ruby `openssl` gem version `3.2.0` or newer.
+The `openssl` gem uses the OpenSSL library Ruby is built against. You can verify the loaded gem and library with:
 
 ```sh
-ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION'
+ruby -ropenssl -e 'puts OpenSSL::VERSION; puts OpenSSL::OPENSSL_VERSION'
 ```
 
-If that spits out something like `OpenSSL 1.0.1 14 Mar 2012`, then you're set.
-If you get an error, then you'll need to see about rebuilding ruby with OpenSSL support,
-or (if your platform supports it) installing the OpenSSL bindings separately.
+If `openssl` cannot be required, rebuild Ruby with OpenSSL support or install the Ruby `openssl` gem separately.
+
+Ed25519, curve25519-sha256, and chacha20-poly1305@openssh.com support also require an OpenSSL backend with Ed25519, X25519, ChaCha20, and Poly1305 enabled.
 
 ## INSTALL:
 
@@ -188,14 +188,11 @@ gem install net-ssh -P HighSecurity
 If you don't add the public key, you'll see an error like "Couldn't verify data signature".
 If you're still having trouble let me know and I'll give you a hand.
 
-For ed25519 public key auth support your bundle file should contain `ed25519`, `bcrypt_pbkdf` dependencies.
+Ed25519 public key auth is backed by Ruby OpenSSL. The `bcrypt_pbkdf` gem is only needed when loading bcrypt-encrypted OpenSSH private keys.
 
 ```sh
-gem install ed25519
 gem install bcrypt_pbkdf
 ```
-
-For curve25519-sha256 kex exchange support your bundle file should contain `x25519` dependency.
 
 ## RUBY SUPPORT
 

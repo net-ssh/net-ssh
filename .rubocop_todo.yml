@@ -335,6 +335,7 @@ Naming/MemoizedInstanceVariableName:
 Naming/MethodName:
   Exclude:
     - 'lib/net/ssh/authentication/ed25519_loader.rb'
+    - 'lib/net/ssh/transport/chacha20_poly1305_cipher_loader.rb'
     - 'lib/net/ssh/transport/kex/curve25519_sha256_loader.rb'
     - 'test/authentication/test_agent.rb'
     - 'test/authentication/test_session.rb'

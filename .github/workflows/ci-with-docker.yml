@@ -17,9 +17,6 @@ jobs:
     - name: Build docker images
       run: docker compose build
 
-    - name: Run ruby 2.6
-      run: docker compose run ruby-2.6
-
     - name: Run ruby 2.7
       run: docker compose run ruby-2.7
 

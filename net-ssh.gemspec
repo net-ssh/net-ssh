@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Net::SSH: a pure-Ruby implementation of the SSH2 client protocol. It allows you to write programs that invoke and interact with processes on remote servers, via SSH2.}
   spec.homepage      = "https://github.com/net-ssh/net-ssh"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.6")
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.7")
   spec.metadata = {
     "changelog_uri" => "https://github.com/net-ssh/net-ssh/blob/master/CHANGES.txt"
   }
@@ -30,13 +30,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  unless ENV['NET_SSH_NO_ED25519']
-    spec.add_development_dependency("bcrypt_pbkdf", "~> 1.0") unless RUBY_PLATFORM == "java"
-    spec.add_development_dependency("ed25519", "~> 1.2")
-    spec.add_development_dependency('x25519') unless RUBY_PLATFORM == 'java'
-  end
+  spec.add_dependency("openssl", ">= 3.2.0")
 
-  spec.add_development_dependency('rbnacl', '~> 7.1') unless ENV['NET_SSH_NO_RBNACL']
+  spec.add_development_dependency("bcrypt_pbkdf", "~> 1.0") unless RUBY_PLATFORM == "java"
 
   spec.add_development_dependency "base64"
   spec.add_development_dependency "bundler", ">= 1.17"
