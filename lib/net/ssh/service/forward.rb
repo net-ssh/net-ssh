@@ -49,7 +49,7 @@ module Net
         # "127.0.0.1", and the rest are applied as above.
         #
         # To request an ephemeral port on the local server, provide 0 (zero) for
-        # the local port number. In all cases, this method will return the port 
+        # the local port number. In all cases, this method will return the port
         # that has been assigned.
         #
         #   ssh.forward.local(1234, "www.capify.org", 80)
