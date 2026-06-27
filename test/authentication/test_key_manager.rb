@@ -93,7 +93,92 @@ module Authentication
 
       assert_equal 1, identities.length
       assert_equal rsa_cert.to_blob, identities.first.to_blob
-      assert_equal({ from: :file, file: first }, manager.known_identities[rsa_cert])
+      assert_equal({ from: :pubkey_file, file: first }, manager.known_identities[rsa_cert])
+    end
+
+    def test_each_identity_should_load_from_public_key_files
+      manager.stubs(:agent).returns(nil)
+      first = File.expand_path("/first")
+      second = File.expand_path("/second")
+      stub_file_public_key first, rsa
+      stub_file_public_key second, dsa
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 2, identities.length
+      assert_equal rsa.to_blob, identities.first.to_blob
+      assert_equal dsa.to_blob, identities.last.to_blob
+
+      assert_equal({ from: :pubkey_file_only, file: nil }, manager.known_identities[rsa])
+      assert_equal({ from: :pubkey_file_only, file: nil }, manager.known_identities[dsa])
+    end
+
+    def test_sign_with_public_key_identity_should_not_try_loading_private_key
+      manager.stubs(:agent).returns(nil)
+      first = File.expand_path("/first")
+      stub_file_public_key first, rsa
+
+      manager.each_identity { |identity| } # preload known_identities
+
+      Net::SSH::KeyFactory.expects(:load_private_key).never
+      assert_raises Net::SSH::Authentication::KeyManagerError do
+        manager.sign(rsa, "hello, world")
+      end
+    end
+
+    def test_each_identity_with_pubkey_file_uses_matching_agent_key
+      # Primary use case: IdentityFile ~/.ssh/kamal.pub + IdentityAgent ~/.1password/agent.sock
+      # The .pub file pins which agent key to use; signing is via the agent.
+      manager.stubs(:agent).returns(agent)
+      first = File.expand_path("/first")
+      stub_file_public_key first, rsa_pk
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      # rsa_pk from agent matches the pubkey file; dsa_pk from agent is also yielded (no keys_only)
+      assert identities.map(&:to_blob).include?(rsa_pk.to_blob)
+      assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_pk])
+    end
+
+    def test_each_identity_with_pubkey_file_filters_agent_keys_when_keys_only
+      # With keys_only (IdentitiesOnly yes), only the agent key matching the .pub file is offered.
+      manager(keys_only: true).stubs(:agent).returns(agent)
+      first = File.expand_path("/first")
+      stub_file_public_key first, rsa_pk
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal 1, identities.length
+      assert_equal rsa_pk.to_blob, identities.first.to_blob
+      assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_pk])
+    end
+
+    def test_each_identity_skips_unreadable_pubkey_file_only_without_raising
+      manager.stubs(:agent).returns(nil)
+      first = File.expand_path("/first")
+      manager.add(first + ".pub")
+      File.stubs(:file?).with(first + ".pub").returns(true)
+      File.stubs(:readable?).with(first + ".pub").returns(true)
+      File.stubs(:file?).with(first + "-cert.pub").returns(false)
+      Net::SSH::KeyFactory.expects(:load_public_key).with(first + ".pub").raises(OpenSSL::PKey::PKeyError, "bad key").at_least_once
+
+      identities = []
+      assert_nothing_raised { manager.each_identity { |identity| identities << identity } }
+      assert_equal 0, identities.length
+    end
+
+    def test_sign_with_pubkey_file_identity_delegates_to_agent
+      manager.stubs(:agent).returns(agent)
+      first = File.expand_path("/first")
+      stub_file_public_key first, rsa_pk
+
+      manager.each_identity { |identity| } # preload known_identities
+
+      agent.expects(:sign).with(rsa_pk, "hello, world").returns("abcxyz123")
+      assert_equal "abcxyz123", manager.sign(rsa_pk, "hello, world")
     end
 
     def test_each_identity_should_use_cert_data
@@ -249,6 +334,17 @@ module Authentication
       assert_equal "abcxyz123", manager.sign(rsa_cert, "hello, world")
     end
 
+    def test_sign_with_implicit_cert_file_and_no_agent_uses_private_key
+      manager.stubs(:agent).returns(nil)
+      first = File.expand_path("/first")
+      stub_implicit_file_cert first, rsa, rsa_cert
+      manager.each_identity { |identity| } # preload known_identities
+
+      Net::SSH::KeyFactory.expects(:load_private_key).with(first, nil, true, prompt).returns(rsa)
+      rsa.expects(:ssh_do_sign).with("hello, world").returns("abcxyz123")
+      assert_equal "\0\0\0\assh-rsa\0\0\0\011abcxyz123", manager.sign(rsa_cert, "hello, world")
+    end
+
     def test_sign_with_file_originated_key_should_load_private_key_and_sign_with_it
       manager.stubs(:agent).returns(nil)
       first = File.expand_path("/first")
@@ -301,9 +397,7 @@ module Authentication
     end
 
     def stub_file_public_key(name, key)
-      manager.add(name)
-      File.stubs(:file?).with(name).returns(true)
-      File.stubs(:readable?).with(name).returns(true)
+      manager.add(name + ".pub")
       File.stubs(:file?).with(name + ".pub").returns(true)
       File.stubs(:readable?).with(name + ".pub").returns(true)
       File.stubs(:file?).with(name + "-cert.pub").returns(false)

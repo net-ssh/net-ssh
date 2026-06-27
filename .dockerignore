@@ -2,5 +2,8 @@
 .git/
 .gitignore
 
+# Vagrant
+test/integration/.vagrant
+
 docker-compose.yml
 README.md
