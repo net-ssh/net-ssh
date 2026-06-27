@@ -1,3 +1,12 @@
+=== 7.3.3
+
+  * Support .pub file as IdentityFile to filter/prioritize agent keys (1Password SSH agent use case) [#942]
+  * Fix cert signing regression when using a .pub companion file without an agent [#1006]
+  * Fix unreadable .pub IdentityFile silently skipped instead of raising [#1006]
+  * Allow multiple UserKnownHostsFile entries (space-separated, matching ssh_config(5)) [#979]
+  * Stop mutating ENV['HOME'] at require time [#997]
+  * Fix ED25519 loader with frozen string literals [#995]
+
 === 7.3.2 rc2
 
  * Fix Ruby 2.6 compat: use public_to_der fallback for EC public keys [#993]
