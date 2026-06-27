@@ -252,7 +252,7 @@ module Net
         def prepare_identities_from_files
           key_files.map do |file|
             if readable_file?(file)
-              identity = {privkey_file: file}
+              identity = { privkey_file: file }
               cert_file = file + "-cert.pub"
               public_key_file = file + ".pub"
               if file.end_with?(".pub")

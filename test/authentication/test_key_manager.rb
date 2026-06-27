@@ -119,7 +119,7 @@ module Authentication
       first = File.expand_path("/first")
       stub_file_public_key first, rsa
 
-      manager.each_identity { |identity| }
+      manager.each_identity { |identity| } # preload known_identities
 
       Net::SSH::KeyFactory.expects(:load_private_key).never
       assert_raises Net::SSH::Authentication::KeyManagerError do
@@ -175,7 +175,7 @@ module Authentication
       first = File.expand_path("/first")
       stub_file_public_key first, rsa_pk
 
-      manager.each_identity { |identity| }
+      manager.each_identity { |identity| } # preload known_identities
 
       agent.expects(:sign).with(rsa_pk, "hello, world").returns("abcxyz123")
       assert_equal "abcxyz123", manager.sign(rsa_pk, "hello, world")
@@ -338,7 +338,7 @@ module Authentication
       manager.stubs(:agent).returns(nil)
       first = File.expand_path("/first")
       stub_implicit_file_cert first, rsa, rsa_cert
-      manager.each_identity { |identity| }
+      manager.each_identity { |identity| } # preload known_identities
 
       Net::SSH::KeyFactory.expects(:load_private_key).with(first, nil, true, prompt).returns(rsa)
       rsa.expects(:ssh_do_sign).with("hello, world").returns("abcxyz123")
