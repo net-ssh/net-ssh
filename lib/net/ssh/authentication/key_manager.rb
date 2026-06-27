@@ -176,7 +176,7 @@ module Net
             raise KeyManagerError, "the given identity is a public key only and cannot be used for signing without an agent"
           end
 
-          if info[:key].nil? && info[:from] == :file
+          if info[:key].nil? && (info[:from] == :file || info[:from] == :pubkey_file)
             begin
               info[:key] = KeyFactory.load_private_key(info[:file], options[:passphrase], !options[:non_interactive], options[:password_prompt])
             rescue OpenSSL::OpenSSLError, Exception => e
@@ -324,7 +324,7 @@ module Net
 
         def process_identity_loading_error(identity, e)
           case identity[:load_from]
-          when :pubkey_file
+          when :pubkey_file, :pubkey_file_only
             error { "could not load public key file `#{identity[:pubkey_file]}': #{e.class} (#{e.message})" }
           when :privkey_file
             error { "could not load private key file `#{identity[:privkey_file]}': #{e.class} (#{e.message})" }
