@@ -2,6 +2,7 @@ require 'net/ssh/transport/openssl'
 
 require 'net/ssh/authentication/certificate'
 require 'net/ssh/authentication/ed25519_loader'
+require 'net/ssh/authentication/security_key'
 
 module Net
   module SSH
@@ -338,6 +339,10 @@ module Net
           key = Net::SSH::Authentication::ED25519::PubKey.read_keyblob(self)
         when /^ecdsa\-sha2\-(\w*)$/
           key = OpenSSL::PKey::EC.read_keyblob($1, self)
+        when Net::SSH::Authentication::SecurityKey::SK_ECDSA_SHA2_NISTP256,
+          Net::SSH::Authentication::SecurityKey::SK_SSH_ED25519
+          # FIDO/U2F security keys (agent-backed only); see SecurityKey.
+          key = Net::SSH::Authentication::SecurityKey::PubKey.read_keyblob(type, self)
         else
           raise NotImplementedError, "unsupported key type `#{type}'"
         end

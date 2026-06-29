@@ -194,6 +194,20 @@ Ed25519 public key auth is backed by Ruby OpenSSL. The `bcrypt_pbkdf` gem is onl
 gem install bcrypt_pbkdf
 ```
 
+### FIDO/U2F security keys (agent only)
+
+FIDO/U2F hardware security keys (`sk-ecdsa-sha2-nistp256@openssh.com` and
+`sk-ssh-ed25519@openssh.com`, created with `ssh-keygen -t ecdsa-sk` / `-t ed25519-sk`)
+are supported for public key authentication **only when provided by a running
+`ssh-agent`**. The agent (and the hardware token behind it) performs the actual
+signing, including the required user-presence touch, so no extra gems or native
+FIDO libraries are needed.
+
+Loading `sk-*` keys directly from private key files on disk is **not** supported,
+because that requires talking to the authenticator over the FIDO/CTAP protocol
+(e.g. via libfido2), which Net::SSH does not implement. Make sure your key is
+loaded in the agent (`ssh-add -K` / `ssh-add`) and that `SSH_AUTH_SOCK` is set.
+
 ## RUBY SUPPORT
 
 * See [net-ssh.gemspec](https://github.com/net-ssh/net-ssh/blob/master/net-ssh.gemspec) for current versions ruby requirements
