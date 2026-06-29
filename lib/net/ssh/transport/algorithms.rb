@@ -6,6 +6,7 @@ require 'net/ssh/transport/constants'
 require 'net/ssh/transport/hmac'
 require 'net/ssh/transport/kex'
 require 'net/ssh/transport/kex/curve25519_sha256_loader'
+require 'net/ssh/transport/kex/mlkem768_x25519_sha256_loader'
 require 'net/ssh/transport/server_version'
 require 'net/ssh/authentication/ed25519_loader'
 
@@ -71,6 +72,11 @@ module Net
           DEFAULT_ALGORITHMS[:kex].unshift(
             'curve25519-sha256',
             'curve25519-sha256@libssh.org'
+          )
+        end
+        if Net::SSH::Transport::Kex::MLKEM768X25519Sha256Loader::LOADED
+          DEFAULT_ALGORITHMS[:kex].unshift(
+            'mlkem768x25519-sha256'
           )
         end
 

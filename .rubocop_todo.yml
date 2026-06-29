@@ -336,6 +336,7 @@ Naming/MethodName:
   Exclude:
     - 'lib/net/ssh/authentication/ed25519_loader.rb'
     - 'lib/net/ssh/transport/kex/curve25519_sha256_loader.rb'
+    - 'lib/net/ssh/transport/kex/mlkem768_x25519_sha256_loader.rb'
     - 'test/authentication/test_agent.rb'
     - 'test/authentication/test_session.rb'
     - 'test/common.rb'
