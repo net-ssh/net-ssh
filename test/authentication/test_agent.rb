@@ -139,6 +139,26 @@ module Authentication
       assert_equal "Okay, but not the best", result.last.comment
     end
 
+    def test_identities_should_return_agent_backed_security_key
+      sk_blob = Net::SSH::Buffer.from(
+        :string, "sk-ecdsa-sha2-nistp256@openssh.com",
+        :string, "nistp256",
+        :string, "\x04#{"\x11" * 64}".b,
+        :string, "ssh:"
+      ).to_s
+
+      socket.expect do |s, type, _buffer|
+        assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
+        s.return(SSH2_AGENT_IDENTITIES_ANSWER, :long, 1, :string, sk_blob, :string, "yubikey")
+      end
+
+      result = agent.identities
+      assert_equal 1, result.size
+      assert_equal "sk-ecdsa-sha2-nistp256@openssh.com", result.first.ssh_type
+      assert_equal sk_blob, result.first.to_blob
+      assert_equal "yubikey", result.first.comment
+    end
+
     def test_identities_should_ignore_unimplemented_ones
       key1 = key
       key2 = OpenSSL::PKey::DSA.new(1024)
