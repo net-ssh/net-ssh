@@ -21,6 +21,13 @@ class TestKeyFactory < NetSSHTest
     assert_equal rsa_key_fingerprint_sha256, Net::SSH::KeyFactory.load_private_key(@key_file).fingerprint('sha256')
   end
 
+  def test_load_openssh_format_private_RSA_key_without_ed25519_should_return_key
+    return unless ENV['NET_SSH_NO_ED25519']
+
+    File.expects(:read).with(@key_file).returns(rsa_key_openssh)
+    assert_equal rsa_key_openssh_pem.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
+  end
+
   def test_load_unencrypted_private_DSA_key_should_return_key
     File.expects(:read).with(@key_file).returns(dsa_key.export)
     assert_equal dsa_key.to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
@@ -208,6 +215,97 @@ class TestKeyFactory < NetSSHTest
   def rsa_key
     # 512 bits
     @rsa_key ||= OpenSSL::PKey::RSA.new("0\202\001;\002\001\000\002A\000\235\236\374N\e@2E\321\3757\003\354c\276N\f\003\3479Ko\005\317\0027\a\255=\345!\306\220\340\211;\027u\331\260\362\2063x\332\301y4\353\v%\032\214v\312\304\212\271GJ\353\2701\031\002\003\001\000\001\002@\022Y\306*\031\306\031\224Cde\231QV3{\306\256U\2477\377\017\000\020\323\363R\332\027\351\034\224OU\020\227H|pUS\n\263+%\304\341\321\273/\271\e\004L\250\273\020&,\t\304By\002!\000\311c\246%a\002\305\277\262R\266\244\250\025V_\351]\264\016\265\341\355\305\223\347Z$8\205#\023\002!\000\310\\\367|\243I\363\350\020\307\246\302\365\ed\212L\273\2158M\223w\a\367 C\t\224A4\243\002!\000\262]+}\327\231\331\002\2331^\312\036\204'g\363\f&\271\020\245\365-\024}\306\374e\202\2459\002 }\231\341\276\3551\277\307{5\\\361\233\353G\024wS\237\fk}\004\302&\205\277\340rb\211\327\002!\000\223\307\025I:\215_\260\370\252\3757\256Y&X\364\354\342\215\350\203E8\227|\f\237M\375D|")
+  end
+
+  def rsa_key_openssh
+    # ssh-keygen -t rsa -b 3072 -N "" -f /tmp/net_ssh_openssh_rsa_test_key
+    @rsa_key_openssh ||= <<~EOF
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      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
+      -----END OPENSSH PRIVATE KEY-----
+    EOF
+  end
+
+  def rsa_key_openssh_pem
+    # ssh-keygen -t rsa -b 3072 -N "" -f /tmp/net_ssh_openssh_rsa_test_key
+    # cp /tmp/net_ssh_openssh_rsa_test_key /tmp/net_ssh_openssh_rsa_test_key.pem
+    # ssh-keygen -p -m PEM -N "" -P "" -f /tmp/net_ssh_openssh_rsa_test_key.pem
+    @rsa_key_openssh_pem ||= OpenSSL::PKey::RSA.new(<<~EOF)
+      -----BEGIN RSA PRIVATE KEY-----
+      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
+      -----END RSA PRIVATE KEY-----
+    EOF
   end
 
   def dsa_key
