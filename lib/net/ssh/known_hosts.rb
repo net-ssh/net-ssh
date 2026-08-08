@@ -63,9 +63,13 @@ module Net
         end
 
         # Returns true if the certificate lists no principals (unrestricted) or
-        # if the given hostname is among the listed principals.
+        # if the given hostname matches a listed principal. Host-certificate
+        # principals are shell-glob patterns, matching OpenSSH, whose
+        # sshkey_cert_check_host passes wildcard_pattern=1 so principals like
+        # "*.example.com" are matched with match_pattern rather than strcmp.
         def matches_principal?(server_key, hostname)
-          server_key.valid_principals.empty? || server_key.valid_principals.include?(hostname)
+          server_key.valid_principals.empty? ||
+            server_key.valid_principals.any? { |principal| File.fnmatch(principal, hostname) }
         end
 
         # Returns true if the certificate's validity window covers the current time.

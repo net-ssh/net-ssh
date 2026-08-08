@@ -208,6 +208,16 @@ class TestCertAuthority < NetSSHTest
     assert ca.matches_principal?(cert, "any.host.example.com")
   end
 
+  def test_matches_principal_with_wildcard_pattern
+    cert = make_cert(valid_principals: ["*.example.com"])
+    assert ca.matches_principal?(cert, "server.example.com")
+  end
+
+  def test_matches_principal_wildcard_does_not_match_other_domain
+    cert = make_cert(valid_principals: ["*.example.com"])
+    refute ca.matches_principal?(cert, "server.evil.com")
+  end
+
   # matches_validity?
 
   def test_matches_validity_for_cert_within_window
