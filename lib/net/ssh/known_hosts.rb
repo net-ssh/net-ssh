@@ -75,6 +75,19 @@ module Net
 
           true
         end
+
+        # Returns true if the certificate is a host certificate. A user
+        # certificate (type :user) must never authenticate a host.
+        def matches_type?(server_key)
+          server_key.type == :host
+        end
+
+        # Returns true if every critical option in the certificate is one we can
+        # enforce. net-ssh enforces none, so any critical option is unsupported
+        # and, as OpenSSH does, must cause the certificate to be rejected.
+        def critical_options_supported?(server_key)
+          server_key.critical_options.empty?
+        end
       end
     end
 

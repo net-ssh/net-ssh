@@ -69,9 +69,9 @@ class TestAlwaysCertAuthority < NetSSHTest
     verifier.verify(session: make_session, key: cert)
   end
 
-  def test_raises_host_key_unknown_when_principal_does_not_match
+  def test_raises_host_key_mismatch_when_principal_does_not_match
     verifier = Net::SSH::Verifiers::Always.new
-    assert_raises(Net::SSH::HostKeyUnknown) do
+    assert_raises(Net::SSH::HostKeyMismatch) do
       verifier.verify(
         session: make_session(matches_principal: false),
         key: cert
@@ -79,10 +79,10 @@ class TestAlwaysCertAuthority < NetSSHTest
     end
   end
 
-  def test_raises_host_key_unknown_when_cert_has_expired
+  def test_raises_host_key_mismatch_when_cert_has_expired
     verifier = Net::SSH::Verifiers::Always.new
     expired_cert = cert(valid_before: Time.now - 3600)
-    assert_raises(Net::SSH::HostKeyUnknown) do
+    assert_raises(Net::SSH::HostKeyMismatch) do
       verifier.verify(
         session: make_session(matches_validity: false),
         key: expired_cert
@@ -93,7 +93,7 @@ class TestAlwaysCertAuthority < NetSSHTest
   def test_expired_cert_error_message_says_expired
     verifier = Net::SSH::Verifiers::Always.new
     expired_cert = cert(valid_before: Time.now - 3600)
-    error = assert_raises(Net::SSH::HostKeyUnknown) do
+    error = assert_raises(Net::SSH::HostKeyMismatch) do
       verifier.verify(
         session: make_session(matches_validity: false),
         key: expired_cert
@@ -105,13 +105,33 @@ class TestAlwaysCertAuthority < NetSSHTest
   def test_not_yet_valid_cert_error_message_says_not_yet_valid
     verifier = Net::SSH::Verifiers::Always.new
     future_cert = cert(valid_before: Time.now + 7200, valid_after: Time.now + 3600)
-    error = assert_raises(Net::SSH::HostKeyUnknown) do
+    error = assert_raises(Net::SSH::HostKeyMismatch) do
       verifier.verify(
         session: make_session(matches_validity: false),
         key: future_cert
       )
     end
     assert_match(/not yet valid/i, error.message)
+  end
+
+  def test_raises_host_key_mismatch_when_cert_is_not_a_host_cert
+    verifier = Net::SSH::Verifiers::Always.new
+    assert_raises(Net::SSH::HostKeyMismatch) do
+      verifier.verify(
+        session: make_session(matches_type: false),
+        key: cert
+      )
+    end
+  end
+
+  def test_raises_host_key_mismatch_when_critical_option_unsupported
+    verifier = Net::SSH::Verifiers::Always.new
+    assert_raises(Net::SSH::HostKeyMismatch) do
+      verifier.verify(
+        session: make_session(critical_options_supported: false),
+        key: cert
+      )
+    end
   end
 
   def test_raises_host_key_mismatch_when_ca_does_not_match
@@ -126,10 +146,13 @@ class TestAlwaysCertAuthority < NetSSHTest
 
   # A mock @cert-authority-style host key entry that duck-types CertAuthority.
   class MockCertAuthorityEntry
-    def initialize(matches_key: true, matches_validity: true, matches_principal: true)
+    def initialize(matches_key: true, matches_validity: true, matches_principal: true,
+                   matches_type: true, critical_options_supported: true)
       @matches_key = matches_key
       @matches_validity = matches_validity
       @matches_principal = matches_principal
+      @matches_type = matches_type
+      @critical_options_supported = critical_options_supported
     end
 
     def matches_key?(_server_key)
@@ -142,6 +165,14 @@ class TestAlwaysCertAuthority < NetSSHTest
 
     def matches_principal?(_server_key, _hostname)
       @matches_principal
+    end
+
+    def matches_type?(_server_key)
+      @matches_type
+    end
+
+    def critical_options_supported?(_server_key)
+      @critical_options_supported
     end
   end
 end
