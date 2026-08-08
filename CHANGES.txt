@@ -1,3 +1,7 @@
+=== 7.3.4
+
+  * Verify @cert-authority host certificate constraints — principals (shell-glob, matching OpenSSH), validity window, host type, and critical options — instead of trusting any CA-signed certificate for any host [#1010]
+
 === 7.3.3
 
   * Support .pub file as IdentityFile to filter/prioritize agent keys (1Password SSH agent use case) [#942]

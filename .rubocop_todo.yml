@@ -758,10 +758,12 @@ Style/OpenStructUse:
   Exclude:
     - 'test/authentication/test_ed25519.rb'
     - 'test/common.rb'
+    - 'test/test_known_hosts.rb'
     - 'test/transport/kex/test_curve25519_sha256.rb'
     - 'test/transport/kex/test_diffie_hellman_group1_sha1.rb'
     - 'test/transport/kex/test_ecdh_sha2_nistp256.rb'
     - 'test/verifiers/test_always.rb'
+    - 'test/verifiers/test_cert_authority_checks.rb'
 
 # Offense count: 16
 # Configuration parameters: AllowedMethods.
