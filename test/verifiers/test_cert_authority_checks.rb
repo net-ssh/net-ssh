@@ -132,6 +132,18 @@ module CertAuthorityChecks
       end
     end
 
+    # Host-certificate principals are shell-glob patterns (OpenSSH match_pattern),
+    # so a "*.example.com" principal must match the target and nothing outside it.
+    def test_accepts_wildcard_principal_matching_host
+      assert verify(always, build_cert(principals: ["*.example.com"]))
+    end
+
+    def test_rejects_wildcard_principal_for_other_domain
+      assert_raises(Net::SSH::HostKeyError) do
+        verify(always, build_cert(principals: ["*.evil.com"]))
+      end
+    end
+
     def test_rejects_expired_cert
       assert_raises(Net::SSH::HostKeyError) do
         verify(always, build_cert(valid_after: Time.now - 7200, valid_before: Time.now - 3600))
