@@ -119,6 +119,9 @@ module Net
               transport.hint :authenticated
               return packet
 
+            when EXT_INFO
+              info { 'Ignoring SSH_MSG_EXT_INFO packet' }
+
             else
               raise Net::SSH::Exception, "unexpected message #{packet.type} (#{packet})"
             end
