@@ -115,5 +115,16 @@ module NetSSH
       assert !options[:logger].nil?
       assert !options[:password_prompt].nil?
     end
+
+    def test_constructor_should_consider_default_configuration
+      previous = Net::SSH.default_configuration
+      Net::SSH.default_configuration = { timeout: 5, keepalive: true }
+      options = { keepalive: false }
+      Net::SSH.start('localhost', 'testuser', options)
+      assert_equal 5, options[:timeout]
+      assert_equal false, options[:keepalive]
+    ensure
+      Net::SSH.default_configuration = previous
+    end
   end
 end
