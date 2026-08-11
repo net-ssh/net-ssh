@@ -17,6 +17,12 @@ module Net
       # An exception for indicating that the SSH agent is not available.
       class AgentNotAvailable < AgentError; end
 
+      # Raised internally when the agent closes the connection mid-packet (a
+      # read returns EOF). Some non-OpenSSH agents (e.g. Proton Pass) close the
+      # socket rather than replying to the legacy version request; #negotiate!
+      # catches this to reconnect and fall back to the modern protocol.
+      class AgentClosedConnection < AgentError; end
+
       # This class implements a simple client for the ssh-agent protocol. It
       # does not implement any specific protocol, but instead copies the
       # behavior of the ssh-agent functions in the OpenSSH library (3.8).
@@ -83,12 +89,23 @@ module Net
         # socket reports that it is an SSH2-compatible agent, this will fail
         # (it only supports the ssh-agent distributed by OpenSSH).
         def connect!(agent_socket_factory = nil, identity_agent = nil)
+          # Remembered so #negotiate! can reopen the socket if the agent closes
+          # the connection on the legacy version request (see #negotiate!).
+          @agent_socket_factory = agent_socket_factory
+          @identity_agent = identity_agent
+          open_agent_socket!
+        end
+
+        # Opens the connection to the agent using the factory/identity set up by
+        # #connect!. Split out so #negotiate! can reopen it if the agent drops
+        # the connection on the legacy version request.
+        def open_agent_socket!
           debug { "connecting to ssh-agent" }
           @socket =
-            if agent_socket_factory
-              agent_socket_factory.call
-            elsif identity_agent
-              unix_socket_class.open(File.expand_path(identity_agent))
+            if @agent_socket_factory
+              @agent_socket_factory.call
+            elsif @identity_agent
+              unix_socket_class.open(File.expand_path(@identity_agent))
             elsif ENV['SSH_AUTH_SOCK'] && unix_socket_class
               unix_socket_class.open(File.expand_path(ENV['SSH_AUTH_SOCK']))
             elsif Gem.win_platform? && RUBY_ENGINE != "jruby"
@@ -100,6 +117,7 @@ module Net
           error { "could not connect to ssh-agent: #{e.message}" }
           raise AgentNotAvailable, $!.message
         end
+        private :open_agent_socket!
 
         # Attempts to negotiate the SSH agent protocol version. Raises an error
         # if the version could not be negotiated successfully.
@@ -114,6 +132,13 @@ module Net
           elsif type != SSH_AGENT_RSA_IDENTITIES_ANSWER1 && type != SSH_AGENT_RSA_IDENTITIES_ANSWER2
             raise AgentNotAvailable, "unknown response from agent: #{type}, #{body.to_s.inspect}"
           end
+        rescue AgentClosedConnection
+          # Some non-OpenSSH agents (e.g. Proton Pass) don't implement the legacy
+          # version request and close the socket instead of replying. They still
+          # speak the modern ssh-agent protocol, so reopen the connection and
+          # continue without version negotiation.
+          debug { "ssh-agent closed the connection on the version request; assuming a modern agent and reconnecting" }
+          open_agent_socket!
         end
 
         # Return an array of all identities (public keys) known to the agent.
@@ -223,8 +248,18 @@ module Net
         # tuple consisting of the packet type, and the packet's body (which
         # is returned as a Net::SSH::Buffer).
         def read_packet
-          buffer = Net::SSH::Buffer.new(@socket.read(4))
-          buffer.append(@socket.read(buffer.read_long))
+          # A nil read means the agent closed the connection mid-packet. Guard
+          # explicitly: otherwise Buffer.new(nil) stores nil.to_s, which is a
+          # frozen "" in Ruby 3.x, and the append below raises a confusing
+          # FrozenError instead of a meaningful error.
+          header = @socket.read(4)
+          raise AgentClosedConnection, "agent closed the connection" if header.nil?
+
+          buffer = Net::SSH::Buffer.new(header)
+          body = @socket.read(buffer.read_long)
+          raise AgentClosedConnection, "agent closed the connection" if body.nil?
+
+          buffer.append(body)
           type = buffer.read_byte
           debug { "received agent packet #{type} len #{buffer.length - 4}" }
           return type, buffer
