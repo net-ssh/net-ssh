@@ -196,6 +196,9 @@ module Net
         # appropriately.
         def classify_key(data, filename)
           if data.match(/-----BEGIN OPENSSH PRIVATE KEY-----/)
+            if OpenSSL::PKey.respond_to?(:read)
+              return OpenSSLPKeyType
+            end
             Net::SSH::Authentication::ED25519Loader.raiseUnlessLoaded("OpenSSH keys only supported if ED25519 is available")
             return OpenSSHPrivateKeyType
           elsif OpenSSL::PKey.respond_to?(:read)
