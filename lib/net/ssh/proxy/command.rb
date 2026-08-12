@@ -38,25 +38,16 @@ module Net
         # Return a new socket connected to the given host and port via the
         # proxy that was requested when the socket factory was instantiated.
         def open(host, port, connection_options = nil)
-          command_line = @command_line_template.gsub(/%(.)/) {
-            case $1
-            when 'h'
-              host
-            when 'p'
-              port.to_s
-            when 'r'
-              remote_user = connection_options && connection_options[:remote_user]
-              if remote_user
-                remote_user
-              else
-                raise ArgumentError, "remote user name not available"
-              end
-            when '%'
-              '%'
-            else
-              raise ArgumentError, "unknown key: #{$1}"
+          net_ssh_settings = { host: host, port: port }
+          if connection_options
+            net_ssh_settings.merge!(connection_options)
+            if connection_options[:remote_user]
+              net_ssh_settings[:user] = connection_options[:remote_user]
             end
-          }
+          end
+          token_values = Net::SSH::Config.build_token_values_from_net_ssh_config(net_ssh_settings)
+
+          command_line = Net::SSH::Config.expand_tokens_in_string(@command_line_template, token_values, raise_unknown_keys: true)
           begin
             io = IO.popen(command_line, "r+")
             begin
