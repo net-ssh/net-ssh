@@ -41,9 +41,9 @@ module Net
         def ask(prompt, echo = true)
           $stdout.print(prompt)
           $stdout.flush
-          ret = $stdin.noecho(&:gets).chomp
-          $stdout.print("\n")
-          ret
+          ret = echo ? $stdin.gets : $stdin.noecho(&:gets)
+          $stdout.print("\n") unless echo
+          ret.chomp
         end
 
         # success method will be called when the password was accepted
