@@ -88,7 +88,11 @@ module Net
           @algorithms.start
           wait { algorithms.initialized? }
         rescue Errno::ETIMEDOUT
+          @socket&.close
           raise Net::SSH::ConnectionTimeout
+        rescue StandardError
+          @socket&.close
+          raise
         end
 
         def host_keys
