@@ -75,6 +75,7 @@ module Net
 
           @socket.extend(PacketStream)
           @socket.logger = @logger
+          set_no_delay if options[:no_delay]
 
           debug { "connection established" }
 
@@ -275,6 +276,18 @@ module Net
         attr_reader :queue # :nodoc:
 
         private
+
+        # Turns Nagle's algorithm off on the socket, so that a packet written
+        # while the previous one is still unacknowledged goes out right away
+        # instead of waiting for the server's ACK. A ProxyCommand hands the
+        # transport a pipe rather than a socket, and the command on its other
+        # end owns the TCP connection, so there is nothing to set in that case.
+        def set_no_delay
+          return unless socket.respond_to?(:setsockopt)
+
+          debug { "setting TCP_NODELAY" }
+          socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
+        end
 
         # Compatibility verifier which allows users to keep using
         # custom verifier code without adding new :verify_signature

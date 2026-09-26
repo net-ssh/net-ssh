@@ -388,6 +388,28 @@ module Transport
       assert_match "establishing connection to #{TEST_HOST}:#{TEST_PORT}", logger.messages
     end
 
+    def test_no_delay_option_should_set_tcp_nodelay_on_socket
+      socket.expects(:setsockopt).with(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
+      session!(no_delay: true)
+    end
+
+    def test_tcp_nodelay_should_not_be_set_by_default
+      socket.expects(:setsockopt).never
+      session!
+    end
+
+    def test_no_delay_option_should_be_ignored_when_proxy_yields_a_pipe
+      reader, writer = IO.pipe
+      proxy = stub("proxy", open: reader)
+      Net::SSH::Transport::ServerVersion.stubs(:new).returns(server_version)
+      Net::SSH::Transport::Algorithms.stubs(:new).returns(algorithms)
+
+      assert_nothing_raised { Net::SSH::Transport::Session.new(TEST_HOST, proxy: proxy, no_delay: true) }
+    ensure
+      reader&.close
+      writer&.close
+    end
+
     private
 
     def socket
