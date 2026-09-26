@@ -208,6 +208,11 @@ module Transport
       assert !algorithms.initialized?
     end
 
+    def test_accept_kexinit_with_truncated_packet_should_raise_ssh_exception
+      truncated = P(:byte, KEXINIT, :long, 0, :long, 0, :long, 0, :long, 0)
+      assert_raises(Net::SSH::Exception) { algorithms.accept_kexinit(truncated) }
+    end
+
     def test_key_exchange_when_initiated_by_server
       transport.expect do |_t, buffer|
         assert_kexinit(buffer)
