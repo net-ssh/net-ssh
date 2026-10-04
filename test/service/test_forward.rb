@@ -5,7 +5,7 @@ require 'net/ssh/service/forward'
 module Service
   class TestForward < NetSSHTest
     def test_auth_agent_channel_should_connect_to_identity_agent
-      session = stub("session", logger: nil, options: { identity_agent: "/tmp/agent.sock" }, on_open_channel: nil)
+      session = stub("session", logger: nil, options: { forward_agent: true, identity_agent: "/tmp/agent.sock" }, on_open_channel: nil)
       forward = Net::SSH::Service::Forward.new(session)
       agent_socket = stub("agent_socket")
 
