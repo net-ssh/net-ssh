@@ -1,6 +1,24 @@
+=== 8.0.0 rc1
+
+  * BREAKING: TCP_NODELAY is now set on the connection socket by default, as OpenSSH does; pass `no_delay: false` to keep Nagle's algorithm on [#1017]
+  * Ruby 4.0 support: add `logger` as a runtime dependency; Windows Pageant users on Ruby 4.0 need `fiddle` in their Gemfile [#984, #1012]
+  * Close the socket when connection setup fails, e.g. on a server version timeout [#1013]
+  * Ignore SSH_MSG_EXT_INFO from servers that send it unrequested [#1020]
+  * Fix `undefined method 'to_pem'` for ECDSA key_data when an agent is running [#982]
+  * Agent forwarding connects to the agent set by `identity_agent`/IdentityAgent [#974]
+  * Keyboard-interactive prompts show input when the server asks for it to be echoed [#1014]
+  * Raise Net::SSH::Exception on a truncated KEXINIT [#1016]
+  * Remote forwarding no longer prints diagnostics to stdout [#953]
+
 === 8.0.0 beta3
 
   * Verify @cert-authority host certificate constraints — principals (shell-glob, matching OpenSSH), validity window, host type, and critical options — instead of trusting any CA-signed certificate for any host [#1009]
+
+=== 8.0.0 beta1
+
+  * BREAKING: require Ruby 2.7 and the openssl gem >= 3.2 [#1001]
+  * Use OpenSSL for Ed25519, X25519 and ChaCha20-Poly1305; the ed25519, x25519 and rbnacl gems are no longer needed [#1001]
+  * Support AEAD-encrypted OpenSSH private keys [#1001]
 
 === 7.3.3
 
