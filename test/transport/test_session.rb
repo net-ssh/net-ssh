@@ -228,6 +228,12 @@ module Transport
       assert_nil session.poll_message
     end
 
+    def test_poll_message_should_silently_handle_ext_info_packets
+      session!
+      socket.expects(:next_packet).times(2).returns(P(:byte, EXT_INFO, :long, 1, :string, "server-sig-algs", :string, "rsa-sha2-512"), nil)
+      assert_nil session.poll_message
+    end
+
     def test_poll_message_should_silently_handle_unimplemented_packets
       session!
       socket.expects(:next_packet).times(2).returns(P(:byte, UNIMPLEMENTED, :long, 15), nil)

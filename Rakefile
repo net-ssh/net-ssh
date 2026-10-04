@@ -9,11 +9,10 @@ require "rake"
 require "rake/clean"
 require "bundler/gem_tasks"
 
-# rdoc is no longer a default gem as of Ruby 4.0; keep the rest of the
-# Rakefile usable when it is not installed.
 begin
   require "rdoc/task"
 rescue LoadError
+  # rdoc is no longer a default gem as of Ruby 4.0; the rest of the Rakefile works without it.
 end
 
 desc "When releasing make sure NET_SSH_BUILDGEM_SIGNED is set"

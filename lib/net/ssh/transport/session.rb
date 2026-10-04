@@ -210,6 +210,10 @@ module Net
             when DEBUG
               send(packet[:always_display] ? :fatal : :debug) { packet[:message] }
 
+            # We don't advertise ext-info-c, but some servers send EXT_INFO anyway (#955).
+            when EXT_INFO
+              debug { "ignoring EXT_INFO packet" }
+
             when KEXINIT
               algorithms.accept_kexinit(packet)
 
