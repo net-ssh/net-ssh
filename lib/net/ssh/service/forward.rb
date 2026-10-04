@@ -48,9 +48,9 @@ module Net
         # If three arguments are given, it is as if the local bind address is
         # "127.0.0.1", and the rest are applied as above.
         #
-        # To request an ephemeral port on the remote server, provide 0 (zero) for
-        # the port number. In all cases, this method will return the port that
-        # has been assigned.
+        # To request an ephemeral port on the local server, provide 0 (zero) for
+        # the local port number. In all cases, this method will return the port
+        # that has been assigned.
         #
         #   ssh.forward.local(1234, "www.capify.org", 80)
         #   assigned_port = ssh.forward.local("0.0.0.0", 0, "www.capify.org", 80)
@@ -388,13 +388,13 @@ module Net
           originator_address = packet.read_string
           originator_port    = packet.read_long
 
-          puts "REMOTE 0: #{connected_port} #{connected_address} #{originator_address} #{originator_port}"
+          debug { "REMOTE 0: #{connected_port} #{connected_address} #{originator_address} #{originator_port}" }
           remote = @remote_forwarded_ports[[connected_port, connected_address]]
           if remote.nil?
             raise Net::SSH::ChannelOpenFailed.new(1, "unknown request from remote forwarded connection on #{connected_address}:#{connected_port}")
           end
 
-          puts "REMOTE: #{remote.host} #{remote.port}"
+          debug { "REMOTE: #{remote.host} #{remote.port}" }
           client = TCPSocket.new(remote.host, remote.port)
           info { "connected #{connected_address}:#{connected_port} originator #{originator_address}:#{originator_port}" }
 

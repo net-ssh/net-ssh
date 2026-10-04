@@ -388,6 +388,14 @@ module Transport
       assert_match "establishing connection to #{TEST_HOST}:#{TEST_PORT}", logger.messages
     end
 
+    def test_socket_should_be_closed_when_version_negotiation_times_out
+      Socket.stubs(:tcp).returns(socket)
+      Net::SSH::Transport::ServerVersion.stubs(:new).raises(Net::SSH::ConnectionTimeout)
+      socket.expects(:close)
+
+      assert_raises(Net::SSH::ConnectionTimeout) { Net::SSH::Transport::Session.new(TEST_HOST) }
+    end
+
     private
 
     def socket
