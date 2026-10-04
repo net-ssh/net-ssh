@@ -181,6 +181,17 @@ module Authentication
       assert_equal "abcxyz123", manager.sign(rsa_pk, "hello, world")
     end
 
+    def test_each_identity_should_match_agent_keys_against_ecdsa_key_data
+      manager.stubs(:agent).returns(stub("agent", identities: [rsa_pk, ecdsa_sha2_nistp256_pk]))
+      manager.add_key_data(ecdsa_sha2_nistp256.to_pem)
+      manager.add_key_data(rsa.to_pem)
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal [rsa_pk.to_blob, ecdsa_sha2_nistp256_pk.to_blob], identities.map(&:to_blob)
+    end
+
     def test_each_identity_should_use_cert_data
       manager.stubs(:agent).returns(nil)
 

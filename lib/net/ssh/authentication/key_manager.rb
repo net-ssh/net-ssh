@@ -127,9 +127,10 @@ module Net
           if agent
             agent.identities.each do |key|
               corresponding_user_identity = user_identities.detect { |identity|
-                identity[:public_key] && identity[:public_key].to_pem == key.to_pem
+                identity[:public_key] && identity[:public_key].to_blob == key.to_blob
               }
-              user_identities.delete(corresponding_user_identity) if corresponding_user_identity
+              # By identity: EC::Point#== raises TypeError when compared with other key types.
+              user_identities.reject! { |identity| identity.equal?(corresponding_user_identity) }
 
               if !options[:keys_only] || corresponding_user_identity
                 known_identities[key] = { from: :agent, identity: key }
