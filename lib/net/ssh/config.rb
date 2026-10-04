@@ -229,7 +229,6 @@ module Net
           fingerprinthash: :fingerprint_hash,
           port: :port,
           user: :user,
-          userknownhostsfile: :user_known_hosts_file,
           checkhostip: :check_host_ip
         }.freeze
         def translate_config_key(hash, key, value, settings)
@@ -293,6 +292,8 @@ module Net
             hash[:set_env] = Shellwords.split(value.to_s).map { |e| e.split '=', 2 }.to_h
           when :numberofpasswordprompts
             hash[:number_of_password_prompts] = value.to_i
+          when :userknownhostsfile
+            hash[:user_known_hosts_file] = value.split(/\s+/)
           when *TRANSLATE_CONFIG_KEY_RENAME_MAP.keys
             hash[TRANSLATE_CONFIG_KEY_RENAME_MAP[key]] = value
           end

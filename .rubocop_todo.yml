@@ -235,7 +235,7 @@ Lint/UselessTimes:
 # Offense count: 205
 # Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
 Metrics/AbcSize:
-  Max: 75
+  Max: 76
 
 # Offense count: 16
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
@@ -335,6 +335,7 @@ Naming/MemoizedInstanceVariableName:
 Naming/MethodName:
   Exclude:
     - 'lib/net/ssh/authentication/ed25519_loader.rb'
+    - 'lib/net/ssh/transport/chacha20_poly1305_cipher_loader.rb'
     - 'lib/net/ssh/transport/kex/curve25519_sha256_loader.rb'
     - 'test/authentication/test_agent.rb'
     - 'test/authentication/test_session.rb'
@@ -758,10 +759,12 @@ Style/OpenStructUse:
   Exclude:
     - 'test/authentication/test_ed25519.rb'
     - 'test/common.rb'
+    - 'test/test_known_hosts.rb'
     - 'test/transport/kex/test_curve25519_sha256.rb'
     - 'test/transport/kex/test_diffie_hellman_group1_sha1.rb'
     - 'test/transport/kex/test_ecdh_sha2_nistp256.rb'
     - 'test/verifiers/test_always.rb'
+    - 'test/verifiers/test_cert_authority_checks.rb'
 
 # Offense count: 16
 # Configuration parameters: AllowedMethods.

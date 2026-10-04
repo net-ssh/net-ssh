@@ -228,6 +228,12 @@ module Transport
       assert_nil session.poll_message
     end
 
+    def test_poll_message_should_silently_handle_ext_info_packets
+      session!
+      socket.expects(:next_packet).times(2).returns(P(:byte, EXT_INFO, :long, 1, :string, "server-sig-algs", :string, "rsa-sha2-512"), nil)
+      assert_nil session.poll_message
+    end
+
     def test_poll_message_should_silently_handle_unimplemented_packets
       session!
       socket.expects(:next_packet).times(2).returns(P(:byte, UNIMPLEMENTED, :long, 15), nil)
@@ -386,6 +392,36 @@ module Transport
 
       session!(logger: logger)
       assert_match "establishing connection to #{TEST_HOST}:#{TEST_PORT}", logger.messages
+    end
+
+    def test_tcp_nodelay_should_be_set_by_default
+      socket.expects(:setsockopt).with(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
+      session!
+    end
+
+    def test_no_delay_false_should_keep_nagle_on
+      socket.expects(:setsockopt).never
+      session!(no_delay: false)
+    end
+
+    def test_no_delay_option_should_be_ignored_when_proxy_yields_a_pipe
+      reader, writer = IO.pipe
+      proxy = stub("proxy", open: reader)
+      Net::SSH::Transport::ServerVersion.stubs(:new).returns(server_version)
+      Net::SSH::Transport::Algorithms.stubs(:new).returns(algorithms)
+
+      assert_nothing_raised { Net::SSH::Transport::Session.new(TEST_HOST, proxy: proxy) }
+    ensure
+      reader&.close
+      writer&.close
+    end
+
+    def test_socket_should_be_closed_when_version_negotiation_times_out
+      Socket.stubs(:tcp).returns(socket)
+      Net::SSH::Transport::ServerVersion.stubs(:new).raises(Net::SSH::ConnectionTimeout)
+      socket.expects(:close)
+
+      assert_raises(Net::SSH::ConnectionTimeout) { Net::SSH::Transport::Session.new(TEST_HOST) }
     end
 
     private

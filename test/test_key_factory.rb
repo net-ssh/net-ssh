@@ -131,7 +131,7 @@ class TestKeyFactory < NetSSHTest
   end
 
   def test_load_should_parse_openssh_format_private_ecdsa_sha2_nistp256_key
-    return if ENV['NET_SSH_NO_ED25519']
+    skip "OpenSSH private key loader requires Ed25519 support" unless Net::SSH::Authentication::ED25519Loader::LOADED
 
     File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp256_key_openssh)
     assert_equal ecdsa_sha2_nistp256_key.to_blob, Net::SSH::KeyFactory.load_private_key('/key-file').to_blob
@@ -148,7 +148,7 @@ class TestKeyFactory < NetSSHTest
   end
 
   def test_load_should_parse_openssh_format_private_ecdsa_sha2_nistp384_key
-    return if ENV['NET_SSH_NO_ED25519']
+    skip "OpenSSH private key loader requires Ed25519 support" unless Net::SSH::Authentication::ED25519Loader::LOADED
 
     File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp384_key_openssh)
     assert_equal ecdsa_sha2_nistp384_key.to_blob, Net::SSH::KeyFactory.load_private_key('/key-file').to_blob
@@ -165,7 +165,7 @@ class TestKeyFactory < NetSSHTest
   end
 
   def test_load_should_parse_openssh_format_private_ecdsa_sha2_nistp521_key
-    return if ENV['NET_SSH_NO_ED25519']
+    skip "OpenSSH private key loader requires Ed25519 support" unless Net::SSH::Authentication::ED25519Loader::LOADED
 
     File.expects(:read).with(@key_file).returns(ecdsa_sha2_nistp521_key_openssh)
     assert_equal ecdsa_sha2_nistp521_key.to_blob, Net::SSH::KeyFactory.load_private_key('/key-file').to_blob

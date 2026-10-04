@@ -72,11 +72,15 @@ module Net
         def add(key_file)
           key_files.push(File.expand_path(key_file)).uniq!
           self
+        rescue ArgumentError
+          self
         end
 
         # Add the given keycert_file to the list of keycert files that will be used.
         def add_keycert(keycert_file)
           keycert_files.push(File.expand_path(keycert_file)).uniq!
+          self
+        rescue ArgumentError
           self
         end
 
@@ -123,9 +127,10 @@ module Net
           if agent
             agent.identities.each do |key|
               corresponding_user_identity = user_identities.detect { |identity|
-                identity[:public_key] && identity[:public_key].to_pem == key.to_pem
+                identity[:public_key] && identity[:public_key].to_blob == key.to_blob
               }
-              user_identities.delete(corresponding_user_identity) if corresponding_user_identity
+              # By identity: EC::Point#== raises TypeError when compared with other key types.
+              user_identities.reject! { |identity| identity.equal?(corresponding_user_identity) }
 
               if !options[:keys_only] || corresponding_user_identity
                 known_identities[key] = { from: :agent, identity: key }
@@ -172,7 +177,11 @@ module Net
         def sign(identity, data, sig_alg = nil)
           info = known_identities[identity] or raise KeyManagerError, "the given identity is unknown to the key manager"
 
-          if info[:key].nil? && info[:from] == :file
+          if info[:from] == :pubkey_file_only
+            raise KeyManagerError, "the given identity is a public key only and cannot be used for signing without an agent"
+          end
+
+          if info[:key].nil? && (info[:from] == :file || info[:from] == :pubkey_file)
             begin
               info[:key] = KeyFactory.load_private_key(info[:file], options[:passphrase], !options[:non_interactive], options[:password_prompt])
             rescue OpenSSL::OpenSSLError, Exception => e
@@ -248,10 +257,14 @@ module Net
         def prepare_identities_from_files
           key_files.map do |file|
             if readable_file?(file)
-              identity = {}
+              identity = { privkey_file: file }
               cert_file = file + "-cert.pub"
               public_key_file = file + ".pub"
-              if readable_file?(cert_file)
+              if file.end_with?(".pub")
+                identity[:load_from] = :pubkey_file_only
+                identity[:pubkey_file] = file
+                identity.delete(:privkey_file)
+              elsif readable_file?(cert_file)
                 identity[:load_from] = :pubkey_file
                 identity[:pubkey_file] = cert_file
               elsif readable_file?(public_key_file)
@@ -260,7 +273,7 @@ module Net
               else
                 identity[:load_from] = :privkey_file
               end
-              identity.merge(privkey_file: file)
+              identity
             end
           end.compact
         end
@@ -282,7 +295,10 @@ module Net
             case identity[:load_from]
             when :pubkey_file
               key = KeyFactory.load_public_key(identity[:pubkey_file])
-              { public_key: key, from: :file, file: identity[:privkey_file] }
+              { public_key: key, from: :pubkey_file, file: identity[:privkey_file] }
+            when :pubkey_file_only
+              key = KeyFactory.load_public_key(identity[:pubkey_file])
+              { public_key: key, from: :pubkey_file_only, file: identity[:privkey_file] }
             when :privkey_file
               private_key = KeyFactory.load_private_key(
                 identity[:privkey_file], options[:passphrase], ask_passphrase, options[:password_prompt]
@@ -313,7 +329,7 @@ module Net
 
         def process_identity_loading_error(identity, e)
           case identity[:load_from]
-          when :pubkey_file
+          when :pubkey_file, :pubkey_file_only
             error { "could not load public key file `#{identity[:pubkey_file]}': #{e.class} (#{e.message})" }
           when :privkey_file
             error { "could not load private key file `#{identity[:privkey_file]}': #{e.class} (#{e.message})" }

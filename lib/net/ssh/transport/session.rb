@@ -62,6 +62,7 @@ module Net
           @port = options[:port] || DEFAULT_PORT
           @bind_address = options[:bind_address] || nil
           @options = options
+          @host_key_verifier = select_host_key_verifier(options[:verify_host_key])
 
           @socket =
             if (factory = options[:proxy])
@@ -75,12 +76,11 @@ module Net
 
           @socket.extend(PacketStream)
           @socket.logger = @logger
+          set_no_delay unless options[:no_delay] == false
 
           debug { "connection established" }
 
           @queue = []
-
-          @host_key_verifier = select_host_key_verifier(options[:verify_host_key])
 
           @server_version = ServerVersion.new(socket, logger, options[:timeout])
 
@@ -88,7 +88,11 @@ module Net
           @algorithms.start
           wait { algorithms.initialized? }
         rescue Errno::ETIMEDOUT
+          @socket&.close
           raise Net::SSH::ConnectionTimeout
+        rescue StandardError
+          @socket&.close
+          raise
         end
 
         def host_keys
@@ -102,8 +106,8 @@ module Net
         # SSH known-host files.
         def host_as_string
           @host_as_string ||= begin
-            string = "#{host}"
-            string = "[#{string}]:#{port}" if port != DEFAULT_PORT
+            string = +"#{host}"
+            string = +"[#{string}]:#{port}" if port != DEFAULT_PORT
 
             peer_ip = socket.peer_ip
 
@@ -206,6 +210,10 @@ module Net
             when DEBUG
               send(packet[:always_display] ? :fatal : :debug) { packet[:message] }
 
+            # We don't advertise ext-info-c, but some servers send EXT_INFO anyway (#955).
+            when EXT_INFO
+              debug { "ignoring EXT_INFO packet" }
+
             when KEXINIT
               algorithms.accept_kexinit(packet)
 
@@ -275,6 +283,18 @@ module Net
         attr_reader :queue # :nodoc:
 
         private
+
+        # Turns Nagle's algorithm off on the socket, so that a packet written
+        # while the previous one is still unacknowledged goes out right away
+        # instead of waiting for the server's ACK. A ProxyCommand hands the
+        # transport a pipe rather than a socket, and the command on its other
+        # end owns the TCP connection, so there is nothing to set in that case.
+        def set_no_delay
+          return unless socket.respond_to?(:setsockopt)
+
+          debug { "setting TCP_NODELAY" }
+          socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
+        end
 
         # Compatibility verifier which allows users to keep using
         # custom verifier code without adding new :verify_signature
