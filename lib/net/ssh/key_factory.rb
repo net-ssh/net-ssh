@@ -55,7 +55,7 @@ module Net
           prompter = nil
           result =
             begin
-              key_type.read(data, passphrase || 'invalid')
+              key_type.read(data, passphrase)
             rescue *key_type.error_classes => e
               encrypted_key = !!key_type.encrypted_key?(data, e) if encrypted_key.nil?
               if encrypted_key && ask_passphrase
@@ -138,8 +138,9 @@ module Net
             raise Exception, "TODO: subclasses should implement"
           end
 
+          # A nil passphrase would make OpenSSL prompt on the terminal itself.
           def self.read(key_data, passphrase)
-            open_ssl_class.new(key_data, passphrase)
+            open_ssl_class.new(key_data, passphrase || 'invalid')
           end
 
           def self.encrypted_key?(key_data, error)
@@ -149,7 +150,7 @@ module Net
 
         class OpenSSLPKeyType < OpenSSLKeyTypeBase
           def self.read(key_data, passphrase)
-            open_ssl_class.read(key_data, passphrase)
+            open_ssl_class.read(key_data, passphrase || 'invalid')
           end
 
           def self.open_ssl_class
