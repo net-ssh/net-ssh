@@ -5,7 +5,11 @@ module Net
     module Transport
       ## Extension module for aes(128|256)gcm ciphers
       module GCMCipher
-        # rubocop:disable Metrics/AbcSize
+        BLOCK_SIZE = 16
+        IV_BYTES = 12
+        AUTH_TAG_BYTES = 16
+
+        # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         def self.extended(orig)
           # rubocop:disable Metrics/BlockLength
           orig.class_eval do
@@ -100,15 +104,32 @@ module Net
             end
 
             def mac_length
-              16
+              GCMCipher::AUTH_TAG_BYTES
             end
 
             def block_size
-              16
+              GCMCipher::BLOCK_SIZE
             end
 
             def self.block_size
-              16
+              GCMCipher::BLOCK_SIZE
+            end
+
+            def self.iv_len
+              GCMCipher::IV_BYTES
+            end
+
+            def self.auth_length
+              GCMCipher::AUTH_TAG_BYTES
+            end
+
+            def self.decrypt_private_key(ciphertext, auth_tag, key, initialization_vector)
+              cipher = new(encrypt: false, key: key)
+
+              cipher.nonce = initialization_vector
+              cipher.cipher.auth_tag = auth_tag.to_s
+              cipher.cipher.auth_data = ''
+              cipher.cipher.update(ciphertext.to_s) << cipher.cipher.final
             end
 
             #
@@ -117,7 +138,7 @@ module Net
             # N_MAX       maximum nonce (IV) length        12 octets
             #
             def iv_len
-              12
+              GCMCipher::IV_BYTES
             end
 
             #
@@ -201,7 +222,7 @@ module Net
         end
         # rubocop:enable Metrics/BlockLength
       end
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     end
   end
 end
