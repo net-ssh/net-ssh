@@ -156,12 +156,12 @@ module Net
     #   for better performance if your SSH server supports it (most do).
     # * :max_win_size => maximum size we tell the other side that is supported for
     #   the window.
-    # * :no_delay => set to +true+ to turn Nagle's algorithm off on the
-    #   connection's socket (TCP_NODELAY), so a packet written while the
-    #   previous one is still unacknowledged is sent right away instead of
-    #   waiting for the server's ACK. Has no effect when the socket comes from
-    #   a ProxyCommand, whose command owns the TCP connection. Defaults to
-    #   +false+.
+    # * :no_delay => turns Nagle's algorithm off on the connection's socket
+    #   (TCP_NODELAY), so a packet written while the previous one is still
+    #   unacknowledged is sent right away instead of waiting for the server's
+    #   ACK. OpenSSH does the same for every connection. Set to +false+ to keep
+    #   Nagle's algorithm on. Has no effect when the socket comes from a
+    #   ProxyCommand, whose command owns the TCP connection. Defaults to +true+.
     # * :non_interactive => set to true if your app is non interactive and prefers
     #   authentication failure vs password prompt. Non-interactive applications
     #   should set it to true to prefer failing a password/etc auth methods vs.

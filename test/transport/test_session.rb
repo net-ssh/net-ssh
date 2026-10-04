@@ -394,14 +394,14 @@ module Transport
       assert_match "establishing connection to #{TEST_HOST}:#{TEST_PORT}", logger.messages
     end
 
-    def test_no_delay_option_should_set_tcp_nodelay_on_socket
+    def test_tcp_nodelay_should_be_set_by_default
       socket.expects(:setsockopt).with(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
-      session!(no_delay: true)
+      session!
     end
 
-    def test_tcp_nodelay_should_not_be_set_by_default
+    def test_no_delay_false_should_keep_nagle_on
       socket.expects(:setsockopt).never
-      session!
+      session!(no_delay: false)
     end
 
     def test_no_delay_option_should_be_ignored_when_proxy_yields_a_pipe
@@ -410,12 +410,12 @@ module Transport
       Net::SSH::Transport::ServerVersion.stubs(:new).returns(server_version)
       Net::SSH::Transport::Algorithms.stubs(:new).returns(algorithms)
 
-      assert_nothing_raised { Net::SSH::Transport::Session.new(TEST_HOST, proxy: proxy, no_delay: true) }
+      assert_nothing_raised { Net::SSH::Transport::Session.new(TEST_HOST, proxy: proxy) }
     ensure
       reader&.close
       writer&.close
     end
-      
+
     def test_socket_should_be_closed_when_version_negotiation_times_out
       Socket.stubs(:tcp).returns(socket)
       Net::SSH::Transport::ServerVersion.stubs(:new).raises(Net::SSH::ConnectionTimeout)

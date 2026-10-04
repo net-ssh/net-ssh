@@ -76,7 +76,7 @@ module Net
 
           @socket.extend(PacketStream)
           @socket.logger = @logger
-          set_no_delay if options[:no_delay]
+          set_no_delay unless options[:no_delay] == false
 
           debug { "connection established" }
 

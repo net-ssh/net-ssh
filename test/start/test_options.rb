@@ -27,7 +27,7 @@ module NetSSH
 
     def test_start_should_accept_no_delay_option
       assert_nothing_raised do
-        options = { no_delay: true }
+        options = { no_delay: false }
         Net::SSH.start('localhost', 'testuser', options)
       end
     end
