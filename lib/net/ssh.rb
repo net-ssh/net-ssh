@@ -69,7 +69,7 @@ module Net
       max_win_size send_env set_env use_agent number_of_password_prompts
       append_all_supported_algorithms non_interactive password_prompt
       agent_socket_factory minimum_dh_bits verify_host_key
-      fingerprint_hash check_host_ip pubkey_algorithms
+      fingerprint_hash check_host_ip pubkey_algorithms no_delay
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -156,6 +156,12 @@ module Net
     #   for better performance if your SSH server supports it (most do).
     # * :max_win_size => maximum size we tell the other side that is supported for
     #   the window.
+    # * :no_delay => turns Nagle's algorithm off on the connection's socket
+    #   (TCP_NODELAY), so a packet written while the previous one is still
+    #   unacknowledged is sent right away instead of waiting for the server's
+    #   ACK. OpenSSH does the same for every connection. Set to +false+ to keep
+    #   Nagle's algorithm on. Has no effect when the socket comes from a
+    #   ProxyCommand, whose command owns the TCP connection. Defaults to +true+.
     # * :non_interactive => set to true if your app is non interactive and prefers
     #   authentication failure vs password prompt. Non-interactive applications
     #   should set it to true to prefer failing a password/etc auth methods vs.
