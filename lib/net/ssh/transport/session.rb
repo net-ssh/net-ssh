@@ -62,6 +62,7 @@ module Net
           @port = options[:port] || DEFAULT_PORT
           @bind_address = options[:bind_address] || nil
           @options = options
+          @host_key_verifier = select_host_key_verifier(options[:verify_host_key])
 
           @socket =
             if (factory = options[:proxy])
@@ -80,15 +81,17 @@ module Net
 
           @queue = []
 
-          @host_key_verifier = select_host_key_verifier(options[:verify_host_key])
-
           @server_version = ServerVersion.new(socket, logger, options[:timeout])
 
           @algorithms = Algorithms.new(self, options)
           @algorithms.start
           wait { algorithms.initialized? }
         rescue Errno::ETIMEDOUT
+          @socket&.close
           raise Net::SSH::ConnectionTimeout
+        rescue StandardError
+          @socket&.close
+          raise
         end
 
         def host_keys
