@@ -347,16 +347,16 @@ module Net
 
           packet.read(16) # skip the cookie value
 
-          data[:kex]                = packet.read_string.split(/,/)
-          data[:host_key]           = packet.read_string.split(/,/)
-          data[:encryption_client]  = packet.read_string.split(/,/)
-          data[:encryption_server]  = packet.read_string.split(/,/)
-          data[:hmac_client]        = packet.read_string.split(/,/)
-          data[:hmac_server]        = packet.read_string.split(/,/)
-          data[:compression_client] = packet.read_string.split(/,/)
-          data[:compression_server] = packet.read_string.split(/,/)
-          data[:language_client]    = packet.read_string.split(/,/)
-          data[:language_server]    = packet.read_string.split(/,/)
+          data[:kex]                = read_name_list(packet)
+          data[:host_key]           = read_name_list(packet)
+          data[:encryption_client]  = read_name_list(packet)
+          data[:encryption_server]  = read_name_list(packet)
+          data[:hmac_client]        = read_name_list(packet)
+          data[:hmac_server]        = read_name_list(packet)
+          data[:compression_client] = read_name_list(packet)
+          data[:compression_server] = read_name_list(packet)
+          data[:language_client]    = read_name_list(packet)
+          data[:language_server]    = read_name_list(packet)
 
           # TODO: if first_kex_packet_follows, we need to try to skip the
           # actual kexinit stuff and try to guess what the server is doing...
@@ -364,6 +364,13 @@ module Net
           # first_kex_packet_follows = packet.read_bool
 
           return data
+        end
+
+        # Reads one comma-separated algorithm name-list from a KEXINIT packet.
+        def read_name_list(packet)
+          list = packet.read_string or raise Net::SSH::Exception, "malformed KEXINIT packet from server"
+
+          list.split(/,/)
         end
 
         # Given the #algorithms map of preferred algorithm types, this constructs
