@@ -27,6 +27,9 @@ module Net
           MEND = "-----END OPENSSH PRIVATE KEY-----"
           MAGIC = "openssh-key-v1"
 
+          # Same limit as OpenSSH; bcrypt_pbkdf with 2**32 rounds would run for months (GHSA-rpq3-v334-f5pm).
+          MAX_KDF_ROUNDS = 1 << 20
+
           class DecryptError < ArgumentError
             def initialize(message, encrypted_key: false)
               super(message)
@@ -36,6 +39,11 @@ module Net
             def encrypted_key?
               return @encrypted_key
             end
+          end
+
+          def self.check_bcrypt_kdf!(rounds, password)
+            raise ArgumentError.new("Private key bcrypt rounds #{rounds} exceeds #{MAX_KDF_ROUNDS}") if rounds > MAX_KDF_ROUNDS
+            raise DecryptError.new("Passphrase required for encrypted private key", encrypted_key: true) if password.nil? || password.empty?
           end
 
           def self.read(datafull, password)
@@ -73,6 +81,8 @@ module Net
               rounds = kdfopts.read_long
 
               raise "BCryptPbkdf is not implemented for jruby" if RUBY_PLATFORM == "java"
+
+              check_bcrypt_kdf!(rounds, password)
 
               key = BCryptPbkdf::key(password, salt, keylen + ivlen, rounds)
               raise DecryptError.new("BCyryptPbkdf failed", encrypted_key: true) unless key
