@@ -31,6 +31,18 @@ class TestProxyJump < NetSSHTest
     assert_equal "ssh -l user1 -J user2@proxy2,user3@proxy3 -W %h:%p proxy1", proxy.command_line_template
   end
 
+  def test_shell_metacharacters_are_rejected
+    ["u$(id)@jump", "user@jump;id", "jump,u$(id)@proxy2", "proxy1,user2@proxy2;id"].each do |jump|
+      assert_raises(ArgumentError) { Net::SSH::Proxy::Jump.new(jump).build_proxy_command_equivalent }
+    end
+  end
+
+  def test_config_path_is_escaped
+    proxy = Net::SSH::Proxy::Jump.new("proxy")
+    proxy.build_proxy_command_equivalent(config: "/home/user/my config")
+    assert_equal "ssh -F /home/user/my\\ config -W %h:%p proxy", proxy.command_line_template
+  end
+
   def test_config_override
     proxy = Net::SSH::Proxy::Jump.new("proxy")
     proxy.build_proxy_command_equivalent(config: "/home/user/.ssh/config2")
