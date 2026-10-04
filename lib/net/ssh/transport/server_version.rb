@@ -18,6 +18,10 @@ module Net
         # The SSH version string as reported by Net::SSH
         PROTO_VERSION = "SSH-2.0-Ruby/Net::SSH_#{Net::SSH::Version::CURRENT} #{RUBY_PLATFORM}"
 
+        # Same limits as OpenSSH, so a server can't make us buffer its banner without bound (GHSA-r75w-7fhp-84w8).
+        MAX_LINE_LENGTH = 8192
+        MAX_HEADER_LINES = 1024
+
         # Any header text sent by the server prior to sending the version.
         attr_reader :header
 
@@ -45,24 +49,15 @@ module Net
           socket.write "#{PROTO_VERSION}\r\n"
           socket.flush
 
-          raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating" if timeout && !IO.select([socket], nil, nil, timeout)
+          deadline = timeout && (Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout)
 
-          loop do
-            @version = String.new
-            loop do
-              begin
-                b = socket.readpartial(1)
-                raise Net::SSH::Disconnect, "connection closed by remote host" if b.nil?
-              rescue EOFError
-                raise Net::SSH::Disconnect, "connection closed by remote host"
-              end
-              @version << b
-              break if b == "\n"
-            end
+          MAX_HEADER_LINES.times do
+            @version = read_line(socket, deadline)
             break if @version.match(/^SSH-/)
 
             @header << @version
           end
+          raise Net::SSH::Exception, "no SSH version received in the first #{MAX_HEADER_LINES} lines" unless @version.match(/^SSH-/)
 
           @version.chomp!
           debug { "remote is `#{@version}'" }
@@ -70,6 +65,31 @@ module Net
           raise Net::SSH::Exception, "incompatible SSH version `#{@version}'" unless @version.match(/^SSH-(1\.99|2\.0)-/)
 
           raise Net::SSH::ConnectionTimeout, "timeout during client version negotiating" if timeout && !IO.select(nil, [socket], nil, timeout)
+        end
+
+        def read_line(socket, deadline)
+          line = String.new
+          loop do
+            wait_readable(socket, deadline)
+            begin
+              b = socket.readpartial(1)
+              raise Net::SSH::Disconnect, "connection closed by remote host" if b.nil?
+            rescue EOFError
+              raise Net::SSH::Disconnect, "connection closed by remote host"
+            end
+            line << b
+            return line if b == "\n"
+            raise Net::SSH::Exception, "server version line exceeds #{MAX_LINE_LENGTH} bytes" if line.bytesize > MAX_LINE_LENGTH
+          end
+        end
+
+        def wait_readable(socket, deadline)
+          return unless deadline
+
+          remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+          return if remaining > 0 && IO.select([socket], nil, nil, remaining)
+
+          raise Net::SSH::ConnectionTimeout, "timeout during server version negotiating"
         end
       end
     end
