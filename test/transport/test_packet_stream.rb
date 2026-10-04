@@ -142,6 +142,19 @@ module Transport
       assert_equal DEBUG, packet.type
     end
 
+    def test_next_packet_should_reject_lengths_above_the_maximum
+      IO.stubs(:select).returns([[stream]])
+      stream.expects(:recv).once.returns([0xFFFF_FFFC, 4].pack("NC") + ("\0" * 3))
+      error = assert_raises(Net::SSH::Exception) { stream.next_packet(:nonblock) }
+      assert_match(/bad packet length 4294967292/, error.message)
+    end
+
+    def test_next_packet_should_reject_lengths_below_the_minimum
+      IO.stubs(:select).returns([[stream]])
+      stream.expects(:recv).once.returns([4, 4].pack("NC") + ("\0" * 3))
+      assert_raises(Net::SSH::Exception) { stream.next_packet(:nonblock) }
+    end
+
     def test_nonblocking_next_packet_should_raise
       IO.stubs(:select).returns([[stream]])
       stream.stubs(:recv).returns("")
