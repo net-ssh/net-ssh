@@ -129,12 +129,8 @@ module Net
               corresponding_user_identity = user_identities.detect { |identity|
                 identity[:public_key] && identity[:public_key].to_blob == key.to_blob
               }
-              if corresponding_user_identity
-                user_identities.delete_if do |ui|
-                  # OpenSSL raises TypeError when OpenSSL::PKey::EC::Point is compared with incompatible class
-                  ui[:public_key].class == corresponding_user_identity[:public_key].class && ui == corresponding_user_identity
-                end
-              end
+              # By identity: EC::Point#== raises TypeError when compared with other key types.
+              user_identities.reject! { |identity| identity.equal?(corresponding_user_identity) }
 
               if !options[:keys_only] || corresponding_user_identity
                 known_identities[key] = { from: :agent, identity: key }
