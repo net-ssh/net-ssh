@@ -15,6 +15,9 @@ module Net
       module PacketStream # rubocop:disable Metrics/ModuleLength
         PROXY_COMMAND_HOST_IP = '<no hostip for proxy command>'.freeze
 
+        # Same limit as OpenSSH; a larger length would make us buffer whatever the server streams (GHSA-pfqh-p9vh-wx4p).
+        PACKET_MAX_SIZE = 256 * 1024
+
         include BufferedIo
 
         def self.extended(object)
@@ -240,6 +243,7 @@ module Net
               @packet = Net::SSH::Buffer.new(server.update_cipher(data))
               @packet_length = @packet.read_long
             end
+            raise Net::SSH::Exception, "bad packet length #{@packet_length}" if @packet_length < 5 || @packet_length > PACKET_MAX_SIZE
           end
 
           need = @packet_length + 4 - aad_length - server.block_size
