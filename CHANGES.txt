@@ -1,3 +1,12 @@
+=== 7.3.5
+
+  * Security: refuse agent channels opened by the server unless agent forwarding was requested (`forward_agent`, ForwardAgent, or `Forward#agent`); any use of port forwarding let a malicious server use the local ssh-agent [GHSA-qpg5-fx6p-8cq3]
+  * Security: reject host and user names containing shell metacharacters, and non-numeric ports, before substituting them into ProxyCommand/ProxyJump commands, as OpenSSH does since 9.6 [GHSA-3x7f-q7wf-fp73]
+  * Security: reject OpenSSH private keys claiming more than 2**20 bcrypt rounds, and only run the KDF once a passphrase is given [GHSA-rpq3-v334-f5pm]
+  * Security: bound the server's identification banner like OpenSSH (8192-byte lines, 1024 lines), and apply `:timeout` to the whole version exchange instead of only its first byte [GHSA-r75w-7fhp-84w8]
+  * Security: reject packet lengths below 5 or above 256 KB, as OpenSSH does [GHSA-pfqh-p9vh-wx4p]
+  * Security: treat unexpected packets during the initial key exchange as a protocol error, and bound packets queued during a re-key [GHSA-ggxh-cfwq-5xqc]
+
 === 7.3.4
 
   * Verify @cert-authority host certificate constraints — principals (shell-glob, matching OpenSSH), validity window, host type, and critical options — instead of trusting any CA-signed certificate for any host [#1010]
