@@ -27,6 +27,10 @@ module Net
         # The standard port for the SSH protocol.
         DEFAULT_PORT = 22
 
+        # Packets held back during a re-key are bounded so a server can't exhaust memory (GHSA-ggxh-cfwq-5xqc).
+        MAX_QUEUED_PACKETS = 16_384
+        MAX_QUEUED_BYTES = 32 * 1024 * 1024
+
         # The host to connect to, as given to the constructor.
         attr_reader :host
 
@@ -81,6 +85,7 @@ module Net
           debug { "connection established" }
 
           @queue = []
+          @queued_bytes = 0
 
           @server_version = ServerVersion.new(socket, logger, options[:timeout])
 
@@ -192,7 +197,7 @@ module Net
         # read from the queue before the socket is queried.
         def poll_message(mode = :nonblock, consume_queue = true)
           loop do
-            return @queue.shift if consume_queue && @queue.any? && algorithms.allow?(@queue.first)
+            return shift_queue if consume_queue && @queue.any? && algorithms.allow?(@queue.first)
 
             packet = socket.next_packet(mode, options[:timeout])
             return nil if packet.nil?
@@ -219,6 +224,7 @@ module Net
 
             else
               return packet if algorithms.allow?(packet)
+              raise Net::SSH::Exception, "unexpected packet type #{packet.type} during initial key exchange" unless algorithms.initialized?
 
               push(packet)
             end
@@ -242,6 +248,11 @@ module Net
         # #poll_message will return packets from the queue in the order they
         # were received.
         def push(packet)
+          @queued_bytes += packet.length
+          if @queue.size >= MAX_QUEUED_PACKETS || @queued_bytes > MAX_QUEUED_BYTES
+            raise Net::SSH::Exception, "too many packets queued during key exchange"
+          end
+
           @queue.push(packet)
         end
 
@@ -283,6 +294,12 @@ module Net
         attr_reader :queue # :nodoc:
 
         private
+
+        def shift_queue
+          packet = @queue.shift
+          @queued_bytes -= packet.length
+          packet
+        end
 
         # Turns Nagle's algorithm off on the socket, so that a packet written
         # while the previous one is still unacknowledged goes out right away
