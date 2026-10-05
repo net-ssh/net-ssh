@@ -59,6 +59,9 @@ module Net
           MEND = "-----END OPENSSH PRIVATE KEY-----"
           MAGIC = "openssh-key-v1"
 
+          # Same limit as OpenSSH; bcrypt_pbkdf with 2**32 rounds would run for months (GHSA-rpq3-v334-f5pm).
+          MAX_KDF_ROUNDS = 1 << 20
+
           class DecryptError < ArgumentError
             def initialize(message, encrypted_key: false)
               super(message)
@@ -109,6 +112,7 @@ module Net
             if kdfname == 'bcrypt'
               salt = kdfopts.read_string
               rounds = kdfopts.read_long
+              raise ArgumentError.new("Private key bcrypt rounds #{rounds} exceeds #{MAX_KDF_ROUNDS}") if rounds > MAX_KDF_ROUNDS
 
               key = bcrypt_pbkdf_key(password, salt, keylen + ivlen, rounds)
             else
@@ -145,6 +149,7 @@ module Net
             rescue LoadError
               raise DecryptError.new("bcrypt_pbkdf is required to decrypt bcrypt-encrypted OpenSSH private keys")
             end
+            raise DecryptError.new("Passphrase required for encrypted private key", encrypted_key: true) if password.nil? || password.empty?
 
             key = BCryptPbkdf::key(password, salt, length, rounds)
             raise DecryptError.new("BCryptPbkdf failed", encrypted_key: true) unless key

@@ -160,6 +160,25 @@ module Authentication
       end
     end
 
+    def test_key_with_too_many_bcrypt_rounds_is_rejected_without_running_the_kdf
+      Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader.expects(:bcrypt_pbkdf_key).never
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH::Authentication::ED25519::PrivKey.read(private_key_max_rounds, 'pwd')
+      end
+      assert_match(/rounds 4294967295 exceeds/, error.message)
+    end
+
+    def test_encrypted_key_without_passphrase_does_not_run_the_kdf
+      require 'bcrypt_pbkdf'
+      BCryptPbkdf.expects(:key).never
+
+      error = assert_raises(Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader::DecryptError) do
+        Net::SSH::KeyFactory.load_data_private_key(private_key_pwd, nil, false)
+      end
+      assert error.encrypted_key?
+    end
+
     def assert_pwd_key_matches_public_key(private_key, public_key)
       pub = Net::SSH::Buffer.new(Base64.decode64(public_key.split(' ')[1]))
       _type = pub.read_string
@@ -223,6 +242,20 @@ module Authentication
         B01Fy7YoHRKUNL/82vC3uxTkhmqHhbDPeLdCdIyvdFpyKp5lrGtIx5K44PKOEU98hDL+Nk
         QGM5HAurbKxg20ZaiYIaF/lmmXSIoEXDJjmxMZhf5c7UkqozXl4puRs6oxQChcg9Rzj9LO
         b6XVrFTWbbgxAwzFkAs5qF0aPI5nsKgTdQX17M4afu86UIj6vPaHF4oMypei5N
+        -----END OPENSSH PRIVATE KEY-----
+      EOF
+    end
+
+    # From GHSA-rpq3-v334-f5pm: claims 0xffffffff bcrypt rounds.
+    def private_key_max_rounds
+      <<~EOF
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABCNmyk3pe
+        r1LJ4Z+9EboO8D/////wAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAAIBTvH51xZ8CJVjAS
+        FzQ2cwRJeuYwOSWEly5MrEBsJIehAAAAkBVBwCyurZ2G1x2fxuiXaXLZQOz1c39x0PTOw6
+        PeU2FE0kmF2Zz6wZxGhUJfZ1Mze+J0/2NOLiEvICCj3oOU11sq0/uRkANNUE0i88fR96qG
+        K7TZUtAemYFmjIR0/B+nNZdgqdtDk2I9KHLE5e86zBAv55Vm1a5AxmMRtFObyUCMiu+T41
+        NZbcUtBBoQJDzxbw==
         -----END OPENSSH PRIVATE KEY-----
       EOF
     end
