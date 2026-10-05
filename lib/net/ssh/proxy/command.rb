@@ -16,6 +16,11 @@ module Net
       #     ...
       #   end
       class Command
+        # The command line is run by the shell, so like OpenSSH 9.6 (CVE-2023-51385) we refuse
+        # host and user names containing shell metacharacters rather than substituting them.
+        INVALID_HOST_NAME = /\A-|[[:space:][:cntrl:]'`"$\\;&<>|(){},]/.freeze
+        INVALID_USER_NAME = /\A-|[[:cntrl:]'`";&<>|(){}]|[[:space:]]-|\\\z/.freeze
+
         # The command line template
         attr_reader :command_line_template
 
@@ -41,13 +46,13 @@ module Net
           command_line = @command_line_template.gsub(/%(.)/) {
             case $1
             when 'h'
-              host
+              validate_host_name!(host)
             when 'p'
-              port.to_s
+              validate_port!(port)
             when 'r'
               remote_user = connection_options && connection_options[:remote_user]
               if remote_user
-                remote_user
+                validate_user_name!(remote_user)
               else
                 raise ArgumentError, "remote user name not available"
               end
@@ -116,6 +121,26 @@ module Net
         def close_on_error(io)
           Process.kill('TERM', io.pid)
           Thread.new { io.close }
+        end
+
+        private
+
+        def validate_host_name!(host)
+          raise ArgumentError, "host name contains invalid characters: #{host.inspect}" if host.to_s.match?(INVALID_HOST_NAME)
+
+          host
+        end
+
+        def validate_user_name!(user)
+          raise ArgumentError, "user name contains invalid characters: #{user.inspect}" if user.to_s.match?(INVALID_USER_NAME)
+
+          user
+        end
+
+        def validate_port!(port)
+          raise ArgumentError, "port is not a number: #{port.inspect}" unless port.to_s.match?(/\A\d+\z/)
+
+          port.to_s
         end
       end
     end
