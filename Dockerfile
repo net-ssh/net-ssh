@@ -3,6 +3,9 @@ FROM ruby:${RUBY_VERSION}
 
 ARG BUNDLERV=
 
+# Ruby 2.6 to 3.0 images are built on Debian bullseye, which only archive.debian.org still serves.
+RUN if grep -q bullseye /etc/os-release; then sed -i 's|deb.debian.org|archive.debian.org|; s|security.debian.org|archive.debian.org|' /etc/apt/sources.list; fi
+
 RUN apt update && apt install -y openssh-server sudo netcat-openbsd \
   && useradd --create-home --shell '/bin/bash' --comment 'NetSSH' 'net_ssh_1' \
   && useradd --create-home --shell '/bin/bash' --comment 'NetSSH' 'net_ssh_2' \
