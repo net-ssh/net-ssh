@@ -38,6 +38,16 @@ class TestAlways < NetSSHTest
     }
   end
 
+  def test_plain_known_hosts_entry_does_not_print_deprecation_warning
+    key = OpenSSL::PKey::RSA.new(2048).public_key
+    host_keys = [Net::SSH::HostKeyEntries::PubKey.new(key)]
+    def host_keys.host
+      'foo'
+    end
+    Kernel.expects(:warn).never
+    assert Net::SSH::Verifiers::Always.new.verify(session: OpenStruct.new(host_keys: host_keys), key: key)
+  end
+
   def test_verify_signature
     secure_verifier = Net::SSH::Verifiers::Always.new
 
