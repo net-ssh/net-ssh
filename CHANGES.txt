@@ -1,3 +1,7 @@
+=== 7.3.6
+
+  * Fix "Calling Net::SSH::Buffer methods on HostKeyEntries PubKey is deprecated" warnings printed on every connection to a host in known_hosts since 7.3.4 [#1026, #1028]
+
 === 7.3.5
 
   * Security: refuse agent channels opened by the server unless agent forwarding was requested (`forward_agent`, ForwardAgent, or `Forward#agent`); any use of port forwarding let a malicious server use the local ssh-agent [GHSA-qpg5-fx6p-8cq3]
