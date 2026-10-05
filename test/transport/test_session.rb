@@ -1,5 +1,6 @@
 require_relative '../common'
 require 'net/ssh/transport/session'
+require 'net/ssh/connection/constants'
 require 'net/ssh/proxy/http'
 require 'logger'
 
@@ -268,6 +269,29 @@ module Transport
       socket.expects(:next_packet).times(2).returns(packet, nil)
       assert_nil session.poll_message
       assert_equal [packet], session.queue
+    end
+
+    def test_poll_message_should_raise_on_disallowed_packet_during_initial_key_exchange
+      session!
+      packet = P(:byte, Net::SSH::Connection::Constants::CHANNEL_DATA, :long, 0, :string, "test")
+      algorithms.stubs(:allow?).with(packet).returns(false)
+      algorithms.stubs(:initialized?).returns(false)
+      socket.expects(:next_packet).returns(packet)
+      assert_raises(Net::SSH::Exception) { session.poll_message }
+      assert session.queue.empty?
+    end
+
+    def test_push_should_raise_when_too_many_packets_are_queued
+      packet = P(:byte, Net::SSH::Connection::Constants::CHANNEL_DATA, :long, 0, :string, "x")
+      Net::SSH::Transport::Session::MAX_QUEUED_PACKETS.times { session.push(packet) }
+      assert_raises(Net::SSH::Exception) { session.push(packet) }
+    end
+
+    def test_push_should_raise_when_too_many_bytes_are_queued
+      packet = P(:byte, Net::SSH::Connection::Constants::CHANNEL_DATA, :long, 0, :string, "x" * 200_000)
+      error = assert_raises(Net::SSH::Exception) { 200.times { session.push(packet) } }
+      assert_match(/too many packets queued/, error.message)
+      assert_operator session.queue.size, :<, 200
     end
 
     def test_poll_message_should_read_from_queue_when_next_in_queue_is_allowed_and_consume_queue_is_true
