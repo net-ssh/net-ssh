@@ -51,6 +51,9 @@ module Net
         # implement them (Net::SSH::HostKeyEntries::CertAuthority). Non-certificate
         # entries do not respond to these predicates and are left untouched.
         def verify_certificate!(entry, host_keys, arguments)
+          # Plain keys carry no certificate constraints, and respond_to? on this delegator prints a deprecation warning (#1026).
+          return if entry.is_a?(Net::SSH::HostKeyEntries::PubKey)
+
           cert = arguments[:key]
 
           if entry.respond_to?(:matches_validity?) && !entry.matches_validity?(cert)
