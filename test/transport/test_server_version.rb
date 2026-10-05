@@ -1,5 +1,6 @@
 require 'common'
 require 'net/ssh/transport/server_version'
+require 'timeout'
 
 module Transport
   class TestServerVersion < NetSSHTest
@@ -40,7 +41,31 @@ module Transport
       assert_raises(Net::SSH::Disconnect) { subject(socket(false, "SSH-2.0-Aborting")) }
     end
 
+    def test_overlong_line_should_raise_exception
+      error = assert_raises(Net::SSH::Exception) { negotiate_with("A" * 8193) }
+      assert_match(/exceeds 8192 bytes/, error.message)
+    end
+
+    def test_too_many_header_lines_should_raise_exception
+      error = assert_raises(Net::SSH::Exception) { negotiate_with("#{"banner\r\n" * 1024}SSH-2.0-Testing_1.0\r\n") }
+      assert_match(/first 1024 lines/, error.message)
+    end
+
+    def test_timeout_should_cover_the_whole_banner
+      assert_raises(Net::SSH::ConnectionTimeout) { negotiate_with("Welcome\r\n", timeout: 0.2) }
+    end
+
     private
+
+    def negotiate_with(server_output, timeout: 5)
+      client, server = UNIXSocket.pair
+      writer = Thread.new { server.write(server_output) rescue nil } # rubocop:disable Style/RescueModifier
+      Timeout.timeout(timeout + 5) { Net::SSH::Transport::ServerVersion.new(client, nil, timeout) }
+    ensure
+      client&.close
+      server&.close
+      writer&.join
+    end
 
     def socket(good, version_header, raise_eot = false)
       socket = mock("socket")
