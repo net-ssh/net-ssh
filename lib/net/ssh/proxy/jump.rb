@@ -1,3 +1,4 @@
+require 'shellwords'
 require 'uri'
 require 'net/ssh/proxy/command'
 
@@ -34,19 +35,28 @@ module Net
         # We cannot build the ProxyCommand template until we know if the :config
         # option was specified during `Net::SSH.start`.
         def build_proxy_command_equivalent(connection_options = nil)
-          first_jump, extra_jumps = jump_proxies.split(",", 2)
+          extra_jumps = jump_proxies.split(",", 2)[1]
           config = connection_options && connection_options[:config]
-          uri = URI.parse("ssh://#{first_jump}")
+          uri, = jump_proxies.split(",").map { |jump| validate_jump!(jump) }
 
           template = "ssh".dup
           template << " -l #{uri.user}"    if uri.user
           template << " -p #{uri.port}"    if uri.port
           template << " -J #{extra_jumps}" if extra_jumps
-          template << " -F #{config}" if config != true && config
+          template << " -F #{Shellwords.escape(config)}" if config != true && config
           template << " -W %h:%p "
           template << uri.host
 
           @command_line_template = template
+        end
+
+        private
+
+        def validate_jump!(jump)
+          uri = URI.parse("ssh://#{jump}")
+          validate_user_name!(uri.user) if uri.user
+          validate_host_name!(uri.host)
+          uri
         end
       end
     end
