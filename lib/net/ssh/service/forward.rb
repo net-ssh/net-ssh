@@ -405,6 +405,12 @@ module Net
 
         # The callback used when an auth-agent channel is requested by the server.
         def auth_agent_channel(session, channel, packet)
+          # Like OpenSSH, only relay the local agent when forwarding was requested (GHSA-qpg5-fx6p-8cq3).
+          unless session.options[:forward_agent] || @agent_forwarded
+            error { "server tried agent forwarding, which was not requested; refusing" }
+            raise Net::SSH::ChannelOpenFailed.new(1, "agent forwarding was not requested")
+          end
+
           info { "opening auth-agent channel" }
           channel[:invisible] = true
 

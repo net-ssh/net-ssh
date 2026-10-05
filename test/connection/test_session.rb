@@ -1,5 +1,6 @@
 require_relative '../common'
 require 'net/ssh/connection/session'
+require 'net/ssh/authentication/agent'
 
 module Connection
   class TestSession < NetSSHTest
@@ -220,6 +221,31 @@ module Connection
       transport.return(CHANNEL_OPEN, :string, "auth-agent", :long, 14, :long, 0x20000, :long, 0x10000)
       process_times(2)
       assert_equal P(:byte, CHANNEL_OPEN_FAILURE, :long, 14, :long, 3, :string, "unknown channel type auth-agent", :string, "").to_s, socket.write_buffer
+    end
+
+    def test_server_opened_agent_channel_should_be_refused_unless_agent_forwarding_was_requested
+      session.forward
+      Net::SSH::Authentication::Agent.expects(:connect).never
+      transport.return(CHANNEL_OPEN, :string, "auth-agent@openssh.com", :long, 14, :long, 0x20000, :long, 0x10000)
+      process_times(2)
+      assert_equal P(:byte, CHANNEL_OPEN_FAILURE, :long, 14, :long, 1, :string, "agent forwarding was not requested", :string, "").to_s, socket.write_buffer
+    end
+
+    def test_server_opened_agent_channel_should_be_accepted_with_forward_agent
+      session(forward_agent: true).forward.expects(:prepare_simple_client)
+      Net::SSH::Authentication::Agent.expects(:connect).returns(stub("agent", socket: stub("agent_socket")))
+      transport.return(CHANNEL_OPEN, :string, "auth-agent@openssh.com", :long, 14, :long, 0x20000, :long, 0x10000)
+      process_times(2)
+      assert_equal CHANNEL_OPEN_CONFIRMATION, socket.write_buffer.getbyte(0)
+    end
+
+    def test_server_opened_agent_channel_should_be_accepted_after_explicit_agent_request
+      session.forward.agent(stub("channel", send_channel_request: nil))
+      session.forward.expects(:prepare_simple_client)
+      Net::SSH::Authentication::Agent.expects(:connect).returns(stub("agent", socket: stub("agent_socket")))
+      transport.return(CHANNEL_OPEN, :string, "auth-agent", :long, 14, :long, 0x20000, :long, 0x10000)
+      process_times(2)
+      assert_equal CHANNEL_OPEN_CONFIRMATION, socket.write_buffer.getbyte(0)
     end
 
     def test_channel_open_packet_with_corresponding_handler_should_result_in_channel_open_failure_when_handler_returns_an_error
