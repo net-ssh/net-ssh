@@ -68,25 +68,23 @@ module Net
           default_keys.each { |key| key_manager.add(key) } unless options.key?(:keys) || options.key?(:key_data)
 
           attempted = []
+          skipped = []
 
           @auth_methods.each do |name|
-            next unless @allowed_auth_methods.include?(name)
-
-            attempted << name
-
-            debug { "trying #{name}" }
-            begin
-              auth_class = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join)
-              method = auth_class.new(self,
-                                      key_manager: key_manager, password_prompt: options[:password_prompt],
-                                      pubkey_algorithms: options[:pubkey_algorithms] || nil)
-            rescue NameError
-              debug {"Mechanism #{name} was requested, but isn't a known type.  Ignoring it."}
+            unless @allowed_auth_methods.include?(name)
+              skipped << name
               next
             end
 
-            return true if method.authenticate(next_service, username, password)
-          rescue Net::SSH::Authentication::DisallowedMethod
+            attempted << name
+            return true if try_authenticate(name, next_service, username, password, key_manager, options)
+          end
+
+          # try skipped methods
+          skipped.each do |name|
+            next unless @allowed_auth_methods.include?(name)
+            attempted << name
+            return true if try_authenticate(name, next_service, username, password, key_manager, options)
           end
 
           error { "all authorization methods failed (tried #{attempted.join(', ')})" }
@@ -135,6 +133,23 @@ module Net
         end
 
         private
+
+        def try_authenticate(method_name, next_service, username, password, key_manager, options)
+          debug { "trying #{method_name}" }
+          begin
+            auth_class = Methods.const_get(method_name.split(/\W+/).map { |p| p.capitalize }.join)
+            method = auth_class.new(self,
+                                    key_manager: key_manager, password_prompt: options[:password_prompt],
+                                    pubkey_algorithms: options[:pubkey_algorithms] || nil)
+          rescue NameError
+            debug {"Mechanism #{method_name} was requested, but isn't a known type.  Ignoring it."}
+            return false
+          end
+
+          method.authenticate(next_service, username, password)
+        rescue Net::SSH::Authentication::DisallowedMethod
+          false
+        end
 
         # Returns an array of paths to the key files usually defined
         # by system default.
