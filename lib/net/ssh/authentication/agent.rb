@@ -17,10 +17,7 @@ module Net
       # An exception for indicating that the SSH agent is not available.
       class AgentNotAvailable < AgentError; end
 
-      # Raised internally when the agent closes the connection mid-packet (a
-      # read returns EOF). Some non-OpenSSH agents (e.g. Proton Pass) close the
-      # socket rather than replying to the legacy version request; #negotiate!
-      # catches this to reconnect and fall back to the modern protocol.
+      # Raised when the agent closes the connection before replying.
       class AgentClosedConnection < AgentError; end
 
       # This class implements a simple client for the ssh-agent protocol. It
@@ -89,16 +86,11 @@ module Net
         # socket reports that it is an SSH2-compatible agent, this will fail
         # (it only supports the ssh-agent distributed by OpenSSH).
         def connect!(agent_socket_factory = nil, identity_agent = nil)
-          # Remembered so #negotiate! can reopen the socket if the agent closes
-          # the connection on the legacy version request (see #negotiate!).
           @agent_socket_factory = agent_socket_factory
           @identity_agent = identity_agent
           open_agent_socket!
         end
 
-        # Opens the connection to the agent using the factory/identity set up by
-        # #connect!. Split out so #negotiate! can reopen it if the agent drops
-        # the connection on the legacy version request.
         def open_agent_socket!
           debug { "connecting to ssh-agent" }
           @socket =
@@ -133,10 +125,8 @@ module Net
             raise AgentNotAvailable, "unknown response from agent: #{type}, #{body.to_s.inspect}"
           end
         rescue AgentClosedConnection
-          # Some non-OpenSSH agents (e.g. Proton Pass) don't implement the legacy
-          # version request and close the socket instead of replying. They still
-          # speak the modern ssh-agent protocol, so reopen the connection and
-          # continue without version negotiation.
+          # Agents built on ssh-agent-lib <= 0.6.0 (e.g. older Proton Pass) drop the connection on
+          # this legacy request but handle the rest of the protocol (#1008).
           debug { "ssh-agent closed the connection on the version request; assuming a modern agent and reconnecting" }
           open_agent_socket!
         end
@@ -248,10 +238,6 @@ module Net
         # tuple consisting of the packet type, and the packet's body (which
         # is returned as a Net::SSH::Buffer).
         def read_packet
-          # A nil read means the agent closed the connection mid-packet. Guard
-          # explicitly: otherwise Buffer.new(nil) stores nil.to_s, which is a
-          # frozen "" in Ruby 3.x, and the append below raises a confusing
-          # FrozenError instead of a meaningful error.
           header = @socket.read(4)
           raise AgentClosedConnection, "agent closed the connection" if header.nil?
 
