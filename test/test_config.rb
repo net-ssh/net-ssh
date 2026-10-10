@@ -569,6 +569,99 @@ class TestConfig < NetSSHTest
     end
   end
 
+  def test_proxyjump_none_is_ignored
+    data = '
+      Host example
+        ProxyJump none
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+    end
+  end
+
+  def test_proxyjump_none_case_insensitive
+    data = '
+      Host example
+        ProxyJump NONE
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+    end
+  end
+
+  def test_proxyjump_none_takes_precedence_over_later_proxyjump
+    data = '
+      Host example
+        ProxyJump none
+      Host *
+        ProxyJump jumphost.example.com
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+    end
+  end
+
+  def test_proxycommand_none_takes_precedence_over_later_proxycommand
+    data = '
+      Host example
+        ProxyCommand none
+      Host *
+        ProxyCommand ssh -W %h:%p jumphost.example.com
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+    end
+  end
+
+  def test_proxyjump_none_takes_precedence_over_later_proxycommand
+    data = '
+      Host example
+        ProxyJump none
+      Host *
+        ProxyCommand ssh -W %h:%p jumphost.example.com
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+    end
+  end
+
+  def test_proxyjump_none_does_not_override_earlier_proxyjump
+    data = '
+      Host example
+        ProxyJump jump1
+      Host *
+        ProxyJump none
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      options[:proxy].build_proxy_command_equivalent
+      assert_equal 'ssh -W %h:%p jump1', options[:proxy].command_line_template
+    end
+  end
+
+  def test_proxycommand_none_case_insensitive
+    data = '
+      Host example
+        ProxyCommand NONE
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
+    end
+  end
+
   private
 
   def with_home_env(value, &block)

@@ -302,13 +302,15 @@ module Net
         def setup_proxy(type, value)
           case type
           when 'proxycommand'
-            if value !~ /^none$/
+            if value !~ /^none$/i
               require 'net/ssh/proxy/command'
               Net::SSH::Proxy::Command.new(value)
             end
           when 'proxyjump'
-            require 'net/ssh/proxy/jump'
-            Net::SSH::Proxy::Jump.new(value)
+            if value !~ /^none$/i
+              require 'net/ssh/proxy/jump'
+              Net::SSH::Proxy::Jump.new(value)
+            end
           end
         end
 
