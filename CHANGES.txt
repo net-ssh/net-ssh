@@ -1,3 +1,9 @@
+=== 8.0.0 rc3
+
+  * Fix "Calling Net::SSH::Buffer methods on HostKeyEntries PubKey is deprecated" warnings printed on every connection to a host in known_hosts [#1026, #1027]
+  * `ProxyJump none` now means no proxy instead of jumping through a host named "none", and `ProxyCommand none` is matched case-insensitively, as in OpenSSH [#893, #972, #1030]
+  * Send SIGHUP to the ProxyCommand process on close, as OpenSSH does, so tunnels such as EC2 Instance Connect Endpoint no longer hang at exit [#947]
+
 === 8.0.0 rc2
 
   * Security: refuse agent channels opened by the server unless agent forwarding was requested (`forward_agent`, ForwardAgent, or `Forward#agent`); any use of port forwarding let a malicious server use the local ssh-agent [GHSA-qpg5-fx6p-8cq3]
