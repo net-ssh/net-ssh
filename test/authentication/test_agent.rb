@@ -91,6 +91,37 @@ module Authentication
       assert_nothing_raised { agent(:connect).negotiate! }
     end
 
+    # Some non-OpenSSH agents (e.g. Proton Pass) close the connection instead of
+    # replying to the legacy version request. net-ssh should not blow up with a
+    # FrozenError; it should reconnect and carry on with the modern protocol.
+    def test_negotiate_reconnects_when_agent_closes_on_version_request
+      closing_socket = mock("closing socket")
+      closing_socket.stubs(:send)
+      closing_socket.stubs(:read).returns(nil) # EOF: agent closed the connection
+      fresh_socket = MockSocket.new
+
+      opener = stub("socket factory")
+      opener.stubs(:open).returns(closing_socket).then.returns(fresh_socket)
+
+      a = Net::SSH::Authentication::Agent.new
+      a.stubs(:unix_socket_class).returns(opener)
+      a.connect!
+
+      assert_nothing_raised { a.negotiate! }
+      assert_equal fresh_socket, a.socket # reconnected to a fresh socket
+    end
+
+    def test_read_packet_raises_agent_closed_connection_on_eof
+      closing_socket = mock("closing socket")
+      closing_socket.stubs(:read).returns(nil)
+
+      a = Net::SSH::Authentication::Agent.new
+      a.stubs(:unix_socket_class).returns(stub(open: closing_socket))
+      a.connect!
+
+      assert_raises(Net::SSH::Authentication::AgentClosedConnection) { a.send(:read_packet) }
+    end
+
     def test_identities_should_fail_if_SSH_AGENT_FAILURE_received
       socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
