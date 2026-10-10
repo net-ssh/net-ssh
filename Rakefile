@@ -9,7 +9,12 @@ require "rake"
 require "rake/clean"
 require "bundler/gem_tasks"
 
-require "rdoc/task"
+# rdoc is no longer a default gem as of Ruby 4.0; keep the rest of the
+# Rakefile usable when it is not installed.
+begin
+  require "rdoc/task"
+rescue LoadError
+end
 
 desc "When releasing make sure NET_SSH_BUILDGEM_SIGNED is set"
 task :check_NET_SSH_BUILDGEM_SIGNED do
@@ -27,17 +32,19 @@ require_relative "lib/net/ssh/version"
 version = Net::SSH::Version::CURRENT
 
 extra_files = %w[LICENSE.txt THANKS.txt CHANGES.txt]
-RDoc::Task.new do |rdoc|
-  rdoc.rdoc_dir = "rdoc"
-  rdoc.title = "#{name} #{version}"
-  rdoc.generator = 'hanna' # gem install hanna-nouveau
-  rdoc.main = 'README.md'
-  rdoc.rdoc_files.include("README*")
-  rdoc.rdoc_files.include("bin/*.rb")
-  rdoc.rdoc_files.include("lib/**/*.rb")
-  extra_files.each { |file|
-    rdoc.rdoc_files.include(file) if File.exist?(file)
-  }
+if defined?(RDoc::Task)
+  RDoc::Task.new do |rdoc|
+    rdoc.rdoc_dir = "rdoc"
+    rdoc.title = "#{name} #{version}"
+    rdoc.generator = 'hanna' # gem install hanna-nouveau
+    rdoc.main = 'README.md'
+    rdoc.rdoc_files.include("README*")
+    rdoc.rdoc_files.include("bin/*.rb")
+    rdoc.rdoc_files.include("lib/**/*.rb")
+    extra_files.each { |file|
+      rdoc.rdoc_files.include(file) if File.exist?(file)
+    }
+  end
 end
 
 namespace :cert do
