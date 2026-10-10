@@ -350,13 +350,31 @@ module Net
           end
 
           channel.on_process do |ch|
-            if ch[:socket].closed?
+            socket = ch[:socket]
+            if socket.closed?
               ch.info { "#{type} forwarded connection closed" }
               ch.close
-            elsif ch[:socket].available > 0
-              data = ch[:socket].read_available(8192)
-              ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
-              ch.send_data(data)
+            else
+              # Backpressure, channel -> socket: re-open the receive window once
+              # the local socket has drained below the low-water mark.
+              ch.resume_local_window_size
+
+              # Backpressure, socket -> channel: stop pulling from the local
+              # socket while the channel's outgoing buffer is over the high-water
+              # mark. Pausing the listener lets the kernel TCP buffer fill so the
+              # local writer blocks, instead of buffering the whole stream in the
+              # Ruby heap. on_process keeps firing (it is driven per-channel, not
+              # per-socket), so we resume as soon as the buffer drains.
+              if ch.output.length >= ch.forward_high_water
+                session.stop_listening_to(socket) if session.listeners.key?(socket)
+              else
+                session.listen_to(socket) unless session.listeners.key?(socket)
+                if socket.available > 0 && ch.output.length < ch.forward_high_water
+                  data = socket.read_available(8192)
+                  ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
+                  ch.send_data(data)
+                end
+              end
             end
           end
         end
