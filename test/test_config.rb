@@ -618,7 +618,6 @@ class TestConfig < NetSSHTest
       config = Net::SSH::Config.load(f, "example")
       options = Net::SSH::Config.translate(config)
       assert_nil options[:proxy]
-      assert_nil options[:proxy_command]
     end
   end
 
@@ -633,7 +632,33 @@ class TestConfig < NetSSHTest
       config = Net::SSH::Config.load(f, "example")
       options = Net::SSH::Config.translate(config)
       assert_nil options[:proxy]
-      assert_nil options[:proxy_command]
+    end
+  end
+
+  def test_proxyjump_none_does_not_override_earlier_proxyjump
+    data = '
+      Host example
+        ProxyJump jump1
+      Host *
+        ProxyJump none
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      options[:proxy].build_proxy_command_equivalent
+      assert_equal 'ssh -W %h:%p jump1', options[:proxy].command_line_template
+    end
+  end
+
+  def test_proxycommand_none_case_insensitive
+    data = '
+      Host example
+        ProxyCommand NONE
+    '
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.load(f, "example")
+      options = Net::SSH::Config.translate(config)
+      assert_nil options[:proxy]
     end
   end
 

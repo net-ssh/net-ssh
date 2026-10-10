@@ -302,7 +302,7 @@ module Net
         def setup_proxy(type, value)
           case type
           when 'proxycommand'
-            if value !~ /^none$/
+            if value !~ /^none$/i
               require 'net/ssh/proxy/command'
               Net::SSH::Proxy::Command.new(value)
             end
