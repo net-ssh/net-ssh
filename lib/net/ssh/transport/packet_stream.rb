@@ -190,6 +190,7 @@ module Net
         def cleanup
           client.cleanup
           server.cleanup
+          hang_up_proxy_command
         end
 
         # If the IO object requires a rekey operation (as indicated by either its
@@ -204,6 +205,17 @@ module Net
         end
 
         protected
+
+        # Like OpenSSH, hang up a ProxyCommand child: tunnels such as EC2 Instance
+        # Connect don't exit on their own, and IO#close waits for them.
+        def hang_up_proxy_command
+          return unless respond_to?(:pid)
+
+          child = pid
+          Process.kill('HUP', child) if child
+        rescue IOError, Errno::ESRCH
+          # already closed, or the child has already been reaped
+        end
 
         # Called when this module is used to extend an object. It initializes
         # the states and generally prepares the object for use as a packet stream.

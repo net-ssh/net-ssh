@@ -70,6 +70,30 @@ module Transport
     def test_cleanup_should_delegate_cleanup_to_client_and_server_states
       stream.client.expects(:cleanup)
       stream.server.expects(:cleanup)
+      stream.expects(:pid)
+      stream.cleanup
+    end
+
+    def test_cleanup_should_hang_up_proxy_command_child
+      stream.stubs(:pid).returns(1234)
+      Process.expects(:kill).with('HUP', 1234)
+      stream.cleanup
+    end
+
+    def test_cleanup_should_not_hang_up_when_socket_has_no_pid
+      Process.expects(:kill).never
+      stream.cleanup
+    end
+
+    def test_cleanup_should_ignore_already_reaped_proxy_command_child
+      stream.stubs(:pid).returns(1234)
+      Process.expects(:kill).with('HUP', 1234).raises(Errno::ESRCH)
+      stream.cleanup
+    end
+
+    def test_cleanup_should_ignore_closed_socket
+      stream.stubs(:pid).raises(IOError, "closed stream")
+      Process.expects(:kill).never
       stream.cleanup
     end
 
@@ -1130,6 +1154,7 @@ module Transport
             assert packet[:always_display]
             assert_equal "debugging", packet[:message]
             assert_equal "", packet[:language]
+            stream.stubs(:pid).returns(nil)
             stream.cleanup
           end
 
@@ -1155,6 +1180,7 @@ module Transport
             stream.client.set cipher: cipher, hmac: hmac, compression: compress
             stream.enqueue_packet(ssh_packet)
             assert_equal PACKETS[cipher_name][hmac_name][compress], stream.write_buffer
+            stream.stubs(:pid).returns(nil)
             stream.cleanup
           end
         end
