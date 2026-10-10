@@ -64,17 +64,17 @@ module Net
 
       # Returns the host name for the remote host, as reported by the socket.
       def host
-        @data && @data[:peer] && @data[:peer][:host]
+        @data && @data[:session]&.host_as_string&.split(",").first
       end
 
       # Returns the port number for the remote host, as reported by the socket.
       def port
-        @data && @data[:peer] && @data[:peer][:port]
+        @data && @data[:session]&.port
       end
 
       # Returns the IP address of the remote host, as reported by the socket.
       def ip
-        @data && @data[:peer] && @data[:peer][:ip]
+        @data && @data[:session]&.host_as_string&.split(",").last
       end
 
       # Returns the key itself, as reported by the remote host.
