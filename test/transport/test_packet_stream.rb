@@ -73,6 +73,29 @@ module Transport
       stream.cleanup
     end
 
+    def test_cleanup_should_hang_up_proxy_command_child
+      stream.stubs(:pid).returns(1234)
+      Process.expects(:kill).with('HUP', 1234)
+      stream.cleanup
+    end
+
+    def test_cleanup_should_not_hang_up_when_socket_has_no_pid
+      Process.expects(:kill).never
+      stream.cleanup
+    end
+
+    def test_cleanup_should_ignore_already_reaped_proxy_command_child
+      stream.stubs(:pid).returns(1234)
+      Process.expects(:kill).with('HUP', 1234).raises(Errno::ESRCH)
+      stream.cleanup
+    end
+
+    def test_cleanup_should_ignore_closed_socket
+      stream.stubs(:pid).raises(IOError, "closed stream")
+      Process.expects(:kill).never
+      stream.cleanup
+    end
+
     def test_if_needs_rekey_should_not_yield_if_neither_client_nor_server_states_need_rekey
       stream.if_needs_rekey? { flunk "shouldn't need rekey" }
       assert(true)
