@@ -4,6 +4,7 @@
   * `ProxyJump none` now means no proxy instead of jumping through a host named "none", and `ProxyCommand none` is matched case-insensitively, as in OpenSSH [#893, #972, #1030]
   * Send SIGHUP to the ProxyCommand process on close, as OpenSSH does, so tunnels such as EC2 Instance Connect Endpoint no longer hang at exit [#947]
   * Reconnect when the ssh-agent closes the connection on the legacy version request (e.g. older Proton Pass) instead of raising FrozenError [#1008]
+  * ssh_config: parse `Key = value` lines like OpenSSH (the value no longer keeps the leading space, and the keyword ends at the first `=`), and honor ProxyJump/ProxyCommand before the first Host [#1034]
 
 === 8.0.0 rc2
 
