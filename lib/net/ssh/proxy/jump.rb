@@ -15,14 +15,23 @@ module Net
       #   Net::SSH.start('host', 'user', :proxy => proxy) do |ssh|
       #     ...
       #   end
+      #
+      # ssh_config options for the jump host can be given as a Hash via
+      # +options:+; each is passed to the ssh command as +-o Key=value+:
+      #
+      #   proxy = Net::SSH::Proxy::Jump.new('user@proxy', options: { 'StrictHostKeyChecking' => 'no' })
+      #
+      # The options apply to the first jump host only; any further hosts in
+      # the chain are connected to by that host's own ssh.
       class Jump < Command
         # The jump proxies
         attr_reader :jump_proxies
 
         # Create a new socket factory that tunnels via multiple jump proxes as
         # [user@]host[:port].
-        def initialize(jump_proxies)
+        def initialize(jump_proxies, options: {})
           @jump_proxies = jump_proxies
+          @options = options
         end
 
         # Return a new socket connected to the given host and port via the jump
@@ -44,6 +53,7 @@ module Net
           template << " -p #{uri.port}"    if uri.port
           template << " -J #{extra_jumps}" if extra_jumps
           template << " -F #{Shellwords.escape(config)}" if config != true && config
+          @options.each { |key, value| template << " -o #{escape_option(key)}=#{escape_option(value)}" }
           template << " -W %h:%p "
           template << uri.host
 
@@ -51,6 +61,12 @@ module Net
         end
 
         private
+
+        # Escape a -o key or value for the shell, and double any % so that it
+        # survives the %h/%p substitution done on the template in Command#open.
+        def escape_option(string)
+          Shellwords.escape(string).gsub("%", "%%")
+        end
 
         def validate_jump!(jump)
           uri = URI.parse("ssh://#{jump}")
