@@ -662,6 +662,58 @@ class TestConfig < NetSSHTest
     end
   end
 
+  def test_load_with_spaces_around_equals
+    data = '
+      Host example
+        User = alice
+        HostName = "example.org"
+        ProxyJump = jump1
+    '
+    with_config_from_data data do |f|
+      options = Net::SSH::Config.translate(Net::SSH::Config.load(f, "example"))
+      assert_equal 'alice', options[:user]
+      assert_equal 'example.org', options[:host_name]
+      options[:proxy].build_proxy_command_equivalent
+      assert_equal 'ssh -W %h:%p jump1', options[:proxy].command_line_template
+    end
+  end
+
+  def test_load_keyword_ends_at_first_equals
+    data = '
+      Host example
+        SetEnv=FOO=bar
+    '
+    with_config_from_data data do |f|
+      options = Net::SSH::Config.translate(Net::SSH::Config.load(f, "example"))
+      assert_equal({ 'FOO' => 'bar' }, options[:set_env])
+    end
+  end
+
+  def test_proxyjump_before_first_host_is_used
+    data = '
+      ProxyJump jump1
+      Host example
+        User alice
+    '
+    with_config_from_data data do |f|
+      options = Net::SSH::Config.translate(Net::SSH::Config.load(f, "example"))
+      options[:proxy].build_proxy_command_equivalent
+      assert_equal 'ssh -W %h:%p jump1', options[:proxy].command_line_template
+    end
+  end
+
+  def test_proxycommand_before_first_host_is_used
+    data = '
+      ProxyCommand ssh -W %h:%p jump1
+      Host example
+        User alice
+    '
+    with_config_from_data data do |f|
+      options = Net::SSH::Config.translate(Net::SSH::Config.load(f, "example"))
+      assert_equal 'ssh -W %h:%p jump1', options[:proxy].command_line_template
+    end
+  end
+
   private
 
   def with_home_env(value, &block)
