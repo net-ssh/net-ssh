@@ -177,6 +177,49 @@ module Authentication
         assert subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
       end
 
+      def test_default_pubkey_algorithms_should_not_include_ssh_rsa
+        transport(pubkey_algorithms: composed_pubkey_algorithms)
+        assert_empty subject.pubkey_algorithms & %w[ssh-rsa ssh-rsa-cert-v01@openssh.com]
+      end
+
+      def test_authenticate_should_offer_ssh_rsa_with_plus_ssh_rsa
+        expect_offer_accepted(keys.first, "ssh-rsa", composed_pubkey_algorithms(pubkey_algorithms: %w[-rsa-sha2-* +ssh-rsa]))
+        assert subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_rsa_key_with_default_pubkey_algorithms_should_prefer_rsa_sha2
+        key_manager(keys: [keys.first]).expects(:sign).with(&signature_parameters_with_alg(keys.first, "rsa-sha2-512")).returns("sig-one")
+
+        transport(pubkey_algorithms: composed_pubkey_algorithms).expect do |t, packet|
+          assert verify_userauth_request_packet(packet, keys.first, false, "rsa-sha2-512")
+          t.return(USERAUTH_PK_OK, :string, "rsa-sha2-512", :string, Net::SSH::Buffer.from(:key, keys.first))
+
+          t.expect do |t2, packet2|
+            assert verify_userauth_request_packet(packet2, keys.first, true, "rsa-sha2-512")
+            assert_equal "sig-one", packet2.read_string
+            t2.return(USERAUTH_SUCCESS)
+          end
+        end
+
+        assert subject.authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_rsa_key_with_default_pubkey_algorithms_should_not_fall_back_to_ssh_rsa
+        key_manager(keys: [keys.first])
+
+        transport(pubkey_algorithms: composed_pubkey_algorithms).expect do |t, packet|
+          assert verify_userauth_request_packet(packet, keys.first, false, "rsa-sha2-512")
+          t.return(USERAUTH_FAILURE, :string, "publickey")
+
+          t.expect do |t2, packet2|
+            assert verify_userauth_request_packet(packet2, keys.first, false, "rsa-sha2-256")
+            t2.return(USERAUTH_FAILURE, :string, "publickey")
+          end
+        end
+
+        assert !subject.authenticate("ssh-connection", "jamis")
+      end
+
       private
 
       def signature_parameters(key)

@@ -39,12 +39,16 @@ Unsecure algoritms will definitely be removed in Net::SSH 8.*.
 
 | Name                 | Support               | Details  |
 |----------------------|-----------------------|----------|
-| ssh-rsa              | OK                    |          |
+| rsa-sha2-512         | OK                    |          |
+| rsa-sha2-256         | OK                    |          |
+| ssh-rsa              | Disabled by default in 8.0 | SHA-1 signatures, off by default as in OpenSSH 8.8; enable with `HostKeyAlgorithms +ssh-rsa` or `host_key: '+ssh-rsa'` |
 | ssh-ed25519          | OK                    | Backed by Ruby OpenSSL raw Ed25519 APIs (`openssl >= 3.2.0`) |
 | ecdsa-sha2-nistp521  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdsa-sha2-nistp384  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdsa-sha2-nistp256  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ssh-dss              | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
+
+RSA public key authentication likewise uses rsa-sha2-512 or rsa-sha2-256 by default; ssh-rsa and ssh-dss keys are only offered when enabled, e.g. with `PubkeyAcceptedAlgorithms +ssh-rsa` or `pubkey_algorithms: %w[+ssh-rsa]`.
 
 ### Key Exchange
 

@@ -12,3 +12,7 @@ Host caret
 
 Host legacy
   PubkeyAcceptedKeyTypes +ssh-dss
+
+Host sha1
+  PubkeyAcceptedAlgorithms +ssh-rsa
+  HostKeyAlgorithms +ssh-rsa

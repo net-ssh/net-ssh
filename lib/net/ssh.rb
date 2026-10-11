@@ -177,9 +177,10 @@ module Net
     # * :pubkey_algorithms => the public key authentication algorithms to offer,
     #   in order of preference (e.g. %w[ssh-ed25519 rsa-sha2-512 rsa-sha2-256]).
     #   Keys whose type isn't listed are skipped. Like PubkeyAcceptedAlgorithms,
-    #   entries starting with +, - or ^ modify the default list. ssh-dss is
-    #   supported but not offered unless listed here or
-    #   :append_all_supported_algorithms is set.
+    #   entries starting with +, - or ^ modify the default list. ssh-rsa (SHA-1),
+    #   ssh-rsa-cert-v01@openssh.com and ssh-dss are supported but not offered
+    #   unless listed here (e.g. '+ssh-rsa') or :append_all_supported_algorithms
+    #   is set.
     # * :rekey_blocks_limit => the max number of blocks to process before rekeying
     # * :rekey_limit => the max number of bytes to process before rekeying
     # * :rekey_packet_limit => the max number of packets to process before rekeying
