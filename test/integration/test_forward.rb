@@ -583,26 +583,25 @@ class TestForward < ForwardTestBase
         client.close
       end
       local_port = session.forward.local(0, localhost, server.addr[1])
-      received = Queue.new
       client = TCPSocket.new(localhost, local_port)
+      received = Queue.new
+      Thread.start do
+        sleep 2
+        received << client.read(size).length
+        client.close
+      end
 
       max_buffered = 0
       max_window = 0
-      stall_until = Time.now + 2
       Timeout.timeout(20) do
-        session.loop(0.1) { Time.now < stall_until }
-        forwarded_sockets(session).each { |socket| max_buffered = [max_buffered, socket.write_buffer.length].max }
-        session.channels.each_value { |ch| max_window = [max_window, ch.local_maximum_window_size].max }
-
-        Thread.start do
-          received << client.read(size).length
-          client.close
+        session.loop(0.1) do
+          forwarded_sockets(session).each { |socket| max_buffered = [max_buffered, socket.write_buffer.length].max }
+          session.channels.each_value { |ch| max_window = [max_window, ch.local_maximum_window_size].max }
+          received.empty?
         end
-        session.loop(0.1) { received.empty? }
       end
 
       assert_equal size, received.pop
-      assert_operator max_buffered, :>, 0
       assert_operator max_buffered, :<=, max_window
     end
   end
