@@ -495,14 +495,13 @@ module Net
           listeners.delete(io)
         end
 
-        # Stops the event loop from reading +io+ while it keeps flushing its
-        # pending output, so a paused reader can't stall data flowing the other way.
-        def pause_reading(io)
-          @read_paused[io] = true
+        # Internal and experimental, used by port forwarding: stops the event
+        # loop from reading +io+ while it keeps flushing its pending output.
+        def pause_reading(io) # :nodoc:
+          @read_paused[io] = true if listeners.key?(io)
         end
 
-        # Undoes #pause_reading.
-        def resume_reading(io)
+        def resume_reading(io) # :nodoc:
           @read_paused.delete(io)
         end
 

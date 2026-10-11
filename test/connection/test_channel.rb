@@ -399,6 +399,23 @@ module Connection
       assert_equal 0xFFFF, channel.local_window_size
     end
 
+    def test_consumed_should_require_grant_window_on_consume
+      channel.do_open_confirmation(0, 1000, 1000)
+      assert_raises(ArgumentError) { channel.consumed(1) }
+    end
+
+    def test_consumed_should_reject_negative_bytes
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.grant_window_on_consume!
+      assert_raises(ArgumentError) { channel.consumed(-1) }
+    end
+
+    def test_grant_window_on_consume_should_fail_after_data_was_received
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.do_data("x")
+      assert_raises(ArgumentError) { channel.grant_window_on_consume! }
+    end
+
     def test_extended_data_without_handler_should_count_as_consumed_with_grant_window_on_consume
       channel.do_open_confirmation(0, 1000, 1000)
       channel.grant_window_on_consume!

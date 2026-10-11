@@ -66,6 +66,26 @@ module Connection
       assert readers.include?(io)
     end
 
+    def test_stop_listening_to_should_clear_pause_state
+      io = stub("io", pending_write?: false)
+      session.listen_to(io)
+      session.pause_reading(io)
+      session.stop_listening_to(io)
+
+      session.listen_to(io)
+      readers, = session.ev_do_calculate_rw_wait(nil)
+      assert readers.include?(io)
+    end
+
+    def test_pause_reading_should_ignore_io_that_is_not_listened_to
+      io = stub("io", pending_write?: false)
+      session.pause_reading(io)
+
+      session.listen_to(io)
+      readers, = session.ev_do_calculate_rw_wait(nil)
+      assert readers.include?(io)
+    end
+
     def test_send_message_should_enqueue_message_at_transport_layer
       packet = P(:byte, REQUEST_SUCCESS)
       session.send_message(packet)

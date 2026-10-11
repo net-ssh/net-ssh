@@ -255,26 +255,22 @@ module Net
           output.append(data.to_s)
         end
 
-        # By default the local window is replenished as soon as data arrives, so
-        # a sender can outpace a slow consumer and everything it sends piles up
-        # in memory. After calling this, window is granted only for bytes
-        # reported via #consumed, so the remote end stalls once the data handed
-        # to #on_data and #on_extended_data but not yet consumed reaches
-        # #local_maximum_window_size. Call it before any data arrives, e.g. in
-        # the block given to Session#open_channel.
-        #
-        #   channel.grant_window_on_consume!
-        #   channel.on_data { |ch, data| slow_writer.enqueue(data) }
-        #   # later, once slow_writer has written +n+ bytes:
-        #   channel.consumed(n)
-        def grant_window_on_consume!
+        # Internal and experimental, used by port forwarding: from now on window
+        # is granted only for bytes reported via #consumed, so a slow consumer
+        # stalls the remote sender instead of buffering everything it sends.
+        # Must be called before any data is received.
+        def grant_window_on_consume! # :nodoc:
+          raise ArgumentError, "grant_window_on_consume! must be called before any data is received" if local_window_size != local_maximum_window_size
+
           @grant_window_on_consume = true
         end
 
-        # Reports that +bytes+ of received data have been processed, allowing
-        # the remote end to send that much more. Only meaningful after
-        # #grant_window_on_consume!.
-        def consumed(bytes)
+        # Internal and experimental: reports that +bytes+ of received data have
+        # been processed, letting the remote end send that much more.
+        def consumed(bytes) # :nodoc:
+          raise ArgumentError, "consumed requires grant_window_on_consume!" unless @grant_window_on_consume
+          raise ArgumentError, "consumed bytes must not be negative" if bytes.negative?
+
           @local_consumed += bytes
           adjust_window_for_consumed
         end

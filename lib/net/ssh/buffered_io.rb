@@ -182,9 +182,9 @@ module Net
         end
       end
 
-      # Registers a block called with the number of bytes each #send_pending
-      # wrote to the socket.
-      def on_sent(&block)
+      # Internal and experimental: registers a block called with the number of
+      # bytes each #send_pending wrote to the socket.
+      def on_sent(&block) # :nodoc:
         @on_sent = block
       end
 
