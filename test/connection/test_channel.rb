@@ -399,6 +399,27 @@ module Connection
       assert_equal 0xFFFF, channel.local_window_size
     end
 
+    def test_extended_data_without_handler_should_count_as_consumed_with_grant_window_on_consume
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.grant_window_on_consume!
+
+      connection.expect do |_t, p|
+        assert_equal CHANNEL_WINDOW_ADJUST, p.type
+        assert_equal 0x30001, p[:extra_bytes]
+      end
+      channel.do_extended_data(1, "." * 0x10001)
+      assert_equal 0x40000, channel.local_window_size
+    end
+
+    def test_extended_data_with_handler_should_wait_for_consumed_with_grant_window_on_consume
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.grant_window_on_consume!
+      channel.on_extended_data { |*_args| nil }
+
+      channel.do_extended_data(1, "." * 0x10001)
+      assert_equal 0xFFFF, channel.local_window_size
+    end
+
     def test_do_failure_should_grab_next_pending_request_and_call_it
       result = nil
       channel.pending_requests << Proc.new { |*args| result = args }

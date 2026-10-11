@@ -623,7 +623,12 @@ module Net
         # type, and data.
         def do_extended_data(type, data)
           update_local_window_size(data.length)
-          @on_extended_data.call(self, type, data) if @on_extended_data
+          if @on_extended_data
+            @on_extended_data.call(self, type, data)
+          elsif @grant_window_on_consume
+            # Nothing will ever consume it, so don't let it shrink the window.
+            consumed(data.length)
+          end
         end
 
         # Invokes the #on_eof callback when the server indicates that no

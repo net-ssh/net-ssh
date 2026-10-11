@@ -72,6 +72,13 @@ module Service
       assert channel.closing?
     end
 
+    def test_forwarded_channel_should_not_leak_window_on_extended_data
+      channel = prepared_channel(remote_window: 10)
+
+      3.times { channel.do_extended_data(1, "e" * 0x10001) }
+      assert_operator channel.local_window_size, :>=, channel.local_maximum_window_size / 2
+    end
+
     def teardown
       [@client, @peer].compact.each(&:close)
     end
