@@ -1,5 +1,6 @@
 require_relative '../common'
 require 'net/ssh/authentication/agent'
+require 'net/ssh/connection/channel'
 require 'net/ssh/service/forward'
 
 module Service
@@ -50,6 +51,27 @@ module Service
       assert_equal written + 0x20000, adjust.read_long
     end
 
+    def test_forwarded_channel_should_close_when_paused_peer_disconnects_and_data_keeps_arriving
+      channel = prepared_channel(remote_window: 10)
+      @peer.write("x" * 20)
+      @client.fill
+      channel.process
+      assert @session.paused?(@client)
+
+      @peer.close
+      @peer = nil
+      channel.do_data("a" * 100)
+      assert_nothing_raised { @client.send_pending }
+      assert !@client.pending_write?
+      channel.do_data("b" * 100)
+      assert_nothing_raised { @client.send_pending }
+
+      assert @client.closed?
+      channel.process
+      assert !@session.listening?(@client)
+      assert channel.closing?
+    end
+
     def teardown
       [@client, @peer].compact.each(&:close)
     end
@@ -72,7 +94,18 @@ module Service
 
       def on_open_channel(*); end
 
-      def listen_to(io); end
+      def listen_to(io)
+        (@listening ||= {})[io] = true
+      end
+
+      def stop_listening_to(io)
+        @listening.delete(io)
+        @paused.delete(io)
+      end
+
+      def listening?(io)
+        @listening.key?(io)
+      end
 
       def pause_reading(io)
         @paused[io] = true

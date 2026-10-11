@@ -194,8 +194,12 @@ module Net
           result = super
           @on_sent.call(pending - output.length) if @on_sent && output.length < pending
           result
-        rescue Errno::ECONNRESET => e
-          debug { "connection was reset => shallowing exception:#{e}" }
+        rescue Errno::EPIPE, Errno::ECONNRESET => e
+          # Like OpenSSH's chan_write_failed: the peer is gone, so drop what it
+          # will never read and close, letting the forwarded channel close too.
+          debug { "write failed => discarding #{output.length} bytes and closing:#{e}" }
+          output.clear!
+          close
           return 0
         rescue IOError => e
           if e.message =~ /closed/ then

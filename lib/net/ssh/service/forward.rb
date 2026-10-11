@@ -358,6 +358,7 @@ module Net
             socket = ch[:socket]
             if socket.closed?
               ch.info { "#{type} forwarded connection closed" }
+              session.stop_listening_to(socket)
               ch.close
             else
               if socket.available > 0
