@@ -205,6 +205,8 @@ class TestKeyFactory < NetSSHTest
   def test_load_encrypted_openssh_format_private_RSA_key_with_windows_newlines
     skip "OpenSSH private key loader requires Ed25519 support" unless Net::SSH::Authentication::ED25519Loader::LOADED
 
+    # Load it before mocking File.read: requiring it lazily makes RubyGems read its gemspec through the mock.
+    Net::SSH::Authentication::ED25519::OpenSSHPrivateKeyLoader.require_bcrypt_pbkdf
     File.expects(:read).with(@key_file).returns(encrypted_rsa_key_openssh.encode(crlf_newline: true))
     assert_equal OpenSSL::PKey.read(anonymous_private_key).to_der, Net::SSH::KeyFactory.load_private_key(@key_file, "password").to_der
   end
