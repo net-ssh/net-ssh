@@ -69,27 +69,22 @@ module Net
 
           attempted = []
 
-          @auth_methods.each do |name|
-            next unless @allowed_auth_methods.include?(name)
+          # After a partial success (sshd AuthenticationMethods) restart from the most preferred method the server now allows, as OpenSSH does.
+          loop do
+            @partial_success = false
 
-            attempted << name
+            @auth_methods.each do |name|
+              next unless @allowed_auth_methods.include?(name)
 
-            debug { "trying #{name}" }
-            begin
-              auth_class = Methods.const_get(name.split(/\W+/).map { |p| p.capitalize }.join)
-              method = auth_class.new(self,
-                                      key_manager: key_manager, password_prompt: options[:password_prompt],
-                                      pubkey_algorithms: options[:pubkey_algorithms] || nil)
-            rescue NameError
-              debug {"Mechanism #{name} was requested, but isn't a known type.  Ignoring it."}
-              next
+              attempted << name
+              return true if try_authenticate(name, next_service, username, password, key_manager)
+              break if @partial_success
             end
 
-            return true if method.authenticate(next_service, username, password)
-          rescue Net::SSH::Authentication::DisallowedMethod
+            break unless @partial_success
           end
 
-          error { "all authorization methods failed (tried #{attempted.join(', ')})" }
+          error { "all authorization methods failed (tried #{attempted.uniq.join(', ')})" }
           return false
         ensure
           key_manager.finish if key_manager
@@ -109,6 +104,7 @@ module Net
 
             when USERAUTH_FAILURE
               @allowed_auth_methods = packet[:authentications].split(/,/)
+              @partial_success ||= packet[:partial_success]
               debug { "allowed methods: #{packet[:authentications]}" }
               return packet
 
@@ -135,6 +131,23 @@ module Net
         end
 
         private
+
+        def try_authenticate(method_name, next_service, username, password, key_manager)
+          debug { "trying #{method_name}" }
+          begin
+            auth_class = Methods.const_get(method_name.split(/\W+/).map { |p| p.capitalize }.join)
+            method = auth_class.new(self,
+                                    key_manager: key_manager, password_prompt: options[:password_prompt],
+                                    pubkey_algorithms: options[:pubkey_algorithms] || nil)
+          rescue NameError
+            debug {"Mechanism #{method_name} was requested, but isn't a known type.  Ignoring it."}
+            return false
+          end
+
+          method.authenticate(next_service, username, password)
+        rescue Net::SSH::Authentication::DisallowedMethod
+          false
+        end
 
         # Returns an array of paths to the key files usually defined
         # by system default.
