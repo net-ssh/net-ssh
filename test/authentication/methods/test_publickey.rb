@@ -220,6 +220,21 @@ module Authentication
         assert !subject.authenticate("ssh-connection", "jamis")
       end
 
+      def test_authenticate_should_offer_agent_sk_ed25519_key_by_default
+        expect_offer_accepted(sk_ed25519_key, "sk-ssh-ed25519@openssh.com", composed_pubkey_algorithms)
+        assert subject(keys: [sk_ed25519_key]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_should_offer_agent_sk_ecdsa_key_by_default
+        expect_offer_accepted(sk_ecdsa_key, "sk-ecdsa-sha2-nistp256@openssh.com", composed_pubkey_algorithms)
+        assert subject(keys: [sk_ecdsa_key]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_should_skip_agent_sk_keys_removed_from_pubkey_algorithms
+        transport(pubkey_algorithms: composed_pubkey_algorithms(pubkey_algorithms: %w[-sk-*]))
+        assert_equal false, subject(keys: [sk_ed25519_key, sk_ecdsa_key]).authenticate("ssh-connection", "jamis")
+      end
+
       private
 
       def signature_parameters(key)
@@ -273,6 +288,16 @@ module Authentication
 
       def ecdsa_key
         @@ecdsa_key ||= OpenSSL::PKey::EC.generate("prime256v1")
+      end
+
+      # As listed by ssh-agent; Buffer#read_key returns a SecurityKey::PubKey for these.
+      def sk_ed25519_key
+        Net::SSH::Buffer.from(:string, "sk-ssh-ed25519@openssh.com", :string, "\x22" * 32, :string, "ssh:").read_key
+      end
+
+      def sk_ecdsa_key
+        Net::SSH::Buffer.from(:string, "sk-ecdsa-sha2-nistp256@openssh.com", :string, "nistp256",
+                              :string, "\x04#{"\x11" * 64}", :string, "ssh:").read_key
       end
 
       @@keys = nil

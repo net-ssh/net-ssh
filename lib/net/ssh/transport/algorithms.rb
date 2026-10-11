@@ -8,6 +8,7 @@ require 'net/ssh/transport/kex'
 require 'net/ssh/transport/kex/curve25519_sha256_loader'
 require 'net/ssh/transport/server_version'
 require 'net/ssh/authentication/ed25519_loader'
+require 'net/ssh/authentication/security_key'
 
 module Net
   module SSH
@@ -56,9 +57,9 @@ module Net
                                 ecdsa-sha2-nistp521-cert-v01@openssh.com
                                 rsa-sha2-512-cert-v01@openssh.com rsa-sha2-256-cert-v01@openssh.com
                                 ssh-ed25519
-                                ecdsa-sha2-nistp256 ecdsa-sha2-nistp384 ecdsa-sha2-nistp521
-                                sk-ssh-ed25519@openssh.com sk-ecdsa-sha2-nistp256@openssh.com
-                                rsa-sha2-512 rsa-sha2-256]
+                                ecdsa-sha2-nistp256 ecdsa-sha2-nistp384 ecdsa-sha2-nistp521] +
+                             [Authentication::SecurityKey::SK_SSH_ED25519, Authentication::SecurityKey::SK_ECDSA_SHA2_NISTP256] +
+                             %w[rsa-sha2-512 rsa-sha2-256]
         }.freeze
 
         if Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
