@@ -186,6 +186,21 @@ class TestKeyFactory < NetSSHTest
     assert_equal ecdsa_sha2_nistp521_key.to_blob, Net::SSH::KeyFactory.load_public_key('/key-file').to_blob
   end
 
+  def test_load_public_sk_ssh_ed25519_key_should_return_security_key
+    File.expects(:read).with(@key_file).returns(sk_ssh_ed25519_public_key)
+    key = Net::SSH::KeyFactory.load_public_key("/key-file")
+    assert_instance_of Net::SSH::Authentication::SecurityKey::PubKey, key
+    assert_equal "sk-ssh-ed25519@openssh.com", key.ssh_type
+    assert_equal "SHA256:n1tKMhw1/usLdyMTVdX7V5lnr/UDVmVJZncNA0ipvYk", key.fingerprint("sha256")
+  end
+
+  def test_load_data_public_sk_ecdsa_sha2_nistp256_key_should_return_security_key
+    key = Net::SSH::KeyFactory.load_data_public_key(sk_ecdsa_sha2_nistp256_public_key)
+    assert_instance_of Net::SSH::Authentication::SecurityKey::PubKey, key
+    assert_equal "sk-ecdsa-sha2-nistp256@openssh.com", key.ssh_type
+    assert_equal "SHA256:ndD+3s351AVTSHGXmwN8KG46k38xvz3y/5NBNDvaRr0", key.fingerprint("sha256")
+  end
+
   def test_load_anonymous_private_key_should_return_key_or_raise_exception
     File.expects(:read).with(@key_file).returns(anonymous_private_key)
     if OpenSSL::PKey.respond_to?(:read)
@@ -212,6 +227,15 @@ class TestKeyFactory < NetSSHTest
   end
 
   private
+
+  # The sk fingerprints asserted in the tests are `ssh-keygen -lf` output for these keys.
+  def sk_ssh_ed25519_public_key
+    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIB3EAkD0aWTMZBn0rMaYZO7wh/2h9yPe7dXShspyBI0WAAAABHNzaDo= user@host\n"
+  end
+
+  def sk_ecdsa_sha2_nistp256_public_key
+    "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBKoqiTnbbceOXTHddiPfT6F1W2zgnGZmj0QtNS8JEfmZbLWmxZjU+8XgJ91cqMWkrNVb48+YcKV6jgwKte45WNcAAAAEc3NoOg== user@host\n"
+  end
 
   def rsa_key_fingerprint_md5
     '32:00:44:78:bf:91:02:c1:00:25:0f:f9:0a:f9:aa:c7'

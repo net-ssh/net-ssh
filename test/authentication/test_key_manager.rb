@@ -156,6 +156,24 @@ module Authentication
       assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_pk])
     end
 
+    def test_each_identity_with_sk_pubkey_file_offers_matching_agent_key_when_keys_only
+      sk_pub = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIB3EAkD0aWTMZBn0rMaYZO7wh/2h9yPe7dXShspyBI0WAAAABHNzaDo= user@host\n"
+      sk_agent_key = Net::SSH::Buffer.new(sk_pub.split[1].unpack1("m")).read_key
+      manager(keys_only: true).stubs(:agent).returns(stub("agent", identities: [rsa_pk, sk_agent_key]))
+      first = File.expand_path("/first")
+      manager.add(first + ".pub")
+      File.stubs(:file?).with(first + ".pub").returns(true)
+      File.stubs(:readable?).with(first + ".pub").returns(true)
+      File.stubs(:file?).with(first + "-cert.pub").returns(false)
+      File.stubs(:read).with(first + ".pub").returns(sk_pub)
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal [sk_agent_key], identities
+      assert_equal({ from: :agent, identity: sk_agent_key }, manager.known_identities[sk_agent_key])
+    end
+
     def test_each_identity_skips_unreadable_pubkey_file_only_without_raising
       manager.stubs(:agent).returns(nil)
       first = File.expand_path("/first")

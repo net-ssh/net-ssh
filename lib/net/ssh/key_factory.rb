@@ -2,6 +2,7 @@ require 'net/ssh/transport/openssl'
 require 'net/ssh/prompt'
 
 require 'net/ssh/authentication/ed25519_loader'
+require 'net/ssh/authentication/security_key'
 
 module Net
   module SSH
@@ -92,7 +93,7 @@ module Net
           blob = nil
           begin
             blob = fields.shift
-          end while !blob.nil? && !/^(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp\d+)(-cert-v01@openssh\.com)?$/.match(blob)
+          end while !blob.nil? && !public_key_type?(blob)
           blob = fields.shift
 
           raise Net::SSH::Exception, "public key at #{filename} is not valid" if blob.nil?
@@ -103,6 +104,11 @@ module Net
         end
 
         private
+
+        def public_key_type?(type)
+          /^(ssh-(rsa|dss|ed25519)|ecdsa-sha2-nistp\d+)(-cert-v01@openssh\.com)?$/.match?(type) ||
+            Net::SSH::Authentication::SecurityKey.understands?(type)
+        end
 
         # rubocop:disable Style/Documentation, Lint/DuplicateMethods
         class KeyType
