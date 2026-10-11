@@ -400,8 +400,9 @@ module Net
           !condition_matches.empty? && condition_matches.all?
         end
 
+        # As in OpenSSH's argv_split, "#" starts a comment only at the start of a token and outside quotes.
         def uncomment(string)
-          string[0...string =~ /\s+#.*?$/]
+          string[/\A(?:\s*(?!#)(?:\\.|"[^"]*"?|'[^']*'?|[^\s"'])+)*/]
         end
 
         def unquote(string)

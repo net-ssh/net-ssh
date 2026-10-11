@@ -9,3 +9,15 @@ Host example3 #host comment
 
 Host example4   #host comment
   User=person #commentcomment
+
+Host example5
+  User "a #b"
+
+Host example6
+  User "a#b" #commentcomment
+
+Host example7
+  SetEnv FOO="a # b"
+
+Host example8
+  SetEnv FOO='a # b' BAR=c #commentcomment
