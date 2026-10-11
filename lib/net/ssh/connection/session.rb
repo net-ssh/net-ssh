@@ -24,7 +24,7 @@ module Net
       #     # 'ssh' is an instance of Net::SSH::Connection::Session
       #     ssh.exec! "/etc/init.d/some_process start"
       #   end
-      class Session
+      class Session # rubocop:disable Metrics/ClassLength
         include Loggable
         include Constants
 
@@ -74,6 +74,8 @@ module Net
           @channel_id_counter = -1
           @channels = Hash.new(NilChannel.new(self))
           @listeners = { transport.socket => nil }
+          @read_paused = {}
+          @draining = {}
           @pending_requests = []
           @channel_open_handlers = {}
           @on_global_request = {}
@@ -131,6 +133,8 @@ module Net
           rescue Net::SSH::Disconnect
             raise unless channels.empty?
           end
+          @draining.each_key(&:close)
+          @draining.clear
           transport.close
         end
 
@@ -151,10 +155,13 @@ module Net
         # a +true+ value for +include_invisible+, then those will be counted.
         #
         # This can be useful for determining whether the event loop should continue
-        # to be run.
+        # to be run. A forwarded socket still writing out data that arrived before
+        # its channel closed also counts as busy.
         #
         #   ssh.loop { ssh.busy? }
         def busy?(include_invisible = false)
+          return true if @draining.any?
+
           if include_invisible
             channels.any?
           else
@@ -260,7 +267,7 @@ module Net
         def ev_do_calculate_rw_wait(wait)
           r = listeners.keys
           w = r.select { |w2| w2.respond_to?(:pending_write?) && w2.pending_write? }
-          [r, w, io_select_wait(wait)]
+          [r.reject { |io| @read_paused.key?(io) }, w, io_select_wait(wait)]
         end
 
         # This is called internally as part of #process.
@@ -286,6 +293,7 @@ module Net
 
           Array(writers).each do |writer|
             writer.send_pending
+            close_if_drained(writer) if @draining.key?(writer)
           end
         end
 
@@ -490,7 +498,34 @@ module Net
         # Removes the given io object from the listeners collection, so that the
         # event loop will no longer monitor it.
         def stop_listening_to(io)
+          @read_paused.delete(io)
+          @draining.delete(io)
           listeners.delete(io)
+        end
+
+        # Internal and experimental, used by port forwarding: stops the event
+        # loop from reading +io+ while it keeps flushing its pending output.
+        def pause_reading(io) # :nodoc:
+          raise ArgumentError, "the transport socket can't be paused" if io.equal?(transport.socket)
+
+          @read_paused[io] = true if listeners.key?(io)
+        end
+
+        def resume_reading(io) # :nodoc:
+          @read_paused.delete(io)
+        end
+
+        def reading_paused?(io) # :nodoc:
+          @read_paused.key?(io)
+        end
+
+        # Internal and experimental, used by port forwarding: stops reading +io+
+        # but keeps flushing its pending output, then closes it and stops
+        # listening, as OpenSSH's chan_rcvd_oclose does.
+        def close_when_drained(io) # :nodoc:
+          pause_reading(io)
+          @draining[io] = true
+          close_if_drained(io)
         end
 
         # Returns a reference to the Net::SSH::Service::Forward service, which can
@@ -568,6 +603,13 @@ module Net
           channels.each do |id, channel|
             channel_closed(channel)
           end
+        end
+
+        def close_if_drained(io)
+          return if io.pending_write? && !io.closed? && !closed? && listeners.key?(io)
+
+          io.close unless io.closed?
+          stop_listening_to(io)
         end
 
         def channel_closed(channel)

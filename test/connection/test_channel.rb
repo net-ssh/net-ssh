@@ -358,6 +358,85 @@ module Connection
       assert_equal 0x2FFFF, channel.local_window_size
     end
 
+    def test_do_data_with_grant_window_on_consume_should_not_adjust_window_until_consumed
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.grant_window_on_consume!
+
+      channel.do_data("." * 0x10001)
+      assert_equal 0xFFFF, channel.local_window_size
+
+      connection.expect do |_t, p|
+        assert_equal CHANNEL_WINDOW_ADJUST, p.type
+        assert_equal 0x30001, p[:extra_bytes]
+      end
+      channel.consumed(0x10001)
+      assert_equal 0x40000, channel.local_maximum_window_size
+      assert_equal 0x40000, channel.local_window_size
+    end
+
+    def test_consumed_should_wait_for_window_to_drop_below_half
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.grant_window_on_consume!
+
+      channel.do_data("." * 0x8000)
+      channel.consumed(0x8000)
+      assert_equal 0x18000, channel.local_window_size
+
+      connection.expect do |_t, p|
+        assert_equal CHANNEL_WINDOW_ADJUST, p.type
+        assert_equal 0x28000, p[:extra_bytes]
+      end
+      channel.do_data("." * 0x8001)
+      assert_equal 0x37FFF, channel.local_window_size
+    end
+
+    def test_consumed_should_not_adjust_window_after_remote_close
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.grant_window_on_consume!
+      channel.do_data("." * 0x10001)
+      channel.remote_closed!
+      channel.consumed(0x10001)
+      assert_equal 0xFFFF, channel.local_window_size
+    end
+
+    def test_consumed_should_require_grant_window_on_consume
+      channel.do_open_confirmation(0, 1000, 1000)
+      assert_raises(ArgumentError) { channel.consumed(1) }
+    end
+
+    def test_consumed_should_reject_negative_bytes
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.grant_window_on_consume!
+      assert_raises(ArgumentError) { channel.consumed(-1) }
+    end
+
+    def test_grant_window_on_consume_should_fail_after_data_was_received
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.do_data("x")
+      assert_raises(ArgumentError) { channel.grant_window_on_consume! }
+    end
+
+    def test_extended_data_without_handler_should_count_as_consumed_with_grant_window_on_consume
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.grant_window_on_consume!
+
+      connection.expect do |_t, p|
+        assert_equal CHANNEL_WINDOW_ADJUST, p.type
+        assert_equal 0x30001, p[:extra_bytes]
+      end
+      channel.do_extended_data(1, "." * 0x10001)
+      assert_equal 0x40000, channel.local_window_size
+    end
+
+    def test_extended_data_with_handler_should_wait_for_consumed_with_grant_window_on_consume
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.grant_window_on_consume!
+      channel.on_extended_data { |*_args| nil }
+
+      channel.do_extended_data(1, "." * 0x10001)
+      assert_equal 0xFFFF, channel.local_window_size
+    end
+
     def test_do_failure_should_grab_next_pending_request_and_call_it
       result = nil
       channel.pending_requests << Proc.new { |*args| result = args }

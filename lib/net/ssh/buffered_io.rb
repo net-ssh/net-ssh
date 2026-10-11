@@ -166,6 +166,11 @@ module Net
     #    http://github.com/net-ssh/net-ssh/tree/portfwfix
     #
     module ForwardedBufferedIo
+      def self.extended(object) # :nodoc:
+        object.instance_variable_set(:@on_sent, nil)
+        object.instance_variable_set(:@shutdown_write_when_drained, false)
+      end
+
       def fill(n = 8192)
         begin
           super(n)
@@ -182,11 +187,25 @@ module Net
         end
       end
 
+      # Internal and experimental: registers a block called with the number of
+      # bytes each #send_pending wrote to the socket.
+      def on_sent(&block) # :nodoc:
+        @on_sent = block
+      end
+
       def send_pending
         begin
-          super
-        rescue Errno::ECONNRESET => e
-          debug { "connection was reset => shallowing exception:#{e}" }
+          pending = output.length
+          result = super
+          @on_sent.call(pending - output.length) if @on_sent && output.length < pending
+          shutdown_write_if_drained
+          result
+        rescue Errno::EPIPE, Errno::ECONNRESET => e
+          # Like OpenSSH's chan_write_failed: the peer is gone, so drop what it
+          # will never read and close, letting the forwarded channel close too.
+          debug { "write failed => discarding #{output.length} bytes and closing:#{e}" }
+          output.clear!
+          close
           return 0
         rescue IOError => e
           if e.message =~ /closed/ then
@@ -196,6 +215,24 @@ module Net
             raise
           end
         end
+      end
+
+      # Internal: shuts down the write side once pending output has been sent,
+      # as OpenSSH does on CHANNEL_EOF (chan_rcvd_ieof, chan_obuf_empty).
+      def shutdown_write_when_drained # :nodoc:
+        @shutdown_write_when_drained = true
+        shutdown_write_if_drained
+      end
+
+      private
+
+      def shutdown_write_if_drained
+        return unless @shutdown_write_when_drained && output.empty? && !closed?
+
+        @shutdown_write_when_drained = false
+        shutdown(Socket::SHUT_WR)
+      rescue Errno::EPIPE, Errno::ENOTCONN => e
+        debug { "shutdown failed => shallowing exception:#{e}" }
       end
     end
   end

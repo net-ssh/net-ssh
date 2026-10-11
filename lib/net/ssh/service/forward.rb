@@ -320,6 +320,11 @@ module Net
           session.listen_to(client)
           channel[:socket] = client
 
+          # Grant window only for data the local end has accepted, so a slow
+          # reader stalls the remote sender instead of filling our memory.
+          channel.grant_window_on_consume!
+          client.on_sent { |bytes| channel.consumed(bytes) }
+
           channel.on_data do |ch, data|
             debug { "data:#{data.length} on #{type} forwarded channel" }
             ch[:socket].enqueue(data)
@@ -327,36 +332,36 @@ module Net
 
           channel.on_eof do |ch|
             debug { "eof #{type} on #{type} forwarded channel" }
-            begin
-              ch[:socket].send_pending
-              ch[:socket].shutdown Socket::SHUT_WR
-            rescue IOError => e
-              if e.message =~ /closed/ then
-                debug { "epipe in on_eof => shallowing exception:#{e}" }
-              else
-                raise
-              end
-            rescue Errno::EPIPE => e
-              debug { "epipe in on_eof => shallowing exception:#{e}" }
-            rescue Errno::ENOTCONN => e
-              debug { "enotconn in on_eof => shallowing exception:#{e}" }
-            end
+            ch[:socket].shutdown_write_when_drained
           end
 
           channel.on_close do |ch|
             debug { "closing #{type} forwarded channel" }
-            ch[:socket].close if !client.closed?
-            session.stop_listening_to(ch[:socket])
+            session.close_when_drained(ch[:socket])
           end
 
           channel.on_process do |ch|
-            if ch[:socket].closed?
+            socket = ch[:socket]
+            if socket.closed?
               ch.info { "#{type} forwarded connection closed" }
+              session.stop_listening_to(socket)
               ch.close
-            elsif ch[:socket].available > 0
-              data = ch[:socket].read_available(8192)
-              ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
-              ch.send_data(data)
+            else
+              if socket.available > 0
+                data = socket.read_available(8192)
+                ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
+                ch.send_data(data)
+              end
+
+              # Like OpenSSH's channel_pre_open, only read more once the remote
+              # window can take what is already queued; writes to the socket keep
+              # flowing. ch.output is still unsent here because Channel#process
+              # runs this block before enqueue_pending_output.
+              if ch.output.length + socket.available < ch.remote_window_size.to_i
+                session.resume_reading(socket)
+              else
+                session.pause_reading(socket)
+              end
             end
           end
         end

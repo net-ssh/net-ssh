@@ -118,6 +118,8 @@ module Net
 
           @local_maximum_packet_size = max_pkt_size
           @local_window_size = @local_maximum_window_size = max_win_size
+          @local_consumed = 0
+          @grant_window_on_consume = false
 
           @on_confirm_open = on_confirm_open
 
@@ -252,6 +254,26 @@ module Net
           raise EOFError, "cannot send data if channel has declared eof" if eof?
 
           output.append(data.to_s)
+        end
+
+        # Internal and experimental, used by port forwarding: from now on window
+        # is granted only for bytes reported via #consumed, so a slow consumer
+        # stalls the remote sender instead of buffering everything it sends.
+        # Must be called before any data is received.
+        def grant_window_on_consume! # :nodoc:
+          raise ArgumentError, "grant_window_on_consume! must be called before any data is received" if local_window_size != local_maximum_window_size
+
+          @grant_window_on_consume = true
+        end
+
+        # Internal and experimental: reports that +bytes+ of received data have
+        # been processed, letting the remote end send that much more.
+        def consumed(bytes) # :nodoc:
+          raise ArgumentError, "consumed requires grant_window_on_consume!" unless @grant_window_on_consume
+          raise ArgumentError, "consumed bytes must not be negative" if bytes.negative?
+
+          @local_consumed += bytes
+          adjust_window_for_consumed
         end
 
         # Returns true if the channel exists in the channel list of the session,
@@ -598,7 +620,12 @@ module Net
         # type, and data.
         def do_extended_data(type, data)
           update_local_window_size(data.length)
-          @on_extended_data.call(self, type, data) if @on_extended_data
+          if @on_extended_data
+            @on_extended_data.call(self, type, data)
+          elsif @grant_window_on_consume
+            # Nothing will ever consume it, so don't let it shrink the window.
+            consumed(data.length)
+          end
         end
 
         # Invokes the #on_eof callback when the server indicates that no
@@ -651,6 +678,8 @@ module Net
         # server telling it that the window size has grown.
         def update_local_window_size(size)
           @local_window_size -= size
+          return adjust_window_for_consumed if @grant_window_on_consume
+
           if local_window_size < local_maximum_window_size / 2
             connection.send_message(
               Buffer.from(:byte, CHANNEL_WINDOW_ADJUST, :long, remote_id, :long, LOCAL_WINDOW_SIZE_INCREMENT)
@@ -661,6 +690,21 @@ module Net
               @local_maximum_window_size += LOCAL_WINDOW_SIZE_INCREMENT
             end
           end
+        end
+
+        # Mirrors OpenSSH's channel_check_window: once the window is below half,
+        # give back what was consumed, growing the maximum window the same way
+        # #update_local_window_size does.
+        def adjust_window_for_consumed
+          return if @local_consumed.zero? || local_window_size >= local_maximum_window_size / 2
+          return if remote_id.nil? || local_closed? || remote_closed?
+
+          growth = (GOOD_LOCAL_MAXIUMUM_WINDOW_SIZE - local_maximum_window_size).clamp(0, LOCAL_WINDOW_SIZE_INCREMENT)
+          adjust = @local_consumed + growth
+          connection.send_message(Buffer.from(:byte, CHANNEL_WINDOW_ADJUST, :long, remote_id, :long, adjust))
+          @local_window_size += adjust
+          @local_maximum_window_size += growth
+          @local_consumed = 0
         end
 
         # Gets an +Array+ of local environment variables in the remote process'

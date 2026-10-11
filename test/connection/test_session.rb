@@ -52,6 +52,97 @@ module Connection
       assert !session.listeners.key?(io)
     end
 
+    def test_pause_reading_should_keep_flushing_pending_output
+      io = stub("io", pending_write?: true)
+      session.listen_to(io)
+
+      session.pause_reading(io)
+      readers, writers, = session.ev_do_calculate_rw_wait(nil)
+      assert !readers.include?(io)
+      assert writers.include?(io)
+
+      session.resume_reading(io)
+      readers, = session.ev_do_calculate_rw_wait(nil)
+      assert readers.include?(io)
+    end
+
+    def test_stop_listening_to_should_clear_pause_state
+      io = stub("io", pending_write?: false)
+      session.listen_to(io)
+      session.pause_reading(io)
+      session.stop_listening_to(io)
+
+      session.listen_to(io)
+      readers, = session.ev_do_calculate_rw_wait(nil)
+      assert readers.include?(io)
+    end
+
+    def test_pause_reading_should_ignore_io_that_is_not_listened_to
+      io = stub("io", pending_write?: false)
+      session.pause_reading(io)
+
+      session.listen_to(io)
+      readers, = session.ev_do_calculate_rw_wait(nil)
+      assert readers.include?(io)
+    end
+
+    def test_pause_reading_should_refuse_the_transport_socket
+      assert_raises(ArgumentError) { session.pause_reading(socket) }
+    end
+
+    def test_reading_paused_should_report_pause_state
+      io = stub("io", pending_write?: false)
+      session.listen_to(io)
+      assert !session.reading_paused?(io)
+      session.pause_reading(io)
+      assert session.reading_paused?(io)
+    end
+
+    def test_close_when_drained_should_keep_flushing_and_stay_busy_until_drained
+      io = stub("io", pending_write?: true, closed?: false)
+      session.listen_to(io)
+      session.close_when_drained(io)
+
+      assert session.busy?
+      readers, writers, = session.ev_do_calculate_rw_wait(nil)
+      assert !readers.include?(io)
+      assert writers.include?(io)
+
+      io.expects(:send_pending).with { io.stubs(:pending_write?).returns(false) }
+      io.expects(:close)
+      session.ev_do_handle_events([], [io])
+      assert !session.listeners.key?(io)
+      assert !session.busy?
+    end
+
+    def test_close_when_drained_should_close_at_once_without_pending_output
+      io = stub("io", pending_write?: false, closed?: false)
+      session.listen_to(io)
+      io.expects(:close)
+      session.close_when_drained(io)
+      assert !session.listeners.key?(io)
+      assert !session.busy?
+    end
+
+    def test_close_when_drained_should_close_at_once_if_not_listened_to
+      io = stub("io", pending_write?: true, closed?: false)
+      io.expects(:close)
+      session.close_when_drained(io)
+      assert !session.busy?
+    end
+
+    def test_close_should_close_sockets_still_draining
+      io = stub("io", pending_write?: true, closed?: false)
+      session.listen_to(io)
+      session.close_when_drained(io)
+
+      IO.stubs(:select).returns([[], [], []])
+      io.expects(:close)
+      transport.expects(:close)
+      session.close
+      assert !session.busy?
+    end
+
     def test_send_message_should_enqueue_message_at_transport_layer
       packet = P(:byte, REQUEST_SUCCESS)
       session.send_message(packet)

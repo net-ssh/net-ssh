@@ -568,6 +568,190 @@ class TestForward < ForwardTestBase
       assert_equal({}, session.channels)
     end
   end
+
+  def forwarded_sockets(session)
+    session.channels.each_value.map { |ch| ch[:socket] }.compact
+  end
+
+  def test_local_forward_should_not_buffer_more_than_the_window_for_a_stalled_reader
+    setup_ssh_env do
+      size = 16 * 1024 * 1024
+      session = Net::SSH.start(*ssh_start_params)
+      server = start_server do |client|
+        client.write("x" * size)
+        client.read
+        client.close
+      end
+      local_port = session.forward.local(0, localhost, server.addr[1])
+      client = TCPSocket.new(localhost, local_port)
+      received = Queue.new
+      Thread.start do
+        sleep 2
+        received << client.read(size).length
+        client.close
+      end
+
+      max_buffered = 0
+      max_window = 0
+      Timeout.timeout(20) do
+        session.loop(0.1) do
+          forwarded_sockets(session).each { |socket| max_buffered = [max_buffered, socket.write_buffer.length].max }
+          session.channels.each_value { |ch| max_window = [max_window, ch.local_maximum_window_size].max }
+          received.empty?
+        end
+      end
+
+      assert_equal size, received.pop
+      assert_operator max_buffered, :<=, max_window
+    end
+  end
+
+  def test_local_forward_echo_should_not_stall_when_client_reads_late
+    setup_ssh_env do
+      size = 64 * 1024 * 1024
+      session = Net::SSH.start(*ssh_start_params)
+      server = start_server do |client|
+        while (data = client.readpartial(65536))
+          client.write(data)
+        end
+      rescue EOFError
+        client.close
+      end
+      local_port = session.forward.local(0, localhost, server.addr[1])
+      client = TCPSocket.new(localhost, local_port)
+      echoed = Queue.new
+      Thread.start { client.write("y" * size) }
+      Thread.start do
+        sleep 3
+        echoed << client.read(size)
+        client.close
+      end
+
+      Timeout.timeout(30) do
+        session.loop(0.1) { echoed.empty? }
+      end
+      assert_equal "y" * size, echoed.pop
+    end
+  end
+
+  def test_local_forward_should_not_buffer_more_than_the_remote_window_for_a_stalled_upload
+    setup_ssh_env do
+      size = 16 * 1024 * 1024
+      session = Net::SSH.start(*ssh_start_params)
+      server_done = Queue.new
+      server = start_server do |client|
+        sleep 2
+        server_done << client.read(size).length
+        client.close
+      end
+      local_port = session.forward.local(0, localhost, server.addr[1])
+      client = TCPSocket.new(localhost, local_port)
+      Thread.start { client.write("u" * size) }
+
+      max_buffered = 0
+      max_window = 0
+      Timeout.timeout(30) do
+        session.loop(0.1) do
+          session.channels.each_value do |ch|
+            next unless ch[:socket]
+
+            max_buffered = [max_buffered, ch.output.length + ch[:socket].available].max
+            max_window = [max_window, ch.remote_window_size.to_i].max
+          end
+          server_done.empty?
+        end
+      end
+
+      assert_equal size, server_done.pop
+      assert_operator max_buffered, :<=, max_window + 8192
+    ensure
+      client&.close
+    end
+  end
+
+  def test_local_forward_should_close_when_paused_client_disconnects_while_data_arrives
+    setup_ssh_env do
+      session = Net::SSH.start(*ssh_start_params)
+      drain = Queue.new
+      server = start_server do |client|
+        Thread.start do
+          loop { client.write("d" * 65536) }
+        rescue StandardError
+          nil
+        end
+        drain.pop
+        client.read
+        client.close
+      end
+      local_port = session.forward.local(0, localhost, server.addr[1])
+      client = TCPSocket.new(localhost, local_port)
+      paused = false
+
+      Timeout.timeout(30) do
+        session.loop(0.1) do
+          begin
+            client.write_nonblock("u" * 65536)
+          rescue IO::WaitWritable
+            paused ||= forwarded_sockets(session).any? { |socket| session.reading_paused?(socket) }
+          end
+          !paused
+        end
+        client.setsockopt(Socket::SOL_SOCKET, Socket::SO_LINGER, [1, 0].pack("ii"))
+        client.close
+        # sshd sends its CLOSE only once the upload it buffered reaches the target
+        drain << true
+
+        iterations = 0
+        session.loop(0.1) do
+          iterations += 1
+          !session.channels.empty?
+        end
+        assert_operator iterations, :<, 1000
+      end
+      assert_equal({}, session.channels)
+    end
+  end
+
+  def test_remote_forward_should_not_buffer_more_than_the_window_for_a_stalled_reader
+    setup_ssh_env do
+      size = 16 * 1024 * 1024
+      session = Net::SSH.start(*ssh_start_params)
+      server = start_server do |client|
+        client.write("r" * size)
+        client.close
+      end
+      got_remote_port = Queue.new
+      session.forward.remote(server.addr[1], localhost, 0, localhost) do |actual_remote_port|
+        got_remote_port << actual_remote_port
+      end
+      session.loop(0.1) { got_remote_port.empty? }
+      remote_port = got_remote_port.pop
+      received = Queue.new
+      Thread.start do
+        client = TCPSocket.new(localhost, remote_port)
+        sleep 2
+        received << client.read.length
+        client.close
+      end
+
+      max_buffered = 0
+      max_window = 0
+      Timeout.timeout(30) do
+        session.loop(0.1) do
+          session.channels.each_value do |ch|
+            next unless ch[:socket]
+
+            max_buffered = [max_buffered, ch.output.length + ch[:socket].available].max
+            max_window = [max_window, ch.remote_window_size.to_i].max
+          end
+          received.empty?
+        end
+      end
+
+      assert_equal size, received.pop
+      assert_operator max_buffered, :<=, max_window + 8192
+    end
+  end
 end
 
 class TestForwardOnUnixSockets < ForwardTestBase
