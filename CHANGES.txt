@@ -6,6 +6,11 @@
   * Support agent-backed FIDO/U2F security keys (sk-ecdsa-sha2-nistp256@openssh.com, sk-ssh-ed25519@openssh.com) for publickey auth [#1007]
   * Port forwarding no longer buffers a whole stream in memory when one side reads slowly: like OpenSSH, window is granted only as data is written to the local socket, and the local socket is read only while the remote window has room. An application that writes everything to a forwarded port before reading anything now blocks once the window fills, as it would with `ssh -L` or a direct TCP connection; the old unbounded buffering hid this [#1037, #1003]
   * Data forwarded to a local socket just before the remote end sends EOF or closes the channel is no longer truncated or dropped: it is written out before the socket is shut down or closed, without blocking the event loop until the local application reads [#1037]
+  * Multi-factor authentication works when the server's AuthenticationMethods order differs from net-ssh's: after each partial success the allowed methods are tried again, as OpenSSH does [#873, #872]
+  * `HostKeyError#host`, `#port` and `#ip` now return the connected host, port and IP (`ip` is nil through a ProxyCommand) instead of always nil [#963]
+  * OpenSSH-format private keys with Windows (CRLF) line endings now load [#922, #921]
+  * Send CHANNEL_EOF before CHANNEL_CLOSE when closing a session's remaining channels, as OpenSSH does; fixes hangs at close with servers that wait for EOF, such as some SFTP servers [#672]
+  * ssh_config: trailing `# comments` are now ignored, as in OpenSSH; a `#` inside quotes or in the middle of a word is kept [#990]
 
 === 8.0.0 rc3
 
