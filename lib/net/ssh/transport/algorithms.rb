@@ -31,11 +31,8 @@ module Net
                        ecdsa-sha2-nistp521
                        ecdsa-sha2-nistp384
                        ecdsa-sha2-nistp256
-                       ssh-rsa-cert-v01@openssh.com
-                       ssh-rsa-cert-v00@openssh.com
-                       ssh-rsa
-                       rsa-sha2-256
-                       rsa-sha2-512],
+                       rsa-sha2-512
+                       rsa-sha2-256],
 
           kex: %w[ecdh-sha2-nistp521
                   ecdh-sha2-nistp384
@@ -61,8 +58,7 @@ module Net
                                 ssh-ed25519
                                 ecdsa-sha2-nistp256 ecdsa-sha2-nistp384 ecdsa-sha2-nistp521
                                 sk-ssh-ed25519@openssh.com sk-ecdsa-sha2-nistp256@openssh.com
-                                rsa-sha2-512 rsa-sha2-256
-                                ssh-rsa-cert-v01@openssh.com ssh-rsa]
+                                rsa-sha2-512 rsa-sha2-256]
         }.freeze
 
         if Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
@@ -86,7 +82,8 @@ module Net
 
         # Define all algorithms, with the deprecated, supported by Net::SSH.
         ALGORITHMS = {
-          host_key: DEFAULT_ALGORITHMS[:host_key] + %w[ssh-dss],
+          host_key: DEFAULT_ALGORITHMS[:host_key] +
+                    %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa ssh-dss],
 
           kex: DEFAULT_ALGORITHMS[:kex] +
                %w[diffie-hellman-group-exchange-sha1
@@ -108,7 +105,7 @@ module Net
                    hmac-md5 hmac-md5-96
                    none],
 
-          pubkey_algorithms: DEFAULT_ALGORITHMS[:pubkey_algorithms] + %w[ssh-dss],
+          pubkey_algorithms: DEFAULT_ALGORITHMS[:pubkey_algorithms] + %w[ssh-rsa-cert-v01@openssh.com ssh-rsa ssh-dss],
 
           compression: %w[none zlib@openssh.com zlib],
           language: %w[]
@@ -301,7 +298,11 @@ module Net
             # existing known key for the host has preference.
 
             existing_keys = session.host_keys
-            host_keys = existing_keys.flat_map { |key| key.respond_to?(:ssh_types) ? key.ssh_types : [key.ssh_type] }.uniq
+            host_keys = existing_keys.flat_map { |key| key.respond_to?(:ssh_types) ? key.ssh_types : [key.ssh_type] }
+            # A known ssh-rsa key also verifies with rsa-sha2-*, and must not re-enable disabled SHA-1 algorithms.
+            disabled_sha1 = %w[ssh-rsa ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com] - algorithms[:host_key]
+            host_keys = host_keys.flat_map { |type| type == 'ssh-rsa' ? %w[rsa-sha2-512 rsa-sha2-256 ssh-rsa] : [type] }
+            host_keys = (host_keys - disabled_sha1).uniq
             algorithms[:host_key].each do |name|
               host_keys << name unless host_keys.include?(name)
             end
