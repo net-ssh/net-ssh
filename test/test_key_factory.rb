@@ -195,6 +195,20 @@ class TestKeyFactory < NetSSHTest
     end
   end
 
+  def test_load_openssh_format_private_RSA_key_with_windows_newlines
+    skip "OpenSSH private key loader requires Ed25519 support" unless Net::SSH::Authentication::ED25519Loader::LOADED
+
+    File.expects(:read).with(@key_file).returns(rsa_key_openssh.encode(crlf_newline: true))
+    assert_equal OpenSSL::PKey.read(anonymous_private_key).to_der, Net::SSH::KeyFactory.load_private_key(@key_file).to_der
+  end
+
+  def test_load_encrypted_openssh_format_private_RSA_key_with_windows_newlines
+    skip "OpenSSH private key loader requires Ed25519 support" unless Net::SSH::Authentication::ED25519Loader::LOADED
+
+    File.expects(:read).with(@key_file).returns(encrypted_rsa_key_openssh.encode(crlf_newline: true))
+    assert_equal OpenSSL::PKey.read(anonymous_private_key).to_der, Net::SSH::KeyFactory.load_private_key(@key_file, "password").to_der
+  end
+
   private
 
   def rsa_key_fingerprint_md5
@@ -334,6 +348,71 @@ class TestKeyFactory < NetSSHTest
       /QdCVCJgnZUO/zdAxkr22dDn+WEXkL4wgBVStQvvnQp9C2NJcoOExvex5PLzKWQg
       WEKt5v3QsUEgVrzkM4K9UbI=
       -----END PRIVATE KEY-----
+    EOF
+  end
+
+  def rsa_key_openssh
+    @rsa_key_openssh ||= <<~EOF
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn
+      NhAAAAAwEAAQAAAQEAt4neYGem4JSbYcpYvCTWkcYbKisMD5UXhCP5qZc8+SD+oFkPdi6I
+      F23QV7R3/WaQOdwXi5rXDQRGNGIHe7DwYZRwAUuQ+f//85bUkl9vi+RghIgunaXxrMko6s
+      plhfkmdj2qn2W5Fi5gg/buMrLnmh3+8WxercRqazaevXn7bVsXcvr1ObZ6Ox1cXpjGUFGp
+      aUoRa3QGCilxKHFezLW5EI87m0teIGlhqVglyJfbjSkHh6Syra3tUJ+Rbf81aQh5oS0HGA
+      7gdSwI/e3qHr+KyIjhNrH3ZLyg5Zhcb86t5smB+KNu1sAIPTmeUgbrJ9s3rCpEQgQRGeea
+      5blZJzhh1wAAA7g5cs9JOXLPSQAAAAdzc2gtcnNhAAABAQC3id5gZ6bglJthyli8JNaRxh
+      sqKwwPlReEI/mplzz5IP6gWQ92LogXbdBXtHf9ZpA53BeLmtcNBEY0Ygd7sPBhlHABS5D5
+      ///zltSSX2+L5GCEiC6dpfGsySjqymWF+SZ2PaqfZbkWLmCD9u4ysueaHf7xbF6txGprNp
+      69efttWxdy+vU5tno7HVxemMZQUalpShFrdAYKKXEocV7MtbkQjzubS14gaWGpWCXIl9uN
+      KQeHpLKtre1Qn5Ft/zVpCHmhLQcYDuB1LAj97eoev4rIiOE2sfdkvKDlmFxvzq3myYH4o2
+      7WwAg9OZ5SBusn2zesKkRCBBEZ55rluVknOGHXAAAAAwEAAQAAAQBkTRTY7Gw3GR9dLr6V
+      ezBDk9bukX3S2jByx1I+CueIYi6kpGcdt8opu5p7A6X7NlylMhEv+tuBQo+3OsdKImULfp
+      pDKu+8n9lZXlkm8L693X2dj+qhvrk3KuuQfDFFKOaLAaJH38hpRcj69SwxSrHk+HWFrCqF
+      nexmUQApHgt4M7wz46C4bvuMtqqPn9I1+L4bDJQN7zl17hV8QbhL0esxCTYKnrqvHQGoOc
+      ItpzIVBohHRVzMxdNTnarS4ROaBSvwb0DVJpFzllYoB9nDElO+p0giZYL0T4JjvCb6ZkPg
+      UTqJXNULSeBx0R3n3qRMN1TYE9UyW5bMuR+oitO3/kJ5AAAAgQDpAXjk+86Cesl6yyCbA7
+      90SaQuXTs9Bgk8Zktpm165au98yuf4CJbloB0fOHM1o603LkHdPvMZQe2DFd6CqB39B0JU
+      ImCdlQ7/N0DGSvbZ0Of5YReQvjCAFVK1C++dCn0LY0lyg4TG97Hk8vMpZCBYQq3m/dCxQS
+      BWvOQzgr1RsgAAAIEA84EcwjzcRbWoukQCInpAUh6qw5623k2sN9hlauQApNWX5NiNLL3L
+      c9YkPaidkkSDacoEIXMiSkOK/y14tewL/R/3ekFeE9gGc0uFnKgZMcUVxVHwEbZygoc7gs
+      zbfbTc+BGYr++UckJs7RmY1YvePmbwsqrqeW3uEr3+DAcYp/UAAACBAMD0/icfMVZlqRMx
+      6LvwsZv/gC5z6vStmnvzGDxn3a2+sN4mMx16x2GIWs8/WqJJgedDzUxJamfoHJwGwdmqK1
+      6NCZidim63+ziob6btKuQ3xYvquKNixsH5TXhUOMyUGU6BwSCOVI1Tah5L7ry765Uj9+DJ
+      dxefgmrfdNJZKB8bAAAAAAEC
+      -----END OPENSSH PRIVATE KEY-----
+    EOF
+  end
+
+  def encrypted_rsa_key_openssh
+    @encrypted_rsa_key_openssh ||= <<~EOF
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABC4rUqGPW
+      XZ1Bn5tfNhVyJ+AAAAAgAAAAEAAAEXAAAAB3NzaC1yc2EAAAADAQABAAABAQC3id5gZ6bg
+      lJthyli8JNaRxhsqKwwPlReEI/mplzz5IP6gWQ92LogXbdBXtHf9ZpA53BeLmtcNBEY0Yg
+      d7sPBhlHABS5D5///zltSSX2+L5GCEiC6dpfGsySjqymWF+SZ2PaqfZbkWLmCD9u4ysuea
+      Hf7xbF6txGprNp69efttWxdy+vU5tno7HVxemMZQUalpShFrdAYKKXEocV7MtbkQjzubS1
+      4gaWGpWCXIl9uNKQeHpLKtre1Qn5Ft/zVpCHmhLQcYDuB1LAj97eoev4rIiOE2sfdkvKDl
+      mFxvzq3myYH4o27WwAg9OZ5SBusn2zesKkRCBBEZ55rluVknOGHXAAADwBe5tL27rwyn4s
+      eXS3QcStYZh0iAKt/C7UmEUwjju5hWhXjWsp6qCOOteEImIVZXHfmg4+bg07Vsk0nWJxRW
+      O5vhWYvNe8LpbX4JjtYOfS04wHmWvscLiycEWaulkmO+Fq8Re9z86JAbwMyKUZjqpSwXWJ
+      caidFYWkgI/3q18O0zsN6enqRBlR1zyByALqDGmBevqN8Go0gWpmeELkLn+uZQAj03EW6I
+      jElCvHb7/lLaRGPrVXMNN7guMTUz5UyV4rCFPb5FyXAujvb2rzkmSZ6CFZZiT3F198ZQUO
+      89O/KuPure7zIHTBxh2Z/V9zIg//WuJtMdU86I7FrwJrj3XZqgIbg3yXLl7Sha4nk5usJK
+      oPz+v9I4zYo0w75KVNcloylD5TFyRG1fPHavgQ2vswSrBP3TFzNJXQsyYVAXwF0uc54LgB
+      HKkeDyN3a/nnt0dWwr93mtm74NaohWA8eted8wIORlHhtJIqxTn1t7x0ApMtUQie3kIJMj
+      3qSoqc/72W7g9QyWPHOGpvHRFMOr6QrP29MgP7T/TVe6jUWFAo8T4mRMoFTe7sJ8mo8NBJ
+      AsOozvbxKlubYU22TEndEihHrsN+tQN+NdOyHvce2cxCq3Kj7v0RNFOUy1OQjiHauxkXXl
+      drAgY5XNPjPo6RMHMOO8X/PDE7Dy4gXMpWECdmETJR1FhbBVerlK9xxdBDfFV2oqSMWakh
+      pnquldvwfVE5Li4L5HHVzsOfqOiKIw6v8/JAd5Xcxyus2z7RUVXb/2YHbGeM6EhBBTvzBh
+      9T/s7vOavZ0kllqQz/J0sjpojHk4dgI0fv7URnlCnxitptp/sTWvfB3xpywHk6IbCvGH1+
+      R0n+38/udfJGkKyIcdxyIis9H2VcQtRoibDrH3c+JtyTYZg286kwg4YDuH06E5oeVaoCT0
+      peh6eWqXDLhfjBOvIvqmAxgmmI97edpGZboPXyQg3wh8hH4jRjOGPVeRJOPvyixo1ic2a5
+      U2TN0IF/2hERGWbbpAFFXNEpBSb04897QDcpkMX9plBBt7OoZQDpc44coSo+HMR5iXrBZ6
+      gj2UfIOWDdAFZVUXNniTNTapUK5iwVNIHjLp1IJt1eo/0BrVX8qRqxJcclWdyxnAhhvYn6
+      rym7FIWDm0fUIYRxUhuMnle0z1cuQJMyW2cUrz6RSPhuk0NjWjMjzhPeCtQXVLT0BrGSUM
+      u2nU19XCxhixOMggbomsuWdz124xGzN+m7yD0U1y4j5otZtxbzakZBvRf4ZiPhe++qVUB4
+      iyH15l9w==
+      -----END OPENSSH PRIVATE KEY-----
     EOF
   end
 
