@@ -352,6 +352,21 @@ module Connection
       assert session.channels.empty?
     end
 
+    def test_close_should_send_eof_before_close_for_open_channels
+      channel = open_confirmed_channel
+      assert_equal [CHANNEL_EOF, CHANNEL_CLOSE], close_session_and_collect_sent_types(channel)
+    end
+
+    def test_close_should_not_send_duplicate_eof_when_channel_already_sent_eof
+      channel = open_confirmed_channel
+      transport.mock_enqueue = true
+      transport.expect { |_t, p| assert_equal CHANNEL_EOF, p.type }
+      channel.eof!
+      channel.process
+
+      assert_equal [CHANNEL_CLOSE], close_session_and_collect_sent_types(channel)
+    end
+
     def test_multiple_pending_dispatches_should_be_dispatched_together
       channel_at(14).expects(:do_eof).with
       session.channels[14].expects(:do_success).with
@@ -590,6 +605,32 @@ module Connection
         socket.extend(MockSocket)
         socket
       end
+    end
+
+    def open_confirmed_channel
+      channel = Net::SSH::Connection::Channel.new(session, "session", 0)
+      channel.do_open_confirmation(17, 0x20000, 0x10000)
+      session.channels[channel.local_id] = channel
+    end
+
+    # Closes the session and returns the type of every packet the client sent,
+    # answering CHANNEL_CLOSE like a server would so that Session#close can finish.
+    def close_session_and_collect_sent_types(channel)
+      sent = []
+      transport.mock_enqueue = true
+      record = lambda do |t, p|
+        sent << p.type
+        if p.type == CHANNEL_CLOSE
+          t.return(CHANNEL_CLOSE, :long, channel.local_id)
+        else
+          t.expect(&record)
+        end
+      end
+      transport.expect(&record)
+      IO.stubs(:select).returns([[], [], []])
+      transport.expects(:close)
+      session.close
+      sent
     end
 
     def channel_at(local_id)
