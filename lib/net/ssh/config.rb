@@ -31,7 +31,7 @@ module Net
     # * PreferredAuthentications => maps to the :auth_methods option
     # * ProxyCommand => maps to the :proxy option
     # * ProxyJump => maps to the :proxy option
-    # * PubkeyAcceptedAlgorithms => maps to :pubkey_algorithms
+    # * PubkeyAcceptedAlgorithms (or PubkeyAcceptedKeyTypes) => maps to :pubkey_algorithms
     # * PubKeyAuthentication => maps to the :auth_methods option
     # * RekeyLimit => :rekey_limit
     # * StrictHostKeyChecking => :verify_host_key
@@ -277,7 +277,7 @@ module Net
             if (proxy = setup_proxy(*value))
               hash[:proxy] = proxy
             end
-          when :pubkeyacceptedalgorithms
+          when :pubkeyacceptedalgorithms, :pubkeyacceptedkeytypes
             hash[:pubkey_algorithms] = value.split(/,/)
           when :pubkeyauthentication
             if value

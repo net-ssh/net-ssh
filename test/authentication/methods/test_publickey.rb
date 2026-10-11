@@ -148,6 +148,35 @@ module Authentication
         assert subject.authenticate("ssh-connection", "jamis")
       end
 
+      def test_authenticate_should_not_offer_dsa_key_by_default
+        assert_equal false, subject(keys: [dsa_key]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_should_offer_dsa_key_with_plus_ssh_dss
+        expect_offer_accepted(dsa_key, "ssh-dss", composed_pubkey_algorithms(pubkey_algorithms: %w[+ssh-dss]))
+        assert subject(keys: [dsa_key]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_should_offer_dsa_key_with_append_all_supported_algorithms
+        expect_offer_accepted(dsa_key, "ssh-dss", composed_pubkey_algorithms(append_all_supported_algorithms: true))
+        assert subject(keys: [dsa_key]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_should_offer_ecdsa_key_by_default
+        expect_offer_accepted(ecdsa_key, "ecdsa-sha2-nistp256", composed_pubkey_algorithms)
+        assert subject(keys: [ecdsa_key]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_should_skip_non_rsa_key_not_in_pubkey_algorithms
+        transport(pubkey_algorithms: %w[rsa-sha2-256 ssh-rsa])
+        assert_equal false, subject(keys: [ecdsa_key]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_should_try_rsa_sha2_512_when_prepended
+        expect_offer_accepted(keys.first, "rsa-sha2-512", composed_pubkey_algorithms(pubkey_algorithms: %w[^rsa-sha2-512]))
+        assert subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
+      end
+
       private
 
       def signature_parameters(key)
@@ -182,7 +211,29 @@ module Authentication
           packet.read_buffer.read_key.to_blob == key.to_blob # key
       end
 
+      def expect_offer_accepted(key, alg, pubkey_algorithms)
+        transport(pubkey_algorithms: pubkey_algorithms).expect do |t, packet|
+          assert_equal USERAUTH_REQUEST, packet.type
+          assert verify_userauth_request_packet(packet, key, false, alg)
+          t.return(USERAUTH_SUCCESS)
+        end
+      end
+
+      def composed_pubkey_algorithms(options = {})
+        algorithms_transport = MockTransport.new(user_known_hosts_file: '/dev/null', global_known_hosts_file: '/dev/null')
+        Net::SSH::Transport::Algorithms.new(algorithms_transport, options).algorithms[:pubkey_algorithms]
+      end
+
+      def dsa_key
+        keys.last
+      end
+
+      def ecdsa_key
+        @@ecdsa_key ||= OpenSSL::PKey::EC.generate("prime256v1")
+      end
+
       @@keys = nil
+      @@ecdsa_key = nil
       def keys
         @@keys ||= [OpenSSL::PKey::RSA.new(512), OpenSSL::PKey::DSA.new(1024)]
       end
