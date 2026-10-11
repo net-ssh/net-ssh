@@ -193,6 +193,7 @@ module Net
           pending = output.length
           result = super
           @on_sent.call(pending - output.length) if @on_sent && output.length < pending
+          shutdown_write_if_drained
           result
         rescue Errno::EPIPE, Errno::ECONNRESET => e
           # Like OpenSSH's chan_write_failed: the peer is gone, so drop what it
@@ -209,6 +210,24 @@ module Net
             raise
           end
         end
+      end
+
+      # Internal: shuts down the write side once pending output has been sent,
+      # as OpenSSH does on CHANNEL_EOF (chan_rcvd_ieof, chan_obuf_empty).
+      def shutdown_write_when_drained # :nodoc:
+        @shutdown_write_when_drained = true
+        shutdown_write_if_drained
+      end
+
+      private
+
+      def shutdown_write_if_drained
+        return unless @shutdown_write_when_drained && output.empty? && !closed?
+
+        @shutdown_write_when_drained = false
+        shutdown(Socket::SHUT_WR)
+      rescue Errno::EPIPE, Errno::ENOTCONN => e
+        debug { "shutdown failed => shallowing exception:#{e}" }
       end
     end
   end

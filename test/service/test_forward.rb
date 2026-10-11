@@ -1,5 +1,6 @@
 require_relative '../common'
 require 'net/ssh/authentication/agent'
+require 'io/wait'
 require 'net/ssh/connection/channel'
 require 'net/ssh/service/forward'
 
@@ -77,6 +78,22 @@ module Service
 
       3.times { channel.do_extended_data(1, "e" * 0x10001) }
       assert_operator channel.local_window_size, :>=, channel.local_maximum_window_size / 2
+    end
+
+    def test_forwarded_channel_should_deliver_pending_data_before_shutting_down_on_eof
+      channel = prepared_channel(remote_window: 10)
+      data = "z" * (1024 * 1024)
+
+      reader = Thread.new do
+        sleep 0.2
+        @peer.read
+      end
+      channel.do_data(data)
+      @client.send_pending
+      channel.do_eof
+      @client.send_pending while @client.pending_write? && @client.wait_writable(5)
+
+      assert_equal data.length, reader.value.length
     end
 
     def teardown
