@@ -1,6 +1,7 @@
 require_relative '../common'
 require 'logger'
 require 'net/ssh/transport/algorithms'
+require 'net/ssh/config'
 
 module Transport
   class TestAlgorithms < NetSSHTest
@@ -32,6 +33,37 @@ module Transport
       assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha1 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5 hmac-md5-96 none], algorithms(append_all_supported_algorithms: true)[:hmac]
       assert_equal %w[none zlib@openssh.com zlib], algorithms(append_all_supported_algorithms: true)[:compression]
       assert_equal %w[], algorithms[:language]
+    end
+
+    def test_constructor_should_build_default_list_of_pubkey_algorithms
+      assert_equal default_pubkey_algorithms, algorithms[:pubkey_algorithms]
+    end
+
+    def test_constructor_should_offer_ssh_dss_pubkey_only_with_append_all_supported_algorithms
+      assert_equal default_pubkey_algorithms + %w[ssh-dss], algorithms(append_all_supported_algorithms: true)[:pubkey_algorithms]
+    end
+
+    def test_constructor_should_keep_explicit_pubkey_algorithms
+      assert_equal %w[rsa-sha2-256 ssh-rsa], algorithms(pubkey_algorithms: %w[rsa-sha2-256 ssh-rsa])[:pubkey_algorithms]
+    end
+
+    def test_pubkey_accepted_algorithms_from_config_replaces_list
+      assert_equal %w[ssh-ed25519 rsa-sha2-512], pubkey_algorithms_for_host('plain')
+    end
+
+    def test_pubkey_accepted_algorithms_from_config_supports_additions
+      assert_equal default_pubkey_algorithms + %w[ssh-dss], pubkey_algorithms_for_host('plus')
+      assert_equal default_pubkey_algorithms + %w[ssh-dss], pubkey_algorithms_for_host('legacy')
+    end
+
+    def test_pubkey_accepted_algorithms_from_config_supports_removals_with_wildcard
+      expected = default_pubkey_algorithms.reject { |alg| alg.start_with?('ssh-rsa', 'ecdsa-sha2-') }
+      assert_equal expected, pubkey_algorithms_for_host('minus')
+      assert_includes expected, 'sk-ecdsa-sha2-nistp256@openssh.com'
+    end
+
+    def test_pubkey_accepted_algorithms_from_config_supports_prepending
+      assert_equal %w[rsa-sha2-512] + (default_pubkey_algorithms - %w[rsa-sha2-512]), pubkey_algorithms_for_host('caret')
     end
 
     def test_constructor_should_set_client_and_server_prefs_identically
@@ -514,6 +546,22 @@ module Transport
       assert_equal :server_cipher, transport.server_options[:cipher].id
       assert_equal :client_hmac, transport.client_options[:hmac]
       assert_equal :server_hmac, transport.server_options[:hmac]
+    end
+
+    def default_pubkey_algorithms
+      %w[ssh-ed25519-cert-v01@openssh.com
+         ecdsa-sha2-nistp256-cert-v01@openssh.com ecdsa-sha2-nistp384-cert-v01@openssh.com ecdsa-sha2-nistp521-cert-v01@openssh.com
+         rsa-sha2-512-cert-v01@openssh.com rsa-sha2-256-cert-v01@openssh.com
+         ssh-ed25519
+         ecdsa-sha2-nistp256 ecdsa-sha2-nistp384 ecdsa-sha2-nistp521
+         sk-ssh-ed25519@openssh.com sk-ecdsa-sha2-nistp256@openssh.com
+         rsa-sha2-512 rsa-sha2-256
+         ssh-rsa-cert-v01@openssh.com ssh-rsa]
+    end
+
+    def pubkey_algorithms_for_host(host)
+      config = Net::SSH::Config.translate(Net::SSH::Config.load('test/configs/pubkey_accepted_algorithms', host))
+      algorithms(config)[:pubkey_algorithms]
     end
 
     def algorithms(algorithms_options = {}, transport_options = {})

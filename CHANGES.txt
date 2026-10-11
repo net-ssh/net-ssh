@@ -1,5 +1,6 @@
 === 8.0.0 rc4
 
+  * Security: ssh_config `PubkeyAcceptedAlgorithms` (and its old name `PubkeyAcceptedKeyTypes`) is now honoured, including `+`, `-` and `^`, and `pubkey_algorithms` now applies to all key types instead of only RSA, adding `rsa-sha2-512`; DSA (`ssh-dss`) keys are no longer offered by default, as in OpenSSH since 7.0 — add `+ssh-dss` or pass `append_all_supported_algorithms: true` to re-enable [#923]
   * Security: ssh_config `Ciphers`, `MACs`, `KexAlgorithms` and `HostKeyAlgorithms` lists starting with `+`, `-` or `^` now append to, remove from or prepend to the default list, as in OpenSSH, instead of silently enabling every supported algorithm including weak ones that are off by default; every listed item is honoured and `-` accepts wildcards. Pass `append_all_supported_algorithms: true` to also get the full supported list [#925]
   * Support agent-backed FIDO/U2F security keys (sk-ecdsa-sha2-nistp256@openssh.com, sk-ssh-ed25519@openssh.com) for publickey auth [#1007]
 

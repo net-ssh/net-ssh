@@ -19,7 +19,7 @@ module Net
       #
       # You will never instantiate or reference this directly. It is used
       # internally by the transport layer.
-      class Algorithms
+      class Algorithms # rubocop:disable Metrics/ClassLength
         include Loggable
         include Constants
 
@@ -52,7 +52,17 @@ module Net
 
           hmac: %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com
                    hmac-sha2-512 hmac-sha2-256
-                   hmac-sha1]
+                   hmac-sha1],
+
+          pubkey_algorithms: %w[ssh-ed25519-cert-v01@openssh.com
+                                ecdsa-sha2-nistp256-cert-v01@openssh.com ecdsa-sha2-nistp384-cert-v01@openssh.com
+                                ecdsa-sha2-nistp521-cert-v01@openssh.com
+                                rsa-sha2-512-cert-v01@openssh.com rsa-sha2-256-cert-v01@openssh.com
+                                ssh-ed25519
+                                ecdsa-sha2-nistp256 ecdsa-sha2-nistp384 ecdsa-sha2-nistp521
+                                sk-ssh-ed25519@openssh.com sk-ecdsa-sha2-nistp256@openssh.com
+                                rsa-sha2-512 rsa-sha2-256
+                                ssh-rsa-cert-v01@openssh.com ssh-rsa]
         }.freeze
 
         if Net::SSH::Transport::ChaCha20Poly1305CipherLoader::LOADED
@@ -97,6 +107,8 @@ module Net
                    hmac-ripemd160 hmac-ripemd160@openssh.com
                    hmac-md5 hmac-md5-96
                    none],
+
+          pubkey_algorithms: DEFAULT_ALGORITHMS[:pubkey_algorithms] + %w[ssh-dss],
 
           compression: %w[none zlib@openssh.com zlib],
           language: %w[]

@@ -1,0 +1,14 @@
+Host plain
+  PubkeyAcceptedAlgorithms ssh-ed25519,rsa-sha2-512
+
+Host plus
+  PubkeyAcceptedAlgorithms +ssh-dss
+
+Host minus
+  PubkeyAcceptedAlgorithms -ssh-rsa*,ecdsa-sha2-*
+
+Host caret
+  PubkeyAcceptedAlgorithms ^rsa-sha2-512
+
+Host legacy
+  PubkeyAcceptedKeyTypes +ssh-dss
