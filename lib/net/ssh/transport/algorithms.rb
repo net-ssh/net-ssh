@@ -269,7 +269,9 @@ module Net
 
           ALGORITHMS.each do |algorithm, supported|
             algorithms[algorithm] = compose_algorithm_list(
-              supported, options[algorithm] || DEFAULT_ALGORITHMS[algorithm],
+              supported,
+              DEFAULT_ALGORITHMS[algorithm],
+              options[algorithm] || DEFAULT_ALGORITHMS[algorithm],
               options[:append_all_supported_algorithms]
             )
           end
@@ -296,21 +298,27 @@ module Net
         end
 
         # Composes the list of algorithms by taking supported algorithms and matching with supplied options.
-        def compose_algorithm_list(supported, option, append_all_supported_algorithms = false)
+        def compose_algorithm_list(supported, defaults, option, append_all_supported_algorithms = false)
           return supported.dup unless option
 
           list = []
           option = Array(option).compact.uniq
 
-          if option.first && option.first.start_with?('+', '-')
-            list = supported.dup
+          if option.first && option.first.start_with?('+', '-', '^')
+            ops = { '^' => [], '+' => [], '-' => [] }
+            cur_list = nil
+            option.each do |cur_opt|
+              if ops.key?(cur_opt[0])
+                cur_list = ops[cur_opt[0]]
+                cur_opt = cur_opt[1..-1]
+              end
+              cur_list << cur_opt
+            end
 
-            appends = option.select { |opt| opt.start_with?('+') }.map { |opt| opt[1..-1] }
-            deletions = option.select { |opt| opt.start_with?('-') }.map { |opt| opt[1..-1] }
+            list = ops['^'] + defaults + ops['+']
+            list.concat(supported) if append_all_supported_algorithms
 
-            list.concat(appends)
-
-            deletions.each do |opt|
+            ops['-'].each do |opt|
               if opt.include?('*')
                 opt_escaped = Regexp.escape(opt)
                 algo_re = /\A#{opt_escaped.gsub('\*', '[A-Za-z\d\-@\.]*')}\z/

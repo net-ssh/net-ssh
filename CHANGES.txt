@@ -1,3 +1,7 @@
+=== 8.0.0 rc4
+
+  * Security: ssh_config `Ciphers`, `MACs`, `KexAlgorithms` and `HostKeyAlgorithms` lists starting with `+`, `-` or `^` now append to, remove from or prepend to the default list, as in OpenSSH, instead of silently enabling every supported algorithm including weak ones that are off by default; every listed item is honoured and `-` accepts wildcards. Pass `append_all_supported_algorithms: true` to also get the full supported list [#925]
+
 === 8.0.0 rc3
 
   * Fix "Calling Net::SSH::Buffer methods on HostKeyEntries PubKey is deprecated" warnings printed on every connection to a host in known_hosts [#1026, #1027]
