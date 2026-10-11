@@ -714,6 +714,34 @@ class TestConfig < NetSSHTest
     end
   end
 
+  def test_comments_are_ignored
+    config = Net::SSH::Config.for('example1', [config(:comments)])
+    assert_equal 'person', config[:user]
+
+    config = Net::SSH::Config.for('example2', [config(:comments)])
+    assert_equal 'person person', config[:user]
+
+    config = Net::SSH::Config.for('example3', [config(:comments)])
+    assert_equal 'person#notacomment', config[:user]
+
+    config = Net::SSH::Config.for('example4', [config(:comments)])
+    assert_equal 'person', config[:user]
+  end
+
+  def test_hash_inside_quotes_is_not_a_comment
+    config = Net::SSH::Config.for('example5', [config(:comments)])
+    assert_equal 'a #b', config[:user]
+
+    config = Net::SSH::Config.for('example6', [config(:comments)])
+    assert_equal 'a#b', config[:user]
+
+    config = Net::SSH::Config.for('example7', [config(:comments)])
+    assert_equal({ 'FOO' => 'a # b' }, config[:set_env])
+
+    config = Net::SSH::Config.for('example8', [config(:comments)])
+    assert_equal({ 'FOO' => 'a # b', 'BAR' => 'c' }, config[:set_env])
+  end
+
   private
 
   def with_home_env(value, &block)

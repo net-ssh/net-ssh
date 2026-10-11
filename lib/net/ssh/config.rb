@@ -95,6 +95,7 @@ module Net
             next if value.nil?
 
             key.downcase!
+            value = uncomment(value)
             value = unquote(value)
 
             value = case value.strip
@@ -397,6 +398,11 @@ module Net
           end
 
           !condition_matches.empty? && condition_matches.all?
+        end
+
+        # As in OpenSSH's argv_split, "#" starts a comment only at the start of a token and outside quotes.
+        def uncomment(string)
+          string[/\A(?:\s*(?!#)(?:\\.|"[^"]*"?|'[^']*'?|[^\s"'])+)*/]
         end
 
         def unquote(string)
