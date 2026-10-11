@@ -43,6 +43,12 @@ class TestProxyJump < NetSSHTest
     assert_equal "ssh -F /home/user/my\\ config -W %h:%p proxy", proxy.command_line_template
   end
 
+  def test_config_path_percent_is_escaped
+    proxy = Net::SSH::Proxy::Jump.new("proxy")
+    proxy.build_proxy_command_equivalent(config: "/home/user/%h config")
+    assert_equal "ssh -F /home/user/\\%%h\\ config -W %h:%p proxy", proxy.command_line_template
+  end
+
   def test_config_override
     proxy = Net::SSH::Proxy::Jump.new("proxy")
     proxy.build_proxy_command_equivalent(config: "/home/user/.ssh/config2")

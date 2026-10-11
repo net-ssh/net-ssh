@@ -52,8 +52,8 @@ module Net
           template << " -l #{uri.user}"    if uri.user
           template << " -p #{uri.port}"    if uri.port
           template << " -J #{extra_jumps}" if extra_jumps
-          template << " -F #{Shellwords.escape(config)}" if config != true && config
-          @options.each { |key, value| template << " -o #{escape_option(key)}=#{escape_option(value)}" }
+          template << " -F #{escape(config)}" if config != true && config
+          @options.each { |key, value| template << " -o #{escape(key)}=#{escape(value)}" }
           template << " -W %h:%p "
           template << uri.host
 
@@ -62,10 +62,10 @@ module Net
 
         private
 
-        # Escape a -o key or value for the shell, and double any % so that it
-        # survives the %h/%p substitution done on the template in Command#open.
-        def escape_option(string)
-          Shellwords.escape(string).gsub("%", "%%")
+        # Escape for the shell, and double any % so it survives the %h/%p
+        # substitution done on the template in Command#open.
+        def escape(value)
+          Shellwords.escape(value).gsub("%", "%%")
         end
 
         def validate_jump!(jump)
