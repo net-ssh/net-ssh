@@ -185,7 +185,7 @@ module Authentication
 
       transport.expect do |t, packet|
         assert_public_key_request default_public_key, packet
-        t.return(USERAUTH_FAILURE, :string, "password")
+        t.return(USERAUTH_FAILURE, :string, "password", :bool, true)
       end
 
       transport.expect do |t, packet|
@@ -217,7 +217,52 @@ module Authentication
       transport.expect do |t, packet|
         assert_equal packet.type, USERAUTH_REQUEST
         assert_password_request "username", "password", "next service", packet
-        t.return(USERAUTH_FAILURE, :string, "publickey")
+        t.return(USERAUTH_FAILURE, :string, "publickey", :bool, true)
+      end
+
+      transport.expect do |t, packet|
+        assert_public_key_request default_public_key, packet
+        t.return(USERAUTH_SUCCESS)
+      end
+
+      assert(session.authenticate("next service", "username", "password"))
+    end
+
+    # Authentication for AuthenticationMethods "keyboard-interactive,password,publickey"
+    def test_mfa_three_steps_reverse_order
+      File.stubs(:file?).returns(false)
+
+      file_on_filesystem("~/.ssh/id_rsa", default_private_key)
+
+      transport.expect do |t, packet|
+        assert_equal SERVICE_REQUEST, packet.type
+        assert_equal "ssh-userauth", packet.read_string
+        t.return(SERVICE_ACCEPT)
+      end
+
+      transport.expect do |t, packet|
+        assert_none_request packet
+        t.return(USERAUTH_FAILURE, :string, "keyboard-interactive", :bool, false)
+      end
+
+      transport.expect do |t, packet|
+        assert_equal USERAUTH_REQUEST, packet.type
+        assert_equal "username", packet.read_string
+        assert_equal "next service", packet.read_string
+        assert_equal "keyboard-interactive", packet.read_string
+        t.return(Net::SSH::Authentication::Methods::KeyboardInteractive::USERAUTH_INFO_REQUEST, :string, "", :string, "", :string, "", :long, 1, :string, "Password:", :bool, false)
+      end
+
+      transport.expect do |t, packet|
+        assert_equal Net::SSH::Authentication::Methods::KeyboardInteractive::USERAUTH_INFO_RESPONSE, packet.type
+        assert_equal 1, packet.read_long
+        assert_equal "password", packet.read_string
+        t.return(USERAUTH_FAILURE, :string, "password", :bool, true)
+      end
+
+      transport.expect do |t, packet|
+        assert_password_request "username", "password", "next service", packet
+        t.return(USERAUTH_FAILURE, :string, "publickey", :bool, true)
       end
 
       transport.expect do |t, packet|

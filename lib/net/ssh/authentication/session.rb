@@ -67,26 +67,23 @@ module Net
           default_keys.each { |key| key_manager.add(key) } unless options.key?(:keys) || options.key?(:key_data)
 
           attempted = []
-          skipped = []
 
-          @auth_methods.each do |name|
-            unless @allowed_auth_methods.include?(name)
-              skipped << name
-              next
+          # After a partial success (sshd AuthenticationMethods) restart from the most preferred method the server now allows, as OpenSSH does.
+          loop do
+            @partial_success = false
+
+            @auth_methods.each do |name|
+              next unless @allowed_auth_methods.include?(name)
+
+              attempted << name
+              return true if try_authenticate(name, next_service, username, password, key_manager)
+              break if @partial_success
             end
 
-            attempted << name
-            return true if try_authenticate(name, next_service, username, password, key_manager, options)
+            break unless @partial_success
           end
 
-          # try skipped methods
-          skipped.each do |name|
-            next unless @allowed_auth_methods.include?(name)
-            attempted << name
-            return true if try_authenticate(name, next_service, username, password, key_manager, options)
-          end
-
-          error { "all authorization methods failed (tried #{attempted.join(', ')})" }
+          error { "all authorization methods failed (tried #{attempted.uniq.join(', ')})" }
           return false
         ensure
           key_manager.finish if key_manager
@@ -106,6 +103,7 @@ module Net
 
             when USERAUTH_FAILURE
               @allowed_auth_methods = packet[:authentications].split(/,/)
+              @partial_success ||= packet[:partial_success]
               debug { "allowed methods: #{packet[:authentications]}" }
               return packet
 
@@ -133,7 +131,7 @@ module Net
 
         private
 
-        def try_authenticate(method_name, next_service, username, password, key_manager, options)
+        def try_authenticate(method_name, next_service, username, password, key_manager)
           debug { "trying #{method_name}" }
           begin
             auth_class = Methods.const_get(method_name.split(/\W+/).map { |p| p.capitalize }.join)
