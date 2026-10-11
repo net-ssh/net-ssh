@@ -62,19 +62,21 @@ module Net
         @data && @data[:fingerprint]
       end
 
-      # Returns the host name for the remote host, as reported by the socket.
+      # Returns the host name that was connected to.
       def host
-        @data && @data[:session]&.host_as_string&.split(",").first
+        session&.host
       end
 
-      # Returns the port number for the remote host, as reported by the socket.
+      # Returns the port number that was connected to.
       def port
-        @data && @data[:session]&.port
+        session&.port
       end
 
-      # Returns the IP address of the remote host, as reported by the socket.
+      # Returns the IP address of the remote host, as reported by the socket,
+      # or nil when connected through a ProxyCommand.
       def ip
-        @data && @data[:session]&.host_as_string&.split(",").last
+        peer_ip = session&.socket&.peer_ip
+        peer_ip unless peer_ip == Net::SSH::Transport::PacketStream::PROXY_COMMAND_HOST_IP
       end
 
       # Returns the key itself, as reported by the remote host.
@@ -86,6 +88,12 @@ module Net
       # that subsequent connections will remember them.
       def remember_host!
         @callback.call
+      end
+
+      private
+
+      def session
+        @data && @data[:session]
       end
     end
 
