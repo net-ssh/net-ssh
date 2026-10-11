@@ -354,8 +354,10 @@ module Net
                 ch.send_data(data)
               end
 
-              # Like OpenSSH, only read more once the remote window can take
-              # what is already queued; writes to the socket keep flowing.
+              # Like OpenSSH's channel_pre_open, only read more once the remote
+              # window can take what is already queued; writes to the socket keep
+              # flowing. ch.output is still unsent here because Channel#process
+              # runs this block before enqueue_pending_output.
               if ch.output.length + socket.available < ch.remote_window_size.to_i
                 session.resume_reading(socket)
               else
