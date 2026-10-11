@@ -140,13 +140,28 @@ module Transport
     end
 
     def test_constructor_with_preferred_encryption_supports_additions
-      assert_equal chacha_poly_cipher + %w[aes256-ctr aes192-ctr aes128-ctr 3des-cbc],
+      assert_equal chacha_poly_cipher + %w[aes256-ctr aes192-ctr aes128-ctr aes256-gcm@openssh.com aes128-gcm@openssh.com 3des-cbc],
                    algorithms(encryption: %w[+3des-cbc])[:encryption]
     end
 
     def test_constructor_with_preferred_encryption_supports_removals_with_wildcard
-      assert_equal chacha_poly_cipher + %w[aes256-ctr aes192-ctr aes128-ctr cast128-ctr],
+      assert_equal chacha_poly_cipher + %w[aes256-gcm@openssh.com aes128-gcm@openssh.com],
+                   algorithms(encryption: %w[-*-ctr -none])[:encryption]
+    end
+
+    def test_constructor_with_preferred_encryption_supports_removals_with_wildcard_from_all_supported
+      assert_equal chacha_poly_cipher + %w[aes256-ctr aes192-ctr aes128-ctr aes256-gcm@openssh.com aes128-gcm@openssh.com cast128-ctr],
                    algorithms(encryption: %w[-rijndael-cbc@lysator.liu.se -blowfish-* -3des-* -*-cbc -none], append_all_supported_algorithms: true)[:encryption]
+    end
+
+    def test_constructor_with_preferred_encryption_removal_does_not_enable_non_default
+      assert_equal chacha_poly_cipher + %w[aes256-ctr aes192-ctr aes256-gcm@openssh.com aes128-gcm@openssh.com],
+                   algorithms(encryption: %w[-aes128-ctr])[:encryption]
+    end
+
+    def test_constructor_with_preferred_encryption_removal_and_append_all_supported_algorithms
+      assert_equal chacha_poly_cipher + %w[aes256-ctr aes192-ctr aes256-gcm@openssh.com aes128-gcm@openssh.com aes256-cbc aes192-cbc aes128-cbc rijndael-cbc@lysator.liu.se blowfish-ctr blowfish-cbc cast128-ctr cast128-cbc 3des-ctr 3des-cbc idea-cbc none],
+                   algorithms(encryption: %w[-aes128-ctr], append_all_supported_algorithms: true)[:encryption]
     end
 
     def test_constructor_with_preferred_hmac_should_put_preferred_hmac_first
@@ -163,11 +178,21 @@ module Transport
     end
 
     def test_constructor_with_preferred_hmac_supports_additions
+      assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha1 hmac-md5-96],
+                   algorithms(hmac: %w[+hmac-md5-96 -none])[:hmac]
+    end
+
+    def test_constructor_with_preferred_hmac_supports_additions_with_append_all_supported_algorithms
       assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha1 hmac-md5-96 hmac-sha2-512-96 hmac-sha2-256-96 hmac-sha1-96 hmac-ripemd160 hmac-ripemd160@openssh.com hmac-md5],
                    algorithms(hmac: %w[+hmac-md5-96 -none], append_all_supported_algorithms: true)[:hmac]
     end
 
     def test_constructor_with_preferred_hmac_supports_removals_with_wildcard
+      assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256],
+                   algorithms(hmac: %w[-hmac-sha1* -hmac-md5* -none])[:hmac]
+    end
+
+    def test_constructor_with_preferred_hmac_supports_removals_with_wildcard_from_all_supported
       assert_equal %w[hmac-sha2-512-etm@openssh.com hmac-sha2-256-etm@openssh.com hmac-sha2-512 hmac-sha2-256 hmac-sha2-512-96 hmac-sha2-256-96 hmac-ripemd160 hmac-ripemd160@openssh.com],
                    algorithms(hmac: %w[-hmac-sha1* -hmac-md5* -none], append_all_supported_algorithms: true)[:hmac]
     end
