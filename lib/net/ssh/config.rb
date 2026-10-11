@@ -88,11 +88,8 @@ module Net
           IO.foreach(file) do |line|
             next if line =~ /^\s*(?:#.*)?$/
 
-            if line =~ /^\s*(\S+)\s*=(.*)$/
-              key, value = $1, $2
-            else
-              key, value = line.strip.split(/\s+/, 2)
-            end
+            # As in OpenSSH, the keyword ends at the first whitespace or "=".
+            key, value = line.strip.split(/\s*=\s*|\s+/, 2)
 
             # silently ignore malformed entries
             next if value.nil?
@@ -152,9 +149,11 @@ module Net
             end
 
             # ProxyCommand and ProxyJump override each other so they need to be tracked togeather
-            %w[proxyjump proxycommand].each do |proxy_key|
-              if (proxy_value = settings.delete(proxy_key))
-                settings['proxy'] ||= [proxy_key, proxy_value]
+            [globals, settings].each do |hash|
+              %w[proxyjump proxycommand].each do |proxy_key|
+                if (proxy_value = hash.delete(proxy_key))
+                  hash['proxy'] ||= [proxy_key, proxy_value]
+                end
               end
             end
           end
