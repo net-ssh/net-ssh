@@ -56,7 +56,7 @@ module Net
 
       # The prerelease component of this version of the Net::SSH library
       # nil allowed
-      PRE   = "rc2"
+      PRE   = "rc3"
 
       # The current version of the Net::SSH library as a Version instance
       CURRENT = new(*[MAJOR, MINOR, TINY, PRE].compact)
