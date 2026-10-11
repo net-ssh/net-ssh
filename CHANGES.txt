@@ -4,7 +4,7 @@
   * Security: ssh_config `Ciphers`, `MACs`, `KexAlgorithms` and `HostKeyAlgorithms` lists starting with `+`, `-` or `^` now append to, remove from or prepend to the default list, as in OpenSSH, instead of silently enabling every supported algorithm including weak ones that are off by default; every listed item is honoured and `-` accepts wildcards. Pass `append_all_supported_algorithms: true` to also get the full supported list [#925]
   * Support agent-backed FIDO/U2F security keys (sk-ecdsa-sha2-nistp256@openssh.com, sk-ssh-ed25519@openssh.com) for publickey auth [#1007]
   * Port forwarding no longer buffers a whole stream in memory when one side reads slowly: like OpenSSH, window is granted only as data is written to the local socket, and the local socket is read only while the remote window has room. An application that writes everything to a forwarded port before reading anything now blocks once the window fills, as it would with `ssh -L` or a direct TCP connection; the old unbounded buffering hid this [#1037, #1003]
-  * Data forwarded to a local socket just before the remote end's EOF is no longer truncated, and that EOF no longer blocks the event loop until the local application reads [#1037]
+  * Data forwarded to a local socket just before the remote end sends EOF or closes the channel is no longer truncated or dropped: it is written out before the socket is shut down or closed, without blocking the event loop until the local application reads [#1037]
 
 === 8.0.0 rc3
 

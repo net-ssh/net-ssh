@@ -337,8 +337,7 @@ module Net
 
           channel.on_close do |ch|
             debug { "closing #{type} forwarded channel" }
-            ch[:socket].close if !client.closed?
-            session.stop_listening_to(ch[:socket])
+            session.close_when_drained(ch[:socket])
           end
 
           channel.on_process do |ch|

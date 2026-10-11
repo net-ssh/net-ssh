@@ -3,6 +3,7 @@ require 'net/ssh/authentication/agent'
 require 'io/wait'
 require 'timeout'
 require 'net/ssh/connection/channel'
+require 'net/ssh/connection/session'
 require 'net/ssh/service/forward'
 
 module Service
@@ -106,8 +107,54 @@ module Service
       assert_equal data.length, reader.value.length
     end
 
+    def test_forwarded_channel_should_deliver_data_that_arrives_with_eof_and_close
+      data = "z" * (256 * 1024)
+      channel = channel_in_session
+      @transport.return(CHANNEL_DATA, :long, channel.local_id, :string, data)
+      @transport.return(CHANNEL_EOF, :long, channel.local_id)
+      @transport.return(CHANNEL_CLOSE, :long, channel.local_id)
+
+      reader = Thread.new do
+        sleep 0.2
+        @peer.read
+      end
+      Timeout.timeout(5) { @ssh.loop(0.1) }
+
+      assert_equal data.length, reader.value.length
+      assert @client.closed?
+      assert !@ssh.listeners.key?(@client)
+    end
+
+    def test_forwarded_channel_should_deliver_pending_data_on_remote_close
+      data = "y" * (256 * 1024)
+      channel = channel_in_session
+      @transport.return(CHANNEL_DATA, :long, channel.local_id, :string, data)
+      @transport.return(CHANNEL_CLOSE, :long, channel.local_id)
+
+      reader = Thread.new do
+        sleep 0.2
+        @peer.read
+      end
+      Timeout.timeout(5) { @ssh.loop(0.1) }
+
+      assert_equal data.length, reader.value.length
+      assert !@ssh.listeners.key?(@client)
+    end
+
+    def test_forwarded_channel_should_stop_draining_when_the_local_peer_goes_away
+      channel = channel_in_session
+      @peer.close
+      @peer = nil
+      @transport.return(CHANNEL_DATA, :long, channel.local_id, :string, "w" * (256 * 1024))
+      @transport.return(CHANNEL_CLOSE, :long, channel.local_id)
+      Timeout.timeout(5) { @ssh.loop(0.1) }
+
+      assert @client.closed?
+      assert !@ssh.listeners.key?(@client)
+    end
+
     def teardown
-      [@client, @peer].compact.each(&:close)
+      [@client, @peer, @transport_socket, @transport_peer].compact.reject(&:closed?).each(&:close)
     end
 
     private
@@ -156,6 +203,23 @@ module Service
       def send_message(msg)
         @sent << Net::SSH::Buffer.new(msg.to_s)
       end
+    end
+
+    # A real Session over a mock transport whose socket is a quiet socketpair,
+    # so the event loop selects on real IO.
+    def channel_in_session
+      @transport_socket, @transport_peer = UNIXSocket.pair
+      @transport_socket.extend(Net::SSH::Transport::PacketStream)
+      @transport = MockTransport.new(socket: @transport_socket)
+      @transport.stubs(:rekey_as_needed)
+      @transport.expect { |_t, p| assert_equal CHANNEL_CLOSE, p.type }
+      @ssh = Net::SSH::Connection::Session.new(@transport, {})
+      @client, @peer = UNIXSocket.pair
+      channel = Net::SSH::Connection::Channel.new(@ssh, "direct-tcpip", 0)
+      @ssh.channels[channel.local_id] = channel
+      @ssh.forward.send(:prepare_client, @client, channel, :local)
+      channel.do_open_confirmation(1, 0x20000, 0x8000)
+      channel
     end
 
     def prepared_channel(remote_window:)
