@@ -320,6 +320,11 @@ module Net
           session.listen_to(client)
           channel[:socket] = client
 
+          # Grant window only for data the local end has accepted, so a slow
+          # reader stalls the remote sender instead of filling our memory.
+          channel.grant_window_on_consume!
+          client.on_sent { |bytes| channel.consumed(bytes) }
+
           channel.on_data do |ch, data|
             debug { "data:#{data.length} on #{type} forwarded channel" }
             ch[:socket].enqueue(data)
@@ -350,13 +355,24 @@ module Net
           end
 
           channel.on_process do |ch|
-            if ch[:socket].closed?
+            socket = ch[:socket]
+            if socket.closed?
               ch.info { "#{type} forwarded connection closed" }
               ch.close
-            elsif ch[:socket].available > 0
-              data = ch[:socket].read_available(8192)
-              ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
-              ch.send_data(data)
+            else
+              if socket.available > 0
+                data = socket.read_available(8192)
+                ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
+                ch.send_data(data)
+              end
+
+              # Like OpenSSH, only read more once the remote window can take
+              # what is already queued; writes to the socket keep flowing.
+              if ch.output.length + socket.available < ch.remote_window_size.to_i
+                session.resume_reading(socket)
+              else
+                session.pause_reading(socket)
+              end
             end
           end
         end

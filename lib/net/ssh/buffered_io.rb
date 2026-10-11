@@ -182,9 +182,18 @@ module Net
         end
       end
 
+      # Registers a block called with the number of bytes each #send_pending
+      # wrote to the socket.
+      def on_sent(&block)
+        @on_sent = block
+      end
+
       def send_pending
         begin
-          super
+          pending = output.length
+          result = super
+          @on_sent.call(pending - output.length) if @on_sent && output.length < pending
+          result
         rescue Errno::ECONNRESET => e
           debug { "connection was reset => shallowing exception:#{e}" }
           return 0

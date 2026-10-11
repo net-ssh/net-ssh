@@ -52,6 +52,20 @@ module Connection
       assert !session.listeners.key?(io)
     end
 
+    def test_pause_reading_should_keep_flushing_pending_output
+      io = stub("io", pending_write?: true)
+      session.listen_to(io)
+
+      session.pause_reading(io)
+      readers, writers, = session.ev_do_calculate_rw_wait(nil)
+      assert !readers.include?(io)
+      assert writers.include?(io)
+
+      session.resume_reading(io)
+      readers, = session.ev_do_calculate_rw_wait(nil)
+      assert readers.include?(io)
+    end
+
     def test_send_message_should_enqueue_message_at_transport_layer
       packet = P(:byte, REQUEST_SUCCESS)
       session.send_message(packet)

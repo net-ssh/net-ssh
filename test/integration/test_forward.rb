@@ -568,6 +568,72 @@ class TestForward < ForwardTestBase
       assert_equal({}, session.channels)
     end
   end
+
+  def forwarded_sockets(session)
+    session.channels.each_value.map { |ch| ch[:socket] }.compact
+  end
+
+  def test_local_forward_should_not_buffer_more_than_the_window_for_a_stalled_reader
+    setup_ssh_env do
+      size = 16 * 1024 * 1024
+      session = Net::SSH.start(*ssh_start_params)
+      server = start_server do |client|
+        client.write("x" * size)
+        client.read
+        client.close
+      end
+      local_port = session.forward.local(0, localhost, server.addr[1])
+      received = Queue.new
+      client = TCPSocket.new(localhost, local_port)
+
+      max_buffered = 0
+      max_window = 0
+      stall_until = Time.now + 2
+      Timeout.timeout(20) do
+        session.loop(0.1) { Time.now < stall_until }
+        forwarded_sockets(session).each { |socket| max_buffered = [max_buffered, socket.write_buffer.length].max }
+        session.channels.each_value { |ch| max_window = [max_window, ch.local_maximum_window_size].max }
+
+        Thread.start do
+          received << client.read(size).length
+          client.close
+        end
+        session.loop(0.1) { received.empty? }
+      end
+
+      assert_equal size, received.pop
+      assert_operator max_buffered, :>, 0
+      assert_operator max_buffered, :<=, max_window
+    end
+  end
+
+  def test_local_forward_echo_should_not_stall_when_client_reads_late
+    setup_ssh_env do
+      size = 64 * 1024 * 1024
+      session = Net::SSH.start(*ssh_start_params)
+      server = start_server do |client|
+        while (data = client.readpartial(65536))
+          client.write(data)
+        end
+      rescue EOFError
+        client.close
+      end
+      local_port = session.forward.local(0, localhost, server.addr[1])
+      client = TCPSocket.new(localhost, local_port)
+      echoed = Queue.new
+      Thread.start { client.write("y" * size) }
+      Thread.start do
+        sleep 3
+        echoed << client.read(size)
+        client.close
+      end
+
+      Timeout.timeout(30) do
+        session.loop(0.1) { echoed.empty? }
+      end
+      assert_equal "y" * size, echoed.pop
+    end
+  end
 end
 
 class TestForwardOnUnixSockets < ForwardTestBase

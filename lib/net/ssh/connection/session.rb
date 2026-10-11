@@ -74,6 +74,7 @@ module Net
           @channel_id_counter = -1
           @channels = Hash.new(NilChannel.new(self))
           @listeners = { transport.socket => nil }
+          @read_paused = {}
           @pending_requests = []
           @channel_open_handlers = {}
           @on_global_request = {}
@@ -260,7 +261,7 @@ module Net
         def ev_do_calculate_rw_wait(wait)
           r = listeners.keys
           w = r.select { |w2| w2.respond_to?(:pending_write?) && w2.pending_write? }
-          [r, w, io_select_wait(wait)]
+          [r.reject { |io| @read_paused.key?(io) }, w, io_select_wait(wait)]
         end
 
         # This is called internally as part of #process.
@@ -490,7 +491,19 @@ module Net
         # Removes the given io object from the listeners collection, so that the
         # event loop will no longer monitor it.
         def stop_listening_to(io)
+          @read_paused.delete(io)
           listeners.delete(io)
+        end
+
+        # Stops the event loop from reading +io+ while it keeps flushing its
+        # pending output, so a paused reader can't stall data flowing the other way.
+        def pause_reading(io)
+          @read_paused[io] = true
+        end
+
+        # Undoes #pause_reading.
+        def resume_reading(io)
+          @read_paused.delete(io)
         end
 
         # Returns a reference to the Net::SSH::Service::Forward service, which can

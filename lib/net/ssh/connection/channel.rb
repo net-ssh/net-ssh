@@ -118,6 +118,7 @@ module Net
 
           @local_maximum_packet_size = max_pkt_size
           @local_window_size = @local_maximum_window_size = max_win_size
+          @local_consumed = 0
 
           @on_confirm_open = on_confirm_open
 
@@ -252,6 +253,30 @@ module Net
           raise EOFError, "cannot send data if channel has declared eof" if eof?
 
           output.append(data.to_s)
+        end
+
+        # By default the local window is replenished as soon as data arrives, so
+        # a sender can outpace a slow consumer and everything it sends piles up
+        # in memory. After calling this, window is granted only for bytes
+        # reported via #consumed, so the remote end stalls once the data handed
+        # to #on_data and #on_extended_data but not yet consumed reaches
+        # #local_maximum_window_size. Call it before any data arrives, e.g. in
+        # the block given to Session#open_channel.
+        #
+        #   channel.grant_window_on_consume!
+        #   channel.on_data { |ch, data| slow_writer.enqueue(data) }
+        #   # later, once slow_writer has written +n+ bytes:
+        #   channel.consumed(n)
+        def grant_window_on_consume!
+          @grant_window_on_consume = true
+        end
+
+        # Reports that +bytes+ of received data have been processed, allowing
+        # the remote end to send that much more. Only meaningful after
+        # #grant_window_on_consume!.
+        def consumed(bytes)
+          @local_consumed += bytes
+          adjust_window_for_consumed
         end
 
         # Returns true if the channel exists in the channel list of the session,
@@ -651,6 +676,8 @@ module Net
         # server telling it that the window size has grown.
         def update_local_window_size(size)
           @local_window_size -= size
+          return adjust_window_for_consumed if @grant_window_on_consume
+
           if local_window_size < local_maximum_window_size / 2
             connection.send_message(
               Buffer.from(:byte, CHANNEL_WINDOW_ADJUST, :long, remote_id, :long, LOCAL_WINDOW_SIZE_INCREMENT)
@@ -661,6 +688,21 @@ module Net
               @local_maximum_window_size += LOCAL_WINDOW_SIZE_INCREMENT
             end
           end
+        end
+
+        # Mirrors OpenSSH's channel_check_window: once the window is below half,
+        # give back what was consumed, growing the maximum window the same way
+        # #update_local_window_size does.
+        def adjust_window_for_consumed
+          return if @local_consumed.zero? || local_window_size >= local_maximum_window_size / 2
+          return if remote_id.nil? || local_closed? || remote_closed?
+
+          growth = (GOOD_LOCAL_MAXIUMUM_WINDOW_SIZE - local_maximum_window_size).clamp(0, LOCAL_WINDOW_SIZE_INCREMENT)
+          adjust = @local_consumed + growth
+          connection.send_message(Buffer.from(:byte, CHANNEL_WINDOW_ADJUST, :long, remote_id, :long, adjust))
+          @local_window_size += adjust
+          @local_maximum_window_size += growth
+          @local_consumed = 0
         end
 
         # Gets an +Array+ of local environment variables in the remote process'

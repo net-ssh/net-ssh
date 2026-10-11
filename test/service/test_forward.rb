@@ -4,6 +4,8 @@ require 'net/ssh/service/forward'
 
 module Service
   class TestForward < NetSSHTest
+    include Net::SSH::Connection::Constants
+
     def test_auth_agent_channel_should_connect_to_identity_agent
       session = stub("session", logger: nil, options: { forward_agent: true, identity_agent: "/tmp/agent.sock" }, on_open_channel: nil)
       forward = Net::SSH::Service::Forward.new(session)
@@ -13,6 +15,89 @@ module Service
       forward.expects(:prepare_simple_client).with(agent_socket, anything, :agent)
 
       forward.send(:auth_agent_channel, session, {}, nil)
+    end
+
+    def test_forwarded_channel_should_pause_reading_while_remote_window_is_full
+      channel = prepared_channel(remote_window: 10)
+
+      @peer.write("x" * 20)
+      @client.fill
+      channel.process
+      assert_equal 10, channel.output.length
+      assert @session.paused?(@client)
+
+      channel.do_data("reply")
+      @client.send_pending
+      assert_equal "reply", @peer.read_nonblock(100)
+
+      channel.do_window_adjust(100)
+      channel.process
+      assert_equal 0, channel.output.length
+      assert !@session.paused?(@client)
+    end
+
+    def test_forwarded_channel_should_grant_window_only_for_bytes_written_to_the_socket
+      channel = prepared_channel(remote_window: 10)
+
+      channel.do_data("x" * 0x10001)
+      assert_empty @session.sent
+
+      @client.send_pending
+      written = @peer.read_nonblock(0x20000).length
+      adjust = @session.sent.last
+      assert_equal CHANNEL_WINDOW_ADJUST, adjust.read_byte
+      adjust.read_long
+      assert_equal written + 0x20000, adjust.read_long
+    end
+
+    def teardown
+      [@client, @peer].compact.each(&:close)
+    end
+
+    private
+
+    class ForwardingSession
+      attr_reader :sent
+
+      def initialize
+        @sent = []
+        @paused = {}
+      end
+
+      def logger; end
+
+      def options
+        {}
+      end
+
+      def on_open_channel(*); end
+
+      def listen_to(io); end
+
+      def pause_reading(io)
+        @paused[io] = true
+      end
+
+      def resume_reading(io)
+        @paused.delete(io)
+      end
+
+      def paused?(io)
+        @paused.key?(io)
+      end
+
+      def send_message(msg)
+        @sent << Net::SSH::Buffer.new(msg.to_s)
+      end
+    end
+
+    def prepared_channel(remote_window:)
+      @session = ForwardingSession.new
+      @client, @peer = UNIXSocket.pair
+      channel = Net::SSH::Connection::Channel.new(@session, "direct-tcpip", 0)
+      Net::SSH::Service::Forward.new(@session).send(:prepare_client, @client, channel, :local)
+      channel.do_open_confirmation(1, remote_window, 0x8000)
+      channel
     end
   end
 end
