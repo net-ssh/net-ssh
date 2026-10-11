@@ -498,11 +498,17 @@ module Net
         # Internal and experimental, used by port forwarding: stops the event
         # loop from reading +io+ while it keeps flushing its pending output.
         def pause_reading(io) # :nodoc:
+          raise ArgumentError, "the transport socket can't be paused" if io.equal?(transport.socket)
+
           @read_paused[io] = true if listeners.key?(io)
         end
 
         def resume_reading(io) # :nodoc:
           @read_paused.delete(io)
+        end
+
+        def reading_paused?(io) # :nodoc:
+          @read_paused.key?(io)
         end
 
         # Returns a reference to the Net::SSH::Service::Forward service, which can

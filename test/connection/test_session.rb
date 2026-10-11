@@ -86,6 +86,18 @@ module Connection
       assert readers.include?(io)
     end
 
+    def test_pause_reading_should_refuse_the_transport_socket
+      assert_raises(ArgumentError) { session.pause_reading(socket) }
+    end
+
+    def test_reading_paused_should_report_pause_state
+      io = stub("io", pending_write?: false)
+      session.listen_to(io)
+      assert !session.reading_paused?(io)
+      session.pause_reading(io)
+      assert session.reading_paused?(io)
+    end
+
     def test_send_message_should_enqueue_message_at_transport_layer
       packet = P(:byte, REQUEST_SUCCESS)
       session.send_message(packet)

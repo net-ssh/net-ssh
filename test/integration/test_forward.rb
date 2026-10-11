@@ -692,7 +692,7 @@ class TestForward < ForwardTestBase
           begin
             client.write_nonblock("u" * 65536)
           rescue IO::WaitWritable
-            paused ||= !session.instance_variable_get(:@read_paused).empty?
+            paused ||= forwarded_sockets(session).any? { |socket| session.reading_paused?(socket) }
           end
           !paused
         end

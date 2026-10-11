@@ -1,6 +1,7 @@
 require_relative '../common'
 require 'net/ssh/authentication/agent'
 require 'io/wait'
+require 'timeout'
 require 'net/ssh/connection/channel'
 require 'net/ssh/service/forward'
 
@@ -26,7 +27,7 @@ module Service
       @client.fill
       channel.process
       assert_equal 10, channel.output.length
-      assert @session.paused?(@client)
+      assert @session.reading_paused?(@client)
 
       channel.do_data("reply")
       @client.send_pending
@@ -35,17 +36,26 @@ module Service
       channel.do_window_adjust(100)
       channel.process
       assert_equal 0, channel.output.length
-      assert !@session.paused?(@client)
+      assert !@session.reading_paused?(@client)
     end
 
     def test_forwarded_channel_should_grant_window_only_for_bytes_written_to_the_socket
       channel = prepared_channel(remote_window: 10)
 
+      received = +""
+      # Ruby 2.7 sockets block in send until everything is written, so keep reading.
+      reader = Thread.new do
+        loop { received << @peer.readpartial(0x20000) }
+      rescue IOError
+        nil
+      end
       channel.do_data("x" * 0x10001)
       assert_empty @session.sent
 
       @client.send_pending
-      written = @peer.read_nonblock(0x20000).length
+      written = 0x10001 - @client.write_buffer.length
+      Timeout.timeout(5) { Thread.pass until received.length == written }
+      reader.kill
       adjust = @session.sent.last
       assert_equal CHANNEL_WINDOW_ADJUST, adjust.read_byte
       adjust.read_long
@@ -57,7 +67,7 @@ module Service
       @peer.write("x" * 20)
       @client.fill
       channel.process
-      assert @session.paused?(@client)
+      assert @session.reading_paused?(@client)
 
       @peer.close
       @peer = nil
@@ -139,7 +149,7 @@ module Service
         @paused.delete(io)
       end
 
-      def paused?(io)
+      def reading_paused?(io)
         @paused.key?(io)
       end
 

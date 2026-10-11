@@ -166,6 +166,11 @@ module Net
     #    http://github.com/net-ssh/net-ssh/tree/portfwfix
     #
     module ForwardedBufferedIo
+      def self.extended(object) # :nodoc:
+        object.instance_variable_set(:@on_sent, nil)
+        object.instance_variable_set(:@shutdown_write_when_drained, false)
+      end
+
       def fill(n = 8192)
         begin
           super(n)

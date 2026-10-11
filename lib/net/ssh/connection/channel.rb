@@ -119,6 +119,7 @@ module Net
           @local_maximum_packet_size = max_pkt_size
           @local_window_size = @local_maximum_window_size = max_win_size
           @local_consumed = 0
+          @grant_window_on_consume = false
 
           @on_confirm_open = on_confirm_open
 
