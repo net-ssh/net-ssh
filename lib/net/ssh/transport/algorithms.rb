@@ -305,30 +305,20 @@ module Net
           option = Array(option).compact.uniq
 
           if option.first && option.first.start_with?('+', '-', '^')
-            list = defaults.dup
-
-            appends = []
-            deletions = []
-            prepends = []
+            ops = { '^' => [], '+' => [], '-' => [] }
             cur_list = nil
             option.each do |cur_opt|
-              if cur_opt.start_with?('+')
-                cur_list = appends
-                cur_opt = cur_opt[1..-1]
-              elsif cur_opt.start_with?('-')
-                cur_list = deletions
-                cur_opt = cur_opt[1..-1]
-              elsif cur_opt.start_with?('^')
-                cur_list = prepends
+              if ops.key?(cur_opt[0])
+                cur_list = ops[cur_opt[0]]
                 cur_opt = cur_opt[1..-1]
               end
               cur_list << cur_opt
             end
 
-            list = prepends + list + appends
+            list = ops['^'] + defaults + ops['+']
             list.concat(supported) if append_all_supported_algorithms
 
-            deletions.each do |opt|
+            ops['-'].each do |opt|
               if opt.include?('*')
                 opt_escaped = Regexp.escape(opt)
                 algo_re = /\A#{opt_escaped.gsub('\*', '[A-Za-z\d\-@\.]*')}\z/
