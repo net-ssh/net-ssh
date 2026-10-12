@@ -137,7 +137,11 @@ module Net
     #   Defaults to +300+ seconds.
     # * :keepalive_maxcount => the maximun number of keepalive packet miss allowed.
     #   Defaults to 3
-    # * :kex => the key exchange algorithm (or algorithms) to use
+    # * :kex => the key exchange algorithm (or algorithms) to use. Like
+    #   KexAlgorithms, entries starting with +, - or ^ modify the default list.
+    #   diffie-hellman-group14-sha1 is supported but not offered unless listed
+    #   here (e.g. '+diffie-hellman-group14-sha1') or
+    #   :append_all_supported_algorithms is set.
     # * :keys => an array of file names of private keys to use for publickey
     #   and hostbased authentication
     # * :keycerts => an array of file names of key certificates to use

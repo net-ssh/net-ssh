@@ -59,7 +59,7 @@ RSA public key authentication likewise uses rsa-sha2-512 or rsa-sha2-256 by defa
 | ecdh-sha2-nistp384                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | ecdh-sha2-nistp256                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
 | diffie-hellman-group1-sha1           | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| diffie-hellman-group14-sha1          | OK                    |          |
+| diffie-hellman-group14-sha1          | Disabled by default in 8.0 | SHA-1, off by default as in OpenSSH 8.2; enable with `KexAlgorithms +diffie-hellman-group14-sha1` or `kex: '+diffie-hellman-group14-sha1'` |
 | diffie-hellman-group-exchange-sha1   | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
 | diffie-hellman-group-exchange-sha256 | OK                    |          |
 

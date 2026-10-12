@@ -131,6 +131,7 @@ class TestConfig < NetSSHTest
       'hostbasedauthentication' => true,
       'hostkeyalgorithms' => "d,e,f",
       'identityfile' => %w(g h i),
+      'kexalgorithms' => "s,t,u",
       'macs' => "j,k,l",
       'certificatefile' => %w(m n o),
       'passwordauthentication' => true,
@@ -158,6 +159,7 @@ class TestConfig < NetSSHTest
     assert_equal %w(hostbased keyboard-interactive none password publickey), net_ssh[:auth_methods].sort
     assert_equal %w(d e f), net_ssh[:host_key]
     assert_equal %w(g h i), net_ssh[:keys]
+    assert_equal %w(s t u), net_ssh[:kex]
     assert_equal %w(j k l), net_ssh[:hmac]
     assert_equal %w(m n o), net_ssh[:keycerts]
     assert_equal 1234,      net_ssh[:port]
