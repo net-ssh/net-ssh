@@ -639,6 +639,45 @@ module Connection
       assert_equal "", session.exec!('ls')
     end
 
+    def test_exec_bang_with_block_should_return_empty_string_with_exitstatus
+      prep_exec("ls", :stdout, "some data", exit_status: 0)
+      yielded = []
+      result = session.exec!("ls") { |_channel, type, data| yielded << [type, data] }
+      assert_equal [[:stdout, "some data"]], yielded
+      assert_equal "", result
+      assert_equal 0, result.exitstatus
+    end
+
+    def test_exec_bang_with_block_should_return_nonzero_exitstatus
+      prep_exec("ls", exit_status: 42)
+      result = session.exec!("ls") { |*| flunk "no output expected" }
+      assert_equal "", result
+      assert_equal 42, result.exitstatus
+    end
+
+    def test_exec_bang_with_block_should_return_result_set_by_block
+      prep_exec("ls", :stdout, "some data", exit_status: 3)
+      result = session.exec!("ls") { |channel, _type, data| channel[:result] = data.upcase }
+      assert_equal "SOME DATA", result
+      assert_equal 3, result.exitstatus
+    end
+
+    def test_exec_bang_without_block_should_return_output_with_exitstatus
+      prep_exec("ls", :stdout, "some data", exit_status: 1)
+      result = session.exec!("ls")
+      assert_equal "some data", result
+      assert_equal Encoding::UTF_8, result.encoding
+      assert_equal 1, result.exitstatus
+    end
+
+    def test_exec_bang_should_fill_status_hash
+      prep_exec("ls", exit_status: 7)
+      status = {}
+      result = session.exec!("ls", status: status) { |*| flunk "no output expected" }
+      assert_equal 7, status[:exit_code]
+      assert_equal 7, result.exitstatus
+    end
+
     def test_max_select_wait_time_should_return_keepalive_interval_when_keepalive_enabled
       options = { keepalive: true, keepalive_interval: 5 }
       assert_equal 5, session(options).max_select_wait_time
@@ -651,7 +690,7 @@ module Connection
 
     private
 
-    def prep_exec(command, *data)
+    def prep_exec(command, *data, exit_status: nil)
       IO.expects(:select).with([socket], [], nil, 0).returns([[], [], []])
       transport.mock_enqueue = true
       transport.expect do |t, p|
@@ -675,6 +714,7 @@ module Connection
             end
           end
 
+          t2.return(CHANNEL_REQUEST, :long, p[:remote_id], :string, "exit-status", :bool, false, :long, exit_status) if exit_status
           t2.return(CHANNEL_CLOSE, :long, p[:remote_id])
           t2.expect { |_t3, p3| assert_equal CHANNEL_CLOSE, p3.type }
         end
