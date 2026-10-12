@@ -24,6 +24,7 @@ module Net
     # * IdentityFile => maps to the :keys option
     # * IdentityAgent => :identity_agent
     # * IdentitiesOnly => :keys_only
+    # * KexAlgorithms => maps to the :kex option
     # * CheckHostIP => :check_host_ip
     # * Macs => maps to the :hmac option
     # * PasswordAuthentication => maps to the :auth_methods option password
@@ -248,6 +249,8 @@ module Net
             hash[:host_key] = value.split(/,/)
           when :hostname
             hash[:host_name] = value.gsub(/%h/, settings['host'])
+          when :kexalgorithms
+            hash[:kex] = value.split(/,/)
           when :macs
             hash[:hmac] = value.split(/,/)
           when :serveralivecountmax

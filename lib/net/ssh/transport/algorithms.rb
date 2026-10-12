@@ -39,8 +39,7 @@ module Net
                   ecdh-sha2-nistp384
                   ecdh-sha2-nistp256
                   diffie-hellman-group-exchange-sha256
-                  diffie-hellman-group14-sha256
-                  diffie-hellman-group14-sha1],
+                  diffie-hellman-group14-sha256],
 
           encryption: %w[aes256-ctr
                          aes192-ctr
@@ -87,7 +86,8 @@ module Net
                     %w[ssh-rsa-cert-v01@openssh.com ssh-rsa-cert-v00@openssh.com ssh-rsa ssh-dss],
 
           kex: DEFAULT_ALGORITHMS[:kex] +
-               %w[diffie-hellman-group-exchange-sha1
+               %w[diffie-hellman-group14-sha1
+                  diffie-hellman-group-exchange-sha1
                   diffie-hellman-group1-sha1],
 
           encryption: DEFAULT_ALGORITHMS[:encryption] +

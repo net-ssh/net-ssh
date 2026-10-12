@@ -1,0 +1,2 @@
+Host sha1
+  KexAlgorithms +diffie-hellman-group14-sha1
