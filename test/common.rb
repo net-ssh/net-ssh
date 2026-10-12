@@ -66,6 +66,17 @@ class NetSSHTest < Minitest::Test
   def assert_not_nil(obj, msg = nil)
     refute_nil obj, msg
   end
+
+  # Legacy ciphers (Blowfish, CAST5, IDEA) need OpenSSL 3's legacy provider, which
+  # e.g. Fedora doesn't ship, and OpenSSL::Cipher.ciphers lists them regardless (#952).
+  def skip_unless_cipher_available(ssh_name)
+    ossl_name = Net::SSH::Transport::CipherFactory::SSH_TO_OSSL[ssh_name]
+    return if ossl_name.nil? || ossl_name == "none"
+
+    OpenSSL::Cipher.new(ossl_name)
+  rescue OpenSSL::Cipher::CipherError
+    skip "#{ssh_name} (#{ossl_name}) is not available in this OpenSSL"
+  end
 end
 
 class MockPrompt
