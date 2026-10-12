@@ -1135,7 +1135,7 @@ module Transport
           define_method("test_next_packet_with_#{cipher_method_name}_and_#{hmac_method_name}_and_#{compress}_compression") do
             opts = { shared: "123", hash: "^&*", digester: OpenSSL::Digest::SHA1 }
             key = "ABC"
-            cipher = Net::SSH::Transport::CipherFactory.get(cipher_name, opts.merge(key: key, decrypt: true, iv: "abc"))
+            cipher = available_cipher(cipher_name, opts.merge(key: key, decrypt: true, iv: "abc"))
             hmac =
               if cipher.implicit_mac?
                 cipher.implicit_mac
@@ -1165,7 +1165,7 @@ module Transport
 
             opts = { shared: "123", digester: OpenSSL::Digest::SHA1, hash: "^&*" }
             key = "ABC"
-            cipher = Net::SSH::Transport::CipherFactory.get(cipher_name, opts.merge(key: key, iv: "abc", encrypt: true))
+            cipher = available_cipher(cipher_name, opts.merge(key: key, iv: "abc", encrypt: true))
             hmac =
               if cipher.implicit_mac?
                 cipher.implicit_mac
@@ -1186,6 +1186,11 @@ module Transport
     end
 
     private
+
+    def available_cipher(name, options)
+      skip_unless_cipher_available(name)
+      Net::SSH::Transport::CipherFactory.get(name, options)
+    end
 
     def stream
       @stream ||= begin
