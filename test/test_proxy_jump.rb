@@ -43,6 +43,12 @@ class TestProxyJump < NetSSHTest
     assert_equal "ssh -F /home/user/my\\ config -W %h:%p proxy", proxy.command_line_template
   end
 
+  def test_config_path_percent_is_escaped
+    proxy = Net::SSH::Proxy::Jump.new("proxy")
+    proxy.build_proxy_command_equivalent(config: "/home/user/%h config")
+    assert_equal "ssh -F /home/user/\\%%h\\ config -W %h:%p proxy", proxy.command_line_template
+  end
+
   def test_config_override
     proxy = Net::SSH::Proxy::Jump.new("proxy")
     proxy.build_proxy_command_equivalent(config: "/home/user/.ssh/config2")
@@ -59,5 +65,17 @@ class TestProxyJump < NetSSHTest
     proxy = Net::SSH::Proxy::Jump.new("proxy")
     proxy.build_proxy_command_equivalent(config: true)
     assert_equal "ssh -W %h:%p proxy", proxy.command_line_template
+  end
+
+  def test_options
+    proxy = Net::SSH::Proxy::Jump.new("proxy", options: { "StrictHostKeyChecking" => "no", "UserKnownHostsFile" => "/dev/null", ConnectTimeout: 5 })
+    proxy.build_proxy_command_equivalent
+    assert_equal "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 -W %h:%p proxy", proxy.command_line_template
+  end
+
+  def test_options_are_escaped
+    proxy = Net::SSH::Proxy::Jump.new("proxy", options: { "IdentityFile" => "/home/user/my key", "ProxyCommand" => "nc %h %p; id" })
+    proxy.build_proxy_command_equivalent
+    assert_equal "ssh -o IdentityFile=/home/user/my\\ key -o ProxyCommand=nc\\ \\%%h\\ \\%%p\\;\\ id -W %h:%p proxy", proxy.command_line_template
   end
 end
