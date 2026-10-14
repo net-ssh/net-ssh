@@ -200,7 +200,8 @@ module Net
     # * :user => the user name to log in as; this overrides the +user+
     #   parameter, and is primarily only useful when provided via an SSH
     #   configuration file.
-    # * :remote_user => used for substitution into the '%r' part of a ProxyCommand
+    # * :remote_user => used for substitution into the '%r' part of a ProxyCommand;
+    #   defaults to the user name the connection logs in as.
     # * :user_known_hosts_file => the location of the user known hosts file.
     #   Set to an array to specify multiple user known hosts files.
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
@@ -268,10 +269,12 @@ module Net
                                  end
       end
 
+      user = options.fetch(:user, user) || Etc.getpwuid.name
+      options[:remote_user] ||= user
+
       transport = Transport::Session.new(host, options)
       auth = Authentication::Session.new(transport, options)
 
-      user = options.fetch(:user, user) || Etc.getpwuid.name
       if auth.authenticate("ssh-connection", user, options[:password])
         connection = Connection::Session.new(transport, options)
         if block_given?
