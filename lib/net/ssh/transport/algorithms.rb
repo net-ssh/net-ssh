@@ -112,6 +112,14 @@ module Net
           language: %w[]
         }.freeze
 
+        # Not added by append_all_supported_algorithms; only used when named explicitly.
+        EXPLICIT_ONLY_ALGORITHMS = {
+          encryption: %w[none],
+          hmac: %w[none]
+        }.freeze
+
+        DEPRECATED_HOST_KEY = 'ssh-rsa-cert-v00@openssh.com'.freeze
+
         # The underlying transport layer session that supports this object
         attr_reader :session
 
@@ -282,9 +290,12 @@ module Net
               supported,
               DEFAULT_ALGORITHMS[algorithm],
               options[algorithm] || DEFAULT_ALGORITHMS[algorithm],
-              options[:append_all_supported_algorithms]
+              options[:append_all_supported_algorithms],
+              supported - EXPLICIT_ONLY_ALGORITHMS.fetch(algorithm, [])
             )
           end
+
+          warn_deprecated_host_key if host_key_explicitly_named?(DEPRECATED_HOST_KEY)
 
           # for convention, make sure our list has the same keys as the server
           # list
@@ -312,7 +323,7 @@ module Net
         end
 
         # Composes the list of algorithms by taking supported algorithms and matching with supplied options.
-        def compose_algorithm_list(supported, defaults, option, append_all_supported_algorithms = false)
+        def compose_algorithm_list(supported, defaults, option, append_all_supported_algorithms = false, appendable = supported)
           return supported.dup unless option
 
           list = []
@@ -330,7 +341,7 @@ module Net
             end
 
             list = ops['^'] + defaults + ops['+']
-            list.concat(supported) if append_all_supported_algorithms
+            list.concat(appendable) if append_all_supported_algorithms
 
             ops['-'].each do |opt|
               if opt.include?('*')
@@ -347,7 +358,7 @@ module Net
             list = option
 
             if append_all_supported_algorithms
-              supported.each { |name| list << name unless list.include?(name) }
+              appendable.each { |name| list << name unless list.include?(name) }
             end
           end
 
@@ -361,6 +372,19 @@ module Net
           lwarn { %(unsupported algorithm: `#{unsupported}') } unless unsupported.empty?
 
           list
+        end
+
+        def host_key_explicitly_named?(name)
+          algorithms[:host_key].include?(name) &&
+            Array(options[:host_key]).any? { |opt| opt.to_s.delete_prefix('+').delete_prefix('^') == name }
+        end
+
+        def warn_deprecated_host_key
+          return if @deprecated_host_key_warned
+
+          @deprecated_host_key_warned = true
+          Kernel.warn("#{DEPRECATED_HOST_KEY} is deprecated and will be removed in a future version; " \
+                      "net-ssh cannot parse v00 certificates, use ssh-rsa-cert-v01@openssh.com or a modern host key type instead")
         end
 
         # Parses a KEXINIT packet from the server.
@@ -420,6 +444,7 @@ module Net
         def negotiate_algorithms
           @kex                = negotiate(:kex)
           @host_key           = negotiate(:host_key)
+          warn_deprecated_host_key if @host_key == DEPRECATED_HOST_KEY
           @encryption_client  = negotiate(:encryption_client)
           @encryption_server  = negotiate(:encryption_server)
           @hmac_client        = negotiate(:hmac_client)

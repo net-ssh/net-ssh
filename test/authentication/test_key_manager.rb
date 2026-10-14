@@ -1,6 +1,7 @@
 require_relative '../common'
 require 'net/ssh/authentication/key_manager'
 require 'base64'
+require 'tmpdir'
 
 module Authentication
   class TestKeyManager < NetSSHTest
@@ -81,6 +82,46 @@ module Authentication
 
       assert_equal({ from: :file, file: first, key: rsa }, manager.known_identities[rsa_pk])
       assert_equal({ from: :file, file: second, key: dsa }, manager.known_identities[dsa_pk])
+    end
+
+    def test_each_identity_skips_agent_that_closes_connection_and_yields_key_files
+      assert_failing_agent_is_skipped(Net::SSH::Authentication::AgentClosedConnection.new("agent closed the connection"))
+    end
+
+    def test_each_identity_skips_agent_that_fails_to_list_identities
+      assert_failing_agent_is_skipped(Net::SSH::Authentication::AgentError.new("could not get identity count"))
+    end
+
+    def test_each_identity_does_not_swallow_agent_errors_raised_by_caller_block
+      manager.stubs(:agent).returns(agent)
+
+      failing_block = proc { raise Net::SSH::Authentication::AgentError, "from block" }
+
+      error = assert_raises(Net::SSH::Authentication::AgentError) { manager.each_identity(&failing_block) }
+      assert_equal "from block", error.message
+      assert manager.use_agent?
+    end
+
+    def test_each_identity_skips_agent_that_closes_socket_on_accept
+      skip "UNIXServer is not available" unless defined?(UNIXServer)
+
+      Dir.mktmpdir do |dir|
+        path = File.join(dir, "agent.sock")
+        server = UNIXServer.new(path)
+        thread = Thread.new { loop { server.accept.close } }
+        manager(identity_agent: path)
+        first = File.expand_path("/first")
+        stub_file_private_key first, rsa, rsa_pk
+
+        identities = []
+        manager.each_identity { |identity| identities << identity }
+
+        assert_equal [rsa.to_blob], identities.map(&:to_blob)
+        assert !manager.use_agent?
+      ensure
+        thread&.kill
+        server&.close
+      end
     end
 
     def test_each_identity_should_load_from_implicit_cert_file
@@ -400,6 +441,23 @@ module Authentication
     end
 
     private
+
+    def assert_failing_agent_is_skipped(error)
+      failing_agent = stub("agent")
+      failing_agent.expects(:identities).raises(error)
+      failing_agent.expects(:close)
+      Net::SSH::Authentication::Agent.expects(:connect).returns(failing_agent)
+      first = File.expand_path("/first")
+      stub_file_private_key first, rsa, rsa_pk
+
+      identities = []
+      manager.each_identity { |identity| identities << identity }
+
+      assert_equal [rsa.to_blob], identities.map(&:to_blob)
+      assert_equal({ from: :file, file: first, key: rsa }, manager.known_identities[rsa_pk])
+      assert !manager.use_agent?
+      assert_nil manager.agent
+    end
 
     def stub_file_private_key(name, key, public_key, options = {})
       manager.add(name)

@@ -199,7 +199,8 @@ module Net
     # * :user => the user name to log in as; this overrides the +user+
     #   parameter, and is primarily only useful when provided via an SSH
     #   configuration file.
-    # * :remote_user => used for substitution into the '%r' part of a ProxyCommand
+    # * :remote_user => used for substitution into the '%r' part of a ProxyCommand;
+    #   defaults to the user name the connection logs in as.
     # * :user_known_hosts_file => the location of the user known hosts file.
     #   Set to an array to specify multiple user known hosts files.
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
@@ -211,7 +212,9 @@ module Net
     #   default. The symbols :debug, :info, :warn, :error, and :fatal are also
     #   supported and are translated to the corresponding Logger constant.
     # * :append_all_supported_algorithms => set to +true+ to append all supported
-    #   algorithms by net-ssh. Was the default behaviour until 2.10
+    #   algorithms by net-ssh, except the +none+ cipher and MAC, which must be
+    #   named explicitly (e.g. encryption: '+none'). Was the default behaviour
+    #   until 2.10
     # * :number_of_password_prompts => Number of prompts for the password
     #   authentication method defaults to 3 set to 0 to disable prompt for
     #   password auth method
@@ -271,10 +274,12 @@ module Net
                                  end
       end
 
+      user = options.fetch(:user, user) || Etc.getpwuid.name
+      options[:remote_user] ||= user
+
       transport = Transport::Session.new(host, options)
       auth = Authentication::Session.new(transport, options)
 
-      user = options.fetch(:user, user) || Etc.getpwuid.name
       if auth.authenticate("ssh-connection", user, options[:password])
         connection = Connection::Session.new(transport, options)
         if block_given?
