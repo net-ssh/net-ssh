@@ -160,6 +160,10 @@ module Net
     #   for better performance if your SSH server supports it (most do).
     # * :max_win_size => maximum size we tell the other side that is supported for
     #   the window.
+    # * :minimum_dh_bits => the smallest group, in bits, accepted from the server
+    #   in diffie-hellman-group-exchange key exchange. Defaults to 2048, as in
+    #   OpenSSH; lower it (e.g. to 1024) only to reach legacy servers that offer
+    #   nothing larger.
     # * :no_delay => turns Nagle's algorithm off on the connection's socket
     #   (TCP_NODELAY), so a packet written while the previous one is still
     #   unacknowledged is sent right away instead of waiting for the server's

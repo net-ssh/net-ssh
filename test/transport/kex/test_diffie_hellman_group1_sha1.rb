@@ -9,8 +9,8 @@ module Transport
       include Net::SSH::Transport::Constants
 
       def setup
-        @dh_options = @dh = @algorithms = @connection = @server_key =
-                                            @packet_data = @shared_secret = nil
+        @dh_options = @dh = @algorithms = @connection = @server_key = @packet_data = nil
+        @shared_secret = @server_dh_pubkey = @session_id = @signature = nil
       end
 
       def digest_type
@@ -84,7 +84,21 @@ module Transport
         assert verified
       end
 
+      def test_exchange_keys_with_invalid_server_dh_pubkey_should_raise_exception
+        [0, 1, group_p - 1, group_p, OpenSSL::BN.new(2)**200].each do |pub|
+          setup
+          @server_dh_pubkey = OpenSSL::BN.new(pub)
+          @signature = "unused"
+          error = assert_raises(Net::SSH::Exception) { exchange! }
+          assert_equal "server's DH public value is invalid", error.message
+        end
+      end
+
       private
+
+      def group_p
+        OpenSSL::BN.new(subject::P_s, subject::P_r)
+      end
 
       def exchange!(options = {})
         connection.expect do |t, buffer|
