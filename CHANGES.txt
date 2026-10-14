@@ -1,5 +1,8 @@
 === Unreleased
 
+  * Security: `append_all_supported_algorithms: true` no longer enables the `none` cipher and MAC; name them explicitly (`encryption: '+none'`, `hmac: '+none'`) to use them [#1051]
+  * `ssh-rsa-cert-v00@openssh.com` host keys are deprecated and warn when named in `host_key`/`HostKeyAlgorithms` or negotiated; net-ssh cannot parse v00 certificates, use `ssh-rsa-cert-v01@openssh.com` or a modern key type [#1051]
+  * README: weak algorithms (CBC/3DES/Blowfish ciphers, `ssh-dss`, `diffie-hellman-group1-sha1`, old MACs, ...) stay available as opt-ins for legacy servers rather than being removed in 8.0 [#1051]
   * An ssh-agent that fails while listing keys (e.g. closes the connection) is now skipped and key files are still tried, as in OpenSSH, instead of aborting authentication [#867, #1048]
   * `%r` in a ProxyCommand now defaults to the connection's user, as in OpenSSH, instead of raising unless `:remote_user` is set [#881, #787, #1047]
   * `Net::SSH.start` no longer modifies the options hash passed to it [#989, #1046]
