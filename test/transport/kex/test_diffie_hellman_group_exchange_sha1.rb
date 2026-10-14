@@ -26,6 +26,27 @@ module Transport
         assert_equal [4096, 4096, 8192], @request
       end
 
+      def test_cisco_server_caps_preferred_size
+        packet_data[:server_version_string] = "SSH-2.0-Cisco-1.25"
+        dh_options need_bytes: 32
+        assert_nothing_raised { exchange! p: modulus(4096) }
+        assert_equal [2048, 4096, 8192], @request
+      end
+
+      def test_non_cisco_server_preferred_size_is_not_capped
+        packet_data[:server_version_string] = "SSH-2.0-OpenSSH_9.6 Cisco-1.25"
+        dh_options need_bytes: 32
+        assert_nothing_raised { exchange! }
+        assert_equal [2048, 8192, 8192], @request
+      end
+
+      def test_cisco_server_preferred_size_stays_at_minimum_dh_bits
+        packet_data[:server_version_string] = "SSH-2.0-Cisco-1.25"
+        dh_options need_bytes: 32, minimum_dh_bits: 6144
+        assert_nothing_raised { exchange! p: modulus(6144) }
+        assert_equal [6144, 6144, 8192], @request
+      end
+
       def test_minimum_dh_bits_below_default_accepts_legacy_group
         dh_options minimum_dh_bits: 1024
         assert_nothing_raised { exchange! p: legacy_p }

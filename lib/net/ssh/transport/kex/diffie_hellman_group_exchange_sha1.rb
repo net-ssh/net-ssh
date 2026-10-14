@@ -8,6 +8,7 @@ module Net::SSH::Transport::Kex
   class DiffieHellmanGroupExchangeSHA1 < DiffieHellmanGroup1SHA1
     MINIMUM_BITS      = 2048
     MAXIMUM_BITS      = 8192
+    CISCO_MAXIMUM_NEED_BITS = 4096
 
     private
 
@@ -16,7 +17,18 @@ module Net::SSH::Transport::Kex
     def compute_need_bits
       data[:minimum_dh_bits] ||= MINIMUM_BITS
       data[:maximum_dh_bits] = [MAXIMUM_BITS, data[:minimum_dh_bits]].max
-      data[:need_bits] = estimate_group_bits(data[:need_bytes] * 8).clamp(data[:minimum_dh_bits], data[:maximum_dh_bits])
+      data[:need_bits] = estimate_group_bits(data[:need_bytes] * 8).clamp(data[:minimum_dh_bits], maximum_need_bits)
+    end
+
+    # Some Cisco servers fail instead of returning their 4096-bit group when asked for more (OpenSSH bz#2209).
+    def maximum_need_bits
+      return data[:maximum_dh_bits] unless cisco_server?
+
+      [CISCO_MAXIMUM_NEED_BITS, data[:minimum_dh_bits]].max
+    end
+
+    def cisco_server?
+      data[:server_version_string].to_s.match?(/\ASSH-[\d.]+-Cisco-1\./)
     end
 
     # Group size giving at least the given bits of security (NIST SP 800-57),
