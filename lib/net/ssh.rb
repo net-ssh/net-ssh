@@ -213,7 +213,9 @@ module Net
     #   default. The symbols :debug, :info, :warn, :error, and :fatal are also
     #   supported and are translated to the corresponding Logger constant.
     # * :append_all_supported_algorithms => set to +true+ to append all supported
-    #   algorithms by net-ssh. Was the default behaviour until 2.10
+    #   algorithms by net-ssh, except the +none+ cipher and MAC, which must be
+    #   named explicitly (e.g. encryption: '+none'). Was the default behaviour
+    #   until 2.10
     # * :number_of_password_prompts => Number of prompts for the password
     #   authentication method defaults to 3 set to 0 to disable prompt for
     #   password auth method
