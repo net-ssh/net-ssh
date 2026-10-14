@@ -119,6 +119,29 @@ module Authentication
       assert_raises(Net::SSH::Authentication::AgentClosedConnection) { a.send(:read_packet) }
     end
 
+    def test_identities_raises_agent_closed_connection_on_connection_reset
+      resetting_socket = stub("resetting socket")
+      resetting_socket.stubs(:send)
+      resetting_socket.stubs(:read).raises(Errno::ECONNRESET)
+
+      a = Net::SSH::Authentication::Agent.new
+      a.stubs(:unix_socket_class).returns(stub(open: resetting_socket))
+      a.connect!
+
+      assert_raises(Net::SSH::Authentication::AgentClosedConnection) { a.identities }
+    end
+
+    def test_identities_raises_agent_closed_connection_on_broken_pipe
+      closed_socket = stub("closed socket")
+      closed_socket.stubs(:send).raises(Errno::EPIPE)
+
+      a = Net::SSH::Authentication::Agent.new
+      a.stubs(:unix_socket_class).returns(stub(open: closed_socket))
+      a.connect!
+
+      assert_raises(Net::SSH::Authentication::AgentClosedConnection) { a.identities }
+    end
+
     def test_identities_should_fail_if_SSH_AGENT_FAILURE_received
       socket.expect do |s, type, _buffer|
         assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type

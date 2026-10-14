@@ -256,6 +256,9 @@ module Net
         def send_and_wait(type, *args)
           send_packet(type, *args)
           read_packet
+        rescue Errno::ECONNRESET, Errno::EPIPE => e
+          # Linux reports an agent that closes with our request unread as a reset, not EOF.
+          raise AgentClosedConnection, "agent closed the connection (#{e.class})"
         end
 
         # Returns +true+ if the parameter indicates a "failure" response from
