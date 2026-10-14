@@ -1,5 +1,6 @@
 === Unreleased
 
+  * An ssh-agent that fails while listing keys (e.g. closes the connection) is now skipped and key files are still tried, as in OpenSSH, instead of aborting authentication [#867, #PR]
   * `%r` in a ProxyCommand now defaults to the connection's user, as in OpenSSH, instead of raising unless `:remote_user` is set [#881, #787, #1047]
   * `Net::SSH.start` no longer modifies the options hash passed to it [#989, #1046]
   * Security: `diffie-hellman-group-exchange-sha1/sha256` now requires groups of at least 2048 bits and requests sizes from the negotiated ciphers, as OpenSSH since 7.2, and rejects invalid server groups and DH public values; like OpenSSH, the requested group size is capped at 4096 bits for Cisco servers. Pass `minimum_dh_bits: 1024` to connect to legacy servers that only offer 1024-bit groups. `minimum_dh_bits` values other than 1024 no longer fail key exchange with "could not verify server signature" [#1049]
