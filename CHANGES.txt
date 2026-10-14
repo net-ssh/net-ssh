@@ -1,5 +1,6 @@
 === Unreleased
 
+  * Security: `diffie-hellman-group-exchange-sha1/sha256` now requires groups of at least 2048 bits and requests sizes from the negotiated ciphers, as OpenSSH since 7.2, and rejects invalid server groups and DH public values; like OpenSSH, the requested group size is capped at 4096 bits for Cisco servers. Pass `minimum_dh_bits: 1024` to connect to legacy servers that only offer 1024-bit groups. `minimum_dh_bits` values other than 1024 no longer fail key exchange with "could not verify server signature" [#1049]
   * `Session#exec!` with a block now returns an empty string with `exitstatus` (like the non-block form) instead of `nil` [#848, #1045]
   * Security: `diffie-hellman-group14-sha1` is no longer offered by default for key exchange, as in OpenSSH since 8.2; add `KexAlgorithms +diffie-hellman-group14-sha1` in ssh_config (or `kex: '+diffie-hellman-group14-sha1'`) or pass `append_all_supported_algorithms: true` to re-enable [#705, #1042]
   * ssh_config `KexAlgorithms` is now honoured and maps to `:kex`, including `+`, `-` and `^`; it was previously ignored [#1042]
