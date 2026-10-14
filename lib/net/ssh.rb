@@ -240,6 +240,7 @@ module Net
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
       end
 
+      options = options.dup
       assign_defaults(options)
       _sanitize_options(options)
 
