@@ -11,6 +11,13 @@ module NetSSH
       Net::SSH::Connection::Session.stubs(:new).returns(mock('connection_session'))
     end
 
+    def start_and_capture_transport_options(options)
+      effective_options = nil
+      Net::SSH::Transport::Session.expects(:new).with { |_host, opts| effective_options = opts }.returns(mock('transport_session'))
+      Net::SSH.start('localhost', 'testuser', options)
+      effective_options
+    end
+
     def test_start_should_accept_keepalive_option
       assert_nothing_raised do
         options = { keepalive: true }
@@ -139,15 +146,6 @@ module NetSSH
       assert_equal original, options
       Net::SSH.start('localhost', 'otheruser', options)
       assert_equal original, options
-    end
-
-    private
-
-    def start_and_capture_transport_options(options)
-      effective_options = nil
-      Net::SSH::Transport::Session.expects(:new).with { |_host, opts| effective_options = opts }.returns(mock('transport_session'))
-      Net::SSH.start('localhost', 'testuser', options)
-      effective_options
     end
   end
 end
