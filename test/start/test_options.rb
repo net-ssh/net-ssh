@@ -32,6 +32,13 @@ module NetSSH
       end
     end
 
+    def test_start_with_paranoid_raises_naming_verify_host_key
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser', paranoid: :always)
+      end
+      assert_equal ":paranoid has been removed, use :verify_host_key (same values)", error.message
+    end
+
     def test_start_should_accept_no_delay_option
       assert_nothing_raised do
         options = { no_delay: false }
@@ -132,15 +139,15 @@ module NetSSH
     end
 
     def test_start_should_accept_frozen_options
-      options = { port: 2222, password: nil, paranoid: false }.freeze
+      options = { port: 2222, password: nil, verify_host_key: :never }.freeze
       effective_options = start_and_capture_transport_options(options)
       assert_equal 2222, effective_options[:port]
-      assert_equal false, effective_options[:verify_host_key]
-      assert_equal({ port: 2222, password: nil, paranoid: false }, options)
+      assert_equal :never, effective_options[:verify_host_key]
+      assert_equal({ port: 2222, password: nil, verify_host_key: :never }, options)
     end
 
     def test_start_should_leave_reused_options_unchanged
-      options = { port: 2222, password: nil, paranoid: false, non_interactive: true }
+      options = { port: 2222, password: nil, verify_host_key: :never, non_interactive: true }
       original = options.dup
       Net::SSH.start('localhost', 'testuser', options)
       assert_equal original, options

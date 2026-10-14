@@ -62,7 +62,7 @@ module Net
       auth_methods bind_address compression compression_level config
       encryption forward_agent hmac host_key identity_agent remote_user
       keepalive keepalive_interval keepalive_maxcount kex keys key_data
-      keycerts keycert_data languages logger paranoid password port proxy
+      keycerts keycert_data languages logger password port proxy
       rekey_blocks_limit rekey_limit rekey_packet_limit timeout verbose
       known_hosts global_known_hosts_file user_known_hosts_file host_key_alias
       host_name user properties passphrase keys_only max_pkt_size
@@ -174,7 +174,6 @@ module Net
     #   authentication failure vs password prompt. Non-interactive applications
     #   should set it to true to prefer failing a password/etc auth methods vs.
     #   asking for password.
-    # * :paranoid => deprecated alias for :verify_host_key
     # * :passphrase => the passphrase to use when loading a private key (default
     #   is +nil+, for no passphrase)
     # * :password => the password to use to login
@@ -227,14 +226,20 @@ module Net
     #   * :accept_new_or_local_tunnel (insecure) ::Net::SSH::Verifiers::AcceptNewOrLocalTunnel
     #   * :accept_new (insecure) ::Net::SSH::Verifiers::AcceptNew
     #   * :always (secure) ::Net::SSH::Verifiers::Always
-    #   You can also provide an own Object which responds to +verify+. The argument
-    #   given to +verify+ is a hash consisting of the +:key+, the +:key_blob+,
-    #   the +:fingerprint+ and the +:session+. Returning true accepts the host key,
-    #   returning false declines it and closes the connection.
+    #   You can also provide an own Object which responds to +verify+ and
+    #   +verify_signature+. The argument given to +verify+ is a hash consisting
+    #   of the +:key+, the +:key_blob+, the +:fingerprint+ and the +:session+.
+    #   Returning true accepts the host key, returning false declines it and
+    #   closes the connection. +verify_signature+ is given a block that checks
+    #   the server's host key signature and must return the block's result.
     # * :fingerprint_hash => 'MD5' or 'SHA256', defaults to 'SHA256'
     # If +user+ parameter is nil it defaults to USER from ssh_config, or
     # local username
     def self.start(host, user = nil, options = {}, &block)
+      if options.key?(:paranoid)
+        raise ArgumentError, ":paranoid has been removed, use :verify_host_key (same values)"
+      end
+
       invalid_options = options.keys - VALID_OPTIONS
       if invalid_options.any?
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
@@ -253,8 +258,6 @@ module Net
       if options[:non_interactive]
         options[:number_of_password_prompts] = 0
       end
-
-      _support_deprecated_option_paranoid(options)
 
       if options[:verbose]
         options[:logger].level = case options[:verbose]
@@ -329,23 +332,5 @@ module Net
       end
     end
     private_class_method :_sanitize_options
-
-    def self._support_deprecated_option_paranoid(options)
-      if options.key?(:paranoid)
-        Kernel.warn(
-          ":paranoid is deprecated, please use :verify_host_key. Supported " \
-          "values are exactly the same, only the name of the option has changed."
-        )
-        if options.key?(:verify_host_key)
-          Kernel.warn(
-            "Both :paranoid and :verify_host_key were specified. " \
-            ":verify_host_key takes precedence, :paranoid will be ignored."
-          )
-        else
-          options[:verify_host_key] = options.delete(:paranoid)
-        end
-      end
-    end
-    private_class_method :_support_deprecated_option_paranoid
   end
 end

@@ -8,6 +8,19 @@ class TestKnownHosts < NetSSHTest
     assert_equal("ssh-rsa", keys[0].ssh_type)
   end
 
+  def test_pub_key_entry_exposes_wrapped_key
+    key = OpenSSL::PKey::RSA.new(2048).public_key
+    assert_same key, Net::SSH::HostKeyEntries::PubKey.new(key).key
+  end
+
+  def test_pub_key_entry_no_longer_forwards_key_methods
+    entry = Net::SSH::HostKeyEntries::PubKey.new(OpenSSL::PKey::RSA.new(2048).public_key)
+    Kernel.expects(:warn).never
+    error = assert_raises(NoMethodError) { entry.fingerprint }
+    assert_match(/call it on #key, the wrapped public key/, error.message)
+    assert !entry.respond_to?(:fingerprint)
+  end
+
   def test_key_for_when_all_hosts_are_recognized
     perform_test(path("known_hosts/github"))
   end

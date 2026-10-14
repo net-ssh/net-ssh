@@ -1,6 +1,5 @@
 require 'strscan'
 require 'openssl'
-require 'delegate'
 require 'net/ssh/buffer'
 require 'net/ssh/authentication/ed25519_loader'
 
@@ -8,8 +7,11 @@ module Net
   module SSH
     module HostKeyEntries
       # regular public key entry
-      class PubKey < Delegator
-        def initialize(key, comment: nil) # rubocop:disable Lint/MissingSuper
+      class PubKey
+        # The public key itself, e.g. an OpenSSL::PKey::PKey.
+        attr_reader :key
+
+        def initialize(key, comment: nil)
           @key = key
           @comment = comment
         end
@@ -26,13 +28,21 @@ module Net
           @key.to_blob
         end
 
-        def __getobj__
-          Kernel.warn("Calling Net::SSH::Buffer methods on HostKeyEntries PubKey is deprecated")
-          @key
-        end
-
         def matches_key?(server_key)
           @key.ssh_type == server_key.ssh_type && @key.to_blob == server_key.to_blob
+        end
+
+        def method_missing(name, *args, &block)
+          return super unless @key.respond_to?(name)
+
+          raise NoMethodError.new(
+            "undefined method `#{name}' for #{self.class}; call it on #key, the wrapped public key",
+            name
+          )
+        end
+
+        def respond_to_missing?(_name, _include_private = false)
+          false
         end
       end
 

@@ -317,22 +317,12 @@ module Net
           socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
         end
 
-        # Compatibility verifier which allows users to keep using
-        # custom verifier code without adding new :verify_signature
-        # method.
-        class CompatibleVerifier
-          def initialize(verifier)
-            @verifier = verifier
-          end
-
-          def verify(arguments)
-            @verifier.verify(arguments)
-          end
-
-          def verify_signature(&block)
-            yield
-          end
-        end
+        REMOVED_VERIFY_HOST_KEY_VALUES = {
+          false => :never,
+          true => :accept_new_or_local_tunnel,
+          very: :accept_new,
+          secure: :always
+        }.freeze
 
         # Instantiates a new host-key verification class, based on the value of
         # the parameter.
@@ -347,46 +337,29 @@ module Net
         #
         # If the argument happens to respond to :verify and :verify_signature,
         # it is returned directly. Otherwise, an exception is raised.
-        #
-        # Values false, true, and :very were deprecated in
-        # [#595](https://github.com/net-ssh/net-ssh/pull/595)
         def select_host_key_verifier(verifier)
           case verifier
-          when false
-            Kernel.warn('verify_host_key: false is deprecated, use :never')
-            Net::SSH::Verifiers::Never.new
           when :never then
             Net::SSH::Verifiers::Never.new
-          when true
-            Kernel.warn('verify_host_key: true is deprecated, use :accept_new_or_local_tunnel')
-            Net::SSH::Verifiers::AcceptNewOrLocalTunnel.new
           when :accept_new_or_local_tunnel, nil then
             Net::SSH::Verifiers::AcceptNewOrLocalTunnel.new
-          when :very
-            Kernel.warn('verify_host_key: :very is deprecated, use :accept_new')
-            Net::SSH::Verifiers::AcceptNew.new
           when :accept_new then
             Net::SSH::Verifiers::AcceptNew.new
-          when :secure then
-            Kernel.warn('verify_host_key: :secure is deprecated, use :always')
-            Net::SSH::Verifiers::Always.new
           when :always then
             Net::SSH::Verifiers::Always.new
+          when *REMOVED_VERIFY_HOST_KEY_VALUES.keys
+            raise ArgumentError,
+                  "verify_host_key: #{verifier.inspect} has been removed, use #{REMOVED_VERIFY_HOST_KEY_VALUES[verifier].inspect}"
           else
-            if verifier.respond_to?(:verify)
-              if verifier.respond_to?(:verify_signature)
-                verifier
-              else
-                Kernel.warn("Warning: verifier without :verify_signature is deprecated")
-                CompatibleVerifier.new(verifier)
-              end
-            else
-              raise(
-                ArgumentError,
-                "Invalid argument to :verify_host_key (or deprecated " \
-                ":paranoid): #{verifier.inspect}"
-              )
+            raise ArgumentError, "Invalid argument to :verify_host_key: #{verifier.inspect}" unless verifier.respond_to?(:verify)
+
+            unless verifier.respond_to?(:verify_signature)
+              raise ArgumentError,
+                    "verify_host_key verifier #{verifier.inspect} must implement verify_signature(&block): " \
+                    "yield to the block, which checks the server's host key signature, and return its result"
             end
+
+            verifier
           end
         end
       end
