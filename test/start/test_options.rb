@@ -118,9 +118,36 @@ module NetSSH
 
     def test_constructor_should_set_default_options
       options = { logger: nil, password_prompt: nil }
+      effective_options = start_and_capture_transport_options(options)
+      assert !effective_options[:logger].nil?
+      assert !effective_options[:password_prompt].nil?
+      assert_equal({ logger: nil, password_prompt: nil }, options)
+    end
+
+    def test_start_should_accept_frozen_options
+      options = { port: 2222, password: nil, paranoid: false }.freeze
+      effective_options = start_and_capture_transport_options(options)
+      assert_equal 2222, effective_options[:port]
+      assert_equal false, effective_options[:verify_host_key]
+      assert_equal({ port: 2222, password: nil, paranoid: false }, options)
+    end
+
+    def test_start_should_leave_reused_options_unchanged
+      options = { port: 2222, password: nil, paranoid: false, non_interactive: true }
+      original = options.dup
       Net::SSH.start('localhost', 'testuser', options)
-      assert !options[:logger].nil?
-      assert !options[:password_prompt].nil?
+      assert_equal original, options
+      Net::SSH.start('localhost', 'otheruser', options)
+      assert_equal original, options
+    end
+
+    private
+
+    def start_and_capture_transport_options(options)
+      effective_options = nil
+      Net::SSH::Transport::Session.expects(:new).with { |_host, opts| effective_options = opts }.returns(mock('transport_session'))
+      Net::SSH.start('localhost', 'testuser', options)
+      effective_options
     end
   end
 end
