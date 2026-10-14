@@ -19,4 +19,14 @@ class TestExec < NetSSHTest
     assert_equal "foo\n", ret
     assert_equal 0, ret.exitstatus
   end
+
+  def test_exitstatus_with_block
+    output = String.new
+    ret = Net::SSH.start("localhost", "net_ssh_1", password: 'foopwd') do |ssh|
+      ssh.exec!("echo 'foo'; exit 42") { |_ch, _type, data| output << data }
+    end
+    assert_equal "foo\n", output
+    assert_equal "", ret
+    assert_equal 42, ret.exitstatus
+  end
 end
