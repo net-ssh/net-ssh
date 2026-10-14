@@ -21,6 +21,12 @@ module Net
       #
       #   proxy = Net::SSH::Proxy::Jump.new('user@proxy', options: { 'StrictHostKeyChecking' => 'no' })
       #
+      # Options that ssh_config allows more than once, such as +IdentityFile+,
+      # +CertificateFile+ or +SendEnv+, take an Array and are passed once per
+      # element:
+      #
+      #   proxy = Net::SSH::Proxy::Jump.new('user@proxy', options: { 'IdentityFile' => ['~/.ssh/jump', '~/.ssh/jump_old'] })
+      #
       # The options apply to the first jump host only; any further hosts in
       # the chain are connected to by that host's own ssh.
       class Jump < Command
@@ -53,7 +59,9 @@ module Net
           template << " -p #{uri.port}"    if uri.port
           template << " -J #{extra_jumps}" if extra_jumps
           template << " -F #{escape(config)}" if config != true && config
-          @options.each { |key, value| template << " -o #{escape(key)}=#{escape(value)}" }
+          @options.each do |key, values|
+            Array(values).each { |value| template << " -o #{escape(key)}=#{escape(value)}" }
+          end
           template << " -W %h:%p "
           template << uri.host
 

@@ -1,5 +1,6 @@
 === Unreleased
 
+  * `Net::SSH::Proxy::Jump` `options:` values may be an Array for ssh_config options that can be given more than once, such as `IdentityFile`; each element is passed as its own `-o Key=value` [#1041]
   * BREAKING: removed the `:paranoid` option (deprecated since 4.2.0); use `:verify_host_key` with the same values. Passing `:paranoid` raises ArgumentError [#1050]
   * BREAKING: removed the `verify_host_key` values `false`, `true`, `:very` and `:secure` (deprecated since 5.0.0); use `:never`, `:accept_new_or_local_tunnel`, `:accept_new` and `:always` respectively. The old values raise ArgumentError naming the replacement [#1050]
   * BREAKING: Security: a custom `verify_host_key` verifier must now implement `verify_signature` (deprecated since 5.1.0) or ArgumentError is raised; such verifiers were previously wrapped so the server's host key signature was never checked [#1050]
