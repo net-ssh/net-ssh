@@ -79,6 +79,22 @@ class TestProxyJump < NetSSHTest
     assert_equal "ssh -o IdentityFile=/home/user/jump -o IdentityFile=/home/user/jump\\ old -o StrictHostKeyChecking=no -W %h:%p proxy", proxy.command_line_template
   end
 
+  def test_options_empty_array_passes_nothing
+    proxy = Net::SSH::Proxy::Jump.new("proxy", options: { "IdentityFile" => [], "StrictHostKeyChecking" => "no" })
+    proxy.build_proxy_command_equivalent
+    assert_equal "ssh -o StrictHostKeyChecking=no -W %h:%p proxy", proxy.command_line_template
+  end
+
+  def test_options_nil_value_raises
+    error = assert_raises(ArgumentError) { Net::SSH::Proxy::Jump.new("proxy", options: { "IdentityFile" => nil }) }
+    assert_equal 'nil is not allowed for "IdentityFile" in Net::SSH::Proxy::Jump options; omit the option to use the default or ssh_config value', error.message
+  end
+
+  def test_options_array_containing_nil_raises
+    error = assert_raises(ArgumentError) { Net::SSH::Proxy::Jump.new("proxy", options: { "IdentityFile" => ["/home/user/jump", nil], "SendEnv" => [nil] }) }
+    assert_equal 'nil is not allowed for "IdentityFile", "SendEnv" in Net::SSH::Proxy::Jump options; omit the option to use the default or ssh_config value', error.message
+  end
+
   def test_options_are_escaped
     proxy = Net::SSH::Proxy::Jump.new("proxy", options: { "IdentityFile" => "/home/user/my key", "ProxyCommand" => "nc %h %p; id" })
     proxy.build_proxy_command_equivalent

@@ -21,11 +21,14 @@ module Net
       #
       #   proxy = Net::SSH::Proxy::Jump.new('user@proxy', options: { 'StrictHostKeyChecking' => 'no' })
       #
-      # Options that ssh_config allows more than once, such as +IdentityFile+,
-      # +CertificateFile+ or +SendEnv+, take an Array and are passed once per
-      # element:
+      # Options that ssh_config allows more than once (+IdentityFile+,
+      # +CertificateFile+ and +SendEnv+) take an Array and are passed once per
+      # element; an empty Array passes nothing:
       #
       #   proxy = Net::SSH::Proxy::Jump.new('user@proxy', options: { 'IdentityFile' => ['~/.ssh/jump', '~/.ssh/jump_old'] })
+      #
+      # A +nil+ value, alone or in an Array, raises ArgumentError, as it does
+      # for the options passed to Net::SSH.start; omit the option instead.
       #
       # The options apply to the first jump host only; any further hosts in
       # the chain are connected to by that host's own ssh.
@@ -38,6 +41,7 @@ module Net
         def initialize(jump_proxies, options: {})
           @jump_proxies = jump_proxies
           @options = options
+          validate_options!
         end
 
         # Return a new socket connected to the given host and port via the jump
@@ -69,6 +73,16 @@ module Net
         end
 
         private
+
+        # Like Net::SSH.start, reject nil option values (alone or in an Array)
+        # rather than silently passing nothing or an empty value to ssh.
+        def validate_options!
+          nil_keys = @options.select { |_key, value| value.nil? || (value.is_a?(Array) && value.include?(nil)) }.keys
+          return if nil_keys.empty?
+
+          raise ArgumentError, "nil is not allowed for #{nil_keys.map(&:inspect).join(', ')} in Net::SSH::Proxy::Jump options; " \
+                               "omit the option to use the default or ssh_config value"
+        end
 
         # Escape for the shell, and double any % so it survives the %h/%p
         # substitution done on the template in Command#open.
