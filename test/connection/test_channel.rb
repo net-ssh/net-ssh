@@ -11,7 +11,8 @@ module Connection
 
     def test_constructor_should_set_defaults
       assert_equal 0x8000, channel.local_maximum_packet_size
-      assert_equal 0x20000, channel.local_maximum_window_size
+      assert_equal 0x200000, channel.local_maximum_window_size
+      assert_equal 0x200000, channel.local_window_size
       assert channel.pending_requests.empty?
     end
 
@@ -327,7 +328,7 @@ module Connection
     end
 
     def test_do_data_should_update_local_window_size
-      assert_equal 0x20000, channel.local_maximum_window_size
+      assert_equal 0x20000, channel(max_win_size: 0x20000).local_maximum_window_size
       assert_equal 0x20000, channel.local_window_size
       channel.do_data("here is some data")
       assert_equal 0x20000, channel.local_maximum_window_size
@@ -335,7 +336,7 @@ module Connection
     end
 
     def test_do_extended_data_should_update_local_window_size
-      assert_equal 0x20000, channel.local_maximum_window_size
+      assert_equal 0x20000, channel(max_win_size: 0x20000).local_maximum_window_size
       assert_equal 0x20000, channel.local_window_size
       channel.do_extended_data(1, "here is some data")
       assert_equal 0x20000, channel.local_maximum_window_size
@@ -343,7 +344,7 @@ module Connection
     end
 
     def test_do_data_when_local_window_size_drops_below_threshold_should_trigger_WINDOW_ADJUST_message
-      channel.do_open_confirmation(0, 1000, 1000)
+      channel(max_win_size: 0x20000).do_open_confirmation(0, 1000, 1000)
       assert_equal 0x20000, channel.local_maximum_window_size
       assert_equal 0x20000, channel.local_window_size
 
@@ -359,7 +360,7 @@ module Connection
     end
 
     def test_do_data_with_grant_window_on_consume_should_not_adjust_window_until_consumed
-      channel.do_open_confirmation(0, 1000, 1000)
+      channel(max_win_size: 0x20000).do_open_confirmation(0, 1000, 1000)
       channel.grant_window_on_consume!
 
       channel.do_data("." * 0x10001)
@@ -375,7 +376,7 @@ module Connection
     end
 
     def test_consumed_should_wait_for_window_to_drop_below_half
-      channel.do_open_confirmation(0, 1000, 1000)
+      channel(max_win_size: 0x20000).do_open_confirmation(0, 1000, 1000)
       channel.grant_window_on_consume!
 
       channel.do_data("." * 0x8000)
@@ -391,7 +392,7 @@ module Connection
     end
 
     def test_consumed_should_not_adjust_window_after_remote_close
-      channel.do_open_confirmation(0, 1000, 1000)
+      channel(max_win_size: 0x20000).do_open_confirmation(0, 1000, 1000)
       channel.grant_window_on_consume!
       channel.do_data("." * 0x10001)
       channel.remote_closed!
@@ -400,24 +401,24 @@ module Connection
     end
 
     def test_consumed_should_require_grant_window_on_consume
-      channel.do_open_confirmation(0, 1000, 1000)
+      channel(max_win_size: 0x20000).do_open_confirmation(0, 1000, 1000)
       assert_raises(ArgumentError) { channel.consumed(1) }
     end
 
     def test_consumed_should_reject_negative_bytes
-      channel.do_open_confirmation(0, 1000, 1000)
+      channel(max_win_size: 0x20000).do_open_confirmation(0, 1000, 1000)
       channel.grant_window_on_consume!
       assert_raises(ArgumentError) { channel.consumed(-1) }
     end
 
     def test_grant_window_on_consume_should_fail_after_data_was_received
-      channel.do_open_confirmation(0, 1000, 1000)
+      channel(max_win_size: 0x20000).do_open_confirmation(0, 1000, 1000)
       channel.do_data("x")
       assert_raises(ArgumentError) { channel.grant_window_on_consume! }
     end
 
     def test_extended_data_without_handler_should_count_as_consumed_with_grant_window_on_consume
-      channel.do_open_confirmation(0, 1000, 1000)
+      channel(max_win_size: 0x20000).do_open_confirmation(0, 1000, 1000)
       channel.grant_window_on_consume!
 
       connection.expect do |_t, p|
@@ -429,12 +430,40 @@ module Connection
     end
 
     def test_extended_data_with_handler_should_wait_for_consumed_with_grant_window_on_consume
-      channel.do_open_confirmation(0, 1000, 1000)
+      channel(max_win_size: 0x20000).do_open_confirmation(0, 1000, 1000)
       channel.grant_window_on_consume!
       channel.on_extended_data { |*_args| nil }
 
       channel.do_extended_data(1, "." * 0x10001)
       assert_equal 0xFFFF, channel.local_window_size
+    end
+
+    def test_do_data_should_not_adjust_default_window_until_below_half
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.do_data("." * 0x100000)
+      assert_equal 0x100000, channel.local_window_size
+
+      connection.expect do |_t, p|
+        assert_equal CHANNEL_WINDOW_ADJUST, p.type
+        assert_equal 0x20000, p[:extra_bytes]
+      end
+      channel.do_data(".")
+      assert_equal 0x200000, channel.local_maximum_window_size
+      assert_equal 0x11FFFF, channel.local_window_size
+    end
+
+    def test_consumed_with_default_window_should_give_back_consumed_without_growing
+      channel.do_open_confirmation(0, 1000, 1000)
+      channel.grant_window_on_consume!
+      channel.do_data("." * 0x100001)
+
+      connection.expect do |_t, p|
+        assert_equal CHANNEL_WINDOW_ADJUST, p.type
+        assert_equal 0x100001, p[:extra_bytes]
+      end
+      channel.consumed(0x100001)
+      assert_equal 0x200000, channel.local_maximum_window_size
+      assert_equal 0x200000, channel.local_window_size
     end
 
     def test_do_failure_should_grab_next_pending_request_and_call_it
@@ -556,9 +585,11 @@ module Connection
     end
 
     def channel(options = {}, &block)
+      sizes = options.key?(:max_win_size) ? [0x8000, options[:max_win_size]] : []
       @channel ||= Net::SSH::Connection::Channel.new(connection(options),
                                                      options[:type] || "session",
                                                      options[:local_id] || 0,
+                                                     *sizes,
                                                      &block)
     end
   end

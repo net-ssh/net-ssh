@@ -1,0 +1,1 @@
+Default `max_win_size` is now 2 MB as in OpenSSH (was 128 KB), which avoids truncated output from some devices (e.g. Mikrotik); pass `max_win_size: 0x20000` for the old behaviour [#726, #1055]

@@ -225,7 +225,7 @@ module Service
     def prepared_channel(remote_window:)
       @session = ForwardingSession.new
       @client, @peer = UNIXSocket.pair
-      channel = Net::SSH::Connection::Channel.new(@session, "direct-tcpip", 0)
+      channel = Net::SSH::Connection::Channel.new(@session, "direct-tcpip", 0, 0x8000, 0x20000)
       Net::SSH::Service::Forward.new(@session).send(:prepare_client, @client, channel, :local)
       channel.do_open_confirmation(1, remote_window, 0x8000)
       channel
