@@ -1,0 +1,37 @@
+name: Changelog
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Ruby 3.1
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+          bundler-cache: true
+      - name: Validate fragments
+        run: bundle exec rake changelog:check
+      - name: Require a fragment
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-changelog') }}
+        # HEAD is the PR merged into the base branch, so HEAD^1...HEAD^2 is the PR's own changes.
+        run: |
+          changed=$(git diff --name-only HEAD^1...HEAD^2)
+          added=$(git diff --name-only --diff-filter=AMR HEAD^1...HEAD^2 -- changelog.d/ ':!changelog.d/README.md')
+          if [ -n "$added" ]; then
+            echo "Changelog fragments:"; echo "$added"
+          elif ! echo "$changed" | grep -v -e '^CHANGES\.txt$' -e '^changelog\.d/' | grep -q .; then
+            echo "Only CHANGES.txt or changelog.d/ changed, no fragment needed"
+          else
+            echo "::error::Add a changelog fragment to changelog.d/ (use a <number>.none.txt one if nothing user-visible changed), see CONTRIBUTING.md#changelog"
+            exit 1
+          fi
