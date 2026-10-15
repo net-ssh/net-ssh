@@ -1,5 +1,6 @@
 require_relative '../common'
 require 'net/ssh'
+require 'tempfile'
 
 module NetSSH
   class TestStartOptions < NetSSHTest
@@ -9,6 +10,14 @@ module NetSSH
       Net::SSH::Authentication::Session.stubs(:new).returns(authentication_session)
       Net::SSH::Transport::Session.stubs(:new).returns(mock('transport_session'))
       Net::SSH::Connection::Session.stubs(:new).returns(mock('connection_session'))
+    end
+
+    def with_ssh_config(content)
+      Tempfile.create('ssh_config') do |file|
+        file.write(content)
+        file.close
+        yield file.path
+      end
     end
 
     def start_and_capture_transport_options(options)
@@ -95,18 +104,68 @@ module NetSSH
       end
     end
 
-    def test_constructor_should_reject_options_set_to_nil
-      Kernel.expects(:warn).with { |message| message =~ /remote_user/ }.once
-
-      options = { remote_user: nil }
-      Net::SSH.start('localhost', 'testuser', options)
+    def test_start_should_raise_for_nil_options
+      %i[proxy port config remote_user].each do |key|
+        Net::SSH::Transport::Session.expects(:new).never
+        error = assert_raises(ArgumentError) { Net::SSH.start('localhost', 'testuser', key => nil) }
+        assert_match(/\Anil is not allowed for #{key.inspect}; omit it to use the default or ssh_config value/, error.message)
+      end
     end
 
-    def test_constructor_should_reject_options_set_to_array_of_nil
-      Kernel.expects(:warn).with { |message| message =~ /keys/ }.once
-
+    def test_start_should_raise_for_arrays_containing_nil
       ENV.delete('no-such-env-variable')
-      Net::SSH.start('localhost', 'testuser', keys: [ENV['no-such-env-variable']])
+      [[nil], ['id_rsa', nil], [ENV['no-such-env-variable']]].each do |keys|
+        error = assert_raises(ArgumentError) { Net::SSH.start('localhost', 'testuser', keys: keys) }
+        assert_match(/\Anil is not allowed for :keys;/, error.message)
+      end
+    end
+
+    def test_nil_option_error_message_includes_hint
+      error = assert_raises(ArgumentError) { Net::SSH.start('localhost', 'testuser', proxy: nil) }
+      assert_equal "nil is not allowed for :proxy; omit it to use the default or ssh_config value, " \
+                   "or pass proxy: false to connect without a proxy", error.message
+    end
+
+    def test_nil_option_error_message_lists_all_keys_and_their_hints
+      error = assert_raises(ArgumentError) { Net::SSH.start('localhost', 'testuser', port: nil, keys: [nil], config: nil) }
+      assert_equal "nil is not allowed for :port, :keys, :config; omit them to use the default or ssh_config value, " \
+                   "or pass keys: [] to use no key files, or config: false to skip ssh_config files", error.message
+    end
+
+    def test_nil_options_should_not_warn
+      Kernel.expects(:warn).never
+      assert_raises(ArgumentError) { Net::SSH.start('localhost', 'testuser', port: nil) }
+      Net::SSH.start('localhost', 'testuser', password: nil, passphrase: nil, logger: nil, password_prompt: nil)
+    end
+
+    def test_nil_options_should_not_modify_callers_hash
+      options = { port: nil }
+      assert_raises(ArgumentError) { Net::SSH.start('localhost', 'testuser', options) }
+      assert_equal({ port: nil }, options)
+    end
+
+    def test_config_false_should_skip_ssh_config
+      Net::SSH::Config.expects(:for).never
+      Net::SSH.start('localhost', 'testuser', config: false)
+    end
+
+    def test_hinted_values_should_override_ssh_config
+      overrides = {
+        "ProxyCommand nc %h %p" => { proxy: false },
+        "IdentityFile ~/.ssh/from_config" => { keys: [] },
+        "ForwardAgent yes" => { forward_agent: false },
+        "ServerAliveInterval 10" => { keepalive: false },
+        "Compression yes" => { compression: false },
+        "SendEnv LANG" => { send_env: [] },
+        "SetEnv FOO=bar" => { set_env: {} }
+      }
+      overrides.each do |config_line, override|
+        key, value = override.first
+        with_ssh_config("Host *\n  #{config_line}\n") do |config|
+          refute_includes [nil, false, [], {}], start_and_capture_transport_options(config: config)[key], config_line
+          assert_equal value, start_and_capture_transport_options(config: config, **override)[key]
+        end
+      end
     end
 
     def test_constructor_should_not_reject_nil_password_options_for_cap_v2_compatibility
