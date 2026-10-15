@@ -86,6 +86,7 @@ RSA public key authentication likewise uses rsa-sha2-512 or rsa-sha2-256 by defa
 |-------------------------------|------------------------|----------|
 | hmac-sha2-512-etm@openssh.com | OK                     |          |
 | hmac-sha2-256-etm@openssh.com | OK                     |          |
+| hmac-sha1-etm@openssh.com     | OK                     | for backward compatibility |
 | hmac-sha2-512                 | OK                     |          |
 | hmac-sha2-256                 | OK                     |          |
 | hmac-sha1                     | OK                     | for backward compatibility |

@@ -9,6 +9,7 @@ require 'net/ssh/transport/hmac/sha2_512'
 require 'net/ssh/transport/hmac/sha2_512_96'
 require 'net/ssh/transport/hmac/sha2_256_etm'
 require 'net/ssh/transport/hmac/sha2_512_etm'
+require 'net/ssh/transport/hmac/sha1_etm'
 require 'net/ssh/transport/hmac/ripemd160'
 require 'net/ssh/transport/hmac/none'
 
@@ -27,6 +28,7 @@ module Net::SSH::Transport::HMAC
     'hmac-sha2-512-96' => SHA2_512_96,
     'hmac-sha2-256-etm@openssh.com' => SHA2_256_Etm,
     'hmac-sha2-512-etm@openssh.com' => SHA2_512_Etm,
+    'hmac-sha1-etm@openssh.com' => SHA1_Etm,
     'hmac-ripemd160' => RIPEMD160,
     'hmac-ripemd160@openssh.com' => RIPEMD160,
     'none' => None
