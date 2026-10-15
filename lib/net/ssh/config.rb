@@ -15,6 +15,8 @@ module Net
     # * Compression => :compression
     # * CompressionLevel => :compression_level
     # * ConnectTimeout => maps to the :timeout option
+    # * ControlPath => :control_path, used only when Net::SSH.start is given
+    #   control_master: :auto; ControlMaster itself is not read
     # * ForwardAgent => :forward_agent
     # * GlobalKnownHostsFile => :global_known_hosts_file
     # * HostBasedAuthentication => maps to the :auth_methods option
@@ -220,6 +222,7 @@ module Net
           bindaddress: :bind_address,
           compression: :compression,
           compressionlevel: :compression_level,
+          controlpath: :control_path,
           certificatefile: :keycerts,
           connecttimeout: :timeout,
           forwardagent: :forward_agent,

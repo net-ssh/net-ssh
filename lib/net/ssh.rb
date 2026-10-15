@@ -8,6 +8,7 @@ require 'net/ssh/loggable'
 require 'net/ssh/transport/session'
 require 'net/ssh/authentication/session'
 require 'net/ssh/connection/session'
+require 'net/ssh/multiplex'
 require 'net/ssh/prompt'
 
 module Net
@@ -70,6 +71,7 @@ module Net
       append_all_supported_algorithms non_interactive password_prompt
       agent_socket_factory minimum_dh_bits verify_host_key
       fingerprint_hash check_host_ip pubkey_algorithms no_delay
+      control_master control_path
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -109,6 +111,28 @@ module Net
     # * :compression => the compression algorithm to use, or +true+ to use
     #   whatever is supported.
     # * :compression_level => the compression level to use when sending data
+    # * :control_master => set to +:auto+ to run the session through an
+    #   already running OpenSSH ControlMaster for the same host, port and user
+    #   (started e.g. with <tt>ssh -M</tt> or <tt>ControlMaster auto</tt>),
+    #   using its proxy mode (OpenSSH 7.4 or later). This skips the TCP
+    #   connection, key exchange and authentication. If there is no usable
+    #   master (no ControlPath, no socket, refused, timed out, owned by another
+    #   user) Net::SSH logs why and connects as usual; it never starts a master
+    #   itself. The master's own settings then apply instead of the options
+    #   for setting up a connection (:keys, :key_data, :password, :passphrase,
+    #   :auth_methods, :verify_host_key, :known_hosts, :host_key, :kex,
+    #   :encryption, :hmac, :compression, :rekey_*, :proxy, :keepalive and the
+    #   like); explicitly passed ones are named in a logger warning. Over the
+    #   master, remote port forwarding (Service::Forward#remote and
+    #   #cancel_remote), agent and X11 forwarding and other global requests
+    #   raise Net::SSH::NotSupportedOverControlMaster, and keepalive and
+    #   rekeying are left to the master. :forward_agent can't be combined with
+    #   it. ssh_config's ControlMaster is ignored, only this option
+    #   enables it. Has no effect on Windows. Defaults to +false+.
+    # * :control_path => the ControlMaster socket to use with
+    #   :control_master, with the same ~, ${ENV} and % tokens as ssh_config's
+    #   ControlPath (%C, %d, %h, %i, %j, %k, %L, %l, %n, %p, %r, %u, %%).
+    #   Defaults to ControlPath from ssh_config; +"none"+ disables the master.
     # * :config => set to +true+ to load the default OpenSSH config files
     #   (~/.ssh/config, /etc/ssh_config), or to +false+ to not load them, or to
     #   a file-name (or array of file-names) to load those specific configuration
@@ -248,6 +272,10 @@ module Net
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
       end
 
+      Multiplex.validate_options!(options)
+      explicit_options = options.keys
+      host_arg = host
+
       options = options.dup
       assign_defaults(options)
       _sanitize_options(options)
@@ -277,25 +305,32 @@ module Net
       user = options.fetch(:user, user) || Etc.getpwuid.name
       options[:remote_user] ||= user
 
+      connection = Multiplex.connect(host_arg, host, user, options, explicit: explicit_options) if options[:control_master]
+      connection ||= connect_directly(host, user, options)
+
+      if block_given?
+        begin
+          yield connection
+        ensure
+          connection.close unless connection.closed?
+        end
+      else
+        connection
+      end
+    end
+
+    def self.connect_directly(host, user, options)
       transport = Transport::Session.new(host, options)
       auth = Authentication::Session.new(transport, options)
 
-      if auth.authenticate("ssh-connection", user, options[:password])
-        connection = Connection::Session.new(transport, options)
-        if block_given?
-          begin
-            yield connection
-          ensure
-            connection.close unless connection.closed?
-          end
-        else
-          return connection
-        end
-      else
+      unless auth.authenticate("ssh-connection", user, options[:password])
         transport.close
         raise AuthenticationFailed, "Authentication failed for user #{user}@#{host}"
       end
+
+      Connection::Session.new(transport, options)
     end
+    private_class_method :connect_directly
 
     # Returns a hash of the configuration options for the given host, as read
     # from the SSH configuration file(s). If +use_ssh_config+ is true (the
