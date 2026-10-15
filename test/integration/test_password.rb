@@ -42,7 +42,7 @@ class TestPassword < NetSSHTest
   def test_password_with_good_password
     ps = Object.new
     pt = Object.new
-    pt.expects(:start).with(type: 'password', user: 'net_ssh_1', host: 'localhost').returns(ps)
+    pt.expects(:start).with({ type: 'password', user: 'net_ssh_1', host: 'localhost' }).returns(ps)
     ps.expects(:ask).with("net_ssh_1@localhost's password:", false).returns("foopwd")
     ps.expects(:success)
 
