@@ -98,7 +98,10 @@ module Net
     #     ssh.loop
     #   end
     #
-    # This method accepts the following options (all are optional):
+    # This method accepts the following options (all are optional). Omit an
+    # option to use its default or ssh_config value; passing +nil+ (or an array
+    # containing +nil+) raises ArgumentError, except for :password,
+    # :passphrase, :logger and :password_prompt, where +nil+ means the default.
     #
     # * :auth_methods => an array of authentication methods to try
     # * :bind_address => the IP address on the connecting machine to use in
@@ -248,9 +251,10 @@ module Net
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
       end
 
+      reject_nil_options(options)
+
       options = options.dup
       assign_defaults(options)
-      _sanitize_options(options)
 
       options[:user] = user if user
       options = configuration_for(host, options.fetch(:config, true)).merge(options)
@@ -329,13 +333,33 @@ module Net
       end
     end
 
-    def self._sanitize_options(options)
-      invalid_option_values = [nil, [nil]]
-      unless (options.values & invalid_option_values).empty?
-        nil_options = options.select { |_k, v| invalid_option_values.include?(v) }.map(&:first)
-        Kernel.warn "#{caller_locations(2, 1)[0]}: Passing nil, or [nil] to Net::SSH.start is deprecated for keys: #{nil_options.join(', ')}"
-      end
+    NIL_ALLOWED_OPTIONS = %i[password passphrase logger password_prompt].freeze
+
+    NIL_OPTION_HINTS = {
+      config: "config: false to skip ssh_config files",
+      proxy: "proxy: false to connect without a proxy",
+      keys: "keys: [] to use no key files",
+      use_agent: "use_agent: false to not use ssh-agent",
+      forward_agent: "forward_agent: false to not forward ssh-agent",
+      keepalive: "keepalive: false to send no keepalives",
+      compression: "compression: false to disable compression",
+      send_env: "send_env: [] to send no environment variables",
+      set_env: "set_env: {} to set no environment variables"
+    }.freeze
+    private_constant :NIL_ALLOWED_OPTIONS, :NIL_OPTION_HINTS
+
+    def self.reject_nil_options(options)
+      nil_keys = options.select do |key, value|
+        !NIL_ALLOWED_OPTIONS.include?(key) && (value.nil? || (value.is_a?(Array) && value.include?(nil)))
+      end.keys
+      return if nil_keys.empty?
+
+      message = "nil is not allowed for #{nil_keys.map(&:inspect).join(', ')}; " \
+                "omit #{nil_keys.one? ? 'it' : 'them'} to use the default or ssh_config value"
+      hints = NIL_OPTION_HINTS.values_at(*nil_keys).compact
+      message += ", or pass #{hints.join(', or ')}" if hints.any?
+      raise ArgumentError, message
     end
-    private_class_method :_sanitize_options
+    private_class_method :reject_nil_options
   end
 end

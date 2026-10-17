@@ -403,6 +403,14 @@ module Transport
       assert_match "establishing connection to #{TEST_HOST}:#{TEST_PORT}", logger.messages
     end
 
+    def test_proxy_false_should_connect_directly
+      logger = TestLogger.new
+
+      session!(logger: logger, proxy: false)
+      assert_match "establishing connection to #{TEST_HOST}:#{TEST_PORT}", logger.messages
+      refute_match "through proxy", logger.messages
+    end
+
     def test_tcp_nodelay_should_be_set_by_default
       socket.expects(:setsockopt).with(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
       session!
