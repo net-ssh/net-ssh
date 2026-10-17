@@ -1,0 +1,43 @@
+name: Changelog
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  changelog:
+    if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # HEAD is the PR merged into the base branch; HEAD^1 is the base it was merged into.
+          fetch-depth: 2
+      - name: Set up Ruby 3.1
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+      - name: Validate fragments
+        run: rake changelog:check
+      - name: Require a fragment
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-changelog') }}
+        env:
+          PR: ${{ github.event.number }}
+        run: |
+          changed=$(git diff --name-only HEAD^1 HEAD)
+          if echo "$changed" | grep -x 'CHANGES\.txt' > /dev/null; then
+            echo "::error::Don't edit CHANGES.txt, add a changelog.d/$PR.<type>.txt fragment instead, see CONTRIBUTING.md#changelog"
+            exit 1
+          fi
+          own=$(git diff --name-only --diff-filter=AMR HEAD^1 HEAD -- changelog.d/ | grep -E "^changelog\.d/$PR\.[a-z-]+(\.[0-9]+)?\.txt$" || true)
+          if [ -n "$own" ]; then
+            echo "Changelog fragments:"; echo "$own"
+          elif ! echo "$changed" | grep -v '^changelog\.d/' > /dev/null; then
+            echo "Only changelog.d/ changed, no fragment needed"
+          else
+            echo "::error::Add a changelog fragment named changelog.d/$PR.<type>.txt (use $PR.none.txt if nothing user-visible changed), see CONTRIBUTING.md#changelog"
+            exit 1
+          fi

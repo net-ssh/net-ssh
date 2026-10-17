@@ -28,6 +28,7 @@ CLEAN.include ['pkg', 'rdoc']
 name = "net-ssh"
 
 require_relative "lib/net/ssh/version"
+require_relative "rakelib/changelog"
 version = Net::SSH::Version::CURRENT
 
 extra_files = %w[LICENSE.txt THANKS.txt CHANGES.txt]
@@ -109,6 +110,15 @@ def change_version(&block)
     raise ArgumentError, "Cound not find line: TINY = \"#{tiny}\" in #{version_file}" unless found[:tiny] || new_tiny == tiny
   end
 
+  begin
+    heading = Changelog.heading(Net::SSH::Version::MAJOR, Net::SSH::Version::MINOR, new_tiny, new_pre)
+    section = Changelog.new(__dir__).release(heading)
+  rescue StandardError
+    FileUtils.rm_f "#{version_file}.new"
+    raise
+  end
+  puts section ? "Added to CHANGES.txt:\n#{section}" : "Nothing to release for a pre-release, CHANGES.txt unchanged"
+
   FileUtils.mv version_file, "#{version_file}.old"
   FileUtils.mv "#{version_file}.new", version_file
 end
@@ -145,6 +155,44 @@ namespace :vbump do
         { pre: "#{match[1]}#{match[2].to_i + 1}" }
       end
     end
+  end
+end
+
+namespace :changelog do
+  changelog = Changelog.new(__dir__)
+
+  desc "Validate the fragments in changelog.d/"
+  task :check do
+    count = changelog.check.size
+    puts "#{count} valid changelog fragment#{'s' unless count == 1}"
+  rescue Changelog::Error => e
+    abort e.message
+  end
+
+  desc "Print the CHANGES.txt section the next version bump would write"
+  task :preview, [:heading] do |_t, args|
+    puts changelog.section(args[:heading] || "Unreleased") || "Nothing to release"
+  rescue Changelog::Error => e
+    abort e.message
+  end
+
+  desc "Create a fragment: rake \"changelog:new[1234,change,Text of the entry]\""
+  task :new, [:number, :type] do |_t, args|
+    abort "Usage: rake \"changelog:new[<PR number>,<#{Changelog::TYPES.keys.join('|')}>,<text>]\"" unless args[:number] && args[:type]
+    # Rake splits arguments on commas and strips the spaces around them, so take the text from the raw task string.
+    raw = Rake.application.top_level_tasks.find { |t| t.start_with?("changelog:new[") }
+    text = raw&.[](/\A[^\[]*\[[^,]*,[^,]*,\s*(.*)\]\z/m, 1) || args.extras.join(", ")
+    puts "Created #{changelog.new_fragment(args[:number], args[:type], text)}"
+  rescue Changelog::Error => e
+    abort e.message
+  end
+
+  desc "Write the fragments to CHANGES.txt under a heading, e.g. rake \"changelog:release[7.3.4]\" (vbump does this)"
+  task :release, [:heading] do |_t, args|
+    abort "Usage: rake \"changelog:release[<version heading>]\"" unless args[:heading]
+    puts changelog.release(args[:heading]) || "Nothing to release"
+  rescue Changelog::Error => e
+    abort e.message
   end
 end
 
