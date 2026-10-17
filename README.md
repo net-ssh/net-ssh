@@ -260,6 +260,10 @@ gem cert --add net-ssh-public_cert.pem
 
 or `rake cert:update_public_when_expired`
 
+## CONTRIBUTING
+
+See [CONTRIBUTING.md](CONTRIBUTING.md), including how to add a changelog entry.
+
 ## Security contact information
 
 See [SECURITY.md](SECURITY.md)
