@@ -9,6 +9,11 @@ module NetSSH
       Net::SSH::Authentication::Session.stubs(:new).returns(authentication_session)
       Net::SSH::Transport::Session.stubs(:new).returns(mock('transport_session'))
       Net::SSH::Connection::Session.stubs(:new).returns(mock('connection_session'))
+      @previous_default_configuration = Net::SSH.default_configuration
+    end
+
+    def teardown
+      Net::SSH.default_configuration = @previous_default_configuration
     end
 
     def start_and_capture_transport_options(options)
@@ -153,6 +158,44 @@ module NetSSH
       assert_equal original, options
       Net::SSH.start('localhost', 'otheruser', options)
       assert_equal original, options
+    end
+
+    def test_default_configuration_and_precedence
+      Net::SSH::Config.stubs(:for).with('localhost', Net::SSH::Config.expandable_default_files)
+                      .returns({ timeout: 5, password: 'from_file' })
+
+      Net::SSH.default_configuration = lambda do |_host, ssh_config|
+        { timeout: 10, keepalive: true, password: ssh_config.fetch(:password, 'from_default_configuration') }
+      end
+
+      Net::SSH::Connection::Session
+        .expects(:new)
+        .with(anything, has_entries(timeout: 10, keepalive: false, password: 'from_file'))
+        .returns(mock('connection_session'))
+
+      options = { keepalive: false }
+      Net::SSH.start('localhost', 'testuser', options)
+
+      # Test that original options are not modified.
+      assert_nil options[:timeout]
+      assert_nil options[:password]
+    end
+
+    def test_default_configuration_and_config_false
+      Net::SSH.default_configuration = lambda do |*|
+        { keepalive: true }
+      end
+
+      Net::SSH::Connection::Session
+        .expects(:new)
+        .with(anything, has_entries(keepalive: true))
+        .returns(mock('connection_session'))
+
+      options = { config: false }
+      Net::SSH.start('localhost', 'testuser')
+
+      # Test that original options are not modified.
+      assert_nil options[:keepalive]
     end
   end
 end

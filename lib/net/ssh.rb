@@ -72,6 +72,24 @@ module Net
       fingerprint_hash check_host_ip pubkey_algorithms no_delay
     ]
 
+    class << self
+      # Allows to set the default configuration that will be used
+      # when starting a new SSH connection.
+      #
+      # Example:
+      #
+      #   Net::SSH.default_configuration = ->(host, ssh_config) {
+      #     { timeout: ssh_config.fetch(:timeout, 5), keepalive: true }
+      #   }
+      #   Net::SSH.start("host", "user") do |ssh|
+      #     # will have a default 5 seconds connection timeout
+      #     # will use keepalive
+      #   end
+      #
+      attr_accessor :default_configuration
+    end
+    self.default_configuration = ->(_host, _ssh_config) { {} }
+
     # The standard means of starting a new SSH connection. When used with a
     # block, the connection will be closed when the block terminates, otherwise
     # the connection will just be returned. The yielded (or returned) value
@@ -253,7 +271,10 @@ module Net
       _sanitize_options(options)
 
       options[:user] = user if user
-      options = configuration_for(host, options.fetch(:config, true)).merge(options)
+      config_options = configuration_for(host, options.fetch(:config, true))
+      default_options = default_configuration.call(host, config_options)
+      options = config_options.merge(default_options, options)
+
       host = options.fetch(:host_name, host)
 
       options[:check_host_ip] = true unless options.key?(:check_host_ip)
