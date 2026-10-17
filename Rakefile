@@ -117,7 +117,7 @@ def change_version(&block)
     FileUtils.rm_f "#{version_file}.new"
     raise
   end
-  puts section ? "Added to CHANGES.txt:\n#{section}" : "No changelog fragments or Unreleased entries, CHANGES.txt unchanged"
+  puts section ? "Added to CHANGES.txt:\n#{section}" : "Nothing to release for a pre-release, CHANGES.txt unchanged"
 
   FileUtils.mv version_file, "#{version_file}.old"
   FileUtils.mv "#{version_file}.new", version_file
@@ -177,9 +177,12 @@ namespace :changelog do
   end
 
   desc "Create a fragment: rake \"changelog:new[1234,change,Text of the entry]\""
-  task :new, [:id, :type] do |_t, args|
-    abort "Usage: rake \"changelog:new[<PR or issue number>,<#{Changelog::TYPES.keys.join('|')}>,<text>]\"" unless args[:id] && args[:type]
-    puts "Created #{changelog.new_fragment(args[:id], args[:type], args.extras.join(', '))}"
+  task :new, [:number, :type] do |_t, args|
+    abort "Usage: rake \"changelog:new[<PR number>,<#{Changelog::TYPES.keys.join('|')}>,<text>]\"" unless args[:number] && args[:type]
+    # Rake splits arguments on commas and strips the spaces around them, so take the text from the raw task string.
+    raw = Rake.application.top_level_tasks.find { |t| t.start_with?("changelog:new[") }
+    text = raw&.[](/\A[^\[]*\[[^,]*,[^,]*,\s*(.*)\]\z/m, 1) || args.extras.join(", ")
+    puts "Created #{changelog.new_fragment(args[:number], args[:type], text)}"
   rescue Changelog::Error => e
     abort e.message
   end

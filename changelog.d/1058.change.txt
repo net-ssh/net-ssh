@@ -1,1 +1,1 @@
-Changelog entries are now added as fragment files in `changelog.d/` instead of editing CHANGES.txt; see CONTRIBUTING.md
+Changelog entries are now added as `changelog.d/<PR number>.<type>.txt` fragment files instead of editing CHANGES.txt, and CI requires one per PR; see CONTRIBUTING.md

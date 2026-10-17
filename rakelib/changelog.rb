@@ -16,22 +16,19 @@ class Changelog
     'none' => nil
   }.freeze
 
-  FILENAME = /\A(?<id>[1-9]\d*|[a-z][a-z0-9-]*)\.(?<type>[a-z-]+)(?:\.(?<seq>[1-9]\d*))?\.txt\z/.freeze
-  IGNORED_FILES = %w[README.md .gitkeep].freeze
+  FILENAME = /\A(?<number>[1-9]\d*)\.(?<type>[a-z-]+)(?:\.(?<seq>[1-9]\d*))?\.txt\z/.freeze
+  REF = /#\d+|GHSA(?:-[a-z0-9]{4}){3}|CVE-\d{4}-\d+/i.freeze
+  REF_LIST = /\[(?:#{REF})(?:,\s*(?:#{REF}))*\]\z/.freeze
   UNRELEASED = '=== Unreleased'
-  PLACEHOLDER = 'TODO'
+  PLACEHOLDER = 'TODO: describe the change as it should read in CHANGES.txt'
 
-  Fragment = Struct.new(:path, :id, :type, :seq, :text) do
-    def number
-      Integer(id, exception: false)
-    end
-
+  Fragment = Struct.new(:path, :number, :type, :seq, :text) do
     def entry
       "#{TYPES.fetch(type)}#{text}"
     end
 
     def sort_key
-      number ? [0, -number, seq] : [1, id, seq]
+      [-number, seq]
     end
   end
 
@@ -56,36 +53,38 @@ class Changelog
     fragments.sort_by(&:sort_key)
   end
 
-  alias check fragments
+  # Validates the fragments and the `=== Unreleased` section of CHANGES.txt; returns the fragments.
+  def check
+    all = fragments
+    split_changes(read_changes)
+    all
+  end
 
-  # The text of the section for +heading+, or nil when there is nothing to release.
+  # The text of the section for +heading+, or nil for a pre-release with nothing to release.
   def section(heading)
-    entries = grouped_entries(fragments, split_changes(read_changes)[:unreleased])
-    return nil if entries.empty?
-
-    "=== #{heading}\n\n#{entries.join}"
+    assemble(heading, fragments, split_changes(read_changes))
   end
 
   # Writes the section for +heading+ to the top of CHANGES.txt, folding in any `=== Unreleased`
-  # entries, and removes the consumed fragments; returns the section, or nil when there is nothing to release.
+  # entries, and removes all fragments; returns the section, or nil when CHANGES.txt was left unchanged.
   def release(heading)
     all = fragments
     content = read_changes
     raise Error, "CHANGES.txt already has a '=== #{heading}' section" if content.lines.any? { |l| l.chomp == "=== #{heading}" }
 
     parts = split_changes(content)
-    entries = grouped_entries(all, parts[:unreleased])
-    return nil if entries.empty?
-
-    rest = parts[:rest].empty? ? '' : "\n#{parts[:rest]}"
-    File.write(changes_path, "#{parts[:preamble]}=== #{heading}\n\n#{entries.join}#{rest}")
+    section = assemble(heading, all, parts)
+    if section
+      rest = parts[:rest].empty? ? '' : "\n#{parts[:rest]}"
+      File.write(changes_path, "#{parts[:preamble]}#{section}#{rest}")
+    end
     remove(all.map(&:path))
-    "=== #{heading}\n\n#{entries.join}"
+    section
   end
 
-  # Creates a fragment for PR/issue +id+ and returns its path; picks the next free `.N` suffix if needed.
-  def new_fragment(id, type, text = nil)
-    path = (1..).lazy.map { |seq| File.join(dir, fragment_name(id, type, seq)) }.find { |p| !File.exist?(p) }
+  # Creates a fragment for PR +number+ and returns its path; picks the next free `.N` suffix if needed.
+  def new_fragment(number, type, text = nil)
+    path = (1..).lazy.map { |seq| File.join(dir, fragment_name(number, type, seq)) }.find { |p| !File.exist?(p) }
     error = validate_name(File.basename(path))
     raise Error, error if error
 
@@ -104,16 +103,16 @@ class Changelog
   def entries_in_dir
     return [] unless Dir.exist?(dir)
 
-    Dir.children(dir).sort - IGNORED_FILES
+    Dir.children(dir).sort.reject { |name| name == 'README.md' || name.start_with?('.') }
   end
 
-  def fragment_name(id, type, seq)
-    seq == 1 ? "#{id}.#{type}.txt" : "#{id}.#{type}.#{seq}.txt"
+  def fragment_name(number, type, seq)
+    seq == 1 ? "#{number}.#{type}.txt" : "#{number}.#{type}.#{seq}.txt"
   end
 
   def validate_name(name)
     match = FILENAME.match(name)
-    return "file name must be <number or slug>.<type>[.<n>].txt, types: #{TYPES.keys.join(', ')}" unless match
+    return "file name must be <PR number>.<type>[.<n>].txt, types: #{TYPES.keys.join(', ')}" unless match
     return "unknown type '#{match[:type]}', expected one of: #{TYPES.keys.join(', ')}" unless TYPES.key?(match[:type])
 
     nil
@@ -128,24 +127,26 @@ class Changelog
     return error if error
 
     match = FILENAME.match(name)
-    fragment = Fragment.new(path, match[:id], match[:type], (match[:seq] || 1).to_i, nil)
+    fragment = Fragment.new(path, match[:number].to_i, match[:type], (match[:seq] || 1).to_i, nil)
     return fragment if fragment.type == 'none'
 
-    text = parse_text(File.read(path))
+    text = parse_text(read_utf8(path))
     return text[:error] if text[:error]
 
     fragment.text = text[:text]
-    fragment.text = "#{fragment.text} [##{fragment.number}]" if fragment.number && !fragment.text.end_with?(']')
+    fragment.text = "#{fragment.text} [##{fragment.number}]" unless fragment.text.match?(REF_LIST)
     fragment
   end
 
   def parse_text(raw)
+    return { error: 'is not valid UTF-8' } unless raw.valid_encoding?
+
     lines = raw.strip.lines.map(&:strip)
     return { error: 'is empty' } if lines.empty?
     return { error: 'must be a single paragraph (no blank lines)' } if lines.include?('')
 
     text = lines.join(' ')
-    return { error: 'still contains the TODO placeholder' } if text.start_with?(PLACEHOLDER)
+    return { error: 'still contains the placeholder text' } if text == PLACEHOLDER
     return { error: "should not start with a bullet, it's added when assembling" } if text.match?(/\A[*-] /)
     return { error: 'should not start with BREAKING:/Security:, the type adds the prefix' } if text.match?(/\A(BREAKING|Security):/i)
 
@@ -153,7 +154,24 @@ class Changelog
   end
 
   def read_changes
-    File.exist?(changes_path) ? File.read(changes_path) : ''
+    File.exist?(changes_path) ? read_utf8(changes_path).gsub("\r\n", "\n") : ''
+  end
+
+  # Explicit so a non-UTF-8 locale (e.g. LANG=C) doesn't break on non-ASCII text.
+  def read_utf8(path)
+    File.read(path, mode: 'r:bom|utf-8')
+  end
+
+  # A final release (a heading without a pre-release suffix) always gets a section, so every published version has a heading.
+  def assemble(heading, fragments, parts)
+    entries = grouped_entries(fragments, parts[:unreleased])
+    if entries.empty?
+      return nil unless heading.match?(/\A\d+\.\d+\.\d+\z/)
+
+      previous = parts[:rest][/\A=== (.+)$/, 1]
+      entries = ["  * #{previous ? "No changes since #{previous}." : 'No changes.'}\n"]
+    end
+    "=== #{heading}\n\n#{entries.join}"
   end
 
   # Splits CHANGES.txt into the text before the first heading, the entries of a leading
