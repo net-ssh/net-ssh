@@ -37,8 +37,9 @@ module Net
           @host_key_alias = host_key_alias
         end
 
-        # Raises ArgumentError for an unknown % token or an unset ${ENV}
-        # variable, which make ssh refuse the ControlPath too.
+        # Raises ArgumentError for an unknown % token, an unset ${ENV}
+        # variable or an unknown ~user, which make ssh refuse the ControlPath
+        # too.
         def expand(path)
           expand_tokens(expand_tilde(path))
         end
@@ -84,8 +85,7 @@ module Net
           return path unless path.start_with?('~')
 
           user, rest = path[1..].split('/', 2)
-          home = user.nil? || user.empty? ? Etc.getpwuid(Process.uid).dir : Etc.getpwnam(user)&.dir
-          raise ArgumentError, "unknown user in #{path}" if home.nil?
+          home = user.nil? || user.empty? ? Etc.getpwuid(Process.uid).dir : Etc.getpwnam(user).dir
 
           rest.nil? ? home : File.join(home, rest)
         end
@@ -94,16 +94,16 @@ module Net
           path.gsub(/\$\{([^}]*)\}|%(.?)|\$\{.*/m) do
             if Regexp.last_match(1)
               name = Regexp.last_match(1)
-              raise ArgumentError, "ControlPath has an empty ${} variable" if name.empty?
+              raise ArgumentError, "empty ${} variable" if name.empty?
 
-              ENV.fetch(name) { raise ArgumentError, "ControlPath variable ${#{name}} is not set" }
+              ENV.fetch(name) { raise ArgumentError, "variable ${#{name}} is not set" }
             elsif Regexp.last_match(2)
               token = Regexp.last_match(2)
               next '%' if token == '%'
 
-              tokens.fetch(token) { raise ArgumentError, "ControlPath has unknown token %#{token}" }
+              tokens.fetch(token) { raise ArgumentError, "unknown token %#{token}" }
             else
-              raise ArgumentError, "ControlPath has an unterminated ${"
+              raise ArgumentError, "unterminated ${"
             end
           end
         end

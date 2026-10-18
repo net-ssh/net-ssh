@@ -37,26 +37,43 @@ module Net
         end
         return unless options[:control_master] && options[:forward_agent]
 
-        raise ArgumentError, "forward_agent can't be used with control_master, the ControlMaster can't forward the agent to Net::SSH"
+        raise ArgumentError, "forward_agent can't be used with control_master: the ControlMaster serves agent requests " \
+                             "from its own agent only if it has ForwardAgent enabled itself, and rejects them otherwise"
       end
 
       # Returns a Connection::Session running through the ControlMaster for
       # this connection, or nil (after logging why) when there is no usable
       # master, in which case the caller connects as usual. +explicit+ are
-      # the option names the caller passed to Net::SSH.start.
+      # the option names the caller passed to Net::SSH.start. Raises
+      # ArgumentError for an invalid ControlPath, as ssh does.
       def self.connect(host_arg, host, user, options, explicit: [])
         logger = options[:logger]
         path = socket_path(host_arg, host, user, options)
         return nil unless path
 
-        socket = Client.new(path, timeout: options[:timeout] || DEFAULT_TIMEOUT, logger: logger).connect_proxy
+        socket = open_proxy(path, options)
+        return nil unless socket
+
         logger.info { "control_master: using ControlMaster at #{path}" }
         warn_master_owned(logger, explicit)
-        transport = ProxyTransport.new(socket, host: host, control_path: path, options: options)
-        Connection::Session.new(transport, session_options(logger, options))
-      rescue Multiplex::Error, SystemCallError, IOError, ArgumentError, SocketError => e
-        socket&.close
-        logger.info { "control_master: not using ControlMaster#{" at #{path}" if path}: #{e.message} (#{e.class})" }
+        begin
+          transport = ProxyTransport.new(socket, host: host, control_path: path, options: options)
+          Connection::Session.new(transport, session_options(logger, options))
+        rescue StandardError
+          socket.close
+          raise
+        end
+      end
+
+      # ENOENT and ECONNREFUSED just mean no master is running, while the
+      # other errors mean a socket is there but can't be used.
+      def self.open_proxy(path, options)
+        Client.new(path, timeout: options[:timeout] || DEFAULT_TIMEOUT, logger: options[:logger]).connect_proxy
+      rescue Errno::ENOENT, Errno::ECONNREFUSED => e
+        options[:logger].info { "control_master: no ControlMaster at #{path}: #{e.message} (#{e.class})" }
+        nil
+      rescue Multiplex::Error, SystemCallError, IOError, SocketError => e
+        options[:logger].warn { "control_master: not using ControlMaster at #{path}: #{e.message} (#{e.class})" }
         nil
       end
 
@@ -72,10 +89,17 @@ module Net
           return nil
         end
 
-        ControlPath.new(
+        expander = ControlPath.new(
           host_arg: host_arg, host: host, port: options[:port] || ProxyTransport::DEFAULT_PORT, remote_user: user,
           jump_host: jump_host(options[:proxy]), host_key_alias: options[:host_key_alias]
-        ).expand(control_path.to_s)
+        )
+        begin
+          path = expander.expand(control_path.to_s)
+          Socket.sockaddr_un(path)
+        rescue ArgumentError => e
+          raise ArgumentError, "invalid control_path #{control_path.to_s.inspect}: #{e.message}"
+        end
+        path
       end
 
       def self.jump_host(proxy)
@@ -93,14 +117,14 @@ module Net
 
       # Keepalive is a global request, which the master doesn't allow; it
       # watches its own connection anyway. ForwardAgent from ssh_config is
-      # dropped as the master can't forward the agent to Net::SSH.
+      # dropped for the reason given in validate_options!.
       def self.session_options(logger, options)
         logger.info { "control_master: keepalive is left to the ControlMaster" } if options[:keepalive]
-        logger.info { "control_master: agent forwarding is not available through the ControlMaster" } if options[:forward_agent]
+        logger.info { "control_master: ignoring ForwardAgent, the ControlMaster's own ForwardAgent setting applies" } if options[:forward_agent]
         options.merge(keepalive: false, forward_agent: false)
       end
 
-      private_class_method :socket_path, :jump_host, :warn_master_owned, :session_options
+      private_class_method :open_proxy, :socket_path, :jump_host, :warn_master_owned, :session_options
     end
   end
 end

@@ -48,7 +48,7 @@ module NetSSH
       direct = expect_direct_connection
 
       assert_equal direct, start
-      assert_includes @log.string, "unsupported mux protocol version 3"
+      assert_match(/WARN -- : control_master: not using ControlMaster at .*unsupported mux protocol version 3/, @log.string)
     end
 
     def test_refused_proxy_falls_back
@@ -56,14 +56,15 @@ module NetSSH
       direct = expect_direct_connection
 
       assert_equal direct, start
-      assert_includes @log.string, "master refused proxy request: Permission denied"
+      assert_match(/WARN -- : .*master refused proxy request: Permission denied/, @log.string)
     end
 
     def test_missing_socket_falls_back
       direct = expect_direct_connection
 
       assert_equal direct, start
-      assert_includes @log.string, "No such file or directory"
+      assert_match(/INFO -- : control_master: no ControlMaster at .*No such file or directory/, @log.string)
+      refute_includes @log.string, "WARN"
     end
 
     def test_stale_socket_falls_back
@@ -71,7 +72,8 @@ module NetSSH
       direct = expect_direct_connection
 
       assert_equal direct, start
-      assert_includes @log.string, "Connection refused"
+      assert_match(/INFO -- : control_master: no ControlMaster at .*Connection refused/, @log.string)
+      refute_includes @log.string, "WARN"
     end
 
     def test_silent_master_times_out_and_falls_back
@@ -81,7 +83,7 @@ module NetSSH
       started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       assert_equal direct, start(timeout: 0.3)
       assert_operator Process.clock_gettime(Process::CLOCK_MONOTONIC) - started, :<, 2
-      assert_includes @log.string, "timed out"
+      assert_match(/WARN -- : .*timed out/, @log.string)
     end
 
     def test_master_of_another_user_falls_back
@@ -90,7 +92,31 @@ module NetSSH
       direct = expect_direct_connection
 
       assert_equal direct, start
-      assert_includes @log.string, "owned by uid #{Process.uid}"
+      assert_match(/WARN -- : .*owned by uid #{Process.uid}/, @log.string)
+    end
+
+    def test_invalid_control_path_raises
+      Net::SSH.expects(:connect_directly).never
+      Net::SSH::Multiplex::Client.expects(:new).never
+      {
+        "#{@dir}/%z" => /invalid control_path ".*%z": unknown token %z/,
+        "#{@dir}/${NET_SSH_TEST_CM_UNSET}" => /invalid control_path .*: variable \$\{NET_SSH_TEST_CM_UNSET\} is not set/,
+        "#{@dir}/${NET_SSH_TEST_CM_UNSET" => /invalid control_path .*: unterminated \$\{/,
+        "~net_ssh_no_such_user/ctl" => %r{invalid control_path "~net_ssh_no_such_user/ctl": .*net_ssh_no_such_user},
+        "#{@dir}/#{'x' * 200}" => /invalid control_path .*too long/
+      }.each do |control_path, message|
+        error = assert_raises(ArgumentError) { start(control_path: control_path) }
+        assert_match message, error.message
+      end
+    end
+
+    def test_error_building_the_session_propagates
+      @master = FakeMaster.new(@path)
+      Net::SSH.expects(:connect_directly).never
+      Net::SSH::Multiplex::ProxyTransport.stubs(:new).raises(NoMethodError, "boom")
+
+      assert_raises(NoMethodError) { start }
+      refute_includes @log.string, "not using ControlMaster"
     end
 
     def test_control_path_none_falls_back

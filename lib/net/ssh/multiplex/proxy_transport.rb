@@ -102,8 +102,9 @@ module Net
         DEFAULT_PORT = 22
 
         # Channel requests whose follow-up channel the server opens towards
-        # the master, which won't hand it to a proxy client (clientloop.c,
-        # client_input_channel_open).
+        # the master, which serves it from its own agent or X display only if
+        # it has ForwardAgent or ForwardX11 enabled itself, and rejects it
+        # otherwise (clientloop.c, client_input_channel_open).
         UNSUPPORTED_CHANNEL_REQUESTS = %w[auth-agent-req@openssh.com auth-agent-req x11-req].freeze
 
         attr_reader :host, :port, :socket, :options
@@ -189,13 +190,19 @@ module Net
         end
 
         # The master kills the proxy connection on any global request other
-        # than tcpip-forward, and consumes the reply to that one itself
+        # than tcpip-forward, and consumes the reply to that one itself, so
+        # its success or failure and an allocated port 0 can't be observed
         # (channels.c channel_proxy_downstream, clientloop.c
-        # client_global_request_reply), so neither can work over the master.
+        # client_global_request_reply).
         def check_supported(data)
           case data.getbyte(0)
           when GLOBAL_REQUEST
             request = Net::SSH::Buffer.new(data.byteslice(1..-1)).read_string
+            if request == 'tcpip-forward'
+              raise NotSupportedOverControlMaster, "remote forwarding (tcpip-forward) is not supported over a ControlMaster: " \
+                                                   "the master consumes the reply, so success and the allocated port can't be observed"
+            end
+
             raise NotSupportedOverControlMaster, "global request #{request} is not supported over a ControlMaster"
           when CHANNEL_REQUEST
             request = Net::SSH::Buffer.new(data.byteslice(5..-1)).read_string

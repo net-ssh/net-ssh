@@ -127,15 +127,27 @@ module Net
     #   :encryption, :hmac, :compression, :rekey_*, :proxy, :keepalive and the
     #   like); explicitly passed ones are named in a logger warning. Over the
     #   master, remote port forwarding (Service::Forward#remote and
-    #   #cancel_remote), agent and X11 forwarding and other global requests
-    #   raise Net::SSH::NotSupportedOverControlMaster, and keepalive and
-    #   rekeying are left to the master. :forward_agent can't be combined with
-    #   it. ssh_config's ControlMaster is ignored, only this option
-    #   enables it. Has no effect on Windows. Defaults to +false+.
+    #   #cancel_remote) raises Net::SSH::NotSupportedOverControlMaster, as the
+    #   master consumes the global request reply, so success, failure and the
+    #   port allocated for port 0 can't be observed; other global requests
+    #   raise it too. Agent and X11 forwarding requests raise it
+    #   too, and :forward_agent can't be combined with it, because the master
+    #   serves them from its own agent or display only if it has ForwardAgent
+    #   or ForwardX11 enabled itself, and rejects them otherwise. Keepalive and
+    #   rekeying are left to the master. ssh_config's ControlMaster is
+    #   ignored, only this option enables it. An invalid ControlPath raises
+    #   ArgumentError. A missing or stale socket is logged at info level, a
+    #   socket that can't be used (another owner, refused, wrong protocol,
+    #   timed out) at warn level. Has no effect on Windows. Defaults to
+    #   +false+.
     # * :control_path => the ControlMaster socket to use with
     #   :control_master, with the same ~, ${ENV} and % tokens as ssh_config's
     #   ControlPath (%C, %d, %h, %i, %j, %k, %L, %l, %n, %p, %r, %u, %%).
-    #   Defaults to ControlPath from ssh_config; +"none"+ disables the master.
+    #   The master at that path decides which host and user the session is
+    #   connected to, so a fixed path without %h, %p, %r or %C sends every
+    #   host through the same master and the explicitly passed host key and
+    #   authentication options are ignored. Defaults to ControlPath from
+    #   ssh_config; +"none"+ disables the master.
     # * :config => set to +true+ to load the default OpenSSH config files
     #   (~/.ssh/config, /etc/ssh_config), or to +false+ to not load them, or to
     #   a file-name (or array of file-names) to load those specific configuration
