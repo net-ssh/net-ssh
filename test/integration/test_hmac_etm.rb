@@ -15,7 +15,8 @@ class TestHMacEtm < NetSSHTest
 
   variants = {
     etm256: "hmac-sha2-256-etm@openssh.com",
-    etm512: "hmac-sha2-512-etm@openssh.com"
+    etm512: "hmac-sha2-512-etm@openssh.com",
+    etmsha1: "hmac-sha1-etm@openssh.com"
   }
 
   def config_with_macs(macs)

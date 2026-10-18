@@ -124,18 +124,16 @@ module Net
 
           user_identities = load_identities(prepared_identities, false, true)
 
-          if agent
-            agent.identities.each do |key|
-              corresponding_user_identity = user_identities.detect { |identity|
-                identity[:public_key] && identity[:public_key].to_blob == key.to_blob
-              }
-              # By identity: EC::Point#== raises TypeError when compared with other key types.
-              user_identities.reject! { |identity| identity.equal?(corresponding_user_identity) }
+          agent_identities.each do |key|
+            corresponding_user_identity = user_identities.detect { |identity|
+              identity[:public_key] && identity[:public_key].to_blob == key.to_blob
+            }
+            # By identity: EC::Point#== raises TypeError when compared with other key types.
+            user_identities.reject! { |identity| identity.equal?(corresponding_user_identity) }
 
-              if !options[:keys_only] || corresponding_user_identity
-                known_identities[key] = { from: :agent, identity: key }
-                yield key
-              end
+            if !options[:keys_only] || corresponding_user_identity
+              known_identities[key] = { from: :agent, identity: key }
+              yield key
             end
           end
 
@@ -246,6 +244,18 @@ module Net
         end
 
         private
+
+        # Like OpenSSH's pubkey_prepare, an agent that fails to list its keys is
+        # dropped for the session so that key files are still tried.
+        def agent_identities
+          return [] unless agent
+
+          agent.identities
+        rescue AgentError => e
+          error { "could not get identities from agent: #{e.class} (#{e.message})" }
+          self.use_agent = false
+          []
+        end
 
         # Load keycerts from files and data.
         def keycerts

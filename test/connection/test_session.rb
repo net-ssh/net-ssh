@@ -164,6 +164,20 @@ module Connection
       assert_equal packet.to_s, socket.write_buffer
     end
 
+    def test_open_channel_should_advertise_2mb_window_by_default
+      channel = session.open_channel
+      assert_equal 0x200000, channel.local_maximum_window_size
+      packet = P(:byte, CHANNEL_OPEN, :string, "session", :long, channel.local_id, :long, 0x200000, :long, 0x8000)
+      assert_equal packet.to_s, socket.write_buffer
+    end
+
+    def test_open_channel_should_use_max_win_size_option
+      channel = session(max_win_size: 0x20000).open_channel
+      assert_equal 0x20000, channel.local_maximum_window_size
+      packet = P(:byte, CHANNEL_OPEN, :string, "session", :long, channel.local_id, :long, 0x20000, :long, 0x8000)
+      assert_equal packet.to_s, socket.write_buffer
+    end
+
     def test_open_channel_with_type_should_use_type
       channel = session.open_channel("direct-tcpip")
       assert_equal "direct-tcpip", channel.type
@@ -353,14 +367,14 @@ module Connection
       result = nil
       session.on_open_channel("auth-agent") { |*args| result = args }
       process_times(2)
-      assert_equal P(:byte, CHANNEL_OPEN_CONFIRMATION, :long, 14, :long, 0, :long, 0x20000, :long, 0x8000).to_s, socket.write_buffer
+      assert_equal P(:byte, CHANNEL_OPEN_CONFIRMATION, :long, 14, :long, 0, :long, 0x200000, :long, 0x8000).to_s, socket.write_buffer
       assert_not_nil(ch = session.channels[0])
       assert_equal [session, ch, P(:byte, CHANNEL_OPEN, :string, "auth-agent", :long, 14, :long, 0x20001, :long, 0x10001)], result
       assert_equal 0, ch.local_id
       assert_equal 14, ch.remote_id
       assert_equal 0x20001, ch.remote_maximum_window_size
       assert_equal 0x10001, ch.remote_maximum_packet_size
-      assert_equal 0x20000, ch.local_maximum_window_size
+      assert_equal 0x200000, ch.local_maximum_window_size
       assert_equal 0x8000, ch.local_maximum_packet_size
       assert_equal "auth-agent", ch.type
     end
@@ -639,6 +653,45 @@ module Connection
       assert_equal "", session.exec!('ls')
     end
 
+    def test_exec_bang_with_block_should_return_empty_string_with_exitstatus
+      prep_exec("ls", :stdout, "some data", exit_status: 0)
+      yielded = []
+      result = session.exec!("ls") { |_channel, type, data| yielded << [type, data] }
+      assert_equal [[:stdout, "some data"]], yielded
+      assert_equal "", result
+      assert_equal 0, result.exitstatus
+    end
+
+    def test_exec_bang_with_block_should_return_nonzero_exitstatus
+      prep_exec("ls", exit_status: 42)
+      result = session.exec!("ls") { |*| flunk "no output expected" }
+      assert_equal "", result
+      assert_equal 42, result.exitstatus
+    end
+
+    def test_exec_bang_with_block_should_return_result_set_by_block
+      prep_exec("ls", :stdout, "some data", exit_status: 3)
+      result = session.exec!("ls") { |channel, _type, data| channel[:result] = data.upcase }
+      assert_equal "SOME DATA", result
+      assert_equal 3, result.exitstatus
+    end
+
+    def test_exec_bang_without_block_should_return_output_with_exitstatus
+      prep_exec("ls", :stdout, "some data", exit_status: 1)
+      result = session.exec!("ls")
+      assert_equal "some data", result
+      assert_equal Encoding::UTF_8, result.encoding
+      assert_equal 1, result.exitstatus
+    end
+
+    def test_exec_bang_should_fill_status_hash
+      prep_exec("ls", exit_status: 7)
+      status = {}
+      result = session.exec!("ls", status: status) { |*| flunk "no output expected" }
+      assert_equal 7, status[:exit_code]
+      assert_equal 7, result.exitstatus
+    end
+
     def test_max_select_wait_time_should_return_keepalive_interval_when_keepalive_enabled
       options = { keepalive: true, keepalive_interval: 5 }
       assert_equal 5, session(options).max_select_wait_time
@@ -651,7 +704,7 @@ module Connection
 
     private
 
-    def prep_exec(command, *data)
+    def prep_exec(command, *data, exit_status: nil)
       IO.expects(:select).with([socket], [], nil, 0).returns([[], [], []])
       transport.mock_enqueue = true
       transport.expect do |t, p|
@@ -675,6 +728,7 @@ module Connection
             end
           end
 
+          t2.return(CHANNEL_REQUEST, :long, p[:remote_id], :string, "exit-status", :bool, false, :long, exit_status) if exit_status
           t2.return(CHANNEL_CLOSE, :long, p[:remote_id])
           t2.expect { |_t3, p3| assert_equal CHANNEL_CLOSE, p3.type }
         end

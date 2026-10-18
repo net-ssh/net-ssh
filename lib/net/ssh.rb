@@ -62,7 +62,7 @@ module Net
       auth_methods bind_address compression compression_level config
       encryption forward_agent hmac host_key identity_agent remote_user
       keepalive keepalive_interval keepalive_maxcount kex keys key_data
-      keycerts keycert_data languages logger paranoid password port proxy
+      keycerts keycert_data languages logger password port proxy
       rekey_blocks_limit rekey_limit rekey_packet_limit timeout verbose
       known_hosts global_known_hosts_file user_known_hosts_file host_key_alias
       host_name user properties passphrase keys_only max_pkt_size
@@ -98,7 +98,10 @@ module Net
     #     ssh.loop
     #   end
     #
-    # This method accepts the following options (all are optional):
+    # This method accepts the following options (all are optional). Omit an
+    # option to use its default or ssh_config value; passing +nil+ (or an array
+    # containing +nil+) raises ArgumentError, except for :password,
+    # :passphrase, :logger and :password_prompt, where +nil+ means the default.
     #
     # * :auth_methods => an array of authentication methods to try
     # * :bind_address => the IP address on the connecting machine to use in
@@ -137,7 +140,11 @@ module Net
     #   Defaults to +300+ seconds.
     # * :keepalive_maxcount => the maximun number of keepalive packet miss allowed.
     #   Defaults to 3
-    # * :kex => the key exchange algorithm (or algorithms) to use
+    # * :kex => the key exchange algorithm (or algorithms) to use. Like
+    #   KexAlgorithms, entries starting with +, - or ^ modify the default list.
+    #   diffie-hellman-group14-sha1 is supported but not offered unless listed
+    #   here (e.g. '+diffie-hellman-group14-sha1') or
+    #   :append_all_supported_algorithms is set.
     # * :keys => an array of file names of private keys to use for publickey
     #   and hostbased authentication
     # * :keycerts => an array of file names of key certificates to use
@@ -155,7 +162,14 @@ module Net
     #   packet. Default is 0x8000 (32768 bytes). Increase to 0x10000 (65536 bytes)
     #   for better performance if your SSH server supports it (most do).
     # * :max_win_size => maximum size we tell the other side that is supported for
-    #   the window.
+    #   the window, i.e. how much the server may send on a channel before net-ssh
+    #   reads it. Default is 0x200000 (2 MB), as in OpenSSH. Smaller values limit
+    #   how much data is in flight; some servers (e.g. Mikrotik) truncate output
+    #   when the window is small.
+    # * :minimum_dh_bits => the smallest group, in bits, accepted from the server
+    #   in diffie-hellman-group-exchange key exchange. Defaults to 2048, as in
+    #   OpenSSH; lower it (e.g. to 1024) only to reach legacy servers that offer
+    #   nothing larger.
     # * :no_delay => turns Nagle's algorithm off on the connection's socket
     #   (TCP_NODELAY), so a packet written while the previous one is still
     #   unacknowledged is sent right away instead of waiting for the server's
@@ -166,7 +180,6 @@ module Net
     #   authentication failure vs password prompt. Non-interactive applications
     #   should set it to true to prefer failing a password/etc auth methods vs.
     #   asking for password.
-    # * :paranoid => deprecated alias for :verify_host_key
     # * :passphrase => the passphrase to use when loading a private key (default
     #   is +nil+, for no passphrase)
     # * :password => the password to use to login
@@ -192,7 +205,8 @@ module Net
     # * :user => the user name to log in as; this overrides the +user+
     #   parameter, and is primarily only useful when provided via an SSH
     #   configuration file.
-    # * :remote_user => used for substitution into the '%r' part of a ProxyCommand
+    # * :remote_user => used for substitution into the '%r' part of a ProxyCommand;
+    #   defaults to the user name the connection logs in as.
     # * :user_known_hosts_file => the location of the user known hosts file.
     #   Set to an array to specify multiple user known hosts files.
     #   Defaults to %w(~/.ssh/known_hosts ~/.ssh/known_hosts2).
@@ -204,7 +218,9 @@ module Net
     #   default. The symbols :debug, :info, :warn, :error, and :fatal are also
     #   supported and are translated to the corresponding Logger constant.
     # * :append_all_supported_algorithms => set to +true+ to append all supported
-    #   algorithms by net-ssh. Was the default behaviour until 2.10
+    #   algorithms by net-ssh, except the +none+ cipher and MAC, which must be
+    #   named explicitly (e.g. encryption: '+none'). Was the default behaviour
+    #   until 2.10
     # * :number_of_password_prompts => Number of prompts for the password
     #   authentication method defaults to 3 set to 0 to disable prompt for
     #   password auth method
@@ -219,21 +235,29 @@ module Net
     #   * :accept_new_or_local_tunnel (insecure) ::Net::SSH::Verifiers::AcceptNewOrLocalTunnel
     #   * :accept_new (insecure) ::Net::SSH::Verifiers::AcceptNew
     #   * :always (secure) ::Net::SSH::Verifiers::Always
-    #   You can also provide an own Object which responds to +verify+. The argument
-    #   given to +verify+ is a hash consisting of the +:key+, the +:key_blob+,
-    #   the +:fingerprint+ and the +:session+. Returning true accepts the host key,
-    #   returning false declines it and closes the connection.
+    #   You can also provide an own Object which responds to +verify+ and
+    #   +verify_signature+. The argument given to +verify+ is a hash consisting
+    #   of the +:key+, the +:key_blob+, the +:fingerprint+ and the +:session+.
+    #   Returning true accepts the host key, returning false declines it and
+    #   closes the connection. +verify_signature+ is given a block that checks
+    #   the server's host key signature and must return the block's result.
     # * :fingerprint_hash => 'MD5' or 'SHA256', defaults to 'SHA256'
     # If +user+ parameter is nil it defaults to USER from ssh_config, or
     # local username
     def self.start(host, user = nil, options = {}, &block)
+      if options.key?(:paranoid)
+        raise ArgumentError, ":paranoid has been removed, use :verify_host_key (same values)"
+      end
+
       invalid_options = options.keys - VALID_OPTIONS
       if invalid_options.any?
         raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
       end
 
+      reject_nil_options(options)
+
+      options = options.dup
       assign_defaults(options)
-      _sanitize_options(options)
 
       options[:user] = user if user
       options = configuration_for(host, options.fetch(:config, true)).merge(options)
@@ -244,8 +268,6 @@ module Net
       if options[:non_interactive]
         options[:number_of_password_prompts] = 0
       end
-
-      _support_deprecated_option_paranoid(options)
 
       if options[:verbose]
         options[:logger].level = case options[:verbose]
@@ -259,10 +281,12 @@ module Net
                                  end
       end
 
+      user = options.fetch(:user, user) || Etc.getpwuid.name
+      options[:remote_user] ||= user
+
       transport = Transport::Session.new(host, options)
       auth = Authentication::Session.new(transport, options)
 
-      user = options.fetch(:user, user) || Etc.getpwuid.name
       if auth.authenticate("ssh-connection", user, options[:password])
         connection = Connection::Session.new(transport, options)
         if block_given?
@@ -312,31 +336,33 @@ module Net
       end
     end
 
-    def self._sanitize_options(options)
-      invalid_option_values = [nil, [nil]]
-      unless (options.values & invalid_option_values).empty?
-        nil_options = options.select { |_k, v| invalid_option_values.include?(v) }.map(&:first)
-        Kernel.warn "#{caller_locations(2, 1)[0]}: Passing nil, or [nil] to Net::SSH.start is deprecated for keys: #{nil_options.join(', ')}"
-      end
-    end
-    private_class_method :_sanitize_options
+    NIL_ALLOWED_OPTIONS = %i[password passphrase logger password_prompt].freeze
 
-    def self._support_deprecated_option_paranoid(options)
-      if options.key?(:paranoid)
-        Kernel.warn(
-          ":paranoid is deprecated, please use :verify_host_key. Supported " \
-          "values are exactly the same, only the name of the option has changed."
-        )
-        if options.key?(:verify_host_key)
-          Kernel.warn(
-            "Both :paranoid and :verify_host_key were specified. " \
-            ":verify_host_key takes precedence, :paranoid will be ignored."
-          )
-        else
-          options[:verify_host_key] = options.delete(:paranoid)
-        end
-      end
+    NIL_OPTION_HINTS = {
+      config: "config: false to skip ssh_config files",
+      proxy: "proxy: false to connect without a proxy",
+      keys: "keys: [] to use no key files",
+      use_agent: "use_agent: false to not use ssh-agent",
+      forward_agent: "forward_agent: false to not forward ssh-agent",
+      keepalive: "keepalive: false to send no keepalives",
+      compression: "compression: false to disable compression",
+      send_env: "send_env: [] to send no environment variables",
+      set_env: "set_env: {} to set no environment variables"
+    }.freeze
+    private_constant :NIL_ALLOWED_OPTIONS, :NIL_OPTION_HINTS
+
+    def self.reject_nil_options(options)
+      nil_keys = options.select do |key, value|
+        !NIL_ALLOWED_OPTIONS.include?(key) && (value.nil? || (value.is_a?(Array) && value.include?(nil)))
+      end.keys
+      return if nil_keys.empty?
+
+      message = "nil is not allowed for #{nil_keys.map(&:inspect).join(', ')}; " \
+                "omit #{nil_keys.one? ? 'it' : 'them'} to use the default or ssh_config value"
+      hints = NIL_OPTION_HINTS.values_at(*nil_keys).compact
+      message += ", or pass #{hints.join(', or ')}" if hints.any?
+      raise ArgumentError, message
     end
-    private_class_method :_support_deprecated_option_paranoid
+    private_class_method :reject_nil_options
   end
 end

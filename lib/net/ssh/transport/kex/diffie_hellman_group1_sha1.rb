@@ -102,6 +102,7 @@ module Net
             result[:key_blob] = buffer.read_string
             result[:server_key] = Net::SSH::Buffer.new(result[:key_blob]).read_key
             result[:server_dh_pubkey] = buffer.read_bignum
+            validate_server_dh_pubkey(result[:server_dh_pubkey])
             result[:shared_secret] = OpenSSL::BN.new(dh.compute_key(result[:server_dh_pubkey]), 2)
 
             sig_buffer = Net::SSH::Buffer.new(buffer.read_string)
@@ -114,6 +115,13 @@ module Net
             result[:server_sig] = sig_buffer.read_string
 
             return result
+          end
+
+          # Rejects degenerate values that would let the server force a
+          # predictable shared secret, as OpenSSH's dh_pub_is_valid.
+          def validate_server_dh_pubkey(pub)
+            valid = pub > 1 && pub < dh.p - 1 && pub.to_i.to_s(2).count("1") >= 4
+            raise Net::SSH::Exception, "server's DH public value is invalid" unless valid
           end
         end
       end

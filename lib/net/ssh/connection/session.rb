@@ -82,7 +82,7 @@ module Net
           @properties = (options[:properties] || {}).dup
 
           @max_pkt_size = (options.key?(:max_pkt_size) ? options[:max_pkt_size] : 0x8000)
-          @max_win_size = (options.key?(:max_win_size) ? options[:max_win_size] : 0x20000)
+          @max_win_size = (options.key?(:max_win_size) ? options[:max_win_size] : Channel::DEFAULT_MAX_WIN_SIZE)
 
           @keepalive = Keepalive.new(self)
 
@@ -429,7 +429,10 @@ module Net
         #
         #   matches = ssh.exec!("grep something /some/files")
         #
-        # the returned string has an exitstatus method to query its exit status
+        # With a block, output goes to the block and an empty string is returned,
+        # unless the block sets <tt>ch[:result]</tt>, which is returned instead.
+        # Either way the returned string has an exitstatus method to query the
+        # command's exit status.
         def exec!(command, status: nil, &block)
           block_or_concat = block || Proc.new do |ch, type, data|
             ch[:result] ||= String.new
@@ -440,10 +443,10 @@ module Net
           channel = exec(command, status: status, &block_or_concat)
           channel.wait
 
-          channel[:result] ||= String.new unless block
           channel[:result] &&= channel[:result].force_encoding("UTF-8") unless block
+          channel[:result] ||= String.new(encoding: Encoding::UTF_8)
 
-          StringWithExitstatus.new(channel[:result], status[:exit_code]) if channel[:result]
+          StringWithExitstatus.new(channel[:result], status[:exit_code])
         end
 
         # Enqueues a message to be sent to the server as soon as the socket is

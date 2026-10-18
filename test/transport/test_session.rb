@@ -26,14 +26,9 @@ module Transport
       )
     end
 
-    def test_verify_host_key_true_uses_accept_new_or_local_tunnel_verifier
-      Kernel.expects(:warn).with(
-        'verify_host_key: true is deprecated, use :accept_new_or_local_tunnel'
-      )
-      assert_instance_of(
-        Net::SSH::Verifiers::AcceptNewOrLocalTunnel,
-        session(verify_host_key: true).host_key_verifier
-      )
+    def test_verify_host_key_true_raises_naming_accept_new_or_local_tunnel
+      error = assert_raises(ArgumentError) { session(verify_host_key: true).host_key_verifier }
+      assert_equal "verify_host_key: true has been removed, use :accept_new_or_local_tunnel", error.message
     end
 
     def test_verify_host_key_accept_new_or_local_tunnel_uses_accept_new_or_local_tunnel_verifier
@@ -50,12 +45,9 @@ module Transport
       )
     end
 
-    def test_verify_host_key_very_uses_accept_new_verifier
-      Kernel.expects(:warn).with('verify_host_key: :very is deprecated, use :accept_new')
-      assert_instance_of(
-        Net::SSH::Verifiers::AcceptNew,
-        session(verify_host_key: :very).host_key_verifier
-      )
+    def test_verify_host_key_very_raises_naming_accept_new
+      error = assert_raises(ArgumentError) { session(verify_host_key: :very).host_key_verifier }
+      assert_equal "verify_host_key: :very has been removed, use :accept_new", error.message
     end
 
     def test_verify_host_key_accept_new_uses_accept_new_verifier
@@ -65,20 +57,14 @@ module Transport
       )
     end
 
-    def test_verify_host_key_secure_uses_always_verifier
-      Kernel.expects(:warn).with('verify_host_key: :secure is deprecated, use :always')
-      assert_instance_of(
-        Net::SSH::Verifiers::Always,
-        session(verify_host_key: :secure).host_key_verifier
-      )
+    def test_verify_host_key_secure_raises_naming_always
+      error = assert_raises(ArgumentError) { session(verify_host_key: :secure).host_key_verifier }
+      assert_equal "verify_host_key: :secure has been removed, use :always", error.message
     end
 
-    def test_verify_host_key_false_uses_never_verifier
-      Kernel.expects(:warn).with('verify_host_key: false is deprecated, use :never')
-      assert_instance_of(
-        Net::SSH::Verifiers::Never,
-        session(verify_host_key: false).host_key_verifier
-      )
+    def test_verify_host_key_false_raises_naming_never
+      error = assert_raises(ArgumentError) { session(verify_host_key: false).host_key_verifier }
+      assert_equal "verify_host_key: false has been removed, use :never", error.message
     end
 
     def test_verify_host_key_null_uses_never_verifier
@@ -97,11 +83,10 @@ module Transport
       assert_equal object, session(verify_host_key: object).host_key_verifier
     end
 
-    def test_deprecated_host_key_verifier
-      Kernel.expects(:warn).with('Warning: verifier without :verify_signature is deprecated')
-
+    def test_host_key_verifier_without_verify_signature_raises
       object = stub("thingy", verify: true)
-      assert_not_nil session(verify_host_key: object).host_key_verifier
+      error = assert_raises(ArgumentError) { session(verify_host_key: object).host_key_verifier }
+      assert_match(/must implement verify_signature\(&block\)/, error.message)
     end
 
     def test_host_as_string_should_return_host_and_ip_when_port_is_default
@@ -416,6 +401,14 @@ module Transport
 
       session!(logger: logger)
       assert_match "establishing connection to #{TEST_HOST}:#{TEST_PORT}", logger.messages
+    end
+
+    def test_proxy_false_should_connect_directly
+      logger = TestLogger.new
+
+      session!(logger: logger, proxy: false)
+      assert_match "establishing connection to #{TEST_HOST}:#{TEST_PORT}", logger.messages
+      refute_match "through proxy", logger.messages
     end
 
     def test_tcp_nodelay_should_be_set_by_default

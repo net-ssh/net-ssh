@@ -28,71 +28,75 @@ It allows you to write programs that invoke and interact with processes on remot
 
 ## Supported Algorithms
 
-Net::SSH 6.0 disables by default the usage of weak algorithms.
-We strongly recommend that you install a servers's version that supports the latest algorithms.
+Net::SSH only offers secure algorithms by default.
+We strongly recommend that you install a server version that supports the latest algorithms.
 
-It is possible to return to the previous behavior by adding the option : `append_all_supported_algorithms: true`
-
-Unsecure algoritms will definitely be removed in Net::SSH 8.*.
+Weak algorithms are still supported as opt-ins, so legacy servers such as embedded routers and old network gear stay reachable. To enable one, prefix it with `+` in the matching option, e.g. `encryption: '+aes256-cbc'`, `hmac: '+hmac-sha1-96'`, `kex: '+diffie-hellman-group1-sha1'`, `host_key: '+ssh-dss'`, or in ssh_config with `Ciphers`, `MACs`, `KexAlgorithms`, `HostKeyAlgorithms` and `PubkeyAcceptedAlgorithms` (e.g. `Ciphers +aes256-cbc`). Passing `append_all_supported_algorithms: true` appends every supported algorithm except the `none` cipher and MAC, which are only used when named explicitly (e.g. `encryption: '+none'`, `hmac: '+none'`).
 
 ### Host Keys
 
-| Name                 | Support               | Details  |
-|----------------------|-----------------------|----------|
-| rsa-sha2-512         | OK                    |          |
-| rsa-sha2-256         | OK                    |          |
-| ssh-rsa              | Disabled by default in 8.0 | SHA-1 signatures, off by default as in OpenSSH 8.8; enable with `HostKeyAlgorithms +ssh-rsa` or `host_key: '+ssh-rsa'` |
-| ssh-ed25519          | OK                    | Backed by Ruby OpenSSL raw Ed25519 APIs (`openssl >= 3.2.0`) |
-| ecdsa-sha2-nistp521  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
-| ecdsa-sha2-nistp384  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
-| ecdsa-sha2-nistp256  | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
-| ssh-dss              | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
+| Name                                     | Support                | Details  |
+|------------------------------------------|------------------------|----------|
+| ssh-ed25519                              | OK                     | Backed by Ruby OpenSSL raw Ed25519 APIs (`openssl >= 3.2.0`) |
+| ssh-ed25519-cert-v01@openssh.com         | OK                     | Backed by Ruby OpenSSL raw Ed25519 APIs (`openssl >= 3.2.0`) |
+| ecdsa-sha2-nistp521/384/256              | OK                     | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| ecdsa-sha2-nistp521/384/256-cert-v01@openssh.com | OK             | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| rsa-sha2-512                             | OK                     |          |
+| rsa-sha2-256                             | OK                     |          |
+| ssh-rsa                                  | Not offered by default | SHA-1 signatures, off by default as in OpenSSH 8.8; opt-in for legacy servers with `HostKeyAlgorithms +ssh-rsa` or `host_key: '+ssh-rsa'` |
+| ssh-rsa-cert-v01@openssh.com             | Not offered by default | SHA-1 signatures; opt-in for legacy servers |
+| ssh-rsa-cert-v00@openssh.com             | Deprecated             | not offered by default, warns when used and will be removed; net-ssh cannot parse v00 certificates, use ssh-rsa-cert-v01@openssh.com or a modern key type |
+| ssh-dss                                  | Not offered by default | unsecure, off by default as in OpenSSH 7.0; opt-in for legacy servers |
 
 RSA public key authentication likewise uses rsa-sha2-512 or rsa-sha2-256 by default; ssh-rsa and ssh-dss keys are only offered when enabled, e.g. with `PubkeyAcceptedAlgorithms +ssh-rsa` or `pubkey_algorithms: %w[+ssh-rsa]`.
 
 ### Key Exchange
 
-| Name                                 | Support               | Details  |
-|--------------------------------------|-----------------------|----------|
-| curve25519-sha256                    | OK                    | Backed by Ruby OpenSSL raw X25519 APIs (`openssl >= 3.2.0`) |
-| ecdh-sha2-nistp521                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
-| ecdh-sha2-nistp384                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
-| ecdh-sha2-nistp256                   | OK                    | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
-| diffie-hellman-group1-sha1           | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| diffie-hellman-group14-sha1          | OK                    |          |
-| diffie-hellman-group-exchange-sha1   | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| diffie-hellman-group-exchange-sha256 | OK                    |          |
+| Name                                 | Support                | Details  |
+|--------------------------------------|------------------------|----------|
+| curve25519-sha256                    | OK                     | Backed by Ruby OpenSSL raw X25519 APIs (`openssl >= 3.2.0`) |
+| curve25519-sha256@libssh.org         | OK                     | Backed by Ruby OpenSSL raw X25519 APIs (`openssl >= 3.2.0`) |
+| ecdh-sha2-nistp521                   | OK                     | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| ecdh-sha2-nistp384                   | OK                     | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| ecdh-sha2-nistp256                   | OK                     | [using weak elliptic curves](https://safecurves.cr.yp.to/) |
+| diffie-hellman-group-exchange-sha256 | OK                     |          |
+| diffie-hellman-group14-sha256        | OK                     |          |
+| diffie-hellman-group14-sha1          | Not offered by default | SHA-1, off by default as in OpenSSH 8.2; opt-in for legacy servers with `KexAlgorithms +diffie-hellman-group14-sha1` or `kex: '+diffie-hellman-group14-sha1'` |
+| diffie-hellman-group-exchange-sha1   | Not offered by default | unsecure; opt-in for legacy servers |
+| diffie-hellman-group1-sha1           | Not offered by default | unsecure; opt-in for legacy servers |
 
 ### Encryption algorithms (ciphers)
 
-| Name                                 | Support               | Details  |
-|--------------------------------------|-----------------------|----------|
-| aes256-ctr / aes192-ctr / aes128-ctr | OK                    |          |
-| chacha20-poly1305@openssh.com        | OK.                   | Backed by Ruby OpenSSL ChaCha20 and Poly1305 APIs (`openssl >= 3.2.0`) |
-| aes256-cbc / aes192-cbc / aes128-cbc | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| rijndael-cbc@lysator.liu.se          | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| blowfish-ctr blowfish-cbc            | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| cast128-ctr cast128-cbc              | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| 3des-ctr 3des-cbc                    | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| idea-cbc                             | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| none                                 | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
+| Name                                    | Support                | Details  |
+|-----------------------------------------|------------------------|----------|
+| chacha20-poly1305@openssh.com           | OK                     | Backed by Ruby OpenSSL ChaCha20 and Poly1305 APIs (`openssl >= 3.2.0`) |
+| aes256-ctr / aes192-ctr / aes128-ctr    | OK                     |          |
+| aes256-gcm@openssh.com / aes128-gcm@openssh.com | OK              |          |
+| aes256-cbc / aes192-cbc / aes128-cbc    | Not offered by default | unsecure; opt-in for legacy servers |
+| rijndael-cbc@lysator.liu.se             | Not offered by default | unsecure; opt-in for legacy servers |
+| blowfish-ctr blowfish-cbc               | Not offered by default | unsecure; opt-in for legacy servers |
+| cast128-ctr cast128-cbc                 | Not offered by default | unsecure; opt-in for legacy servers |
+| 3des-ctr 3des-cbc                       | Not offered by default | unsecure; opt-in for legacy servers |
+| idea-cbc                                | Not offered by default | unsecure; opt-in for legacy servers |
+| none                                    | Not offered by default | no encryption; only used when named explicitly, not added by `append_all_supported_algorithms` |
 
 ### Message Authentication Code algorithms
 
-| Name                 | Support               | Details  |
-|----------------------|-----------------------|----------|
-| hmac-sha2-512-etm    | OK                    |          |
-| hmac-sha2-256-etm    | OK                    |          |
-| hmac-sha2-512        | OK                    |          |
-| hmac-sha2-256        | OK                    |          |
-| hmac-sha2-512-96     | Deprecated in 6.0     | removed from the specification, will be removed in 8.0 |
-| hmac-sha2-256-96     | Deprecated in 6.0     | removed from the specification, will be removed in 8.0 |
-| hmac-sha1            | OK                    | for backward compatibility      |
-| hmac-sha1-96         | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| hmac-ripemd160       | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| hmac-md5             | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| hmac-md5-96          | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
-| none                 | Deprecated in 6.0     | unsecure, will be removed in 8.0 |
+| Name                          | Support                | Details  |
+|-------------------------------|------------------------|----------|
+| hmac-sha2-512-etm@openssh.com | OK                     |          |
+| hmac-sha2-256-etm@openssh.com | OK                     |          |
+| hmac-sha1-etm@openssh.com     | OK                     | for backward compatibility |
+| hmac-sha2-512                 | OK                     |          |
+| hmac-sha2-256                 | OK                     |          |
+| hmac-sha1                     | OK                     | for backward compatibility |
+| hmac-sha2-512-96              | Not offered by default | removed from the specification; opt-in for legacy servers |
+| hmac-sha2-256-96              | Not offered by default | removed from the specification; opt-in for legacy servers |
+| hmac-sha1-96                  | Not offered by default | unsecure; opt-in for legacy servers |
+| hmac-ripemd160 / hmac-ripemd160@openssh.com | Not offered by default | unsecure; opt-in for legacy servers |
+| hmac-md5                      | Not offered by default | unsecure; opt-in for legacy servers |
+| hmac-md5-96                   | Not offered by default | unsecure; opt-in for legacy servers |
+| none                          | Not offered by default | no integrity protection; only used when named explicitly, not added by `append_all_supported_algorithms` |
 
 ## SYNOPSIS:
 
@@ -255,6 +259,10 @@ gem cert --add net-ssh-public_cert.pem
 ```
 
 or `rake cert:update_public_when_expired`
+
+## CONTRIBUTING
+
+See [CONTRIBUTING.md](CONTRIBUTING.md), including how to add a changelog entry.
 
 ## Security contact information
 
