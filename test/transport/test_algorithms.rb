@@ -326,6 +326,10 @@ module Transport
                    algorithms(hmac: %w[-hmac-sha1* -hmac-md5* -none], append_all_supported_algorithms: true)[:hmac]
     end
 
+    def test_constructor_with_compression_false_should_prefer_none
+      assert_equal %w[none zlib@openssh.com zlib], algorithms(compression: false)[:compression]
+    end
+
     def test_constructor_with_preferred_compression_should_put_preferred_compression_first
       assert_equal %w[zlib none zlib@openssh.com], algorithms(compression: "zlib", append_all_supported_algorithms: true)[:compression]
     end

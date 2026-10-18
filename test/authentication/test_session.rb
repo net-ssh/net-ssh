@@ -166,6 +166,25 @@ module Authentication
       session(key_data: custom_private_key).authenticate("next service", "username")
     end
 
+    def test_does_not_use_any_key_files_if_keys_are_empty
+      File.stubs(:file?).returns(false)
+
+      file_on_filesystem("~/.ssh/id_rsa", default_private_key)
+
+      transport.expect do |t, packet|
+        assert_equal SERVICE_REQUEST, packet.type
+        assert_equal "ssh-userauth", packet.read_string
+        t.return(SERVICE_ACCEPT)
+      end
+
+      transport.expect do |t, packet|
+        assert_none_request packet
+        t.return(USERAUTH_FAILURE, :string, "publickey")
+      end
+
+      assert_equal false, session(keys: []).authenticate("next service", "username")
+    end
+
     # Authentication for AuthenticationMethods "publickey,password"
     def test_mfa
       File.stubs(:file?).returns(false)
