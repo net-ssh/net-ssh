@@ -1,3 +1,4 @@
+require 'net/ssh/errors'
 require 'net/ssh/authentication/pub_key_fingerprint'
 
 module Net
@@ -35,7 +36,7 @@ module Net
               application = buffer.read_string
               new(type, public_key_data, application)
             else
-              raise NotImplementedError, "unsupported security key type `#{type}'"
+              raise Net::SSH::UnsupportedKeyType, "unsupported security key type `#{type}'"
             end
           end
 

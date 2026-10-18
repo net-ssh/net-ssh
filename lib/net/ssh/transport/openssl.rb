@@ -1,4 +1,5 @@
 require 'openssl'
+require 'net/ssh/errors'
 require 'net/ssh/authentication/pub_key_fingerprint'
 
 module OpenSSL
@@ -178,7 +179,7 @@ module OpenSSL
 
           return key
         rescue OpenSSL::PKey::ECError
-          raise NotImplementedError, "unsupported key type `#{type}'"
+          raise Net::SSH::UnsupportedKeyType, "unsupported key type `ecdsa-sha2-#{curve_name_in_type}'"
         end
       end
 

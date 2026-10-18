@@ -73,7 +73,15 @@ module Authentication
 
     def test_unknown_type_still_raises
       blob = Net::SSH::Buffer.from(:string, "totally-unknown", :string, "x").to_s
-      assert_raises(NotImplementedError) { Net::SSH::Buffer.new(blob).read_key }
+      assert_raises(Net::SSH::UnsupportedKeyType) { Net::SSH::Buffer.new(blob).read_key }
+    end
+
+    def test_pub_key_read_keyblob_rejects_unknown_sk_type
+      buffer = Net::SSH::Buffer.from(:string, "x", :string, "ssh:")
+      error = assert_raises(Net::SSH::UnsupportedKeyType) do
+        Net::SSH::Authentication::SecurityKey::PubKey.read_keyblob("sk-unknown@openssh.com", buffer)
+      end
+      assert_equal "unsupported security key type `sk-unknown@openssh.com'", error.message
     end
   end
 end

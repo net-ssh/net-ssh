@@ -152,7 +152,7 @@ module Net
               key.extend(Comment)
               key.comment = comment_str
               identities.push key
-            rescue NotImplementedError => e
+            rescue Net::SSH::UnsupportedKeyType, NotImplementedError => e
               error { "ignoring unimplemented key:#{e.message} #{comment_str}" }
             end
           end

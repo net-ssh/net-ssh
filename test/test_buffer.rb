@@ -240,6 +240,26 @@ class TestBuffer < NetSSHTest
     end
   end
 
+  def test_read_key_with_signature_algorithm_as_key_type_should_raise_unsupported_key_type
+    buffer = Net::SSH::Buffer.from(:string, "rsa-sha2-512", :bignum, OpenSSL::BN.new(65537), :bignum, OpenSSL::BN.new(12345))
+    error = assert_raises(Net::SSH::UnsupportedKeyType) { buffer.read_key }
+    assert_equal "unsupported key type `rsa-sha2-512'", error.message
+  end
+
+  def test_read_keyblob_with_unknown_type_should_raise_a_standard_error
+    error = assert_raises(StandardError) { new("").read_keyblob("foo-bar") }
+    assert_kind_of Net::SSH::Exception, error
+    assert_equal "unsupported key type `foo-bar'", error.message
+  end
+
+  def test_read_keyblob_with_unparseable_ecdsa_key_should_raise_unsupported_key_type
+    public_key = OpenSSL::PKey::EC.generate('prime256v1').public_key.to_octet_string(:uncompressed)
+    buffer = Net::SSH::Buffer.from(:string, 'nistp256', :string, public_key)
+    OpenSSL::PKey::EC.stubs(:new).raises(OpenSSL::PKey::ECError)
+    error = assert_raises(Net::SSH::UnsupportedKeyType) { buffer.read_keyblob('ecdsa-sha2-nistp256') }
+    assert_equal "unsupported key type `ecdsa-sha2-nistp256'", error.message
+  end
+
   def test_read_buffer_should_read_a_string_and_return_it_wrapped_in_a_buffer
     buffer = new("\0\0\0\x0bhello world")
     b2 = buffer.read_buffer
