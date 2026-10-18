@@ -164,6 +164,20 @@ module Connection
       assert_equal packet.to_s, socket.write_buffer
     end
 
+    def test_open_channel_should_advertise_2mb_window_by_default
+      channel = session.open_channel
+      assert_equal 0x200000, channel.local_maximum_window_size
+      packet = P(:byte, CHANNEL_OPEN, :string, "session", :long, channel.local_id, :long, 0x200000, :long, 0x8000)
+      assert_equal packet.to_s, socket.write_buffer
+    end
+
+    def test_open_channel_should_use_max_win_size_option
+      channel = session(max_win_size: 0x20000).open_channel
+      assert_equal 0x20000, channel.local_maximum_window_size
+      packet = P(:byte, CHANNEL_OPEN, :string, "session", :long, channel.local_id, :long, 0x20000, :long, 0x8000)
+      assert_equal packet.to_s, socket.write_buffer
+    end
+
     def test_open_channel_with_type_should_use_type
       channel = session.open_channel("direct-tcpip")
       assert_equal "direct-tcpip", channel.type
@@ -353,14 +367,14 @@ module Connection
       result = nil
       session.on_open_channel("auth-agent") { |*args| result = args }
       process_times(2)
-      assert_equal P(:byte, CHANNEL_OPEN_CONFIRMATION, :long, 14, :long, 0, :long, 0x20000, :long, 0x8000).to_s, socket.write_buffer
+      assert_equal P(:byte, CHANNEL_OPEN_CONFIRMATION, :long, 14, :long, 0, :long, 0x200000, :long, 0x8000).to_s, socket.write_buffer
       assert_not_nil(ch = session.channels[0])
       assert_equal [session, ch, P(:byte, CHANNEL_OPEN, :string, "auth-agent", :long, 14, :long, 0x20001, :long, 0x10001)], result
       assert_equal 0, ch.local_id
       assert_equal 14, ch.remote_id
       assert_equal 0x20001, ch.remote_maximum_window_size
       assert_equal 0x10001, ch.remote_maximum_packet_size
-      assert_equal 0x20000, ch.local_maximum_window_size
+      assert_equal 0x200000, ch.local_maximum_window_size
       assert_equal 0x8000, ch.local_maximum_packet_size
       assert_equal "auth-agent", ch.type
     end

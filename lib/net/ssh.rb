@@ -159,7 +159,10 @@ module Net
     #   packet. Default is 0x8000 (32768 bytes). Increase to 0x10000 (65536 bytes)
     #   for better performance if your SSH server supports it (most do).
     # * :max_win_size => maximum size we tell the other side that is supported for
-    #   the window.
+    #   the window, i.e. how much the server may send on a channel before net-ssh
+    #   reads it. Default is 0x200000 (2 MB), as in OpenSSH. Smaller values limit
+    #   how much data is in flight; some servers (e.g. Mikrotik) truncate output
+    #   when the window is small.
     # * :minimum_dh_bits => the smallest group, in bits, accepted from the server
     #   in diffie-hellman-group-exchange key exchange. Defaults to 2048, as in
     #   OpenSSH; lower it (e.g. to 1024) only to reach legacy servers that offer

@@ -82,7 +82,7 @@ module Net
           @properties = (options[:properties] || {}).dup
 
           @max_pkt_size = (options.key?(:max_pkt_size) ? options[:max_pkt_size] : 0x8000)
-          @max_win_size = (options.key?(:max_win_size) ? options[:max_win_size] : 0x20000)
+          @max_win_size = (options.key?(:max_win_size) ? options[:max_win_size] : Channel::DEFAULT_MAX_WIN_SIZE)
 
           @keepalive = Keepalive.new(self)
 
