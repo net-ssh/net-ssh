@@ -19,6 +19,12 @@ module Net
     # timeouted unexpectedly.
     class Timeout < Disconnect; end
 
+    # Raised when a session connected through an OpenSSH ControlMaster (see the
+    # :control_master option of Net::SSH.start) is asked for something the
+    # master's proxy mode cannot carry, such as remote port forwarding, agent
+    # or X11 forwarding, or other global requests.
+    class NotSupportedOverControlMaster < Net::SSH::Exception; end
+
     # This exception is primarily used internally, but if you have a channel
     # request handler (see Net::SSH::Connection::Channel#on_request) that you
     # want to fail in such a way that the server knows it failed, you can
