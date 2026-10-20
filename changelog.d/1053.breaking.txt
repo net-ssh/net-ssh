@@ -1,1 +1,0 @@
-`Net::SSH.start` raises ArgumentError for option values that are `nil` or arrays containing `nil` (deprecated since 4.0.0); omit the option to use the default or ssh_config value, the error names a value that turns it off where one exists (e.g. `proxy: false`, `keys: []`, `config: false`). `password: nil` and `passphrase: nil` are still accepted [#458, #1053]

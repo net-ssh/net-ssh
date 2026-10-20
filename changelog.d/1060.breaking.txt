@@ -1,1 +1,0 @@
-Unsupported key types now raise `Net::SSH::UnsupportedKeyType` (a `Net::SSH::Exception`) instead of `NotImplementedError`; code that rescued `NotImplementedError` around key loading or connecting should rescue the new class [#945, #1060]
