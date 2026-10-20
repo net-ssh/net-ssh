@@ -1,1 +1,0 @@
-`Net::SSH.start(host, user, control_master: :auto)` reuses an already running OpenSSH ControlMaster found via `:control_path` or ssh_config `ControlPath`, falling back to a normal connection when there is none [#443, #1057]
