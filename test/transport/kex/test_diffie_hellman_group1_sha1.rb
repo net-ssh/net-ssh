@@ -39,6 +39,12 @@ module Transport
         assert_raises(Net::SSH::Exception) { exchange! key_type: "ssh-dss" }
       end
 
+      def test_exchange_keys_with_signature_algorithm_as_host_key_type_should_raise_unsupported_key_type
+        blob = b(:string, "rsa-sha2-512", :bignum, server_key.e, :bignum, server_key.n)
+        error = assert_raises(Net::SSH::UnsupportedKeyType) { exchange! server_key_blob: blob }
+        assert_equal "unsupported key type `rsa-sha2-512'", error.message
+      end
+
       def test_exchange_keys_when_server_signature_could_not_be_verified_should_raise_exception
         @signature = "1234567890"
         assert_raises(Net::SSH::Exception) { exchange! }
@@ -104,7 +110,7 @@ module Transport
         connection.expect do |t, buffer|
           assert_equal KEXDH_INIT, buffer.type
           assert_equal dh.dh.pub_key, buffer.read_bignum
-          t.return(KEXDH_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
+          t.return(KEXDH_REPLY, :string, options[:server_key_blob] || b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
           connection.expect do |t2, buffer2|
             assert_equal NEWKEYS, buffer2.type
             t2.return(NEWKEYS)

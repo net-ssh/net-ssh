@@ -33,6 +33,21 @@ class TestKnownHosts < NetSSHTest
     perform_test(path("known_hosts/known_hosts_ignore"))
   end
 
+  def test_keys_for_skips_entries_with_unknown_key_type
+    with_config_file(lines: ["github.com rsa-sha2-512 AAAA", "github.com #{sample_key}"]) do |path|
+      keys = Net::SSH::KnownHosts.new(path).keys_for("github.com")
+      assert_equal(["ssh-rsa"], keys.map(&:ssh_type))
+    end
+  end
+
+  def test_keys_for_raises_unsupported_key_type_for_mislabelled_blob
+    blob = Net::SSH::Buffer.from(:string, "rsa-sha2-512", :bignum, rsa_key.e, :bignum, rsa_key.n).to_s
+    with_config_file(lines: ["github.com ssh-rsa #{[blob].pack('m0')}"]) do |path|
+      error = assert_raises(Net::SSH::UnsupportedKeyType) { Net::SSH::KnownHosts.new(path).keys_for("github.com") }
+      assert_equal "unsupported key type `rsa-sha2-512'", error.message
+    end
+  end
+
   def test_missing_then_add
     Tempfile.open('github') do |f|
       f.write(File.read(path("known_hosts/github")))

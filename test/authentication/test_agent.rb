@@ -229,6 +229,31 @@ module Authentication
       assert_equal "Okay, but not the best", result.last.comment
     end
 
+    def test_identities_should_ignore_unsupported_key_types
+      unsupported = Net::SSH::Buffer.from(:string, "rsa-sha2-512", :bignum, key.e, :bignum, key.n)
+
+      socket.expect do |s, type, _buffer|
+        assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
+        s.return(SSH2_AGENT_IDENTITIES_ANSWER, :long, 2, :string, unsupported, :string, "bad", :string, Net::SSH::Buffer.from(:key, key), :string, "good")
+      end
+
+      result = agent.identities
+      assert_equal ["good"], result.map(&:comment)
+    end
+
+    def test_identities_should_ignore_ed25519_ones_when_ed25519_is_unavailable
+      ed25519 = Net::SSH::Buffer.from(:string, "ssh-ed25519", :string, "\x01" * 32)
+      Net::SSH::Authentication::ED25519Loader.stubs(:raiseUnlessLoaded).raises(NotImplementedError, "unsupported key type `ssh-ed25519'")
+
+      socket.expect do |s, type, _buffer|
+        assert_equal SSH2_AGENT_REQUEST_IDENTITIES, type
+        s.return(SSH2_AGENT_IDENTITIES_ANSWER, :long, 2, :string, ed25519, :string, "ed25519", :string, Net::SSH::Buffer.from(:key, key), :string, "good")
+      end
+
+      result = agent.identities
+      assert_equal ["good"], result.map(&:comment)
+    end
+
     def test_identities_should_ignore_invalid_ones
       key1 = key
       key2_bad = Net::SSH::Buffer.new(String.new)

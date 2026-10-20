@@ -1,3 +1,4 @@
+require 'net/ssh/errors'
 require 'net/ssh/transport/openssl'
 
 require 'net/ssh/authentication/certificate'
@@ -343,7 +344,7 @@ module Net
           Net::SSH::Authentication::SecurityKey::SK_SSH_ED25519
           key = Net::SSH::Authentication::SecurityKey::PubKey.read_keyblob(type, self)
         else
-          raise NotImplementedError, "unsupported key type `#{type}'"
+          raise Net::SSH::UnsupportedKeyType, "unsupported key type `#{type}'"
         end
 
         return key

@@ -19,6 +19,10 @@ module Net
     # timeouted unexpectedly.
     class Timeout < Disconnect; end
 
+    # This exception is raised when a key blob has a key type that Net::SSH
+    # cannot parse.
+    class UnsupportedKeyType < Net::SSH::Exception; end
+
     # Raised when a session connected through an OpenSSH ControlMaster (see the
     # :control_master option of Net::SSH.start) is asked for something the
     # master's proxy mode cannot carry, such as remote port forwarding, agent

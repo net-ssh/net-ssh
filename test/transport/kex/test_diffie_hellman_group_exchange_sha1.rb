@@ -112,7 +112,7 @@ module Transport
           t.expect do |t2, buffer2|
             assert_equal KEXDH_GEX_INIT, buffer2.type
             assert_equal dh.dh.pub_key, buffer2.read_bignum
-            t2.return(KEXDH_GEX_REPLY, :string, b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
+            t2.return(KEXDH_GEX_REPLY, :string, options[:server_key_blob] || b(:key, server_key), :bignum, server_dh_pubkey, :string, b(:string, options[:key_type] || "ssh-rsa", :string, signature))
             t2.expect do |t3, buffer3|
               assert_equal NEWKEYS, buffer3.type
               t3.return(NEWKEYS)
