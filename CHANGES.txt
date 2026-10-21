@@ -1,3 +1,7 @@
+=== 8.0.0
+
+  * No changes since 8.0.0 rc5.
+
 === 8.0.0 rc5
 
   * BREAKING: Security: a custom `verify_host_key` verifier must now implement `verify_signature` (deprecated since 5.1.0) or ArgumentError is raised; such verifiers were previously wrapped so the server's host key signature was never checked [#1050]
