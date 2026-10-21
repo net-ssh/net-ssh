@@ -1,0 +1,1 @@
+String literals are now frozen in all files via the `frozen_string_literal` magic comment, enforced by RuboCop; strings returned by net-ssh that come from literals (such as key type names) are frozen, so `dup` them before mutating
