@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'common'
 require 'net/ssh/transport/hmac/none'
 

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 require 'tmpdir'
 require 'open3'
 require_relative '../rakelib/changelog'
 
 class TestChangelog < Minitest::Test
-  HISTORY = <<~TXT.freeze
+  HISTORY = <<~TXT
     === 8.0.0 rc4
 
       * Old entry [#1]

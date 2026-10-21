@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/transport/hmac/abstract'
 
 module Net::SSH::Transport::HMAC

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'openssl'
 require 'net/ssh/transport/ctr.rb'
 require 'net/ssh/transport/aes128_gcm'

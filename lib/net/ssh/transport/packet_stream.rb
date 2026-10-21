@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/buffered_io'
 require 'net/ssh/errors'
 require 'net/ssh/packet'
@@ -13,7 +15,7 @@ module Net
       # per the SSH2 protocol. It also adds an abstraction for polling packets,
       # to allow for both blocking and non-blocking reads.
       module PacketStream # rubocop:disable Metrics/ModuleLength
-        PROXY_COMMAND_HOST_IP = '<no hostip for proxy command>'.freeze
+        PROXY_COMMAND_HOST_IP = '<no hostip for proxy command>'
 
         # Same limit as OpenSSH; a larger length would make us buffer whatever the server streams (GHSA-pfqh-p9vh-wx4p).
         PACKET_MAX_SIZE = 256 * 1024

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/buffer'
 require 'net/ssh/known_hosts'
 require 'net/ssh/loggable'
@@ -119,7 +121,7 @@ module Net
           hmac: %w[none]
         }.freeze
 
-        DEPRECATED_HOST_KEY = 'ssh-rsa-cert-v00@openssh.com'.freeze
+        DEPRECATED_HOST_KEY = 'ssh-rsa-cert-v00@openssh.com'
 
         # The underlying transport layer session that supports this object
         attr_reader :session

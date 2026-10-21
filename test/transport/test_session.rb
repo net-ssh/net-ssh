@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../common'
 require 'net/ssh/transport/session'
 require 'net/ssh/connection/constants'

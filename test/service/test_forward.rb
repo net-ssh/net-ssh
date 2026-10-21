@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../common'
 require 'net/ssh/authentication/agent'
 require 'io/wait'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'openssl'
 require 'net/ssh/transport/constants'
 require 'net/ssh/transport/kex/abstract5656'

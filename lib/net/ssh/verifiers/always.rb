@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/errors'
 require 'net/ssh/known_hosts'
 

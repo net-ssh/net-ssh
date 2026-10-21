@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/transport/kex/abstract5656'
 
 module Net

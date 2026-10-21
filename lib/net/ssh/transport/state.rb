@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'zlib'
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'

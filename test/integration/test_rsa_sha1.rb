@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'common'
 require 'tmpdir'
 require 'timeout'
@@ -8,7 +10,7 @@ require 'net/ssh'
 class TestRSASHA1 < NetSSHTest
   include IntegrationTestHelpers
 
-  RSA_HOST_KEY = "HostKey /etc/ssh/ssh_host_rsa_key".freeze
+  RSA_HOST_KEY = "HostKey /etc/ssh/ssh_host_rsa_key"
 
   def connect(config_lines, options = {})
     start_sshd_7_or_later(config: config_lines) do |_pid, port|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../common'
 require_relative 'fake_master'
 require 'net/ssh'

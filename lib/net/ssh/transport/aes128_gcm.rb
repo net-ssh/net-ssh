@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/transport/hmac/abstract'
 require 'net/ssh/transport/gcm_cipher'
 

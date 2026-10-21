@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Also in your terminal environment run:
 #   $ export LANG=en_US.UTF-8

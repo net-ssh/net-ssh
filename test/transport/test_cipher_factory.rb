@@ -1,4 +1,5 @@
 # encoding: ASCII-8BIT
+# frozen_string_literal: true
 
 require_relative '../common'
 require 'net/ssh/transport/cipher_factory'

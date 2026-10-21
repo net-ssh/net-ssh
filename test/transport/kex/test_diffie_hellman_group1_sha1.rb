@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../common'
 require 'net/ssh/transport/kex/diffie_hellman_group1_sha1'
 require 'base64'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/transport/hmac/sha1'
 
 module Net::SSH::Transport::HMAC

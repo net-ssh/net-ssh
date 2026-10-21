@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Net
   module SSH
     # A simple module to make logging easier to deal with. It assumes that the

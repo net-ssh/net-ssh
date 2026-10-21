@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Simple Man in the middle server
 #
 # server = MitmServer.new('localhost', 22)

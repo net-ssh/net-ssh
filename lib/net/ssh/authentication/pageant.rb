@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if RUBY_VERSION < "1.9"
   require 'dl/import'
   require 'dl/struct'

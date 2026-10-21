@@ -587,13 +587,6 @@ Style/FormatString:
     - 'lib/net/ssh/authentication/pageant.rb'
     - 'lib/net/ssh/loggable.rb'
 
-# Offense count: 174
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 # Offense count: 1
 # This cop supports safe auto-correction (--auto-correct).
 Style/GlobalStdStream:

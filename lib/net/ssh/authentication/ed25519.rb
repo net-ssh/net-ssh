@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'openssl'
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/authentication/pub_key_fingerprint'

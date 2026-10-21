@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'strscan'
 require 'openssl'
 require 'net/ssh/buffer'

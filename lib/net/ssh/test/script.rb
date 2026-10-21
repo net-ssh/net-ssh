@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/test/channel'
 require 'net/ssh/test/local_packet'
 require 'net/ssh/test/remote_packet'

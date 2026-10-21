@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../common'
 require 'transport/kex/test_diffie_hellman_group1_sha1'
 require 'net/ssh/transport/kex/curve25519_sha256_loader'

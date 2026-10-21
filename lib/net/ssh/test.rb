@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/transport/session'
 require 'net/ssh/connection/session'
 require 'net/ssh/test/kex'

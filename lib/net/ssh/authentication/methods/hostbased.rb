@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/authentication/methods/abstract'
 
 module Net

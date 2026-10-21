@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../common'
 require_relative './test_diffie_hellman_group14_sha1'
 

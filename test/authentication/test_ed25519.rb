@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../common'
 require 'net/ssh/authentication/ed25519_loader'
 require 'net/ssh/key_factory'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #     $ ruby -Ilib -Itest -rrubygems test/manual/test_forward.rb
 
 # Tests for the following patch:

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require_relative '../common'
 require 'net/ssh/multiplex/control_path'
 
 module NetSSH
   class TestControlPath < NetSSHTest
-    ALL_TOKENS = '%C|%h|%n|%p|%r|%j|%l|%L|%u|%i|%d|%k|%%'.freeze
+    ALL_TOKENS = '%C|%h|%n|%p|%r|%j|%l|%L|%u|%i|%d|%k|%%'
 
     def setup
       Socket.stubs(:gethostname).returns('client.example.org')

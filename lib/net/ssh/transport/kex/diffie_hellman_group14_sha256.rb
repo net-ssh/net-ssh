@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/ssh/transport/kex/diffie_hellman_group14_sha1'
 
 module Net::SSH::Transport::Kex

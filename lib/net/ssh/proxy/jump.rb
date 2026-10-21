@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'shellwords'
 require 'uri'
 require 'net/ssh/proxy/command'

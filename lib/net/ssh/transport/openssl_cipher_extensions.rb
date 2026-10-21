@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Net::SSH::Transport
   # we add those mehtods to OpenSSL::Chipher instances
   module OpenSSLCipherExtensions
