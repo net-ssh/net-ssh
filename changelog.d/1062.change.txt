@@ -1,0 +1,1 @@
+`control_master: :auto` now ignores `forward_agent` (logged at info level) instead of raising ArgumentError, and logs the ignored connection options at info instead of warn level, so it works with sshkit (Kamal, Capistrano), which always passes `forward_agent: true`, `keys`, `known_hosts` and `keepalive`
