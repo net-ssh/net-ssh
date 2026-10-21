@@ -125,21 +125,21 @@ module Net
     #   for setting up a connection (:keys, :key_data, :password, :passphrase,
     #   :auth_methods, :verify_host_key, :known_hosts, :host_key, :kex,
     #   :encryption, :hmac, :compression, :rekey_*, :proxy, :keepalive and the
-    #   like); explicitly passed ones are named in a logger warning. Over the
+    #   like); explicitly passed ones are named at info level. Over the
     #   master, remote port forwarding (Service::Forward#remote and
     #   #cancel_remote) raises Net::SSH::NotSupportedOverControlMaster, as the
     #   master consumes the global request reply, so success, failure and the
     #   port allocated for port 0 can't be observed; other global requests
     #   raise it too. Agent and X11 forwarding requests raise it
-    #   too, and :forward_agent can't be combined with it, because the master
-    #   serves them from its own agent or display only if it has ForwardAgent
-    #   or ForwardX11 enabled itself, and rejects them otherwise. Keepalive and
-    #   rekeying are left to the master. ssh_config's ControlMaster is
-    #   ignored, only this option enables it. An invalid ControlPath raises
-    #   ArgumentError. A missing or stale socket is logged at info level, a
-    #   socket that can't be used (another owner, refused, wrong protocol,
-    #   timed out) at warn level. Has no effect on Windows. Defaults to
-    #   +false+.
+    #   too, and :forward_agent is ignored (logged at info level), because the
+    #   master serves them from its own agent or display only if it has
+    #   ForwardAgent or ForwardX11 enabled itself, and rejects them otherwise.
+    #   Keepalive and rekeying are left to the master. ssh_config's
+    #   ControlMaster is ignored, only this option enables it. An invalid
+    #   ControlPath raises ArgumentError. A missing or stale socket is logged
+    #   at info level, a socket that can't be used (another owner, refused,
+    #   wrong protocol, timed out) at warn level. Has no effect on Windows.
+    #   Defaults to +false+.
     # * :control_path => the ControlMaster socket to use with
     #   :control_master, with the same ~, ${ENV} and % tokens as ssh_config's
     #   ControlPath (%C, %d, %h, %i, %j, %k, %L, %l, %n, %p, %r, %u, %%).
@@ -154,7 +154,8 @@ module Net
     #   files. Defaults to +true+.
     # * :encryption => the encryption cipher (or ciphers) to use
     # * :forward_agent => set to true if you want the SSH agent connection to
-    #   be forwarded
+    #   be forwarded. Ignored for a session through a ControlMaster (see
+    #   :control_master).
     # * :known_hosts => a custom object holding known hosts records.
     #   It must implement #search_for and `add` in a similiar manner as KnownHosts.
     # * :global_known_hosts_file => the location of the global known hosts

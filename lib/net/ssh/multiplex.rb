@@ -32,13 +32,9 @@ module Net
       VALUES = [:auto, false, nil].freeze
 
       def self.validate_options!(options)
-        unless VALUES.include?(options[:control_master])
-          raise ArgumentError, "control_master must be :auto or false, got #{options[:control_master].inspect}"
-        end
-        return unless options[:control_master] && options[:forward_agent]
+        return if VALUES.include?(options[:control_master])
 
-        raise ArgumentError, "forward_agent can't be used with control_master: the ControlMaster serves agent requests " \
-                             "from its own agent only if it has ForwardAgent enabled itself, and rejects them otherwise"
+        raise ArgumentError, "control_master must be :auto or false, got #{options[:control_master].inspect}"
       end
 
       # Returns a Connection::Session running through the ControlMaster for
@@ -55,7 +51,7 @@ module Net
         return nil unless socket
 
         logger.info { "control_master: using ControlMaster at #{path}" }
-        warn_master_owned(logger, explicit)
+        log_master_owned(logger, explicit)
         begin
           transport = ProxyTransport.new(socket, host: host, control_path: path, options: options)
           Connection::Session.new(transport, session_options(logger, options))
@@ -108,23 +104,23 @@ module Net
         ControlPath.jump_host(proxy.jump_proxies)
       end
 
-      def self.warn_master_owned(logger, explicit)
+      def self.log_master_owned(logger, explicit)
         bypassed = explicit & MASTER_OWNED_OPTIONS
         return if bypassed.empty?
 
-        logger.warn { "control_master: ignoring #{bypassed.join(', ')}, the ControlMaster's own settings apply" }
+        logger.info { "control_master: ignoring #{bypassed.join(', ')}, the ControlMaster's own settings apply" }
       end
 
       # Keepalive is a global request, which the master doesn't allow; it
-      # watches its own connection anyway. ForwardAgent from ssh_config is
-      # dropped for the reason given in validate_options!.
+      # watches its own connection anyway. The master serves agent requests
+      # from its own agent only if it has ForwardAgent enabled itself.
       def self.session_options(logger, options)
         logger.info { "control_master: keepalive is left to the ControlMaster" } if options[:keepalive]
         logger.info { "control_master: ignoring ForwardAgent, the ControlMaster's own ForwardAgent setting applies" } if options[:forward_agent]
         options.merge(keepalive: false, forward_agent: false)
       end
 
-      private_class_method :open_proxy, :socket_path, :jump_host, :warn_master_owned, :session_options
+      private_class_method :open_proxy, :socket_path, :jump_host, :log_master_owned, :session_options
     end
   end
 end
