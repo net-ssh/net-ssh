@@ -1,1 +1,0 @@
-Fixed `unexpected packet type 94 during initial key exchange` (or 93) when channel data arrives during a client-initiated re-key, which broke bulk transfers at the first re-key (e.g. with `rekey_limit`, or after about 1 GB); a regression in 8.0.0
