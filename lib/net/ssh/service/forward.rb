@@ -347,7 +347,8 @@ module Net
               session.stop_listening_to(socket)
               ch.close
             elsif ch.eof?
-              # Like OpenSSH's chan_shutdown_read: after EOF, data not yet read from the socket is dropped.
+              # Like OpenSSH's chan_shutdown_read: data already read still goes out before CHANNEL_EOF, the rest is dropped.
+              ch.output.append(socket.read_available) if socket.available > 0
               session.pause_reading(socket)
             else
               if socket.available > 0

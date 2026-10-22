@@ -166,20 +166,22 @@ module Service
       assert_nothing_raised { Timeout.timeout(5) { @ssh.close } }
     end
 
-    def test_forwarded_channel_should_stop_reading_the_local_socket_after_eof
+    def test_forwarded_channel_should_send_data_already_read_from_the_local_socket_before_eof
       channel = prepared_channel(remote_window: 0x20000)
       @peer.write("queued")
       @client.fill
       channel.process
-      @peer.write("unread")
+      @peer.write("buffered")
       @client.fill
+      @peer.write("unread")
       channel.eof!
 
+      channel.process
       channel.process
 
       assert @session.reading_paused?(@client)
       sent = @session.sent.map { |msg| [msg.read_byte, msg.read_long, msg.read_string] }
-      assert_equal [[CHANNEL_DATA, 1, "queued"], [CHANNEL_EOF, 1, nil]], sent
+      assert_equal [[CHANNEL_DATA, 1, "queued"], [CHANNEL_DATA, 1, "buffered"], [CHANNEL_EOF, 1, nil]], sent
     end
 
     def teardown
