@@ -52,7 +52,7 @@ module Net
       MINOR = 0
 
       # The tiny component of this version of the Net::SSH library
-      TINY  = 1
+      TINY  = 2
 
       # The prerelease component of this version of the Net::SSH library
       # nil allowed
