@@ -20,3 +20,7 @@ Layout/LineLength:
 
 Style/EmptyLiteral:
   Enabled: false
+
+# CI runs the suite with RUBYOPT=--enable=frozen-string-literal instead of a magic comment in every file.
+Style/FrozenStringLiteralComment:
+  Enabled: false
