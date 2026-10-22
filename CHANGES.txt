@@ -1,10 +1,10 @@
 === 8.0.2
 
-  * Fixed `Session#close` raising `EOFError: cannot send data if channel has declared eof` when a forwarded connection still had unread data from its local client; as in OpenSSH, that unread data is dropped on close; a regression in 8.0.0 [#1066]
+  * Fixed `Session#close` raising `EOFError: cannot send data if channel has declared eof` when a forwarded connection still had unread data from its local client; data net-ssh had already read is still sent before the EOF and, as in OpenSSH, the rest is dropped; a regression in 8.0.0 [#1066, #1067]
 
 === 8.0.1
 
-  * Fixed `unexpected packet type 94 during initial key exchange` (or 93) when channel data arrives during a client-initiated re-key, which broke bulk transfers at the first re-key (e.g. with `rekey_limit`, or after about 1 GB); a regression in 8.0.0 [#1063]
+  * Fixed `unexpected packet type 94 during initial key exchange` (or 93) when channel data arrives during a client-initiated re-key, which broke bulk transfers at the first re-key (e.g. with `rekey_limit`, or after about 1 GB); a regression in 7.3.5 and 8.0.0 [#1063]
   * `control_master: :auto` now ignores `forward_agent` (logged at info level) instead of raising ArgumentError, and logs the ignored connection options at info instead of warn level, so it works with sshkit (Kamal, Capistrano), which always passes `forward_agent: true`, `keys`, `known_hosts` and `keepalive` [#1062]
 
 === 8.0.0
