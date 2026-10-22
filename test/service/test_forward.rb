@@ -153,6 +153,35 @@ module Service
       assert !@ssh.listeners.key?(@client)
     end
 
+    def test_session_close_should_not_send_data_after_eof_when_a_forwarded_socket_still_has_unread_data
+      channel = channel_in_session
+      @peer.write("x" * 100)
+      @client.fill
+      # the server answers our CHANNEL_CLOSE with its own
+      transport = @transport
+      transport.define_singleton_method(:enqueue_message) do |message|
+        transport.return(CHANNEL_CLOSE, :long, channel.local_id) if message.to_s.getbyte(0) == CHANNEL_CLOSE
+      end
+
+      assert_nothing_raised { Timeout.timeout(5) { @ssh.close } }
+    end
+
+    def test_forwarded_channel_should_stop_reading_the_local_socket_after_eof
+      channel = prepared_channel(remote_window: 0x20000)
+      @peer.write("queued")
+      @client.fill
+      channel.process
+      @peer.write("unread")
+      @client.fill
+      channel.eof!
+
+      channel.process
+
+      assert @session.reading_paused?(@client)
+      sent = @session.sent.map { |msg| [msg.read_byte, msg.read_long, msg.read_string] }
+      assert_equal [[CHANNEL_DATA, 1, "queued"], [CHANNEL_EOF, 1, nil]], sent
+    end
+
     def teardown
       [@client, @peer, @transport_socket, @transport_peer].compact.reject(&:closed?).each(&:close)
     end

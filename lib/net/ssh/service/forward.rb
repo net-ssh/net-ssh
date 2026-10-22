@@ -346,6 +346,9 @@ module Net
               ch.info { "#{type} forwarded connection closed" }
               session.stop_listening_to(socket)
               ch.close
+            elsif ch.eof?
+              # Like OpenSSH's chan_shutdown_read: after EOF, data not yet read from the socket is dropped.
+              session.pause_reading(socket)
             else
               if socket.available > 0
                 data = socket.read_available(8192)
@@ -376,6 +379,8 @@ module Net
           end
 
           channel.on_process do |ch|
+            next if ch.eof?
+
             data = ch[:socket].read(8192)
             if data
               ch.debug { "read #{data.length} bytes from client, sending over #{type} forwarded connection" }
