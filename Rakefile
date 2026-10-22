@@ -14,6 +14,7 @@ require "bundler/gem_tasks"
 begin
   require "rdoc/task"
 rescue LoadError
+  # rdoc tasks are optional
 end
 
 desc "When releasing make sure NET_SSH_BUILDGEM_SIGNED is set"
