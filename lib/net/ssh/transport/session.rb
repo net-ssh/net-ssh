@@ -216,7 +216,8 @@ module Net
 
             else
               return packet if algorithms.allow?(packet)
-              raise Net::SSH::Exception, "unexpected packet type #{packet.type} during initial key exchange" unless algorithms.initialized?
+              # Algorithms#rekey! clears initialized?, so the session id is what marks the first key exchange as done.
+              raise Net::SSH::Exception, "unexpected packet type #{packet.type} during initial key exchange" unless algorithms.session_id
 
               push(packet)
             end

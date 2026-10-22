@@ -1,3 +1,7 @@
+=== 7.3.7
+
+  * Fixed `unexpected packet type 94 during initial key exchange` (or 93) when channel data arrives during a client-initiated re-key, which broke bulk transfers at the first re-key (e.g. with `rekey_limit`, or after about 1 GB); a regression in 7.3.5 [#1063]
+
 === 7.3.6
 
   * Fix "Calling Net::SSH::Buffer methods on HostKeyEntries PubKey is deprecated" warnings printed on every connection to a host in known_hosts since 7.3.4 [#1026, #1028]
