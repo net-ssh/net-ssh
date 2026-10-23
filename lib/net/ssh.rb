@@ -71,7 +71,7 @@ module Net
       append_all_supported_algorithms non_interactive password_prompt
       agent_socket_factory minimum_dh_bits verify_host_key
       fingerprint_hash check_host_ip pubkey_algorithms no_delay
-      control_master control_path
+      control_master control_path preopen_channels
     ]
 
     # The standard means of starting a new SSH connection. When used with a
@@ -221,6 +221,12 @@ module Net
     #   is +nil+, for no passphrase)
     # * :password => the password to use to login
     # * :port => the port to use when connecting to the remote host
+    # * :preopen_channels => set to +true+ to keep one spare "session" channel
+    #   open, so that Net::SSH::Connection::Session#open_channel can hand it
+    #   out at once and a command that waits for the previous one to finish
+    #   costs one round trip instead of two. The spare counts against the
+    #   server's MaxSessions; if the server refuses it, pre-opening stops for
+    #   the session. Defaults to +false+.
     # * :properties => a hash of key/value pairs to add to the new connection's
     #   properties (see Net::SSH::Connection::Session#properties)
     # * :proxy => a proxy instance (see Proxy) to use when connecting

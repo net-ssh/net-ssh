@@ -53,6 +53,10 @@ module Net
         # The list of callbacks for pending requests. See #send_global_request.
         attr_reader :pending_requests # :nodoc:
 
+        # A "session" channel opened ahead of time by :preopen_channels, and
+        # the server's confirmation for it once that has arrived.
+        SpareChannel = Struct.new(:local_id, :remote_id, :window_size, :packet_size) # :nodoc:
+
         class NilChannel
           def initialize(session)
             @session = session
@@ -83,6 +87,11 @@ module Net
 
           @max_pkt_size = (options.key?(:max_pkt_size) ? options[:max_pkt_size] : 0x8000)
           @max_win_size = (options.key?(:max_win_size) ? options[:max_win_size] : Channel::DEFAULT_MAX_WIN_SIZE)
+
+          @preopen_channels = options.fetch(:preopen_channels, false)
+          @spare_channel = nil
+          @spare_wanted = false
+          @preopened = []
 
           @keepalive = Keepalive.new(self)
 
@@ -121,6 +130,7 @@ module Net
         # successfully closed, and then closes the underlying transport layer
         # connection.
         def close
+          stop_preopening
           info { "closing remaining channels (#{channels.length} open)" }
 
           channels.each do |id, channel|
@@ -143,6 +153,7 @@ module Net
         # when the connection needs to close but you don't know the status of the
         # underlying protocol's state).
         def shutdown!
+          stop_preopening
           transport.shutdown!
         end
 
@@ -258,8 +269,10 @@ module Net
         # Called by event loop to process available data before going to
         # event multiplexing
         def ev_preprocess(&block)
+          confirm_preopened_channels
           dispatch_incoming_packets(raise_disconnect_errors: false)
           each_channel { |id, channel| channel.process unless channel.local_closed? }
+          open_spare_channel
         end
 
         # Returns the file descriptors the event loop should wait for read/write events,
@@ -348,14 +361,20 @@ module Net
         #   end
         #
         #   channel.wait
+        #
+        # With the :preopen_channels option a plain "session" channel reuses
+        # the spare opened ahead of time, if there is one. Its callback still
+        # runs from the event loop, as if the server had just confirmed it.
         def open_channel(type = "session", *extra, &on_confirm)
-          local_id = get_next_channel_id
+          spare = take_spare_channel if type == "session" && extra.empty?
+          local_id = spare ? spare.local_id : get_next_channel_id
 
           channel = Channel.new(self, type, local_id, @max_pkt_size, @max_win_size, &on_confirm)
-          msg = Buffer.from(:byte, CHANNEL_OPEN, :string, type, :long, local_id,
-                            :long, channel.local_maximum_window_size,
-                            :long, channel.local_maximum_packet_size, *extra)
-          send_message(msg)
+          if spare
+            @preopened << [channel, spare] if spare.remote_id
+          else
+            send_channel_open(type, channel.local_id, channel.local_maximum_window_size, channel.local_maximum_packet_size, *extra)
+          end
 
           channels[local_id] = channel
         end
@@ -603,6 +622,8 @@ module Net
         end
 
         def force_channel_cleanup_on_close
+          stop_preopening
+          @preopened.clear
           channels.each do |id, channel|
             channel_closed(channel)
           end
@@ -694,18 +715,37 @@ module Net
 
         def channel_open_confirmation(packet)
           info { "channel_open_confirmation: #{packet[:local_id]} #{packet[:remote_id]} #{packet[:window_size]} #{packet[:packet_size]}" }
+          if (spare = spare_channel(packet))
+            spare.remote_id = packet[:remote_id]
+            spare.window_size = packet[:window_size]
+            spare.packet_size = packet[:packet_size]
+            return
+          end
+
           channel = channels[packet[:local_id]]
           channel.do_open_confirmation(packet[:remote_id], packet[:window_size], packet[:packet_size])
         end
 
         def channel_open_failure(packet)
           error { "channel_open_failed: #{packet[:local_id]} #{packet[:reason_code]} #{packet[:description]}" }
+          if spare_channel(packet)
+            info { "preopen_channels: server refused the spare channel, no longer pre-opening" }
+            stop_preopening
+            @spare_channel = nil
+            return
+          end
+
           channel = channels.delete(packet[:local_id])
           channel.do_open_failed(packet[:reason_code], packet[:description])
         end
 
         def channel_window_adjust(packet)
           info { "channel_window_adjust: #{packet[:local_id]} +#{packet[:extra_bytes]}" }
+          if (spare = spare_channel(packet))
+            spare.window_size += packet[:extra_bytes]
+            return
+          end
+
           channels[packet[:local_id]].do_window_adjust(packet[:extra_bytes])
         end
 
@@ -726,11 +766,20 @@ module Net
 
         def channel_eof(packet)
           info { "channel_eof: #{packet[:local_id]}" }
+          return if spare_channel(packet)
+
           channels[packet[:local_id]].do_eof
         end
 
         def channel_close(packet)
           info { "channel_close: #{packet[:local_id]}" }
+          if (spare = spare_channel(packet))
+            send_message(Buffer.from(:byte, CHANNEL_CLOSE, :long, spare.remote_id))
+            @spare_channel = nil
+            # Wait for the next plain open_channel before opening another, so a server closing spares can't make us loop.
+            @spare_wanted = false
+            return
+          end
 
           channel = channels[packet[:local_id]]
           channel_closed(channel)
@@ -744,6 +793,45 @@ module Net
         def channel_failure(packet)
           info { "channel_failure: #{packet[:local_id]}" }
           channels[packet[:local_id]].do_failure
+        end
+
+        def send_channel_open(type, local_id, window_size, packet_size, *extra)
+          send_message(Buffer.from(:byte, CHANNEL_OPEN, :string, type, :long, local_id,
+                                   :long, window_size, :long, packet_size, *extra))
+        end
+
+        def take_spare_channel
+          return unless @preopen_channels
+
+          @spare_wanted = true
+          spare = @spare_channel
+          @spare_channel = nil
+          spare
+        end
+
+        def open_spare_channel
+          return unless @spare_wanted && @preopen_channels && @spare_channel.nil? && !closed?
+
+          @spare_channel = SpareChannel.new(get_next_channel_id)
+          info { "preopen_channels: opening spare channel #{@spare_channel.local_id}" }
+          send_channel_open("session", @spare_channel.local_id, @max_win_size, @max_pkt_size)
+        end
+
+        # An unused spare is never closed, as that would cost round trips just before the transport goes away;
+        # it stays in @spare_channel to absorb the server's late replies for it.
+        def stop_preopening
+          @preopen_channels = false
+        end
+
+        def confirm_preopened_channels
+          until @preopened.empty?
+            channel, spare = @preopened.shift
+            channel.do_open_confirmation(spare.remote_id, spare.window_size, spare.packet_size)
+          end
+        end
+
+        def spare_channel(packet)
+          @spare_channel if @spare_channel && @spare_channel.local_id == packet[:local_id]
         end
 
         def io_select_wait(wait)

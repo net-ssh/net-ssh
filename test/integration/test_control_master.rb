@@ -44,6 +44,19 @@ class TestControlMaster < NetSSHTest
     end
   end
 
+  def test_preopen_channels
+    start(preopen_channels: true) do |ssh|
+      assert_equal "1\n", ssh.exec!("echo 1")
+      ssh.loop(0.1) { ssh.instance_variable_get(:@spare_channel).remote_id.nil? }
+      spare_id = ssh.instance_variable_get(:@spare_channel).local_id
+      channel = ssh.exec("echo 2; exit 4", status: (status = {})) { |ch, _, data| ch[:out] = data }
+      channel.wait
+      assert_equal spare_id, channel.local_id
+      assert_equal ["2\n", 4], [channel[:out], status[:exit_code]]
+      3.times { |i| assert_equal "#{i}\n", ssh.exec!("echo #{i}") }
+    end
+  end
+
   def test_concurrent_channels_with_pty
     start do |ssh|
       outputs = Hash.new { |h, k| h[k] = String.new }
