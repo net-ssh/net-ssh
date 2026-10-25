@@ -1,0 +1,1 @@
+Net::SSH.start no longer prompts for passwords, passphrases or keyboard-interactive responses when $stdin is not a TTY, matching OpenSSH; this fixes Errno::EPIPE in background jobs. Pass `prompt_without_tty: true` to prompt anyway, e.g. for a piped password [#967, #1073]
