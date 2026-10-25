@@ -1,3 +1,7 @@
+=== 8.0.3
+
+  * Add `preopen_channels` option: keep a spare session channel open so each command saves a round trip [#1071]
+
 === 8.0.2
 
   * Fixed `Session#close` raising `EOFError: cannot send data if channel has declared eof` when a forwarded connection still had unread data from its local client; data net-ssh had already read is still sent before the EOF and, as in OpenSSH, the rest is dropped; a regression in 8.0.0 [#1066, #1067]

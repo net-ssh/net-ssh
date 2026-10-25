@@ -1,1 +1,0 @@
-Add `preopen_channels` option: keep a spare session channel open so each command saves a round trip
