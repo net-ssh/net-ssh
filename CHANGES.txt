@@ -1,3 +1,7 @@
+=== Unreleased
+
+  * Security: validate every ProxyJump hop, not only the first, as [user@]host[:port] (refusing a path, query, fragment or password) and shell-escape the hops passed to ssh -J; a hop such as `evil/x&$(cmd)` ran `cmd` through the shell [GHSA-g2r2-x3p2-5677]
+
 === 7.3.7
 
   * Fixed `unexpected packet type 94 during initial key exchange` (or 93) when channel data arrives during a client-initiated re-key, which broke bulk transfers at the first re-key (e.g. with `rekey_limit`, or after about 1 GB); a regression in 7.3.5 [#1063]
