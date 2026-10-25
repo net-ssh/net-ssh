@@ -56,6 +56,11 @@ module Net
         # The hash of options that were given to the object at initialization.
         attr_reader :options
 
+        # The signature algorithms the server accepts for publickey
+        # authentication, from its RFC 8308 server-sig-algs extension, or nil if
+        # it did not send one.
+        attr_reader :server_sig_algs
+
         # Instantiates a new transport layer abstraction. This will block until
         # the initial key exchange completes, leaving you with a ready-to-use
         # transport session.
@@ -219,9 +224,8 @@ module Net
             when DEBUG
               send(packet[:always_display] ? :fatal : :debug) { packet[:message] }
 
-            # We don't advertise ext-info-c, but some servers send EXT_INFO anyway (#955).
             when EXT_INFO
-              debug { "ignoring EXT_INFO packet" }
+              accept_ext_info(packet)
 
             when KEXINIT
               algorithms.accept_kexinit(packet)
@@ -299,6 +303,20 @@ module Net
         attr_reader :queue # :nodoc:
 
         private
+
+        # Parses an RFC 8308 EXT_INFO packet, which servers send after the first
+        # NEWKEYS and possibly again just before USERAUTH_SUCCESS.
+        def accept_ext_info(packet)
+          count = packet.read_long or raise Net::SSH::Exception, "malformed EXT_INFO packet from server"
+          count.times do
+            name = packet.read_string
+            value = packet.read_string
+            raise Net::SSH::Exception, "malformed EXT_INFO packet from server" if name.nil? || value.nil?
+
+            debug { "EXT_INFO #{name}: #{value}" }
+            @server_sig_algs = value.split(",") if name == "server-sig-algs"
+          end
+        end
 
         def shift_queue
           packet = @queue.shift
