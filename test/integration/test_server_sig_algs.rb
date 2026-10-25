@@ -29,9 +29,9 @@ class TestServerSigAlgs < NetSSHTest
     tmpdir do |dir|
       refused = Array.new(refused_rsa_keys) { |i| "#{dir}/id_rsa#{i}" }
       refused.each { |key| ssh_keygen(key, "rsa") }
-      ssh_keygen "#{dir}/id_ecdsa", "ecdsa"
-      set_authorized_key('net_ssh_1', "#{dir}/id_ecdsa.pub")
-      yield(keys: refused + ["#{dir}/id_ecdsa"], keys_only: true, auth_methods: ['publickey'], non_interactive: true)
+      ssh_keygen "#{dir}/id_rsa_good", "rsa"
+      set_authorized_key('net_ssh_1', "#{dir}/id_rsa_good.pub")
+      yield(keys: refused + ["#{dir}/id_rsa_good"], keys_only: true, auth_methods: ['publickey'], non_interactive: true)
     end
   end
 
@@ -39,15 +39,15 @@ class TestServerSigAlgs < NetSSHTest
     with_keys(3) do |options|
       out, offered = connect(["MaxAuthTries 6"], options)
       assert_equal "foo\n", out
-      assert_equal %w[rsa-sha2-512 rsa-sha2-512 rsa-sha2-512 ecdsa-sha2-nistp256], offered
+      assert_equal %w[rsa-sha2-512] * 4, offered
     end
   end
 
   def test_rsa_signature_algorithm_follows_pubkey_algorithms_order
     with_keys(1) do |options|
-      out, offered = connect(["MaxAuthTries 6"], options.merge(pubkey_algorithms: %w[rsa-sha2-256 rsa-sha2-512 ecdsa-sha2-nistp256]))
+      out, offered = connect(["MaxAuthTries 6"], options.merge(pubkey_algorithms: %w[rsa-sha2-256 rsa-sha2-512]))
       assert_equal "foo\n", out
-      assert_equal %w[rsa-sha2-256 ecdsa-sha2-nistp256], offered
+      assert_equal %w[rsa-sha2-256] * 2, offered
     end
   end
 end
