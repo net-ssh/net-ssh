@@ -218,7 +218,8 @@ module Net
     #   should set it to true to prefer failing a password/etc auth methods vs.
     #   asking for password. Like OpenSSH, Net::SSH never prompts when $stdin is
     #   not a TTY (e.g. in a background job), so it defaults to +true+ then,
-    #   unless :password_prompt or :prompt_without_tty is given.
+    #   unless :password_prompt or :prompt_without_tty is given or an
+    #   SSH_ASKPASS program can be used (see Net::SSH::Prompt.askpass).
     # * :passphrase => the passphrase to use when loading a private key (default
     #   is +nil+, for no passphrase)
     # * :password => the password to use to login
