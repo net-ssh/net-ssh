@@ -46,7 +46,8 @@ module Net
         def ask(prompt, echo = true)
           $stdout.print(prompt)
           $stdout.flush
-          ret = (echo || !$stdin.tty?) ? $stdin.gets : $stdin.noecho(&:gets)
+          hide = !echo && $stdin.tty?
+          ret = hide ? $stdin.noecho(&:gets) : $stdin.gets
           $stdout.print("\n") unless echo
           ret.chomp
         end
