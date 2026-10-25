@@ -26,24 +26,44 @@ module Net
 
       def initialize(options = {}); end
 
-      # Whether the default prompt has a terminal to ask on.
+      # Whether the default prompt has a terminal or an askpass program to ask with.
       def self.can_ask?
-        $stdin.tty?
+        $stdin.tty? || !askpass.nil?
+      end
+
+      # The SSH_ASKPASS program to ask with instead of the terminal, chosen with
+      # the SSH_ASKPASS_REQUIRE and DISPLAY rules described in ssh(1).
+      def self.askpass
+        program = ENV['SSH_ASKPASS'].to_s
+        return nil if program.empty?
+
+        display = !ENV['DISPLAY'].to_s.empty? || !ENV['WAYLAND_DISPLAY'].to_s.empty?
+        case ENV['SSH_ASKPASS_REQUIRE'].to_s.downcase
+        when 'force' then program
+        when 'never' then nil
+        when 'prefer' then (program if display)
+        else (program if display && !$stdin.tty?)
+        end
       end
 
       # default prompt object implementation. More sophisticated implemenetations
       # might implement caching.
       class Prompter
         def initialize(info)
+          @askpass = Prompt.askpass
+          @header = []
           if info[:type] == 'keyboard-interactive'
-            $stdout.puts(info[:name]) unless info[:name].empty?
-            $stdout.puts(info[:instruction]) unless info[:instruction].empty?
+            @header << info[:name] unless info[:name].empty?
+            @header << info[:instruction] unless info[:instruction].empty?
           end
+          $stdout.puts(@header) unless @askpass || @header.empty?
         end
 
         # ask input from user, a prompter might ask for multiple inputs
         # (like user and password) in a single session.
         def ask(prompt, echo = true)
+          return ask_askpass(prompt) if @askpass
+
           $stdout.print(prompt)
           $stdout.flush
           hide = !echo && $stdin.tty?
@@ -55,6 +75,16 @@ module Net
         # success method will be called when the password was accepted
         # It's a good time to save password asked to a cache.
         def success; end
+
+        private
+
+        # Like OpenSSH, a cancelled or failed askpass answers with an empty string.
+        def ask_askpass(prompt)
+          text = (@header + [prompt]).join("\n")
+          @header = []
+          answer = IO.popen([@askpass, text], &:read)
+          Process.last_status.success? ? answer.chomp : ""
+        end
       end
 
       # start password session. Multiple questions might be asked multiple times
