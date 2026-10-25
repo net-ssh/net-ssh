@@ -1,3 +1,7 @@
+=== 8.0.4
+
+  * Security: validate every ProxyJump hop, not only the first, as [user@]host[:port] (refusing a path, query, fragment or password) and shell-escape the hops passed to ssh -J; a hop such as `evil/x&$(cmd)` ran `cmd` through the shell [GHSA-g2r2-x3p2-5677]
+
 === 8.0.3
 
   * Add `preopen_channels` option: keep a spare session channel open so each command saves a round trip [#1071]
