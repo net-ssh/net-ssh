@@ -144,6 +144,28 @@ module NetSSH
       assert_equal({ port: nil }, options)
     end
 
+    def test_match_user_should_use_the_start_user
+      with_ssh_config("Match User alice Host localhost\n  Port 2200\n") do |path|
+        assert_equal 2200, start_and_capture_transport_options_as('alice', config: path)[:port]
+        assert_nil start_and_capture_transport_options_as('bob', config: path)[:port]
+        assert_equal 2200, start_and_capture_transport_options_as(nil, config: path, user: 'alice')[:port]
+      end
+    end
+
+    def test_match_user_should_use_user_from_ssh_config_when_user_is_nil
+      with_ssh_config("Host localhost\n  User alice\nMatch User alice\n  Port 2200\n") do |path|
+        assert_equal 2200, start_and_capture_transport_options_as(nil, config: path)[:port]
+        assert_nil start_and_capture_transport_options_as('bob', config: path)[:port]
+      end
+    end
+
+    def start_and_capture_transport_options_as(user, options)
+      effective_options = nil
+      Net::SSH::Transport::Session.expects(:new).with { |_host, opts| effective_options = opts }.returns(mock('transport_session'))
+      Net::SSH.start('localhost', user, options)
+      effective_options
+    end
+
     def test_config_false_should_skip_ssh_config
       Net::SSH::Config.expects(:for).never
       Net::SSH.start('localhost', 'testuser', config: false)
