@@ -26,6 +26,11 @@ module Net
 
       def initialize(options = {}); end
 
+      # Whether the default prompt has a terminal to ask on.
+      def self.can_ask?
+        $stdin.tty?
+      end
+
       # default prompt object implementation. More sophisticated implemenetations
       # might implement caching.
       class Prompter
@@ -41,7 +46,7 @@ module Net
         def ask(prompt, echo = true)
           $stdout.print(prompt)
           $stdout.flush
-          ret = echo ? $stdin.gets : $stdin.noecho(&:gets)
+          ret = (echo || !$stdin.tty?) ? $stdin.gets : $stdin.noecho(&:gets)
           $stdout.print("\n") unless echo
           ret.chomp
         end

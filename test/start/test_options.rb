@@ -197,6 +197,34 @@ module NetSSH
       assert_equal({ logger: nil, password_prompt: nil }, options)
     end
 
+    def test_start_should_prompt_when_stdin_is_a_tty
+      Net::SSH::Prompt.stubs(:can_ask?).returns(true)
+      effective_options = start_and_capture_transport_options({})
+      refute effective_options[:non_interactive]
+      assert_nil effective_options[:number_of_password_prompts]
+    end
+
+    def test_start_should_be_non_interactive_when_stdin_is_not_a_tty
+      Net::SSH::Prompt.stubs(:can_ask?).returns(false)
+      effective_options = start_and_capture_transport_options({})
+      assert effective_options[:non_interactive]
+      assert_equal 0, effective_options[:number_of_password_prompts]
+    end
+
+    def test_start_should_prompt_without_tty_when_opted_in
+      Net::SSH::Prompt.stubs(:can_ask?).returns(false)
+      effective_options = start_and_capture_transport_options(prompt_without_tty: true)
+      refute effective_options[:non_interactive]
+    end
+
+    def test_start_should_use_custom_password_prompt_without_tty
+      Net::SSH::Prompt.stubs(:can_ask?).returns(false)
+      prompt = Object.new
+      effective_options = start_and_capture_transport_options(password_prompt: prompt)
+      refute effective_options[:non_interactive]
+      assert_same prompt, effective_options[:password_prompt]
+    end
+
     def test_start_should_accept_frozen_options
       options = { port: 2222, password: nil, verify_host_key: :never }.freeze
       effective_options = start_and_capture_transport_options(options)

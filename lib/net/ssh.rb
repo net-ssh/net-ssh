@@ -69,7 +69,7 @@ module Net
       host_name user properties passphrase keys_only max_pkt_size
       max_win_size send_env set_env use_agent number_of_password_prompts
       append_all_supported_algorithms non_interactive password_prompt
-      agent_socket_factory minimum_dh_bits verify_host_key
+      prompt_without_tty agent_socket_factory minimum_dh_bits verify_host_key
       fingerprint_hash check_host_ip pubkey_algorithms no_delay
       control_master control_path preopen_channels
     ]
@@ -216,7 +216,9 @@ module Net
     # * :non_interactive => set to true if your app is non interactive and prefers
     #   authentication failure vs password prompt. Non-interactive applications
     #   should set it to true to prefer failing a password/etc auth methods vs.
-    #   asking for password.
+    #   asking for password. Like OpenSSH, Net::SSH never prompts when $stdin is
+    #   not a TTY (e.g. in a background job), so it defaults to +true+ then,
+    #   unless :password_prompt or :prompt_without_tty is given.
     # * :passphrase => the passphrase to use when loading a private key (default
     #   is +nil+, for no passphrase)
     # * :password => the password to use to login
@@ -227,6 +229,10 @@ module Net
     #   costs one round trip instead of two. The spare counts against the
     #   server's MaxSessions; if the server refuses it, pre-opening stops for
     #   the session. Defaults to +false+.
+    # * :prompt_without_tty => set to +true+ to prompt for passwords, key
+    #   passphrases and keyboard-interactive responses on $stdout/$stdin even
+    #   when $stdin is not a TTY, e.g. to read a password piped into the
+    #   process. Defaults to +false+.
     # * :properties => a hash of key/value pairs to add to the new connection's
     #   properties (see Net::SSH::Connection::Session#properties)
     # * :proxy => a proxy instance (see Proxy) to use when connecting
@@ -382,6 +388,9 @@ module Net
         options[:logger].level = Logger::FATAL
       end
 
+      unless options[:password_prompt] || options[:prompt_without_tty] || Prompt.can_ask?
+        options[:non_interactive] = true
+      end
       options[:password_prompt] ||= Prompt.default(options)
 
       %i[password passphrase].each do |key|

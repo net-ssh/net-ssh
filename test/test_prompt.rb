@@ -5,6 +5,10 @@ class TestPrompt < NetSSHTest
   class FakeTTY < StringIO
     attr_reader :noecho_used
 
+    def tty?
+      true
+    end
+
     def noecho
       @noecho_used = true
       yield self
@@ -12,7 +16,7 @@ class TestPrompt < NetSSHTest
   end
 
   def test_ask_with_echo_should_read_input_visibly
-    answer, stdin, stdout = ask("user\n", "Login: ", true)
+    answer, stdin, stdout = ask(FakeTTY.new("user\n"), "Login: ", true)
 
     assert_equal "user", answer
     refute stdin.noecho_used
@@ -20,17 +24,32 @@ class TestPrompt < NetSSHTest
   end
 
   def test_ask_without_echo_should_hide_input_and_end_the_line
-    answer, stdin, stdout = ask("secret\n", "Password: ", false)
+    answer, stdin, stdout = ask(FakeTTY.new("secret\n"), "Password: ", false)
 
     assert_equal "secret", answer
     assert stdin.noecho_used
     assert_equal "Password: \n", stdout.string
   end
 
+  def test_ask_without_echo_should_read_a_pipe_without_noecho
+    answer, _stdin, stdout = ask(StringIO.new("secret\n"), "Password: ", false)
+
+    assert_equal "secret", answer
+    assert_equal "Password: \n", stdout.string
+  end
+
+  def test_can_ask_only_with_a_tty
+    $stdin = FakeTTY.new
+    assert Net::SSH::Prompt.can_ask?
+    $stdin = StringIO.new
+    refute Net::SSH::Prompt.can_ask?
+  ensure
+    $stdin = STDIN
+  end
+
   private
 
-  def ask(input, prompt, echo)
-    stdin = FakeTTY.new(input)
+  def ask(stdin, prompt, echo)
     stdout = StringIO.new
     $stdin = stdin
     $stdout = stdout
