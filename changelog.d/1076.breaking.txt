@@ -1,0 +1,1 @@
+A `Match` block containing a condition net-ssh does not support (`exec`, `canonical`, `final`, `localnetwork`, `tagged`, ...) no longer matches and prints a warning, where the condition used to be ignored; `Match User`, `OriginalHost` and `LocalUser` are now evaluated, so e.g. `Match User x Host y` no longer applies to every user [#782, #1076]
