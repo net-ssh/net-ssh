@@ -46,7 +46,7 @@ module Net
           end
 
           def authenticate_with_alg(identity, next_service, username, alg, sig_alg = nil)
-            debug { "trying publickey (#{identity.fingerprint}) alg #{alg}" }
+            debug { "trying publickey (#{fingerprint(identity)}) alg #{alg}" }
             send_request(identity, username, next_service, alg)
 
             message = session.next_message
@@ -66,10 +66,10 @@ module Net
 
               case message.type
               when USERAUTH_SUCCESS
-                debug { "publickey succeeded (#{identity.fingerprint})" }
+                debug { "publickey succeeded (#{fingerprint(identity)})" }
                 return true
               when USERAUTH_FAILURE
-                debug { "publickey failed (#{identity.fingerprint})" }
+                debug { "publickey failed (#{fingerprint(identity)})" }
 
                 raise Net::SSH::Authentication::DisallowedMethod unless
                   message[:authentications].split(/,/).include? 'publickey'
