@@ -77,12 +77,14 @@ def change_version(&block)
   require_relative version_file
   pre = Net::SSH::Version::PRE
   tiny = Net::SSH::Version::TINY
-  result = block[pre: pre, tiny: Net::SSH::Version::TINY]
+  minor = Net::SSH::Version::MINOR
+  result = block[pre: pre, tiny: tiny, minor: minor]
   raise ArgumentError, "Version change logic should always return a pre" unless result.key?(:pre)
 
   new_pre = result[:pre]
   new_tiny = result[:tiny] || tiny
-  found = { pre: false, tiny: false }
+  new_minor = result[:minor] || minor
+  found = { pre: false, tiny: false, minor: false }
   File.open("#{version_file}.new", "w") do |f|
     File.readlines(version_file).each do |line|
       match =
@@ -114,10 +116,23 @@ def change_version(&block)
         end
       end
 
+      if new_minor != minor
+        match = /^(\s+MINOR\s+=\s+)#{minor}(\s*)$/.match(line)
+        if match
+          prefix = match[1]
+          postfix = match[2]
+          new_line = "#{prefix}#{new_minor}#{postfix}"
+          puts "Changing:\n  - #{line}  + #{new_line}"
+          line = new_line
+          found[:minor] = true
+        end
+      end
+
       f.write(line)
     end
     raise ArgumentError, "Cound not find line: PRE = \"#{pre}\" in #{version_file}" unless found[:pre]
     raise ArgumentError, "Cound not find line: TINY = \"#{tiny}\" in #{version_file}" unless found[:tiny] || new_tiny == tiny
+    raise ArgumentError, "Cound not find line: MINOR = \"#{minor}\" in #{version_file}" unless found[:minor] || new_minor == minor
   end
 
   FileUtils.mv version_file, "#{version_file}.old"
@@ -128,7 +143,7 @@ end
 namespace :vbump do
   desc "Final release"
   task :final do
-    change_version do |pre:, tiny:|
+    change_version do |pre:, tiny:, **|
       _ = tiny
       if pre.nil?
         { tiny: tiny + 1, pre: nil }
@@ -140,9 +155,18 @@ namespace :vbump do
     end
   end
 
+  desc "Minor release"
+  task :minor do
+    change_version do |pre:, minor:, **|
+      raise ArgumentError, "PRE is #{pre.inspect}; release it with vbump:final first" unless pre.nil?
+
+      { minor: minor + 1, tiny: 0, pre: nil }
+    end
+  end
+
   desc "Increment prerelease"
   task :pre, [:type] do |_t, args|
-    change_version do |pre:, tiny:|
+    change_version do |pre:, tiny:, **|
       puts " PRE => #{pre.inspect}"
       match = /^([a-z]+)(\d+)/.match(pre)
       raise ArgumentError, "Unexpected pre: #{pre}" if match.nil? && args[:type].nil?
