@@ -143,6 +143,14 @@ class TestBuffer < NetSSHTest
     assert_equal "hello world again", buffer.to_s
   end
 
+  def test_append_should_force_binary_encoding_without_changing_argument
+    text = "\u25cf" * 3
+    buffer = new.append(text)
+    assert_equal Encoding::BINARY, buffer.content.encoding
+    assert_equal "\xE2\x97\x8F\xE2", buffer.read(4)
+    assert_equal Encoding::UTF_8, text.encoding
+  end
+
   def test_remainder_as_buffer_should_return_a_new_buffer_filled_with_the_text_after_the_current_position
     buffer = new "hello world"
     buffer.read(6)
