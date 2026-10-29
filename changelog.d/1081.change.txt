@@ -1,0 +1,1 @@
+Package only `lib`, `CHANGES.txt`, `LICENSE.txt` and `README.md` in the gem, about 10% smaller. Thanks @yuri-zubov [#1081]
