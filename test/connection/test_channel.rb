@@ -140,6 +140,29 @@ module Connection
       channel.enqueue_pending_output
     end
 
+    def test_enqueue_pending_output_should_chunk_multibyte_data_by_bytes_not_characters
+      channel.do_open_confirmation(0, 100, 8)
+      data = "●" * 4 # 12 bytes
+      channel.send_data(data)
+
+      connection.expect do |t, packet|
+        assert_equal CHANNEL_DATA, packet.type
+        assert_equal 0, packet[:local_id]
+        assert_equal 8, packet[:data].bytesize
+        assert_equal data.b[0, 8], packet[:data]
+
+        t.expect do |_t2, packet2|
+          assert_equal CHANNEL_DATA, packet2.type
+          assert_equal 0, packet2[:local_id]
+          assert_equal 4, packet2[:data].bytesize
+          assert_equal data.b[8, 4], packet2[:data]
+        end
+      end
+
+      channel.enqueue_pending_output
+      assert_equal 88, channel.remote_window_size
+    end
+
     def test_enqueue_pending_output_should_not_enqueue_more_than_max_window_size
       channel.do_open_confirmation(0, 8, 100)
       channel.send_data("hello world")

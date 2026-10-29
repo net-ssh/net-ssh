@@ -1,0 +1,1 @@
+Buffer#append now forces BINARY encoding so Channel#send_data chunks multibyte UTF-8 data by bytes instead of characters and no longer exceeds the remote maximum packet size [#1080, #1079]

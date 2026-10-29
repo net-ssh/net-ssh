@@ -145,7 +145,7 @@ module Net
       # Appends the given text to the end of the buffer. Does not alter the
       # read position. Returns the buffer object itself.
       def append(text)
-        @content << text
+        @content << text.b
         self
       end
 
@@ -359,7 +359,7 @@ module Net
       # Writes the given data literally into the string. Does not alter the
       # read position. Returns the buffer object.
       def write(*data)
-        data.each { |datum| @content << datum.dup.force_encoding('BINARY') }
+        data.each { |datum| @content << datum.b }
         self
       end
 
