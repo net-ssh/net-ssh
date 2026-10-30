@@ -74,6 +74,24 @@ module Net
       control_master control_path preopen_channels
     ]
 
+    class << self
+      # Allows to set the default configuration that will be used
+      # when starting a new SSH connection.
+      #
+      # Example:
+      #
+      #   Net::SSH.default_configuration = ->(host, ssh_config) {
+      #     { timeout: ssh_config.fetch(:timeout, 5), keepalive: true }
+      #   }
+      #   Net::SSH.start("host", "user") do |ssh|
+      #     # will have a default 5 seconds connection timeout
+      #     # will use keepalive
+      #   end
+      #
+      attr_accessor :default_configuration
+    end
+    self.default_configuration = ->(_host, _ssh_config) { {} }
+
     # The standard means of starting a new SSH connection. When used with a
     # block, the connection will be closed when the block terminates, otherwise
     # the connection will just be returned. The yielded (or returned) value
@@ -288,6 +306,12 @@ module Net
     # If +user+ parameter is nil it defaults to USER from ssh_config, or
     # local username
     def self.start(host, user = nil, options = {}, &block)
+      config_options = configuration_for(host, options.fetch(:config, true))
+      default_options = default_configuration&.call(host, config_options) || {}
+      unless default_options.is_a?(Hash)
+        raise ArgumentError, "Net::SSH.default_configuration should return a Hash"
+      end
+
       if options.key?(:paranoid)
         raise ArgumentError, ":paranoid has been removed, use :verify_host_key (same values)"
       end
@@ -303,10 +327,11 @@ module Net
       host_arg = host
 
       options = options.dup
+      options = config_options.merge(default_options, options)
       assign_defaults(options)
 
       options[:user] = user if user
-      options = configuration_for(host, options.fetch(:config, true)).merge(options)
+
       host = options.fetch(:host_name, host)
 
       options[:check_host_ip] = true unless options.key?(:check_host_ip)

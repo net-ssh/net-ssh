@@ -1,0 +1,1 @@
+Added `Net::SSH.default_configuration`, a callable receiving the host and its ssh_config options and returning default options for new connections; these override ssh_config values and are overridden by options passed to `Net::SSH.start`
