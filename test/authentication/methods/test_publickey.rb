@@ -108,7 +108,7 @@ module Authentication
       def test_authenticate_rsa_sha2
         key_manager.expects(:sign).with(&signature_parameters_with_alg(keys.first, "rsa-sha2-256")).returns("sig-one")
 
-        transport(pubkey_algorithms: %w[rsa-sha2-256]).expect do |t, packet|
+        transport(pubkey_algorithms: %w[rsa-sha2-256], server_sig_algs: %w[rsa-sha2-256]).expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert verify_userauth_request_packet(packet, keys.first, false, "rsa-sha2-256")
           t.return(USERAUTH_PK_OK, :string, "rsa-sha2-256", :string, Net::SSH::Buffer.from(:key, keys.first))
@@ -124,29 +124,103 @@ module Authentication
         assert subject.authenticate("ssh-connection", "jamis")
       end
 
-      def test_authenticate_rsa_sha2_fallback
-        key_manager.expects(:sign).with(&signature_parameters(keys.first)).returns("sig-one")
+      def test_authenticate_rsa_without_server_sig_algs_should_offer_only_ssh_rsa
+        key_manager.expects(:sign).with(&signature_parameters_with_alg(keys.first, "ssh-rsa")).returns("sig-one")
 
         transport(pubkey_algorithms: %w[rsa-sha2-256 ssh-rsa]).expect do |t, packet|
-          assert_equal USERAUTH_REQUEST, packet.type
-          assert verify_userauth_request_packet(packet, keys.first, false, "rsa-sha2-256")
-          t.return(USERAUTH_FAILURE, :string, "publickey")
+          assert verify_userauth_request_packet(packet, keys.first, false, "ssh-rsa")
+          t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
 
           t.expect do |t2, packet2|
-            assert_equal USERAUTH_REQUEST, packet2.type
-            assert verify_userauth_request_packet(packet2, keys.first, false)
-            t2.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
+            assert verify_userauth_request_packet(packet2, keys.first, true, "ssh-rsa")
+            assert_equal "sig-one", packet2.read_string
+            t2.return(USERAUTH_SUCCESS)
+          end
+        end
 
-            t2.expect do |t3, packet3|
-              assert_equal USERAUTH_REQUEST, packet3.type
-              assert verify_userauth_request_packet(packet3, keys.first, true)
-              assert_equal "sig-one", packet3.read_string
-              t3.return(USERAUTH_SUCCESS)
-            end
+        assert subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_rsa_without_server_sig_algs_should_skip_key_when_ssh_rsa_is_disabled
+        transport(pubkey_algorithms: composed_pubkey_algorithms)
+        assert_equal false, subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_rsa_should_offer_first_preferred_algorithm_in_server_sig_algs
+        transport(pubkey_algorithms: composed_pubkey_algorithms, server_sig_algs: %w[ssh-ed25519 ssh-rsa rsa-sha2-256])
+        expect_offers_refused([keys.first], "rsa-sha2-256")
+        assert_equal false, subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
+        assert_empty transport.instance_variable_get(:@expectations)
+      end
+
+      def test_authenticate_rsa_should_follow_pubkey_algorithms_order
+        transport(pubkey_algorithms: %w[rsa-sha2-256 rsa-sha2-512], server_sig_algs: %w[rsa-sha2-512 rsa-sha2-256])
+        expect_offers_refused([keys.first], "rsa-sha2-256")
+        assert_equal false, subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
+        assert_empty transport.instance_variable_get(:@expectations)
+      end
+
+      def test_authenticate_rsa_should_skip_key_when_server_sig_algs_has_no_enabled_rsa_algorithm
+        transport(pubkey_algorithms: composed_pubkey_algorithms, server_sig_algs: %w[ssh-ed25519 ssh-rsa])
+        assert_equal false, subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_rsa_should_offer_ssh_rsa_when_enabled_and_only_listed_by_server
+        expect_offer_accepted(keys.first, "ssh-rsa", composed_pubkey_algorithms(pubkey_algorithms: %w[+ssh-rsa]), %w[ssh-ed25519 ssh-rsa])
+        assert subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_should_offer_each_refused_rsa_key_once
+        rsa_keys = Array.new(3) { OpenSSL::PKey::RSA.new(1024) }
+        transport(pubkey_algorithms: composed_pubkey_algorithms, server_sig_algs: %w[rsa-sha2-512 rsa-sha2-256])
+        expect_offers_refused(rsa_keys, "rsa-sha2-512")
+        assert_equal false, subject(keys: rsa_keys).authenticate("ssh-connection", "jamis")
+        assert_empty transport.instance_variable_get(:@expectations)
+      end
+
+      def test_authenticate_rsa_should_assume_rsa_sha2_for_openssh74
+        transport(pubkey_algorithms: composed_pubkey_algorithms, server_sig_algs: %w[ssh-ed25519 ssh-rsa ssh-dss])
+        transport.server_version = stub("server_version", version: "SSH-2.0-OpenSSH_7.4")
+        expect_offers_refused([keys.first], "rsa-sha2-512")
+        assert_equal false, subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
+        assert_empty transport.instance_variable_get(:@expectations)
+      end
+
+      def test_authenticate_rsa_cert_should_offer_rsa_sha2_cert_algorithm_from_server_sig_algs
+        key_manager(keys: [rsa_cert]).expects(:sign).with(&signature_parameters_with_alg(rsa_cert, "rsa-sha2-256-cert-v01@openssh.com", "rsa-sha2-256")).returns("sig-one")
+
+        transport(pubkey_algorithms: composed_pubkey_algorithms, server_sig_algs: %w[rsa-sha2-256]).expect do |t, packet|
+          assert verify_userauth_request_packet(packet, rsa_cert, false, "rsa-sha2-256-cert-v01@openssh.com")
+          t.return(USERAUTH_PK_OK, :string, "rsa-sha2-256-cert-v01@openssh.com", :string, Net::SSH::Buffer.from(:key, rsa_cert))
+
+          t.expect do |t2, packet2|
+            assert verify_userauth_request_packet(packet2, rsa_cert, true, "rsa-sha2-256-cert-v01@openssh.com")
+            assert_equal "sig-one", packet2.read_string
+            t2.return(USERAUTH_SUCCESS)
           end
         end
 
         assert subject.authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_rsa_cert_without_server_sig_algs_should_be_skipped_by_default
+        transport(pubkey_algorithms: composed_pubkey_algorithms)
+        assert_equal false, subject(keys: [rsa_cert]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_authenticate_rsa_cert_should_use_ssh_rsa_cert_for_openssh77
+        transport(pubkey_algorithms: composed_pubkey_algorithms(pubkey_algorithms: %w[+ssh-rsa-cert-v01@openssh.com]),
+                  server_sig_algs: %w[rsa-sha2-256 rsa-sha2-512 ssh-rsa])
+        transport.server_version = stub("server_version", version: "SSH-2.0-OpenSSH_7.7p1")
+        expect_offers_refused([rsa_cert], "ssh-rsa-cert-v01@openssh.com")
+        assert_equal false, subject(keys: [rsa_cert]).authenticate("ssh-connection", "jamis")
+        assert_empty transport.instance_variable_get(:@expectations)
+      end
+
+      def test_authenticate_rsa_cert_should_be_skipped_for_openssh77_by_default
+        transport(pubkey_algorithms: composed_pubkey_algorithms, server_sig_algs: %w[rsa-sha2-256 rsa-sha2-512 ssh-rsa])
+        transport.server_version = stub("server_version", version: "SSH-2.0-OpenSSH_7.7p1")
+        assert_equal false, subject(keys: [rsa_cert]).authenticate("ssh-connection", "jamis")
       end
 
       def test_authenticate_should_not_offer_dsa_key_by_default
@@ -174,7 +248,7 @@ module Authentication
       end
 
       def test_authenticate_should_try_rsa_sha2_512_when_prepended
-        expect_offer_accepted(keys.first, "rsa-sha2-512", composed_pubkey_algorithms(pubkey_algorithms: %w[^rsa-sha2-512]))
+        expect_offer_accepted(keys.first, "rsa-sha2-512", composed_pubkey_algorithms(pubkey_algorithms: %w[^rsa-sha2-512]), %w[rsa-sha2-256 rsa-sha2-512])
         assert subject(keys: [keys.first]).authenticate("ssh-connection", "jamis")
       end
 
@@ -191,7 +265,7 @@ module Authentication
       def test_authenticate_rsa_key_with_default_pubkey_algorithms_should_prefer_rsa_sha2
         key_manager(keys: [keys.first]).expects(:sign).with(&signature_parameters_with_alg(keys.first, "rsa-sha2-512")).returns("sig-one")
 
-        transport(pubkey_algorithms: composed_pubkey_algorithms).expect do |t, packet|
+        transport(pubkey_algorithms: composed_pubkey_algorithms, server_sig_algs: %w[rsa-sha2-256 rsa-sha2-512]).expect do |t, packet|
           assert verify_userauth_request_packet(packet, keys.first, false, "rsa-sha2-512")
           t.return(USERAUTH_PK_OK, :string, "rsa-sha2-512", :string, Net::SSH::Buffer.from(:key, keys.first))
 
@@ -207,18 +281,10 @@ module Authentication
 
       def test_authenticate_rsa_key_with_default_pubkey_algorithms_should_not_fall_back_to_ssh_rsa
         key_manager(keys: [keys.first])
-
-        transport(pubkey_algorithms: composed_pubkey_algorithms).expect do |t, packet|
-          assert verify_userauth_request_packet(packet, keys.first, false, "rsa-sha2-512")
-          t.return(USERAUTH_FAILURE, :string, "publickey")
-
-          t.expect do |t2, packet2|
-            assert verify_userauth_request_packet(packet2, keys.first, false, "rsa-sha2-256")
-            t2.return(USERAUTH_FAILURE, :string, "publickey")
-          end
-        end
-
+        transport(pubkey_algorithms: composed_pubkey_algorithms, server_sig_algs: %w[ssh-rsa rsa-sha2-256 rsa-sha2-512])
+        expect_offers_refused([keys.first], "rsa-sha2-512")
         assert !subject.authenticate("ssh-connection", "jamis")
+        assert_empty transport.instance_variable_get(:@expectations)
       end
 
       def test_authenticate_should_offer_agent_sk_ed25519_key_by_default
@@ -260,10 +326,10 @@ module Authentication
         end
       end
 
-      def signature_parameters_with_alg(key, alg)
+      def signature_parameters_with_alg(key, alg, sig_alg = alg)
         Proc.new do |given_key, data, given_alg|
           next false unless given_key.to_blob == key.to_blob
-          next false unless given_alg == alg
+          next false unless given_alg == sig_alg
 
           buffer = Net::SSH::Buffer.new(data)
           buffer.read_string == "abcxyz123"      && # session-id
@@ -281,11 +347,38 @@ module Authentication
           packet.read_buffer.read_key.to_blob == key.to_blob # key
       end
 
-      def expect_offer_accepted(key, alg, pubkey_algorithms)
-        transport(pubkey_algorithms: pubkey_algorithms).expect do |t, packet|
+      def expect_offer_accepted(key, alg, pubkey_algorithms, server_sig_algs = nil)
+        transport(pubkey_algorithms: pubkey_algorithms, server_sig_algs: server_sig_algs).expect do |t, packet|
           assert_equal USERAUTH_REQUEST, packet.type
           assert verify_userauth_request_packet(packet, key, false, alg)
           t.return(USERAUTH_SUCCESS)
+        end
+      end
+
+      def expect_offers_refused(refused_keys, alg)
+        refused_keys.each do |key|
+          transport.expect do |t, packet|
+            assert verify_userauth_request_packet(packet, key, false, alg)
+            t.return(USERAUTH_FAILURE, :string, "publickey")
+          end
+        end
+      end
+
+      def rsa_cert
+        @@rsa_cert ||= begin
+          cert = Net::SSH::Authentication::Certificate.new
+          cert.type = :user
+          cert.key = keys.first.public_key
+          cert.serial = 1
+          cert.key_id = "test key"
+          cert.valid_principals = %w[jamis]
+          cert.valid_after = Time.now - 86400
+          cert.valid_before = Time.now + 86400
+          cert.critical_options = {}
+          cert.extensions = {}
+          cert.reserved = ''
+          cert.sign!(OpenSSL::PKey::RSA.new(1024))
+          cert
         end
       end
 
@@ -313,6 +406,7 @@ module Authentication
       end
 
       @@keys = nil
+      @@rsa_cert = nil
       @@ecdsa_key = nil
       def keys
         @@keys ||= [OpenSSL::PKey::RSA.new(512), OpenSSL::PKey::DSA.new(1024)]

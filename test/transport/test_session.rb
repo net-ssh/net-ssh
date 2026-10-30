@@ -220,6 +220,42 @@ module Transport
       assert_nil session.poll_message
     end
 
+    def test_server_sig_algs_should_be_nil_without_ext_info
+      session!
+      assert_nil session.server_sig_algs
+    end
+
+    def test_poll_message_should_store_server_sig_algs_from_ext_info
+      session!
+      packet = P(:byte, EXT_INFO, :long, 2, :string, "publickey-hostbound@openssh.com", :string, "0",
+                 :string, "server-sig-algs", :string, "ssh-ed25519,rsa-sha2-256,rsa-sha2-512")
+      socket.expects(:next_packet).times(2).returns(packet, nil)
+      assert_nil session.poll_message
+      assert_equal %w[ssh-ed25519 rsa-sha2-256 rsa-sha2-512], session.server_sig_algs
+    end
+
+    def test_server_sig_algs_should_be_replaced_by_a_later_ext_info
+      session!
+      first = P(:byte, EXT_INFO, :long, 1, :string, "server-sig-algs", :string, "ssh-ed25519")
+      second = P(:byte, EXT_INFO, :long, 1, :string, "server-sig-algs", :string, "rsa-sha2-256")
+      socket.expects(:next_packet).times(3).returns(first, second, nil)
+      assert_nil session.poll_message
+      assert_equal %w[rsa-sha2-256], session.server_sig_algs
+    end
+
+    def test_ext_info_without_server_sig_algs_should_leave_them_unset
+      session!
+      socket.expects(:next_packet).times(2).returns(P(:byte, EXT_INFO, :long, 1, :string, "ping@openssh.com", :string, "0"), nil)
+      assert_nil session.poll_message
+      assert_nil session.server_sig_algs
+    end
+
+    def test_malformed_ext_info_should_raise
+      session!
+      socket.expects(:next_packet).returns(P(:byte, EXT_INFO, :long, 2, :string, "server-sig-algs", :string, "ssh-ed25519"))
+      assert_raises(Net::SSH::Exception) { session.poll_message }
+    end
+
     def test_poll_message_should_silently_handle_unimplemented_packets
       session!
       socket.expects(:next_packet).times(2).returns(P(:byte, UNIMPLEMENTED, :long, 15), nil)

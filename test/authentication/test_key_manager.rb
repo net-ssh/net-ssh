@@ -396,6 +396,17 @@ module Authentication
       assert_equal "abcxyz123", manager.sign(rsa_pk, "hello, world")
     end
 
+    def test_sign_with_agent_originated_rsa_key_should_pass_rsa_sha2_flags
+      manager.stubs(:agent).returns(agent)
+      manager.each_identity { |identity| } # preload the known_identities
+      agent.expects(:sign).with(rsa_pk, "hello, world", Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_512).returns("sig512")
+      agent.expects(:sign).with(rsa_pk, "hello, world", Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_256).returns("sig256")
+      agent.expects(:sign).with(rsa_pk, "hello, world").returns("sig1")
+      assert_equal "sig512", manager.sign(rsa_pk, "hello, world", "rsa-sha2-512")
+      assert_equal "sig256", manager.sign(rsa_pk, "hello, world", "rsa-sha2-256")
+      assert_equal "sig1", manager.sign(rsa_pk, "hello, world", "ssh-rsa")
+    end
+
     def test_sign_with_agent_originated_key_should_be_signable_through_explicitly_loaded_cert
       stub_explicit_file_cert File.expand_path("/cert"), rsa_cert
       manager.stubs(:agent).returns(agent)

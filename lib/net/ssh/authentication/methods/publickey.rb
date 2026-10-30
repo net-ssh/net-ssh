@@ -8,6 +8,25 @@ module Net
       module Methods
         # Implements the "publickey" SSH authentication method.
         class Publickey < Abstract
+          RSA_CERT = "ssh-rsa-cert-v01@openssh.com".freeze
+
+          # Key algorithms usable with each RSA key type, mapped to the signature algorithm they imply.
+          RSA_SIGNATURE_ALGORITHMS = {
+            "ssh-rsa" => {
+              "rsa-sha2-512" => "rsa-sha2-512",
+              "rsa-sha2-256" => "rsa-sha2-256",
+              "ssh-rsa" => "ssh-rsa"
+            }.freeze,
+            RSA_CERT => {
+              "rsa-sha2-512-cert-v01@openssh.com" => "rsa-sha2-512",
+              "rsa-sha2-256-cert-v01@openssh.com" => "rsa-sha2-256",
+              RSA_CERT => "ssh-rsa"
+            }.freeze
+          }.freeze
+
+          # Servers that OpenSSH flags with SSH_BUG_SIGTYPE (compat.c): no RSA/SHA-2 certificate signatures.
+          SIGTYPE_BUG = /\A(OpenSSH_[2-5]|OpenSSH_6\.[56]|OpenSSH_7\.[0-7]|Sun_SSH_1\.0)/.freeze
+
           # Attempts to perform public-key authentication for the given
           # username, trying each identity known to the key manager. If any of
           # them succeed, returns +true+, otherwise returns +false+. This
@@ -94,43 +113,36 @@ module Net
           # username, with the given identity (public key). Returns +true+ if
           # successful, or +false+ otherwise.
           def authenticate_with(identity, next_service, username)
-            type = identity.ssh_type
-            if type == "ssh-rsa"
-              pubkey_algorithms.each do |pk_alg|
-                case pk_alg
-                when "rsa-sha2-512", "rsa-sha2-256", "ssh-rsa"
-                  if authenticate_with_alg(identity, next_service, username, pk_alg, pk_alg)
-                    # success
-                    return true
-                  end
-                end
-              end
-            elsif type == "ssh-rsa-cert-v01@openssh.com"
-              pubkey_algorithms.each do |pk_alg|
-                case pk_alg
-                when "rsa-sha2-512-cert-v01@openssh.com"
-                  if authenticate_with_alg(identity, next_service, username, pk_alg, "rsa-sha2-512")
-                    # success
-                    return true
-                  end
-                when "rsa-sha2-256-cert-v01@openssh.com"
-                  if authenticate_with_alg(identity, next_service, username, pk_alg, "rsa-sha2-256")
-                    # success
-                    return true
-                  end
-                when "ssh-rsa-cert-v01@openssh.com"
-                  if authenticate_with_alg(identity, next_service, username, pk_alg)
-                    # success
-                    return true
-                  end
-                end
-              end
-            elsif pubkey_algorithms.include?(type) && authenticate_with_alg(identity, next_service, username, type)
-              # success
-              return true
+            alg = key_algorithm(identity)
+            if alg.nil?
+              debug { "skipping publickey (#{identity.fingerprint}): no mutual signature algorithm for #{identity.ssh_type}" }
+              return false
             end
-            # failure
-            return false
+
+            authenticate_with_alg(identity, next_service, username, alg, RSA_SIGNATURE_ALGORITHMS.dig(identity.ssh_type, alg))
+          end
+
+          # Picks the single algorithm to offer for the identity, following
+          # key_sig_algorithm() in OpenSSH 10.2 sshconnect2.c.
+          def key_algorithm(identity)
+            type = identity.ssh_type
+            server_sig_algs = session.transport.server_sig_algs
+            server_software = session.transport.server_version.version.to_s.sub(/\ASSH-[\d.]+-/, "")
+
+            if server_sig_algs.nil? || !RSA_SIGNATURE_ALGORITHMS.key?(type) ||
+               (type == RSA_CERT && server_software.match?(SIGTYPE_BUG))
+              return type if pubkey_algorithms.include?(type)
+
+              return nil
+            end
+
+            # OpenSSH 7.4 accepts RSA/SHA-2 signatures but leaves them out of server-sig-algs.
+            server_sig_algs = %w[rsa-sha2-256 rsa-sha2-512] if type == "ssh-rsa" && server_software.start_with?("OpenSSH_7.4")
+
+            pubkey_algorithms.find do |alg|
+              sig_alg = RSA_SIGNATURE_ALGORITHMS[type][alg]
+              sig_alg && server_sig_algs.include?(sig_alg)
+            end
           end
         end
       end

@@ -447,6 +447,17 @@ module Transport
       assert_exchange_results
     end
 
+    def test_rekey_should_not_advertise_ext_info_c
+      algorithms.instance_variable_set(:@session_id, session_id)
+      sent = false
+      transport.expect do |_t, buffer|
+        assert_kexinit(buffer, rekey: true)
+        sent = true
+      end
+      algorithms.rekey!
+      assert sent
+    end
+
     def test_key_exchange_when_server_does_not_support_preferred_kex_should_fallback_to_secondary
       kexinit kex: "diffie-hellman-group14-sha256"
       transport.expect do |_t, buffer|
@@ -685,7 +696,9 @@ module Transport
     def assert_kexinit(buffer, options = {})
       assert_equal KEXINIT, buffer.type
       assert_equal 16, buffer.read(16).length
-      assert_equal options[:kex] || default_kex.join(','), buffer.read_string
+      kex = options[:kex] || default_kex.join(',')
+      kex += ',ext-info-c' unless options[:rekey]
+      assert_equal kex, buffer.read_string
       assert_equal options[:host_key] || (ed_ec_host_keys + rsa_host_keys).join(','), buffer.read_string
       assert_equal options[:encryption_client] || "#{chacha_poly_cipher_str}aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com", buffer.read_string
       assert_equal options[:encryption_server] || "#{chacha_poly_cipher_str}aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com", buffer.read_string
