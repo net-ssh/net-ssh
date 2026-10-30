@@ -1,3 +1,6 @@
+require 'etc'
+require 'set'
+
 module Net
   module SSH
     # The Net::SSH::Config class is used to parse OpenSSH configuration files,
@@ -69,9 +72,19 @@ module Net
         # given +files+ (defaulting to the list of files returned by
         # #default_files), translates the resulting hash into the options
         # recognized by Net::SSH, and returns them.
-        def for(host, files = expandable_default_files)
+        #
+        # +user+ is the remote user given explicitly (e.g. to Net::SSH.start),
+        # used by <tt>Match User</tt>; when nil, the User set so far by the
+        # config, then the local user name, is used, as in OpenSSH.
+        #
+        # Match supports +all+, +Host+, +OriginalHost+, +User+ and +LocalUser+,
+        # each optionally negated with a leading "!". A Match block with any
+        # other condition (+exec+, +canonical+, +final+, +localnetwork+,
+        # +tagged+, ...) never matches, and a warning naming the condition is
+        # printed with Kernel#warn once per config line.
+        def for(host, files = expandable_default_files, user: nil)
           translate(files.inject({}) { |settings, file|
-            load(file, host, settings)
+            load(file, host, settings, user: user)
           })
         end
 
@@ -81,15 +94,16 @@ module Net
         # ones. Returns a hash containing the OpenSSH options. (See
         # #translate for how to convert the OpenSSH options into Net::SSH
         # options.)
-        def load(path, host, settings = {}, base_dir = nil)
+        def load(path, host, settings = {}, base_dir = nil, user: nil)
           file = File.expand_path(path)
           base_dir ||= File.dirname(file)
           return settings unless File.readable?(file)
 
           globals = {}
-          block_matched = false
-          block_seen = false
+          block_matched = block_seen = false
+          lineno = 0
           IO.foreach(file) do |line|
+            lineno += 1
             next if line =~ /^\s*(?:#.*)?$/
 
             # As in OpenSSH, the keyword ends at the first whitespace or "=".
@@ -127,7 +141,7 @@ module Net
               block_seen = true
               settings[key] = host
             elsif key == 'match'
-              block_matched = eval_match_conditions(value, host, settings)
+              block_matched = eval_match_conditions(value, host, [user, settings['user'], globals['user']].compact.first, "#{file} line #{lineno}")
               block_seen = true
             elsif !block_seen
               case key
@@ -135,7 +149,7 @@ module Net
                 (globals[key] ||= []) << value
               when 'include'
                 included_file_paths(base_dir, value).each do |file_path|
-                  globals = load(file_path, host, globals, base_dir)
+                  globals = load(file_path, host, globals, base_dir, user: user)
                 end
               else
                 globals[key] = value unless settings.key?(key)
@@ -146,7 +160,7 @@ module Net
                 (settings[key] ||= []) << value
               when 'include'
                 included_file_paths(base_dir, value).each do |file_path|
-                  settings = load(file_path, host, settings, base_dir)
+                  settings = load(file_path, host, settings, base_dir, user: user)
                 end
               else
                 settings[key] = value unless settings.key?(key)
@@ -325,7 +339,7 @@ module Net
 
         # Converts an ssh_config pattern into a regex for matching against
         # host names.
-        def pattern2regex(pattern)
+        def pattern2regex(pattern, ignore_case: true)
           tail = pattern
           prefix = String.new
           while !tail.empty? do
@@ -341,7 +355,7 @@ module Net
               fail "Unpexpcted sep:#{sep}"
             end
           end
-          Regexp.new("^" + prefix + "$", true)
+          Regexp.new("^" + prefix + "$", ignore_case)
         end
 
         # Converts the given size into an integer number of bytes.
@@ -374,39 +388,82 @@ module Net
           str.scan(/([^"\s]+)?(?:"([^"]+)")?\s*/).map(&:join)
         end
 
-        def eval_match_conditions(condition, host, settings)
+        MATCH_CONDITIONS_WITHOUT_ARGUMENT = %w[all canonical final].freeze
+        SUPPORTED_MATCH_CONDITIONS = %w[all host originalhost user localuser].freeze
+
+        def eval_match_conditions(condition, host, remote_user, location)
           # Not using `\s` for whitespace matching as canonical
           # ssh_config parser implementation (OpenSSH) has specific character set.
           # Ref: https://github.com/openssh/openssh-portable/blob/2581333d564d8697837729b3d07d45738eaf5a54/misc.c#L237-L239
-          conditions = condition.split(/[ \t\r\n]+|(?<!=)=(?!=)/).reject(&:empty?)
-          return true if conditions == ["all"]
+          tokens = condition.split(/[ \t\r\n]+|(?<!=)=(?!=)/).reject(&:empty?)
+          return true if tokens == ["all"]
 
-          conditions = conditions.each_slice(2)
-          condition_matches = []
-          conditions.each do |(kind, exprs)|
-            exprs = unquote(exprs)
-
-            case kind.downcase
-            when "all"
-              raise "all cannot be mixed with other conditions"
-            when "host"
-              if exprs.start_with?('!')
-                negated = true
-                exprs = exprs[1..-1]
-              else
-                negated = false
-              end
-              condition_met = false
-              exprs.split(",").each do |expr|
-                condition_met = condition_met || host =~ pattern2regex(expr)
-              end
-              condition_matches << (true && negated ^ condition_met)
-              # else
-              # warn "net-ssh: Unsupported expr in Match block: #{kind}"
-            end
+          conditions = parse_match_conditions(tokens)
+          unsupported = conditions.find { |_kind, name, exprs|
+            !SUPPORTED_MATCH_CONDITIONS.include?(name) || (name != 'all' && exprs.nil?)
+          }
+          if unsupported
+            warn_unsupported_match(unsupported[0], location)
+            return false
           end
 
-          !condition_matches.empty? && condition_matches.all?
+          !conditions.empty? && conditions.all? do |kind, name, exprs|
+            kind.start_with?('!') ^ match_condition?(name, exprs, host, remote_user || local_user, conditions.size)
+          end
+        end
+
+        def parse_match_conditions(tokens)
+          conditions = []
+          until tokens.empty?
+            kind = tokens.shift
+            name = kind.delete_prefix('!').downcase
+            exprs = tokens.shift unless MATCH_CONDITIONS_WITHOUT_ARGUMENT.include?(name)
+            conditions << [kind, name, exprs && unquote(exprs)]
+          end
+          conditions
+        end
+
+        def match_condition?(name, exprs, host, remote_user, condition_count)
+          case name
+          when "all"
+            raise "all cannot be mixed with other conditions" if condition_count > 1
+
+            true
+          when "host"
+            negated = exprs.start_with?('!')
+            exprs = exprs[1..-1] if negated
+            negated ^ exprs.split(",").any? { |expr| host =~ pattern2regex(expr) }
+          when "originalhost"
+            match_pattern_list(host, exprs)
+          when "user"
+            match_pattern_list(remote_user, exprs, ignore_case: false)
+          when "localuser"
+            match_pattern_list(local_user, exprs, ignore_case: false)
+          end
+        end
+
+        # OpenSSH's match_pattern_list: true if any pattern matches and no "!pattern" does.
+        def match_pattern_list(string, list, ignore_case: true)
+          matched = false
+          list.split(",").each do |pattern|
+            negated = pattern.start_with?('!')
+            next unless string =~ pattern2regex(negated ? pattern[1..-1] : pattern, ignore_case: ignore_case)
+            return false if negated
+
+            matched = true
+          end
+          matched
+        end
+
+        def warn_unsupported_match(kind, location)
+          @warned_unsupported_matches ||= Set.new
+          return unless @warned_unsupported_matches.add?([location, kind])
+
+          Kernel.warn("net-ssh: #{location}: unsupported Match condition '#{kind}', the Match block is skipped")
+        end
+
+        def local_user
+          Etc.getpwuid&.name || Etc.getlogin
         end
 
         # As in OpenSSH's argv_split, "#" starts a comment only at the start of a token and outside quotes.

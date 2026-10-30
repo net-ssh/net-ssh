@@ -306,7 +306,7 @@ module Net
       assign_defaults(options)
 
       options[:user] = user if user
-      options = configuration_for(host, options.fetch(:config, true)).merge(options)
+      options = configuration_for(host, options.fetch(:config, true), user: options[:user]).merge(options)
       host = options.fetch(:host_name, host)
 
       options[:check_host_ip] = true unless options.key?(:check_host_ip)
@@ -365,15 +365,17 @@ module Net
     # be a file name (or array of file names) of SSH configuration file(s)
     # to read.
     #
+    # +user+ is the explicitly requested remote user, matched by <tt>Match User</tt>.
+    #
     # See Net::SSH::Config for the full description of all supported options.
-    def self.configuration_for(host, use_ssh_config)
+    def self.configuration_for(host, use_ssh_config, user: nil)
       files = case use_ssh_config
               when true then Net::SSH::Config.expandable_default_files
               when false, nil then return {}
               else Array(use_ssh_config)
               end
 
-      Net::SSH::Config.for(host, files)
+      Net::SSH::Config.for(host, files, user: user)
     end
 
     def self.assign_defaults(options)
