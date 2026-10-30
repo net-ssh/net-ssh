@@ -137,7 +137,8 @@ module Net
           begin
             auth_class = Methods.const_get(method_name.split(/\W+/).map { |p| p.capitalize }.join)
             method = auth_class.new(self,
-                                    key_manager: key_manager, password_prompt: options[:password_prompt])
+                                    key_manager: key_manager, password_prompt: options[:password_prompt],
+                                    fingerprint_hash: options[:fingerprint_hash])
           rescue NameError
             debug {"Mechanism #{method_name} was requested, but isn't a known type.  Ignoring it."}
             return false

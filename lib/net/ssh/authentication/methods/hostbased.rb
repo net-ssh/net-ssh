@@ -31,7 +31,7 @@ module Net
           # Attempts to perform host-based authentication of the user, using
           # the given host identity (key).
           def authenticate_with(identity, next_service, username, key_manager)
-            debug { "trying hostbased (#{identity.fingerprint})" }
+            debug { "trying hostbased (#{fingerprint(identity)})" }
             client_username = ENV['USER'] || username
 
             req = build_request(identity, next_service, username, "#{hostname}.", client_username)
@@ -46,10 +46,10 @@ module Net
 
             case message.type
             when USERAUTH_SUCCESS
-              info { "hostbased succeeded (#{identity.fingerprint})" }
+              info { "hostbased succeeded (#{fingerprint(identity)})" }
               return true
             when USERAUTH_FAILURE
-              info { "hostbased failed (#{identity.fingerprint})" }
+              info { "hostbased failed (#{fingerprint(identity)})" }
 
               raise Net::SSH::Authentication::DisallowedMethod unless
                 message[:authentications].split(/,/).include? 'hostbased'

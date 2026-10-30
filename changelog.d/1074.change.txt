@@ -1,0 +1,1 @@
+Publickey and hostbased authentication now log key fingerprints using `:fingerprint_hash` (default SHA256) instead of MD5, fixing a crash with debug logging on FIPS-enabled OpenSSL [#936, #1074]

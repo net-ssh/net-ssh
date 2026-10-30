@@ -1,4 +1,5 @@
 require 'common'
+require 'logger'
 require 'net/ssh/authentication/methods/publickey'
 require 'authentication/methods/common'
 
@@ -233,6 +234,17 @@ module Authentication
       def test_authenticate_should_skip_agent_sk_keys_removed_from_pubkey_algorithms
         transport(pubkey_algorithms: composed_pubkey_algorithms(pubkey_algorithms: %w[-sk-*]))
         assert_equal false, subject(keys: [sk_ed25519_key, sk_ecdsa_key]).authenticate("ssh-connection", "jamis")
+      end
+
+      def test_debug_log_uses_sha256_fingerprint_when_md5_is_unavailable
+        OpenSSL::Digest.stubs(:hexdigest).with { |alg, _| alg.to_s.upcase == 'MD5' }.raises(OpenSSL::Digest::DigestError, 'MD5 disabled')
+        key = OpenSSL::PKey::EC.generate("prime256v1")
+        expect_offer_accepted(key, "ecdsa-sha2-nistp256", composed_pubkey_algorithms)
+        log = StringIO.new
+        session.stubs(:logger).returns(Logger.new(log).tap { |l| l.level = Logger::DEBUG })
+
+        assert subject(keys: [key]).authenticate("ssh-connection", "jamis")
+        assert_includes log.string, "trying publickey (#{key.fingerprint('SHA256')})"
       end
 
       private
