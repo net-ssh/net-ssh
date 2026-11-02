@@ -25,8 +25,9 @@ module Net
         keepalive keepalive_interval keepalive_maxcount kex key_data keycert_data
         keycerts keys keys_only known_hosts languages minimum_dh_bits no_delay
         non_interactive number_of_password_prompts passphrase password
-        password_prompt proxy pubkey_algorithms rekey_blocks_limit rekey_limit
-        rekey_packet_limit use_agent user_known_hosts_file verify_host_key
+        password_prompt prompt_without_tty proxy pubkey_algorithms
+        rekey_blocks_limit rekey_limit rekey_packet_limit use_agent
+        user_known_hosts_file verify_host_key
       ].freeze
 
       VALUES = [:auto, false, nil].freeze
