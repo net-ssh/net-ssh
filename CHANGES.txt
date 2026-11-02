@@ -1,3 +1,13 @@
+=== 8.1.0
+
+  * BREAKING: Publickey auth offers each RSA key and certificate once, with the first `pubkey_algorithms` entry the server lists in RFC 8308 `server-sig-algs`, as OpenSSH does, so refused RSA keys no longer use up `MaxAuthTries` two or three at a time. Servers that send no `server-sig-algs` (OpenSSH 7.1 and older, some other servers) are offered RSA keys only as `ssh-rsa`, and only when it's enabled (e.g. `pubkey_algorithms: %w[+ssh-rsa]`); by default RSA keys are skipped there instead of being tried with rsa-sha2-512/256; OpenSSH 7.2 to 9.5 servers that accept only `ssh-rsa` still list rsa-sha2-* in `server-sig-algs`, so they need `ssh-rsa` first (`pubkey_algorithms: %w[^ssh-rsa]`) [#886, #1077]
+  * BREAKING: A `Match` block containing a condition net-ssh does not support (`exec`, `canonical`, `final`, `localnetwork`, `tagged`, ...) no longer matches and prints a warning, where the condition used to be ignored; `Match User`, `OriginalHost` and `LocalUser` are now evaluated, so e.g. `Match User x Host y` no longer applies to every user [#782, #1076]
+  * BREAKING: Net::SSH.start no longer prompts for passwords, passphrases or keyboard-interactive responses when $stdin is not a TTY, matching OpenSSH; this fixes Errno::EPIPE in background jobs. Pass `prompt_without_tty: true` to prompt anyway, e.g. for a piped password [#967, #1073]
+  * Package only `lib`, `CHANGES.txt`, `LICENSE.txt` and `README.md` in the gem, about 10% smaller. Thanks @yuri-zubov [#1081]
+  * Buffer#append now forces BINARY encoding so Channel#send_data chunks multibyte UTF-8 data by bytes instead of characters and no longer exceeds the remote maximum packet size [#1080, #1079]
+  * The default password prompt runs the `SSH_ASKPASS` program when there is no terminal, following the OpenSSH `SSH_ASKPASS_REQUIRE` and `DISPLAY` rules [#1075]
+  * Publickey and hostbased authentication now log key fingerprints using `:fingerprint_hash` (default SHA256) instead of MD5, fixing a crash with debug logging on FIPS-enabled OpenSSL [#936, #1074]
+
 === 8.0.4
 
   * Security: validate every ProxyJump hop, not only the first, as [user@]host[:port] (refusing a path, query, fragment or password) and shell-escape the hops passed to ssh -J; a hop such as `evil/x&$(cmd)` ran `cmd` through the shell [GHSA-g2r2-x3p2-5677]

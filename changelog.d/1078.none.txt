@@ -1,1 +1,0 @@
-Pin CI to ubuntu-24.04 [#1078]

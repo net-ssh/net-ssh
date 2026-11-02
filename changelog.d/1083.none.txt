@@ -1,1 +1,0 @@
-Add `rake vbump:minor`.
