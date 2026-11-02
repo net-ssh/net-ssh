@@ -1,0 +1,1 @@
+The default password prompt runs the `SSH_ASKPASS` program when there is no terminal, following the OpenSSH `SSH_ASKPASS_REQUIRE` and `DISPLAY` rules [#1075]
