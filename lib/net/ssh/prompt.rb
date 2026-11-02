@@ -84,6 +84,8 @@ module Net
           @header = []
           answer = IO.popen([@askpass, text], &:read)
           Process.last_status.success? ? answer.chomp : ""
+        rescue SystemCallError
+          ""
         end
       end
 

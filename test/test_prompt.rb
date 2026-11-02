@@ -114,6 +114,14 @@ class TestPrompt < NetSSHTest
     end
   end
 
+  def test_ask_should_answer_empty_when_askpass_cannot_run
+    with_env('SSH_ASKPASS' => '/nonexistent/askpass', 'SSH_ASKPASS_REQUIRE' => 'force') do
+      answer, = ask(StringIO.new, "Password: ", false)
+
+      assert_equal "", answer
+    end
+  end
+
   def test_keyboard_interactive_should_pass_name_and_instruction_to_askpass
     with_askpass_script('printf "%s|" "$1" >> "$0.args"; echo answer') do |script|
       stdout = StringIO.new
