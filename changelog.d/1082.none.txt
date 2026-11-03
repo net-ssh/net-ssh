@@ -1,0 +1,1 @@
+Make the forwarded-channel window test independent of thread scheduling [#1082]

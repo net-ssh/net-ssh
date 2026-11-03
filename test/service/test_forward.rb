@@ -1,6 +1,7 @@
 require_relative '../common'
 require 'net/ssh/authentication/agent'
 require 'io/wait'
+require 'io/nonblock'
 require 'timeout'
 require 'net/ssh/connection/channel'
 require 'net/ssh/connection/session'
@@ -43,20 +44,16 @@ module Service
     def test_forwarded_channel_should_grant_window_only_for_bytes_written_to_the_socket
       channel = prepared_channel(remote_window: 10)
 
-      received = +""
-      # Ruby 2.7 sockets block in send until everything is written, so keep reading.
-      reader = Thread.new do
-        loop { received << @peer.readpartial(0x20000) }
-      rescue IOError
-        nil
-      end
+      # Ruby 2.7 sockets block by default, and the small buffer forces a partial write.
+      @client.nonblock = true
+      @client.setsockopt(Socket::SOL_SOCKET, Socket::SO_SNDBUF, 4096)
       channel.do_data("x" * 0x10001)
       assert_empty @session.sent
 
       @client.send_pending
       written = 0x10001 - @client.write_buffer.length
-      Timeout.timeout(5) { Thread.pass until received.length == written }
-      reader.kill
+      assert_operator written, :<, 0x10001
+      assert_equal written, @peer.read(written).length
       adjust = @session.sent.last
       assert_equal CHANNEL_WINDOW_ADJUST, adjust.read_byte
       adjust.read_long
