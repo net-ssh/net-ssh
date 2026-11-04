@@ -1,0 +1,1 @@
+Ed25519 keys keep the comment from the key file: the private and public keys have a `comment` reader, and `PubKey#to_ssh` returns the public key in `ssh-ed25519 <base64> <comment>` format

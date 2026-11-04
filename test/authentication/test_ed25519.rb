@@ -22,6 +22,8 @@ module Authentication
       signed = priv_key.ssh_do_sign(shared_secret)
       self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
       self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
+      self.assert_equal(priv_key.comment, "vagrant@vagrant-ubuntu-trusty-64")
+      self.assert_equal(priv_key.public_key.comment, "vagrant@vagrant-ubuntu-trusty-64")
       self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_no_pwd)
       self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_no_pwd)
     end
@@ -39,6 +41,8 @@ module Authentication
       signed = priv_key.ssh_do_sign(shared_secret)
       self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
       self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
+      self.assert_equal(priv_key.comment, "vagrant@vagrant-ubuntu-trusty-64")
+      self.assert_equal(priv_key.public_key.comment, "vagrant@vagrant-ubuntu-trusty-64")
       self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_no_pwd)
       self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_no_pwd)
     end
@@ -54,6 +58,8 @@ module Authentication
 
       shared_secret = "Hello"
       signed = priv_key.ssh_do_sign(shared_secret)
+      self.assert_equal(priv_key.comment, "vagrant@vagrant-ubuntu-trusty-64")
+      self.assert_equal(priv_key.public_key.comment, "vagrant@vagrant-ubuntu-trusty-64")
       self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
       self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
       self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_no_pwd)
@@ -77,6 +83,8 @@ module Authentication
       signed = priv_key.ssh_do_sign(shared_secret)
       self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
       self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
+      self.assert_equal(priv_key.comment, "vagrant@vagrant-ubuntu-trusty-64")
+      self.assert_equal(priv_key.public_key.comment, "vagrant@vagrant-ubuntu-trusty-64")
       self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_pwd)
       self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_pwd)
     end
@@ -161,6 +169,8 @@ module Authentication
       signed = priv_key.ssh_do_sign(shared_secret)
       self.assert_equal(true, pub_key.ssh_do_verify(signed, shared_secret))
       self.assert_equal(priv_key.public_key.fingerprint, pub_key.fingerprint)
+      self.assert_equal(priv_key.comment, "vagrant@vagrant-ubuntu-trusty-64")
+      self.assert_equal(priv_key.public_key.comment, "vagrant@vagrant-ubuntu-trusty-64")
       self.assert_equal(pub_key.fingerprint, key_fingerprint_md5_pwd)
       self.assert_equal(pub_key.fingerprint('sha256'), key_fingerprint_sha256_pwd)
     end
