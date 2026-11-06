@@ -102,5 +102,15 @@ module Net
     # you want to proceed anyway, simply call the remember_host! method on the
     # exception, and then retry.
     class HostKeyUnknown < HostKeyError; end
+
+    # Raised when the key given by the host, or the CA that signed its
+    # certificate, is marked @revoked in a known hosts file. A revoked key must
+    # never be accepted, so unlike the other host key errors this one can't be
+    # overridden: #remember_host! just raises it again.
+    class HostKeyRevoked < HostKeyError
+      def remember_host!
+        raise self
+      end
+    end
   end
 end

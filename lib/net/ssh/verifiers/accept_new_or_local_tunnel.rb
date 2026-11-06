@@ -7,11 +7,13 @@ module Net
       # verify a connection if the server is the localhost and the port is a
       # nonstandard port number. Those two conditions will typically mean the
       # connection is being tunnelled through a forwarded port, so the known-hosts
-      # file will not be helpful (in general).
+      # file will not be helpful (in general). A key marked @revoked is refused
+      # either way.
       class AcceptNewOrLocalTunnel < AcceptNew
         # Tries to determine if the connection is being tunnelled, and if so,
         # returns true. Otherwise, performs the standard strict verification.
         def verify(arguments)
+          refuse_revoked!(arguments)
           return true if tunnelled?(arguments)
 
           super
