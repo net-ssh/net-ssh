@@ -10,10 +10,13 @@ module Net
       # (HostKeyUnknown). This is in contrast to the "Strict" class, which will
       # silently add the key to your known_hosts file. If the server does appear at
       # least once, but the key given does not match any known for the server, an
-      # exception will be raised (HostKeyMismatch).
+      # exception will be raised (HostKeyMismatch). A key marked @revoked in a
+      # host file is always refused (HostKeyRevoked).
       # Otherwise, this returns true.
       class Always
         def verify(arguments)
+          refuse_revoked!(arguments)
+
           host_keys = arguments[:session].host_keys
 
           # We've never seen this host before, so raise an exception.
@@ -46,6 +49,18 @@ module Net
         end
 
         private
+
+        # Custom :known_hosts objects may return a host_keys collection with no
+        # revocation support.
+        def refuse_revoked!(arguments)
+          host_keys = arguments[:session].host_keys
+          return unless host_keys.respond_to?(:revoked?) && host_keys.revoked?(arguments[:key])
+
+          exception = HostKeyRevoked.new("fingerprint #{arguments[:fingerprint]} " +
+                                         "is revoked for #{host_keys.host.inspect}")
+          exception.data = arguments
+          raise exception
+        end
 
         # Enforces the @cert-authority certificate constraints for entries that
         # implement them (Net::SSH::HostKeyEntries::CertAuthority). Non-certificate
