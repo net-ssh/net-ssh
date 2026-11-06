@@ -103,6 +103,22 @@ module Net
           server_key.critical_options.empty?
         end
       end
+
+      # @revoked entry
+      class Revoked
+        def initialize(key, comment: nil)
+          @key = key
+          @comment = comment
+        end
+
+        # Returns true for the revoked key itself and for any certificate that
+        # wraps it or is signed by it, matching OpenSSH's check_key_not_revoked.
+        def matches_key?(server_key)
+          keys = [server_key]
+          keys += [server_key.key, server_key.signature_key] if server_key.respond_to?(:signature_key)
+          keys.any? { |key| key.ssh_type == @key.ssh_type && key.to_blob == @key.to_blob }
+        end
+      end
     end
 
     # Represents the result of a search in known hosts
@@ -111,11 +127,17 @@ module Net
       include Enumerable
       attr_reader :host
 
-      def initialize(host_keys, host, known_hosts, options = {})
+      def initialize(host_keys, host, known_hosts, options = {}, revoked_keys = [])
         @host_keys = host_keys
         @host = host
         @known_hosts = known_hosts
         @options = options
+        @revoked_keys = revoked_keys
+      end
+
+      # Returns true if a @revoked known-hosts entry for this host matches +key+.
+      def revoked?(key)
+        @revoked_keys.any? { |entry| entry.matches_key?(key) }
       end
 
       def add_host_key(key)
@@ -161,11 +183,14 @@ module Net
         # Searches all known host files (see KnownHosts.hostfiles) for all keys
         # of the given host. Returns an enumerable of keys found.
         def search_for(host, options = {})
-          HostKeys.new(search_in(hostfiles(options), host, options), host, self, options)
+          files = hostfiles(options)
+          revoked_keys = files.flat_map { |file| KnownHosts.new(file).revoked_keys_for(host) }
+          HostKeys.new(search_in(files, host, options), host, self, options, revoked_keys)
         end
 
         # Search for all known keys for the given host, in every file given in
-        # the +files+ array. Returns the list of keys.
+        # the +files+ array. Returns the list of keys. @revoked entries are not
+        # included.
         def search_in(files, host, options = {})
           files.flat_map { |file| KnownHosts.new(file).keys_for(host, options) }
         end
@@ -229,46 +254,50 @@ module Net
       #   "[net.ssh.test]:5555"
       #   "[1,2,3,4]:5555"
       #   "[net.ssh.test]:5555,[1.2.3.4]:5555
+      #
+      # @revoked entries are not included, see revoked_keys_for.
       def keys_for(host, options = {})
         keys = []
-        return keys unless File.readable?(source)
-
         entries = host.split(/,/)
         host_name = entries[0]
         host_ip = entries[1]
 
-        File.open(source) do |file|
-          file.each_line do |line|
-            if line.start_with?('@')
-              marker, hosts, type, key_content, comment = line.split(' ')
+        each_entry do |marker, hostlist, key_content, comment|
+          next if marker == "@revoked"
+
+          found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
+          next unless found
+
+          found = hostlist.include?(host_ip) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
+          next unless found
+
+          raw_key = read_key(key_content)
+
+          keys <<
+            if marker == "@cert-authority"
+              HostKeyEntries::CertAuthority.new(raw_key, comment: comment)
             else
-              marker = nil
-              hosts, type, key_content, comment = line.split(' ')
+              HostKeyEntries::PubKey.new(raw_key, comment: comment)
             end
+        end
 
-            # Skip empty line or one that is commented
-            next if hosts.nil? || hosts.start_with?('#')
+        keys
+      end
 
-            hostlist = hosts.split(',')
+      # Returns the @revoked entries for the given host, which takes the same
+      # formats as keys_for. An entry matching any of the comma-separated names
+      # counts, so :check_host_ip can't narrow a revocation.
+      def revoked_keys_for(host)
+        keys = []
+        entries = host.split(/,/)
 
-            next unless SUPPORTED_TYPE.include?(type)
+        each_entry do |marker, hostlist, key_content, comment|
+          next unless marker == "@revoked"
 
-            found = hostlist.any? { |pattern| match(host_name, pattern) } || known_host_hash?(hostlist, entries)
-            next unless found
+          found = entries.any? { |entry| hostlist.any? { |pattern| match(entry, pattern) } }
+          next unless found || known_host_hash?(hostlist, entries)
 
-            found = hostlist.include?(host_ip) if options[:check_host_ip] && entries.size > 1 && hostlist.size > 1
-            next unless found
-
-            blob = key_content.unpack("m*").first
-            raw_key = Net::SSH::Buffer.new(blob).read_key
-
-            keys <<
-              if marker == "@cert-authority"
-                HostKeyEntries::CertAuthority.new(raw_key, comment: comment)
-              else
-                HostKeyEntries::PubKey.new(raw_key, comment: comment)
-              end
-          end
+          keys << HostKeyEntries::Revoked.new(read_key(key_content), comment: comment)
         end
 
         keys
@@ -312,6 +341,32 @@ module Net
           blob = [Net::SSH::Buffer.from(:key, key).to_s].pack("m*").gsub(/\s/, "")
           file.puts "#{host} #{key.ssh_type} #{blob}"
         end
+      end
+
+      private
+
+      # Yields the marker, host patterns, key and comment of each usable line.
+      def each_entry
+        return unless File.readable?(source)
+
+        File.open(source) do |file|
+          file.each_line do |line|
+            fields = line.split(' ')
+            marker = fields.shift if fields.first&.start_with?('@')
+            hosts, type, key_content, comment = fields
+
+            # Skip empty line or one that is commented
+            next if hosts.nil? || hosts.start_with?('#')
+
+            next unless SUPPORTED_TYPE.include?(type)
+
+            yield marker, hosts.split(','), key_content, comment
+          end
+        end
+      end
+
+      def read_key(key_content)
+        Net::SSH::Buffer.new(key_content.unpack("m*").first).read_key
       end
     end
   end
