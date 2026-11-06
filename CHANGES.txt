@@ -1,3 +1,7 @@
+=== 7.3.10
+
+  * Security: verify the proxy's certificate and hostname in `Net::SSH::Proxy::HTTPS` by default, and the hostname with any verifying `:ssl_context`; any certificate was accepted, exposing the proxy credentials to a man-in-the-middle. A self-signed or private CA proxy now needs an `:ssl_context` that trusts it, or one with `verify_mode = OpenSSL::SSL::VERIFY_NONE` to skip verification. Thanks @fuzzyrichie [GHSA-qcf4-j55x-72hv]
+
 === 7.3.9
 
   * Security: refuse host keys marked `@revoked` in known_hosts, and certificates of such a key or signed by it, by raising the new `Net::SSH::HostKeyRevoked`, which `remember_host!` can't override; these lines were loaded as trusted keys, so every verifier except `:never` accepted the revoked key [GHSA-hjwv-j52r-xcg7]

@@ -1,5 +1,6 @@
 require 'socket'
 require 'openssl'
+require 'resolv'
 require 'net/ssh/proxy/errors'
 require 'net/ssh/proxy/http'
 
@@ -15,18 +16,15 @@ module Net
         # can be used to tweak this proxy connection. In addition to the options
         # taken by Net::SSH::Proxy::HTTP it supports:
         #
-        # * :ssl_context => the SSL configuration to use for the connection
+        # * :ssl_context => the SSL configuration to use for the connection. The
+        #   default verifies the proxy's certificate and hostname against the
+        #   system trust store. For a self-signed or private CA certificate pass a
+        #   context with it in +cert_store+, or, to skip verification and expose
+        #   the proxy credentials to a man-in-the-middle, a context with
+        #   +verify_mode+ set to OpenSSL::SSL::VERIFY_NONE.
         def initialize(proxy_host, proxy_port = 80, options = {})
-          @ssl_context = options.delete(:ssl_context) || self.class.default_ssl_context
+          @ssl_context = options.delete(:ssl_context) || default_ssl_context
           super(proxy_host, proxy_port, options)
-        end
-
-        # Builds the SSL context used when the caller does not supply one. Unlike a
-        # bare OpenSSL::SSL::SSLContext.new (which defaults to VERIFY_NONE and does
-        # no hostname checking), this enables peer verification against the system
-        # trust store so proxy credentials are not exposed to a man-in-the-middle.
-        def self.default_ssl_context
-          OpenSSL::SSL::SSLContext.new.tap(&:set_params)
         end
 
         protected
@@ -47,19 +45,28 @@ module Net
         def establish_connection(connect_timeout)
           plain_socket = super(connect_timeout)
           OpenSSL::SSL::SSLSocket.new(plain_socket, @ssl_context).tap do |socket|
-            socket.hostname = proxy_host if socket.respond_to?(:hostname=)
             socket.extend(SSLSocketCompatibility)
-            socket.connect
-            socket.post_connection_check(proxy_host) if verify?(socket)
+            # SNI must not carry an IP address (RFC 6066).
+            socket.hostname = proxy_host unless Resolv::AddressRegex.match?(proxy_host)
+            begin
+              socket.connect
+              socket.post_connection_check(proxy_host) if verify_peer?
+            rescue StandardError
+              socket.close
+              raise
+            end
           end
         end
 
-        # Whether the negotiated context actually verifies the peer. When it does
-        # we also enforce hostname matching; when the caller deliberately opted
-        # into VERIFY_NONE we leave their choice untouched.
-        def verify?(socket)
-          mode = socket.context.verify_mode
-          !mode.nil? && mode != OpenSSL::SSL::VERIFY_NONE
+        private
+
+        def default_ssl_context
+          OpenSSL::SSL::SSLContext.new.tap(&:set_params)
+        end
+
+        # verify_mode is nil on a bare SSLContext in older openssl gems.
+        def verify_peer?
+          @ssl_context.verify_mode.to_i != OpenSSL::SSL::VERIFY_NONE
         end
       end
     end

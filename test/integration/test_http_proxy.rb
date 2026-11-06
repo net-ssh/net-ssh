@@ -58,8 +58,8 @@ class TestHTTPProxy < NetSSHTest
   end
 
   def with_http_tls_proxy_server(&block)
-    cert_name = [%w[CN localhost]]
-    proxy = WEBrick::HTTPProxyServer.new Port: 0, SSLEnable: true, SSLCertName: cert_name
+    cert, key = WEBrick::Utils.create_self_signed_cert(2048, [%w[CN localhost]], 'net-ssh test')
+    proxy = WEBrick::HTTPProxyServer.new Port: 0, SSLEnable: true, SSLCertificate: cert, SSLPrivateKey: key
     Thread.start { proxy.start }
     begin
       yield(proxy)
@@ -72,7 +72,11 @@ class TestHTTPProxy < NetSSHTest
     setup_ssh_env do
       with_http_tls_proxy_server do |http_proxy|
         msg = 'echo123'
-        ret = Net::SSH.start(*ssh_start_params(proxy: Net::SSH::Proxy::HTTPS.new('localhost', http_proxy.config[:Port]))) do |ssh|
+        ssl_context = OpenSSL::SSL::SSLContext.new
+        ssl_context.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        ssl_context.cert_store = OpenSSL::X509::Store.new.tap { |store| store.add_cert(http_proxy.config[:SSLCertificate]) }
+        proxy = Net::SSH::Proxy::HTTPS.new('localhost', http_proxy.config[:Port], ssl_context: ssl_context)
+        ret = Net::SSH.start(*ssh_start_params(proxy: proxy)) do |ssh|
           ssh.exec! "echo \"$USER:#{msg}\""
         end
         assert_equal "net_ssh_1:#{msg}\n", ret
