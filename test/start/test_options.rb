@@ -293,5 +293,41 @@ module NetSSH
       end
       assert_includes error.message, 'default_configuration should return a Hash'
     end
+
+    def test_raises_if_default_configuration_returns_invalid_option
+      Net::SSH.default_configuration = ->(*) { { timout: 5 } }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser')
+      end
+      assert_equal 'Net::SSH.default_configuration: invalid option(s): timout', error.message
+    end
+
+    def test_raises_if_default_configuration_returns_nil_value
+      Net::SSH.default_configuration = ->(*) { { timeout: nil } }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser')
+      end
+      assert_match(/\ANet::SSH.default_configuration: nil is not allowed for :timeout/, error.message)
+    end
+
+    def test_raises_if_default_configuration_returns_paranoid
+      Net::SSH.default_configuration = ->(*) { { paranoid: true } }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser')
+      end
+      assert_match(/\ANet::SSH.default_configuration: :paranoid has been removed/, error.message)
+    end
+
+    def test_raises_if_default_configuration_and_options_combine_control_master_and_forward_agent
+      Net::SSH.default_configuration = ->(*) { { control_master: :auto } }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser', forward_agent: true)
+      end
+      assert_match(/forward_agent can't be used with control_master/, error.message)
+    end
   end
 end

@@ -305,17 +305,9 @@ module Net
         raise ArgumentError, "Net::SSH.default_configuration should return a Hash"
       end
 
-      if options.key?(:paranoid)
-        raise ArgumentError, ":paranoid has been removed, use :verify_host_key (same values)"
-      end
-
-      invalid_options = options.keys - VALID_OPTIONS
-      if invalid_options.any?
-        raise ArgumentError, "invalid option(s): #{invalid_options.join(', ')}"
-      end
-
-      reject_nil_options(options)
-      Multiplex.validate_options!(options)
+      validate_options!(default_options, "Net::SSH.default_configuration: ")
+      validate_options!(options)
+      Multiplex.validate_options!(default_options.merge(options))
       explicit_options = options.keys
       host_arg = host
 
@@ -424,13 +416,27 @@ module Net
     }.freeze
     private_constant :NIL_ALLOWED_OPTIONS, :NIL_OPTION_HINTS
 
-    def self.reject_nil_options(options)
+    def self.validate_options!(options, source = "")
+      if options.key?(:paranoid)
+        raise ArgumentError, "#{source}:paranoid has been removed, use :verify_host_key (same values)"
+      end
+
+      invalid_options = options.keys - VALID_OPTIONS
+      if invalid_options.any?
+        raise ArgumentError, "#{source}invalid option(s): #{invalid_options.join(', ')}"
+      end
+
+      reject_nil_options(options, source)
+    end
+    private_class_method :validate_options!
+
+    def self.reject_nil_options(options, source)
       nil_keys = options.select do |key, value|
         !NIL_ALLOWED_OPTIONS.include?(key) && (value.nil? || (value.is_a?(Array) && value.include?(nil)))
       end.keys
       return if nil_keys.empty?
 
-      message = "nil is not allowed for #{nil_keys.map(&:inspect).join(', ')}; " \
+      message = "#{source}nil is not allowed for #{nil_keys.map(&:inspect).join(', ')}; " \
                 "omit #{nil_keys.one? ? 'it' : 'them'} to use the default or ssh_config value"
       hints = NIL_OPTION_HINTS.values_at(*nil_keys).compact
       message += ", or pass #{hints.join(', or ')}" if hints.any?
