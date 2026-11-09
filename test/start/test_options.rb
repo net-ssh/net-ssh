@@ -306,6 +306,7 @@ module NetSSH
     end
 
     def test_default_configuration_and_config_false
+      Net::SSH::Config.expects(:for).never
       Net::SSH.default_configuration = lambda do |*|
         { keepalive: true }
       end
@@ -356,7 +357,51 @@ module NetSSH
       error = assert_raises(ArgumentError) do
         Net::SSH.start('localhost', 'testuser')
       end
-      assert_includes error.message, 'default_configuration should return a Hash'
+      assert_equal 'Net::SSH.default_configuration: must return a Hash, got Integer', error.message
+    end
+
+    def test_default_configuration_setter_rejects_non_callable
+      error = assert_raises(ArgumentError) { Net::SSH.default_configuration = { timeout: 5 } }
+      assert_equal 'Net::SSH.default_configuration must respond to call or be nil, got Hash', error.message
+    end
+
+    def test_default_configuration_may_pass_ssh_config_values_through
+      Net::SSH::Config.stubs(:for).returns({ verify_host_key: nil, port: 2200 })
+      Net::SSH.default_configuration = ->(_host, ssh_config) { ssh_config.merge(timeout: 5) }
+
+      Net::SSH::Connection::Session
+        .expects(:new)
+        .with(anything, has_entries(timeout: 5, port: 2200))
+        .returns(mock('connection_session'))
+
+      Net::SSH.start('localhost', 'testuser')
+    end
+
+    def test_explicit_nil_should_use_default_configuration_value
+      logger = Logger.new(nil)
+      Net::SSH.default_configuration = ->(*) { { password: 'from_hook', logger: logger } }
+
+      Net::SSH::Connection::Session
+        .expects(:new)
+        .with(anything, has_entries(password: 'from_hook', logger: logger))
+        .returns(mock('connection_session'))
+
+      Net::SSH.start('localhost', 'testuser', password: nil, logger: nil)
+    end
+
+    def test_raises_if_default_configuration_sets_user_or_config
+      Net::SSH.default_configuration = ->(*) { { user: 'alice', config: false } }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser')
+      end
+      assert_equal "Net::SSH.default_configuration: can't set :user, :config", error.message
+    end
+
+    def test_invalid_explicit_option_should_raise_before_default_configuration_runs
+      Net::SSH.default_configuration = ->(*) { flunk 'default_configuration should not be called' }
+
+      assert_raises(ArgumentError) { Net::SSH.start('localhost', 'testuser', timout: 5) }
     end
 
     def test_raises_if_default_configuration_returns_invalid_option

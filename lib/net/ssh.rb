@@ -75,10 +75,16 @@ module Net
     ]
 
     class << self
-      # Allows to set the default configuration that will be used
-      # when starting a new SSH connection.
+      # A callable that supplies default options for every connection made
+      # with Net::SSH.start, including those opened by libraries such as
+      # net-sftp, net-scp or SSHKit. It is called with the host as passed to
+      # +start+ and the options read from ssh_config for it, and returns a Hash
+      # of options. Set it to +nil+ to remove it.
       #
-      # Example:
+      # Options are applied in this order, later ones winning: ssh_config, the
+      # hook's Hash, then the options passed to +start+. An option passed to
+      # +start+ as +nil+ counts as not given, so the hook's value applies. The
+      # hook can't set :user or :config, as both are needed to read ssh_config.
       #
       #   Net::SSH.default_configuration = ->(host, ssh_config) {
       #     { timeout: ssh_config.fetch(:timeout, 5), keepalive: true }
@@ -87,10 +93,16 @@ module Net
       #     # will have a default 5 seconds connection timeout
       #     # will use keepalive
       #   end
-      #
-      attr_accessor :default_configuration
+      attr_reader :default_configuration
+
+      def default_configuration=(callable)
+        unless callable.nil? || callable.respond_to?(:call)
+          raise ArgumentError, "Net::SSH.default_configuration must respond to call or be nil, got #{callable.class}"
+        end
+
+        @default_configuration = callable
+      end
     end
-    self.default_configuration = ->(_host, _ssh_config) { {} }
 
     # The standard means of starting a new SSH connection. When used with a
     # block, the connection will be closed when the block terminates, otherwise
@@ -122,6 +134,8 @@ module Net
     # option to use its default or ssh_config value; passing +nil+ (or an array
     # containing +nil+) raises ArgumentError, except for :password,
     # :passphrase, :logger and :password_prompt, where +nil+ means the default.
+    # Options given here override Net::SSH.default_configuration, which
+    # overrides ssh_config.
     #
     # * :auth_methods => an array of authentication methods to try
     # * :bind_address => the IP address on the connecting machine to use in
@@ -313,20 +327,15 @@ module Net
     # If +user+ parameter is nil it defaults to USER from ssh_config, or
     # local username
     def self.start(host, user = nil, options = {}, &block)
-      config_options = configuration_for(host, options.fetch(:config, true), user: user || options[:user])
-      default_options = default_configuration&.call(host, config_options) || {}
-      unless default_options.is_a?(Hash)
-        raise ArgumentError, "Net::SSH.default_configuration should return a Hash"
-      end
-
-      validate_options!(default_options, "Net::SSH.default_configuration: ")
       validate_options!(options)
-      Multiplex.validate_options!(default_options.merge(options))
+      Multiplex.validate_options!(options)
       explicit_options = options.keys
       host_arg = host
 
-      options = options.dup
-      options = config_options.merge(default_options, options)
+      config_options = configuration_for(host, options.fetch(:config, true), user: user || options[:user])
+      default_options = default_options_for(host, config_options)
+
+      options = config_options.merge(default_options, options.compact)
       assign_defaults(options)
 
       options[:user] = user if user
@@ -434,6 +443,24 @@ module Net
       set_env: "set_env: {} to set no environment variables"
     }.freeze
     private_constant :NIL_ALLOWED_OPTIONS, :NIL_OPTION_HINTS
+
+    def self.default_options_for(host, config_options)
+      return {} unless default_configuration
+
+      source = "Net::SSH.default_configuration: "
+      default_options = default_configuration.call(host, config_options.dup)
+      raise ArgumentError, "#{source}must return a Hash, got #{default_options.class}" unless default_options.is_a?(Hash)
+
+      fixed = default_options.keys & %i[user config]
+      raise ArgumentError, "#{source}can't set #{fixed.map(&:inspect).join(', ')}" if fixed.any?
+
+      # A hook may pass ssh_config's values through (e.g. nil for StrictHostKeyChecking ask), so only what it changes is checked.
+      changed = default_options.reject { |key, value| config_options.key?(key) && config_options[key] == value }
+      validate_options!(changed, source)
+      Multiplex.validate_options!(changed)
+      default_options
+    end
+    private_class_method :default_options_for
 
     def self.validate_options!(options, source = "")
       if options.key?(:paranoid)
