@@ -424,7 +424,10 @@ module Net
         # a KEXINIT packet to send to the server. It does not actually send it,
         # it simply builds the packet and returns it.
         def build_client_algorithm_packet
-          kex         = algorithms[:kex].join(",")
+          kex_names   = algorithms[:kex]
+          # RFC 8308: ext-info-c is only meaningful in the first key exchange.
+          kex_names  += %w[ext-info-c] unless session_id
+          kex         = kex_names.join(",")
           host_key    = algorithms[:host_key].join(",")
           encryption  = algorithms[:encryption].join(",")
           hmac        = algorithms[:hmac].join(",")

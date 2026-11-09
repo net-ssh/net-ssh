@@ -56,7 +56,8 @@ class TestRSASHA1 < NetSSHTest
 
   def test_ssh_rsa_pubkey_auth_can_be_enabled
     with_rsa_key do |options|
-      _host_key, out = connect(["PubkeyAcceptedAlgorithms ssh-rsa"], options.merge(pubkey_algorithms: %w[+ssh-rsa]))
+      # OpenSSH before 9.6 lists rsa-sha2-* in server-sig-algs even when PubkeyAcceptedAlgorithms excludes them.
+      _host_key, out = connect(["PubkeyAcceptedAlgorithms ssh-rsa"], options.merge(pubkey_algorithms: %w[^ssh-rsa]))
       assert_equal "foo\n", out
     end
   end

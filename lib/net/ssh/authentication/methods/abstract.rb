@@ -66,6 +66,10 @@ module Net
           private
 
           attr_reader :prompt
+
+          def fingerprint(identity)
+            identity.fingerprint(@options[:fingerprint_hash] || 'SHA256')
+          end
         end
       end
     end

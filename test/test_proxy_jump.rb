@@ -1,4 +1,5 @@
 require_relative 'common'
+require 'tmpdir'
 require 'net/ssh/proxy/jump'
 
 class TestProxyJump < NetSSHTest
@@ -99,5 +100,34 @@ class TestProxyJump < NetSSHTest
     proxy = Net::SSH::Proxy::Jump.new("proxy", options: { "IdentityFile" => "/home/user/my key", "ProxyCommand" => "nc %h %p; id" })
     proxy.build_proxy_command_equivalent
     assert_equal "ssh -o IdentityFile=/home/user/my\\ key -o ProxyCommand=nc\\ \\%%h\\ \\%%p\\;\\ id -W %h:%p proxy", proxy.command_line_template
+  end
+
+  def test_multiple_jump_proxies_with_ports
+    proxy = Net::SSH::Proxy::Jump.new("a@h1:2222,b@h2:2200,h3")
+    proxy.build_proxy_command_equivalent
+    assert_equal "ssh -l a -p 2222 -J b@h2:2200,h3 -W %h:%p h1", proxy.command_line_template
+  end
+
+  def test_ipv6_jump_proxies
+    proxy = Net::SSH::Proxy::Jump.new("a@[::1]:2222,b@[fe80::1]:2200,[::2]")
+    proxy.build_proxy_command_equivalent
+    assert_equal "ssh -l a -p 2222 -J b@\\[fe80::1\\]:2200,\\[::2\\] -W %h:%p \\[::1\\]", proxy.command_line_template
+  end
+
+  def test_extra_jump_with_shell_payload_in_path_is_rejected_and_never_runs
+    Dir.mktmpdir do |dir|
+      marker = File.join(dir, "marker")
+      proxy = Net::SSH::Proxy::Jump.new("deploy@bastion.internal,evil/x&$(touch$IFS#{marker})")
+      error = assert_raises(StandardError) { proxy.open("target", 22) }
+      refute File.exist?(marker), "payload in the -J hop was executed"
+      assert_kind_of ArgumentError, error
+    end
+  end
+
+  def test_jump_with_more_than_user_host_port_is_rejected
+    ["jump/path", "jump/", "jump?x", "jump#x", "user:secret@jump", "user@", "",
+     "proxy1,jump/path", "proxy1,jump?x", "proxy1,jump#x", "proxy1,user:secret@jump", "proxy1,", "proxy1,,proxy3"].each do |jump|
+      assert_raises(ArgumentError, jump.inspect) { Net::SSH::Proxy::Jump.new(jump).build_proxy_command_equivalent }
+    end
   end
 end

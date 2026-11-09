@@ -152,6 +152,10 @@ class MockTransport < Net::SSH::Transport::Session
     options[:pubkey_algorithms] || Net::SSH::Transport::Algorithms::DEFAULT_ALGORITHMS[:pubkey_algorithms]
   end
 
+  def server_sig_algs
+    options[:server_sig_algs]
+  end
+
   def closed?
     false
   end

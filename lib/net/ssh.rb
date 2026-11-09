@@ -69,9 +69,9 @@ module Net
       host_name user properties passphrase keys_only max_pkt_size
       max_win_size send_env set_env use_agent number_of_password_prompts
       append_all_supported_algorithms non_interactive password_prompt
-      agent_socket_factory minimum_dh_bits verify_host_key
+      prompt_without_tty agent_socket_factory minimum_dh_bits verify_host_key
       fingerprint_hash check_host_ip pubkey_algorithms no_delay
-      control_master control_path
+      control_master control_path preopen_channels
     ]
 
     class << self
@@ -143,21 +143,21 @@ module Net
     #   for setting up a connection (:keys, :key_data, :password, :passphrase,
     #   :auth_methods, :verify_host_key, :known_hosts, :host_key, :kex,
     #   :encryption, :hmac, :compression, :rekey_*, :proxy, :keepalive and the
-    #   like); explicitly passed ones are named in a logger warning. Over the
+    #   like); explicitly passed ones are named at info level. Over the
     #   master, remote port forwarding (Service::Forward#remote and
     #   #cancel_remote) raises Net::SSH::NotSupportedOverControlMaster, as the
     #   master consumes the global request reply, so success, failure and the
     #   port allocated for port 0 can't be observed; other global requests
     #   raise it too. Agent and X11 forwarding requests raise it
-    #   too, and :forward_agent can't be combined with it, because the master
-    #   serves them from its own agent or display only if it has ForwardAgent
-    #   or ForwardX11 enabled itself, and rejects them otherwise. Keepalive and
-    #   rekeying are left to the master. ssh_config's ControlMaster is
-    #   ignored, only this option enables it. An invalid ControlPath raises
-    #   ArgumentError. A missing or stale socket is logged at info level, a
-    #   socket that can't be used (another owner, refused, wrong protocol,
-    #   timed out) at warn level. Has no effect on Windows. Defaults to
-    #   +false+.
+    #   too, and :forward_agent is ignored (logged at info level), because the
+    #   master serves them from its own agent or display only if it has
+    #   ForwardAgent or ForwardX11 enabled itself, and rejects them otherwise.
+    #   Keepalive and rekeying are left to the master. ssh_config's
+    #   ControlMaster is ignored, only this option enables it. An invalid
+    #   ControlPath raises ArgumentError. A missing or stale socket is logged
+    #   at info level, a socket that can't be used (another owner, refused,
+    #   wrong protocol, timed out) at warn level. Has no effect on Windows.
+    #   Defaults to +false+.
     # * :control_path => the ControlMaster socket to use with
     #   :control_master, with the same ~, ${ENV} and % tokens as ssh_config's
     #   ControlPath (%C, %d, %h, %i, %j, %k, %L, %l, %n, %p, %r, %u, %%).
@@ -172,7 +172,8 @@ module Net
     #   files. Defaults to +true+.
     # * :encryption => the encryption cipher (or ciphers) to use
     # * :forward_agent => set to true if you want the SSH agent connection to
-    #   be forwarded
+    #   be forwarded. Ignored for a session through a ControlMaster (see
+    #   :control_master).
     # * :known_hosts => a custom object holding known hosts records.
     #   It must implement #search_for and `add` in a similiar manner as KnownHosts.
     # * :global_known_hosts_file => the location of the global known hosts
@@ -233,11 +234,24 @@ module Net
     # * :non_interactive => set to true if your app is non interactive and prefers
     #   authentication failure vs password prompt. Non-interactive applications
     #   should set it to true to prefer failing a password/etc auth methods vs.
-    #   asking for password.
+    #   asking for password. Like OpenSSH, Net::SSH never prompts when $stdin is
+    #   not a TTY (e.g. in a background job), so it defaults to +true+ then,
+    #   unless :password_prompt or :prompt_without_tty is given or an
+    #   SSH_ASKPASS program can be used (see Net::SSH::Prompt.askpass).
     # * :passphrase => the passphrase to use when loading a private key (default
     #   is +nil+, for no passphrase)
     # * :password => the password to use to login
     # * :port => the port to use when connecting to the remote host
+    # * :preopen_channels => set to +true+ to keep one spare "session" channel
+    #   open, so that Net::SSH::Connection::Session#open_channel can hand it
+    #   out at once and a command that waits for the previous one to finish
+    #   costs one round trip instead of two. The spare counts against the
+    #   server's MaxSessions; if the server refuses it, pre-opening stops for
+    #   the session. Defaults to +false+.
+    # * :prompt_without_tty => set to +true+ to prompt for passwords, key
+    #   passphrases and keyboard-interactive responses on $stdout/$stdin even
+    #   when $stdin is not a TTY, e.g. to read a password piped into the
+    #   process. Defaults to +false+.
     # * :properties => a hash of key/value pairs to add to the new connection's
     #   properties (see Net::SSH::Connection::Session#properties)
     # * :proxy => a proxy instance (see Proxy) to use when connecting
@@ -299,7 +313,7 @@ module Net
     # If +user+ parameter is nil it defaults to USER from ssh_config, or
     # local username
     def self.start(host, user = nil, options = {}, &block)
-      config_options = configuration_for(host, options.fetch(:config, true))
+      config_options = configuration_for(host, options.fetch(:config, true), user: user || options[:user])
       default_options = default_configuration&.call(host, config_options) || {}
       unless default_options.is_a?(Hash)
         raise ArgumentError, "Net::SSH.default_configuration should return a Hash"
@@ -375,15 +389,17 @@ module Net
     # be a file name (or array of file names) of SSH configuration file(s)
     # to read.
     #
+    # +user+ is the explicitly requested remote user, matched by <tt>Match User</tt>.
+    #
     # See Net::SSH::Config for the full description of all supported options.
-    def self.configuration_for(host, use_ssh_config)
+    def self.configuration_for(host, use_ssh_config, user: nil)
       files = case use_ssh_config
               when true then Net::SSH::Config.expandable_default_files
               when false, nil then return {}
               else Array(use_ssh_config)
               end
 
-      Net::SSH::Config.for(host, files)
+      Net::SSH::Config.for(host, files, user: user)
     end
 
     def self.assign_defaults(options)
@@ -392,6 +408,9 @@ module Net
         options[:logger].level = Logger::FATAL
       end
 
+      unless options[:password_prompt] || options[:prompt_without_tty] || Prompt.can_ask?
+        options[:non_interactive] = true
+      end
       options[:password_prompt] ||= Prompt.default(options)
 
       %i[password passphrase].each do |key|

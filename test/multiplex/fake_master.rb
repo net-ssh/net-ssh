@@ -25,9 +25,17 @@ class FakeMaster
   end
 
   def received_types
-    types = []
-    types << @received.pop until @received.empty?
-    types.map(&:first)
+    drain_received.map(&:first)
+  end
+
+  def received_requests
+    drain_received.filter_map { |type, request| request if type == CHANNEL_REQUEST }
+  end
+
+  def drain_received
+    packets = []
+    packets << @received.pop until @received.empty?
+    packets
   end
 
   def stop

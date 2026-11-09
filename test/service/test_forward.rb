@@ -1,6 +1,7 @@
 require_relative '../common'
 require 'net/ssh/authentication/agent'
 require 'io/wait'
+require 'io/nonblock'
 require 'timeout'
 require 'net/ssh/connection/channel'
 require 'net/ssh/connection/session'
@@ -43,20 +44,16 @@ module Service
     def test_forwarded_channel_should_grant_window_only_for_bytes_written_to_the_socket
       channel = prepared_channel(remote_window: 10)
 
-      received = +""
-      # Ruby 2.7 sockets block in send until everything is written, so keep reading.
-      reader = Thread.new do
-        loop { received << @peer.readpartial(0x20000) }
-      rescue IOError
-        nil
-      end
+      # Ruby 2.7 sockets block by default, and the small buffer forces a partial write.
+      @client.nonblock = true
+      @client.setsockopt(Socket::SOL_SOCKET, Socket::SO_SNDBUF, 4096)
       channel.do_data("x" * 0x10001)
       assert_empty @session.sent
 
       @client.send_pending
       written = 0x10001 - @client.write_buffer.length
-      Timeout.timeout(5) { Thread.pass until received.length == written }
-      reader.kill
+      assert_operator written, :<, 0x10001
+      assert_equal written, @peer.read(written).length
       adjust = @session.sent.last
       assert_equal CHANNEL_WINDOW_ADJUST, adjust.read_byte
       adjust.read_long
@@ -151,6 +148,37 @@ module Service
 
       assert @client.closed?
       assert !@ssh.listeners.key?(@client)
+    end
+
+    def test_session_close_should_not_send_data_after_eof_when_a_forwarded_socket_still_has_unread_data
+      channel = channel_in_session
+      @peer.write("x" * 100)
+      @client.fill
+      # the server answers our CHANNEL_CLOSE with its own
+      transport = @transport
+      transport.define_singleton_method(:enqueue_message) do |message|
+        transport.return(CHANNEL_CLOSE, :long, channel.local_id) if message.to_s.getbyte(0) == CHANNEL_CLOSE
+      end
+
+      assert_nothing_raised { Timeout.timeout(5) { @ssh.close } }
+    end
+
+    def test_forwarded_channel_should_send_data_already_read_from_the_local_socket_before_eof
+      channel = prepared_channel(remote_window: 0x20000)
+      @peer.write("queued")
+      @client.fill
+      channel.process
+      @peer.write("buffered")
+      @client.fill
+      @peer.write("unread")
+      channel.eof!
+
+      channel.process
+      channel.process
+
+      assert @session.reading_paused?(@client)
+      sent = @session.sent.map { |msg| [msg.read_byte, msg.read_long, msg.read_string] }
+      assert_equal [[CHANNEL_DATA, 1, "queued"], [CHANNEL_DATA, 1, "buffered"], [CHANNEL_EOF, 1, nil]], sent
     end
 
     def teardown

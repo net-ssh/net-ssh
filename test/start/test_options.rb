@@ -149,6 +149,43 @@ module NetSSH
       assert_equal({ port: nil }, options)
     end
 
+    def test_match_user_should_use_the_start_user
+      with_ssh_config("Match User alice Host localhost\n  Port 2200\n") do |path|
+        assert_equal 2200, start_and_capture_transport_options_as('alice', config: path)[:port]
+        assert_nil start_and_capture_transport_options_as('bob', config: path)[:port]
+        assert_equal 2200, start_and_capture_transport_options_as(nil, config: path, user: 'alice')[:port]
+      end
+    end
+
+    def test_match_user_should_use_user_from_ssh_config_when_user_is_nil
+      with_ssh_config("Host localhost\n  User alice\nMatch User alice\n  Port 2200\n") do |path|
+        assert_equal 2200, start_and_capture_transport_options_as(nil, config: path)[:port]
+        assert_nil start_and_capture_transport_options_as('bob', config: path)[:port]
+      end
+    end
+
+    def test_match_user_should_apply_before_default_configuration
+      seen_ports = []
+      Net::SSH.default_configuration = lambda do |_host, ssh_config|
+        seen_ports << ssh_config[:port]
+        { timeout: 7 }
+      end
+      with_ssh_config("Match User alice Host localhost\n  Port 2200\n") do |path|
+        options = start_and_capture_transport_options_as('alice', config: path)
+        assert_equal 2200, options[:port]
+        assert_equal 7, options[:timeout]
+        assert_nil start_and_capture_transport_options_as('bob', config: path)[:port]
+      end
+      assert_equal [2200, nil], seen_ports
+    end
+
+    def start_and_capture_transport_options_as(user, options)
+      effective_options = nil
+      Net::SSH::Transport::Session.expects(:new).with { |_host, opts| effective_options = opts }.returns(mock('transport_session'))
+      Net::SSH.start('localhost', user, options)
+      effective_options
+    end
+
     def test_config_false_should_skip_ssh_config
       Net::SSH::Config.expects(:for).never
       Net::SSH.start('localhost', 'testuser', config: false)
@@ -202,6 +239,34 @@ module NetSSH
       assert_equal({ logger: nil, password_prompt: nil }, options)
     end
 
+    def test_start_should_prompt_when_stdin_is_a_tty
+      Net::SSH::Prompt.stubs(:can_ask?).returns(true)
+      effective_options = start_and_capture_transport_options({})
+      refute effective_options[:non_interactive]
+      assert_nil effective_options[:number_of_password_prompts]
+    end
+
+    def test_start_should_be_non_interactive_when_stdin_is_not_a_tty
+      Net::SSH::Prompt.stubs(:can_ask?).returns(false)
+      effective_options = start_and_capture_transport_options({})
+      assert effective_options[:non_interactive]
+      assert_equal 0, effective_options[:number_of_password_prompts]
+    end
+
+    def test_start_should_prompt_without_tty_when_opted_in
+      Net::SSH::Prompt.stubs(:can_ask?).returns(false)
+      effective_options = start_and_capture_transport_options(prompt_without_tty: true)
+      refute effective_options[:non_interactive]
+    end
+
+    def test_start_should_use_custom_password_prompt_without_tty
+      Net::SSH::Prompt.stubs(:can_ask?).returns(false)
+      prompt = Object.new
+      effective_options = start_and_capture_transport_options(password_prompt: prompt)
+      refute effective_options[:non_interactive]
+      assert_same prompt, effective_options[:password_prompt]
+    end
+
     def test_start_should_accept_frozen_options
       options = { port: 2222, password: nil, verify_host_key: :never }.freeze
       effective_options = start_and_capture_transport_options(options)
@@ -220,7 +285,7 @@ module NetSSH
     end
 
     def test_default_configuration_and_precedence
-      Net::SSH::Config.stubs(:for).with('localhost', Net::SSH::Config.expandable_default_files)
+      Net::SSH::Config.stubs(:for).with('localhost', Net::SSH::Config.expandable_default_files, user: 'testuser')
                       .returns({ timeout: 5, password: 'from_file' })
 
       Net::SSH.default_configuration = lambda do |_host, ssh_config|
@@ -258,7 +323,7 @@ module NetSSH
     end
 
     def test_default_configuration_and_config_from_file
-      Net::SSH::Config.stubs(:for).with('localhost', ['/some/config'])
+      Net::SSH::Config.stubs(:for).with('localhost', ['/some/config'], user: 'testuser')
                       .returns({ timeout: 5, password: 'from_file' })
 
       Net::SSH.default_configuration = lambda do |*|
@@ -321,13 +386,13 @@ module NetSSH
       assert_match(/\ANet::SSH.default_configuration: :paranoid has been removed/, error.message)
     end
 
-    def test_raises_if_default_configuration_and_options_combine_control_master_and_forward_agent
-      Net::SSH.default_configuration = ->(*) { { control_master: :auto } }
+    def test_raises_if_default_configuration_returns_invalid_control_master
+      Net::SSH.default_configuration = ->(*) { { control_master: :yes } }
 
       error = assert_raises(ArgumentError) do
-        Net::SSH.start('localhost', 'testuser', forward_agent: true)
+        Net::SSH.start('localhost', 'testuser')
       end
-      assert_match(/forward_agent can't be used with control_master/, error.message)
+      assert_equal 'control_master must be :auto or false, got :yes', error.message
     end
   end
 end

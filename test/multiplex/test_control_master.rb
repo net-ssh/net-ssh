@@ -153,8 +153,30 @@ module NetSSH
       end
     end
 
-    def test_forward_agent_option_conflicts
-      assert_raises(ArgumentError) { start(forward_agent: true) }
+    def test_forward_agent_option_is_ignored
+      @master = FakeMaster.new(@path)
+      Net::SSH.expects(:connect_directly).never
+
+      start(forward_agent: true) do |ssh|
+        refute ssh.options[:forward_agent]
+        assert_equal "hello\n", ssh.exec!("true")
+      end
+      assert_equal ["exec"], @master.received_requests
+      assert_match(/INFO -- : control_master: ignoring ForwardAgent, the ControlMaster's own ForwardAgent setting applies/, @log.string)
+      refute_match(/WARN/, @log.string)
+    end
+
+    def test_forward_agent_from_ssh_config_is_ignored
+      @master = FakeMaster.new(@path)
+      config = File.join(@dir, 'config')
+      File.write(config, "Host *\n  ForwardAgent yes\n")
+
+      start(config: config) do |ssh|
+        refute ssh.options[:forward_agent]
+        ssh.exec!("true")
+      end
+      assert_equal ["exec"], @master.received_requests
+      assert_includes @log.string, "ignoring ForwardAgent"
     end
 
     def test_keepalive_is_disabled
@@ -171,10 +193,23 @@ module NetSSH
       assert_includes @log.string, "keepalive is left to the ControlMaster"
     end
 
-    def test_warns_about_explicit_master_owned_options
+    def test_logs_explicit_master_owned_options_at_info
       @master = FakeMaster.new(@path)
       start(password: 'secret', verify_host_key: :always, port: 22, &:close)
-      assert_match(/WARN.*ignoring password, verify_host_key, the ControlMaster's own settings apply/, @log.string)
+      assert_match(/INFO -- : control_master: ignoring password, verify_host_key, the ControlMaster's own settings apply/, @log.string)
+      refute_match(/WARN/, @log.string)
+    end
+
+    def test_sshkit_style_options_through_master
+      @master = FakeMaster.new(@path)
+      Net::SSH.expects(:connect_directly).never
+
+      options = { forward_agent: true, keys: [File.join(@dir, 'id_ed25519')], keys_only: true,
+                  known_hosts: Net::SSH::KnownHosts, password_prompt: Net::SSH::Prompt.default,
+                  keepalive: true, keepalive_interval: 30 }
+      start(options) { |ssh| assert_equal "hello\n", ssh.exec!("true") }
+      assert_equal 1, @master.connections
+      refute_match(/WARN/, @log.string)
     end
 
     def test_ssh_config_control_path_is_used
@@ -217,6 +252,7 @@ module NetSSH
 
     def test_invalid_control_master_value
       assert_raises(ArgumentError) { start(control_master: :yes) }
+      assert_raises(ArgumentError) { start(control_master: :yes, forward_agent: true) }
     end
 
     def test_nil_control_options_raise

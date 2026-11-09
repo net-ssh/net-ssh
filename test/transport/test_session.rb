@@ -220,6 +220,42 @@ module Transport
       assert_nil session.poll_message
     end
 
+    def test_server_sig_algs_should_be_nil_without_ext_info
+      session!
+      assert_nil session.server_sig_algs
+    end
+
+    def test_poll_message_should_store_server_sig_algs_from_ext_info
+      session!
+      packet = P(:byte, EXT_INFO, :long, 2, :string, "publickey-hostbound@openssh.com", :string, "0",
+                 :string, "server-sig-algs", :string, "ssh-ed25519,rsa-sha2-256,rsa-sha2-512")
+      socket.expects(:next_packet).times(2).returns(packet, nil)
+      assert_nil session.poll_message
+      assert_equal %w[ssh-ed25519 rsa-sha2-256 rsa-sha2-512], session.server_sig_algs
+    end
+
+    def test_server_sig_algs_should_be_replaced_by_a_later_ext_info
+      session!
+      first = P(:byte, EXT_INFO, :long, 1, :string, "server-sig-algs", :string, "ssh-ed25519")
+      second = P(:byte, EXT_INFO, :long, 1, :string, "server-sig-algs", :string, "rsa-sha2-256")
+      socket.expects(:next_packet).times(3).returns(first, second, nil)
+      assert_nil session.poll_message
+      assert_equal %w[rsa-sha2-256], session.server_sig_algs
+    end
+
+    def test_ext_info_without_server_sig_algs_should_leave_them_unset
+      session!
+      socket.expects(:next_packet).times(2).returns(P(:byte, EXT_INFO, :long, 1, :string, "ping@openssh.com", :string, "0"), nil)
+      assert_nil session.poll_message
+      assert_nil session.server_sig_algs
+    end
+
+    def test_malformed_ext_info_should_raise
+      session!
+      socket.expects(:next_packet).returns(P(:byte, EXT_INFO, :long, 2, :string, "server-sig-algs", :string, "ssh-ed25519"))
+      assert_raises(Net::SSH::Exception) { session.poll_message }
+    end
+
     def test_poll_message_should_silently_handle_unimplemented_packets
       session!
       socket.expects(:next_packet).times(2).returns(P(:byte, UNIMPLEMENTED, :long, 15), nil)
@@ -266,9 +302,58 @@ module Transport
       session!
       packet = P(:byte, Net::SSH::Connection::Constants::CHANNEL_DATA, :long, 0, :string, "test")
       algorithms.stubs(:allow?).with(packet).returns(false)
-      algorithms.stubs(:initialized?).returns(false)
+      algorithms.stubs(:session_id).returns(nil)
       socket.expects(:next_packet).returns(packet)
       assert_raises(Net::SSH::Exception) { session.poll_message }
+      assert session.queue.empty?
+    end
+
+    def test_poll_message_should_queue_channel_data_during_client_initiated_rekey
+      algorithms = completed_kex_algorithms
+      socket.expects(:send_packet)
+      algorithms.rekey!
+
+      socket.expects(:next_packet).times(2).returns(channel_data, nil)
+      assert_nil session.poll_message
+      assert_equal [channel_data], session.queue
+    end
+
+    def test_poll_message_should_queue_channel_data_during_server_initiated_rekey
+      algorithms = completed_kex_algorithms
+      socket.expects(:send_packet)
+      socket.expects(:next_packet).times(3).returns(server_kexinit, channel_data, P(:byte, NEWKEYS))
+      transport = session
+      algorithms.define_singleton_method(:exchange_keys) do
+        transport.next_message
+        @initialized = true
+      end
+
+      assert_equal channel_data, session.poll_message
+      assert session.queue.empty?
+    end
+
+    def test_poll_message_should_bound_the_queue_during_rekey
+      algorithms = completed_kex_algorithms
+      socket.expects(:send_packet)
+      algorithms.rekey!
+
+      socket.stubs(:next_packet).returns(channel_data)
+      error = assert_raises(Net::SSH::Exception) { session.poll_message }
+      assert_match(/too many packets queued/, error.message)
+      assert_equal Net::SSH::Transport::Session::MAX_QUEUED_PACKETS, session.queue.size
+    end
+
+    def test_poll_message_should_raise_on_channel_data_before_first_key_exchange_completes
+      session!
+      Net::SSH::Transport::Algorithms.unstub(:new)
+      algorithms = Net::SSH::Transport::Algorithms.new(session, session.options)
+      session.instance_variable_set(:@algorithms, algorithms)
+      socket.expects(:send_packet)
+      algorithms.start
+
+      socket.expects(:next_packet).returns(channel_data)
+      error = assert_raises(Net::SSH::Exception) { session.poll_message }
+      assert_match(/during initial key exchange/, error.message)
       assert session.queue.empty?
     end
 
@@ -443,6 +528,27 @@ module Transport
 
     private
 
+    def completed_kex_algorithms
+      session!
+      Net::SSH::Transport::Algorithms.unstub(:new)
+      algorithms = Net::SSH::Transport::Algorithms.new(session, session.options)
+      algorithms.instance_variable_set(:@session_id, "session-id")
+      algorithms.instance_variable_set(:@initialized, true)
+      session.instance_variable_set(:@algorithms, algorithms)
+      algorithms
+    end
+
+    def channel_data
+      @channel_data ||= P(:byte, Net::SSH::Connection::Constants::CHANNEL_DATA, :long, 0, :string, "x")
+    end
+
+    def server_kexinit
+      P(:byte, KEXINIT, :long, 0, :long, 0, :long, 0, :long, 0,
+        :string, "ecdh-sha2-nistp256", :string, "ecdsa-sha2-nistp256",
+        :string, "aes256-ctr", :string, "aes256-ctr", :string, "hmac-sha2-256", :string, "hmac-sha2-256",
+        :string, "none", :string, "none", :string, "", :string, "", :bool, false, :long, 0)
+    end
+
     def socket
       @socket ||= stub("socket", hints: {})
     end
@@ -452,7 +558,7 @@ module Transport
     end
 
     def algorithms
-      @algorithms ||= stub("algorithms", initialized?: true, allow?: true, start: true)
+      @algorithms ||= stub("algorithms", initialized?: true, session_id: "session-id", allow?: true, start: true)
     end
 
     def session(options = {})

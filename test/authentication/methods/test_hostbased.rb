@@ -1,4 +1,5 @@
 require 'common'
+require 'logger'
 require 'net/ssh/authentication/methods/hostbased'
 require 'authentication/methods/common'
 
@@ -49,6 +50,22 @@ module Authentication
         end
 
         assert subject.authenticate("ssh-connection", "jamis")
+      end
+
+      def test_debug_log_uses_sha256_fingerprint_when_md5_is_unavailable
+        OpenSSL::Digest.stubs(:hexdigest).with { |alg, _| alg.to_s.upcase == 'MD5' }.raises(OpenSSL::Digest::DigestError, 'MD5 disabled')
+        ENV.stubs(:[]).with('USER').returns(nil)
+        log = StringIO.new
+        session.stubs(:logger).returns(Logger.new(log).tap { |l| l.level = Logger::DEBUG })
+        key = OpenSSL::PKey::RSA.new(2048)
+        key_manager(keys: [key]).expects(:sign).with(&signature_parameters(key)).returns("sig-one")
+
+        transport.expect do |t, _packet|
+          t.return(USERAUTH_SUCCESS)
+        end
+
+        assert subject.authenticate("ssh-connection", "jamis")
+        assert_includes log.string, "hostbased succeeded (#{key.fingerprint('SHA256')})"
       end
 
       private

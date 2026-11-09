@@ -359,7 +359,10 @@ class TestConfig < NetSSHTest
   end
 
   def test_load_with_match_block
-    config = Net::SSH::Config.load(config(:match), "test.host")
+    config = nil
+    assert_output(nil, /line 7: unsupported Match condition 'unsupported'/) do
+      config = Net::SSH::Config.load(config(:match), "test.host")
+    end
     net_ssh = Net::SSH::Config.translate(config)
     assert_equal true, net_ssh[:forward_agent]
     assert_equal true, net_ssh[:compression]
@@ -512,8 +515,10 @@ class TestConfig < NetSSHTest
         Compression no
     '
     with_config_from_data data do |f|
-      config = Net::SSH::Config.load(f, "bar2")
-      assert_nil config['port']
+      assert_output(nil, /unsupported Match condition 'host==foo,\*.baz.com'/) do
+        config = Net::SSH::Config.load(f, "bar2")
+        assert_nil config['port']
+      end
       config = Net::SSH::Config.load(f, "bbaz.com")
       assert_nil config['port']
       config = Net::SSH::Config.load(f, "bar.baz.com")
@@ -537,6 +542,92 @@ class TestConfig < NetSSHTest
       assert_nil config['port']
       config = Net::SSH::Config.load(f, "meh.baz.com")
       assert_equal 1234, config['port']
+    end
+  end
+
+  def test_match_all_only_matches_alone
+    with_config_from_data "Match all\n  Port 1234\n" do |f|
+      assert_equal 1234, Net::SSH::Config.load(f, "foo")['port']
+    end
+    with_config_from_data "Match all host foo\n  Port 1234\n" do |f|
+      assert_raises(RuntimeError) { Net::SSH::Config.load(f, "foo") }
+    end
+  end
+
+  def test_match_with_unsupported_condition_does_not_match_and_warns
+    %w[exec canonical final localnetwork tagged version].each do |kind|
+      data = "Match host foo #{kind} \"touch /nonexistent/#{kind}\"\n  Port 1234\nHost *\n  Port 22\n"
+      with_config_from_data data do |f|
+        config = nil
+        assert_output(nil, /net-ssh: #{Regexp.quote(f)} line 1: unsupported Match condition '#{kind}'/) do
+          config = Net::SSH::Config.for("foo", [f])
+        end
+        assert_equal 22, config[:port]
+      end
+    end
+  end
+
+  def test_match_unsupported_condition_warns_once_per_line
+    with_config_from_data "Match exec true\n  Port 1234\n" do |f|
+      assert_output(nil, /exec/) { Net::SSH::Config.for("foo", [f]) }
+      assert_output(nil, "") { Net::SSH::Config.for("foo", [f]) }
+    end
+  end
+
+  def test_match_user
+    with_config_from_data "Match User alice,bob\n  Port 1234\n" do |f|
+      assert_equal 1234, Net::SSH::Config.for("foo", [f], user: "alice")[:port]
+      assert_equal 1234, Net::SSH::Config.for("foo", [f], user: "bob")[:port]
+      assert_nil Net::SSH::Config.for("foo", [f], user: "carol")[:port]
+      assert_nil Net::SSH::Config.for("foo", [f], user: "Alice")[:port]
+    end
+  end
+
+  def test_match_user_with_wildcards
+    with_config_from_data "Match User ubuntu_ssm*,adm?n\n  Port 1234\n" do |f|
+      assert_equal 1234, Net::SSH::Config.for("foo", [f], user: "ubuntu_ssm1")[:port]
+      assert_equal 1234, Net::SSH::Config.for("foo", [f], user: "admin")[:port]
+      assert_nil Net::SSH::Config.for("foo", [f], user: "ubuntu")[:port]
+      assert_nil Net::SSH::Config.for("foo", [f], user: "administrator")[:port]
+    end
+  end
+
+  def test_match_user_negated
+    with_config_from_data "Match !User root\n  Port 1234\nMatch User *,!alice\n  Compression yes\n" do |f|
+      config = Net::SSH::Config.for("foo", [f], user: "alice")
+      assert_equal 1234, config[:port]
+      assert_nil config[:compression]
+      config = Net::SSH::Config.for("foo", [f], user: "root")
+      assert_nil config[:port]
+      assert_equal true, config[:compression]
+    end
+  end
+
+  def test_match_user_and_host
+    data = "Match User ubuntu_ssm* Host i-*\n  ProxyCommand nc %h %p\n"
+    with_config_from_data data do |f|
+      assert_equal "nc %h %p", Net::SSH::Config.for("i-123", [f], user: "ubuntu_ssm1")[:proxy].command_line_template
+      assert_nil Net::SSH::Config.for("i-123", [f], user: "alice")[:proxy]
+      assert_nil Net::SSH::Config.for("web-1", [f], user: "ubuntu_ssm1")[:proxy]
+    end
+  end
+
+  def test_match_user_defaults_to_user_set_so_far_then_local_user
+    data = "Host i-*\n  User ubuntu_ssm1\nMatch User ubuntu_ssm*\n  Port 1234\nMatch LocalUser #{Etc.getpwuid.name}\n  Compression yes\n"
+    with_config_from_data data do |f|
+      config = Net::SSH::Config.for("i-123", [f])
+      assert_equal 1234, config[:port]
+      assert_equal true, config[:compression]
+      assert_nil Net::SSH::Config.for("i-123", [f], user: "alice")[:port]
+      assert_nil Net::SSH::Config.for("web-1", [f])[:port] unless Etc.getpwuid.name.start_with?("ubuntu_ssm")
+    end
+  end
+
+  def test_match_original_host
+    with_config_from_data "Match OriginalHost *.example.com,!bad.example.com\n  Port 1234\n" do |f|
+      assert_equal 1234, Net::SSH::Config.for("Good.Example.com", [f])[:port]
+      assert_nil Net::SSH::Config.for("bad.example.com", [f])[:port]
+      assert_nil Net::SSH::Config.for("example.org", [f])[:port]
     end
   end
 

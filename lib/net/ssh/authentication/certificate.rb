@@ -78,8 +78,8 @@ module Net
           key.to_pem
         end
 
-        def fingerprint
-          key.fingerprint
+        def fingerprint(algorithm = 'MD5')
+          key.fingerprint(algorithm)
         end
 
         # Signs the certificate with key.

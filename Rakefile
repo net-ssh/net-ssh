@@ -28,8 +28,17 @@ CLEAN.include ['pkg', 'rdoc']
 name = "net-ssh"
 
 require_relative "lib/net/ssh/version"
-require_relative "rakelib/changelog"
 version = Net::SSH::Version::CURRENT
+
+begin
+  require "changelogd/rake"
+rescue LoadError
+  # A git gem isn't on the load path under plain `rake`, as the release workflow runs it; bundler/setup could clash with the running rake.
+  require "bundler"
+  $LOAD_PATH.unshift(*Bundler.definition.specs["changelogd"].flat_map(&:full_require_paths))
+  require "changelogd/rake"
+end
+Changelogd::RakeTasks.new(version_file: "lib/net/ssh/version.rb")
 
 extra_files = %w[LICENSE.txt THANKS.txt CHANGES.txt]
 if defined?(RDoc::Task)
@@ -63,16 +72,19 @@ namespace :cert do
 end
 
 def change_version(&block)
+  Rake::Task["changelog:check"].invoke
   version_file = 'lib/net/ssh/version.rb'
   require_relative version_file
   pre = Net::SSH::Version::PRE
   tiny = Net::SSH::Version::TINY
-  result = block[pre: pre, tiny: Net::SSH::Version::TINY]
+  minor = Net::SSH::Version::MINOR
+  result = block[pre: pre, tiny: tiny, minor: minor]
   raise ArgumentError, "Version change logic should always return a pre" unless result.key?(:pre)
 
   new_pre = result[:pre]
   new_tiny = result[:tiny] || tiny
-  found = { pre: false, tiny: false }
+  new_minor = result[:minor] || minor
+  found = { pre: false, tiny: false, minor: false }
   File.open("#{version_file}.new", "w") do |f|
     File.readlines(version_file).each do |line|
       match =
@@ -104,29 +116,34 @@ def change_version(&block)
         end
       end
 
+      if new_minor != minor
+        match = /^(\s+MINOR\s+=\s+)#{minor}(\s*)$/.match(line)
+        if match
+          prefix = match[1]
+          postfix = match[2]
+          new_line = "#{prefix}#{new_minor}#{postfix}"
+          puts "Changing:\n  - #{line}  + #{new_line}"
+          line = new_line
+          found[:minor] = true
+        end
+      end
+
       f.write(line)
     end
     raise ArgumentError, "Cound not find line: PRE = \"#{pre}\" in #{version_file}" unless found[:pre]
     raise ArgumentError, "Cound not find line: TINY = \"#{tiny}\" in #{version_file}" unless found[:tiny] || new_tiny == tiny
+    raise ArgumentError, "Cound not find line: MINOR = \"#{minor}\" in #{version_file}" unless found[:minor] || new_minor == minor
   end
-
-  begin
-    heading = Changelog.heading(Net::SSH::Version::MAJOR, Net::SSH::Version::MINOR, new_tiny, new_pre)
-    section = Changelog.new(__dir__).release(heading)
-  rescue StandardError
-    FileUtils.rm_f "#{version_file}.new"
-    raise
-  end
-  puts section ? "Added to CHANGES.txt:\n#{section}" : "Nothing to release for a pre-release, CHANGES.txt unchanged"
 
   FileUtils.mv version_file, "#{version_file}.old"
   FileUtils.mv "#{version_file}.new", version_file
+  Rake::Task["changelog:release"].invoke
 end
 
 namespace :vbump do
   desc "Final release"
   task :final do
-    change_version do |pre:, tiny:|
+    change_version do |pre:, tiny:, **|
       _ = tiny
       if pre.nil?
         { tiny: tiny + 1, pre: nil }
@@ -138,9 +155,18 @@ namespace :vbump do
     end
   end
 
+  desc "Minor release"
+  task :minor do
+    change_version do |pre:, minor:, **|
+      raise ArgumentError, "PRE is #{pre.inspect}; release it with vbump:final first" unless pre.nil?
+
+      { minor: minor + 1, tiny: 0, pre: nil }
+    end
+  end
+
   desc "Increment prerelease"
   task :pre, [:type] do |_t, args|
-    change_version do |pre:, tiny:|
+    change_version do |pre:, tiny:, **|
       puts " PRE => #{pre.inspect}"
       match = /^([a-z]+)(\d+)/.match(pre)
       raise ArgumentError, "Unexpected pre: #{pre}" if match.nil? && args[:type].nil?
@@ -155,44 +181,6 @@ namespace :vbump do
         { pre: "#{match[1]}#{match[2].to_i + 1}" }
       end
     end
-  end
-end
-
-namespace :changelog do
-  changelog = Changelog.new(__dir__)
-
-  desc "Validate the fragments in changelog.d/"
-  task :check do
-    count = changelog.check.size
-    puts "#{count} valid changelog fragment#{'s' unless count == 1}"
-  rescue Changelog::Error => e
-    abort e.message
-  end
-
-  desc "Print the CHANGES.txt section the next version bump would write"
-  task :preview, [:heading] do |_t, args|
-    puts changelog.section(args[:heading] || "Unreleased") || "Nothing to release"
-  rescue Changelog::Error => e
-    abort e.message
-  end
-
-  desc "Create a fragment: rake \"changelog:new[1234,change,Text of the entry]\""
-  task :new, [:number, :type] do |_t, args|
-    abort "Usage: rake \"changelog:new[<PR number>,<#{Changelog::TYPES.keys.join('|')}>,<text>]\"" unless args[:number] && args[:type]
-    # Rake splits arguments on commas and strips the spaces around them, so take the text from the raw task string.
-    raw = Rake.application.top_level_tasks.find { |t| t.start_with?("changelog:new[") }
-    text = raw&.[](/\A[^\[]*\[[^,]*,[^,]*,\s*(.*)\]\z/m, 1) || args.extras.join(", ")
-    puts "Created #{changelog.new_fragment(args[:number], args[:type], text)}"
-  rescue Changelog::Error => e
-    abort e.message
-  end
-
-  desc "Write the fragments to CHANGES.txt under a heading, e.g. rake \"changelog:release[7.3.4]\" (vbump does this)"
-  task :release, [:heading] do |_t, args|
-    abort "Usage: rake \"changelog:release[<version heading>]\"" unless args[:heading]
-    puts changelog.release(args[:heading]) || "Nothing to release"
-  rescue Changelog::Error => e
-    abort e.message
   end
 end
 
