@@ -10,6 +10,11 @@ module NetSSH
       Net::SSH::Authentication::Session.stubs(:new).returns(authentication_session)
       Net::SSH::Transport::Session.stubs(:new).returns(mock('transport_session'))
       Net::SSH::Connection::Session.stubs(:new).returns(mock('connection_session'))
+      @previous_default_configuration = Net::SSH.default_configuration
+    end
+
+    def teardown
+      Net::SSH.default_configuration = @previous_default_configuration
     end
 
     def with_ssh_config(content)
@@ -159,6 +164,21 @@ module NetSSH
       end
     end
 
+    def test_match_user_should_apply_before_default_configuration
+      seen_ports = []
+      Net::SSH.default_configuration = lambda do |_host, ssh_config|
+        seen_ports << ssh_config[:port]
+        { timeout: 7 }
+      end
+      with_ssh_config("Match User alice Host localhost\n  Port 2200\n") do |path|
+        options = start_and_capture_transport_options_as('alice', config: path)
+        assert_equal 2200, options[:port]
+        assert_equal 7, options[:timeout]
+        assert_nil start_and_capture_transport_options_as('bob', config: path)[:port]
+      end
+      assert_equal [2200, nil], seen_ports
+    end
+
     def start_and_capture_transport_options_as(user, options)
       effective_options = nil
       Net::SSH::Transport::Session.expects(:new).with { |_host, opts| effective_options = opts }.returns(mock('transport_session'))
@@ -262,6 +282,162 @@ module NetSSH
       assert_equal original, options
       Net::SSH.start('localhost', 'otheruser', options)
       assert_equal original, options
+    end
+
+    def test_default_configuration_and_precedence
+      Net::SSH::Config.stubs(:for).with('localhost', Net::SSH::Config.expandable_default_files, user: 'testuser')
+                      .returns({ timeout: 5, password: 'from_file' })
+
+      Net::SSH.default_configuration = lambda do |_host, ssh_config|
+        { timeout: 10, keepalive: true, password: ssh_config.fetch(:password, 'from_default_configuration') }
+      end
+
+      Net::SSH::Connection::Session
+        .expects(:new)
+        .with(anything, has_entries(timeout: 10, keepalive: false, password: 'from_file'))
+        .returns(mock('connection_session'))
+
+      options = { keepalive: false }
+      Net::SSH.start('localhost', 'testuser', options)
+
+      # Test that original options are not modified.
+      assert_nil options[:timeout]
+      assert_nil options[:password]
+    end
+
+    def test_default_configuration_and_config_false
+      Net::SSH::Config.expects(:for).never
+      Net::SSH.default_configuration = lambda do |*|
+        { keepalive: true }
+      end
+
+      Net::SSH::Connection::Session
+        .expects(:new)
+        .with(anything, has_entries(keepalive: true))
+        .returns(mock('connection_session'))
+
+      options = { config: false }
+      Net::SSH.start('localhost', 'testuser', options)
+
+      # Test that original options are not modified.
+      assert_nil options[:keepalive]
+    end
+
+    def test_default_configuration_and_config_from_file
+      Net::SSH::Config.stubs(:for).with('localhost', ['/some/config'], user: 'testuser')
+                      .returns({ timeout: 5, password: 'from_file' })
+
+      Net::SSH.default_configuration = lambda do |*|
+        { timeout: 10, keepalive: true }
+      end
+
+      Net::SSH::Connection::Session
+        .expects(:new)
+        .with(anything, has_entries(timeout: 10, keepalive: false, password: 'from_file'))
+        .returns(mock('connection_session'))
+
+      options = { keepalive: false, config: '/some/config' }
+      Net::SSH.start('localhost', 'testuser', options)
+    end
+
+    def test_accepts_nil_default_configuration
+      Net::SSH.default_configuration = nil
+
+      Net::SSH::Connection::Session
+        .expects(:new)
+        .with(anything, has_entries(keepalive: true))
+        .returns(mock('connection_session'))
+
+      Net::SSH.start('localhost', 'testuser', keepalive: true)
+    end
+
+    def test_raises_if_default_configuration_returns_non_hash
+      Net::SSH.default_configuration = ->(*) { 1 }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser')
+      end
+      assert_equal 'Net::SSH.default_configuration: must return a Hash, got Integer', error.message
+    end
+
+    def test_default_configuration_setter_rejects_non_callable
+      error = assert_raises(ArgumentError) { Net::SSH.default_configuration = { timeout: 5 } }
+      assert_equal 'Net::SSH.default_configuration must respond to call or be nil, got Hash', error.message
+    end
+
+    def test_default_configuration_may_pass_ssh_config_values_through
+      Net::SSH::Config.stubs(:for).returns({ verify_host_key: nil, port: 2200 })
+      Net::SSH.default_configuration = ->(_host, ssh_config) { ssh_config.merge(timeout: 5) }
+
+      Net::SSH::Connection::Session
+        .expects(:new)
+        .with(anything, has_entries(timeout: 5, port: 2200))
+        .returns(mock('connection_session'))
+
+      Net::SSH.start('localhost', 'testuser')
+    end
+
+    def test_explicit_nil_should_use_default_configuration_value
+      logger = Logger.new(nil)
+      Net::SSH.default_configuration = ->(*) { { password: 'from_hook', logger: logger } }
+
+      Net::SSH::Connection::Session
+        .expects(:new)
+        .with(anything, has_entries(password: 'from_hook', logger: logger))
+        .returns(mock('connection_session'))
+
+      Net::SSH.start('localhost', 'testuser', password: nil, logger: nil)
+    end
+
+    def test_raises_if_default_configuration_sets_user_or_config
+      Net::SSH.default_configuration = ->(*) { { user: 'alice', config: false } }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser')
+      end
+      assert_equal "Net::SSH.default_configuration: can't set :user, :config", error.message
+    end
+
+    def test_invalid_explicit_option_should_raise_before_default_configuration_runs
+      Net::SSH.default_configuration = ->(*) { flunk 'default_configuration should not be called' }
+
+      assert_raises(ArgumentError) { Net::SSH.start('localhost', 'testuser', timout: 5) }
+    end
+
+    def test_raises_if_default_configuration_returns_invalid_option
+      Net::SSH.default_configuration = ->(*) { { timout: 5 } }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser')
+      end
+      assert_equal 'Net::SSH.default_configuration: invalid option(s): timout', error.message
+    end
+
+    def test_raises_if_default_configuration_returns_nil_value
+      Net::SSH.default_configuration = ->(*) { { timeout: nil } }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser')
+      end
+      assert_match(/\ANet::SSH.default_configuration: nil is not allowed for :timeout/, error.message)
+    end
+
+    def test_raises_if_default_configuration_returns_paranoid
+      Net::SSH.default_configuration = ->(*) { { paranoid: true } }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser')
+      end
+      assert_match(/\ANet::SSH.default_configuration: :paranoid has been removed/, error.message)
+    end
+
+    def test_raises_if_default_configuration_returns_invalid_control_master
+      Net::SSH.default_configuration = ->(*) { { control_master: :yes } }
+
+      error = assert_raises(ArgumentError) do
+        Net::SSH.start('localhost', 'testuser')
+      end
+      assert_equal 'control_master must be :auto or false, got :yes', error.message
     end
   end
 end
