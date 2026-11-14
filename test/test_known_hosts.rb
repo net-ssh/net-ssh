@@ -1,4 +1,7 @@
 require_relative './common'
+require 'net/ssh/verifiers/always'
+require 'logger'
+require 'stringio'
 
 class TestKnownHosts < NetSSHTest
   def perform_test(source)
@@ -177,12 +180,90 @@ class TestKnownHosts < NetSSHTest
     end
   end
 
+  def test_search_for_includes_known_hosts_command_keys
+    with_known_hosts_command_script do |command|
+      options = { user_known_hosts_file: [], global_known_hosts_file: [], known_hosts_command: "#{command} %H" }
+      keys = Net::SSH::KnownHosts.search_for('[example.com]:2222', options)
+      assert_equal([sample_key_blob], keys.map(&:to_blob))
+      assert Net::SSH::Verifiers::Always.new.verify(session: OpenStruct.new(host_keys: keys), key: keys.first.key)
+    end
+  end
+
+  def test_known_hosts_command_keys_are_added_to_user_file
+    with_known_hosts_command_script do |command|
+      with_config_file do |user_file|
+        options = { user_known_hosts_file: user_file, global_known_hosts_file: [], known_hosts_command: "#{command} unknown.com" }
+        Net::SSH::KnownHosts.search_for('example.com', options).add_host_key(rsa_key)
+        assert_equal("example.com ssh-rsa", File.read(user_file).split[0, 2].join(" "))
+      end
+    end
+  end
+
+  def test_known_hosts_command_expands_tokens_in_arguments_only
+    ENV['NET_SSH_KHC_TEST'] = 'env'
+    status = stub(success?: true)
+    Open3.expects(:capture2).with(
+      %w[/bin/%h /bin/%h], 'real.example.com', '2222', 'bob', 'alias', '[alias]:2222', 'HOSTNAME', 'NONE', 'NONE', 'NONE',
+      '%h $(touch x)', 'env'
+    ).returns(["", status])
+    options = { user_known_hosts_file: [], global_known_hosts_file: [], host_name: 'Real.Example.com', port: 2222,
+                user: 'bob', host_key_alias: 'alias',
+                known_hosts_command: %(/bin/%h %h %p %r %k %H %I %f %K %t "%%h $(touch x)" ${NET_SSH_KHC_TEST}) }
+    Net::SSH::KnownHosts.search_for('[alias]:2222', options)
+  ensure
+    ENV.delete('NET_SSH_KHC_TEST')
+  end
+
+  def test_known_hosts_command_failure_falls_back_to_files
+    logger = Logger.new(log = StringIO.new)
+    options = { user_known_hosts_file: path("known_hosts/github"), global_known_hosts_file: [], logger: logger,
+                known_hosts_command: "#{RbConfig.ruby} -e 'puts ARGV[0]; exit 1' '#{"github.com #{sample_key}"}'" }
+    keys = Net::SSH::KnownHosts.search_for('github.com', options)
+    assert_equal(1, keys.count)
+    assert_match(/KnownHostsCommand .* failed: .*exit 1/, log.string)
+  end
+
+  def test_known_hosts_command_spawn_failure_falls_back_to_files
+    logger = Logger.new(log = StringIO.new)
+    options = { user_known_hosts_file: path("known_hosts/github"), global_known_hosts_file: [], logger: logger,
+                known_hosts_command: "/nonexistent/known-hosts-command %h" }
+    assert_equal(1, Net::SSH::KnownHosts.search_for('github.com', options).count)
+    assert_match(/KnownHostsCommand .* failed: No such file/, log.string)
+  end
+
+  def test_known_hosts_command_unknown_token_falls_back_to_files
+    Open3.expects(:capture2).never
+    options = { user_known_hosts_file: path("known_hosts/github"), global_known_hosts_file: [],
+                known_hosts_command: "/bin/echo %n" }
+    assert_equal(1, Net::SSH::KnownHosts.search_for('github.com', options).count)
+  end
+
+  def test_known_hosts_command_none_is_not_run
+    Open3.expects(:capture2).never
+    options = { user_known_hosts_file: path("known_hosts/github"), global_known_hosts_file: [], known_hosts_command: "none" }
+    assert_equal(1, Net::SSH::KnownHosts.search_for('github.com', options).count)
+  end
+
   def path(relative_path)
     File.join(File.dirname(__FILE__), relative_path)
   end
 
   def sample_key
     "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
+  end
+
+  def sample_key_blob
+    sample_key.split[1].unpack1("m")
+  end
+
+  # A command printing a known_hosts line with sample_key for the host given
+  # as its argument.
+  def with_known_hosts_command_script
+    Tempfile.open(['known_hosts_command', '.rb']) do |f|
+      f.write("puts \"\#{ARGV[0]} #{sample_key}\"\n")
+      f.close
+      yield "#{RbConfig.ruby} #{f.path}"
+    end
   end
 
   def with_config_file(lines: [], &block)

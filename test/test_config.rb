@@ -329,6 +329,20 @@ class TestConfig < NetSSHTest
     assert_equal "/path/to/auth.sock", net_ssh[:identity_agent]
   end
 
+  def test_load_with_known_hosts_command
+    data = %(Host example.com\n  KnownHostsCommand /usr/bin/fetch-keys --host %h "%p"\n)
+    with_config_from_data data do |f|
+      net_ssh = Net::SSH::Config.for("example.com", [f])
+      assert_equal '/usr/bin/fetch-keys --host %h "%p"', net_ssh[:known_hosts_command]
+    end
+  end
+
+  def test_load_with_known_hosts_command_none
+    with_config_from_data "KnownHostsCommand none\n" do |f|
+      assert_equal 'none', Net::SSH::Config.for("example.com", [f])[:known_hosts_command]
+    end
+  end
+
   def test_load_with_include_keyword
     config = Net::SSH::Config.load(config(:include), "xyz")
     net_ssh = Net::SSH::Config.translate(config)

@@ -71,7 +71,7 @@ module Net
       append_all_supported_algorithms non_interactive password_prompt
       prompt_without_tty agent_socket_factory minimum_dh_bits verify_host_key
       fingerprint_hash check_host_ip pubkey_algorithms no_delay
-      control_master control_path preopen_channels
+      control_master control_path preopen_channels known_hosts_command
     ]
 
     class << self
@@ -190,6 +190,15 @@ module Net
     #   :control_master).
     # * :known_hosts => a custom object holding known hosts records.
     #   It must implement #search_for and `add` in a similiar manner as KnownHosts.
+    # * :known_hosts_command => a command whose output, in known_hosts format,
+    #   KnownHosts searches in addition to the known hosts files, as with
+    #   ssh_config's KnownHostsCommand. It is split into words and run without
+    #   a shell, and its arguments take the % tokens of :control_path except
+    #   %n, plus %H (the host searched for), %I (always HOSTNAME) and %f, %K
+    #   and %t, which are "NONE" as the server's key isn't known yet. If the
+    #   command fails, a warning is logged and only the files are used. New
+    #   keys are still added to the user known hosts file. Defaults to
+    #   KnownHostsCommand from ssh_config; +"none"+ disables it.
     # * :global_known_hosts_file => the location of the global known hosts
     #   file. Set to an array if you want to specify multiple global known
     #   hosts files. Defaults to %w(/etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2).

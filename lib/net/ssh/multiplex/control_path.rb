@@ -24,10 +24,13 @@ module Net
       #   %p  remote port
       #   %r  remote user
       #   %u  local user
+      #
+      # KnownHostsCommand arguments use the same tokens plus +extra_tokens+,
+      # where a nil value makes that token unknown.
       class ControlPath
         # +host_arg+ is the host as given, +host+ the one connected to after
         # HostName.
-        def initialize(host_arg:, host:, port:, remote_user:, jump_host: '', host_key_alias: nil) # rubocop:disable Metrics/ParameterLists
+        def initialize(host_arg:, host:, port:, remote_user:, jump_host: '', host_key_alias: nil, extra_tokens: {}) # rubocop:disable Metrics/ParameterLists
           @host_arg = host_arg.to_s
           # ssh lowercases host names, but not addresses, before expanding.
           @host = address?(host.to_s) ? host.to_s : host.to_s.downcase
@@ -35,6 +38,7 @@ module Net
           @remote_user = remote_user.to_s
           @jump_host = jump_host.to_s
           @host_key_alias = host_key_alias
+          @extra_tokens = extra_tokens
         end
 
         # Raises ArgumentError for an unknown % token, an unset ${ENV}
@@ -61,7 +65,27 @@ module Net
               'p' => @port,
               'r' => @remote_user,
               'u' => pw.name
-            }
+            }.merge(@extra_tokens).compact
+          end
+        end
+
+        # Expands ${ENV} and the % tokens, but not a leading ~, raising
+        # ArgumentError like #expand.
+        def expand_tokens(path)
+          path.gsub(/\$\{([^}]*)\}|%(.?)|\$\{.*/m) do
+            if Regexp.last_match(1)
+              name = Regexp.last_match(1)
+              raise ArgumentError, "empty ${} variable" if name.empty?
+
+              ENV.fetch(name) { raise ArgumentError, "variable ${#{name}} is not set" }
+            elsif Regexp.last_match(2)
+              token = Regexp.last_match(2)
+              next '%' if token == '%'
+
+              tokens.fetch(token) { raise ArgumentError, "unknown token %#{token}" }
+            else
+              raise ArgumentError, "unterminated ${"
+            end
           end
         end
 
@@ -88,24 +112,6 @@ module Net
           home = user.nil? || user.empty? ? Etc.getpwuid(Process.uid).dir : Etc.getpwnam(user).dir
 
           rest.nil? ? home : File.join(home, rest)
-        end
-
-        def expand_tokens(path)
-          path.gsub(/\$\{([^}]*)\}|%(.?)|\$\{.*/m) do
-            if Regexp.last_match(1)
-              name = Regexp.last_match(1)
-              raise ArgumentError, "empty ${} variable" if name.empty?
-
-              ENV.fetch(name) { raise ArgumentError, "variable ${#{name}} is not set" }
-            elsif Regexp.last_match(2)
-              token = Regexp.last_match(2)
-              next '%' if token == '%'
-
-              tokens.fetch(token) { raise ArgumentError, "unknown token %#{token}" }
-            else
-              raise ArgumentError, "unterminated ${"
-            end
-          end
         end
 
         def address?(host)
