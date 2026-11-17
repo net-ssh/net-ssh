@@ -7,6 +7,7 @@ require 'net/ssh/transport/kex/ecdh_sha2_nistp256'
 require 'net/ssh/transport/kex/ecdh_sha2_nistp384'
 require 'net/ssh/transport/kex/ecdh_sha2_nistp521'
 require 'net/ssh/transport/kex/curve25519_sha256_loader'
+require 'net/ssh/transport/kex/mlkem768_x25519_sha256_loader'
 
 module Net::SSH::Transport
   module Kex
@@ -27,5 +28,6 @@ module Net::SSH::Transport
       MAP['curve25519-sha256'] = Curve25519Sha256
       MAP['curve25519-sha256@libssh.org'] = Curve25519Sha256
     end
+    MAP['mlkem768x25519-sha256'] = MLKEM768X25519Sha256 if Net::SSH::Transport::Kex::MLKEM768X25519Sha256Loader::LOADED
   end
 end
