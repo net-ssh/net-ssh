@@ -85,7 +85,7 @@ module Net
                        when "exec", "subsystem", "shell" then parts << :string
                        when "exit-status" then parts << :long
                        when "pty-req" then parts.concat(%i[string long long long long string])
-                       when "env" then parts.contact(%i[string string])
+                       when "env" then parts.concat(%i[string string])
                        else
                          request = Packet.registered_channel_requests(@data[1])
                          raise "don't know what to do about #{@data[1]} channel request" unless request
