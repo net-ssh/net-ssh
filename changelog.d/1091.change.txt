@@ -1,0 +1,1 @@
+Limit the size of zlib-decompressed packets so a server can't exhaust client memory with a highly compressed packet (reported by the RubyCentral gem security team and the Stripe security team)
