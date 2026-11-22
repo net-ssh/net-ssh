@@ -2,6 +2,7 @@
 
 require 'common'
 require 'net/ssh/transport/state'
+require 'net/ssh/transport/packet_stream'
 
 module Transport
   class TestState < NetSSHTest
@@ -129,6 +130,23 @@ module Transport
       return if defined?(JRUBY_VERSION)
 
       assert_equal "hello everybody", state.decompress("x\234\312H\315\311\311WH-K-\252L\312O\251\004\000\000\000\377\377")
+    end
+
+    def test_decompress_should_handle_shared_stream_across_packets
+      state.set compression: :standard
+      payloads = ["hello everybody", "a" * 100_000, Random.new(1).bytes(50_000), "hello everybody"]
+      payloads.each do |payload|
+        assert_equal payload.b, state.decompress(deflater.deflate(payload, Zlib::SYNC_FLUSH))
+      end
+    end
+
+    def test_decompress_should_raise_when_packet_inflates_beyond_limit
+      state.set compression: :standard
+      bomb = deflater(9).deflate("\0" * (64 * 1024 * 1024), Zlib::SYNC_FLUSH)
+      assert_operator bomb.bytesize, :<, Net::SSH::Transport::PacketStream::PACKET_MAX_SIZE
+      error = assert_raises(Net::SSH::Exception) { state.decompress(bomb) }
+      assert_match(/decompressed packet exceeds/, error.message)
+      state.cleanup
     end
 
     def test_compress_when_compression_is_delayed_and_auth_hint_is_set_should_return_compressed_text

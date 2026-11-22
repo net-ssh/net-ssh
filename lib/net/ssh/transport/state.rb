@@ -1,4 +1,5 @@
 require 'zlib'
+require 'net/ssh/errors'
 require 'net/ssh/transport/cipher_factory'
 require 'net/ssh/transport/hmac'
 
@@ -11,6 +12,9 @@ module Net
       # forth. This class will never be instantiated directly, but is used as
       # part of the internal state of the PacketStream module.
       class State
+        # Mirrors PacketStream::PACKET_MAX_SIZE; legitimate packets never decompress beyond it.
+        MAX_DECOMPRESSED_SIZE = 256 * 1024
+
         # The socket object that owns this state object.
         attr_reader :socket
 
@@ -131,7 +135,9 @@ module Net
           data = data.to_s
           return data unless compression?
 
-          decompressor.inflate(data)
+          result = String.new
+          decompressor.inflate(data) { |chunk| append_decompressed(result, chunk) }
+          append_decompressed(result, decompressor.flush_next_out)
         end
 
         # Resets the counters on the state object, but leaves the sequence_number
@@ -190,6 +196,13 @@ module Net
         end
 
         private
+
+        def append_decompressed(result, chunk)
+          result << chunk
+          raise Net::SSH::Exception, "decompressed packet exceeds #{MAX_DECOMPRESSED_SIZE} bytes" if result.bytesize > MAX_DECOMPRESSED_SIZE
+
+          result
+        end
 
         def update_next_iv(data, reset = false)
           @next_iv << data
