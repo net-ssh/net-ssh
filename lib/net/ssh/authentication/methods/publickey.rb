@@ -1,6 +1,7 @@
 require 'net/ssh/buffer'
 require 'net/ssh/errors'
 require 'net/ssh/authentication/methods/abstract'
+require 'net/ssh/authentication/agent'
 
 module Net
   module SSH
@@ -78,7 +79,12 @@ module Net
               sig_data.write_string(session_id)
               sig_data.append(buffer.to_s)
 
-              sig_blob = key_manager.sign(identity, sig_data, sig_alg)
+              begin
+                sig_blob = key_manager.sign(identity, sig_data, sig_alg)
+              rescue Net::SSH::Authentication::AgentError => e
+                debug { "publickey skipped (#{fingerprint(identity)}): #{e.message}" }
+                return false
+              end
 
               send_request(identity, username, next_service, alg, sig_blob.to_s)
               message = session.next_message

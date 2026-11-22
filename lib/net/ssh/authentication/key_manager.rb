@@ -131,10 +131,18 @@ module Net
             # By identity: EC::Point#== raises TypeError when compared with other key types.
             user_identities.reject! { |identity| identity.equal?(corresponding_user_identity) }
 
-            if !options[:keys_only] || corresponding_user_identity
-              known_identities[key] = { from: :agent, identity: key }
-              yield key
+            next if options[:keys_only] && !corresponding_user_identity
+
+            fallback = signing_fallback(corresponding_user_identity)
+            if use_agent?
+              known_identities[key] = { from: :agent, identity: key, fallback: fallback }.compact
+            elsif fallback
+              known_identities[key] = fallback
+            else
+              debug { "skipping agent identity #{fingerprint(key)}: the agent is no longer in use" }
+              next
             end
+            yield key
           end
 
           user_identities = load_identities(user_identities, !options[:non_interactive], false)
@@ -199,15 +207,14 @@ module Net
           end
 
           if info[:from] == :agent
-            raise KeyManagerError, "the agent is no longer available" unless agent
+            begin
+              return sign_with_agent(info[:identity], data, sig_alg)
+            rescue AgentError => e
+              agent_sign_failed(info[:identity], e)
+              raise unless info[:fallback]
 
-            case sig_alg
-            when "rsa-sha2-512"
-              return agent.sign(info[:identity], data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_512)
-            when "rsa-sha2-256"
-              return agent.sign(info[:identity], data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_256)
-            else
-              return agent.sign(info[:identity], data.to_s)
+              info.replace(info[:fallback])
+              return sign(identity, data, sig_alg)
             end
           end
 
@@ -255,6 +262,40 @@ module Net
           error { "could not get identities from agent: #{e.class} (#{e.message})" }
           self.use_agent = false
           []
+        end
+
+        def sign_with_agent(identity, data, sig_alg)
+          raise AgentNotAvailable, "the agent is no longer available" unless agent
+
+          case sig_alg
+          when "rsa-sha2-512"
+            agent.sign(identity, data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_512)
+          when "rsa-sha2-256"
+            agent.sign(identity, data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_256)
+          else
+            agent.sign(identity, data.to_s)
+          end
+        end
+
+        # Like OpenSSH, a refused signature only fails that key, but an agent that
+        # closed the connection is dropped so it is not asked (or prompts) again.
+        def agent_sign_failed(identity, error)
+          info { "agent could not sign with #{fingerprint(identity)}: #{error.class} (#{error.message})" }
+          return unless error.is_a?(AgentClosedConnection)
+
+          info { "not using the agent for the rest of this session" }
+          self.use_agent = false
+        end
+
+        # The user identity matching an agent key, if it can sign without the agent.
+        def signing_fallback(identity)
+          return if identity.nil? || identity[:from] == :pubkey_file_only
+
+          identity.reject { |k, _| k == :public_key }
+        end
+
+        def fingerprint(key)
+          key.fingerprint(options[:fingerprint_hash] || 'SHA256')
         end
 
         # Load keycerts from files and data.
