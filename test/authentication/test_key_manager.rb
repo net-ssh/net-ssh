@@ -367,7 +367,7 @@ module Authentication
       assert_equal 1, identities.length
       assert_equal rsa_pk.to_blob, identities.first.to_blob
 
-      assert_equal({ from: :agent, identity: rsa_pk }, manager.known_identities[rsa_pk])
+      assert_equal({ from: :agent, identity: rsa_pk, fallback: { public_key: rsa_pk, from: :file, file: first, key: rsa } }, manager.known_identities[rsa_pk])
       assert manager.use_agent?
     end
 
@@ -449,6 +449,39 @@ module Authentication
       manager.known_identities[rsa] = { from: :file, file: "/first" }
       Net::SSH::KeyFactory.expects(:load_private_key).with('/first', nil, true, prompt).returns(rsa)
       manager.sign(rsa, "hello, world")
+    end
+
+    def test_sign_falls_back_to_key_file_and_drops_agent_that_closes_connection
+      Net::SSH::Authentication::Agent.expects(:connect).once.returns(agent)
+      agent.expects(:sign).once.raises(Net::SSH::Authentication::AgentClosedConnection, "agent closed the connection")
+      agent.expects(:close)
+      stub_file_private_key File.expand_path("/first"), rsa(512), rsa_pk
+      rsa.expects(:ssh_do_sign).with("hello, world").returns("abcxyz123")
+      manager.each_identity { |identity| } # preload the known_identities
+
+      assert_equal "\0\0\0\assh-rsa\0\0\0\011abcxyz123", manager.sign(rsa_pk, "hello, world")
+      assert_raises(Net::SSH::Authentication::AgentNotAvailable) { manager.sign(dsa_pk, "hello, world") }
+      assert !manager.use_agent?
+    end
+
+    def test_sign_falls_back_to_key_file_when_agent_refuses_to_sign
+      manager.stubs(:agent).returns(agent)
+      agent.expects(:sign).raises(Net::SSH::Authentication::AgentError, "agent could not sign data with requested identity")
+      stub_file_private_key File.expand_path("/first"), rsa(512), rsa_pk
+      rsa.expects(:ssh_do_sign).with("hello, world").returns("abcxyz123")
+      manager.each_identity { |identity| } # preload the known_identities
+
+      assert_equal "\0\0\0\assh-rsa\0\0\0\011abcxyz123", manager.sign(rsa_pk, "hello, world")
+      assert manager.use_agent?
+    end
+
+    def test_sign_does_not_fall_back_to_public_key_only_file
+      manager.stubs(:agent).returns(agent)
+      agent.expects(:sign).raises(Net::SSH::Authentication::AgentError, "agent could not sign data with requested identity")
+      stub_file_public_key File.expand_path("/first"), rsa_pk
+      manager.each_identity { |identity| } # preload the known_identities
+
+      assert_raises(Net::SSH::Authentication::AgentError) { manager.sign(rsa_pk, "hello, world") }
     end
 
     private

@@ -132,7 +132,8 @@ module Net
             user_identities.reject! { |identity| identity.equal?(corresponding_user_identity) }
 
             if !options[:keys_only] || corresponding_user_identity
-              known_identities[key] = { from: :agent, identity: key }
+              fallback = corresponding_user_identity unless corresponding_user_identity&.dig(:from) == :pubkey_file_only
+              known_identities[key] = { from: :agent, identity: key, fallback: fallback }.compact
               yield key
             end
           end
@@ -199,15 +200,25 @@ module Net
           end
 
           if info[:from] == :agent
-            raise KeyManagerError, "the agent is no longer available" unless agent
+            begin
+              raise AgentNotAvailable, "the agent is no longer available" unless agent
 
-            case sig_alg
-            when "rsa-sha2-512"
-              return agent.sign(info[:identity], data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_512)
-            when "rsa-sha2-256"
-              return agent.sign(info[:identity], data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_256)
-            else
-              return agent.sign(info[:identity], data.to_s)
+              case sig_alg
+              when "rsa-sha2-512"
+                return agent.sign(info[:identity], data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_512)
+              when "rsa-sha2-256"
+                return agent.sign(info[:identity], data.to_s, Net::SSH::Authentication::Agent::SSH_AGENT_RSA_SHA2_256)
+              else
+                return agent.sign(info[:identity], data.to_s)
+              end
+            rescue AgentError => e
+              debug { "agent could not sign: #{e.class} (#{e.message})" }
+              # Like OpenSSH, drop an agent that closed the connection so it is not asked (or prompts) again.
+              self.use_agent = false if e.is_a?(AgentClosedConnection)
+              raise unless info[:fallback]
+
+              info.replace(info[:fallback])
+              return sign(identity, data, sig_alg)
             end
           end
 
