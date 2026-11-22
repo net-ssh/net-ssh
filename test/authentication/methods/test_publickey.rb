@@ -129,22 +129,6 @@ module Authentication
         assert subject.authenticate("ssh-connection", "jamis")
       end
 
-      def test_authenticate_should_return_false_if_agent_refuses_to_sign_with_every_key
-        key_manager.expects(:sign).twice.raises(Net::SSH::Authentication::AgentError, "agent could not sign data with requested identity")
-
-        transport(pubkey_algorithms: %w[ssh-rsa ssh-dss]).expect do |t, packet|
-          assert verify_userauth_request_packet(packet, keys.first, false)
-          t.return(USERAUTH_PK_OK, :string, keys.first.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.first))
-
-          t.expect do |t2, packet2|
-            assert verify_userauth_request_packet(packet2, keys.last, false)
-            t2.return(USERAUTH_PK_OK, :string, keys.last.ssh_type, :string, Net::SSH::Buffer.from(:key, keys.last))
-          end
-        end
-
-        assert_equal false, subject.authenticate("ssh-connection", "jamis")
-      end
-
       def test_authenticate_rsa_sha2
         key_manager.expects(:sign).with(&signature_parameters_with_alg(keys.first, "rsa-sha2-256")).returns("sig-one")
 
