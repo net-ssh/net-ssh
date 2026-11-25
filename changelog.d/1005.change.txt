@@ -1,0 +1,1 @@
+Added the `mlkem768x25519-sha256` post-quantum hybrid key exchange, offered first by default when the openssl gem (>= 4.0.0) and OpenSSL (>= 3.5.0) support ML-KEM-768 and X25519
