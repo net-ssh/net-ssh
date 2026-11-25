@@ -30,6 +30,7 @@ module Net
     # * IdentityAgent => :identity_agent
     # * IdentitiesOnly => :keys_only
     # * KexAlgorithms => maps to the :kex option
+    # * KnownHostsCommand => :known_hosts_command
     # * CheckHostIP => :check_host_ip
     # * Macs => maps to the :hmac option
     # * PasswordAuthentication => maps to the :auth_methods option password
@@ -245,6 +246,7 @@ module Net
           globalknownhostsfile: :global_known_hosts_file,
           hostkeyalias: :host_key_alias,
           identityfile: :keys,
+          knownhostscommand: :known_hosts_command,
           fingerprinthash: :fingerprint_hash,
           port: :port,
           user: :user,

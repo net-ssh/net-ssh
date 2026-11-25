@@ -1,0 +1,1 @@
+Support ssh_config's KnownHostsCommand (and a :known_hosts_command option): its output is searched for host keys alongside the known hosts files

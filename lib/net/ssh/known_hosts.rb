@@ -1,7 +1,10 @@
 require 'strscan'
 require 'openssl'
+require 'open3'
+require 'shellwords'
 require 'net/ssh/buffer'
 require 'net/ssh/authentication/ed25519_loader'
+require 'net/ssh/multiplex/control_path'
 
 module Net
   module SSH
@@ -180,12 +183,14 @@ module Net
       SUPPORTED_TYPE.push('ssh-ed25519') if Net::SSH::Authentication::ED25519Loader::LOADED
 
       class << self
-        # Searches all known host files (see KnownHosts.hostfiles) for all keys
-        # of the given host. Returns an enumerable of keys found.
+        # Searches all known host files (see KnownHosts.hostfiles) and the
+        # output of :known_hosts_command for all keys of the given host.
+        # Returns an enumerable of keys found.
         def search_for(host, options = {})
-          files = hostfiles(options)
-          revoked_keys = files.flat_map { |file| KnownHosts.new(file).revoked_keys_for(host) }
-          HostKeys.new(search_in(files, host, options), host, self, options, revoked_keys)
+          sources = hostfiles(options).map { |file| KnownHosts.new(file) }
+          sources += known_hosts_command(host, options)
+          revoked_keys = sources.flat_map { |source| source.revoked_keys_for(host) }
+          HostKeys.new(sources.flat_map { |source| source.keys_for(host, options) }, host, self, options, revoked_keys)
         end
 
         # Search for all known keys for the given host, in every file given in
@@ -227,6 +232,53 @@ module Net
             # try the next hostfile
           end
         end
+
+        private
+
+        # Runs :known_hosts_command as ssh_config's KnownHostsCommand does and
+        # returns its output as a KnownHosts, in an array that is empty when
+        # the option is unset or "none", or the command fails. The host key is
+        # looked up before the server sends it, so %f, %K and %t are "NONE",
+        # as in OpenSSH's ORDER invocation.
+        def known_hosts_command(host, options)
+          command = options[:known_hosts_command]
+          return [] if command.nil? || command.to_s == 'none'
+
+          program, *args = Shellwords.split(command.to_s)
+          return [] if program.nil?
+
+          expander = known_hosts_command_expander(host, options)
+          # Like OpenSSH, expand tokens in the arguments only, and run without a
+          # shell so that no expanded value is interpreted.
+          output, status = Open3.capture2([program, program], *args.map { |arg| expander.expand_tokens(arg) })
+          unless status.success?
+            options[:logger]&.warn { "KnownHostsCommand #{command.inspect} failed: #{status}" }
+            return []
+          end
+
+          [KnownHosts.new("KnownHostsCommand", content: output)]
+        rescue ArgumentError, SystemCallError => e
+          options[:logger]&.warn { "KnownHostsCommand #{command.inspect} failed: #{e.message}" }
+          []
+        end
+
+        # The host as given to Net::SSH.start isn't known here, so %n is
+        # unsupported and %k falls back to the host after HostName.
+        def known_hosts_command_expander(host, options)
+          host_name = options[:host_name] || host.split(',').first.gsub(/\[|\]:\d+/, '')
+          jump_host = if defined?(Net::SSH::Proxy::Jump) && options[:proxy].is_a?(Net::SSH::Proxy::Jump)
+                        Multiplex::ControlPath.jump_host(options[:proxy].jump_proxies)
+                      else
+                        ''
+                      end
+
+          Multiplex::ControlPath.new(
+            host_arg: host_name, host: host_name, port: options[:port] || 22,
+            remote_user: options[:remote_user] || options[:user], jump_host: jump_host,
+            host_key_alias: options[:host_key_alias],
+            extra_tokens: { 'H' => host.split(',').first, 'I' => 'HOSTNAME', 'f' => 'NONE', 'K' => 'NONE', 't' => 'NONE', 'n' => nil }
+          )
+        end
       end
 
       # The host-key file name that this KnownHosts instance will use to search
@@ -234,9 +286,11 @@ module Net
       attr_reader :source
 
       # Instantiate a new KnownHosts instance that will search the given known-hosts
-      # file. The path is expanded file File.expand_path.
-      def initialize(source)
-        @source = File.expand_path(source)
+      # file. The path is expanded file File.expand_path. If +content+ is given,
+      # it is searched instead, and +source+ only names it.
+      def initialize(source, content: nil)
+        @content = content
+        @source = content ? source : File.expand_path(source)
       rescue ArgumentError
         @source = source
       end
@@ -347,22 +401,25 @@ module Net
 
       # Yields the marker, host patterns, key and comment of each usable line.
       def each_entry
+        each_line do |line|
+          fields = line.split(' ')
+          marker = fields.shift if fields.first&.start_with?('@')
+          hosts, type, key_content, comment = fields
+
+          # Skip empty line or one that is commented
+          next if hosts.nil? || hosts.start_with?('#')
+
+          next unless SUPPORTED_TYPE.include?(type)
+
+          yield marker, hosts.split(','), key_content, comment
+        end
+      end
+
+      def each_line(&block)
+        return @content.each_line(&block) if @content
         return unless File.readable?(source)
 
-        File.open(source) do |file|
-          file.each_line do |line|
-            fields = line.split(' ')
-            marker = fields.shift if fields.first&.start_with?('@')
-            hosts, type, key_content, comment = fields
-
-            # Skip empty line or one that is commented
-            next if hosts.nil? || hosts.start_with?('#')
-
-            next unless SUPPORTED_TYPE.include?(type)
-
-            yield marker, hosts.split(','), key_content, comment
-          end
-        end
+        File.foreach(source, &block)
       end
 
       def read_key(key_content)
