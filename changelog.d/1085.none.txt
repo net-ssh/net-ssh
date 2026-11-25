@@ -1,1 +1,0 @@
-Update CI actions to current versions and run Ansible on Python 3.12 [#1085]

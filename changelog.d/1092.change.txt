@@ -1,1 +1,0 @@
-Continue publickey authentication with the next identity, or the same key's file, when the agent refuses or fails to sign, and stop using an agent that closed the connection [#1090]

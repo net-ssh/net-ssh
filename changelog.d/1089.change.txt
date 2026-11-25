@@ -1,1 +1,0 @@
-Net::SSH::Test stories that script an `env` channel request no longer raise NoMethodError
