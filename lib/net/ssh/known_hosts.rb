@@ -175,9 +175,14 @@ module Net
       SUPPORTED_TYPE = %w[ssh-rsa ssh-dss
                           ecdsa-sha2-nistp256
                           ecdsa-sha2-nistp384
-                          ecdsa-sha2-nistp521]
+                          ecdsa-sha2-nistp521
+                          ssh-rsa-cert-v01@openssh.com
+                          ssh-dss-cert-v01@openssh.com
+                          ecdsa-sha2-nistp256-cert-v01@openssh.com
+                          ecdsa-sha2-nistp384-cert-v01@openssh.com
+                          ecdsa-sha2-nistp521-cert-v01@openssh.com]
 
-      SUPPORTED_TYPE.push('ssh-ed25519') if Net::SSH::Authentication::ED25519Loader::LOADED
+      SUPPORTED_TYPE.push('ssh-ed25519', 'ssh-ed25519-cert-v01@openssh.com') if Net::SSH::Authentication::ED25519Loader::LOADED
 
       class << self
         # Searches all known host files (see KnownHosts.hostfiles) for all keys
