@@ -188,8 +188,9 @@ class TestKnownHosts < NetSSHTest
       keys.add_host_key(cert)
 
       keys2 = Net::SSH::KnownHosts.search_for('[myserver.connect.to]:3022', options)
-      assert_equal(['ssh-rsa-cert-v01@openssh.com'], keys2.map(&:ssh_type))
-      assert_equal([cert.to_blob], keys2.map(&:to_blob))
+      assert_equal(['ssh-rsa'], keys2.map(&:ssh_type))
+      assert_equal([cert.key.to_blob], keys2.map(&:to_blob))
+      assert keys2.any? { |k| k.matches_key?(cert) }
     end
   end
 
@@ -217,6 +218,18 @@ class TestKnownHosts < NetSSHTest
       assert verifier.verify(args)
       assert verifier.verify(args)
       assert_equal(1, File.readlines(f.path).count)
+
+      # When the host renews its certificate with the same underlying key,
+      # accept_new connects without raising HostKeyMismatch.
+      renewed_cert = build_host_cert(cert.key, OpenSSL::PKey::RSA.new(2048))
+      renewed_args = {
+        key: renewed_cert,
+        key_blob: renewed_cert.to_blob,
+        fingerprint: renewed_cert.fingerprint('SHA256'),
+        session: session
+      }
+      assert verifier.verify(renewed_args)
+      assert_equal(1, File.readlines(f.path).count)
     end
   end
 
@@ -227,6 +240,9 @@ class TestKnownHosts < NetSSHTest
       options = { user_known_hosts_file: path, global_known_hosts_file: [] }
       keys = Net::SSH::KnownHosts.search_for('myserver.connect.to', options)
       assert keys.revoked?(cert)
+      assert keys.revoked?(cert.key), "cert-type @revoked entry should revoke the underlying key"
+      renewed = build_host_cert(cert.key, OpenSSL::PKey::RSA.new(2048))
+      assert keys.revoked?(renewed), "cert-type @revoked entry should revoke renewed certificates using the same key"
     end
   end
 
@@ -238,8 +254,9 @@ class TestKnownHosts < NetSSHTest
       options = { user_known_hosts_file: f.path, global_known_hosts_file: [] }
       Net::SSH::KnownHosts.new(f.path).add('ecdsa-host.example', cert)
       keys = Net::SSH::KnownHosts.search_for('ecdsa-host.example', options)
-      assert_equal(['ecdsa-sha2-nistp256-cert-v01@openssh.com'], keys.map(&:ssh_type))
-      assert_equal([cert.to_blob], keys.map(&:to_blob))
+      assert_equal(['ecdsa-sha2-nistp256'], keys.map(&:ssh_type))
+      assert_equal([host_key.to_blob], keys.map(&:to_blob))
+      assert keys.any? { |k| k.matches_key?(cert) }
     end
   end
 
