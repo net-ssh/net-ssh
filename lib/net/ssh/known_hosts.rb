@@ -29,7 +29,17 @@ module Net
         end
 
         def matches_key?(server_key)
-          @key.ssh_type == server_key.ssh_type && @key.to_blob == server_key.to_blob
+          candidate_keys = [server_key]
+          candidate_keys << server_key.key if server_key.respond_to?(:key)
+
+          entry_keys = [@key]
+          entry_keys << @key.key if @key.respond_to?(:key)
+
+          entry_keys.any? do |ek|
+            candidate_keys.any? do |ck|
+              ek.ssh_type == ck.ssh_type && ek.to_blob == ck.to_blob
+            end
+          end
         end
 
         def method_missing(name, *args, &block)
@@ -113,10 +123,20 @@ module Net
 
         # Returns true for the revoked key itself and for any certificate that
         # wraps it or is signed by it, matching OpenSSH's check_key_not_revoked.
+        # If the revoked entry is itself a certificate, it also revokes the
+        # underlying plain key.
         def matches_key?(server_key)
-          keys = [server_key]
-          keys += [server_key.key, server_key.signature_key] if server_key.respond_to?(:signature_key)
-          keys.any? { |key| key.ssh_type == @key.ssh_type && key.to_blob == @key.to_blob }
+          candidate_keys = [server_key]
+          candidate_keys += [server_key.key, server_key.signature_key] if server_key.respond_to?(:signature_key)
+
+          revoked_keys = [@key]
+          revoked_keys << @key.key if @key.respond_to?(:key)
+
+          revoked_keys.any? do |rk|
+            candidate_keys.any? do |ck|
+              ck.ssh_type == rk.ssh_type && ck.to_blob == rk.to_blob
+            end
+          end
         end
       end
     end
@@ -141,8 +161,9 @@ module Net
       end
 
       def add_host_key(key)
-        @known_hosts.add(@host, key, @options)
-        @host_keys.push(key)
+        plain_key = key.respond_to?(:key) ? key.key : key
+        @known_hosts.add(@host, plain_key, @options)
+        @host_keys.push(plain_key)
       end
 
       def each(&block)
@@ -175,9 +196,14 @@ module Net
       SUPPORTED_TYPE = %w[ssh-rsa ssh-dss
                           ecdsa-sha2-nistp256
                           ecdsa-sha2-nistp384
-                          ecdsa-sha2-nistp521]
+                          ecdsa-sha2-nistp521
+                          ssh-rsa-cert-v01@openssh.com
+                          ssh-dss-cert-v01@openssh.com
+                          ecdsa-sha2-nistp256-cert-v01@openssh.com
+                          ecdsa-sha2-nistp384-cert-v01@openssh.com
+                          ecdsa-sha2-nistp521-cert-v01@openssh.com]
 
-      SUPPORTED_TYPE.push('ssh-ed25519') if Net::SSH::Authentication::ED25519Loader::LOADED
+      SUPPORTED_TYPE.push('ssh-ed25519', 'ssh-ed25519-cert-v01@openssh.com') if Net::SSH::Authentication::ED25519Loader::LOADED
 
       class << self
         # Searches all known host files (see KnownHosts.hostfiles) for all keys
@@ -337,6 +363,7 @@ module Net
       # and key. If it is unable to (because the file is not writable, for
       # instance), an exception will be raised.
       def add(host, key)
+        key = key.key if key.respond_to?(:key)
         File.open(source, "a") do |file|
           blob = [Net::SSH::Buffer.from(:key, key).to_s].pack("m*").gsub(/\s/, "")
           file.puts "#{host} #{key.ssh_type} #{blob}"

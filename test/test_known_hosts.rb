@@ -177,6 +177,110 @@ class TestKnownHosts < NetSSHTest
     end
   end
 
+  def test_search_for_then_add_certificate
+    cert = rsa_host_cert
+    Tempfile.open('known_hosts_cert') do |f|
+      f.close
+      options = { user_known_hosts_file: f.path, global_known_hosts_file: [] }
+      keys = Net::SSH::KnownHosts.search_for('[myserver.connect.to]:3022', options)
+      assert_equal(0, keys.count)
+
+      keys.add_host_key(cert)
+
+      keys2 = Net::SSH::KnownHosts.search_for('[myserver.connect.to]:3022', options)
+      assert_equal(['ssh-rsa'], keys2.map(&:ssh_type))
+      assert_equal([cert.key.to_blob], keys2.map(&:to_blob))
+      assert keys2.any? { |k| k.matches_key?(cert) }
+    end
+  end
+
+  def test_accept_new_does_not_duplicate_certificate_entry
+    require 'net/ssh/verifiers/accept_new_or_local_tunnel'
+    cert = rsa_host_cert
+    Tempfile.open('known_hosts_cert_dup') do |f|
+      f.close
+      options = { user_known_hosts_file: f.path, global_known_hosts_file: [] }
+      session = Object.new
+      session.define_singleton_method(:port) { 3022 }
+      session.define_singleton_method(:peer) { { ip: '198.51.100.1' } }
+      session.define_singleton_method(:host_keys) do
+        Net::SSH::KnownHosts.search_for('[myserver.connect.to]:3022', options)
+      end
+
+      verifier = Net::SSH::Verifiers::AcceptNewOrLocalTunnel.new
+      args = {
+        key: cert,
+        key_blob: cert.to_blob,
+        fingerprint: cert.fingerprint('SHA256'),
+        session: session
+      }
+
+      assert verifier.verify(args)
+      assert verifier.verify(args)
+      assert_equal(1, File.readlines(f.path).count)
+
+      # When the host renews its certificate with the same underlying key,
+      # accept_new connects without raising HostKeyMismatch.
+      renewed_cert = build_host_cert(cert.key, OpenSSL::PKey::RSA.new(2048))
+      renewed_args = {
+        key: renewed_cert,
+        key_blob: renewed_cert.to_blob,
+        fingerprint: renewed_cert.fingerprint('SHA256'),
+        session: session
+      }
+      assert verifier.verify(renewed_args)
+      assert_equal(1, File.readlines(f.path).count)
+    end
+  end
+
+  def test_revoked_certificate_entry_is_recognized
+    cert = rsa_host_cert
+    blob = [Net::SSH::Buffer.from(:key, cert).to_s].pack('m0')
+    with_config_file(lines: ["@revoked myserver.connect.to #{cert.ssh_type} #{blob}"]) do |path|
+      options = { user_known_hosts_file: path, global_known_hosts_file: [] }
+      keys = Net::SSH::KnownHosts.search_for('myserver.connect.to', options)
+      assert keys.revoked?(cert)
+      assert keys.revoked?(cert.key), "cert-type @revoked entry should revoke the underlying key"
+      renewed = build_host_cert(cert.key, OpenSSL::PKey::RSA.new(2048))
+      assert keys.revoked?(renewed), "cert-type @revoked entry should revoke renewed certificates using the same key"
+    end
+  end
+
+  def test_ecdsa_certificate_entry_is_recognized
+    host_key = OpenSSL::PKey::EC.generate('prime256v1')
+    cert = build_host_cert(host_key, OpenSSL::PKey::RSA.new(2048))
+    Tempfile.open('known_hosts_ecdsa_cert') do |f|
+      f.close
+      options = { user_known_hosts_file: f.path, global_known_hosts_file: [] }
+      Net::SSH::KnownHosts.new(f.path).add('ecdsa-host.example', cert)
+      keys = Net::SSH::KnownHosts.search_for('ecdsa-host.example', options)
+      assert_equal(['ecdsa-sha2-nistp256'], keys.map(&:ssh_type))
+      assert_equal([host_key.to_blob], keys.map(&:to_blob))
+      assert keys.any? { |k| k.matches_key?(cert) }
+    end
+  end
+
+  def rsa_host_cert
+    @rsa_host_cert ||= build_host_cert(OpenSSL::PKey::RSA.new(2048), OpenSSL::PKey::RSA.new(2048))
+  end
+
+  def build_host_cert(host_key, ca_key)
+    require 'net/ssh/authentication/certificate'
+    cert = Net::SSH::Authentication::Certificate.new
+    cert.key = host_key
+    cert.serial = 1
+    cert.type = :host
+    cert.key_id = 'host-cert'
+    cert.valid_principals = ['myserver.connect.to']
+    cert.valid_after = Time.now - 60
+    cert.valid_before = Time.now + 3600
+    cert.critical_options = {}
+    cert.extensions = {}
+    cert.reserved = ''
+    cert.sign!(ca_key)
+    cert
+  end
+
   def path(relative_path)
     File.join(File.dirname(__FILE__), relative_path)
   end

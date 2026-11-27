@@ -1,0 +1,1 @@
+Fallback to cert.key and support -cert-v01@openssh.com certificate types in KnownHosts
